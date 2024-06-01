@@ -1,0 +1,12 @@
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/llama.cpp/CMakeFiles/ggml.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/llama.cpp/CMakeFiles/llama.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/llama.cpp/CMakeFiles/edit_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/llama.cpp/CMakeFiles/rebuild_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/CMakeFiles/llmodel.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/CMakeFiles/edit_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/gpt4all-backend/CMakeFiles/rebuild_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/src/CMakeFiles/chat.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/src/CMakeFiles/edit_cache.dir
+D:/LLMS/LlamaGPTJ-chat-main/cmake-build-debug/src/CMakeFiles/rebuild_cache.dir
