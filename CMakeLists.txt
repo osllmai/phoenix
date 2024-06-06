@@ -81,12 +81,7 @@ if (AVX512)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512vl")
 endif()
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=native")
-
 # dependencies
-
 set(CMAKE_C_STANDARD   17)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -114,6 +109,6 @@ configure_file(
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_subdirectory(gpt4all-backend/llama.cpp)
-add_subdirectory(gpt4all-backend)
+add_subdirectory(gptnerd_backend/llama.cpp)
+add_subdirectory(gptnerd_backend)
 add_subdirectory(src)

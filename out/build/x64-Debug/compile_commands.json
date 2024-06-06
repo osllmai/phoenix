@@ -1,0 +1,56 @@
+[
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo -D_CRT_SECURE_NO_WARNINGS -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1 -std:c11 /arch:AVX2 /Fogptnerd_backend\\llama.cpp\\CMakeFiles\\ggml.dir\\ggml.c.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\ggml.c",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\ggml.c",
+  "output": "gptnerd_backend\\llama.cpp\\CMakeFiles\\ggml.dir\\ggml.c.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -D_CRT_SECURE_NO_WARNINGS -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 /arch:AVX2 /Fogptnerd_backend\\llama.cpp\\CMakeFiles\\llama.dir\\llama.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\llama.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\llama.cpp",
+  "output": "gptnerd_backend\\llama.cpp\\CMakeFiles\\llama.dir\\llama.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\gptj.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\gptj.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\gptj.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\gptj.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\gptj.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\llamamodel.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\llamamodel.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\llamamodel.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\llamamodel.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\llamamodel.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\common.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\common.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\common.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\common.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\common.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\llmodel_c.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\llmodel_c.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\llmodel_c.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\llmodel_c.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\llmodel_c.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\mpt.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\mpt.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\mpt.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\mpt.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\mpt.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @gptnerd_backend\\CMakeFiles\\llmodel.dir\\utils.cpp.obj.modmap /Fogptnerd_backend\\CMakeFiles\\llmodel.dir\\utils.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\gptnerd_backend\\utils.cpp",
+  "file": "E:\\CPP\\GPTNerd\\gptnerd_backend\\utils.cpp",
+  "output": "gptnerd_backend\\CMakeFiles\\llmodel.dir\\utils.cpp.obj"
+},
+{
+  "directory": "E:/CPP/GPTNerd/out/build/x64-Debug",
+  "command": "D:\\MicrosoftVisualStudio\\Enterprise\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx64\\x64\\cl.exe  /nologo /TP -IE:\\CPP\\GPTNerd\\out\\build\\x64-Debug -IE:\\CPP\\GPTNerd\\gptnerd_backend\\llama.cpp\\. /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1 -std:c++20 @src\\CMakeFiles\\chat.dir\\chat.cpp.obj.modmap /Fosrc\\CMakeFiles\\chat.dir\\chat.cpp.obj /FdTARGET_COMPILE_PDB /FS -c E:\\CPP\\GPTNerd\\src\\chat.cpp",
+  "file": "E:\\CPP\\GPTNerd\\src\\chat.cpp",
+  "output": "src\\CMakeFiles\\chat.dir\\chat.cpp.obj"
+}
+]

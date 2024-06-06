@@ -1,0 +1,13 @@
+# ninja log v5
+40	2281	7393215088461684	gptnerd_backend/CMakeFiles/llmodel.dir/llmodel_c.cpp.obj	5f30942ea567d896
+48	4077	7393199214259349	gptnerd_backend/llama.cpp/CMakeFiles/ggml.dir/ggml.c.obj	6005282a25612f72
+54	6144	7393199235419507	gptnerd_backend/llama.cpp/CMakeFiles/llama.dir/llama.cpp.obj	2ee3bf16e1f9fa29
+77	4168	7393199215739182	gptnerd_backend/CMakeFiles/llmodel.dir/common.cpp.obj	2e89fc61aee50936
+64	5496	7393199228842408	gptnerd_backend/CMakeFiles/llmodel.dir/llamamodel.cpp.obj	c0fa966b22143a81
+91	6358	7393199237674939	gptnerd_backend/CMakeFiles/llmodel.dir/mpt.cpp.obj	60ef137a99722d97
+59	5888	7393199232819561	gptnerd_backend/CMakeFiles/llmodel.dir/gptj.cpp.obj	f75addcf779ec712
+6144	7167	7393199243730365	gptnerd_backend/llama.cpp/llama.lib	fdb167e4b736245e
+96	6248	7393199236559485	gptnerd_backend/CMakeFiles/llmodel.dir/utils.cpp.obj	f51f4fc2b83ac726
+2281	3474	7393215095285757	gptnerd_backend/llmodel.lib	823db4623cbe7f0b
+119	5421	7393211673821652	src/CMakeFiles/chat.dir/chat.cpp.obj	6c539fdff4521543
+3474	10977	7393215170160791	bin/chat.exe	5aee18d850a1324a

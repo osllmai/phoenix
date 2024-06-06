@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "gptnerd_backend/llama.cpp",
+		"source" : "gptnerd_backend/llama.cpp"
+	}
+}
