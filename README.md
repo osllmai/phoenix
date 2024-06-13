@@ -1,3 +1,10 @@
+
+<a href="https://github.com/drkostas">
+    <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=18&duration=2000&pause=100&multiline=true&width=500&height=80&lines=Kostas+Georgiou;Researcher+%7C+PhD+Student+%7C+Software+Engineer;AI+%7C+Computer+Vision+%7C+Bots" alt="Typing SVG" />
+</a>
+<br/>
+
+
 [![CMake](https://github.com/kuvaus/LlamaGPTJ-chat/actions/workflows/cmake.yml/badge.svg)](https://github.com/kuvaus/LlamaGPTJ-chat/actions/workflows/cmake.yml)
 # LlamaGPTJ-chat
 Simple command line chat program for [GPT-J](https://en.wikipedia.org/wiki/GPT-J), [LLaMA](https://en.wikipedia.org/wiki/LLaMA) and [MPT](https://www.mosaicml.com/blog/mpt-7b) models written in C++. Based on [llama.cpp](https://github.com/ggerganov/llama.cpp) and uses [gpt4all-backend](https://github.com/nomic-ai/gpt4all) for full compatibility.
