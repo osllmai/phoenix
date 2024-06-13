@@ -1,6 +1,6 @@
 
 <a href="https://github.com/osllmai/inDox">
-    <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=18&duration=2000&pause=100&multiline=true&width=500&height=100&lines=InDox;an+advanced+search+and+retrieval+technique+%7C+Open+Source;Copyright+©️+OSLLAM.ai" alt="Typing SVG" />
+    <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=18&duration=2000&pause=100&multiline=true&width=500&height=100&lines=InDox;Advanced+Search+and+Retrieval+Augmentation+Generative+%7C+Open+Source;Copy+right+©️+OSLLAM.ai" alt="Typing SVG" />
 </a>
 <br/>
 
