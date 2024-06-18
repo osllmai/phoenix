@@ -156,8 +156,14 @@ int main(int argc, char* argv[]) {
 
     check_avx_support_at_startup();
 
+    std::cout << "Enter your model path:\n";
+    std::string path;
+    set_console_color(con_st, USER_INPUT);
+    std::getline(std::cin, path);
+    set_console_color(con_st, DEFAULT);
+
     chatParams params;
-    params.model = "E:/CPP/GPTNerd/models/ggml-gpt4all-j.bin";
+    params.model = path;
 
     //***get all parameters from cli arguments or json
     parse_params(argc, argv, params);
@@ -235,14 +241,14 @@ int main(int argc, char* argv[]) {
             if (params.save_log != ""){ save_chat_log(params.save_log, (params.prompt + " " + input + params.default_footer).c_str(), answer.c_str()); }
         //Interactive mode. Else get prompt from input.
         }
-        /*else {
+        else {
             if (params.use_animation){ stop_display = false; future = std::async(std::launch::async, display_frames); }
             if (params.b_token != ""){answer = answer + params.b_token; if(!params.use_animation) {std::cout << params.b_token;} }
             llmodel_prompt(model, (params.default_prefix + params.default_header + input + params.default_footer).c_str(),prompt_callback, response_callback, recalculate_callback, &prompt_context);
             if (params.e_token != ""){std::cout << params.e_token; answer = answer + params.e_token; }
             if (params.use_animation){ stop_display = true; future.wait(); stop_display = false; }
             if (params.save_log != ""){ save_chat_log(params.save_log, (params.default_prefix + params.default_header + input + params.default_footer).c_str(), answer.c_str()); }
-        }*/
+        }
         //Interactive and continuous mode. Get prompt from input.
 
         while (!params.run_once && !sighup_received) {

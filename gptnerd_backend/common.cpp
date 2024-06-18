@@ -6,6 +6,7 @@
 #include <string>
 #include <iterator>
 #include <algorithm>
+#include <iostream>
 
 #if defined (_WIN32)
 #include <fcntl.h>

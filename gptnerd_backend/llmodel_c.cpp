@@ -53,14 +53,10 @@ void llmodel_llama_destroy(llmodel_model llama)
 }
 
 llmodel_model llmodel_model_create(const char *model_path) {
-    std::cout << "\n\n          -----File:llmodel_c.cpp llmodel_model llmodel_model_create(const char *model_path) Line:62  :)\n\n";
-    std::cout << (model_path) << "*********************************\n";
     uint32_t magic;
     llmodel_model model;
     FILE *f = fopen(model_path, "rb");
     fread(&magic, sizeof(magic), 1, f);
-    std::cout << magic<<"*********************************\n";
-    
 
     if (magic == 0x67676d6c) { model = llmodel_gptj_create();  }
     else if (magic == 0x67676a74) { model = llmodel_llama_create(); }
