@@ -1,5 +1,44 @@
 
 
+# Nerd Studio Local chatbot
+
+
+## How to build it:
+
+Run cmack:
+```cmd
+mkdir build
+cd build
+cmake ..
+cmake --build . --parallel
+```
+
+Then,
+Run chat: 
+On Widnows, to run this you must got to below address
+```
+build/run/debug
+```
+On Mac,
+```cmd
+build/run/debug
+```
+## how to run it:
+
+```
+./chat -m {You Path address} -t 4
+```
+for exmample, On Windows,
+
+```cmd
+./chat -m "c:\LLMS\LlamaGPTJ-chat-main\C_QT\ggml-gpt4all-j.bin" -t 4
+```
+
+OR on Mac,
+
+```cmd
+./chat -m "/Users/uername/LlamaGPTJ-chat-main-main/C_QT/ggml-gpt4all-j.bin" -t 4 
+```
 
 
 
