@@ -1,43 +1,68 @@
+# Nerd Studio Local Chatbot
 
+## Cloning the Repository and Building the Project
 
-# Nerd Studio Local chatbot
+First, clone the repository and navigate into the project directory:
 
+```bash
+git clone https://github.com/osllmai/nerdstudio.git
+cd nerdstudio 
+```
 
-## How to build it:
+## Downloading the Model File
 
-Run cmack:
-```cmd
-mkdir build
+We recommend creating a `model` folder in the root directory of the project to store the model file:
+
+```bash
+mkdir model
+```
+
+Download the model file from one of the following links and save it in the `model` folder:
+
+- [Download GGML GPT4ALL J v1.3 Groovy Model](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin)
+- [Download GGML GPT4ALL J Model](https://gpt4all.io/models/ggml-gpt4all-j.bin)
+
+*Credit: copyright to gpt4all.io*
+
+## Building the Project
+
+Create a build directory and run CMake to build the project:
+
+```bash
+mkdir build  
 cd build
 cmake ..
 cmake --build . --parallel
 ```
 
-Then,
-Run chat: 
-On Widnows, to run this you must got to below address
-```
-build/run/debug
-```
-On Mac,
-```cmd
-build/run/debug
-```
-## how to run it:
+## Running the Chatbot on Windows
 
-```
-./chat -m {You Path address} -t 4
-```
-for exmample, On Windows,
+Navigate to the debug directory and run the chat executable:
 
-```cmd
-./chat -m "c:\LLMS\LlamaGPTJ-chat-main\C_QT\ggml-gpt4all-j.bin" -t 4
+```bash
+cd build/run/debug/
+./chat
 ```
 
-OR on Mac,
+When prompted, enter the path to the model file you downloaded:
 
-```cmd
-./chat -m "/Users/uername/LlamaGPTJ-chat-main-main/C_QT/ggml-gpt4all-j.bin" -t 4 
+```bash
+c:\LLMS\nerdstudio\nerdstudio\model\ggml-gpt4all-j.bin
+```
+
+## Running the Chatbot on Mac
+
+Navigate to the bin directory and run the chat executable:
+
+```bash
+cd build/bin/
+./chat
+```
+
+When prompted, enter the path to the model file you downloaded:
+
+```bash
+/Users/username/nerdstudio/model/ggml-gpt4all-j.bin
 ```
 
 

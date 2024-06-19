@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>readme</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="nerd-studio-local-chatbot" class="level1">
+<h1>Nerd Studio Local chatbot</h1>
+<section id="download-the-git-repository-and-build-the-project" class="level2">
+<h2 class="anchored" data-anchor-id="download-the-git-repository-and-build-the-project">Download the git repository and build the project</h2>
+<pre class="cmd"><code>git clone https://github.com/osllmai/nerdstudio.git
+cd nerdstudio</code></pre>
+</section>
+<section id="download-the-model-file-and-save-it-in-the-local-folder" class="level2">
+<h2 class="anchored" data-anchor-id="download-the-model-file-and-save-it-in-the-local-folder">Download the model file and save it in the local folder</h2>
+<p>We prefer to create a folder names <code>model</code> in the root directory of the project and save the model file in it.</p>
+<pre class="cmd"><code>mkdir model</code></pre>
+<p>For downloading the model, you can use the following links:</p>
+<ul>
+<li><a href="https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin">Download GGML GPT4ALL J v1.3 Groovy Model</a></li>
+<li><a href="https://gpt4all.io/models/ggml-gpt4all-j.bin">Download GGML GPT4ALL J Model</a></li>
+</ul>
+</section>
+<section id="how-to-build-it" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-build-it">How to build it:</h2>
+<p>Run cmack:</p>
+<pre class="cmd"><code>mkdir build  
+cd build
+cmake ..
+cmake --build . --parallel</code></pre>
+</section>
+<section id="how-to-run-it-on-windows" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-run-it-on-windows">How to run it on Windows :</h2>
+<p>Then, Run chat: On Windows, to run this you must got to below address</p>
+<pre><code>build/run/debug/</code></pre>
+<p>then,</p>
+<pre class="cmd"><code>./chat </code></pre>
+<p>it will ask you to enter the model path, you can enter the path of the model file you downloaded in the previous step.</p>
+<pre class="cmd"><code>c:\LLMS\nerdstudio\nerdstudio\model\ggml-gpt4all-j.bin</code></pre>
+</section>
+<section id="how-to-run-it-on-mac" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-run-it-on-mac">How to run it on Mac :</h2>
+<p>to run this you must got to below address</p>
+<p>On Mac,</p>
+<pre class="cmd"><code>build/bin/</code></pre>
+<p>it will ask you to enter the model path, you can enter the path of the model file you downloaded in the previous step.</p>
+<pre class="cmd"><code>/Users/uername/nerdstudio/model/ggml-gpt4all-j.bin</code></pre>
+</section>
+<section id="how-to-run-it" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-run-it">how to run it:</h2>
+<p>for example, On Windows,</p>
+<pre class="cmd"><code>./chat</code></pre>
+<p><strong> Enter your model path: </strong></p>
+<pre class="cmd"><code>c:\LLMS\nerdstudio\nerdstudio\model\ggml-gpt4all-j.bin</code></pre>
+<p>OR on Mac,</p>
+<pre class="cmd"><code>./chat -m "/Users/uername/nerdstudio/model/ggml-gpt4all-j.bin" -t 4 </code></pre>
+<p>or you can use the following command to run the chatbot:</p>
+<p>then you need to add your path</p>
+<pre class="cmd"><code>Enter your model path:</code></pre>
+<p><code>./chat -h</code></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">usage:</span> ./bin/chat <span class="pp">[</span><span class="ss">options</span><span class="pp">]</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span> simple chat program for GPT-J, LLaMA, and MPT models.</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">You</span> can set specific initial prompt with the <span class="at">-p</span> flag.</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Runs</span> default in interactive and continuous mode.</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'/reset'</span> to reset the chat context.</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'/save'</span>,<span class="st">'/load'</span> to save network state into a binary file.</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'/save NAME'</span>,<span class="st">'/load NAME'</span> to rename saves. Default: <span class="at">--save_name</span> NAME.</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'/help'</span> to show this help dialog.</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="ex">Type</span> <span class="st">'quit'</span>, <span class="st">'exit'</span> or, <span class="st">'Ctrl+C'</span> to quit.</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="ex">options:</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-h,</span> <span class="at">--help</span>            show this help message and exit</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v,</span> <span class="at">--version</span>         show version and license information</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--run-once</span>            disable continuous mode</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--no-interactive</span>      disable interactive mode altogether <span class="er">(</span><span class="ex">uses</span> given prompt only<span class="kw">)</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--no-animation</span>        disable chat animation</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--no-saves</span>            disable <span class="st">'/save'</span>,<span class="st">'/load'</span> functionality</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-s</span> SEED, <span class="at">--seed</span> SEED  RNG seed for <span class="at">--random-prompt</span> <span class="er">(</span><span class="ex">default:</span> <span class="at">-1</span><span class="kw">)</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-t</span> N, <span class="at">--threads</span>    N  number of threads to use during computation <span class="er">(</span><span class="ex">default:</span> 4<span class="kw">)</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-p</span> PROMPT, <span class="at">--prompt</span> PROMPT</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">prompt</span> to start generation with <span class="er">(</span><span class="ex">default:</span> empty<span class="kw">)</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--random-prompt</span>       start with a randomized prompt.</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-n</span> N, <span class="at">--n_predict</span>  N  number of tokens to predict <span class="er">(</span><span class="ex">default:</span> 200<span class="kw">)</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--top_k</span>            N  top-k sampling <span class="er">(</span><span class="ex">default:</span> 40<span class="kw">)</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--top_p</span>            N  top-p sampling <span class="er">(</span><span class="ex">default:</span> 0.9<span class="kw">)</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--temp</span>             N  temperature <span class="er">(</span><span class="ex">default:</span> 0.9<span class="kw">)</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--n_ctx</span>            N  number of tokens in context window <span class="er">(</span><span class="ex">default:</span> 0<span class="kw">)</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-b</span> N, <span class="at">--batch_size</span> N  batch size for prompt processing <span class="er">(</span><span class="ex">default:</span> 20<span class="kw">)</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--repeat_penalty</span>   N  repeat_penalty <span class="er">(</span><span class="ex">default:</span> 1.1<span class="kw">)</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--repeat_last_n</span>    N  last n tokens to penalize  <span class="er">(</span><span class="ex">default:</span> 64<span class="kw">)</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--context_erase</span>    N  percent of context to erase  <span class="er">(</span><span class="ex">default:</span> 0.8<span class="kw">)</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--b_token</span>             optional beginning wrap token for response <span class="er">(</span><span class="ex">default:</span> empty<span class="kw">)</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--e_token</span>             optional end wrap token for response <span class="er">(</span><span class="ex">default:</span> empty<span class="kw">)</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-j,</span>   <span class="at">--load_json</span> FNAME</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">load</span> options instead from json at FNAME <span class="er">(</span><span class="ex">default:</span> empty/no<span class="kw">)</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--load_template</span>   FNAME</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">load</span> prompt template from a txt file at FNAME <span class="er">(</span><span class="ex">default:</span> empty/no<span class="kw">)</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--save_log</span>        FNAME</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">save</span> chat log to a file at FNAME <span class="er">(</span><span class="ex">default:</span> empty/no<span class="kw">)</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--load_log</span>        FNAME</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">load</span> chat log from a file at FNAME <span class="er">(</span><span class="ex">default:</span> empty/no<span class="kw">)</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--save_dir</span>        DIR</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">directory</span> for saves <span class="er">(</span><span class="ex">default:</span> ./saves<span class="kw">)</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  <span class="ex">--save_name</span>       NAME</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">save/load</span> model state binary at save_dir/NAME.bin <span class="er">(</span><span class="ex">current:</span> model_state<span class="kw">)</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">context</span> is saved to save_dir/NAME.ctx <span class="er">(</span><span class="ex">current:</span> model_state<span class="kw">)</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-m</span> FNAME, <span class="at">--model</span> FNAME</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>                        <span class="ex">model</span> path <span class="er">(</span><span class="ex">current:</span> ./models/ggml-vicuna-13b-1.1-q4_2.bin<span class="kw">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="useful-features" class="level2">
+<h2 class="anchored" data-anchor-id="useful-features">Useful features</h2>
+<p>Here are some handy features and details on how to achieve them using command line options.</p>
+<section id="saveload-chat-log-and-read-output-from-other-apps" class="level3">
+<h3 class="anchored" data-anchor-id="saveload-chat-log-and-read-output-from-other-apps">Save/load chat log and read output from other apps</h3>
+<p>By default, the program prints the chat to standard (stdout) output, so if you’re including the program into your app, it only needs to read stdout. You can also save the whole chat log to a text file with <code>--save_log</code> option. There’s an elementary way to remember your past conversation by simply loading the saved chat log with <code>--load_log</code> option when you start a new session.</p>
+</section>
+<section id="run-the-program-once-without-user-interaction" class="level3">
+<h3 class="anchored" data-anchor-id="run-the-program-once-without-user-interaction">Run the program once without user interaction</h3>
+<p>If you only need the program to run once without any user interactions, one way is to set prompt with <code>-p "prompt"</code> and using <code>--no-interactive</code> and <code>--no-animation</code> flags. The program will read the prompt, print the answer, and close.</p>
+</section>
+<section id="add-ai-personalities-and-characters" class="level3">
+<h3 class="anchored" data-anchor-id="add-ai-personalities-and-characters">Add AI personalities and characters</h3>
+<p>If you want a personality for your AI, you can change <code>prompt_template_sample.txt</code> and use <code>--load_template</code> to load the modified file. The only constant is that your input during chat will be put on the <code>%1</code> line. Instructions, prompt, response, and everything else can be replaced any way you want. Having different <code>personality_template.txt</code> files is an easy way to add different AI characters. With <em>some</em> models, giving both AI and user names instead of <code>Prompt:</code> and <code>Response:</code>, can make the conversation flow more naturally as the AI tries to mimic a conversation between two people.</p>
+</section>
+<section id="ability-to-reset-chat-context" class="level3">
+<h3 class="anchored" data-anchor-id="ability-to-reset-chat-context">Ability to reset chat context</h3>
+<p>You can reset the chat at any time during chatting by typing <code>/reset</code> in the input field. This will clear the AI’s memory of past conversations, logits, and tokens. You can then start the chat from a blank slate without having to reload the whole model again.</p>
+</section>
+<section id="load-all-parameters-using-json" class="level3">
+<h3 class="anchored" data-anchor-id="load-all-parameters-using-json">Load all parameters using JSON</h3>
+<p>You can also fetch parameters from a json file with <code>--load_json "/path/to/file.json"</code> flag. Different models might perform better or worse with different input parameters so using json files is a handy way to store and load all the settings at once. The JSON file loader is designed to be simple in order to prevent any external dependencies, and as a result, the JSON file must follow a specific format. Here is a simple example:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>{<span class="st">"top_p"</span><span class="op">:</span> <span class="fl">1.0</span><span class="op">,</span> <span class="st">"top_k"</span><span class="op">:</span> <span class="dv">50400</span><span class="op">,</span> <span class="st">"temp"</span><span class="op">:</span> <span class="fl">0.9</span><span class="op">,</span> <span class="st">"n_batch"</span><span class="op">:</span> <span class="dv">9</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is useful when you want to store different temperature and sampling settings.</p>
+<p>And a more detailed one:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="st">"top_p"</span><span class="op">:</span> <span class="fl">1.0</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="st">"top_k"</span><span class="op">:</span> <span class="dv">50400</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="st">"temp"</span><span class="op">:</span> <span class="fl">0.9</span><span class="op">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="st">"n_batch"</span><span class="op">:</span> <span class="dv">20</span><span class="op">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="st">"threads"</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="st">"prompt"</span><span class="op">:</span> <span class="st">"Once upon a time"</span><span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="st">"load_template"</span><span class="op">:</span> <span class="st">"/path/to/prompt_template_sample.txt"</span><span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="st">"model"</span><span class="op">:</span> <span class="st">"/path/to/ggml-gpt4all-j-v1.3-groovy.bin"</span><span class="op">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="st">"no-interactive"</span><span class="op">:</span> <span class="st">"true"</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This one loads the prompt from the json, uses a specific template, and runs the program once in no-interactive mode so user does not have to press any input.</p>
+</section>
+</section>
+<section id="license" class="level2">
+<h2 class="anchored" data-anchor-id="license">License</h2>
+<p>This project is licensed under the MIT <a href="https://github.com/kuvaus/LlamaGPTJ-chat/blob/main/LICENSE">License</a></p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
