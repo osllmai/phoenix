@@ -65,11 +65,11 @@ When prompted, enter the path to the model file you downloaded:
 /Users/username/nerdstudio/model/ggml-gpt4all-j.bin
 ```
 
+   
 
-
-`
+```cmd
 ./chat -h
-`
+```
 
 ```sh
 usage: ./bin/chat [options]
