@@ -22,7 +22,7 @@ Download the model file from one of the following links and save it in the `mode
 - [Download GGML GPT4ALL J v1.3 Groovy Model](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin)
 - [Download GGML GPT4ALL J Model](https://gpt4all.io/models/ggml-gpt4all-j.bin)
 
-*Credit: copyright to gpt4all.io*
+*Credit: gpt4all.io*
 
 ## Building the Project
 
