@@ -1,19 +1,29 @@
-# Run Phoenix locally! 
+# Phoenix Local Chatbot
+
+<p align="center">
+  <img src="docs/image/Phoenix.png" alt="phoenix Logo" width="380" height="380" style="border: 2px solid yellow;" />
+</p>
+<br/>
+
+
+
+<div style="position: relative; width: 100%; text-align: center;">
+    <a href="https://github.com/osllmai/phoenix">
+        <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=16&duration=3000&pause=500&multiline=true&width=700&height=100&lines=Phoenix+Local+Chatbot+and+Advanced+Search+and+Retrieval+Augmentation+Generative+%7C+Open+Source;Copyright+©️+osllm.ai" alt="Typing SVG" style="margin-top: 10px;"/>
+    </a>
+</div>
+
+
+
+
 
 ## Cloning the Repository and Building the Project
-
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=9kVBfG4vFNw" target="_blank">
- <img src="http://img.youtube.com/vi/9kVBfG4vFNw/default.jpg" alt="Watch the video" width="240" height="180" border="10" />
-</a>
-
-
-
 
 First, clone the repository and navigate into the project directory:
 
 ```bash
-git clone https://github.com/osllmai/nerdstudio.git
-cd nerdstudio 
+git clone https://github.com/osllmai/phoenix.git
+cd phoenix 
 ```
 
 ## Downloading the Model File
@@ -29,7 +39,7 @@ Download the model file from one of the following links and save it in the `mode
 - [Download GGML GPT4ALL J v1.3 Groovy Model](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin)
 - [Download GGML GPT4ALL J Model](https://gpt4all.io/models/ggml-gpt4all-j.bin)
 
-*Credit: gpt4all.io*
+*Credit: copyright to gpt4all.io*
 
 ## Building the Project
 
@@ -47,17 +57,27 @@ cmake --build . --parallel
 Navigate to the debug directory and run the chat executable:
 
 ```bash
-cd build/bin/debug/
+cd build/run/debug/
 ./chat
 ```
 
 When prompted, enter the path to the model file you downloaded:
 
 ```bash
-c:\LLMS\nerdstudio\nerdstudio\model\ggml-gpt4all-j.bin
+c:\LLMS\phoenix\model\ggml-gpt4all-j.bin
 ```
 
+Please consider to watch the video tutorial on how to run the chatbot on Windows on youtube:
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=9kVBfG4vFNw" target="_blank">
+ <img src="http://img.youtube.com/vi/9kVBfG4vFNw/default.jpg" alt="Watch the video" width="240" height="180" border="10" />
+</a>
+
+
+
+
 ## Running the Chatbot on Mac
+
 
 Navigate to the bin directory and run the chat executable:
 
@@ -69,7 +89,7 @@ cd build/bin/
 When prompted, enter the path to the model file you downloaded:
 
 ```bash
-/Users/username/nerdstudio/model/ggml-gpt4all-j.bin
+/Users/username/phoenix/model/ggml-gpt4all-j.bin
 ```
 
    
