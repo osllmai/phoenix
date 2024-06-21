@@ -1,12 +1,29 @@
-# Nerd Studio Local Chatbot
+# Phoenix Local Chatbot
+
+<p align="center">
+  <img src="docs/image/Phoenix.png" alt="phoenix Logo" width="380" height="380" style="border: 2px solid yellow;" />
+</p>
+<br/>
+
+
+
+<div style="position: relative; width: 100%; text-align: center;">
+    <a href="https://github.com/osllmai/phoenix">
+        <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=16&duration=3000&pause=500&multiline=true&width=700&height=100&lines=Phoenix+Local+Chatbot+and+Advanced+Search+and+Retrieval+Augmentation+Generative+%7C+Open+Source;Copyright+©️+osllm.ai" alt="Typing SVG" style="margin-top: 10px;"/>
+    </a>
+</div>
+
+
+
+
 
 ## Cloning the Repository and Building the Project
 
 First, clone the repository and navigate into the project directory:
 
 ```bash
-git clone https://github.com/osllmai/nerdstudio.git
-cd nerdstudio 
+git clone https://github.com/osllmai/phoenix.git
+cd phoenix 
 ```
 
 ## Downloading the Model File
@@ -47,7 +64,7 @@ cd build/run/debug/
 When prompted, enter the path to the model file you downloaded:
 
 ```bash
-c:\LLMS\nerdstudio\nerdstudio\model\ggml-gpt4all-j.bin
+c:\LLMS\phoenix\model\ggml-gpt4all-j.bin
 ```
 
 ## Running the Chatbot on Mac
@@ -62,7 +79,7 @@ cd build/bin/
 When prompted, enter the path to the model file you downloaded:
 
 ```bash
-/Users/username/nerdstudio/model/ggml-gpt4all-j.bin
+/Users/username/phoenix/model/ggml-gpt4all-j.bin
 ```
 
    
