@@ -15,8 +15,6 @@
 
 
 
-
-
 ## Cloning the Repository and Building the Project
 
 First, clone the repository and navigate into the project directory:
@@ -69,11 +67,9 @@ c:\LLMS\phoenix\model\ggml-gpt4all-j.bin
 
 Please consider to watch the video tutorial on how to run the chatbot on Windows on youtube:
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=9kVBfG4vFNw" target="_blank">
- <img src="http://img.youtube.com/vi/9kVBfG4vFNw/default.jpg" alt="Watch the video" width="240" height="180" border="10" />
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=vck-OCaiw10" target="_blank">
+ <img src="http://img.youtube.com/vi/vck-OCaiw10/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
 </a>
-
-
 
 
 ## Running the Chatbot on Mac
