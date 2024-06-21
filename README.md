@@ -1,4 +1,4 @@
-# Nerd Studio Local Chatbot
+# Run Phoenix locally! 
 
 ## Cloning the Repository and Building the Project
 
