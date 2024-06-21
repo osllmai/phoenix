@@ -2,6 +2,13 @@
 
 ## Cloning the Repository and Building the Project
 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=9kVBfG4vFNw" target="_blank">
+ <img src="http://img.youtube.com/vi/9kVBfG4vFNw/default.jpg" alt="Watch the video" width="240" height="180" border="10" />
+</a>
+
+
+
+
 First, clone the repository and navigate into the project directory:
 
 ```bash
