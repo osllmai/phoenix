@@ -40,7 +40,7 @@ cmake --build . --parallel
 Navigate to the debug directory and run the chat executable:
 
 ```bash
-cd build/run/debug/
+cd build/bin/debug/
 ./chat
 ```
 
