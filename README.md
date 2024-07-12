@@ -161,7 +161,6 @@ options:
     | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
      '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
 ```
-This one loads the prompt from the json, uses a specific template, and runs the program once in no-interactive mode so user does not have to press any input.
 
 ## License
 
