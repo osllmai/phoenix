@@ -36,6 +36,7 @@ Download the model file from one of the following links and save it in the `mode
 
 - [Download Llama 3 Instruct Model](https://gpt4all.io/models/gguf/Meta-Llama-3-8B-Instruct.Q4_0.gguf)
 - [Download Orca 2 (Medium) Model](https://gpt4all.io/models/gguf/orca-2-7b.Q4_0.gguf)
+- (Phi-3 mini 4k instruct Q4)[https://gpt4all.io/models/gguf/Phi-3-mini-4k-instruct.Q4_0.gguf]
 
 *Credit: copyright to gpt4all.io*
 
