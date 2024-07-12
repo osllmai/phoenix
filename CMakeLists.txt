@@ -15,11 +15,11 @@ if(APPLE)
   endif()
 endif()
 
-project(LlamaGPTJ-chat)
+project(phoenix)
 
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 3)
-set(VERSION_PATCH 0)
+set(VERSION_MINOR 0)
+set(VERSION_PATCH 2)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "on")
@@ -81,7 +81,12 @@ if (AVX512)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512vl")
 endif()
 
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffast-math")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=native")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcpu=native")
+
 # dependencies
+
 set(CMAKE_C_STANDARD   17)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -109,6 +114,6 @@ configure_file(
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_subdirectory(gptnerd_backend/llama.cpp)
-add_subdirectory(gptnerd_backend)
+add_subdirectory(phoenix/llama.cpp-mainline)
+add_subdirectory(phoenix)
 add_subdirectory(src)

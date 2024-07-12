@@ -79,7 +79,7 @@ struct chatParams {
         //Parameters below are not inside prompt_context, but handled separately
         int32_t seed = -1; 
         int32_t n_threads = std::min(4, (int32_t)std::thread::hardware_concurrency()); 
-        std::string model = "./models/ggml-gpt4all-j.bin";
+        std::string model = "F:/Zeinab/model/ggml-gpt4all-l13b-snoozy.bin";
         std::string prompt = "";
         //template prefix, header, and footer
         std::string default_prefix = "### Instruction:\n The prompt below is a question to answer, a task to complete, or a conversation to respond to; decide which and write an appropriate response.";
@@ -114,7 +114,7 @@ struct ConsoleState {
     ConsoleColor color = DEFAULT;
 };
 
-std::string APPNAME = "GPTNerd";
+std::string APPNAME = "Phoenix";
 
 //utils.h functions
 void set_console_color(ConsoleState &con_st, ConsoleColor color);
