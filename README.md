@@ -15,7 +15,7 @@
 
 
 
-## Cloning the Repository and Building the Project
+## Cloning the Repository and Building the Project 
 
 First, clone the repository and navigate into the project directory:
 
@@ -34,8 +34,8 @@ mkdir model
 
 Download the model file from one of the following links and save it in the `model` folder:
 
-- [Download GGML GPT4ALL J v1.3 Groovy Model](https://gpt4all.io/models/ggml-gpt4all-j-v1.3-groovy.bin)
-- [Download GGML GPT4ALL J Model](https://gpt4all.io/models/ggml-gpt4all-j.bin)
+- [Download Llama 3 Instruct Model](https://gpt4all.io/models/gguf/Meta-Llama-3-8B-Instruct.Q4_0.gguf)
+- [Download Orca 2 (Medium) Model](https://gpt4all.io/models/gguf/orca-2-7b.Q4_0.gguf)
 
 *Credit: copyright to gpt4all.io*
 
@@ -62,7 +62,7 @@ cd build/run/debug/
 When prompted, enter the path to the model file you downloaded:
 
 ```bash
-c:\LLMS\phoenix\model\ggml-gpt4all-j.bin
+c:\LLMS\phoenix\model\Meta-Llama-3-8B-Instruct.Q4_0.gguf
 ```
 
 Please consider to watch the video tutorial on how to run the chatbot on Windows on youtube:
@@ -178,7 +178,7 @@ And a more detailed one:
 "threads": 12,
 "prompt": "Once upon a time",
 "load_template": "/path/to/prompt_template_sample.txt",
-"model": "/path/to/ggml-gpt4all-j-v1.3-groovy.bin",
+"model": "/path/to/Meta-Llama-3-8B-Instruct.Q4_0.gguf",
 "no-interactive": "true"
 }
 ```
