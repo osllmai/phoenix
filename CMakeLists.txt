@@ -19,7 +19,7 @@ project(phoenix)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 2)
+set(VERSION_PATCH 3)
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "on")
@@ -114,6 +114,5 @@ configure_file(
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_subdirectory(phoenix/llama.cpp-mainline)
 add_subdirectory(phoenix)
 add_subdirectory(src)
