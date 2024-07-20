@@ -48,7 +48,7 @@ Create a build directory and run CMake to build the project:
 mkdir build  
 cd build
 cmake ..
-cmake --build . --parallel
+cmake --build . 
 ```
 
 ## Running the Chatbot on Windows
