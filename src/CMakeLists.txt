@@ -28,8 +28,8 @@ if(APPLE)
 	target_link_libraries(chat PRIVATE  llmodel 
 		llamamodel-mainline-cpu
         llamamodel-mainline-cpu-avxonly
-        gptj-cpu
-        gptj-cpu-avxonly
+        #gptj-cpu
+        #gptj-cpu-avxonly
 		llamamodel-mainline-metal
 	)
 elseif(UNIX)
