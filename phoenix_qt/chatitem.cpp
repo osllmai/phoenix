@@ -1,18 +1,33 @@
 #include "chatitem.h"
 
-ChatItem::ChatItem(const int &id, const QString &prompt, QObject *parent):
-    QObject(parent), m_id(id), m_prompt(prompt), m_response(""){}
+ChatItem::ChatItem(const int &id, Message *prompt, Message *response, int numberOfPrompt,
+                   int numberOfEditPrompt, int numberOfResponse, int numberOfRegenerate, QObject *parent):
+    QObject(parent), m_id(id), m_prompt(prompt), m_response(response), m_numberOfPrompt(numberOfPrompt),
+    m_numberOfEditPrompt(numberOfEditPrompt), m_numberOfResponse(numberOfResponse),
+    m_numberOfRegenerate(numberOfRegenerate){}
 
 //*----------------------------------------------------------------------------------------**************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property *----------------------------------------------------------------------------------------*//
 int ChatItem::id() const{
     return m_id;
 }
-QString ChatItem::prompt() const{
+Message* ChatItem::prompt(){
     return m_prompt;
 }
-QString ChatItem::response() const{
+Message* ChatItem::response(){
     return m_response;
+}
+int ChatItem::numberOfPrompt() const{
+    return m_numberOfPrompt;
+}
+int ChatItem::numberOfEditPrompt() const{
+    return m_numberOfEditPrompt;
+}
+int ChatItem::numberOfResponse() const{
+    return m_numberOfResponse;
+}
+int ChatItem::numberOfRegenerate() const{
+    return m_numberOfRegenerate;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
@@ -25,18 +40,16 @@ void ChatItem::setId(const int id){
     m_id = id;
     emit idChanged(m_id);
 }
-
-void ChatItem::setPrompt(const QString prompt){
+void ChatItem::setPrompt(Message *prompt){
     if (m_prompt == prompt)
         return;
     m_prompt = prompt;
-    emit promptChanged(m_prompt);
+    emit promptChanged();
 }
-
-void ChatItem::setResponse(const QString tokenResponse){
-    if (m_response == tokenResponse)
+void ChatItem::setResponse(Message *response){
+    if (m_response == response)
         return;
-    m_response = tokenResponse;
-    emit responseChanged(m_response);
+    m_response = response;
+    emit responseChanged();
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//

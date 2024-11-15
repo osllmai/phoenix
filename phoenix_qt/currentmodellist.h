@@ -48,6 +48,7 @@ public:
     //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
     void addModel( Model *model);
+    void deleteModel( Model *model);
 
 private:
     QList<Model*> models;

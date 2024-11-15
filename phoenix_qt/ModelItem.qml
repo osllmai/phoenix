@@ -47,23 +47,23 @@ Item{
         border.color: hoverButtonColor
         border.width: 0
 
-        Rectangle{
-            id: recBackground
-            height: 40
-            color: boxColor
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.leftMargin: 0
-            anchors.rightMargin: 0
-            anchors.topMargin: 0
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: backgroundPageColor
+            }
+
+            GradientStop {
+                position: 1
+                color: /*"#ababb9"*/ backgroungColor
+            }
+            orientation: Gradient.Vertical
         }
 
         Rectangle {
             id: modelIconBox
             width: 40
             height: 40
-            // color: fillIconColor
             color: "#00ffffff"
             radius: 4
             anchors.left: parent.left
@@ -81,12 +81,6 @@ Item{
                 anchors.horizontalCenter: parent.horizontalCenter
                 fillMode: Image.PreserveAspectFit
             }
-            // ColorOverlay {
-            //     id: colorOverlaymodelIcon
-            //     anchors.fill: modelIcon
-            //     source: modelIcon
-            //     color: "#ffffff"
-            // }
             MouseArea{
                 anchors.fill: parent
                 onClicked: function() {}

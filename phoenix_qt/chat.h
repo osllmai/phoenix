@@ -57,6 +57,8 @@ signals:
     void prompt(const QString &input);
     void tokenResponse(const QString &token);
 
+    void startChat();
+
 public slots:
     void LoadModelResult(const bool result);
     void promptRequested(const QString &input);

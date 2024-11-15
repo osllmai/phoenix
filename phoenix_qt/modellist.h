@@ -27,6 +27,7 @@ class ModelList : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(CurrentModelList *currentModelList READ currentModelList WRITE setCurrentModelList NOTIFY currentModelListChanged)
+    Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         FileSizeRole,
@@ -67,6 +68,7 @@ public:
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
     CurrentModelList *currentModelList() const;
+    double downloadProgress() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -86,11 +88,13 @@ public slots:
 
 signals:
     void currentModelListChanged();
+    void downloadProgressChanged();
 
 private:
     QList<Model*> models;
     QList<Download*>downloads;
     CurrentModelList *m_currentModelList;
+    double m_downloadProgress;
 
     void readModelFromJSONFile();
 };

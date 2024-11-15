@@ -27,7 +27,8 @@ ComboBox {
 
     property var fontFamily
 
-    Accessible.role: Accessible.comboBoxId
+
+    Accessible.role: Accessible.ComboBox
     contentItem: RowLayout {
         id: contentRow
         spacing: 0
@@ -52,7 +53,7 @@ ComboBox {
                 sourceSize.height: comboBoxId.font.pixelSize
                 mipmap: true
                 visible: false
-                source: "./images/chatIcon.svg"
+                source: "./images/Phoenix.svg"
             }
 
             ColorOverlay {
@@ -100,7 +101,7 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: "white"
+            color: "red"
             border.color: "yellow"
             border.width: 1
             radius: 10

@@ -1,18 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 
 Item {
     id: root
     width: 250
     height: 60
 
-    Constants{
-        id: constantsId
-    }
-
-    property var fontFamily: constantsId.fontFamily
+    property var fontFamily
     property color textColor: "black"
-    property color borderColor: "#e0dede"
+    property color boxColor: "#e0dede"
+    property color glowColor
 
     property alias myTextName: textId.text
     property double sliderValue: 0.5
@@ -23,6 +21,7 @@ Item {
     Rectangle{
         id: settingsSliderBox
         anchors.fill: parent
+        color: "#00ffffff"
         Text{
             id:textId
             text: "Temperature"
@@ -32,7 +31,6 @@ Item {
             anchors.leftMargin: 0
             anchors.topMargin: 0
             font.pointSize: 10
-            font.styleName: "Bold"
             font.family: root.fontFamily
         }
 
@@ -55,7 +53,7 @@ Item {
             width: 40
             height: 30
             radius: 2
-            border.color: root.borderColor
+            color: root.boxColor
             anchors.verticalCenter: sliderId.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 2
@@ -69,6 +67,13 @@ Item {
                 font.pointSize: 10
                 font.family: root.fontFamily
             }
+            layer.enabled: true
+            layer.effect: Glow {
+                 samples: 15
+                 color: root.glowColor
+                 spread: 0.0
+                 transparentBorder: true
+             }
         }
         Text {
             id: minValueSliderId
@@ -77,10 +82,10 @@ Item {
             anchors.left: parent.left
             anchors.top: sliderId.bottom
             anchors.leftMargin: 5
-            anchors.topMargin: 5
+            anchors.topMargin: 2
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            font.pointSize: 10
+            font.pointSize: 8
             font.family: root.fontFamily
         }
         Text {
@@ -90,10 +95,10 @@ Item {
             anchors.right: valueSliderBoxId.left
             anchors.top: sliderId.bottom
             anchors.rightMargin: 5
-            anchors.topMargin: 5
+            anchors.topMargin: 2
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            font.pointSize: 10
+            font.pointSize: 8
             font.family: root.fontFamily
         }
     }

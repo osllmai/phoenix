@@ -250,6 +250,9 @@ bool ModelList::setData(const QModelIndex &index, const QVariant &value, int rol
 CurrentModelList *ModelList::currentModelList() const{
     return m_currentModelList;
 }
+double ModelList::downloadProgress() const{
+    return m_downloadProgress;
+}
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -273,15 +276,17 @@ void ModelList::addModel(const int &id, const double &fileSize ,const int &ramRa
         model->setDownloadFinished(true);
         model->setDirectoryPath(directoryPath);
         m_currentModelList->addModel(model);
-        // emit currentModelListChanged();
+        emit currentModelListChanged();
     }else{
         Model *model = new Model(id, fileSize, ramRamrequired, name, information, fileName, url , directoryPath, parameters, quant,
                                                     type, promptTemplate, systemPrompt, icon, downloadPercent, isDownloading, downloadFinished, this);
         beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
         models.append(model);
         endInsertRows();
-        if(downloadFinished == true)
+        if(downloadFinished == true){
             m_currentModelList->addModel(model);
+                emit currentModelListChanged();
+        }
     }
 }
 
@@ -461,6 +466,9 @@ void ModelList::deleteRequest(const int index){
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
+
+    m_currentModelList->deleteModel(model);
+    emit currentModelListChanged();
 
 }
 

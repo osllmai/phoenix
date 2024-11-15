@@ -32,10 +32,20 @@ Item {
 
     property var fontFamily
 
-
+    //information about model
     property bool isFinished: true
     property var prompt
     property var response
+    signal regenerateResponse()
+    signal editPrompt()
+    signal nextPrompt()
+    signal beforPrompt()
+    signal nextResponse()
+    signal beforResponse()
+    property int numberOfPrompt
+    property int numberOfRegenerate
+    property int numberOfResponse
+    property int numberOfEdit
 
     Rectangle{
         id: backgroundId
@@ -46,15 +56,39 @@ Item {
         Rectangle{
             id: columnDelegate
             width: parent.width
-            height: userBox.height + llmBox.height
+            height: userBox.height + llmBox.height + dateBoxId.height + 20
             color: "#00ffffff"
+
             Rectangle{
-                id: userBox
-                height: userTextRec.height +30
+                id:dateBoxId
+                height: 20
                 anchors.left: parent.left
                 anchors.right: parent.right
+                anchors.top: parent.top
                 anchors.leftMargin: 0
                 anchors.rightMargin: 0
+                anchors.topMargin: 20
+                color: "#00ffffff"
+                Text {
+                    id: dateId
+                    text: qsTr("Today")
+                    color: root.chatMessageTitleTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 10
+                    font.family: "Times New Roman"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+
+            Rectangle{
+                id: userBox
+                height: userTextRec.height +userImageRec.height+20
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: dateBoxId.bottom
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+                anchors.topMargin: 0
                 color: "#00ffffff"
 
                 Rectangle{
@@ -65,7 +99,7 @@ Item {
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.rightMargin: 0
-                    anchors.topMargin: 23
+                    anchors.topMargin: 20
                     Image{
                         id: userImage
                         anchors.fill: parent
@@ -83,11 +117,27 @@ Item {
                     anchors.right: userImageRec.left
                     anchors.top: parent.top
                     anchors.rightMargin: 2
-                    anchors.topMargin: 20
+                    anchors.topMargin: 40
                     maxWidth: root.width - 90
                     isFinished: true
                     isLLM: false
                     myText: root.prompt
+                    Connections {
+                        target: userTextRec
+                        function onRegenerateOrEdit(){
+                            console.log("dear")
+                            root.editPrompt();
+                        }
+                        function onNextMessage(){
+                            root.nextPrompt()
+                        }
+                        function onBeforMessage(){
+                            root.beforPrompt()
+                        }
+                    }
+                    numberOfMessage: root.numberOfPrompt
+                    numberOfRegenerateOrEdit: root.numberOfEdit
+
 
                     backgroungColor: root.backgroungColor
                     glowColor: root.glowColor
@@ -116,7 +166,7 @@ Item {
                 Text {
                     id: timeText
                     color: root.chatMessageTitleTextColor
-                    text: qsTr("Oct 20, 2024, 02:07:37 PM")
+                    text: qsTr("02:07")
                     anchors.right: userImageRec.left
                     anchors.bottom: userTextRec.top
                     anchors.rightMargin: 5
@@ -129,7 +179,7 @@ Item {
 
             Rectangle{
                 id: llmBox
-                height: llmTextRec.height +30
+                height: llmTextRec.height +llmImageRec.height+20
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: userBox.bottom
@@ -146,7 +196,7 @@ Item {
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.leftMargin: 0
-                    anchors.topMargin: 23
+                    anchors.topMargin: 20
                     Image{
                         id: llmImage
                         anchors.fill: parent
@@ -164,11 +214,27 @@ Item {
                     anchors.left: llmImageRec.right
                     anchors.top: parent.top
                     anchors.leftMargin: 2
-                    anchors.topMargin: 20
+                    anchors.topMargin: 30
                     maxWidth: root.width -90
                     isFinished: isFinished
                     isLLM: true
                     myText: root.response
+                    Connections {
+                        target: llmTextRec
+                        function onRegenerateOrEdit(){
+                            console.log("Hi")
+                            root.regenerateResponse();
+                        }
+                        function onNextMessage(){
+                            root.nextResponse()
+                        }
+                        function onBeforMessage(){
+                            root.beforResponse()
+                        }
+                    }
+                    numberOfMessage: root.numberOfResponse
+                    numberOfRegenerateOrEdit: root.numberOfRegenerate
+
 
                     backgroungColor: root.backgroungColor
                     glowColor: root.glowColor
@@ -196,7 +262,7 @@ Item {
                 Text {
                     id: llmTimeText
                     color: root.chatMessageTitleTextColor
-                    text: qsTr("Oct 20, 2024, 02:07:37 PM")
+                    text: qsTr("02:07")
                     anchors.left: llmImageRec.right
                     anchors.bottom: llmTextRec.top
                     anchors.leftMargin: 5

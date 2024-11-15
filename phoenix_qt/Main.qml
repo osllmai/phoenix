@@ -398,7 +398,14 @@ Window {
                     selectTextColor: window.selectTextColor
 
                     fontFamily: window.fontFamily
-
+                    Connections{
+                        target: chatPageId
+                        function onGoToModelPage(){
+                            console.log(" hi dear");
+                            modelsItemMenu.clicked()
+                            modelsItemMenu.checked = true
+                        }
+                    }
                 }
             }
 
@@ -498,6 +505,194 @@ Window {
                     onClicked: function () {}
                 }
             }
+
+            Rectangle {
+                id: systemMonitorId
+                width: 130
+                color: "#00ffffff"
+                anchors.right: githubIcon.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 0
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
+
+                MyIcon {
+                    id: systemMonitorIcon
+                    visible: true
+                    width: 30
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: 0
+                    anchors.leftMargin: 0
+                    anchors.bottomMargin: 0
+                    myIconId: "images./githubIcon.svg"
+                    myFillIconId: "images./githubIcon.svg"
+                    heightSource: 18
+                    widthSource: 18
+                    normalColor:window.menuIconColor
+                    hoverColor:window.fillIconColor
+                    Connections {
+                        target: githubIcon
+                        onClicked: function () {}
+                    }
+                }
+                Text {
+                    id: systemMonitorText
+                    text: qsTr("System Monitor")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: systemMonitorIcon.right
+                    anchors.leftMargin: 0
+                }
+            }
+
+            Rectangle {
+                id: executionTimeId
+                width: 130
+                color: "#00ffffff"
+                anchors.left: numberOfTokenId.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 0
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
+
+                Text {
+                    id: executionTimeText
+                    text: qsTr("Execution time: ")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    font.pointSize: 8
+                }
+                Text {
+                    id: executionTimeValue
+                    text: qsTr("10s")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: executionTimeText.right
+                    anchors.leftMargin: 3
+                    font.pointSize: 8
+                }
+            }
+
+            Rectangle {
+                id: numberOfTokenId
+                width: 130
+                color: "#00ffffff"
+                anchors.left: currentDownloadId.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 0
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
+
+                Text {
+                    id: numberOfTokenText
+                    text: qsTr("Number of tokens: ")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    font.pointSize: 8
+                }
+                Text {
+                    id: numberOfTokenValue
+                    text: qsTr("50")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: numberOfTokenText.right
+                    anchors.leftMargin: 3
+                    font.pointSize: 8
+                }
+            }
+
+            Rectangle {
+                id: currentDownloadId
+                width: 290
+                color: "#00ffffff"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 0
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
+                MyIcon {
+                    id: currentDownloadIcon
+                    visible: true
+                    width: 30
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: 0
+                    anchors.leftMargin: 0
+                    anchors.bottomMargin: 0
+                    myIconId: "images./githubIcon.svg"
+                    myFillIconId: "images./githubIcon.svg"
+                    heightSource: 18
+                    widthSource: 18
+                    normalColor:window.menuIconColor
+                    hoverColor:window.fillIconColor
+                    Connections {
+                        target: githubIcon
+                        onClicked: function () {}
+                    }
+                }
+                Text {
+                    id: currentDownloadText
+                    text: qsTr("Downloading model")
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: currentDownloadIcon.right
+                    anchors.leftMargin: 0
+                    font.pointSize: 8
+                }
+                ProgressBar {
+                    id: progressBar
+                    width: 100
+                    height: 6
+                    value: 0.3
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: currentDownloadText.right
+                    anchors.leftMargin: 5
+                    background: Rectangle {
+                        color: "#c0c0c0"
+                        implicitHeight: 6
+                        radius: 2
+                        border.color: "#c0c0c0"
+                        border.width: 2
+                    }
+
+                    contentItem: Item {
+                        implicitHeight: 6
+                        Rectangle {
+                            width: progressBar.visualPosition * parent.width
+                            height: 6
+                            radius: 2
+                            color: "#047eff"
+                            border.color: "#047eff"
+                            border.width: 2
+                        }
+                    }
+                }
+                Text {
+                    id: cancleText
+                    text: "%" + progressBar.value
+                    color: window.informationTextColor
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: progressBar.right
+                    anchors.leftMargin: 5
+                    font.pixelSize: fontSize
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.family: fontFamily
+                }
+            }
+
+
         }
     }
 }

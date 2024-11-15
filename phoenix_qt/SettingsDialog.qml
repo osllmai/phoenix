@@ -158,21 +158,19 @@ Item {
                         Connections{
                             target: applicationSettingsPageId
                             function onThemeRequested2(myTheme){
-                                themeRequested1(myTheme)
+                                rootId.themeRequested1(myTheme)
                             }
                             function onFontSizeRequested2(myFontSize){
-                                fontSizeRequested1(myFontSize)
+                                rootId.fontSizeRequested1(myFontSize)
                             }
                             function onFontFamilyRequested2(myFontFamily){
-                                fontFamilyRequested1(myFontFamily)
+                                rootId.fontFamilyRequested1(myFontFamily)
                             }
                         }
                     }
                 }
             }
         }
-
-
     }
 }
 

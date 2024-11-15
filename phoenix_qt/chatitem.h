@@ -2,42 +2,61 @@
 #define CHATITEM_H
 
 #include <QObject>
+#include <message.h>
 
-class ChatItem : public QObject
-{
+class ChatItem : public QObject{
     Q_OBJECT
     Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged )
-    Q_PROPERTY(QString prompt READ prompt WRITE setPrompt NOTIFY promptChanged )
-    Q_PROPERTY(QString response READ response WRITE setResponse NOTIFY responseChanged )
+    Q_PROPERTY(Message *prompt READ prompt WRITE setPrompt NOTIFY promptChanged )
+    Q_PROPERTY(Message *response READ response WRITE setResponse NOTIFY responseChanged )
+    Q_PROPERTY(int numberOfPrompt READ numberOfPrompt NOTIFY numberOfPromptChanged )
+    Q_PROPERTY(int numberOfEditPrompt READ numberOfEditPrompt NOTIFY numberOfEditPromptChanged )
+    Q_PROPERTY(int numberOfResponse READ numberOfResponse NOTIFY numberOfResponseChanged)
+    Q_PROPERTY(int numberOfRegenerate READ numberOfRegenerate NOTIFY numberOfRegenerateChanged )
+    // Q_PROPERTY(int numberOfTokens READ numberOfTokens NOTIFY numberOfTokensChanged FINAL)
+    // Q_PROPERTY(int executionTime READ executionTime NOTIFY executionTimeChanged FINAL)
 
 public:
-    explicit ChatItem(const int &id, const QString &prompt, QObject *parent = nullptr);
+    explicit ChatItem(const int &id, Message *prompt, Message *response, int numberOfPrompt, int numberOfEditPrompt, int numberOfResponse, int numberOfRegenerate, QObject *parent);
 
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
     int id() const;
-    QString prompt() const;
-    QString response() const;
+    Message* prompt();
+    Message* response();
+    int numberOfPrompt() const;
+    int numberOfEditPrompt() const;
+    int numberOfResponse() const;
+    int numberOfRegenerate() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Write Property *----------------------------------------------------------------------------------------*//
-    void setId( int id);
-    void setPrompt( QString prompt);
-    void setResponse( QString tokenResponse);
+    void setId(const int id);
+    void setPrompt(Message *prompt);
+    void setResponse(Message *response);
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 signals:
     void idChanged(int id);
-    void promptChanged(QString prompt);
-    void responseChanged(QString tokenResponse);
+    void promptChanged();
+    void responseChanged();
+    void numberOfPromptChanged();
+    void numberOfEditPromptChanged();
+    void numberOfResponseChanged();
+    void numberOfRegenerateChanged();
 
 private:
     int m_id;
-    QString m_prompt;
-    QString m_response;
-
+    Message *m_prompt;
+    Message *m_response;
+    int m_numberOfPrompt;
+    int m_numberOfEditPrompt;
+    int m_numberOfResponse;
+    int m_numberOfRegenerate;
+    int m_numberOfTokens;
+    int m_executionTime;
 };
 
 #endif // CHATITEM_H

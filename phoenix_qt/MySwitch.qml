@@ -11,12 +11,6 @@ import QtQuick.Controls 2.15
 Switch {
     id: control
 
-    Constants{
-        id: constantsId
-    }
-
-    property var fontFamily: constantsId.fontFamily
-
     readonly property int baseSize: 7
 
     background: backgroundItem

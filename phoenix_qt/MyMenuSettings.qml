@@ -9,14 +9,8 @@ T.Button {
     width: 100
     height: 30
 
-    Constants{
-        id: constantsId
-    }
-
     leftPadding: 4
     rightPadding: 4
-
-    property var fontFamily: constantsId.fontFamily
 
     text: control.state
     property alias myTextId: textId.text
@@ -24,15 +18,17 @@ T.Button {
     autoExclusive: false
     checkable: true
 
-    property color normalColor: "#f5f5f5"
-    property color selectColor: "#ffffff"
+    property color backgroungColor: "#f5f5f5"
+    property color borderColor: "#ffffff"
     property color textColor: "#000000"
+    property color selectTextColor: "#000000"
     property color glowColor: "#d7d7d7"
+    property var fontFamily
 
     background: Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.selectColor
+        color: control.backgroungColor
         radius: 2
         Text {
             id: textId
@@ -44,16 +40,17 @@ T.Button {
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
             font.family: control.fontFamily
+            font.styleName: "Bold"
         }
 
-        layer.enabled: true
-        layer.effect: Glow {
-             samples: 15
-             color: control.glowColors
-             spread: 0.0
-             // radius: 2
-             transparentBorder: true
-         }
+        // layer.enabled: true
+        // layer.effect: Glow {
+        //      samples: 15
+        //      color: control.glowColor
+        //      spread: 0.0
+        //      // radius: 2
+        //      transparentBorder: true
+        //  }
     }
 
 
@@ -64,8 +61,9 @@ T.Button {
             when: control.checked
 
             PropertyChanges {
-                target: backgroundId
-                color:control. selectColor
+                target: textId
+                color:control. selectTextColor
+                font.styleName: "Bold"
             }
         },
         State {
@@ -73,8 +71,9 @@ T.Button {
             when: control.hovered && !control.checked && !control.pressed
 
             PropertyChanges {
-                target: backgroundId
-                color: control.selectColor
+                target: textId
+                color: control.selectTextColor
+                font.styleName: "Bold"
             }
 
         },
@@ -83,8 +82,9 @@ T.Button {
             when: !control.pressed && !control.checked &&!control.hovered
 
             PropertyChanges {
-                target: backgroundId
-                color: control.normalColor
+                target: textId
+                color: control.textColor
+                font.styleName: "Bold"
             }
 
         }

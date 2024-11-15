@@ -13,6 +13,8 @@ class ChatListModel : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(Chat *currentChat READ currentChat WRITE setCurrentChat NOTIFY currentChatChanged)
+    Q_PROPERTY(int size READ size NOTIFY sizeChanged)
+
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         TitleRole,
@@ -33,6 +35,7 @@ public:
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
     Chat *currentChat() const;
+    int size() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -47,8 +50,10 @@ public:
 
 signals:
     void currentChatChanged();
+    void sizeChanged();
 
 public slots:
+    void addCurrentChatToChatList();
 
 private:
     Chat* m_currentChat = nullptr;

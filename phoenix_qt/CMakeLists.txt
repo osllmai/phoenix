@@ -56,7 +56,6 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/sendMessageIcon.svg"
         "images/settingsIcon.svg"
         "images/stopIcon.svg"
-        "images/upload.svg"
         "images/userIcon.svg"
         "images/image1.svg"
         "images/image2.svg"
@@ -101,6 +100,8 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/fillRegenerateIcon.svg"
         "images/copyIcon.svg"
         "images/fillCopyIcon.svg"
+        "images/rightIcon.svg"
+        "images/leftIcon.svg"
         "fontFamily/DMSans-VariableFont.ttf"
         "./phoenix.db"
         "./models.json"
@@ -127,6 +128,9 @@ qt_add_qml_module(app${PROJECTNAME}
     QML_FILES MyMenuButtonItem.qml
     QML_FILES MyPromptResponse.qml
     QML_FILES MyMessage.qml
+    SOURCES message.h message.cpp
+    QML_FILES ModelDialog.qml
+    QML_FILES InputPromptBox.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

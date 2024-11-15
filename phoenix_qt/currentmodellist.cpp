@@ -207,3 +207,10 @@ void CurrentModelList::addModel( Model *model){
     models.append(model);
     endInsertRows();
 }
+
+void CurrentModelList::deleteModel( Model *model){
+    const int index = models.indexOf(model);
+    beginRemoveRows(QModelIndex(), index, index);
+    models.removeAll(model);
+    endRemoveRows();
+}

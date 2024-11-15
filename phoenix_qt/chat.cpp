@@ -41,19 +41,15 @@ Chat::~Chat(){
 int Chat::id() const{
     return m_id;
 }
-
 QString Chat::title() const{
     return m_title;
 }
-
 bool Chat::isLoadModel() const{
     return m_isLoadModel;
 }
-
 ChatModel* Chat::chatModel() const{
     return m_chatModel;
 }
-
 bool Chat::responseInProgress() const{
     return m_responseInProgress;
 }
@@ -68,21 +64,18 @@ void Chat::setId(const int id){
     m_id = id;
     emit idChanged();
 }
-
 void Chat::setTitle(const QString title){
     if(m_title == title)
         return;
     m_title = title;
     emit titleChanged();
 }
-
 void Chat::setIsLoadModel(const bool isLoadModel){
     if(m_isLoadModel == isLoadModel)
         return;
     m_isLoadModel = isLoadModel;
     emit isLoadModelChanged();
 }
-
 void Chat::setResponseInProgress(const bool responseInProgress){
     if(m_responseInProgress == responseInProgress)
         return;
@@ -104,41 +97,42 @@ void Chat::LoadModelResult(const bool result){
 void Chat::promptRequested(const QString &input){
 
     if(m_chatModel->size() == 1){
-        // Open the database
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-        if (!db.open()) {
-            qDebug() << "Error: Unable to open database" << db.lastError().text();
-            return;
-        }
+        emit startChat();
+        qInfo() << "Hi  bo bo";
+        // // Open the database
+        // QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+        // db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
+        // if (!db.open()) {
+        //     qDebug() << "Error: Unable to open database" << db.lastError().text();
+        //     return;
+        // }
 
-        // Prepare and execute the SQL query
-        QSqlQuery query(db);
+        // // Prepare and execute the SQL query
+        // QSqlQuery query(db);
 
-        // Create table with id and name columns
-        query.exec("CREATE TABLE IF NOT EXISTS chat (id INTEGER, name TEXT)");
+        // // Create table with id and name columns
+        // query.exec("CREATE TABLE IF NOT EXISTS chat (id INTEGER, name TEXT)");
 
-        // Prepare query to insert both id and name
-        query.prepare("INSERT INTO chat (id, name) VALUES (?, ?)");
+        // // Prepare query to insert both id and name
+        // query.prepare("INSERT INTO chat (id, name) VALUES (?, ?)");
 
-        // Bind values
-        query.addBindValue(m_id);   // Example id value
-        query.addBindValue(m_title); // The name provided by the function parameter
+        // // Bind values
+        // query.addBindValue(m_id);   // Example id value
+        // query.addBindValue(m_title); // The name provided by the function parameter
 
-        // Execute the query
-        if (!query.exec()) {
-            qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-        } else {
-            qDebug() << "Data inserted successfully.";
-        }
+        // // Execute the query
+        // if (!query.exec()) {
+        //     qDebug() << "Error: Unable to insert data -" << query.lastError().text();
+        // } else {
+        //     qDebug() << "Data inserted successfully.";
+        // }
 
-        // Close the database
-        db.close();
+        // // Close the database
+        // db.close();
     }
 
     setResponseInProgress(true);
     emit prompt(input);
-    qInfo() << "Finished" << QThread::currentThread() << " Chat::promptRequested";
 }
 
 void Chat::tokenResponseRequested(const QString &token){
@@ -147,18 +141,15 @@ void Chat::tokenResponseRequested(const QString &token){
 }
 
 void Chat::finishedResponnse(){
-    m_chatModel->saveChatItem(m_id);
+    // m_chatModel->saveChatItem(m_id);
     setResponseInProgress(false);
 }
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 
 
 void Chat::loadModelRequested(QString modelPath){
-    qInfo()<<modelPath;
     modelPath.remove("file:///");
-    qInfo()<<modelPath;
     emit loadModel(modelPath);
-    qInfo() << "Finished" << QThread::currentThread();
 }
 
 void Chat::unloadModelRequested(){
@@ -167,5 +158,5 @@ void Chat::unloadModelRequested(){
 }
 
 void Chat::addChatItem(int id, QString prompt, QString response){
-    m_chatModel->addChatItem(id, prompt, response);
+    // m_chatModel->addChatItem(id, prompt, response);
 }

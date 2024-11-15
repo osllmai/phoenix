@@ -9,73 +9,8 @@
 ChatListModel::ChatListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-    //------------------------------------------------------------------------------------------------------------------------------database: load chat
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
-
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
-
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS chat (id INTEGER, name TEXT)");
-
-    // Prepare query to select both id and name
-    QString cmd = "SELECT id, name FROM chat";
-
-    // Execute the query
-    if (!query.exec(cmd)) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully."<<query.size();
-        while(query.next()){
-            int id = query.value(0).toInt();
-            QString name = query.value(1).toString();
-
-            const int index = chats.size();
-            Chat *chat = new Chat(id, name , this);
-
-            beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
-            chats.append(chat);
-            setCurrentChat(chat);
-            endInsertRows();
-        }
-    }
-
-    for(int chatIndex=0; chatIndex<chats.size(); chatIndex++){
-        Chat *chat = chats[chatIndex];
-        qDebug()<< chatIndex <<"for chats";
-        //------------------------------------------------------------------------------------------------------------------------------database: load message
-
-        // Create table with id and name columns
-        query.exec("CREATE TABLE IF NOT EXISTS message (id INTEGER, chatId INTEGER, beforeMessageId INTEGER, prompt TEXT, response TEXT)");
-
-        // Prepare query to select both id and name
-        cmd = "SELECT id, chatId, prompt, response FROM message";
-
-        // Execute the query
-        if (!query.exec(cmd)) {
-            qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-        } else {
-            qDebug() << "Data inserted successfully.";
-            while(query.next()){
-                if(query.value(1).toInt() == chat->id()){
-                    chat->addChatItem(query.value(0).toInt(), query.value(2).toString(), query.value(3).toString());
-                }
-            }
-        }
-        //------------------------------------------------------------------------------------------------------------------------------end database: load message
-    }
-
-    // Close the database
-    db.close();
-    //------------------------------------------------------------------------------------------------------------------------------end database: load chat
-
     addChat();
+    qInfo()<<"create chatListModel";
 }
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
@@ -146,6 +81,9 @@ bool ChatListModel::setData(const QModelIndex &index, const QVariant &value, int
 Chat* ChatListModel::currentChat() const{
     return m_currentChat;
 }
+int ChatListModel::size() const{
+    return chats.size();
+}
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -163,11 +101,27 @@ void ChatListModel::setCurrentChat(Chat *chat){
 void ChatListModel::addChat(){
     const int index = chats.size();
     const QString name = "new chat" +  QString::number(index);
+
+    qInfo()<<"add chat: "<<name;
     Chat *chat = new Chat(index, name , this);
-    beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
-    chats.append(chat);
+    if(m_currentChat != nullptr){
+        qInfo()<<"        disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);";
+        disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);
+    }
+
     setCurrentChat(chat);
+    connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
+
+}
+
+void ChatListModel::addCurrentChatToChatList(){
+    qInfo() << "addCurrentChatToChatList()";
+    const int index = chats.size();
+    beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
+    chats.append(m_currentChat);
     endInsertRows();
+    emit sizeChanged();
+    qInfo()<<"chats.size()"<<chats.size();
 }
 
 Chat* ChatListModel::getChat(int index){
@@ -184,60 +138,11 @@ void ChatListModel::deleteChat(int index){
     beginRemoveRows(QModelIndex(), newIndex, newIndex);
     chats.removeAll(chat);
     endRemoveRows();
+    emit sizeChanged();
 
     if(chat == currentChat())
         if(chats.size() == 0)
             addChat();
         else
             setCurrentChat(chats.first());
-
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
-
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
-
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS chat (id INTEGER, name TEXT)");
-
-    // Prepare query to insert both id and name
-    query.prepare("DELETE FROM chat where id = ?");
-
-    // Bind values
-    query.addBindValue(chat->id());
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully.";
-    }
-
-    // Prepare query to insert both id and name
-    query.prepare("DELETE FROM message where chatId = ?");
-
-    // Bind values
-    query.addBindValue(chat->id());
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully.";
-    }
-
-    // Close the database
-    db.close();
-
-    // const int newIndex = chats.indexOf(chat);
-    // beginRemoveRows(QModelIndex(), newIndex, newIndex);
-    // chats.remove(chat);
-    // chats.removeAt(index);
-    // endRemoveRows();
-    // chat->unloadAndDeleteLater();
 }

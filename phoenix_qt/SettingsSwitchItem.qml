@@ -6,18 +6,16 @@ Item {
     width: 250
     height: 60
 
-    Constants{
-        id: constantsId
-    }
 
     property alias myTextName: textId.text
 
-    property var fontFamily: constantsId.fontFamily
+    property var fontFamily
     property color textColor: "black"
 
     Rectangle{
         id: settingsSliderBox
         anchors.fill: parent
+        color: "#00ffffff"
         Text{
             id:textId
             text: "Temperature"
@@ -30,7 +28,6 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pointSize: 10
-            font.styleName: "Bold"
             font.family: root.fontFamily
         }
 

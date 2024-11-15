@@ -39,6 +39,18 @@ Item {
     property var chatModel
     property var modelListModel
 
+    property bool emptyConversation: root.chatModel.size == 0? true: false
+    // function onEmptyConversationChanged(){
+    //     if(emptyConversation){
+    //         console.log("***********************onEmptyConversationChanged Hi")
+    //         inputBoxRec.y = emptyMessageText.y +100
+    //     }else{
+    //         console.log("---------------------------------onEmptyConversationChanged Hi")
+    //         inputBoxRec.y = textChat.y + textChat.height
+    //     }
+    // }
+
+    signal goToModelPage()
 
     Rectangle{
         id: chatPage
@@ -57,13 +69,11 @@ Item {
             id: mainStructure
             anchors.fill: parent
 
-
             Rectangle{
                 id: leftSidePage
-                width: mainStructure.width / 4
+                width: Math.min(mainStructure.width / 4, 350)
                 height: mainStructure.height
                 color: root.chatBackgroungColor
-
 
                 Row{
                     id: searchAndNewChatBox
@@ -149,15 +159,15 @@ Item {
                             myLable: "New chat"
                             myIconId: "images/chatAddIcon.svg"
                             myFillIconId:  "images/chatAddIcon.svg"
-                            heightSource: 18
-                            widthSource: 18
+                            heightSource: 19
+                            widthSource: 19
                             normalColor: root.iconColor
                             hoverColor: root.fillIconColor
                             Connections {
                                 target: newChatIcon
                                 function onClicked() {
                                     root.chatListModel.addChat();
-                                    historylist.contentY = historylist.contentHeight;
+                                    // historylist.contentY = historylist.contentHeight;
                                 }
                             }
                         }
@@ -165,7 +175,6 @@ Item {
                     }
 
                 }
-
 
                 Rectangle {
                     id: historyRec
@@ -180,8 +189,30 @@ Item {
                     anchors.bottomMargin: 10
 
                     Rectangle{
-                        id: rectangleListChat
+                        id: emptyChatListId
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: recHistoryText.bottom
+                        anchors.bottom: parent.bottom
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                        anchors.topMargin: 0
+                        anchors.bottomMargin: 0
+                        color: "#00ffffff"
+                        visible: root.chatListModel.size == 0
+                        Text {
+                            id: emptyChatText
+                            color: "#919191"
+                            text: qsTr("There is no chat.")
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            font.pointSize: 10
+                            font.family: "Times New Roman"
+                        }
+                    }
 
+                    Rectangle{
+                        id: rectangleListChat
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: recHistoryText.bottom
@@ -191,6 +222,7 @@ Item {
                         anchors.topMargin: 16
                         anchors.bottomMargin: 0
                         color: "#00000000"
+                        visible: root.chatListModel.size > 0
 
                         ListView {
                             id: historylist
@@ -235,7 +267,7 @@ Item {
                         color: "#00ffffff"
                         Text {
                             id: historyText
-                            text: qsTr("History")
+                            text: qsTr("Histoty")
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -251,14 +283,6 @@ Item {
                     }
                 }
 
-                Rectangle{
-                    id:lineId3
-                    height: parent.height
-                    color: "#e1e1e1"
-                    anchors.right: parent.right
-                    anchors.rightMargin: 0
-                    width: 1
-                }
             }
 
             Rectangle{
@@ -270,13 +294,14 @@ Item {
                 anchors.top: header.bottom
                 anchors.bottom: parent.bottom
                 anchors.topMargin: 0
+                radius: 10
 
                 Rectangle {
                     id: chatStack
                     // width: Math.min(700,parent.width)
                     anchors.left: parent.left
                     anchors.right: modelSettings.visible=== true? modelSettings.left: parent.right
-                    anchors.top: header.bottom
+                    anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.topMargin: 0
                     color: "#00ffffff"
@@ -289,6 +314,29 @@ Item {
                         color: "#00ffffff"
                         anchors.horizontalCenter: parent.horizontalCenter
 
+                        Rectangle{
+                            id: emptyMessageListId
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: 50
+                            anchors.rightMargin: 50
+                            anchors.topMargin: 24
+                            anchors.bottomMargin: 24
+                            color: "#00ffffff"
+                            visible: root.emptyConversation
+                            Text {
+                                id: emptyMessageText
+                                color: root.informationTextColor
+                                text: qsTr("What can I help with?")
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                font.pointSize: 14
+                                font.family: "Times New Roman"
+                            }
+                        }
+
                         Rectangle {
                             id: textChat
                             color: "#00ffffff"
@@ -296,10 +344,15 @@ Item {
                             anchors.right: parent.right
                             anchors.top: parent.top
                             anchors.bottom: inputBoxRec.top
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
+                            anchors.leftMargin: 50
+                            anchors.rightMargin: 50
                             anchors.topMargin: 24
                             anchors.bottomMargin: 12
+                            visible: !root.emptyConversation
+                            function onVisible(){
+                                inputBoxRec.y = inputBoxRec.y + 200
+                            }
+
                             ColumnLayout{
                                 anchors.fill: parent
                                 ListView {
@@ -323,9 +376,41 @@ Item {
                                         MyPromptResponse{
                                             id: myPromptResponseId
                                             width: parent.width
+
                                             prompt: model.prompt
                                             response: model.response
                                             isFinished: !root.currentChat.responseInProgress
+                                            Connections {
+                                                target: myPromptResponseId
+                                                function onRegenerateResponse(){
+                                                    root.chatModel.regenerateResponse(index)
+                                                }
+                                                function onEditPrompt(){
+                                                    console.log("onEditPrompt")
+                                                    root.chatModel.editPrompt(index, "Tell me about iran")
+                                                }
+                                                function onNextPrompt(){
+                                                    console.log("onNextPrompt")
+                                                    root.chatModel.nextPrompt(index, model.numberPrompt)
+                                                }
+                                                function onBeforPrompt(){
+                                                    console.log("onBeforPrompt")
+                                                    root.chatModel.nextPrompt(index, model.numberPrompt-2)
+                                                }
+                                                function onNextResponse(){
+                                                    console.log("onNextResponse")
+                                                    root.chatModel.nextResponse(index, model.numberResponse)
+                                                }
+                                                function onBeforResponse(){
+                                                    console.log("onBeforResponse")
+                                                    root.chatModel.nextResponse(index, model.numberResponse-2)
+                                                }
+                                            }
+                                            numberOfPrompt: model.numberPrompt
+                                            numberOfRegenerate: model.numberOfRegenerate
+                                            numberOfResponse: model.numberResponse
+                                            numberOfEdit: model.numberOfEditPrompt
+
 
                                             backgroungColor: root.backgroungColor
                                             glowColor: root.glowColor
@@ -351,14 +436,18 @@ Item {
                                         }
                                     }
 
-                                    function scrollToEnd() {
-                                        listViewChat.positionViewAtEnd()
-                                    }
+                                    // function scrollToEnd() {
+                                    //     listViewChat.positionViewAtEnd()
+                                    // }
 
                                     onContentHeightChanged: {
-                                        if (atYEnd)
-                                            scrollToEnd()
+                                        // if (atYEnd)
+                                            listViewChat.positionViewAtEnd()
                                     }
+                                    // onHeightChanged:{
+                                    //     if (atYEnd)
+                                    //         scrollToEnd()
+                                    // }
                                 }
                             }
                         }
@@ -366,144 +455,315 @@ Item {
                         Rectangle{
                             id: inputBoxRec
                             width: parent.width
-                            height: inputBox.height+36
+                            height: inputBox.height+30
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            anchors.bottom: parent.bottom
+                            // anchors.bottom: parent.bottom
                             color: rightSidePage.color
-                            Rectangle {
+
+                            y: emptyMessageText.y + 50
+
+                            Behavior on y{
+                                NumberAnimation{
+                                    duration: 200
+                                }
+                            }
+
+                            InputPromptBox{
                                 id: inputBox
-                                height: 40
-                                color: parent.color
-                                radius: 12
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.bottom: parent.bottom
-                                anchors.leftMargin: 24
-                                anchors.rightMargin: 24
-                                anchors.bottomMargin: 24
+                                anchors.leftMargin: 80
+                                anchors.rightMargin: 80
+                                anchors.bottomMargin: 20
 
-                                Rectangle{
-                                    id:lineInputBox
-                                    width: parent.width - 16
-                                    height: 3
-                                    anchors.bottom: parent.bottom
-                                    anchors.bottomMargin: 0
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    color: /*root.iconColor*/root.glowColor
-                                    visible: false
-                                }
+                                backgroungColor: root.backgroungColor
+                                glowColor: root.glowColor
+                                boxColor: root.boxColor
+                                normalButtonColor: root.normalButtonColor
+                                selectButtonColor: root.selectButtonColor
+                                hoverButtonColor: root.hoverButtonColor
+                                fillIconColor: root.fillIconColor
+                                iconColor: root.iconColor
 
-                                ScrollView {
-                                    id: scrollInput
-                                    anchors.left: parent.left
-                                    anchors.right: sendIcon.left
-                                    anchors.top: parent.top
-                                    anchors.bottom: parent.bottom
-                                    anchors.leftMargin: 10
-                                    anchors.rightMargin: 10
-                                    anchors.topMargin: 5
-                                    anchors.bottomMargin: 5
+                                chatBackgroungColor: root.chatBackgroungColor
+                                chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
+                                chatMessageBackgroungColor: root.chatMessageBackgroungColor
+                                chatMessageTitleTextColor: root.chatMessageTitleTextColor
+                                chatMessageInformationTextColor: root.chatMessageInformationTextColor
+                                chatMessageIsGlow: root.chatMessageIsGlow
 
-                                    TextArea {
-                                        id: inputTextBox
-                                        height: scrollInput.height
-                                        visible: true
-                                        color: root.informationTextColor
-                                        wrapMode: Text.Wrap
-                                        placeholderText: root.currentChat.isLoadModel? qsTr("What is in your mind ?"): qsTr("Load a model to continue ...")
-                                        clip: false
-                                        font.pointSize: 12
-                                        hoverEnabled: true
-                                        tabStopDistance: 80
-                                        selectionColor: "#fff5fe"
-                                        cursorVisible: false
-                                        persistentSelection: true
-                                        placeholderTextColor: root.informationTextColor
-                                        font.family: root.fontFamily
-                                        onHeightChanged: {
-                                            if(inputBox.height < 150 && inputTextBox.text !== ""){
-                                                inputBox.height += 6;
-                                            }
-                                        }
-                                        onEditingFinished: {
-                                            lineInputBox.visible= false
-                                        }
-                                        onPressed: {
-                                            lineInputBox.visible= true
-                                        }
+                                titleTextColor: root.titleTextColor
+                                informationTextColor: root.informationTextColor
+                                selectTextColor: root.selectTextColor
 
-                                        Keys.onReturnPressed: (event)=> {
-                                          if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier)
-                                            event.accepted = false;
-                                          else {
-                                              if(root.currentChat.responseInProgress){
-                                                  root.currentChat.responseInProgress = false;
-                                              }else if (inputTextBox.text !== "") {
-                                                  chatModel.prompt(inputTextBox.text);
-                                                  inputTextBox.text = ""; // Clear the input
-                                                  listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
-                                                  inputBox.height = 40;
-                                              }
-                                          }
-                                        }
+                                fontFamily: root.fontFamily
 
-                                        background: Rectangle{
-                                            color: "#00ffffff"
+                                currentChat: root.currentChat
+                                modelListModel: root.modelListModel
+
+                                Connections{
+                                    target: inputBox
+                                    function onSendPrompt(prompt){
+                                        if(root.currentChat.responseInProgress){
+                                            root.currentChat.responseInProgress = false;
+                                        }else if (prompt !== "") {
+                                            chatModel.prompt(prompt);
+                                            prompt = ""; // Clear the input
+                                            listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
                                         }
                                     }
-                                }
-
-                                MyIcon {
-                                    id: sendIcon
-                                    width: 40
-                                    height: 40
-                                    anchors.right: parent.right
-                                    anchors.bottom: parent.bottom
-                                    myLable: root.currentChat.responseInProgress? "Stop":"Send"
-                                    myIconId: root.currentChat.responseInProgress? "images/stopIcon.svg" : "images/sendIcon.svg"
-                                    myFillIconId:  root.currentChat.responseInProgress? "images/fillStopIcon.svg" : "images/fillSendIcon.svg"
-                                    heightSource: 16
-                                    widthSource: 16
-                                    normalColor: root.iconColor
-                                    hoverColor: root.fillIconColor
-                                    Connections {
-                                        target: sendIcon
-                                        function onClicked() {
-                                            if(root.currentChat.responseInProgress){
-                                                root.currentChat.responseInProgress = false;
-                                            }else if (inputTextBox.text !== "") {
-                                                chatModel.prompt(inputTextBox.text);
-                                                inputTextBox.text = ""; // Clear the input
-                                                listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
-                                                inputBox.height = 40;
-                                            }
-                                        }
+                                    function onGoToModelPage(){
+                                        root.goToModelPage()
+                                    }
+                                    function onLoadModelDialog(modelPath , name){
                                     }
                                 }
-
-                                layer.enabled: true
-                                layer.effect: Glow {
-                                    samples: 30
-                                    color: root.glowColor
-                                    spread: 0.0
-                                    transparentBorder: true
-                                 }
                             }
+
+                            // Rectangle {
+                            //     id: inputBox
+                            //     height: 40 + selectModelId.height
+                            //     color: parent.color
+                            //     radius: 12
+                            //     anchors.left: parent.left
+                            //     anchors.right: parent.right
+                            //     anchors.bottom: parent.bottom
+                            //     anchors.leftMargin: 80
+                            //     anchors.rightMargin: 80
+                            //     anchors.bottomMargin: 20
+                            //     visible: parent.visible
+
+                            //     // Rectangle{
+                            //     //     id:lineInputBox
+                            //     //     width: parent.width - 16
+                            //     //     height: 3
+                            //     //     anchors.bottom: parent.bottom
+                            //     //     anchors.bottomMargin: 0
+                            //     //     anchors.horizontalCenter: parent.horizontalCenter
+                            //     //     color: /*root.iconColor*/root.glowColor
+                            //     //     visible: false
+                            //     // }
+
+                            //     ScrollView {
+                            //         id: scrollInput
+                            //         anchors.left: parent.left
+                            //         anchors.right: sendIcon.left
+                            //         anchors.top: parent.top
+                            //         anchors.bottom: selectModelId.top
+                            //         anchors.leftMargin: 10
+                            //         anchors.rightMargin: 10
+                            //         anchors.topMargin: 5
+                            //         anchors.bottomMargin: 5
+
+                            //         TextArea {
+                            //             id: inputTextBox
+                            //             height: text.height
+                            //             visible: true
+                            //             color: root.informationTextColor
+                            //             wrapMode: Text.Wrap
+                            //             placeholderText: root.currentChat.isLoadModel? qsTr("What is in your mind ?"): qsTr("Load a model to continue ...")
+                            //             clip: false
+                            //             font.pointSize: 12
+                            //             hoverEnabled: true
+                            //             tabStopDistance: 80
+                            //             selectionColor: "#fff5fe"
+                            //             cursorVisible: false
+                            //             persistentSelection: true
+                            //             placeholderTextColor: root.informationTextColor
+                            //             font.family: root.fontFamily
+                            //             onHeightChanged: {
+                            //                 if(inputTextBox.height >30 && inputTextBox.text !== ""){
+                            //                     inputBox.height  = Math.min(inputTextBox.height + 10 + selectModelId.height, 180+selectModelId.height) ;
+                            //                 }if(inputTextBox.text === ""){
+                            //                     inputBox.height = 40 + selectModelId.height
+                            //                 }
+                            //             }
+
+                            //             // onHeightChanged: {
+                            //             //     if(inputBox.height < 150 && inputTextBox.text !== ""){
+                            //             //         inputBox.height += 6;
+                            //             //     }
+                            //             // }
+                            //             onEditingFinished: {
+                            //                 // inputBoxRec.layer.enabled= false
+                            //             }
+                            //             onPressed: {
+                            //                 // inputBoxRec.layer.enabled= true
+                            //             }
+
+                            //             Keys.onReturnPressed: (event)=> {
+                            //               if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier)
+                            //                 event.accepted = false;
+                            //               else {
+                            //                     sendIcon.clicked()
+                            //                   // if(root.currentChat.responseInProgress){
+                            //                   //     root.currentChat.responseInProgress = false;
+                            //                   // }else if (inputTextBox.text !== "") {
+                            //                   //     chatModel.prompt(inputTextBox.text);
+                            //                   //     inputTextBox.text = ""; // Clear the input
+                            //                   //     listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
+                            //                   //     inputBox.height = 40 + selectModelId.height;
+                            //                   // }
+                            //               }
+                            //             }
+
+                            //             background: Rectangle{
+                            //                 color: "#00ffffff"
+                            //             }
+                            //         }
+                            //     }
+
+                            //     MyIcon {
+                            //         id: sendIcon
+                            //         width: 40
+                            //         height: 40
+                            //         anchors.right: parent.right
+                            //         anchors.bottom: parent.bottom
+                            //         anchors.bottomMargin: 35
+                            //         myLable: root.currentChat.responseInProgress? "Stop":"Send"
+                            //         myIconId: root.currentChat.responseInProgress? "images/stopIcon.svg" : "images/sendIcon.svg"
+                            //         myFillIconId:  root.currentChat.responseInProgress? "images/fillStopIcon.svg" : "images/fillSendIcon.svg"
+                            //         heightSource: 16
+                            //         widthSource: 16
+                            //         normalColor: root.iconColor
+                            //         hoverColor: root.fillIconColor
+                            //         Connections {
+                            //             target: sendIcon
+                            //             function onClicked() {
+                            //                 if(root.currentChat.responseInProgress){
+                            //                     root.currentChat.responseInProgress = false;
+                            //                 }else if (inputTextBox.text !== "") {
+                            //                     chatModel.prompt(inputTextBox.text);
+                            //                     inputTextBox.text = ""; // Clear the input
+                            //                     listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
+                            //                     inputBox.height = 40 + selectModelId.height;
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+
+                            //     Rectangle{
+                            //         id: selectModelId
+                            //         height: 35
+                            //         color: "#00ffffff"
+                            //         anchors.left: parent.left
+                            //         anchors.right: parent.right
+                            //         anchors.bottom: parent.bottom
+                            //         anchors.leftMargin: 0
+                            //         anchors.rightMargin: 0
+                            //         anchors.bottomMargin: 0
+                            //         MyButton{
+                            //             id:loadModelIcon
+                            //             width: 200
+                            //             anchors.left: parent.left
+                            //             anchors.top: parent.top
+                            //             anchors.bottom: parent.bottom
+                            //             anchors.leftMargin: 15
+                            //             anchors.topMargin: 5
+                            //             anchors.bottomMargin: 5
+                            //             myTextId: "load Model"
+                            //             Connections{
+                            //                 target:loadModelIcon
+                            //                 function onClicked(){
+                            //                     loadModelPopup.open()
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+
+                            //     Popup {
+                            //         id: loadModelPopup
+                            //         width: 200
+                            //         height: 250
+                            //         x: 0
+                            //         y: -180
+                            //         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+                            //         background:Rectangle{
+                            //             color: "#00ffffff" // Background color of tooltip
+                            //             radius: 4
+                            //             anchors.fill: parent
+                            //         }
+                            //         ModelDialog{
+                            //             id: modelListDialog
+                            //             // anchors.fill: parent
+
+                            //             backgroungColor: root.backgroungColor
+                            //             glowColor: root.glowColor
+                            //             boxColor: root.boxColor
+                            //             normalButtonColor: root.normalButtonColor
+                            //             selectButtonColor: root.selectButtonColor
+                            //             hoverButtonColor: root.hoverButtonColor
+                            //             fillIconColor: root.fillIconColor
+                            //             iconColor: root.iconColor
+
+                            //             chatBackgroungColor: root.chatBackgroungColor
+                            //             chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
+                            //             chatMessageBackgroungColor: root.chatMessageBackgroungColor
+                            //             chatMessageTitleTextColor: root.chatMessageTitleTextColor
+                            //             chatMessageInformationTextColor: root.chatMessageInformationTextColor
+                            //             chatMessageIsGlow: root.chatMessageIsGlow
+
+                            //             titleTextColor: root.titleTextColor
+                            //             informationTextColor: root.informationTextColor
+                            //             selectTextColor: root.selectTextColor
+
+                            //             fontFamily: root.fontFamily
+
+                            //             modelListModel: root.modelListModel
+                            //             Connections{
+                            //                 target: modelListDialog
+                            //                 function onGoToModelPage(){
+                            //                     loadModelPopup.close()
+                            //                     root.goToModelPage()
+                            //                 }
+                            //                 function onLoadModelDialog(modelPath , name){
+                            //                     loadModelIcon.myTextId = name
+                            //                     loadModelPopup.close()
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+
+
+
+                            //     layer.enabled: true
+                            //     layer.effect: Glow {
+                            //         samples: 15
+                            //         color: root.glowColor
+                            //         spread: 0.0
+                            //         transparentBorder: true
+                            //      }
+                            // }
+
+
+                        }
+
+                        Rectangle {
+                            id: header
+                            height: 20
+                            color: rightSidePage.color
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: 0
+                            anchors.rightMargin: 0
                         }
                     }
                 }
 
                 Rectangle{
                     id:modelSettings
-                    width: mainStructure.width / 4
-                    anchors.top: header.bottom
+                    width: Math.min(mainStructure.width / 4, 350)
+                    anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    anchors.topMargin: 0
-                    anchors.bottomMargin: 0
-                    color: "#00ffffff"
+                    anchors.topMargin: 10
+                    anchors.bottomMargin: 10
+                    color: root.chatBackgroungColor
                     anchors.right: parent.right
-                    anchors.rightMargin: 0
+                    anchors.rightMargin: 10
+                    radius:5
                     visible: true
 
                     Rectangle {
@@ -528,9 +788,18 @@ Item {
                                 myTextId: "Assistant"
                                 checked: true
                                 autoExclusive: true
+                                backgroungColor: "#00ffffff"
+                                borderColor:"#00ffffff"
+                                textColor: root.informationTextColor
+                                glowColor: root.glowColor
+                                fontFamily: root.fontFamily
+                                selectTextColor:root.fillIconColor
                                 Connections {
                                     target: assistantMenue
-                                    function onClicked(){ settingsSpace.currentIndex = 0}
+                                    function onClicked(){
+                                        settingsSpace.currentIndex = 0
+                                        showSelectMenuId.x = menuSettingsId.x +10
+                                    }
                                 }
                             }
                             MyMenuSettings {
@@ -547,9 +816,33 @@ Item {
                                 myTextId: "Model"
                                 checked: false
                                 autoExclusive: true
+                                backgroungColor: "#00ffffff"
+                                borderColor:"#00ffffff"
+                                textColor: root.informationTextColor
+                                glowColor: root.glowColor
+                                fontFamily: root.fontFamily
+                                selectTextColor:root.fillIconColor
                                 Connections {
                                     target: modelMenue
-                                    function onClicked(){ settingsSpace.currentIndex = 1}
+                                    function onClicked(){
+                                        settingsSpace.currentIndex = 1
+                                        showSelectMenuId.x = menuSettingsId.x + 10 + (menuSettingsId.width-10)/2
+                                    }
+                                }
+                            }
+                        }
+                        Rectangle{
+                            id: showSelectMenuId
+                            color: root.fillIconColor
+                            height: 2
+                            width: (parent.width-30)/2
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 10
+                            x: menuSettingsId.x +10
+
+                            Behavior on x{
+                                NumberAnimation{
+                                    duration: 300
                                 }
                             }
                         }
@@ -576,9 +869,8 @@ Item {
                             Rectangle {
                                 id: instructionsBox
                                 height: 80
-                                color: root.boxColor
+                                color: root.chatBackgroungConverstationColor
                                 radius: 12
-                                border.color: "#eaeaea"
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.top: parent.top
@@ -600,9 +892,9 @@ Item {
 
                                     TextArea {
                                         id: instructionTextBox
-                                        height: scrollInput.height
+                                        height: text.height
                                         visible: true
-                                        color: "#343434"
+                                        color: root.informationTextColor
                                         anchors.left: parent.left
                                         anchors.right: parent.right
                                         anchors.leftMargin: 0
@@ -613,16 +905,18 @@ Item {
                                         font.pointSize: 10
                                         hoverEnabled: true
                                         tabStopDistance: 80
-                                        selectionColor: "#fff5fe"
+                                        selectionColor: root.informationTextColor
                                         cursorVisible: false
                                         persistentSelection: true
-                                        placeholderTextColor: "#343434"
+                                        placeholderTextColor: root.informationTextColor
                                         font.family: root.fontFamily
+
                                         onHeightChanged: {
-                                            if(instructionsBox.height < settingsSpace.height - 100 && instructionTextBox.text !== ""){
-                                                instructionsBox.height += 10;
+                                            if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
+                                                instructionsBox.height  = Math.min(instructionTextBox.height + 10,settingsSpace.height - 10) ;
                                             }
                                         }
+
                                         background: Rectangle{
                                             color: "#00ffffff"
                                         }
@@ -631,9 +925,8 @@ Item {
                                 layer.enabled: true
                                 layer.effect: Glow {
                                      samples: 15
-                                     color: root.backgroungAndGlowColor
+                                     color: root.glowColor
                                      spread: 0.0
-                                     // radius: 2
                                      transparentBorder: true
                                  }
                             }
@@ -653,13 +946,14 @@ Item {
                                 // height: inferenceSettingsId.height+modelSettingsId.height+engineSettingsId.height +30
                                 Rectangle{
                                     id: inferenceSettingsId
-                                    height: inferenceSettingsButtonId.height + inferenceSettingsInformationId.height
+                                    height: inferenceSettingsButtonId.height /*+ inferenceSettingsInformationId.height*/
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.top: parent.top
                                     anchors.leftMargin: 10
                                     anchors.rightMargin: 10
                                     anchors.topMargin: 0
+                                    color: "#00ffffff"
 
                                     Rectangle{
                                         id: inferenceSettingsButtonId
@@ -670,6 +964,7 @@ Item {
                                         anchors.leftMargin: 5
                                         anchors.rightMargin: 5
                                         anchors.topMargin: 0
+                                        color: "#00ffffff"
                                         Text {
                                             id: inferenceSettingsTextId
                                             text: qsTr("Inference Settings")
@@ -677,7 +972,7 @@ Item {
                                             anchors.left: parent.left
                                             anchors.leftMargin: 5
                                             font.pointSize: 10
-                                            font.styleName: "Bold"
+                                            color: root.titleTextColor
                                             font.family: root.fontFamily
                                         }
                                         MyIcon {
@@ -691,9 +986,9 @@ Item {
                                             anchors.leftMargin: 0
                                             anchors.rightMargin: 0
                                             anchors.topMargin: 0
-                                            myLable: inferenceSettingsInformationId.visible=== true?"open":"close"
-                                            myIconId: "images/upIcon.svg"
-                                            myFillIconId: "images/fillUpIcon.svg"
+                                            myLable: inferenceSettingsInformationId.visible=== true? "close": "open"
+                                            myIconId:  inferenceSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                            myFillIconId: inferenceSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
                                             normalColor: root.iconColor
                                             hoverColor: root.fillIconColor
                                             Connections {
@@ -702,13 +997,9 @@ Item {
                                                     if(inferenceSettingsInformationId.visible=== true){
                                                         inferenceSettingsInformationId.visible = false
                                                         inferenceSettingsId.height = inferenceSettingsButtonId.height
-                                                        inferenceSettingsIconId.myIconId = "images/downIcon.svg"
-                                                        inferenceSettingsIconId.myFillIconId = "images/fillDownIcon.svg"
                                                     }else{
                                                         inferenceSettingsInformationId.visible = true
                                                         inferenceSettingsId.height = inferenceSettingsButtonId.height + inferenceSettingsInformationId.height
-                                                        inferenceSettingsIconId.myIconId = "images/upIcon.svg"
-                                                        inferenceSettingsIconId.myFillIconId = "images/fillUpIcon.svg"
                                                     }
                                                 }
                                             }
@@ -724,7 +1015,8 @@ Item {
                                         anchors.leftMargin: 0
                                         anchors.rightMargin: 0
                                         anchors.topMargin: 0
-                                        visible: true
+                                        visible: false
+                                        color: "#00ffffff"
 
                                         SettingsSwitchItem{
                                             id:streamId
@@ -735,6 +1027,8 @@ Item {
                                             anchors.rightMargin: 10
                                             anchors.topMargin: 0
                                             myTextName: "Stream"
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
                                         }
                                         SettingsSliderItem{
                                             id:temperatureId
@@ -749,7 +1043,10 @@ Item {
                                             sliderFrom: 0
                                             sliderTo:2
                                             sliderStepSize:0.1
-
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                         SettingsSliderItem{
                                             id:topPId
@@ -764,6 +1061,10 @@ Item {
                                             sliderFrom: 0
                                             sliderTo:1
                                             sliderStepSize:0.1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                         SettingsSliderItem{
                                             id:maxTokensId
@@ -778,6 +1079,10 @@ Item {
                                             sliderFrom: 100
                                             sliderTo: 4096
                                             sliderStepSize:1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                         SettingsSliderItem{
                                             id:frequencyPenaltyId
@@ -792,6 +1097,10 @@ Item {
                                             sliderFrom: 0
                                             sliderTo: 1
                                             sliderStepSize:0.1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                         SettingsSliderItem{
                                             id:presencePenaltyId
@@ -806,6 +1115,10 @@ Item {
                                             sliderFrom: 0
                                             sliderTo: 1
                                             sliderStepSize:0.1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                     }
                                 }
@@ -813,13 +1126,14 @@ Item {
 
                                 Rectangle{
                                     id: modelSettingsId
-                                    height: modelSettingsButtonId.height + modelSettingsInformationId.height
+                                    height: modelSettingsButtonId.height /*+ modelSettingsInformationId.height*/
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.top: inferenceSettingsId.bottom
                                     anchors.leftMargin: 10
                                     anchors.rightMargin: 10
                                     anchors.topMargin: 10
+                                    color: "#00ffffff"
                                     Rectangle{
                                         id: modelSettingsButtonId
                                         height: 40
@@ -829,6 +1143,7 @@ Item {
                                         anchors.leftMargin: 5
                                         anchors.rightMargin: 5
                                         anchors.topMargin: 0
+                                        color: "#00ffffff"
                                         Text {
                                             id: modelSettingsTextId
                                             text: qsTr("Model Settings")
@@ -836,23 +1151,23 @@ Item {
                                             anchors.left: parent.left
                                             anchors.leftMargin: 5
                                             font.pointSize: 10
-                                            font.styleName: "Bold"
+                                            color: root.titleTextColor
                                             font.family: root.fontFamily
                                         }
                                         MyIcon {
                                             id: modelSettingsIconId
                                             visible: true
-                                            anchors.left: modelList.right
+                                            // anchors.left: modelList.right
                                             anchors.right: parent.right
                                             width: 40
                                             anchors.top: parent.top
                                             anchors.bottom: parent.bottom
-                                            anchors.leftMargin: 0
+                                            // anchors.leftMargin: 0
                                             anchors.rightMargin: 0
                                             anchors.topMargin: 0
-                                            myLable: modelSettingsInformationId.visible=== true?"open":"close"
-                                            myIconId: "images/upIcon.svg"
-                                            myFillIconId: "images/fillUpIcon.svg"
+                                            myLable: modelSettingsInformationId.visible=== true? "close": "open"
+                                            myIconId:  modelSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                            myFillIconId: modelSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
                                             normalColor: root.iconColor
                                             hoverColor: root.fillIconColor
                                             Connections {
@@ -861,13 +1176,9 @@ Item {
                                                     if(modelSettingsInformationId.visible=== true){
                                                         modelSettingsInformationId.visible = false
                                                         modelSettingsId.height = modelSettingsButtonId.height
-                                                        modelSettingsIconId.myIconId = "images/downIcon.svg"
-                                                        modelSettingsIconId.myFillIconId = "images/fillDownIcon.svg"
                                                     }else{
                                                         modelSettingsInformationId.visible = true
                                                         modelSettingsId.height = modelSettingsButtonId.height + modelSettingsInformationId.height
-                                                        modelSettingsIconId.myIconId = "images/upIcon.svg"
-                                                        modelSettingsIconId.myFillIconId = "images/fillUpIcon.svg"
                                                     }
                                                 }
                                             }
@@ -883,7 +1194,8 @@ Item {
                                         anchors.leftMargin: 0
                                         anchors.rightMargin: 0
                                         anchors.topMargin: 0
-                                        visible: true
+                                        visible: false
+                                        color: "#00ffffff"
 
                                         Text {
                                             id: promptTemplateTextId
@@ -892,16 +1204,15 @@ Item {
                                             anchors.left: parent.left
                                             anchors.leftMargin: 10
                                             font.pointSize: 10
-                                            font.styleName: "Bold"
                                             font.family: root.fontFamily
+                                            color: root.informationTextColor
                                         }
 
                                         Rectangle {
                                             id: promptTemplateBox
                                             height: 80
-                                            color: root.boxColor
+                                            color: root.chatBackgroungConverstationColor
                                             radius: 12
-                                            border.color: "#eaeaea"
                                             anchors.left: parent.left
                                             anchors.right: parent.right
                                             anchors.top: promptTemplateTextId.bottom
@@ -925,7 +1236,7 @@ Item {
                                                     id: promptTemplateTextBox
                                                     height: scrollPromptTemplate.height
                                                     visible: true
-                                                    color: "#343434"
+                                                    color: root.informationTextColor
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 0
@@ -936,10 +1247,10 @@ Item {
                                                     font.pointSize: 10
                                                     hoverEnabled: true
                                                     tabStopDistance: 80
-                                                    selectionColor: "#fff5fe"
+                                                    selectionColor: root.informationTextColor
                                                     cursorVisible: false
                                                     persistentSelection: true
-                                                    placeholderTextColor: "#343434"
+                                                    placeholderTextColor: root.informationTextColor
                                                     font.family: root.fontFamily
                                                     onHeightChanged: {
                                                         if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
@@ -955,7 +1266,7 @@ Item {
                                             layer.enabled: true
                                             layer.effect: Glow {
                                                  samples: 15
-                                                 color: root.backgroungAndGlowColor
+                                                 color: root.glowColor
                                                  spread: 0.0
                                                  transparentBorder: true
                                              }
@@ -966,13 +1277,15 @@ Item {
 
                                 Rectangle{
                                     id: engineSettingsId
-                                    height: engineSettingsButtonId.height + engineSettingsInformationId.height
+                                    height: engineSettingsButtonId.height /*+ engineSettingsInformationId.height*/
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.top: modelSettingsId.bottom
                                     anchors.leftMargin: 10
                                     anchors.rightMargin: 10
                                     anchors.topMargin: 10
+                                    color: "#00ffffff"
+
                                     Rectangle{
                                         id: engineSettingsButtonId
                                         height: 40
@@ -982,6 +1295,8 @@ Item {
                                         anchors.leftMargin: 5
                                         anchors.rightMargin: 5
                                         anchors.topMargin: 0
+                                        color: "#00ffffff"
+
                                         Text {
                                             id: engineSettingsTextId
                                             text: qsTr("Engine Settings")
@@ -989,23 +1304,24 @@ Item {
                                             anchors.left: parent.left
                                             anchors.leftMargin: 5
                                             font.pointSize: 10
-                                            font.styleName: "Bold"
                                             font.family: root.fontFamily
+                                            color: root.titleTextColor
+
                                         }
                                         MyIcon {
                                             id: engineSettingsIconId
                                             visible: true
-                                            anchors.left: modelList.right
+                                            // anchors.left: modelList.right
                                             anchors.right: parent.right
                                             width: 40
                                             anchors.top: parent.top
                                             anchors.bottom: parent.bottom
-                                            anchors.leftMargin: 0
+                                            // anchors.leftMargin: 0
                                             anchors.rightMargin: 0
                                             anchors.topMargin: 0
-                                            myLable: engineSettingsInformationId.visible=== true?"open":"close"
-                                            myIconId: "images/upIcon.svg"
-                                            myFillIconId: "images/fillUpIcon.svg"
+                                            myLable: engineSettingsInformationId.visible=== true? "close":"open"
+                                            myIconId:  engineSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                            myFillIconId: engineSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
                                             normalColor: root.iconColor
                                             hoverColor: root.fillIconColor
                                             Connections {
@@ -1014,13 +1330,9 @@ Item {
                                                     if(engineSettingsInformationId.visible=== true){
                                                         engineSettingsInformationId.visible = false
                                                         engineSettingsId.height = engineSettingsButtonId.height
-                                                        engineSettingsIconId.myIconId = "images/downIcon.svg"
-                                                        engineSettingsIconId.myFillIconId = "images/fillDownIcon.svg"
                                                     }else{
                                                         engineSettingsInformationId.visible = true
                                                         engineSettingsId.height = engineSettingsButtonId.height + engineSettingsInformationId.height
-                                                        engineSettingsIconId.myIconId = "images/upIcon.svg"
-                                                        engineSettingsIconId.myFillIconId = "images/fillUpIcon.svg"
                                                     }
                                                 }
                                             }
@@ -1036,7 +1348,9 @@ Item {
                                         anchors.leftMargin: 0
                                         anchors.rightMargin: 0
                                         anchors.topMargin: 0
-                                        visible: true
+                                        visible: false
+                                        color: "#00ffffff"
+
                                         SettingsSliderItem{
                                             id:contextLengthId
                                             anchors.left: parent.left
@@ -1050,6 +1364,10 @@ Item {
                                             sliderFrom: 120
                                             sliderTo:4096
                                             sliderStepSize:1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                         SettingsSliderItem{
                                             id:numberOfGPUId
@@ -1064,180 +1382,95 @@ Item {
                                             sliderFrom: 1
                                             sliderTo: 100
                                             sliderStepSize:1
+                                            fontFamily:root.fontFamily
+                                            textColor: root.informationTextColor
+                                            boxColor: root.chatBackgroungConverstationColor
+                                            glowColor: root.glowColor
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                }
 
-                    Rectangle{
-                        id:lineId
-                        height: parent.height
-                        color: "#e1e1e1"
-                        anchors.left: parent.left
-                        anchors.leftMargin: 0
-                        width: 1
+                MyIcon {
+                    id: rightDrawer
+                    visible: true
+                    anchors.right: modelSettings.visible=== true?modelSettings.left: parent.right
+                    height: 40
+                    width: 40
+                    anchors.top: parent.top
+                    anchors.rightMargin: 10
+                    anchors.topMargin: 10
+                    myLable: modelSettings.visible=== true? "close model settings":"open model settings"
+                    myIconId: modelSettings.visible=== true? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
+                    myFillIconId: modelSettings.visible=== true? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
+                    heightSource: 18
+                    widthSource: 18
+                    normalColor: root.iconColor
+                    hoverColor: root.fillIconColor
+                    Connections {
+                        target: rightDrawer
+                        function onClicked() {
+                            if(modelSettings.visible=== true){
+                                modelSettings.visible = false
+                            }else{
+                                modelSettings.visible = true
+                            }
+                        }
                     }
                 }
 
-                Rectangle {
-                    id: header
-                    height: 60
-                    color: root.chatBackgroungColor
+                MyIcon {
+                    id: leftDrawer
+                    visible: true
                     anchors.left: parent.left
-                    anchors.right: parent.right
+                    height: 40
+                    width: 40
+                    anchors.top: parent.top
+                    anchors.leftMargin: 10
+                    anchors.topMargin: 10
+                    myLable: leftSidePage.visible=== true? "close history":"open history"
+                    myIconId: leftSidePage.visible=== true? "./images/alignLeftIcon.svg":"./images/alignRightIcon.svg"
+                    myFillIconId: leftSidePage.visible=== true? "./images/fillAlignLeftIcon":"./images/fillAlignRightIcon.svg"
+                    heightSource: 18
+                    widthSource: 18
+                    normalColor: root.iconColor
+                    hoverColor: root.fillIconColor
+                    Connections {
+                        target: leftDrawer
+                        function onClicked() {
+                            if(leftSidePage.visible=== true){
+                                leftSidePage.visible = false
+                            }else{
+                                leftSidePage.visible = true
+                            }
+                        }
+                    }
+                }
+
+                MyIcon {
+                    id: newChatIcon2
+                    visible: leftSidePage.visible=== true? false: true
+                    anchors.left: leftDrawer.right
+                    height: 40
+                    width: 40
+                    anchors.top: parent.top
                     anchors.leftMargin: 0
-                    anchors.rightMargin: 0
-
-                    MyIcon {
-                        id: leftDrawer
-                        visible: true
-                        anchors.left: parent.left
-                        width: 40
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.leftMargin: 0
-                        anchors.topMargin: 0
-                        myLable: leftSidePage.visible=== true? "close history":"open history"
-                        myIconId: leftSidePage.visible=== true? "./images/alignLeftIcon.svg":"./images/alignRightIcon.svg"
-                        myFillIconId: leftSidePage.visible=== true? "./images/fillAlignLeftIcon":"./images/fillAlignRightIcon.svg"
-                        heightSource: 18
-                        widthSource: 18
-                        normalColor: root.iconColor
-                        hoverColor: root.fillIconColor
-                        Connections {
-                            target: leftDrawer
-                            function onClicked() {
-                                if(leftSidePage.visible=== true){
-                                    leftSidePage.visible = false
-                                }else{
-                                    leftSidePage.visible = true
-                                }
-                            }
+                    anchors.topMargin: 10
+                    myLable: "New chat"
+                    myIconId: "images/chatAddIcon.svg"
+                    myFillIconId:  "images/chatAddIcon.svg"
+                    heightSource: 19
+                    widthSource: 19
+                    normalColor: root.iconColor
+                    hoverColor: root.fillIconColor
+                    Connections {
+                        target: newChatIcon2
+                        function onClicked() {
+                            root.chatListModel.addChat();
                         }
-                    }
-
-                    MyIcon {
-                        id: newChatIcon2
-                        visible: leftSidePage.visible=== true? false: true
-                        height: 40
-                        width: 40
-                        anchors.left: leftDrawer.right
-                        anchors.leftMargin: 3
-                        anchors.verticalCenter: parent.verticalCenter
-                        myLable: "New chat"
-                        myIconId: "images/chatAddIcon.svg"
-                        myFillIconId:  "images/chatAddIcon.svg"
-                        heightSource: 18
-                        widthSource: 18
-                        normalColor: root.iconColor
-                        hoverColor: root.fillIconColor
-                        Connections {
-                            target: newChatIcon2
-                            function onClicked() {
-                                root.chatListModel.addChat();
-                                historylist.contentY = historylist.contentHeight;
-                            }
-                        }
-                    }
-
-                    MyComboBox {
-                        id: modelList
-                        height: 35
-                        width: 200
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.family: root.fontFamily
-                        anchors.horizontalCenter: parent.horizontalCenter
-
-                        backgroundPageColor: root.chatBackgroungColor
-                        backgroungColor: root.backgroungColor
-                        glowColor: root.glowColor
-                        boxColor: root.boxColor
-                        headerColor: root.chatBackgroungConverstationColor
-                        normalButtonColor: root.normalButtonColor
-                        selectButtonColor: root.selectButtonColor
-                        hoverButtonColor: root.hoverButtonColor
-                        fillIconColor: root.fillIconColor
-                        iconColor: root.iconColor
-
-                        titleTextColor: root.titleTextColor
-                        informationTextColor: root.informationTextColor
-                        selectTextColor: root.selectTextColor
-
-                        editable: true
-                        model: modelListModel
-                        valueRole: "id"
-                        textRole: "name"
-
-                        Layout.fillWidth: true
-                        currentIndex: {
-                            var i = modelList.indexOfValue(ChatListModel.currentChat.modelInfo.id);
-                            if (i >= 0)
-                                return i;
-                            return 0;
-                        }
-                        contentItem: Text {
-                            leftPadding: 10
-                            rightPadding: 20
-                            text: modelList.currentText
-                            font: modelList.font
-                            color:"red"
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                        }
-                        delegate: ItemDelegate {
-                            width: modelList.width -20
-                            contentItem: Text {
-                                text: name
-                                color: "yellow"
-                                font: modelList.font
-                                elide: Text.ElideRight
-                                verticalAlignment: Text.AlignVCenter
-                            }
-                            background: Rectangle {
-                                radius: 10
-                                color: "green"
-                            }
-                            highlighted: modelList.highlightedIndex === index
-                        }
-                    }
-
-                    MyIcon {
-                        id: rightDrawer
-                        visible: true
-                        anchors.right: parent.right
-                        width: 40
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.leftMargin: 0
-                        anchors.topMargin: 0
-                        myLable: modelSettings.visible=== true? "close model settings":"open model settings"
-                        myIconId: modelSettings.visible=== true? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
-                        myFillIconId: modelSettings.visible=== true? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
-                        heightSource: 18
-                        widthSource: 18
-                        normalColor: root.iconColor
-                        hoverColor: root.fillIconColor
-                        Connections {
-                            target: rightDrawer
-                            function onClicked() {
-                                if(modelSettings.visible=== true){
-                                    modelSettings.visible = false
-                                }else{
-                                    modelSettings.visible = true
-                                }
-                            }
-                        }
-                    }
-
-                    Rectangle{
-                        id:lineId2
-                        height: 1
-                        color: "#e1e1e1"
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 0
-                        width: parent.width
                     }
                 }
             }

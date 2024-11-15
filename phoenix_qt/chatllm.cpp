@@ -114,9 +114,9 @@ void ChatLLM::prompt(const QString &input){
     for(int i=0;i<30;i++){
         emit tokenResponse("Hi  :)  ");
         qInfo()<<"send";
-        Sleep(200);
+        Sleep(50);
         emit tokenResponse("Phoenix!, ");
-        Sleep(200);
+        Sleep(50);
     }
 
     emit finishedResponnse();

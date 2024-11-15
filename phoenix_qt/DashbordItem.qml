@@ -48,6 +48,19 @@ Item {
         border.color: boxColor
         border.width: 0
 
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: backgroundPageColor
+            }
+
+            GradientStop {
+                position: 1
+                color: /*"#ababb9"*/ backgroungColor
+            }
+            orientation: Gradient.Vertical
+        }
+
         Rectangle {
             id: newChatBox
             width: 40
