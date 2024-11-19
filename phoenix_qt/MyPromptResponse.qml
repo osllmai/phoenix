@@ -36,6 +36,10 @@ Item {
     property bool isFinished: true
     property var prompt
     property var response
+    property var promptTime
+    property var responseTime
+    property var dateRequest
+
     signal regenerateResponse()
     signal editPrompt()
     signal nextPrompt()
@@ -56,7 +60,7 @@ Item {
         Rectangle{
             id: columnDelegate
             width: parent.width
-            height: userBox.height + llmBox.height + dateBoxId.height + 20
+            height: root.dateRequest === ""? userBox.height + llmBox.height :userBox.height + llmBox.height + dateBoxId.height + 20
             color: "#00ffffff"
 
             Rectangle{
@@ -69,9 +73,11 @@ Item {
                 anchors.rightMargin: 0
                 anchors.topMargin: 20
                 color: "#00ffffff"
+                visible: root.dateRequest !== ""
+
                 Text {
                     id: dateId
-                    text: qsTr("Today")
+                    text: root.dateRequest
                     color: root.chatMessageTitleTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     font.pointSize: 10
@@ -85,7 +91,7 @@ Item {
                 height: userTextRec.height +userImageRec.height+20
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.top: dateBoxId.bottom
+                anchors.top: root.dateRequest !== ""?dateBoxId.bottom:parent.top
                 anchors.leftMargin: 0
                 anchors.rightMargin: 0
                 anchors.topMargin: 0
@@ -125,7 +131,6 @@ Item {
                     Connections {
                         target: userTextRec
                         function onRegenerateOrEdit(){
-                            console.log("dear")
                             root.editPrompt();
                         }
                         function onNextMessage(){
@@ -166,7 +171,7 @@ Item {
                 Text {
                     id: timeText
                     color: root.chatMessageTitleTextColor
-                    text: qsTr("02:07")
+                    text: root.promptTime
                     anchors.right: userImageRec.left
                     anchors.bottom: userTextRec.top
                     anchors.rightMargin: 5
@@ -222,7 +227,6 @@ Item {
                     Connections {
                         target: llmTextRec
                         function onRegenerateOrEdit(){
-                            console.log("Hi")
                             root.regenerateResponse();
                         }
                         function onNextMessage(){
@@ -262,7 +266,7 @@ Item {
                 Text {
                     id: llmTimeText
                     color: root.chatMessageTitleTextColor
-                    text: qsTr("02:07")
+                    text: root.responseTime
                     anchors.left: llmImageRec.right
                     anchors.bottom: llmTextRec.top
                     anchors.leftMargin: 5

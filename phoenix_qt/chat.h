@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtQml>
+#include <QDateTime>
 
 #include <chatllm.h>
 #include <chatmodel.h>
@@ -13,6 +14,8 @@ class Chat : public QObject
     QML_ELEMENT
     Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged )
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged )
+    Q_PROPERTY(QDateTime date READ date NOTIFY dateChanged )
+
     Q_PROPERTY(ChatModel *chatModel READ chatModel NOTIFY chatModelChanged )
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged )
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged )
@@ -31,6 +34,7 @@ public:
     //*----------------------------------------------------------------------------------------* Read Property *----------------------------------------------------------------------------------------*//
     int id() const;
     QString title() const;
+    QDateTime date() const;
     ChatModel* chatModel() const;
     bool isLoadModel() const;
     bool responseInProgress() const;
@@ -48,6 +52,7 @@ public:
 signals:
     void idChanged();
     void titleChanged();
+    void dateChanged();
     void chatModelChanged();
     void isLoadModelChanged();
     void responseInProgressChanged();
@@ -68,6 +73,7 @@ public slots:
 private:
     int m_id;
     QString m_title;
+    QDateTime m_date;
     ChatLLM *chatLLM;
     ChatModel *m_chatModel;
     bool m_isLoadModel;

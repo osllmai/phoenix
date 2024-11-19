@@ -15,7 +15,8 @@ Chat::Chat(const int &id, const QString &title, QObject *parent) :
     chatLLM(new ChatLLM(this))
 {
     QThread::currentThread()->setObjectName("Main Thread");
-    qInfo() << "new" << QThread::currentThread();
+    m_date = QDateTime::currentDateTime();
+
     //load and unload model
     connect(this, &Chat::loadModel, chatLLM, &ChatLLM::loadModel, Qt::QueuedConnection);
     connect(chatLLM, &ChatLLM::loadModelResult, this, &Chat::LoadModelResult, Qt::QueuedConnection);
@@ -31,7 +32,6 @@ Chat::Chat(const int &id, const QString &title, QObject *parent) :
 }
 
 Chat::~Chat(){
-    qInfo() << "delete" << QThread::currentThread() ;
     delete chatLLM;
     chatLLM = nullptr;
 }
@@ -43,6 +43,9 @@ int Chat::id() const{
 }
 QString Chat::title() const{
     return m_title;
+}
+QDateTime Chat::date() const{
+    return m_date;
 }
 bool Chat::isLoadModel() const{
     return m_isLoadModel;
@@ -96,39 +99,8 @@ void Chat::LoadModelResult(const bool result){
 
 void Chat::promptRequested(const QString &input){
 
-    if(m_chatModel->size() == 1){
+    if(!m_chatModel->isStart()){
         emit startChat();
-        qInfo() << "Hi  bo bo";
-        // // Open the database
-        // QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-        // db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-        // if (!db.open()) {
-        //     qDebug() << "Error: Unable to open database" << db.lastError().text();
-        //     return;
-        // }
-
-        // // Prepare and execute the SQL query
-        // QSqlQuery query(db);
-
-        // // Create table with id and name columns
-        // query.exec("CREATE TABLE IF NOT EXISTS chat (id INTEGER, name TEXT)");
-
-        // // Prepare query to insert both id and name
-        // query.prepare("INSERT INTO chat (id, name) VALUES (?, ?)");
-
-        // // Bind values
-        // query.addBindValue(m_id);   // Example id value
-        // query.addBindValue(m_title); // The name provided by the function parameter
-
-        // // Execute the query
-        // if (!query.exec()) {
-        //     qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-        // } else {
-        //     qDebug() << "Data inserted successfully.";
-        // }
-
-        // // Close the database
-        // db.close();
     }
 
     setResponseInProgress(true);
@@ -136,7 +108,6 @@ void Chat::promptRequested(const QString &input){
 }
 
 void Chat::tokenResponseRequested(const QString &token){
-    qInfo()<<token;
     m_chatModel->updateResponse(token);
 }
 

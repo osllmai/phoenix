@@ -9,6 +9,7 @@
 ChatModel::ChatModel(QObject *parent)
     : QAbstractListModel{parent}{}
 
+
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
 //*------------------------------------------------------------------------------* QAbstractItemModel interface  *------------------------------------------------------------------------------*//
 int ChatModel::rowCount(const QModelIndex &parent) const {
@@ -26,14 +27,24 @@ QVariant ChatModel::data(const QModelIndex &index, int role = Qt::DisplayRole) c
     switch (role) {
         case IdRole:
             return chatItem->id();
+        case DateRequestRole:
+            return calculationDateRequest(index.row());
+        case ExecutionTimeRole:
+            return chatItem->response()->executionTime();
+        case NumberOfTokenRole:
+            return chatItem->response()->numberOfToken();
         case PromptRole:
             return chatItem->prompt()->text();
+        case PromptTimeRole:
+            return calculationPromptRequest(index.row());
         case NumberPromptRole:
             return chatItem->numberOfPrompt()+1;
         case NumberOfEditPromptRole:
             return chatItem->numberOfEditPrompt();
         case ResponseRole:
             return chatItem->response()->text();
+        case ResponseTimeRole:
+            return calculationResponseRequest(index.row());
         case NumberResponseRole:
             return chatItem->numberOfResponse()+1;
         case NumberOfRegenerateRole:
@@ -46,10 +57,15 @@ QVariant ChatModel::data(const QModelIndex &index, int role = Qt::DisplayRole) c
 QHash<int, QByteArray> ChatModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
+    roles[DateRequestRole] = "dateRequest";
+    roles[ExecutionTimeRole] = "executionTime";
+    roles[NumberOfTokenRole] = "numberOfToken";
     roles[PromptRole] = "prompt";
+    roles[PromptTimeRole] = "promptTime";
     roles[NumberPromptRole] = "numberPrompt";
     roles[NumberOfEditPromptRole] = "numberOfEditPrompt";
     roles[ResponseRole] = "response";
+    roles[ResponseTimeRole] = "responseTime";
     roles[NumberResponseRole] = "numberResponse";
     roles[NumberOfRegenerateRole] = "numberOfRegenerate";
     return roles;
@@ -97,6 +113,11 @@ bool ChatModel::setData(const QModelIndex &index, const QVariant &value, int rol
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
 int ChatModel::size() const{
     return chatItems.size();
+}
+bool ChatModel::isStart() const{
+    if(size() <= 1)
+        return chatItems.first()->numberOfEditPrompt() >1 || chatItems.first()->numberOfRegenerate() >1;
+    return true;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
@@ -232,57 +253,6 @@ void ChatModel::regenerateResponse(const int index){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole});
 }
 
- // void ChatModel::saveChatItem(int parentId){
- //     // const int index = chatItems.size() - 1;
- //     // ChatItem *item = chatItems[index];
-
- //     // // Open the database
- //     // QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
- //     // db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
- //     // if (!db.open()) {
- //     //     qDebug() << "Error: Unable to open database" << db.lastError().text();
- //     //     return;
- //     // }
-
- //     // // Prepare and execute the SQL query
- //     // QSqlQuery query(db);
-
- //     // // Create table with id and name columns
- //     // query.exec("CREATE TABLE IF NOT EXISTS message (id INTEGER, chatId INTEGER, beforeMessageId INTEGER, prompt TEXT, response TEXT)");
-
- //     // // Prepare query to insert both id and name
- //     // query.prepare("INSERT INTO message (id, chatId, beforeMessageId, prompt, response) VALUES (?, ?, ?, ?, ?)");
-
- //     // // Bind values
- //     // query.addBindValue(item->id());   //  id value
- //     // query.addBindValue(parentId); // The name provided by the function parameter
- //     // if(index == 0)
- //     //     query.addBindValue(-1);
- //     // else
- //     //    query.addBindValue(chatItems[index-1]->id()); // The name provided by the function parameter
- //     // query.addBindValue(item->prompt()); // The name provided by the function parameter
- //     // query.addBindValue(item->response()); // The name provided by the function parameter
-
- //     // // Execute the query
- //     // if (!query.exec()) {
- //     //     qDebug() << "****Error: Unable to insert data -" << query.lastError().text();
- //     // } else {
- //     //     qDebug() << "****Data inserted successfully.";
- //     // }
-
- //     // // Close the database
- //     // db.close();
- // }
-
- // void ChatModel::addChatItem(int id, QString prompt, QString response){
- //     // const int index = chatItems.size();
- //     // ChatItem *chatItem = new ChatItem(id, prompt, this);
- //     // chatItem->setResponse(response);
- //     // beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
- //     // chatItems.append(chatItem);
- //     // endInsertRows();
- // }
-
  int ChatModel::size(){
      qDebug()<<chatItems.size();
      return chatItems.size();
@@ -296,4 +266,54 @@ void ChatModel::regenerateResponse(const int index){
      endRemoveRows();
      emit sizeChanged();
      return true;
+ }
+
+ QVariant ChatModel::calculationDateRequest(const int currentIndex)const{
+     QDateTime date = chatItems[currentIndex]->prompt()->date();
+     QDateTime beforDate ;
+     if(currentIndex != 0)
+         beforDate = chatItems[currentIndex-1]->prompt()->date();
+     if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
+         return "";
+
+     QDateTime now = QDateTime::currentDateTime();
+     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+         return "Today";
+     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+         return "Yesterday";
+     if(date.daysTo(now) < 7)
+         return date.toString("dddd");
+     if(date.toString("yyyy") == now.toString("yyyy"))
+         return date.toString("dddd, MMMM dd");
+     return date.toString("dddd, MM/dd/yyyy");
+ }
+
+ QVariant ChatModel::calculationPromptRequest(const int currentIndex)const{
+     QDateTime date = chatItems[currentIndex]->prompt()->date();
+
+     QDateTime now = QDateTime::currentDateTime();
+     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+         return date.toString("hh:mm:ss");
+     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+         return date.toString("Yesterday hh:mm:ss");
+     if(date.daysTo(now) < 7)
+         return date.toString("dddd hh:mm:ss");
+     if(date.toString("yyyy") == now.toString("yyyy"))
+         return date.toString("MM/dd hh:mm:ss");
+     return date.toString("MM/dd/yyyy hh:mm:ss");
+ }
+
+ QVariant ChatModel::calculationResponseRequest(const int currentIndex)const{
+     QDateTime date = chatItems[currentIndex]->response()->date();
+
+     QDateTime now = QDateTime::currentDateTime();
+     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+         return date.toString("hh:mm:ss");
+     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+         return date.toString("Yesterday hh:mm:ss");
+     if(date.daysTo(now) < 7)
+         return date.toString("dddd hh:mm:ss");
+     if(date.toString("yyyy") == now.toString("yyyy"))
+         return date.toString("MM/dd hh:mm:ss");
+     return date.toString("MM/dd/yyyy hh:mm:ss");
  }

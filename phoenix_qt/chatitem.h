@@ -28,6 +28,8 @@ public:
     int numberOfEditPrompt() const;
     int numberOfResponse() const;
     int numberOfRegenerate() const;
+    // int numberOfTokens() const;
+    // int executionTime() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -55,8 +57,8 @@ private:
     int m_numberOfEditPrompt;
     int m_numberOfResponse;
     int m_numberOfRegenerate;
-    int m_numberOfTokens;
-    int m_executionTime;
+    // int m_numberOfTokens;
+    // int m_executionTime;
 };
 
 #endif // CHATITEM_H

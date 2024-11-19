@@ -234,16 +234,31 @@ Item {
                             delegate: Rectangle{
                                 id: delegateChat
                                 width: historylist.width
-                                height: 42
+                                height: model.date!==""? dateHistoryId.height + applicationButton.height +7:  applicationButton.height +7
                                 color: "#00000000"
+
+                                Text {
+                                    id:dateHistoryId
+                                    text: model.date
+                                    height: 20
+                                    font.pointSize: 10
+                                    font.family: root.fontFamily
+                                    color: root.informationTextColor
+                                    anchors.top: parent.top
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    visible:model.date!==""
+                                }
 
                                 MyChatItem {
                                       id: applicationButton
                                       height: 35
                                       anchors.left: parent.left
                                       anchors.right: parent.right
+                                      anchors.top: model.date!==""?dateHistoryId.bottom:parent.top
                                       anchors.leftMargin: 0
                                       anchors.rightMargin: 0
+                                      anchors.topMargin: 0
                                       fontFamily: root.fontFamily
                                       myTextId: model.title
                                       myChatListModel: chatListModel
@@ -298,14 +313,12 @@ Item {
 
                 Rectangle {
                     id: chatStack
-                    // width: Math.min(700,parent.width)
                     anchors.left: parent.left
                     anchors.right: modelSettings.visible=== true? modelSettings.left: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.topMargin: 0
                     color: "#00ffffff"
-                    // anchors.horizontalCenter: parent.horizontalCenter
 
                     Rectangle {
                         id: chatRec
@@ -349,8 +362,16 @@ Item {
                             anchors.topMargin: 24
                             anchors.bottomMargin: 12
                             visible: !root.emptyConversation
-                            function onVisible(){
-                                inputBoxRec.y = inputBoxRec.y + 200
+                            Connections{
+                               target: textChat
+                                function onVisibleChanged(){
+                                    if(textChat.visible == true){
+                                        console.log("Hi Zeinab :)")
+                                        inputBoxRec.y = inputBoxRec.y + 200
+                                    }else{
+                                        inputBoxRec.y = emptyMessageText.y + 50
+                                    }
+                                }
                             }
 
                             ColumnLayout{
@@ -379,6 +400,10 @@ Item {
 
                                             prompt: model.prompt
                                             response: model.response
+                                            promptTime: model.promptTime
+                                            responseTime: model.responseTime
+                                            dateRequest: model.dateRequest
+
                                             isFinished: !root.currentChat.responseInProgress
                                             Connections {
                                                 target: myPromptResponseId
@@ -458,7 +483,6 @@ Item {
                             height: inputBox.height+30
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            // anchors.bottom: parent.bottom
                             color: rightSidePage.color
 
                             y: emptyMessageText.y + 50
@@ -521,224 +545,6 @@ Item {
                                     }
                                 }
                             }
-
-                            // Rectangle {
-                            //     id: inputBox
-                            //     height: 40 + selectModelId.height
-                            //     color: parent.color
-                            //     radius: 12
-                            //     anchors.left: parent.left
-                            //     anchors.right: parent.right
-                            //     anchors.bottom: parent.bottom
-                            //     anchors.leftMargin: 80
-                            //     anchors.rightMargin: 80
-                            //     anchors.bottomMargin: 20
-                            //     visible: parent.visible
-
-                            //     // Rectangle{
-                            //     //     id:lineInputBox
-                            //     //     width: parent.width - 16
-                            //     //     height: 3
-                            //     //     anchors.bottom: parent.bottom
-                            //     //     anchors.bottomMargin: 0
-                            //     //     anchors.horizontalCenter: parent.horizontalCenter
-                            //     //     color: /*root.iconColor*/root.glowColor
-                            //     //     visible: false
-                            //     // }
-
-                            //     ScrollView {
-                            //         id: scrollInput
-                            //         anchors.left: parent.left
-                            //         anchors.right: sendIcon.left
-                            //         anchors.top: parent.top
-                            //         anchors.bottom: selectModelId.top
-                            //         anchors.leftMargin: 10
-                            //         anchors.rightMargin: 10
-                            //         anchors.topMargin: 5
-                            //         anchors.bottomMargin: 5
-
-                            //         TextArea {
-                            //             id: inputTextBox
-                            //             height: text.height
-                            //             visible: true
-                            //             color: root.informationTextColor
-                            //             wrapMode: Text.Wrap
-                            //             placeholderText: root.currentChat.isLoadModel? qsTr("What is in your mind ?"): qsTr("Load a model to continue ...")
-                            //             clip: false
-                            //             font.pointSize: 12
-                            //             hoverEnabled: true
-                            //             tabStopDistance: 80
-                            //             selectionColor: "#fff5fe"
-                            //             cursorVisible: false
-                            //             persistentSelection: true
-                            //             placeholderTextColor: root.informationTextColor
-                            //             font.family: root.fontFamily
-                            //             onHeightChanged: {
-                            //                 if(inputTextBox.height >30 && inputTextBox.text !== ""){
-                            //                     inputBox.height  = Math.min(inputTextBox.height + 10 + selectModelId.height, 180+selectModelId.height) ;
-                            //                 }if(inputTextBox.text === ""){
-                            //                     inputBox.height = 40 + selectModelId.height
-                            //                 }
-                            //             }
-
-                            //             // onHeightChanged: {
-                            //             //     if(inputBox.height < 150 && inputTextBox.text !== ""){
-                            //             //         inputBox.height += 6;
-                            //             //     }
-                            //             // }
-                            //             onEditingFinished: {
-                            //                 // inputBoxRec.layer.enabled= false
-                            //             }
-                            //             onPressed: {
-                            //                 // inputBoxRec.layer.enabled= true
-                            //             }
-
-                            //             Keys.onReturnPressed: (event)=> {
-                            //               if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier)
-                            //                 event.accepted = false;
-                            //               else {
-                            //                     sendIcon.clicked()
-                            //                   // if(root.currentChat.responseInProgress){
-                            //                   //     root.currentChat.responseInProgress = false;
-                            //                   // }else if (inputTextBox.text !== "") {
-                            //                   //     chatModel.prompt(inputTextBox.text);
-                            //                   //     inputTextBox.text = ""; // Clear the input
-                            //                   //     listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
-                            //                   //     inputBox.height = 40 + selectModelId.height;
-                            //                   // }
-                            //               }
-                            //             }
-
-                            //             background: Rectangle{
-                            //                 color: "#00ffffff"
-                            //             }
-                            //         }
-                            //     }
-
-                            //     MyIcon {
-                            //         id: sendIcon
-                            //         width: 40
-                            //         height: 40
-                            //         anchors.right: parent.right
-                            //         anchors.bottom: parent.bottom
-                            //         anchors.bottomMargin: 35
-                            //         myLable: root.currentChat.responseInProgress? "Stop":"Send"
-                            //         myIconId: root.currentChat.responseInProgress? "images/stopIcon.svg" : "images/sendIcon.svg"
-                            //         myFillIconId:  root.currentChat.responseInProgress? "images/fillStopIcon.svg" : "images/fillSendIcon.svg"
-                            //         heightSource: 16
-                            //         widthSource: 16
-                            //         normalColor: root.iconColor
-                            //         hoverColor: root.fillIconColor
-                            //         Connections {
-                            //             target: sendIcon
-                            //             function onClicked() {
-                            //                 if(root.currentChat.responseInProgress){
-                            //                     root.currentChat.responseInProgress = false;
-                            //                 }else if (inputTextBox.text !== "") {
-                            //                     chatModel.prompt(inputTextBox.text);
-                            //                     inputTextBox.text = ""; // Clear the input
-                            //                     listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
-                            //                     inputBox.height = 40 + selectModelId.height;
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-
-                            //     Rectangle{
-                            //         id: selectModelId
-                            //         height: 35
-                            //         color: "#00ffffff"
-                            //         anchors.left: parent.left
-                            //         anchors.right: parent.right
-                            //         anchors.bottom: parent.bottom
-                            //         anchors.leftMargin: 0
-                            //         anchors.rightMargin: 0
-                            //         anchors.bottomMargin: 0
-                            //         MyButton{
-                            //             id:loadModelIcon
-                            //             width: 200
-                            //             anchors.left: parent.left
-                            //             anchors.top: parent.top
-                            //             anchors.bottom: parent.bottom
-                            //             anchors.leftMargin: 15
-                            //             anchors.topMargin: 5
-                            //             anchors.bottomMargin: 5
-                            //             myTextId: "load Model"
-                            //             Connections{
-                            //                 target:loadModelIcon
-                            //                 function onClicked(){
-                            //                     loadModelPopup.open()
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-
-                            //     Popup {
-                            //         id: loadModelPopup
-                            //         width: 200
-                            //         height: 250
-                            //         x: 0
-                            //         y: -180
-                            //         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-                            //         background:Rectangle{
-                            //             color: "#00ffffff" // Background color of tooltip
-                            //             radius: 4
-                            //             anchors.fill: parent
-                            //         }
-                            //         ModelDialog{
-                            //             id: modelListDialog
-                            //             // anchors.fill: parent
-
-                            //             backgroungColor: root.backgroungColor
-                            //             glowColor: root.glowColor
-                            //             boxColor: root.boxColor
-                            //             normalButtonColor: root.normalButtonColor
-                            //             selectButtonColor: root.selectButtonColor
-                            //             hoverButtonColor: root.hoverButtonColor
-                            //             fillIconColor: root.fillIconColor
-                            //             iconColor: root.iconColor
-
-                            //             chatBackgroungColor: root.chatBackgroungColor
-                            //             chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                            //             chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                            //             chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                            //             chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                            //             chatMessageIsGlow: root.chatMessageIsGlow
-
-                            //             titleTextColor: root.titleTextColor
-                            //             informationTextColor: root.informationTextColor
-                            //             selectTextColor: root.selectTextColor
-
-                            //             fontFamily: root.fontFamily
-
-                            //             modelListModel: root.modelListModel
-                            //             Connections{
-                            //                 target: modelListDialog
-                            //                 function onGoToModelPage(){
-                            //                     loadModelPopup.close()
-                            //                     root.goToModelPage()
-                            //                 }
-                            //                 function onLoadModelDialog(modelPath , name){
-                            //                     loadModelIcon.myTextId = name
-                            //                     loadModelPopup.close()
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-
-
-
-                            //     layer.enabled: true
-                            //     layer.effect: Glow {
-                            //         samples: 15
-                            //         color: root.glowColor
-                            //         spread: 0.0
-                            //         transparentBorder: true
-                            //      }
-                            // }
-
-
                         }
 
                         Rectangle {
@@ -761,10 +567,16 @@ Item {
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     color: root.chatBackgroungColor
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
                     radius:5
-                    visible: true
+                    // visible: true
+
+                    x: rightSidePage.width - modelSettings.width - 10
+
+                    Behavior on x{
+                        NumberAnimation{
+                            duration: 200
+                        }
+                    }
 
                     Rectangle {
                         id: menuSettingsId
@@ -943,449 +755,458 @@ Item {
                                 id: scrollViewSettingsId
                                 width: parent.width
                                 height: parent.height
-                                // height: inferenceSettingsId.height+modelSettingsId.height+engineSettingsId.height +30
-                                Rectangle{
-                                    id: inferenceSettingsId
-                                    height: inferenceSettingsButtonId.height /*+ inferenceSettingsInformationId.height*/
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: parent.top
-                                    anchors.leftMargin: 10
-                                    anchors.rightMargin: 10
-                                    anchors.topMargin: 0
-                                    color: "#00ffffff"
 
+                                Column{
+                                    width: parent.width
+                                    spacing: 5
                                     Rectangle{
-                                        id: inferenceSettingsButtonId
-                                        height: 40
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: parent.top
-                                        anchors.leftMargin: 5
-                                        anchors.rightMargin: 5
-                                        anchors.topMargin: 0
+                                        id: inferenceSettingsId
+                                        height: inferenceSettingsButtonId.height
+                                        width: parent.width
                                         color: "#00ffffff"
-                                        Text {
-                                            id: inferenceSettingsTextId
-                                            text: qsTr("Inference Settings")
-                                            anchors.verticalCenter: parent.verticalCenter
+
+                                        Rectangle{
+                                            id: inferenceSettingsButtonId
+                                            height: 40
                                             anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.top: parent.top
                                             anchors.leftMargin: 5
-                                            font.pointSize: 10
-                                            color: root.titleTextColor
-                                            font.family: root.fontFamily
-                                        }
-                                        MyIcon {
-                                            id: inferenceSettingsIconId
-                                            visible: true
-                                            anchors.left: modelList.right
-                                            anchors.right: parent.right
-                                            width: 40
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            anchors.leftMargin: 0
-                                            anchors.rightMargin: 0
+                                            anchors.rightMargin: 5
                                             anchors.topMargin: 0
-                                            myLable: inferenceSettingsInformationId.visible=== true? "close": "open"
-                                            myIconId:  inferenceSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
-                                            myFillIconId: inferenceSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                            normalColor: root.iconColor
-                                            hoverColor: root.fillIconColor
-                                            Connections {
-                                                target: inferenceSettingsIconId
-                                                function onClicked () {
-                                                    if(inferenceSettingsInformationId.visible=== true){
-                                                        inferenceSettingsInformationId.visible = false
-                                                        inferenceSettingsId.height = inferenceSettingsButtonId.height
-                                                    }else{
-                                                        inferenceSettingsInformationId.visible = true
-                                                        inferenceSettingsId.height = inferenceSettingsButtonId.height + inferenceSettingsInformationId.height
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle{
-                                        id: inferenceSettingsInformationId
-                                        height: streamId.height+temperatureId.height+topPId.height+maxTokensId.height+frequencyPenaltyId.height+presencePenaltyId.height
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: inferenceSettingsButtonId.bottom
-                                        anchors.leftMargin: 0
-                                        anchors.rightMargin: 0
-                                        anchors.topMargin: 0
-                                        visible: false
-                                        color: "#00ffffff"
-
-                                        SettingsSwitchItem{
-                                            id:streamId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: parent.top
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Stream"
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                        }
-                                        SettingsSliderItem{
-                                            id:temperatureId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: streamId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Temperature"
-                                            sliderValue: 0.4
-                                            sliderFrom: 0
-                                            sliderTo:2
-                                            sliderStepSize:0.1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
-                                        }
-                                        SettingsSliderItem{
-                                            id:topPId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: temperatureId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Top P"
-                                            sliderValue: 0.9
-                                            sliderFrom: 0
-                                            sliderTo:1
-                                            sliderStepSize:0.1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
-                                        }
-                                        SettingsSliderItem{
-                                            id:maxTokensId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: topPId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Max Tokens"
-                                            sliderValue: 4096
-                                            sliderFrom: 100
-                                            sliderTo: 4096
-                                            sliderStepSize:1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
-                                        }
-                                        SettingsSliderItem{
-                                            id:frequencyPenaltyId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: maxTokensId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Frequency Penalty"
-                                            sliderValue: 0
-                                            sliderFrom: 0
-                                            sliderTo: 1
-                                            sliderStepSize:0.1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
-                                        }
-                                        SettingsSliderItem{
-                                            id:presencePenaltyId
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: frequencyPenaltyId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-                                            myTextName: "Presence Penalty"
-                                            sliderValue: 0
-                                            sliderFrom: 0
-                                            sliderTo: 1
-                                            sliderStepSize:0.1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
-                                        }
-                                    }
-                                }
-
-
-                                Rectangle{
-                                    id: modelSettingsId
-                                    height: modelSettingsButtonId.height /*+ modelSettingsInformationId.height*/
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: inferenceSettingsId.bottom
-                                    anchors.leftMargin: 10
-                                    anchors.rightMargin: 10
-                                    anchors.topMargin: 10
-                                    color: "#00ffffff"
-                                    Rectangle{
-                                        id: modelSettingsButtonId
-                                        height: 40
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: parent.top
-                                        anchors.leftMargin: 5
-                                        anchors.rightMargin: 5
-                                        anchors.topMargin: 0
-                                        color: "#00ffffff"
-                                        Text {
-                                            id: modelSettingsTextId
-                                            text: qsTr("Model Settings")
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5
-                                            font.pointSize: 10
-                                            color: root.titleTextColor
-                                            font.family: root.fontFamily
-                                        }
-                                        MyIcon {
-                                            id: modelSettingsIconId
-                                            visible: true
-                                            // anchors.left: modelList.right
-                                            anchors.right: parent.right
-                                            width: 40
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            // anchors.leftMargin: 0
-                                            anchors.rightMargin: 0
-                                            anchors.topMargin: 0
-                                            myLable: modelSettingsInformationId.visible=== true? "close": "open"
-                                            myIconId:  modelSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
-                                            myFillIconId: modelSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                            normalColor: root.iconColor
-                                            hoverColor: root.fillIconColor
-                                            Connections {
-                                                target: modelSettingsIconId
-                                                function onClicked() {
-                                                    if(modelSettingsInformationId.visible=== true){
-                                                        modelSettingsInformationId.visible = false
-                                                        modelSettingsId.height = modelSettingsButtonId.height
-                                                    }else{
-                                                        modelSettingsInformationId.visible = true
-                                                        modelSettingsId.height = modelSettingsButtonId.height + modelSettingsInformationId.height
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle{
-                                        id: modelSettingsInformationId
-                                        height: 120
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: modelSettingsButtonId.bottom
-                                        anchors.leftMargin: 0
-                                        anchors.rightMargin: 0
-                                        anchors.topMargin: 0
-                                        visible: false
-                                        color: "#00ffffff"
-
-                                        Text {
-                                            id: promptTemplateTextId
-                                            height: 20
-                                            text: qsTr("Prompt template")
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 10
-                                            font.pointSize: 10
-                                            font.family: root.fontFamily
-                                            color: root.informationTextColor
-                                        }
-
-                                        Rectangle {
-                                            id: promptTemplateBox
-                                            height: 80
-                                            color: root.chatBackgroungConverstationColor
-                                            radius: 12
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.top: promptTemplateTextId.bottom
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
-                                            anchors.topMargin: 0
-
-
-                                            ScrollView {
-                                                id: scrollPromptTemplate
+                                            color: "#00ffffff"
+                                            Text {
+                                                id: inferenceSettingsTextId
+                                                text: qsTr("Inference Settings")
+                                                anchors.verticalCenter: parent.verticalCenter
                                                 anchors.left: parent.left
+                                                anchors.leftMargin: 5
+                                                font.pointSize: 10
+                                                color: root.titleTextColor
+                                                font.family: root.fontFamily
+                                            }
+                                            MyIcon {
+                                                id: inferenceSettingsIconId
+                                                visible: true
+                                                // anchors.left: modelList.right
                                                 anchors.right: parent.right
+                                                width: 40
                                                 anchors.top: parent.top
                                                 anchors.bottom: parent.bottom
-                                                anchors.leftMargin: 10
-                                                anchors.rightMargin: 10
-                                                anchors.topMargin: 5
-                                                anchors.bottomMargin: 5
-
-                                                TextArea {
-                                                    id: promptTemplateTextBox
-                                                    height: scrollPromptTemplate.height
-                                                    visible: true
-                                                    color: root.informationTextColor
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-                                                    anchors.leftMargin: 0
-                                                    anchors.rightMargin: 0
-                                                    wrapMode: Text.WordWrap
-                                                    placeholderText: qsTr("Eg. You are a helpful assistant")
-                                                    clip: false
-                                                    font.pointSize: 10
-                                                    hoverEnabled: true
-                                                    tabStopDistance: 80
-                                                    selectionColor: root.informationTextColor
-                                                    cursorVisible: false
-                                                    persistentSelection: true
-                                                    placeholderTextColor: root.informationTextColor
-                                                    font.family: root.fontFamily
-                                                    onHeightChanged: {
-                                                        if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
-                                                            promptTemplateBox.height += 10;
+                                                // anchors.leftMargin: 0
+                                                anchors.rightMargin: 0
+                                                anchors.topMargin: 0
+                                                myLable: inferenceSettingsInformationId.visible=== true? "close": "open"
+                                                myIconId:  inferenceSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                                myFillIconId: inferenceSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
+                                                normalColor: root.iconColor
+                                                hoverColor: root.fillIconColor
+                                                Connections {
+                                                    target: inferenceSettingsIconId
+                                                    function onClicked () {
+                                                        if(inferenceSettingsInformationId.visible=== true){
+                                                            inferenceSettingsInformationId.visible = false
+                                                            inferenceSettingsId.height = inferenceSettingsButtonId.height
+                                                        }else{
+                                                            inferenceSettingsInformationId.visible = true
+                                                            inferenceSettingsId.height = inferenceSettingsButtonId.height + inferenceSettingsInformationId.height
                                                         }
                                                     }
-                                                    background: Rectangle{
-                                                        color: "#00ffffff"
-                                                    }
                                                 }
                                             }
+                                        }
 
-                                            layer.enabled: true
-                                            layer.effect: Glow {
-                                                 samples: 15
-                                                 color: root.glowColor
-                                                 spread: 0.0
-                                                 transparentBorder: true
-                                             }
+                                        Column{
+                                            id: inferenceSettingsInformationId
+                                            anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.top: inferenceSettingsButtonId.bottom
+                                            anchors.leftMargin: 10
+                                            anchors.rightMargin: 10
+                                            anchors.topMargin: 0
+                                            visible: false
+
+                                            SettingsSwitchItem{
+                                                id:streamId
+                                                width: parent.width
+                                                myTextName: "Stream"
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:temperatureId
+                                                width: parent.width
+                                                myTextName: "Temperature"
+                                                sliderValue: 0.4
+                                                sliderFrom: 0
+                                                sliderTo:2
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:topPId
+                                                width: parent.width
+                                                myTextName: "Top-P"
+                                                sliderValue: 0.9
+                                                sliderFrom: 0
+                                                sliderTo:1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:maxTokensId
+                                                width: parent.width
+                                                myTextName: "Max Tokens"
+                                                sliderValue: 4096
+                                                sliderFrom: 100
+                                                sliderTo: 4096
+                                                sliderStepSize:1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:frequencyPenaltyId
+                                                width: parent.width
+                                                myTextName: "Frequency Penalty"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:presencePenaltyId
+                                                width: parent.width
+                                                myTextName: "Presence Penalty"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:promptBatchSizeId
+                                                width: parent.width
+                                                myTextName: "Prompt Batch Size"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:minPId
+                                                width: parent.width
+                                                myTextName: "Min-P"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:maxLengthId
+                                                width: parent.width
+                                                myTextName: "Max Lenght"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:topKId
+                                                width: parent.width
+                                                myTextName: "Top-K"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:repeatPenaltyTokensId
+                                                width: parent.width
+                                                myTextName: "Repeat Penalty Tokens"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:repeatPenaltyId
+                                                width: parent.width
+                                                myTextName: "Repeat Penalty"
+                                                sliderValue: 0
+                                                sliderFrom: 0
+                                                sliderTo: 1
+                                                sliderStepSize:0.1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
                                         }
                                     }
-                                }
 
-
-                                Rectangle{
-                                    id: engineSettingsId
-                                    height: engineSettingsButtonId.height /*+ engineSettingsInformationId.height*/
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.top: modelSettingsId.bottom
-                                    anchors.leftMargin: 10
-                                    anchors.rightMargin: 10
-                                    anchors.topMargin: 10
-                                    color: "#00ffffff"
 
                                     Rectangle{
-                                        id: engineSettingsButtonId
-                                        height: 40
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: parent.top
-                                        anchors.leftMargin: 5
-                                        anchors.rightMargin: 5
-                                        anchors.topMargin: 0
+                                        id: modelSettingsId
+                                        height: modelSettingsButtonId.height
+                                        width: parent.width
                                         color: "#00ffffff"
-
-                                        Text {
-                                            id: engineSettingsTextId
-                                            text: qsTr("Engine Settings")
-                                            anchors.verticalCenter: parent.verticalCenter
+                                        Rectangle{
+                                            id: modelSettingsButtonId
+                                            height: 40
                                             anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.top: parent.top
                                             anchors.leftMargin: 5
-                                            font.pointSize: 10
-                                            font.family: root.fontFamily
-                                            color: root.titleTextColor
-
-                                        }
-                                        MyIcon {
-                                            id: engineSettingsIconId
-                                            visible: true
-                                            // anchors.left: modelList.right
-                                            anchors.right: parent.right
-                                            width: 40
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            // anchors.leftMargin: 0
-                                            anchors.rightMargin: 0
+                                            anchors.rightMargin: 5
                                             anchors.topMargin: 0
-                                            myLable: engineSettingsInformationId.visible=== true? "close":"open"
-                                            myIconId:  engineSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
-                                            myFillIconId: engineSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                            normalColor: root.iconColor
-                                            hoverColor: root.fillIconColor
-                                            Connections {
-                                                target: engineSettingsIconId
-                                                function onClicked() {
-                                                    if(engineSettingsInformationId.visible=== true){
-                                                        engineSettingsInformationId.visible = false
-                                                        engineSettingsId.height = engineSettingsButtonId.height
-                                                    }else{
-                                                        engineSettingsInformationId.visible = true
-                                                        engineSettingsId.height = engineSettingsButtonId.height + engineSettingsInformationId.height
+                                            color: "#00ffffff"
+                                            Text {
+                                                id: modelSettingsTextId
+                                                text: qsTr("Model Settings")
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                anchors.left: parent.left
+                                                anchors.leftMargin: 5
+                                                font.pointSize: 10
+                                                color: root.titleTextColor
+                                                font.family: root.fontFamily
+                                            }
+                                            MyIcon {
+                                                id: modelSettingsIconId
+                                                visible: true
+                                                anchors.right: parent.right
+                                                width: 40
+                                                anchors.top: parent.top
+                                                anchors.bottom: parent.bottom
+                                                anchors.rightMargin: 0
+                                                anchors.topMargin: 0
+                                                myLable: modelSettingsInformationId.visible=== true? "close": "open"
+                                                myIconId:  modelSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                                myFillIconId: modelSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
+                                                normalColor: root.iconColor
+                                                hoverColor: root.fillIconColor
+                                                Connections {
+                                                    target: modelSettingsIconId
+                                                    function onClicked() {
+                                                        if(modelSettingsInformationId.visible=== true){
+                                                            modelSettingsInformationId.visible = false
+                                                            modelSettingsId.height = modelSettingsButtonId.height
+                                                        }else{
+                                                            modelSettingsInformationId.visible = true
+                                                            modelSettingsId.height = modelSettingsButtonId.height + modelSettingsInformationId.height
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
+
+                                        Column{
+                                            id: modelSettingsInformationId
+                                            anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.top: modelSettingsButtonId.bottom
+                                            anchors.leftMargin: 10
+                                            anchors.rightMargin: 10
+                                            anchors.topMargin: 0
+                                            visible: false
+
+                                            Text {
+                                                id: promptTemplateTextId
+                                                height: 20
+                                                text: qsTr("Prompt template")
+                                                font.pointSize: 10
+                                                font.family: root.fontFamily
+                                                color: root.informationTextColor
+                                            }
+
+                                            Rectangle {
+                                                id: promptTemplateBox
+                                                height: 80
+                                                color: root.chatBackgroungConverstationColor
+                                                radius: 12
+                                                width: parent.width
+
+                                                ScrollView {
+                                                    id: scrollPromptTemplate
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.top: parent.top
+                                                    anchors.bottom: parent.bottom
+                                                    anchors.leftMargin: 10
+                                                    anchors.rightMargin: 10
+                                                    anchors.topMargin: 5
+                                                    anchors.bottomMargin: 5
+
+                                                    TextArea {
+                                                        id: promptTemplateTextBox
+                                                        height: scrollPromptTemplate.height
+                                                        visible: true
+                                                        color: root.informationTextColor
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+                                                        anchors.leftMargin: 0
+                                                        anchors.rightMargin: 0
+                                                        wrapMode: Text.WordWrap
+                                                        placeholderText: qsTr("Eg. You are a helpful assistant")
+                                                        clip: false
+                                                        font.pointSize: 10
+                                                        hoverEnabled: true
+                                                        tabStopDistance: 80
+                                                        selectionColor: root.informationTextColor
+                                                        cursorVisible: false
+                                                        persistentSelection: true
+                                                        placeholderTextColor: root.informationTextColor
+                                                        font.family: root.fontFamily
+                                                        onHeightChanged: {
+                                                            if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
+                                                                promptTemplateBox.height += 10;
+                                                            }
+                                                        }
+                                                        background: Rectangle{
+                                                            color: "#00ffffff"
+                                                        }
+                                                    }
+                                                }
+
+                                                layer.enabled: true
+                                                layer.effect: Glow {
+                                                     samples: 15
+                                                     color: root.glowColor
+                                                     spread: 0.0
+                                                     transparentBorder: true
+                                                 }
+                                            }
+                                        }
                                     }
 
+
                                     Rectangle{
-                                        id: engineSettingsInformationId
-                                        height: contextLengthId.height+numberOfGPUId.height
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.top: engineSettingsButtonId.bottom
-                                        anchors.leftMargin: 0
-                                        anchors.rightMargin: 0
-                                        anchors.topMargin: 0
-                                        visible: false
+                                        id: engineSettingsId
+                                        height: engineSettingsButtonId.height
+                                        width: parent.width
                                         color: "#00ffffff"
 
-                                        SettingsSliderItem{
-                                            id:contextLengthId
+                                        Rectangle{
+                                            id: engineSettingsButtonId
+                                            height: 40
                                             anchors.left: parent.left
                                             anchors.right: parent.right
                                             anchors.top: parent.top
-                                            anchors.leftMargin: 10
-                                            anchors.rightMargin: 10
+                                            anchors.leftMargin: 5
+                                            anchors.rightMargin: 5
                                             anchors.topMargin: 0
-                                            myTextName: "Context Length"
-                                            sliderValue: 4096
-                                            sliderFrom: 120
-                                            sliderTo:4096
-                                            sliderStepSize:1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
+                                            color: "#00ffffff"
+
+                                            Text {
+                                                id: engineSettingsTextId
+                                                text: qsTr("Engine Settings")
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                anchors.left: parent.left
+                                                anchors.leftMargin: 5
+                                                font.pointSize: 10
+                                                font.family: root.fontFamily
+                                                color: root.titleTextColor
+
+                                            }
+                                            MyIcon {
+                                                id: engineSettingsIconId
+                                                visible: true
+                                                // anchors.left: modelList.right
+                                                anchors.right: parent.right
+                                                width: 40
+                                                anchors.top: parent.top
+                                                anchors.bottom: parent.bottom
+                                                // anchors.leftMargin: 0
+                                                anchors.rightMargin: 0
+                                                anchors.topMargin: 0
+                                                myLable: engineSettingsInformationId.visible=== true? "close":"open"
+                                                myIconId:  engineSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
+                                                myFillIconId: engineSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
+                                                normalColor: root.iconColor
+                                                hoverColor: root.fillIconColor
+                                                Connections {
+                                                    target: engineSettingsIconId
+                                                    function onClicked() {
+                                                        if(engineSettingsInformationId.visible=== true){
+                                                            engineSettingsInformationId.visible = false
+                                                            engineSettingsId.height = engineSettingsButtonId.height
+                                                        }else{
+                                                            engineSettingsInformationId.visible = true
+                                                            engineSettingsId.height = engineSettingsButtonId.height + engineSettingsInformationId.height
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
-                                        SettingsSliderItem{
-                                            id:numberOfGPUId
+
+                                        Column{
+                                            id: engineSettingsInformationId
                                             anchors.left: parent.left
                                             anchors.right: parent.right
-                                            anchors.top: contextLengthId.bottom
+                                            anchors.top: engineSettingsButtonId.bottom
                                             anchors.leftMargin: 10
                                             anchors.rightMargin: 10
                                             anchors.topMargin: 0
-                                            myTextName: "Number of GPU layers (ngl)"
-                                            sliderValue: 40
-                                            sliderFrom: 1
-                                            sliderTo: 100
-                                            sliderStepSize:1
-                                            fontFamily:root.fontFamily
-                                            textColor: root.informationTextColor
-                                            boxColor: root.chatBackgroungConverstationColor
-                                            glowColor: root.glowColor
+                                            visible: false
+
+                                            SettingsSliderItem{
+                                                id:contextLengthId
+                                                myTextName: "Context Length"
+                                                sliderValue: 4096
+                                                sliderFrom: 120
+                                                sliderTo:4096
+                                                sliderStepSize:1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
+                                            SettingsSliderItem{
+                                                id:numberOfGPUId
+                                                myTextName: "Number of GPU layers (ngl)"
+                                                sliderValue: 40
+                                                sliderFrom: 1
+                                                sliderTo: 100
+                                                sliderStepSize:1
+                                                fontFamily:root.fontFamily
+                                                textColor: root.informationTextColor
+                                                boxColor: root.chatBackgroungConverstationColor
+                                                glowColor: root.glowColor
+                                            }
                                         }
                                     }
                                 }
@@ -1397,15 +1218,15 @@ Item {
                 MyIcon {
                     id: rightDrawer
                     visible: true
-                    anchors.right: modelSettings.visible=== true?modelSettings.left: parent.right
+                    anchors.right: modelSettings.x != rightSidePage.width?modelSettings.left: parent.right
                     height: 40
                     width: 40
                     anchors.top: parent.top
                     anchors.rightMargin: 10
                     anchors.topMargin: 10
-                    myLable: modelSettings.visible=== true? "close model settings":"open model settings"
-                    myIconId: modelSettings.visible=== true? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
-                    myFillIconId: modelSettings.visible=== true? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
+                    myLable: modelSettings.x != rightSidePage.width? "close model settings":"open model settings"
+                    myIconId: modelSettings.x != rightSidePage.width? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
+                    myFillIconId: modelSettings.x != rightSidePage.width? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
                     heightSource: 18
                     widthSource: 18
                     normalColor: root.iconColor
@@ -1413,10 +1234,10 @@ Item {
                     Connections {
                         target: rightDrawer
                         function onClicked() {
-                            if(modelSettings.visible=== true){
-                                modelSettings.visible = false
+                            if(modelSettings.x != rightSidePage.width){
+                                modelSettings.x = rightSidePage.width
                             }else{
-                                modelSettings.visible = true
+                                modelSettings.x = rightSidePage.width - modelSettings.width - 10
                             }
                         }
                     }

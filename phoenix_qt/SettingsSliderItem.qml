@@ -34,6 +34,29 @@ Item {
             font.family: root.fontFamily
         }
 
+        MyIcon {
+            id: discordIcon
+            visible: true
+            anchors.verticalCenter: textId.verticalCenter
+            anchors.left: textId.right
+            anchors.leftMargin: 5
+            width: 20
+            height: 20
+            myIconId: "images/aboutIcon.svg"
+            myFillIconId: "images/fillAboutIcon.svg"
+            myLable: "Discord"
+            heightSource: 15
+            widthSource: 15
+            normalColor: "#5b5fc7"
+            hoverColor: "#5b5fc7"
+            xPopup: -18
+            yPopup: -30
+            Connections {
+                target: discordIcon
+                onClicked: function () {}
+            }
+        }
+
         MySlider{
             id:sliderId
             anchors.left: parent.left

@@ -9,7 +9,6 @@ T.Button {
     width: 30
     height: 30
 
-
     leftPadding: 4
     rightPadding: 4
 
@@ -23,14 +22,18 @@ T.Button {
 
     property color normalColor
     property color hoverColor
+
+    property int xPopup: 30
+    property int yPopup: 23
+
     autoExclusive: false
     checkable: true
 
     // Define a custom tooltip using a Popup
     Popup {
         id: customToolTipId
-        x: parent.width
-        y: 23
+        x: control.xPopup
+        y: control.yPopup
         width: lableFoolTipId.width + 20
         height: 30
         visible: control.hovered  // Show when the button is hovered

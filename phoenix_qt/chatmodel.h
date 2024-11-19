@@ -12,13 +12,19 @@ class ChatModel : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(int size READ size NOTIFY sizeChanged)
+    Q_PROPERTY(bool isStart READ isStart NOTIFY isStartChanged)
 
     enum ChatItemRoles {
         IdRole = Qt::UserRole + 1,
+        DateRequestRole,
+        ExecutionTimeRole,
+        NumberOfTokenRole,
         PromptRole,
+        PromptTimeRole,
         NumberPromptRole,
         NumberOfEditPromptRole,
         ResponseRole,
+        ResponseTimeRole,
         NumberResponseRole,
         NumberOfRegenerateRole
     };
@@ -41,6 +47,7 @@ public:
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
     int size() const;
+    bool isStart() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -54,14 +61,19 @@ public:
 signals:
     void startPrompt(const QString &prompt);
     void sizeChanged();
+    void isStartChanged();
 
 public slots:
 
 private:
     Message *root = new Message(-1,"root",true , this);
     QList<ChatItem*> chatItems;
+    bool m_isStart;
 
     bool deleteChatItem(const int index);
+    QVariant calculationDateRequest(const int currentIndex) const;
+    QVariant calculationPromptRequest(const int currentIndex) const;
+    QVariant calculationResponseRequest(const int currentIndex) const;
 };
 
 #endif // CHATMODEL_H

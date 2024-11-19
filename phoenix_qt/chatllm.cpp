@@ -43,7 +43,7 @@ void ChatLLM::setStop(){
 
 void ChatLLM::loadModel(const QString &modelPath)
 {
-    qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
+    // qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
     Sleep(2000);
 
 //     std::string backend = "cuda";
@@ -82,7 +82,7 @@ void ChatLLM::loadModel(const QString &modelPath)
 //     }
 
     emit loadModelResult(true);
-    qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
+    // qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 }
 
 void ChatLLM::unLoadModel(){
@@ -92,7 +92,7 @@ void ChatLLM::unLoadModel(){
 
 void ChatLLM::prompt(const QString &input){
     stop = false;
-    qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
+    // qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
 
     // answer = "";
 
@@ -113,14 +113,14 @@ void ChatLLM::prompt(const QString &input){
 
     for(int i=0;i<30;i++){
         emit tokenResponse("Hi  :)  ");
-        qInfo()<<"send";
+        // qInfo()<<"send";
         Sleep(50);
         emit tokenResponse("Phoenix!, ");
         Sleep(50);
     }
 
     emit finishedResponnse();
-    qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
+    // qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
 
 }
 

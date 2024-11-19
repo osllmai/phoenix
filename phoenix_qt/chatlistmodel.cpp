@@ -10,7 +10,6 @@ ChatListModel::ChatListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
     addChat();
-    qInfo()<<"create chatListModel";
 }
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
@@ -32,6 +31,8 @@ QVariant ChatListModel::data(const QModelIndex &index, int role = Qt::DisplayRol
         return chat->id();
     case TitleRole:
         return chat->title();
+    case DateRole:
+        return dateRequest(index.row());
     }
 
     return QVariant();
@@ -41,6 +42,7 @@ QHash<int, QByteArray> ChatListModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[TitleRole] = "title";
+    roles[DateRole] = "date";
     return roles;
 }
 
@@ -102,10 +104,8 @@ void ChatListModel::addChat(){
     const int index = chats.size();
     const QString name = "new chat" +  QString::number(index);
 
-    qInfo()<<"add chat: "<<name;
     Chat *chat = new Chat(index, name , this);
     if(m_currentChat != nullptr){
-        qInfo()<<"        disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);";
         disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);
     }
 
@@ -115,13 +115,12 @@ void ChatListModel::addChat(){
 }
 
 void ChatListModel::addCurrentChatToChatList(){
-    qInfo() << "addCurrentChatToChatList()";
-    const int index = chats.size();
-    beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
-    chats.append(m_currentChat);
+    beginInsertRows(QModelIndex(), 0, 0);//Tell the model that you are about to add data
+    chats.prepend(m_currentChat);
     endInsertRows();
     emit sizeChanged();
-    qInfo()<<"chats.size()"<<chats.size();
+    if(chats.size() >1)
+        emit dataChanged(createIndex(1, 0), createIndex(1, 0), {DateRole});
 }
 
 Chat* ChatListModel::getChat(int index){
@@ -134,15 +133,45 @@ void ChatListModel::deleteChat(int index){
     if (index < 0 || index >= chats.size())
         return ;
     Chat* chat = chats.at(index);
+    if(chat == m_currentChat)
+        addChat();
     const int newIndex = chats.indexOf(chat);
     beginRemoveRows(QModelIndex(), newIndex, newIndex);
     chats.removeAll(chat);
     endRemoveRows();
     emit sizeChanged();
+}
 
-    if(chat == currentChat())
-        if(chats.size() == 0)
-            addChat();
+QVariant ChatListModel::dateRequest(const int currentIndex)const{
+    QDateTime date = chats[currentIndex]->date();
+    QDateTime beforDate ;
+    if(currentIndex != 0)
+        beforDate = chats[currentIndex-1]->date();
+    if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
+        return "";
+
+    QDateTime now = QDateTime::currentDateTime();
+    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+        return "Today";
+    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+        return "Yesterday";
+    if(date.daysTo(now) < 7)
+        if(currentIndex != 0 && beforDate.daysTo(now)<7)
+            return "";
         else
-            setCurrentChat(chats.first());
+            return "Previous 7 days";
+    if(date.daysTo(now) < 30)
+        if(currentIndex != 0 && beforDate.daysTo(now)<30)
+            return "";
+        else
+            return "Previous 30 days";
+    if(date.toString("yyyy") == now.toString("yyyy"))
+        if(currentIndex != 0 && date.toString("MMMM")==beforDate.toString("MMMM"))
+            return "";
+        else
+            return date.toString("MMMM");
+    if(currentIndex != 0 && date.toString("yyyy")==beforDate.toString("yyyy"))
+        return "";
+    else
+        return date.toString("yyyy");
 }

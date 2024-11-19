@@ -451,6 +451,15 @@ Window {
         ]
 
         Rectangle{
+            id: rightRecId
+            color: parent.color
+            anchors.left: page.right
+            anchors.right: parent.right
+            anchors.top: topRecId.bottom
+            anchors.bottom: bottomRecId.top
+        }
+
+        Rectangle{
             id: topRecId
             color: parent.color
             anchors.left: menuId.right
@@ -476,13 +485,18 @@ Window {
                 anchors.topMargin: 0
                 myIconId: "images/discordIcon.svg"
                 myFillIconId: "images/discordIcon.svg"
+                myLable: "Discord"
                 heightSource: 22
                 widthSource: 22
                 normalColor: window.menuIconColor
                 hoverColor:window.fillIconColor
+                xPopup: -18
+                yPopup: -30
                 Connections {
                     target: discordIcon
-                    onClicked: function () {}
+                    function onClicked(){
+                        Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")
+                    }
                 }
             }
             MyIcon {
@@ -496,13 +510,18 @@ Window {
                 anchors.topMargin: 0
                 myIconId: "images./githubIcon.svg"
                 myFillIconId: "images./githubIcon.svg"
+                myLable: "Github"
                 heightSource: 18
                 widthSource: 18
                 normalColor:window.menuIconColor
                 hoverColor:window.fillIconColor
+                xPopup: -15
+                yPopup: -30
                 Connections {
                     target: githubIcon
-                    onClicked: function () {}
+                    function onClicked(){
+                        Qt.openUrlExternally("https://github.com/osllmai")
+                    }
                 }
             }
 

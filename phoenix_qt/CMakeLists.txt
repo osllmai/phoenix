@@ -31,6 +31,7 @@ qt_add_qml_module(app${PROJECTNAME}
     QML_FILES DownloadModelButton.qml
     RESOURCES
         "images/aboutIcon.svg"
+        "images/fillAboutIcon.svg"
         "images/chatIcon.svg"
         "images/darkIcon.svg"
         "images/deleteIcon.svg"

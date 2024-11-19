@@ -18,6 +18,7 @@ class ChatListModel : public QAbstractListModel
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         TitleRole,
+        DateRole
     };
 public:
     explicit ChatListModel(QObject *parent );
@@ -58,6 +59,8 @@ public slots:
 private:
     Chat* m_currentChat = nullptr;
     QList<Chat*> chats;
+
+    QVariant dateRequest(const int currentIndex)const;
 };
 
 #endif // CHATLISTMODEL_H

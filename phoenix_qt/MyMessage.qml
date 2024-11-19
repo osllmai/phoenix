@@ -107,7 +107,7 @@ Item {
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
             background:Rectangle{
-                color: "#00ffffff" // Background color of tooltip
+                color: "#00ffffff"
                 radius: 4
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -115,25 +115,10 @@ Item {
                 anchors.bottomMargin: 0
             }
 
-            // MyIcon {
-            //     id: deleteIconId
-            //     width: 20
-            //     height: 20
-            //     anchors.right: parent.right
-            //     anchors.rightMargin: 0
-            //     heightSource:16
-            //     widthSource:16
-            //     normalColor:root.iconColor
-            //     hoverColor:root.fillIconColor
-            //     myIconId: "images/deleteIcon.svg"
-            //     myFillIconId: "images/fillDeleteIcon.svg"
-            //     myLable:"Delete"
-            // }
             MyIcon {
                 id: copyIconId
                 width: 20
                 height: 20
-                // anchors.right: deleteIconId.left
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 heightSource:13
@@ -239,11 +224,10 @@ Item {
             id: informationTokenId
             width: 280
             height: 20
-            // x: messageTextRec.width -60
             y: messageTextRec.height - 23
 
             background:Rectangle{
-                color: "#00ffffff" // Background color of tooltip
+                color: "#00ffffff"
                 radius: 4
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
