@@ -12,7 +12,9 @@ Chat::Chat(const int &id, const QString &title, QObject *parent) :
     m_isLoadModel(false),
     m_responseInProgress(false),
     m_chatModel(new ChatModel(this)),
-    chatLLM(new ChatLLM(this))
+    chatLLM(new ChatLLM(this)),
+    m_timer(new QTimer(this)),
+    m_valueTimer(0)
 {
     QThread::currentThread()->setObjectName("Main Thread");
     m_date = QDateTime::currentDateTime();
@@ -26,6 +28,7 @@ Chat::Chat(const int &id, const QString &title, QObject *parent) :
     connect(m_chatModel, &ChatModel::startPrompt, this, &Chat::promptRequested, Qt::QueuedConnection);
     connect(this, &Chat::prompt, chatLLM, &ChatLLM::prompt, Qt::QueuedConnection);
     connect(chatLLM, &ChatLLM::tokenResponse, this, &Chat::tokenResponseRequested, Qt::QueuedConnection);
+    connect(m_timer, &QTimer::timeout, [=](){++m_valueTimer; emit valueTimerChanged();});
 
     //finished response
     connect(chatLLM, &ChatLLM::finishedResponnse, this, &Chat::finishedResponnse, Qt::QueuedConnection);
@@ -55,6 +58,9 @@ ChatModel* Chat::chatModel() const{
 }
 bool Chat::responseInProgress() const{
     return m_responseInProgress;
+}
+int Chat::valueTimer() const{
+    return m_valueTimer;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
@@ -98,11 +104,10 @@ void Chat::LoadModelResult(const bool result){
 }
 
 void Chat::promptRequested(const QString &input){
-
+    m_timer->start(1000);
     if(!m_chatModel->isStart()){
         emit startChat();
     }
-
     setResponseInProgress(true);
     emit prompt(input);
 }
@@ -114,6 +119,10 @@ void Chat::tokenResponseRequested(const QString &token){
 void Chat::finishedResponnse(){
     // m_chatModel->saveChatItem(m_id);
     setResponseInProgress(false);
+    m_timer->stop();
+    m_chatModel->setExecutionTime(m_valueTimer);
+    m_valueTimer = 0;
+    emit valueTimerChanged();
 }
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 

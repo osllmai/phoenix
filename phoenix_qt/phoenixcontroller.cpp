@@ -1,15 +1,10 @@
 #include "phoenixcontroller.h"
 
-
-#include <QtSql>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QDebug>
-
 PhoenixController::PhoenixController(QObject *parent)
     : QObject{parent},m_chatListModel(new ChatListModel(this)), m_modelList(new ModelList(this))
-{}
+{
+    initDb();
+}
 
 //*---------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*---------------------------------------------------------------------------------------* Read Property *----------------------------------------------------------------------------------------*//

@@ -29,12 +29,6 @@ int ChatItem::numberOfResponse() const{
 int ChatItem::numberOfRegenerate() const{
     return m_numberOfRegenerate;
 }
-// int ChatItem::numberOfTokens() const{
-//     return m_numberOfTokens;
-// }
-// int ChatItem::executionTime() const{
-//     return m_executionTime;
-// }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 

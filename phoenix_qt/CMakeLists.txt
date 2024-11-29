@@ -3,9 +3,16 @@ cmake_minimum_required(VERSION 3.16)
 set(PROJECTNAME  Phoenix)
 project(${PROJECTNAME} VERSION 0.1 LANGUAGES CXX)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 COMPONENTS Quick Sql REQUIRED)
+
+find_package(Qt6 6.4 REQUIRED COMPONENTS Core Quick Sql )
 
 qt_standard_project_setup()
 
@@ -103,6 +110,11 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/fillCopyIcon.svg"
         "images/rightIcon.svg"
         "images/leftIcon.svg"
+        "images/speed_dial_195_151.png"
+        "images/sppedometer_outer_ring_195_86.png"
+        "images/speedometer_track_bg_195_87.png"
+        "images/speedometer_needle_ring_195_90.png"
+        "images/speedometer_needle_195_142.png"
         "fontFamily/DMSans-VariableFont.ttf"
         "./phoenix.db"
         "./models.json"
@@ -132,6 +144,9 @@ qt_add_qml_module(app${PROJECTNAME}
     SOURCES message.h message.cpp
     QML_FILES ModelDialog.qml
     QML_FILES InputPromptBox.qml
+    QML_FILES SpeedDisplay.qml
+    QML_FILES CustomDot.qml
+    QML_FILES AnimationText.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -149,6 +164,7 @@ target_link_libraries(app${PROJECTNAME}
     PRIVATE
         Qt6::Quick
         Qt6::Sql
+        Qt6::Core
 )
 
 include(GNUInstallDirs)

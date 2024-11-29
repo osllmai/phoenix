@@ -68,7 +68,7 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         cacheBuffer: Math.max(0, gridView.contentHeight)
 
-                        cellWidth: Math.max(100, (parent.width)/3)
+                        cellWidth: parent.width<1400? Math.max(100, (parent.width)/3): Math.max(100, (parent.width)/4)
                         cellHeight: 330
                         model: root.modelListModel
 

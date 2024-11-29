@@ -33,12 +33,14 @@ Item {
     property var fontFamily
 
     //information about model
-    property bool isFinished: true
     property var prompt
     property var response
     property var promptTime
     property var responseTime
     property var dateRequest
+    property bool isFinished
+    property var executionTime
+    property var numberOfToken
 
     signal regenerateResponse()
     signal editPrompt()
@@ -125,9 +127,11 @@ Item {
                     anchors.rightMargin: 2
                     anchors.topMargin: 40
                     maxWidth: root.width - 90
-                    isFinished: true
                     isLLM: false
                     myText: root.prompt
+                    executionTime: root.executionTime
+                    numberOfToken:root.numberOfToken
+
                     Connections {
                         target: userTextRec
                         function onRegenerateOrEdit(){
@@ -221,9 +225,12 @@ Item {
                     anchors.leftMargin: 2
                     anchors.topMargin: 30
                     maxWidth: root.width -90
-                    isFinished: isFinished
                     isLLM: true
                     myText: root.response
+                    isFinished: root.isFinished
+                    executionTime: root.executionTime
+                    numberOfToken:root.numberOfToken
+
                     Connections {
                         target: llmTextRec
                         function onRegenerateOrEdit(){

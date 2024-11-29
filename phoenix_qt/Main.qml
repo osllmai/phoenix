@@ -121,6 +121,7 @@ Window {
         id: phoenixController
     }
 
+
     Rectangle {
         id: phoenix
         anchors.fill: parent
@@ -552,10 +553,7 @@ Window {
                     widthSource: 18
                     normalColor:window.menuIconColor
                     hoverColor:window.fillIconColor
-                    Connections {
-                        target: githubIcon
-                        onClicked: function () {}
-                    }
+                    havePupup: false
                 }
                 Text {
                     id: systemMonitorText
@@ -565,7 +563,71 @@ Window {
                     anchors.left: systemMonitorIcon.right
                     anchors.leftMargin: 0
                 }
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onHoveredChanged: function(){
+                        if(containsMouse){
+                            systemMonitorPupup.open()
+                            systemMonitorIcon.normalColor = window.fillIconColor
+                            systemMonitorText.color= window.fillIconColor
+                        }else{
+                            systemMonitorPupup.close()
+                            systemMonitorIcon.normalColor = window.menuIconColor
+                            systemMonitorText.color=window.informationTextColor
+                        }
+                    }
+                }
             }
+
+            Popup {
+                id: systemMonitorPupup
+                width: 350
+                height: 180
+                x: systemMonitorId.x -200
+                y: systemMonitorId.y-180
+
+                background:Rectangle{
+                    color: "#00ffffff" // Background color of tooltip
+                    radius: 4
+                    anchors.fill: parent
+                    Rectangle{
+                        radius: 4
+                        anchors.fill: parent
+                        gradient: Gradient {
+                            GradientStop {
+                                position: 0
+                                color: "#d4afff"
+                            }
+
+                            GradientStop {
+                                position: 1
+                                color: "#fbc2eb"
+                            }
+                            orientation: Gradient.Vertical
+                        }
+                        SpeedDisplay {
+                            anchors.top: parent.top
+                            anchors.left:parent.left
+                            anchors.topMargin: 20
+                            anchors.leftMargin: 20
+                            kplDisplay: 100
+                            kphDisplay: 50
+                            kphFrame: 110
+                        }
+                        SpeedDisplay {
+                            anchors.top: parent.top
+                            anchors.right:parent.right
+                            anchors.topMargin: 20
+                            anchors.rightMargin: 20
+                            kplDisplay: 100
+                            kphDisplay: 50
+                            kphFrame: 110
+                        }
+                    }
+                }
+            }
+
 
             Rectangle {
                 id: executionTimeId
@@ -589,7 +651,7 @@ Window {
                 }
                 Text {
                     id: executionTimeValue
-                    text: qsTr("10s")
+                    text: phoenixController.chatListModel.currentChat.valueTimer
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: executionTimeText.right
@@ -602,7 +664,7 @@ Window {
                 id: numberOfTokenId
                 width: 130
                 color: "#00ffffff"
-                anchors.left: currentDownloadId.right
+                anchors.left: currentDownloadId.visible === true? currentDownloadId.right: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.leftMargin: 0
@@ -639,8 +701,10 @@ Window {
                 anchors.leftMargin: 0
                 anchors.topMargin: 0
                 anchors.bottomMargin: 0
+                visible: (phoenixController.modelList.downloadProgress === 0)? false: true
+
                 MyIcon {
-                    id: currentDownloadIcon
+                    id: downloadIcon
                     visible: true
                     width: 30
                     anchors.left: parent.left
@@ -649,15 +713,16 @@ Window {
                     anchors.topMargin: 0
                     anchors.leftMargin: 0
                     anchors.bottomMargin: 0
-                    myIconId: "images./githubIcon.svg"
-                    myFillIconId: "images./githubIcon.svg"
+                    myIconId: "images/downloadIcon.svg"
+                    myFillIconId: "images/downloadIcon.svg"
                     heightSource: 18
                     widthSource: 18
                     normalColor:window.menuIconColor
-                    hoverColor:window.fillIconColor
+                    hoverColor:window.menuIconColor
+                    havePupup: false
                     Connections {
-                        target: githubIcon
-                        onClicked: function () {}
+                        target: downloadIcon
+                        function onClicked() {}
                     }
                 }
                 Text {
@@ -665,7 +730,7 @@ Window {
                     text: qsTr("Downloading model")
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: currentDownloadIcon.right
+                    anchors.left: downloadIcon.right
                     anchors.leftMargin: 0
                     font.pointSize: 8
                 }
@@ -673,7 +738,7 @@ Window {
                     id: progressBar
                     width: 100
                     height: 6
-                    value: 0.3
+                    value: phoenixController.modelList.downloadProgress/100
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: currentDownloadText.right
                     anchors.leftMargin: 5
@@ -699,7 +764,7 @@ Window {
                 }
                 Text {
                     id: cancleText
-                    text: "%" + progressBar.value
+                    text: "%" + (progressBar.value * 100)
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: progressBar.right

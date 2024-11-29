@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QtQml>
-
+#include <QTimer>
 #include <QAbstractListModel>
 #include "chat.h"
 
@@ -23,7 +23,7 @@ class ChatListModel : public QAbstractListModel
 public:
     explicit ChatListModel(QObject *parent );
 
-    //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
+    //*-------------------------------------------------------------------------------*************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;

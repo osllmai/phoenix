@@ -52,6 +52,7 @@ Item {
 
     signal goToModelPage()
 
+
     Rectangle{
         id: chatPage
         color: root.chatBackgroungConverstationColor
@@ -339,6 +340,14 @@ Item {
                             anchors.bottomMargin: 24
                             color: "#00ffffff"
                             visible: root.emptyConversation
+                            // AnimationText{
+                            //     // id:animationTextId
+                            //     id: emptyMessageText
+                            //     anchors.verticalCenter: parent.verticalCenter
+                            //     anchors.horizontalCenter: parent.horizontalCenter
+
+                            // }
+
                             Text {
                                 id: emptyMessageText
                                 color: root.informationTextColor
@@ -349,6 +358,15 @@ Item {
                                 font.family: "Times New Roman"
                             }
                         }
+                        // Text {
+                        //     id: emptyMessageListId
+                        //     color: root.informationTextColor
+                        //     text: qsTr("What can I help with?")
+                        //     anchors.verticalCenter: parent.verticalCenter
+                        //     anchors.horizontalCenter: parent.horizontalCenter
+                        //     font.pointSize: 14
+                        //     font.family: "Times New Roman"
+                        // }
 
                         Rectangle {
                             id: textChat
@@ -404,7 +422,9 @@ Item {
                                             responseTime: model.responseTime
                                             dateRequest: model.dateRequest
 
-                                            isFinished: !root.currentChat.responseInProgress
+                                            executionTime: model.executionTime
+                                            numberOfToken:model.numberOfToken
+                                            isFinished: !!root.currentChat.responseInProgress
                                             Connections {
                                                 target: myPromptResponseId
                                                 function onRegenerateResponse(){

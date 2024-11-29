@@ -20,14 +20,14 @@
 #include "model.h"
 #include "download.h"
 #include "currentmodellist.h"
-
+#include "database.h"
 
 class ModelList : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(CurrentModelList *currentModelList READ currentModelList WRITE setCurrentModelList NOTIFY currentModelListChanged)
-    Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
+    Q_PROPERTY(int downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         FileSizeRole,
@@ -83,7 +83,7 @@ public:
                   const QString &systemPrompt, const QString &icon, const double &downloadPercent, const bool &isDownloading, const bool &downloadFinished);
 
 public slots:
-    void handleDownloadProgress(const int index, qint64 bytesReceived, qint64 bytesTotal);
+    void handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int index);
 
 signals:
@@ -94,9 +94,15 @@ private:
     QList<Model*> models;
     QList<Download*>downloads;
     CurrentModelList *m_currentModelList;
-    double m_downloadProgress;
+    int m_downloadProgress;
 
     void readModelFromJSONFile();
+    void updateDownloadProgress();
+
+    //private function for DB
+    // void loadModelFromDB();
+    // void addModelFromDB(const int name, const int directoryPath);
+    // void deleteModelFromDB(const int id);
 };
 
 #endif // MODELLIST_H

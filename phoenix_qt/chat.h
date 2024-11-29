@@ -19,6 +19,7 @@ class Chat : public QObject
     Q_PROPERTY(ChatModel *chatModel READ chatModel NOTIFY chatModelChanged )
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged )
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged )
+    Q_PROPERTY(int valueTimer READ valueTimer NOTIFY valueTimerChanged)
 
 
 public:
@@ -38,6 +39,7 @@ public:
     ChatModel* chatModel() const;
     bool isLoadModel() const;
     bool responseInProgress() const;
+    int valueTimer() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -56,6 +58,7 @@ signals:
     void chatModelChanged();
     void isLoadModelChanged();
     void responseInProgressChanged();
+    void valueTimerChanged();
 
     void loadModel(const QString &modelPath);
     void unLoadModel();
@@ -78,6 +81,8 @@ private:
     ChatModel *m_chatModel;
     bool m_isLoadModel;
     bool m_responseInProgress;
+    QTimer *m_timer;
+    int m_valueTimer;
 };
 
 #endif // CHAT_H

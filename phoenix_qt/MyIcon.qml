@@ -16,6 +16,7 @@ T.Button {
     property alias myLable: lableFoolTipId.text
     property var myIconId
     property var myFillIconId
+    property bool havePupup: true
 
     property int heightSource: 16
     property int widthSource: 16
@@ -36,7 +37,7 @@ T.Button {
         y: control.yPopup
         width: lableFoolTipId.width + 20
         height: 30
-        visible: control.hovered  // Show when the button is hovered
+        visible: control.hovered && control.havePupup // Show when the button is hovered
         background:Rectangle {
             color: "#ffffff"
             radius: 4

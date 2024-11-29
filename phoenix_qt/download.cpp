@@ -44,7 +44,6 @@ void Download::removeModel(){
     }
 }
 
-
 void Download::onDownloadFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     if (reply->error() == QNetworkReply::NoError) {
@@ -69,4 +68,3 @@ void Download::onDownloadFinished() {
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
     emit downloadProgress(m_index, bytesReceived, bytesTotal);
 }
-

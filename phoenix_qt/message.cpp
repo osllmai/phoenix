@@ -1,7 +1,8 @@
 #include "message.h"
 
 Message::Message(const int &id, const QString &text, bool isPrompt, QObject *parent ):
-    m_id(id),m_text(text), m_child(nullptr), QObject(parent),m_numberOfCurrentChild(-1),m_numberOfChildList(0),m_isPrompt(isPrompt)
+    m_id(id),m_text(text), m_child(nullptr), QObject(parent),m_numberOfCurrentChild(-1),
+    m_numberOfChildList(0),m_isPrompt(isPrompt),m_numberOfToken(0),m_executionTime(0)
 {
     m_date = QDateTime::currentDateTime();
 }

@@ -250,7 +250,8 @@ void ChatModel::regenerateResponse(const int index){
 
     ChatItem *item = chatItems[index];
     item->response()->setText(item->response()->text() + response);
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole});
+    item->response()->setNumberOfToken(item->response()->numberOfToken()+1);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole, NumberOfTokenRole});
 }
 
  int ChatModel::size(){
@@ -293,14 +294,14 @@ void ChatModel::regenerateResponse(const int index){
 
      QDateTime now = QDateTime::currentDateTime();
      if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
-         return date.toString("hh:mm:ss");
+         return date.toString("hh:mm");
      if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-         return date.toString("Yesterday hh:mm:ss");
+         return date.toString("Yesterday hh:mm");
      if(date.daysTo(now) < 7)
-         return date.toString("dddd hh:mm:ss");
+         return date.toString("dddd hh:mm");
      if(date.toString("yyyy") == now.toString("yyyy"))
-         return date.toString("MM/dd hh:mm:ss");
-     return date.toString("MM/dd/yyyy hh:mm:ss");
+         return date.toString("MM/dd hh:mm");
+     return date.toString("MM/dd/yyyy hh:mm");
  }
 
  QVariant ChatModel::calculationResponseRequest(const int currentIndex)const{
@@ -308,12 +309,18 @@ void ChatModel::regenerateResponse(const int index){
 
      QDateTime now = QDateTime::currentDateTime();
      if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
-         return date.toString("hh:mm:ss");
+         return date.toString("hh:mm");
      if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-         return date.toString("Yesterday hh:mm:ss");
+         return date.toString("Yesterday hh:mm");
      if(date.daysTo(now) < 7)
-         return date.toString("dddd hh:mm:ss");
+         return date.toString("dddd hh:mm");
      if(date.toString("yyyy") == now.toString("yyyy"))
-         return date.toString("MM/dd hh:mm:ss");
-     return date.toString("MM/dd/yyyy hh:mm:ss");
+         return date.toString("MM/dd hh:mm");
+     return date.toString("MM/dd/yyyy hh:mm");
+ }
+
+ void ChatModel::setExecutionTime(const int executionTime){
+     chatItems.last()->response()->setExecutionTime(executionTime);
+     emit dataChanged(createIndex(chatItems.size()-1, 0), createIndex(chatItems.size()-1, 0), {ExecutionTimeRole});
+
  }

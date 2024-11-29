@@ -19,6 +19,8 @@ Item {
     property int numberOfMessage
     property int numberOfRegenerateOrEdit
 
+    property var executionTime
+    property var numberOfToken
 
     //theme for chat page
     property color chatBackgroungColor
@@ -88,10 +90,10 @@ Item {
                 onHoveredChanged:{
                     if(containsMouse){
                         messageIcon.open()
-                        if(root.isLLM){
+                        if(root.isLLM && !root.isFinished){
                             informationTokenId.open()
                         }
-                    }else if(root.isLLM){
+                    }else if(root.isLLM ){
                         informationTokenId.close()
                     }
                 }
@@ -233,7 +235,6 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 3
                 anchors.bottomMargin: 0
-                // visible: root.isFinished
             }
             Rectangle {
                 id: executionTimeId
@@ -257,7 +258,7 @@ Item {
                 }
                 Text {
                     id: executionTimeValue
-                    text: qsTr("10s")
+                    text: root.executionTime
                     color: root.chatMessageTitleTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: executionTimeText.right
@@ -288,7 +289,7 @@ Item {
                 }
                 Text {
                     id: numberOfTokenValue
-                    text: qsTr("50")
+                    text: root.numberOfToken
                     color: root.chatMessageTitleTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: numberOfTokenText.right

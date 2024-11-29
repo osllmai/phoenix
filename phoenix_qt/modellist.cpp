@@ -7,44 +7,11 @@
 #include <QDebug>
 
 ModelList::ModelList(QObject *parent)
-    : QAbstractListModel(parent),m_currentModelList(new CurrentModelList(this))
+    : QAbstractListModel(parent),m_currentModelList(new CurrentModelList(this)), m_downloadProgress(0)
 {
     readModelFromJSONFile();
-
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
-
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
-
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS model (id INTEGER, name TEXT, path TEXT)");
-
-    // Prepare query to select both id and name
-    QString cmd = "SELECT id, name, path FROM model";
-
-    // Execute the query
-    if (!query.exec(cmd)) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully."<<query.size();
-        while(query.next()){
-            int id = query.value(0).toInt();
-            QString name = query.value(1).toString();
-            QString path = query.value(2).toString();
-
-            addModel(id ,0 , 0,  name, "", "", "", path, "", "", "", "", "","./images/Phoenix.svg", 0,  false, true);
-
-        }
-    }
-
-    // Close the database
-    db.close();
+    //read from database
+    readModel(this);
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
@@ -271,22 +238,25 @@ void ModelList::addModel(const int &id, const double &fileSize ,const int &ramRa
                          const QString &url, const QString &directoryPath, const QString &parameters, const QString &quant, const QString &type, const QString &promptTemplate,
                          const QString &systemPrompt, const QString &icon, const double &downloadPercent, const bool &isDownloading, const bool &downloadFinished){
     const int index = models.size();
-    if(id<index){
-        Model *model = models[id];
-        model->setDownloadFinished(true);
-        model->setDirectoryPath(directoryPath);
-        m_currentModelList->addModel(model);
-        emit currentModelListChanged();
-    }else{
-        Model *model = new Model(id, fileSize, ramRamrequired, name, information, fileName, url , directoryPath, parameters, quant,
-                                                    type, promptTemplate, systemPrompt, icon, downloadPercent, isDownloading, downloadFinished, this);
-        beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
-        models.append(model);
-        endInsertRows();
-        if(downloadFinished == true){
+    for(int numberModel=0 ;numberModel<index; numberModel++){
+        if(model[numberModel].name() == name){
+            model[numberModel]->setId(id);
+            model[numberModel]->setDownloadFinished(true);
+            model[numberModel]->setDirectoryPath(directoryPath);
             m_currentModelList->addModel(model);
-                emit currentModelListChanged();
+            emit currentModelListChanged();
+            return;
         }
+    }
+
+    Model *model = new Model(id, fileSize, ramRamrequired, name, information, fileName, url , directoryPath, parameters, quant,
+                                                type, promptTemplate, systemPrompt, icon, downloadPercent, isDownloading, downloadFinished, this);
+    beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
+    models.append(model);
+    endInsertRows();
+    if(downloadFinished == true){
+        m_currentModelList->addModel(model);
+            emit currentModelListChanged();
     }
 }
 
@@ -310,53 +280,23 @@ void ModelList::downloadRequest(const int index , const QString &directoryPath){
 }
 
 void ModelList::addModel(const QString &directoryPath){
-    const int id = models.size();
-
     QString modelPath = directoryPath;
     modelPath.remove("file:///");
 
     QFileInfo fileInfo(modelPath);
     QString name = fileInfo.fileName();
 
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
-
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
-
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS model (id INTEGER, name TEXT, path TEXT)");
-
-    // Prepare query to insert both id and name
-    query.prepare("INSERT INTO model (id, name, path) VALUES (?, ?, ?)");
-
-    // Bind values
-    query.addBindValue(id);
-    query.addBindValue(name);
-    query.addBindValue(modelPath);
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully.";
-    }
-
-    // Close the database
-    db.close();
-
-    addModel(id ,0 , 0,  name, "", "", "", modelPath, "", "", "", "", "","./images/Phoenix.svg", 0,  false, true);
+    //add from database
+    insertModel(this, name, directoryPath);
 }
 
-void ModelList::handleDownloadProgress(const int index, qint64 bytesReceived, qint64 bytesTotal){
+void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal){
     Model *model = models[index];
     qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
     model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+
+    updateDownloadProgress();
+
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
 }
 
@@ -365,37 +305,9 @@ void ModelList::handleDownloadFinished(const int index){
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
 
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
+    updateDownloadProgress();
 
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
 
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS model (id INTEGER, name TEXT, path TEXT)");
-
-    // Prepare query to insert both id and name
-    query.prepare("INSERT INTO model (id, name, path) VALUES (?, ?, ?)");
-
-    // Bind values
-    query.addBindValue(model->id());
-    query.addBindValue(model->name());
-    query.addBindValue(model->directoryPath());
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully.";
-    }
-
-    // Close the database
-    db.close();
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole});
 }
@@ -407,6 +319,8 @@ void ModelList::cancelRequest(const int index){
             downloads[indexSearch]->cancelDownload();
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
+
+    updateDownloadProgress();
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 }
 
@@ -416,37 +330,8 @@ void ModelList::deleteRequest(const int index){
         if(downloads[indexSearch]->index() == index)
             downloads[indexSearch]->removeModel();
 
-
-    // Open the database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("./phoenix.db");  // Replace with the actual path to your DB
-    if (!db.open()) {
-        qDebug() << "Error: Unable to open database" << db.lastError().text();
-        return;
-    }
-
-    // Prepare and execute the SQL query
-    QSqlQuery query(db);
-
-    // Create table with id and name columns
-    query.exec("CREATE TABLE IF NOT EXISTS model (id INTEGER, name TEXT, path TEXT)");
-
-    // Prepare query to insert both id and name
-    query.prepare("DELETE FROM model where id = ?");
-
-    // Bind values
-    query.addBindValue(model->id());
-
-    // Execute the query
-    if (!query.exec()) {
-        qDebug() << "Error: Unable to insert data -" << query.lastError().text();
-    } else {
-        qDebug() << "Data inserted successfully.";
-    }
-
-    // Close the database
-    db.close();
-
+    //delete from database
+    deleteModel(model->id);
 
     if(model->url() == ""){
         const int newIndex = models.indexOf(model);
@@ -458,7 +343,6 @@ void ModelList::deleteRequest(const int index){
         QFile file(model->directoryPath());
         qDebug()<< model->directoryPath();
         if (file.exists()){
-            qDebug()<<"remove ";
             file.remove();
         }
     }
@@ -469,7 +353,6 @@ void ModelList::deleteRequest(const int index){
 
     m_currentModelList->deleteModel(model);
     emit currentModelListChanged();
-
 }
 
 
@@ -490,7 +373,6 @@ void ModelList::readModelFromJSONFile(){
     }
 
     QJsonArray jsonArray = document.array();
-    int id=0;
     for (const QJsonValue &value : jsonArray) {
         QJsonObject jsonObj = value.toObject();
 
@@ -507,7 +389,26 @@ void ModelList::readModelFromJSONFile(){
         QString systemPrompt = jsonObj["systemPrompt"].toString();
         QString icon = jsonObj["icon"].toString();
 
-        addModel(id, modelFilesize, ramRamrequired, modelName,  description, modelFilename, url, "", parameters, quant, type, promptTemplate, systemPrompt, icon, 0, false, false);
-        id++;
+        addModel(-1, modelFilesize, ramRamrequired, modelName,  description, modelFilename, url, "", parameters, quant, type, promptTemplate, systemPrompt, icon, 0, false, false);
     }
 }
+
+void ModelList::updateDownloadProgress(){
+    double totalBytesDownload =0;
+    double receivedBytesDownload =0;
+    for(int indexModel=0; indexModel<models.size();indexModel++){
+        if(models[indexModel]->isDownloading()){
+            totalBytesDownload += 1;
+            receivedBytesDownload += models[indexModel]->downloadPercent();
+        }
+    }
+    if(totalBytesDownload != 0)
+        m_downloadProgress = (receivedBytesDownload/totalBytesDownload)*100;
+    else
+        m_downloadProgress = 0;
+
+    qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
+
+    emit downloadProgressChanged();
+}
+

@@ -7,6 +7,7 @@
 #include "chatlistmodel.h"
 #include "download.h"
 #include "modellist.h"
+#include "database.h"
 
 
 class PhoenixController : public QObject

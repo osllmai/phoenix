@@ -13,8 +13,6 @@ class ChatItem : public QObject{
     Q_PROPERTY(int numberOfEditPrompt READ numberOfEditPrompt NOTIFY numberOfEditPromptChanged )
     Q_PROPERTY(int numberOfResponse READ numberOfResponse NOTIFY numberOfResponseChanged)
     Q_PROPERTY(int numberOfRegenerate READ numberOfRegenerate NOTIFY numberOfRegenerateChanged )
-    // Q_PROPERTY(int numberOfTokens READ numberOfTokens NOTIFY numberOfTokensChanged FINAL)
-    // Q_PROPERTY(int executionTime READ executionTime NOTIFY executionTimeChanged FINAL)
 
 public:
     explicit ChatItem(const int &id, Message *prompt, Message *response, int numberOfPrompt, int numberOfEditPrompt, int numberOfResponse, int numberOfRegenerate, QObject *parent);
@@ -28,8 +26,6 @@ public:
     int numberOfEditPrompt() const;
     int numberOfResponse() const;
     int numberOfRegenerate() const;
-    // int numberOfTokens() const;
-    // int executionTime() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -57,8 +53,6 @@ private:
     int m_numberOfEditPrompt;
     int m_numberOfResponse;
     int m_numberOfRegenerate;
-    // int m_numberOfTokens;
-    // int m_executionTime;
 };
 
 #endif // CHATITEM_H
