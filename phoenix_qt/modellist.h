@@ -77,11 +77,6 @@ public:
     void setCurrentModelList(CurrentModelList *currentModelList);
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-
-    void addModel(const int &id, const double &fileSize ,const int &ramRamrequired, const QString &name, const QString &information, const QString &fileName,
-                  const QString &url, const QString &directoryPath, const QString &parameters, const QString &quant, const QString &type, const QString &promptTemplate,
-                  const QString &systemPrompt, const QString &icon, const double &downloadPercent, const bool &isDownloading, const bool &downloadFinished);
-
 public slots:
     void handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int index);
@@ -98,11 +93,6 @@ private:
 
     void readModelFromJSONFile();
     void updateDownloadProgress();
-
-    //private function for DB
-    // void loadModelFromDB();
-    // void addModelFromDB(const int name, const int directoryPath);
-    // void deleteModelFromDB(const int id);
 };
 
 #endif // MODELLIST_H

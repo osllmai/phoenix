@@ -9,9 +9,11 @@
 ModelList::ModelList(QObject *parent)
     : QAbstractListModel(parent),m_currentModelList(new CurrentModelList(this)), m_downloadProgress(0)
 {
-    readModelFromJSONFile();
     //read from database
-    readModel(this);
+    models = readModel();
+    qInfo()<< "-----------------------------------------------------------------------------------------models.size:"<<models.size();
+    readModelFromJSONFile();
+    qInfo()<< "-----------------------------------------------------------------------------------------Hi";
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
@@ -234,32 +236,6 @@ void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 
-void ModelList::addModel(const int &id, const double &fileSize ,const int &ramRamrequired, const QString &name, const QString &information, const QString &fileName,
-                         const QString &url, const QString &directoryPath, const QString &parameters, const QString &quant, const QString &type, const QString &promptTemplate,
-                         const QString &systemPrompt, const QString &icon, const double &downloadPercent, const bool &isDownloading, const bool &downloadFinished){
-    const int index = models.size();
-    for(int numberModel=0 ;numberModel<index; numberModel++){
-        if(model[numberModel].name() == name){
-            model[numberModel]->setId(id);
-            model[numberModel]->setDownloadFinished(true);
-            model[numberModel]->setDirectoryPath(directoryPath);
-            m_currentModelList->addModel(model);
-            emit currentModelListChanged();
-            return;
-        }
-    }
-
-    Model *model = new Model(id, fileSize, ramRamrequired, name, information, fileName, url , directoryPath, parameters, quant,
-                                                type, promptTemplate, systemPrompt, icon, downloadPercent, isDownloading, downloadFinished, this);
-    beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
-    models.append(model);
-    endInsertRows();
-    if(downloadFinished == true){
-        m_currentModelList->addModel(model);
-            emit currentModelListChanged();
-    }
-}
-
 void ModelList::downloadRequest(const int index , const QString &directoryPath){
 
     Model *model = models[index];
@@ -287,7 +263,14 @@ void ModelList::addModel(const QString &directoryPath){
     QString name = fileInfo.fileName();
 
     //add from database
-    insertModel(this, name, directoryPath);
+    Model *model =insertModel(name, directoryPath);
+    if(model != nullptr){
+        const int index = models.size();
+        beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
+        models.append(model);
+        endInsertRows();
+        m_currentModelList->addModel(model);
+    }
 }
 
 void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal){
@@ -307,8 +290,6 @@ void ModelList::handleDownloadFinished(const int index){
 
     updateDownloadProgress();
 
-
-
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole});
 }
 
@@ -325,21 +306,28 @@ void ModelList::cancelRequest(const int index){
 }
 
 void ModelList::deleteRequest(const int index){
+    qInfo()<<"======================================= 304";
     Model *model = models[index];
+    qInfo()<<"======================================= 306";
     for(int indexSearch =0 ;indexSearch<downloads.size();indexSearch++)
         if(downloads[indexSearch]->index() == index)
             downloads[indexSearch]->removeModel();
 
-    //delete from database
-    deleteModel(model->id);
-
+    qInfo()<<"======================================= 311";
     if(model->url() == ""){
+        qInfo()<<"======================================= 313";
         const int newIndex = models.indexOf(model);
         beginRemoveRows(QModelIndex(), newIndex, newIndex);
         models.removeAll(model);
         endRemoveRows();
+        qInfo()<<"======================================= 317";
+
+        //delete from database
+        deleteModel(model->id());
+
         // chat->unloadAndDeleteLater();
-    }else{
+    }else if(model->directoryPath() != ""){
+        qInfo()<<"======================================= 324";
         QFile file(model->directoryPath());
         qDebug()<< model->directoryPath();
         if (file.exists()){
@@ -347,12 +335,17 @@ void ModelList::deleteRequest(const int index){
         }
     }
 
+    qInfo()<<"======================================= 333";
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
+    qInfo()<<"======================================= 336";
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 
+    qInfo()<<"======================================= 339";
     m_currentModelList->deleteModel(model);
+    qInfo()<<"======================================= 341";
     emit currentModelListChanged();
+    qInfo()<<"======================================= 343";
 }
 
 
@@ -389,8 +382,70 @@ void ModelList::readModelFromJSONFile(){
         QString systemPrompt = jsonObj["systemPrompt"].toString();
         QString icon = jsonObj["icon"].toString();
 
-        addModel(-1, modelFilesize, ramRamrequired, modelName,  description, modelFilename, url, "", parameters, quant, type, promptTemplate, systemPrompt, icon, 0, false, false);
+        bool flagExist = false;
+
+        qInfo()<<"------------------------------------------------------------------------------hi 371    "<<models.size();
+        for(int index=0; index<models.size(); index++){
+            qInfo()<<"**********************************"<<models[index]->name();
+            qInfo()<<"**********************************"<<modelName;
+            if(models[index]->name() == modelName){
+                models[index]->setFileName(modelFilename);
+                models[index]->setFileSize(modelFilesize);
+                models[index]->setUrl(url);
+                models[index]->setRamRamrequired(ramRamrequired);
+                models[index]->setParameters(parameters);
+                models[index]->setQuant(quant);
+                models[index]->setType(type);
+                models[index]->setInformation(description);
+                models[index]->setPromptTemplate(promptTemplate);
+                models[index]->setSystemPrompt(systemPrompt);
+                models[index]->setIcon(icon);
+                flagExist = true;
+                qInfo()<<"------------------------------------------------------------------------------hi 387    "<<index;
+            }
+            qInfo()<<"------------------------------------------------------------------------------hi 389    "<<index;
+        }
+
+        qInfo()<<"------------------------------------------------------------------------------hi 393    ";
+
+        if(flagExist == false){
+            //insert from database
+            qInfo()<<"------------------------------------------------------------------------------hi 302";
+            Model *model = insertModel(modelName, "");
+            qInfo()<<"------------------------------------------------------------------------------hi 294";
+            if(model != nullptr){
+                model->setFileName(modelFilename);
+                model->setFileSize(modelFilesize);
+                model->setUrl(url);
+                model->setRamRamrequired(ramRamrequired);
+                model->setParameters(parameters);
+                model->setQuant(quant);
+                model->setType(type);
+                model->setInformation(description);
+                model->setPromptTemplate(promptTemplate);
+                model->setSystemPrompt(systemPrompt);
+                model->setIcon(icon);
+                models.append(model);
+            }
+            // deleteModel(model->id);
+            qInfo()<<"------------------------------------------------------------------------------hi 410";
+        }
+
+        qInfo()<<"------------------------------------------------------------------------------hi 418    ";
     }
+    qInfo()<<"------------------------------------------------------------------------------hi 420    ";
+    for(int index=0;index<models.size();index++){
+        qInfo()<<"------------------------------------------------------------------------------hi 422    ";
+        if(models[index]->downloadFinished())
+            m_currentModelList->addModel(models[index]);
+        else if(models[index]->url() != ""){
+            qInfo()<<"------------------------------------------------------------------------------hi 426    ";
+            deleteRequest(index);
+            qInfo()<<"------------------------------------------------------------------------------hi 428    ";
+        }
+        qInfo()<<"------------------------------------------------------------------------------hi 428    ";
+    }
+    qInfo()<<"------------------------------------------------------------------------------hi";
 }
 
 void ModelList::updateDownloadProgress(){
@@ -408,7 +463,6 @@ void ModelList::updateDownloadProgress(){
         m_downloadProgress = 0;
 
     qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
-
     emit downloadProgressChanged();
 }
 

@@ -1,9 +1,11 @@
 #include "phoenixcontroller.h"
 
 PhoenixController::PhoenixController(QObject *parent)
-    : QObject{parent},m_chatListModel(new ChatListModel(this)), m_modelList(new ModelList(this))
+    : QObject{parent}
 {
     initDb();
+    m_chatListModel = new ChatListModel(this);
+    m_modelList = new ModelList(this);
 }
 
 //*---------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//

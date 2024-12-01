@@ -209,8 +209,15 @@ void CurrentModelList::addModel( Model *model){
 }
 
 void CurrentModelList::deleteModel( Model *model){
+    qInfo()<<"-------------------------------------------------------------------------------------212";
     const int index = models.indexOf(model);
-    beginRemoveRows(QModelIndex(), index, index);
-    models.removeAll(model);
-    endRemoveRows();
+    qInfo()<<"-------------------------------------------------------------------------------------214      "<<index;
+    if(index>-1){
+        beginRemoveRows(QModelIndex(), index, index);
+        qInfo()<<"-------------------------------------------------------------------------------------214";
+        models.removeAll(model);
+        qInfo()<<"-------------------------------------------------------------------------------------214";
+        endRemoveRows();
+        qInfo()<<"-------------------------------------------------------------------------------------214";
+    }
 }

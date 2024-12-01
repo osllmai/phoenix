@@ -4,7 +4,7 @@
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
-#include "modellist.h"
+#include "model.h"
 #include "chatmodel.h"
 #include "chatlistmodel.h"
 
@@ -111,7 +111,7 @@ const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
 //----------------------------------**Function Query**------------------------------//
 QSqlError initDb();
 
-QSqlError insertModel(ModelList &modelList, const QString &name, const QString &path);
+Model* insertModel(const QString &name, const QString &path);
 
 QSqlError insertConversation(const QString &name, const QDateTime date);
 
@@ -124,7 +124,7 @@ QSqlError deleteConversation(const int &id);
 
 QSqlError deleteMessage(const int &id);
 
-QSqlError readModel(ModelList &modelList);
+QList<Model*> readModel();
 
 QSqlError readChat(ChatListModel &chatListModel);
 //-------------------------------**End Function Query**---------------------------//

@@ -29,24 +29,26 @@ QSqlError initDb(){
     return QSqlError();
 }
 
-QSqlError insertModel(ModelList &modelList, const QString &name, const QString &path){
+Model* insertModel(const QString &name, const QString &path){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    Model *model ;
+
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
-        return db.lastError();
+       return model;
 
     QSqlQuery query(db);
 
     if (!query.prepare(INSERT_MODEL_SQL))
-        return query.lastError();
+        return model;
     query.addBindValue(name);
     query.addBindValue(path);
     query.exec();
 
-    modelList.addModel(query.lastInsertId() ,0 , 0,  name, "", "", "", path, "", "", "", "", "","./images/Phoenix.svg", 0,  false, true);
+    model = new Model(query.lastInsertId().toInt() ,0 ,0 ,name ,"","","",path ,"","","","","","./images/Phoenix.svg" ,0,false ,false );
 
     db.close();
-    return QSqlError();
+    return model;
 }
 
 QSqlError insertConversation(const QString &name, const QDateTime date){
@@ -103,7 +105,6 @@ QSqlError deleteModel(const int &id){
         return query.lastError();
     query.addBindValue(id);
     query.exec();
-
     db.close();
     return QSqlError();
 }
@@ -142,25 +143,31 @@ QSqlError deleteMessage(const int &id){
     return QSqlError();
 }
 
-QSqlError readModel(ModelList &modelList){
+QList<Model*> readModel(){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    QList<Model*> models ;
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
-        return db.lastError();
+        return models;
 
     QSqlQuery query(db);
 
-    if (!query.prepare(READ_MODEL_SQL))
-        return query.lastError();
+    if (!query.exec(READ_MODEL_SQL))
+        return models;
     while(query.next()){
         int id = query.value(0).toInt();
         QString name = query.value(1).toString();
         QString path = query.value(2).toString();
-        modelList.addModel(id ,0 , 0,  name, "", "", "", path, "", "", "", "", "","./images/Phoenix.svg", 0,  false, true);
+        bool fileExist = false;
+        QFile file(path);
+        if (file.exists()){
+            fileExist = true;
+        }
+        models.append(new Model(id,0,0,name,"","","",path,"","","","","","./images/Phoenix.svg",0,false,fileExist));
     }
 
     db.close();
-    return QSqlError();
+    return models;
 }
 
 QSqlError readChat(ChatListModel &chatListModel){
