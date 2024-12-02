@@ -259,11 +259,10 @@ void ChatModel::regenerateResponse(const int index){
      return chatItems.size();
  }
 
- bool ChatModel::deleteChatItem(const int index){
-     ChatItem* chatItem = chatItems.at(index);
-     const int nextIndex = chatItems.indexOf(chatItem);
-     beginRemoveRows(QModelIndex(), nextIndex, nextIndex);
-     chatItems.removeAll(chatItem);
+ bool ChatModel::deleteChatItem(const int index)
+ {
+     beginRemoveRows(QModelIndex(), index, index);
+     delete chatItems.takeAt(index);
      endRemoveRows();
      emit sizeChanged();
      return true;
@@ -272,13 +271,15 @@ void ChatModel::regenerateResponse(const int index){
  QVariant ChatModel::calculationDateRequest(const int currentIndex)const{
      QDateTime date = chatItems[currentIndex]->prompt()->date();
      QDateTime beforDate ;
+
      if(currentIndex != 0)
          beforDate = chatItems[currentIndex-1]->prompt()->date();
      if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
          return "";
 
+     QDate today = QDate::currentDate();
      QDateTime now = QDateTime::currentDateTime();
-     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+     if (date.daysTo(now) < 1 && date.date().day() == now.date().day())
          return "Today";
      if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
          return "Yesterday";
@@ -299,7 +300,7 @@ void ChatModel::regenerateResponse(const int index){
          return date.toString("Yesterday hh:mm");
      if(date.daysTo(now) < 7)
          return date.toString("dddd hh:mm");
-     if(date.toString("yyyy") == now.toString("yyyy"))
+     if (date.toString("yyyy") == now.toString("yyyy"))
          return date.toString("MM/dd hh:mm");
      return date.toString("MM/dd/yyyy hh:mm");
  }

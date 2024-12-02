@@ -1,5 +1,4 @@
 #include "chat.h"
-#include <Windows.h>
 
 #include <QtSql>
 #include <QSqlDatabase>

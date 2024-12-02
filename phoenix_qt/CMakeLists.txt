@@ -94,7 +94,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/downIcon.svg"
         "images/fillDownIcon.svg"
         "images/mistral-ai-icon.svg"
-        "images./githubIcon.svg"
+        "images/githubIcon.svg"
         "images/discordIcon.svg"
         "images/alignLeftIcon.svg"
         "images/fillAlignLeftIcon.svg"
@@ -116,7 +116,6 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/speedometer_needle_ring_195_90.png"
         "images/speedometer_needle_195_142.png"
         "fontFamily/DMSans-VariableFont.ttf"
-        "./phoenix.db"
         "./models.json"
     RESOURCE_PREFIX /
 
