@@ -20,15 +20,15 @@ jobs:
           - os: ubuntu-latest
             qt_version: '6.8.0'
             host: 'linux'
-            qt_arch: 'gcc_64'
+            qt_arch: 'linux_gcc_64'
           - os: windows-latest
             qt_version: '6.8.0'
             host: 'windows'
-            qt_arch: 'win64_msvc2019_64'
-          - os: macos-latest
-            qt_version: '6.8.0'
-            host: 'mac'
-            qt_arch: 'clang_64'
+            qt_arch: 'win64_msvc2022_64'
+          # - os: macos-latest
+          #   qt_version: '6.8.0'
+          #   host: 'mac'
+          #   qt_arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }}
