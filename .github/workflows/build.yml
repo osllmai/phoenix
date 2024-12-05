@@ -1,5 +1,8 @@
 name: Build phoenix
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -15,15 +18,15 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            qt_version: '6.5.0'
+            qt_version: '6.8.0'
             host: 'linux'
             qt_arch: 'gcc_64'
           - os: windows-latest
-            qt_version: '6.5.0'
+            qt_version: '6.8.0'
             host: 'windows'
             qt_arch: 'win64_msvc2019_64'
           - os: macos-latest
-            qt_version: '6.5.0'
+            qt_version: '6.8.0'
             host: 'mac'
             qt_arch: 'clang_64'
 
@@ -39,7 +42,7 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.7.1
+          version: ${{ matrix.qt_version }}
           host: ${{ matrix.host }}
           target: desktop
           arch: ${{ matrix.qt_arch }}
@@ -79,7 +82,9 @@ jobs:
       - name: Install CQtDeployer on macOS
         if: matrix.os == 'macos-latest'
         run: |
-          brew install quasarapp/tap/cqtdeployer
+          curl -L -o CQtDeployer.dmg https://github.com/QuasarApp/CQtDeployer/releases/download/v1.6.2365/CQtDeployer_1.6.2365_macOS.dmg
+          hdiutil attach CQtDeployer.dmg
+          cp -r /Volumes/CQtDeployer/CQtDeployer.app /Applications/
           which cqtdeployer
         shell: bash
 
