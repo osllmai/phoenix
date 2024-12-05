@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
             qt_version: '6.8.0'
@@ -93,6 +93,11 @@ jobs:
           cd phoenix_qt
           mkdir output
           cd build
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            ../../CQtDeployer/cqtdeployer.exe -bin Release/{% binary_name %}.exe -qmlDir ../{% qml_dir %} -qmake ${{ env.Qt6_DIR }}/bin/qmake.exe -targetDir ../output
+          else
+            cqtdeployer -bin {% binary_name %} -qmlDir ../{% qml_dir %} -qmake ${{ env.Qt6_DIR }}/bin/qmake -targetDir ../output
+          fi
         shell: bash
 
       - name: Zip output
