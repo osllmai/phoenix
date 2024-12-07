@@ -11,15 +11,10 @@ ChatListModel::ChatListModel(QObject *parent)
 
         //find message for this chat
         Message* root = new Message(-1,"root",true , this);
-        qInfo()<<"----------------------------------------------------------Hi DEAR";
         phoenix_databace::readMessage(root, chatDB.first()->id());
-        qInfo()<<"----------------------------------------------------------Hi DEAR";
-        qInfo()<<chatDB.first()->id()<<"------------------------------------------";
-        qInfo()<<"----------------------------------------------------------Hi DEAR";
 
         //add chat to list chats
         Chat *chat = new Chat(chatDB.first()->id(), chatDB.first()->title(), chatDB.first()->date(),root, this);
-        qInfo()<<"----------------------------------------------------------Hi DEAR";
         setCurrentChat(chat);
 
         beginInsertRows(QModelIndex(), 0, 0);
@@ -129,6 +124,7 @@ void ChatListModel::addChat(){
 
     Message *root = new Message(-1,"root",true , this);
     Chat *chat = new Chat(index, name, QDateTime::currentDateTime(),root, this);
+
     if(m_currentChat != nullptr)
         disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);
 
@@ -139,12 +135,14 @@ void ChatListModel::addChat(){
 void ChatListModel::addCurrentChatToChatList(){
     int id = phoenix_databace::insertConversation(m_currentChat->title(), m_currentChat->date());
     m_currentChat->setId(id);
+
+
     beginInsertRows(QModelIndex(), 0, 0);
     chats.prepend(m_currentChat);
     endInsertRows();
     emit sizeChanged();
     if(chats.size() >1)
-        emit dataChanged(createIndex(1, 0), createIndex(1, 0), {DateRole});
+        emit dataChanged(createIndex(1, 0), createIndex(1, 0), {IdRole, DateRole});
 }
 
 Chat* ChatListModel::getChat(int index){

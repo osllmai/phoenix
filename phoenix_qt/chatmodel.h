@@ -36,6 +36,7 @@ public:
     int size();
     void updateResponse(const QString &response);
     void setExecutionTime(const int executionTime);
+    void setParentId(const int id);
     Q_INVOKABLE void prompt(const QString &promptText);
     Q_INVOKABLE void nextPrompt(const int index, const int numberOfNext);
     Q_INVOKABLE void editPrompt(const int index,const QString &promptText);

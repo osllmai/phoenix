@@ -8,26 +8,15 @@ ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
 {
     Message* beforMessage =root;
     int index = 0;
-    qInfo()<<"----------------------------------------------------------Hi DEAR 11";
     while(beforMessage !=nullptr && beforMessage->numberOfChildList() > 0){
-        qInfo()<<"----------------------------------------------------------Hi DEAR 13";
         ChatItem* chatItem = new ChatItem(index,beforMessage->child(),beforMessage->child()->child(),
                                           beforMessage->numberOfChildList(),beforMessage->numberOfCurrentChild(),
                                           beforMessage->child()->numberOfChildList(),beforMessage->child()->numberOfCurrentChild(),
                                           beforMessage);
         chatItems.append(chatItem);
-        beforMessage = beforMessage->child();
-        qInfo()<<beforMessage<<beforMessage->numberOfChildList();
-        qInfo()<<"----------------------------------------------------------Hi DEAR 154";
-        qInfo()<<"----------------------chatItem->id()"<<chatItem->id();
-        // qInfo()<<"----------------------chatItem->prompt()->id()"<<chatItem->prompt()->id();
-        // qInfo()<<"----------------------chatItem->response()->id()"<<chatItem->response()->id();
-        // qInfo()<<"----------------------chatItem->numberOfPrompt()"<<chatItem->numberOfPrompt();
-        // qInfo()<<"----------------------chatItem->numberOfResponse()"<<chatItem->numberOfResponse();
+        beforMessage = beforMessage->child()->child();
         index++;
-        qInfo()<<"----------------------------------------------------------Hi DEAR 23";
     }
-    qInfo()<<"----------------------------------------------------------Hi DEAR 23";
 }
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
@@ -297,7 +286,7 @@ QVariant ChatModel::calculationDateRequest(const int currentIndex)const{
     if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
         return "";
 
-    QDate today = QDate::currentDate();
+    // QDate today = QDate::currentDate();
     QDateTime now = QDateTime::currentDateTime();
     if (date.daysTo(now) < 1 && date.date().day() == now.date().day())
         return "Today";
@@ -366,4 +355,8 @@ void ChatModel::finishedResponnse(){
                                 response->executionTime(), prompt, m_parentId, response->date());
         response->setId(responseId);
     }
+}
+
+void ChatModel::setParentId(const int id){
+    m_parentId = id;
 }

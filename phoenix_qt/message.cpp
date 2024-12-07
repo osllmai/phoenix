@@ -7,12 +7,10 @@ Message::Message(const int &id, const QString &text, bool isPrompt, QObject *par
     m_date = QDateTime::currentDateTime();
 }
 
-Message::Message(const int &id, const QString &text, bool isPrompt, QDateTime date, int numberOfToken, int executionTime,QObject *parent ){
-    Message(id,text,isPrompt,parent);
-    m_date = date;
-    m_numberOfToken = numberOfToken;
-    m_executionTime = executionTime;
-}
+Message::Message(const int &id, const QString &text, bool isPrompt, QDateTime date, int numberOfToken, int executionTime,QObject *parent ):
+    m_id(id),m_text(text), m_child(nullptr), QObject(parent),m_numberOfCurrentChild(-1),
+    m_numberOfChildList(0),m_isPrompt(isPrompt),m_numberOfToken(numberOfToken),m_executionTime(executionTime),m_date(date)
+{}
 
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//

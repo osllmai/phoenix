@@ -98,6 +98,10 @@ namespace phoenix_databace{
         SELECT id, text, is_prompt, number_of_token, execution_time, date FROM message WHERE parent_id = ? AND conversation_id =?
         )");
 
+    const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
+        DELETE FROM message where conversation_id = ?
+        )");
+
     //-------------------------------**End Message Query**----------------------------//
 
 
