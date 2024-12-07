@@ -1,19 +1,43 @@
 #include "chatlistmodel.h"
 
-#include <QtSql>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QDebug>
 
 ChatListModel::ChatListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
+    // read chat from database
+    QList<Chat*> chatDB = phoenix_databace::readConversation();
+    for(int i=chatDB.size()-1 ; i>=0 ; i--){
+
+        //find message for this chat
+        Message* root = new Message(-1,"root",true , this);
+        qInfo()<<"----------------------------------------------------------Hi DEAR";
+        phoenix_databace::readMessage(root, chatDB.first()->id());
+        qInfo()<<"----------------------------------------------------------Hi DEAR";
+        qInfo()<<chatDB.first()->id()<<"------------------------------------------";
+        qInfo()<<"----------------------------------------------------------Hi DEAR";
+
+        //add chat to list chats
+        Chat *chat = new Chat(chatDB.first()->id(), chatDB.first()->title(), chatDB.first()->date(),root, this);
+        qInfo()<<"----------------------------------------------------------Hi DEAR";
+        setCurrentChat(chat);
+
+        beginInsertRows(QModelIndex(), 0, 0);
+        chats.prepend(m_currentChat);
+        endInsertRows();
+        if(chats.size() >1)
+            emit dataChanged(createIndex(1, 0), createIndex(1, 0), {DateRole});
+
+        Chat *chatOld = chatDB.first();
+        chatDB.removeFirst();
+        delete chatOld;
+    }
+    connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
     addChat();
 }
 
-//*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
-//*------------------------------------------------------------------------------* QAbstractItemModel interface  *------------------------------------------------------------------------------*//
+//*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
+//*------------------------------------------------------------------------------* QAbstractItemModel interface  *-----------------------------------------------------------------------------*//
 int ChatListModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
     return chats.size();
@@ -99,23 +123,23 @@ void ChatListModel::setCurrentChat(Chat *chat){
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-
 void ChatListModel::addChat(){
     const int index = chats.size();
     const QString name = "new chat" +  QString::number(index);
 
-    Chat *chat = new Chat(index, name , this);
-    if(m_currentChat != nullptr){
+    Message *root = new Message(-1,"root",true , this);
+    Chat *chat = new Chat(index, name, QDateTime::currentDateTime(),root, this);
+    if(m_currentChat != nullptr)
         disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);
-    }
 
     setCurrentChat(chat);
     connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
-
 }
 
 void ChatListModel::addCurrentChatToChatList(){
-    beginInsertRows(QModelIndex(), 0, 0);//Tell the model that you are about to add data
+    int id = phoenix_databace::insertConversation(m_currentChat->title(), m_currentChat->date());
+    m_currentChat->setId(id);
+    beginInsertRows(QModelIndex(), 0, 0);
     chats.prepend(m_currentChat);
     endInsertRows();
     emit sizeChanged();
@@ -124,8 +148,9 @@ void ChatListModel::addCurrentChatToChatList(){
 }
 
 Chat* ChatListModel::getChat(int index){
-    if (index < 0 || index >= chats.size())
+    if (index < 0 || index >= chats.size()){
         return nullptr;
+    }
     return chats.at(index);
 }
 
@@ -135,10 +160,14 @@ void ChatListModel::deleteChat(int index){
     Chat* chat = chats.at(index);
     if(chat == m_currentChat)
         addChat();
-    const int newIndex = chats.indexOf(chat);
-    beginRemoveRows(QModelIndex(), newIndex, newIndex);
+    // const int newIndex = chats.indexOf(chat);
+    beginRemoveRows(QModelIndex(), index, index);
     chats.removeAll(chat);
     endRemoveRows();
+
+    phoenix_databace::deleteConversation(chat->id());
+    delete chat;
+
     emit sizeChanged();
 }
 
@@ -156,12 +185,12 @@ QVariant ChatListModel::dateRequest(const int currentIndex)const{
     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
         return "Yesterday";
     if(date.daysTo(now) < 7)
-        if(currentIndex != 0 && beforDate.daysTo(now)<7)
+        if(currentIndex != 0 && beforDate.daysTo(now)<7 && beforDate.daysTo(now)>2)
             return "";
         else
             return "Previous 7 days";
     if(date.daysTo(now) < 30)
-        if(currentIndex != 0 && beforDate.daysTo(now)<30)
+        if(currentIndex != 0 && beforDate.daysTo(now)<30 && beforDate.daysTo(now)>7)
             return "";
         else
             return "Previous 30 days";

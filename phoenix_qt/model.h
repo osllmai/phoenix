@@ -116,8 +116,6 @@ private:
     double m_downloadPercent;
     bool m_isDownloading;
     bool m_downloadFinished;
-
-
 };
 
 #endif // MODEL_H

@@ -23,7 +23,7 @@ class Chat : public QObject
 
 
 public:
-    explicit Chat(const int &id, const QString &title, QObject *parent = nullptr);
+    explicit Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent = nullptr);
     virtual ~Chat();
 
     Q_INVOKABLE void loadModelRequested(QString modelPath);
@@ -66,6 +66,7 @@ signals:
     void tokenResponse(const QString &token);
 
     void startChat();
+    void finishedResponnseRequest();
 
 public slots:
     void LoadModelResult(const bool result);

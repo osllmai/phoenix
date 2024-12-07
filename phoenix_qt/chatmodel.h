@@ -7,6 +7,7 @@
 #include <QAbstractListModel>
 #include "chatitem.h"
 
+
 class ChatModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -29,7 +30,7 @@ class ChatModel : public QAbstractListModel
         NumberOfRegenerateRole
     };
 public:
-    explicit ChatModel(QObject *parent = nullptr);
+    explicit ChatModel(const int &parentId,Message* rootMessage, QObject *parent = nullptr);
     // void saveChatItem(int parentId);
     // void addChatItem(int id, QString prompt, QString response);
     int size();
@@ -63,11 +64,13 @@ signals:
     void isStartChanged();
 
 public slots:
+    void finishedResponnse();
 
 private:
     Message *root = new Message(-1,"root",true , this);
     QList<ChatItem*> chatItems;
     bool m_isStart;
+    int m_parentId;
 
     bool deleteChatItem(const int index);
     QVariant calculationDateRequest(const int currentIndex) const;

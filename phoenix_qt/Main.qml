@@ -7,7 +7,7 @@ import QtQuick.Layouts
 import Phoenix
 
 
-ApplicationWindow {
+Window {
     id: window
 
     width: 1229

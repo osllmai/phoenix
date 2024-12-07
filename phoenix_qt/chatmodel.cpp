@@ -1,14 +1,34 @@
 #include "chatmodel.h"
 
-#include <QtSql>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QDebug>
+#include "database.h"
 
-ChatModel::ChatModel(QObject *parent)
-    : QAbstractListModel{parent}{}
-
+ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
+    :m_parentId(parentId),root(rootMessage), QAbstractListModel{parent}
+{
+    Message* beforMessage =root;
+    int index = 0;
+    qInfo()<<"----------------------------------------------------------Hi DEAR 11";
+    while(beforMessage !=nullptr && beforMessage->numberOfChildList() > 0){
+        qInfo()<<"----------------------------------------------------------Hi DEAR 13";
+        ChatItem* chatItem = new ChatItem(index,beforMessage->child(),beforMessage->child()->child(),
+                                          beforMessage->numberOfChildList(),beforMessage->numberOfCurrentChild(),
+                                          beforMessage->child()->numberOfChildList(),beforMessage->child()->numberOfCurrentChild(),
+                                          beforMessage);
+        chatItems.append(chatItem);
+        beforMessage = beforMessage->child();
+        qInfo()<<beforMessage<<beforMessage->numberOfChildList();
+        qInfo()<<"----------------------------------------------------------Hi DEAR 154";
+        qInfo()<<"----------------------chatItem->id()"<<chatItem->id();
+        // qInfo()<<"----------------------chatItem->prompt()->id()"<<chatItem->prompt()->id();
+        // qInfo()<<"----------------------chatItem->response()->id()"<<chatItem->response()->id();
+        // qInfo()<<"----------------------chatItem->numberOfPrompt()"<<chatItem->numberOfPrompt();
+        // qInfo()<<"----------------------chatItem->numberOfResponse()"<<chatItem->numberOfResponse();
+        index++;
+        qInfo()<<"----------------------------------------------------------Hi DEAR 23";
+    }
+    qInfo()<<"----------------------------------------------------------Hi DEAR 23";
+}
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
 //*------------------------------------------------------------------------------* QAbstractItemModel interface  *------------------------------------------------------------------------------*//
@@ -25,30 +45,30 @@ QVariant ChatModel::data(const QModelIndex &index, int role = Qt::DisplayRole) c
     ChatItem* chatItem = chatItems[index.row()];
 
     switch (role) {
-        case IdRole:
-            return chatItem->id();
-        case DateRequestRole:
-            return calculationDateRequest(index.row());
-        case ExecutionTimeRole:
-            return chatItem->response()->executionTime();
-        case NumberOfTokenRole:
-            return chatItem->response()->numberOfToken();
-        case PromptRole:
-            return chatItem->prompt()->text();
-        case PromptTimeRole:
-            return calculationPromptRequest(index.row());
-        case NumberPromptRole:
-            return chatItem->numberOfPrompt()+1;
-        case NumberOfEditPromptRole:
-            return chatItem->numberOfEditPrompt();
-        case ResponseRole:
-            return chatItem->response()->text();
-        case ResponseTimeRole:
-            return calculationResponseRequest(index.row());
-        case NumberResponseRole:
-            return chatItem->numberOfResponse()+1;
-        case NumberOfRegenerateRole:
-            return chatItem->numberOfRegenerate();
+    case IdRole:
+        return chatItem->id();
+    case DateRequestRole:
+        return calculationDateRequest(index.row());
+    case ExecutionTimeRole:
+        return chatItem->response()->executionTime();
+    case NumberOfTokenRole:
+        return chatItem->response()->numberOfToken();
+    case PromptRole:
+        return chatItem->prompt()->text();
+    case PromptTimeRole:
+        return calculationPromptRequest(index.row());
+    case NumberPromptRole:
+        return chatItem->numberOfPrompt()+1;
+    case NumberOfEditPromptRole:
+        return chatItem->numberOfEditPrompt();
+    case ResponseRole:
+        return chatItem->response()->text();
+    case ResponseTimeRole:
+        return calculationResponseRequest(index.row());
+    case NumberResponseRole:
+        return chatItem->numberOfResponse()+1;
+    case NumberOfRegenerateRole:
+        return chatItem->numberOfRegenerate();
     }
 
     return QVariant();
@@ -82,23 +102,23 @@ bool ChatModel::setData(const QModelIndex &index, const QVariant &value, int rol
     bool somethingChanged{false};
 
     switch (role) {
-        case IdRole:
-            if( chatItem->id()!= value.toInt()){
-                chatItem->setId(value.toInt());
-                somethingChanged = true;
-            }
-            break;
-        case PromptRole:
-            if( chatItem->prompt()->text()!= value.toString()){
-                chatItem->prompt()->setText(value.toString());
-                somethingChanged = true;
-            }
-            break;
-        case ResponseRole:
-            if( chatItem->response()->text()!= value.toString()){
-                chatItem->response()->setText(value.toString());
-                somethingChanged = true;
-            }
+    case IdRole:
+        if( chatItem->id()!= value.toInt()){
+            chatItem->setId(value.toInt());
+            somethingChanged = true;
+        }
+        break;
+    case PromptRole:
+        if( chatItem->prompt()->text()!= value.toString()){
+            chatItem->prompt()->setText(value.toString());
+            somethingChanged = true;
+        }
+        break;
+    case ResponseRole:
+        if( chatItem->response()->text()!= value.toString()){
+            chatItem->response()->setText(value.toString());
+            somethingChanged = true;
+        }
     }
     if(somethingChanged){
         emit dataChanged(index, index, QVector<int>() << role);
@@ -199,8 +219,8 @@ void ChatModel::nextResponse(const int index, const int numberOfNext){
             Message *response = prompt->child();
 
             ChatItem *chatItem = new ChatItem(chatItems.size(), prompt, response,
-                                    parentPrompt->numberOfCurrentChild(), parentPrompt->numberOfChildList(),
-                                    prompt->numberOfCurrentChild(), prompt->numberOfChildList(), this);
+                                              parentPrompt->numberOfCurrentChild(), parentPrompt->numberOfChildList(),
+                                              prompt->numberOfCurrentChild(), prompt->numberOfChildList(), this);
             beginInsertRows(QModelIndex(), chatItems.size(), chatItems.size());//Tell the model that you are about to add data
             chatItems.append(chatItem);
             endInsertRows();
@@ -244,7 +264,7 @@ void ChatModel::regenerateResponse(const int index){
 }
 
 
- void ChatModel::updateResponse(const QString &response){
+void ChatModel::updateResponse(const QString &response){
     const int index = chatItems.size() - 1;
     if (index < 0 || index >= chatItems.size()) return;
 
@@ -254,74 +274,96 @@ void ChatModel::regenerateResponse(const int index){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole, NumberOfTokenRole});
 }
 
- int ChatModel::size(){
-     qDebug()<<chatItems.size();
-     return chatItems.size();
- }
+int ChatModel::size(){
+    qDebug()<<chatItems.size();
+    return chatItems.size();
+}
 
- bool ChatModel::deleteChatItem(const int index)
- {
-     beginRemoveRows(QModelIndex(), index, index);
-     delete chatItems.takeAt(index);
-     endRemoveRows();
-     emit sizeChanged();
-     return true;
- }
+bool ChatModel::deleteChatItem(const int index)
+{
+    beginRemoveRows(QModelIndex(), index, index);
+    delete chatItems.takeAt(index);
+    endRemoveRows();
+    emit sizeChanged();
+    return true;
+}
 
- QVariant ChatModel::calculationDateRequest(const int currentIndex)const{
-     QDateTime date = chatItems[currentIndex]->prompt()->date();
-     QDateTime beforDate ;
+QVariant ChatModel::calculationDateRequest(const int currentIndex)const{
+    QDateTime date = chatItems[currentIndex]->prompt()->date();
+    QDateTime beforDate ;
 
-     if(currentIndex != 0)
-         beforDate = chatItems[currentIndex-1]->prompt()->date();
-     if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
-         return "";
+    if(currentIndex != 0)
+        beforDate = chatItems[currentIndex-1]->prompt()->date();
+    if(currentIndex != 0 && beforDate.toString("MM/dd/yyyy") == date.toString("MM/dd/yyyy"))
+        return "";
 
-     QDate today = QDate::currentDate();
-     QDateTime now = QDateTime::currentDateTime();
-     if (date.daysTo(now) < 1 && date.date().day() == now.date().day())
-         return "Today";
-     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-         return "Yesterday";
-     if(date.daysTo(now) < 7)
-         return date.toString("dddd");
-     if(date.toString("yyyy") == now.toString("yyyy"))
-         return date.toString("dddd, MMMM dd");
-     return date.toString("dddd, MM/dd/yyyy");
- }
+    QDate today = QDate::currentDate();
+    QDateTime now = QDateTime::currentDateTime();
+    if (date.daysTo(now) < 1 && date.date().day() == now.date().day())
+        return "Today";
+    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+        return "Yesterday";
+    if(date.daysTo(now) < 7)
+        return date.toString("dddd");
+    if(date.toString("yyyy") == now.toString("yyyy"))
+        return date.toString("dddd, MMMM dd");
+    return date.toString("dddd, MM/dd/yyyy");
+}
 
- QVariant ChatModel::calculationPromptRequest(const int currentIndex)const{
-     QDateTime date = chatItems[currentIndex]->prompt()->date();
+QVariant ChatModel::calculationPromptRequest(const int currentIndex)const{
+    QDateTime date = chatItems[currentIndex]->prompt()->date();
 
-     QDateTime now = QDateTime::currentDateTime();
-     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
-         return date.toString("hh:mm");
-     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-         return date.toString("Yesterday hh:mm");
-     if(date.daysTo(now) < 7)
-         return date.toString("dddd hh:mm");
-     if (date.toString("yyyy") == now.toString("yyyy"))
-         return date.toString("MM/dd hh:mm");
-     return date.toString("MM/dd/yyyy hh:mm");
- }
+    QDateTime now = QDateTime::currentDateTime();
+    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+        return date.toString("hh:mm");
+    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+        return date.toString("Yesterday hh:mm");
+    if(date.daysTo(now) < 7)
+        return date.toString("dddd hh:mm");
+    if (date.toString("yyyy") == now.toString("yyyy"))
+        return date.toString("MM/dd hh:mm");
+    return date.toString("MM/dd/yyyy hh:mm");
+}
 
- QVariant ChatModel::calculationResponseRequest(const int currentIndex)const{
-     QDateTime date = chatItems[currentIndex]->response()->date();
+QVariant ChatModel::calculationResponseRequest(const int currentIndex)const{
+    QDateTime date = chatItems[currentIndex]->response()->date();
 
-     QDateTime now = QDateTime::currentDateTime();
-     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
-         return date.toString("hh:mm");
-     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-         return date.toString("Yesterday hh:mm");
-     if(date.daysTo(now) < 7)
-         return date.toString("dddd hh:mm");
-     if(date.toString("yyyy") == now.toString("yyyy"))
-         return date.toString("MM/dd hh:mm");
-     return date.toString("MM/dd/yyyy hh:mm");
- }
+    QDateTime now = QDateTime::currentDateTime();
+    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+        return date.toString("hh:mm");
+    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+        return date.toString("Yesterday hh:mm");
+    if(date.daysTo(now) < 7)
+        return date.toString("dddd hh:mm");
+    if(date.toString("yyyy") == now.toString("yyyy"))
+        return date.toString("MM/dd hh:mm");
+    return date.toString("MM/dd/yyyy hh:mm");
+}
 
- void ChatModel::setExecutionTime(const int executionTime){
-     chatItems.last()->response()->setExecutionTime(executionTime);
-     emit dataChanged(createIndex(chatItems.size()-1, 0), createIndex(chatItems.size()-1, 0), {ExecutionTimeRole});
+void ChatModel::setExecutionTime(const int executionTime){
+    chatItems.last()->response()->setExecutionTime(executionTime);
+    emit dataChanged(createIndex(chatItems.size()-1, 0), createIndex(chatItems.size()-1, 0), {ExecutionTimeRole});
+}
 
- }
+void ChatModel::finishedResponnse(){
+    Message *prompt = chatItems.last()->prompt();
+    Message *response = chatItems.last()->response();
+    Message *parent ;
+    if(chatItems.size() == 1)
+        parent = root;
+    else
+        parent = chatItems[chatItems.size()-2]->response();
+    qInfo()<<root;
+    if(prompt->numberOfChildList() == 1){
+        int promptId = phoenix_databace::insertMessage(prompt->text(), prompt->isPrompt(), prompt->numberOfToken(),
+                                prompt->executionTime(), parent ,m_parentId, prompt->date());
+        prompt->setId(promptId);
+        int responseId = phoenix_databace::insertMessage(response->text(), response->isPrompt(), response->numberOfToken(),
+                                response->executionTime(), prompt, m_parentId, response->date());
+        response->setId(responseId);
+    }else{
+        int responseId = phoenix_databace::insertMessage(response->text(), response->isPrompt(), response->numberOfToken(),
+                                response->executionTime(), prompt, m_parentId, response->date());
+        response->setId(responseId);
+    }
+}

@@ -6,7 +6,9 @@
 #include <QtQml>
 #include <QTimer>
 #include <QAbstractListModel>
+#include "database.h"
 #include "chat.h"
+#include "message.h"
 
 class ChatListModel : public QAbstractListModel
 {

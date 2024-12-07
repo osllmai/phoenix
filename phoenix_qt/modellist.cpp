@@ -10,10 +10,8 @@ ModelList::ModelList(QObject *parent)
     : QAbstractListModel(parent),m_currentModelList(new CurrentModelList(this)), m_downloadProgress(0)
 {
     //read from database
-    models = readModel();
-    qInfo()<< "-----------------------------------------------------------------------------------------models.size:"<<models.size();
+    models = phoenix_databace::readModel();
     readModelFromJSONFile();
-    qInfo()<< "-----------------------------------------------------------------------------------------Hi";
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
@@ -263,10 +261,11 @@ void ModelList::addModel(const QString &directoryPath){
     QString name = fileInfo.fileName();
 
     //add from database
-    Model *model =insertModel(name, directoryPath);
+    Model *model =phoenix_databace::insertModel(name, directoryPath);
+    model->setDownloadFinished(true);
     if(model != nullptr){
         const int index = models.size();
-        beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
+        beginInsertRows(QModelIndex(), index, index);
         models.append(model);
         endInsertRows();
         m_currentModelList->addModel(model);
@@ -306,28 +305,27 @@ void ModelList::cancelRequest(const int index){
 }
 
 void ModelList::deleteRequest(const int index){
-    qInfo()<<"======================================= 304";
     Model *model = models[index];
-    qInfo()<<"======================================= 306";
     for(int indexSearch =0 ;indexSearch<downloads.size();indexSearch++)
         if(downloads[indexSearch]->index() == index)
             downloads[indexSearch]->removeModel();
 
-    qInfo()<<"======================================= 311";
+    model->setIsDownloading(false);
+    model->setDownloadFinished(false);
+    m_currentModelList->deleteModel(model);
+
     if(model->url() == ""){
-        qInfo()<<"======================================= 313";
         const int newIndex = models.indexOf(model);
         beginRemoveRows(QModelIndex(), newIndex, newIndex);
         models.removeAll(model);
         endRemoveRows();
-        qInfo()<<"======================================= 317";
 
         //delete from database
-        deleteModel(model->id());
+        phoenix_databace::deleteModel(model->id());
+        delete model;
 
         // chat->unloadAndDeleteLater();
     }else if(model->directoryPath() != ""){
-        qInfo()<<"======================================= 324";
         QFile file(model->directoryPath());
         qDebug()<< model->directoryPath();
         if (file.exists()){
@@ -335,17 +333,10 @@ void ModelList::deleteRequest(const int index){
         }
     }
 
-    qInfo()<<"======================================= 333";
-    model->setIsDownloading(false);
-    model->setDownloadFinished(false);
-    qInfo()<<"======================================= 336";
+
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 
-    qInfo()<<"======================================= 339";
-    m_currentModelList->deleteModel(model);
-    qInfo()<<"======================================= 341";
     emit currentModelListChanged();
-    qInfo()<<"======================================= 343";
 }
 
 
@@ -384,10 +375,7 @@ void ModelList::readModelFromJSONFile(){
 
         bool flagExist = false;
 
-        qInfo()<<"------------------------------------------------------------------------------hi 371    "<<models.size();
         for(int index=0; index<models.size(); index++){
-            qInfo()<<"**********************************"<<models[index]->name();
-            qInfo()<<"**********************************"<<modelName;
             if(models[index]->name() == modelName){
                 models[index]->setFileName(modelFilename);
                 models[index]->setFileSize(modelFilesize);
@@ -401,18 +389,12 @@ void ModelList::readModelFromJSONFile(){
                 models[index]->setSystemPrompt(systemPrompt);
                 models[index]->setIcon(icon);
                 flagExist = true;
-                qInfo()<<"------------------------------------------------------------------------------hi 387    "<<index;
             }
-            qInfo()<<"------------------------------------------------------------------------------hi 389    "<<index;
         }
-
-        qInfo()<<"------------------------------------------------------------------------------hi 393    ";
 
         if(flagExist == false){
             //insert from database
-            qInfo()<<"------------------------------------------------------------------------------hi 302";
-            Model *model = insertModel(modelName, "");
-            qInfo()<<"------------------------------------------------------------------------------hi 294";
+            Model *model = phoenix_databace::insertModel(modelName, "");
             if(model != nullptr){
                 model->setFileName(modelFilename);
                 model->setFileSize(modelFilesize);
@@ -425,27 +407,22 @@ void ModelList::readModelFromJSONFile(){
                 model->setPromptTemplate(promptTemplate);
                 model->setSystemPrompt(systemPrompt);
                 model->setIcon(icon);
+
+                const int index = models.size();
+                beginInsertRows(QModelIndex(), index, index);
                 models.append(model);
+                endInsertRows();
             }
             // deleteModel(model->id);
-            qInfo()<<"------------------------------------------------------------------------------hi 410";
         }
-
-        qInfo()<<"------------------------------------------------------------------------------hi 418    ";
     }
-    qInfo()<<"------------------------------------------------------------------------------hi 420    ";
     for(int index=0;index<models.size();index++){
-        qInfo()<<"------------------------------------------------------------------------------hi 422    ";
         if(models[index]->downloadFinished())
             m_currentModelList->addModel(models[index]);
         else if(models[index]->url() != ""){
-            qInfo()<<"------------------------------------------------------------------------------hi 426    ";
             deleteRequest(index);
-            qInfo()<<"------------------------------------------------------------------------------hi 428    ";
         }
-        qInfo()<<"------------------------------------------------------------------------------hi 428    ";
     }
-    qInfo()<<"------------------------------------------------------------------------------hi";
 }
 
 void ModelList::updateDownloadProgress(){

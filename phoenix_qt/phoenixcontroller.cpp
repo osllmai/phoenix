@@ -3,7 +3,7 @@
 PhoenixController::PhoenixController(QObject *parent)
     : QObject{parent}
 {
-    initDb();
+    phoenix_databace::initDb();
     m_chatListModel = new ChatListModel(this);
     m_modelList = new ModelList(this);
 }

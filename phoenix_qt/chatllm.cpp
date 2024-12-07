@@ -1,6 +1,7 @@
 #include "chatllm.h"
 #include "chat.h"
 
+#include <Windows.h>
 #include <QDebug>
 #include <cassert>
 #include <string>
@@ -43,7 +44,7 @@ void ChatLLM::setStop(){
 void ChatLLM::loadModel(const QString &modelPath)
 {
     // qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
-    QThread::msleep(2000);
+    Sleep(2000);
 
 //     std::string backend = "cuda";
 
@@ -113,9 +114,9 @@ void ChatLLM::prompt(const QString &input){
     for(int i=0;i<30;i++){
         emit tokenResponse("Hi  :)  ");
         // qInfo()<<"send";
-        QThread::msleep(50);
+        Sleep(50);
         emit tokenResponse("Phoenix!, ");
-        QThread::msleep(50);
+        Sleep(50);
     }
 
     emit finishedResponnse();

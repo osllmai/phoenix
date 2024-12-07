@@ -6,22 +6,28 @@
 #include <QSqlError>
 #include <QDebug>
 
-Chat::Chat(const int &id, const QString &title, QObject *parent) :
+Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent) :
     QObject(parent), m_id(id), m_title(title),
     m_isLoadModel(false),
     m_responseInProgress(false),
-    m_chatModel(new ChatModel(this)),
     chatLLM(new ChatLLM(this)),
     m_timer(new QTimer(this)),
+    m_date(date),
     m_valueTimer(0)
 {
     QThread::currentThread()->setObjectName("Main Thread");
-    m_date = QDateTime::currentDateTime();
+    // m_date = QDateTime::currentDateTime();
+    qInfo()<<"------------------------------------------------------------------Chat 21";
 
+    m_chatModel = new ChatModel(id,root,this);
+
+    qInfo()<<"------------------------------------------------------------------Chat 24";
     //load and unload model
     connect(this, &Chat::loadModel, chatLLM, &ChatLLM::loadModel, Qt::QueuedConnection);
     connect(chatLLM, &ChatLLM::loadModelResult, this, &Chat::LoadModelResult, Qt::QueuedConnection);
     connect(this, &Chat::unLoadModel, chatLLM, &ChatLLM::unLoadModel, Qt::QueuedConnection);
+
+    qInfo()<<"------------------------------------------------------------------Chat 30";
 
     //prompt
     connect(m_chatModel, &ChatModel::startPrompt, this, &Chat::promptRequested, Qt::QueuedConnection);
@@ -29,8 +35,13 @@ Chat::Chat(const int &id, const QString &title, QObject *parent) :
     connect(chatLLM, &ChatLLM::tokenResponse, this, &Chat::tokenResponseRequested, Qt::QueuedConnection);
     connect(m_timer, &QTimer::timeout, [=](){++m_valueTimer; emit valueTimerChanged();});
 
+    qInfo()<<"------------------------------------------------------------------Chat 38";
+
     //finished response
     connect(chatLLM, &ChatLLM::finishedResponnse, this, &Chat::finishedResponnse, Qt::QueuedConnection);
+    connect(this, &Chat::finishedResponnseRequest, m_chatModel, &ChatModel::finishedResponnse, Qt::QueuedConnection);
+    qInfo()<<"------------------------------------------------------------------Chat 43";
+
 }
 
 Chat::~Chat(){
@@ -122,6 +133,7 @@ void Chat::finishedResponnse(){
     m_chatModel->setExecutionTime(m_valueTimer);
     m_valueTimer = 0;
     emit valueTimerChanged();
+    emit finishedResponnseRequest();
 }
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 

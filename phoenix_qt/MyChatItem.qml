@@ -54,12 +54,12 @@ Item {
                 hoverEnabled: true
                 onHoveredChanged: {
                     if(containsMouse){
-                        if(control.myChatListModel.currentChat !== control.myChatListModel.getChat(control.myIndex) ){
+                        if(control.myChatListModel.currentChat.id !== control.myChatListModel.getChat(control.myIndex).id ){
                             backgroundId.color = control.hoverButtonColor
                             chatIcon.open()
                         }
                     }else{
-                        if(control.myChatListModel.currentChat === control.myChatListModel.getChat(control.myIndex)){
+                        if(control.myChatListModel.currentChat.id === control.myChatListModel.getChat(control.myIndex).id){
                             backgroundId.color=control.selectButtonColor
                         }else{
                             backgroundId.color=control.normalButtonColor
