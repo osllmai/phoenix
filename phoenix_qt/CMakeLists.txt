@@ -58,7 +58,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/lightIcon.svg"
         "images/modelIcon.svg"
         "images/chatAddIcon.svg"
-        "images/Phoenix.svg"
+        "images/phoenix.png"
         "images/searchIcon.svg"
         "images/sendIcon.svg"
         "images/sendMessageIcon.svg"

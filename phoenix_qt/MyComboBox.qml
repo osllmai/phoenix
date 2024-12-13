@@ -39,7 +39,7 @@ ComboBox {
             rightPadding: 20
             text: comboBoxId.displayText
             font: comboBoxId.font
-            color: "black"
+            color: comboBoxId.informationTextColor
             verticalAlignment: Text.AlignLeft
             elide: Text.ElideRight
         }
@@ -53,13 +53,13 @@ ComboBox {
                 sourceSize.height: comboBoxId.font.pixelSize
                 mipmap: true
                 visible: false
-                source: "./images/Phoenix.svg"
+                source: popupId.visible? "images/upIcon.svg":"images/downIcon.svg"
             }
 
             ColorOverlay {
                 anchors.fill: updown
                 source: updown
-                color: "red"
+                color: comboBoxId.iconColor
             }
         }
     }
@@ -67,18 +67,19 @@ ComboBox {
         width: comboBoxId.width -20
         contentItem: Text {
             text: modelData
-            color: "black"
-            font: comboBoxId.font
+            color: comboBoxId.informationTextColor
+            font: comboBoxId.fontFamily
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
         background: Rectangle {
             radius: 10
-            color: "white"
+            color: highlighted? comboBoxId.selectButtonColor: comboBoxId.normalButtonColor
         }
         highlighted: comboBoxId.highlightedIndex === index
     }
     popup: Popup {
+        id: popupId
         y: comboBoxId.height - 1
         width: comboBoxId.width
         implicitHeight: contentItem.implicitHeight + 20
@@ -101,18 +102,17 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: "red"
-            border.color: "yellow"
+            color: comboBoxId.normalButtonColor
+            border.color: comboBoxId.selectButtonColor
             border.width: 1
             radius: 10
         }
     }
-    indicator: Item {
-    }
+    indicator: Image {}
     background: Rectangle {
-        color: "white"
+        color: comboBoxId.normalButtonColor
         border.width: 1
-        border.color: "blue"
+        border.color: comboBoxId.selectButtonColor
         radius: 10
     }
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval

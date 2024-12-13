@@ -72,6 +72,11 @@ Item {
                         cellHeight: 330
                         model: root.modelListModel
 
+                        ScrollBar.vertical: ScrollBar {
+                            policy: ScrollBar.AsNeeded
+
+                        }
+
                         delegate: Rectangle{
                             id: rectangleGridView
                             width: gridView.cellWidth

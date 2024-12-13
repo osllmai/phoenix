@@ -413,13 +413,12 @@ void ModelList::readModelFromJSONFile(){
                 models.append(model);
                 endInsertRows();
             }
-            // deleteModel(model->id);
         }
     }
-    for(int index=0;index<models.size();index++){
+    for(int index=models.size()-1;index>=0;index--){
         if(models[index]->downloadFinished())
             m_currentModelList->addModel(models[index]);
-        else if(models[index]->url() != ""){
+        else if(models[index]->url() == ""){
             deleteRequest(index);
         }
     }

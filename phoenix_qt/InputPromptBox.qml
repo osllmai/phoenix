@@ -49,18 +49,6 @@ Item {
         color: root.chatBackgroungConverstationColor
         radius: 12
 
-
-        // Rectangle{
-        //     id:lineInputBox
-        //     width: parent.width - 16
-        //     height: 3
-        //     anchors.bottom: parent.bottom
-        //     anchors.bottomMargin: 0
-        //     anchors.horizontalCenter: parent.horizontalCenter
-        //     color: /*root.iconColor*/root.glowColor
-        //     visible: false
-        // }
-
         ScrollView {
             id: scrollInput
             anchors.left: parent.left
@@ -112,15 +100,7 @@ Item {
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier)
                     event.accepted = false;
                   else {
-                        sendIcon.clicked()
-                      // if(root.currentChat.responseInProgress){
-                      //     root.currentChat.responseInProgress = false;
-                      // }else if (inputTextBox.text !== "") {
-                      //     chatModel.prompt(inputTextBox.text);
-                      //     inputTextBox.text = ""; // Clear the input
-                      //     listViewChat.contentY = listViewChat.contentHeight; // Scroll to bottom
-                      //     inputBox.height = 40 + selectModelId.height;
-                      // }
+                        sendIcon.actionClicked()
                   }
                 }
 
@@ -146,7 +126,7 @@ Item {
             hoverColor: root.fillIconColor
             Connections {
                 target: sendIcon
-                function onClicked() {
+                function onActionClicked() {
                     root.sendPrompt(inputTextBox.text)
                     inputTextBox.text = ""; // Clear the input
                     inputBox.height = 40 + selectModelId.height;
@@ -198,7 +178,6 @@ Item {
             }
             ModelDialog{
                 id: modelListDialog
-                // anchors.fill: parent
 
                 backgroungColor: root.backgroungColor
                 glowColor: root.glowColor

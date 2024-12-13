@@ -306,7 +306,7 @@ QVariant ChatModel::calculationPromptRequest(const int currentIndex)const{
     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
         return date.toString("hh:mm");
     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-        return date.toString("Yesterday hh:mm");
+        return "Yesterday"+date.toString(" hh:mm");
     if(date.daysTo(now) < 7)
         return date.toString("dddd hh:mm");
     if (date.toString("yyyy") == now.toString("yyyy"))
@@ -321,7 +321,7 @@ QVariant ChatModel::calculationResponseRequest(const int currentIndex)const{
     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
         return date.toString("hh:mm");
     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-        return date.toString("Yesterday hh:mm");
+        return "Yesterday"+date.toString(" hh:mm");
     if(date.daysTo(now) < 7)
         return date.toString("dddd hh:mm");
     if(date.toString("yyyy") == now.toString("yyyy"))

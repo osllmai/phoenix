@@ -30,6 +30,17 @@ T.Button {
     autoExclusive: false
     checkable: true
 
+    signal actionClicked()
+
+    MouseArea{
+        anchors.fill: parent
+        propagateComposedEvents: true
+        onClicked: (mouse)=> {
+            console.log("Hi dear this icon action ")
+            control.actionClicked()
+        }
+    }
+
     // Define a custom tooltip using a Popup
     Popup {
         id: customToolTipId

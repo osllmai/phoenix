@@ -102,10 +102,15 @@ Window {
 
     property var fontFamily: "Times New Roman"
 
+    property bool isTheme
+
+    function onIsThemeChanged(){
+        console.log(" pl pl plp")
+    }
+
 
     visible: true
     title: qsTr("Phoenix")
-
 
     Settings{
         category: "window"
@@ -224,8 +229,10 @@ Window {
                         function onClicked(){
                             if(window.theme === "light"){
                                 window.theme = "dark"
+                                window.isTheme = true
                             }else{
                                 window.theme = "light"
+                                window.isTheme = false
                             }
                         }
                     }
@@ -399,6 +406,8 @@ Window {
                     selectTextColor: window.selectTextColor
 
                     fontFamily: window.fontFamily
+
+                    isTheme: window.isTheme
                     Connections{
                         target: chatPageId
                         function onGoToModelPage(){
@@ -495,7 +504,7 @@ Window {
                 yPopup: -30
                 Connections {
                     target: discordIcon
-                    function onClicked(){
+                    function onActionClicked(){
                         Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")
                     }
                 }
@@ -520,7 +529,7 @@ Window {
                 yPopup: -30
                 Connections {
                     target: githubIcon
-                    function onClicked(){
+                    function onActionClicked(){
                         Qt.openUrlExternally("https://github.com/osllmai")
                     }
                 }
@@ -567,15 +576,15 @@ Window {
                     anchors.fill: parent
                     hoverEnabled: true
                     onHoveredChanged: function(){
-                        if(containsMouse){
-                            systemMonitorPupup.open()
-                            systemMonitorIcon.normalColor = window.fillIconColor
-                            systemMonitorText.color= window.fillIconColor
-                        }else{
-                            systemMonitorPupup.close()
-                            systemMonitorIcon.normalColor = window.menuIconColor
-                            systemMonitorText.color=window.informationTextColor
-                        }
+                        // if(containsMouse){
+                        //     systemMonitorPupup.open()
+                        //     systemMonitorIcon.normalColor = window.fillIconColor
+                        //     systemMonitorText.color= window.fillIconColor
+                        // }else{
+                        //     systemMonitorPupup.close()
+                        //     systemMonitorIcon.normalColor = window.menuIconColor
+                        //     systemMonitorText.color=window.informationTextColor
+                        // }
                     }
                 }
             }
@@ -722,7 +731,7 @@ Window {
                     havePupup: false
                     Connections {
                         target: downloadIcon
-                        function onClicked() {}
+                        function onActionClicked() {}
                     }
                 }
                 Text {

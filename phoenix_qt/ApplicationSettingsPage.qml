@@ -130,6 +130,7 @@ Item {
             selectTextColor: root.selectTextColor
 
             font.family: root.fontFamily
+
             model: ListModel {
                 ListElement { text: "Times New Roman" }
                 ListElement { text: "Arial" }
@@ -242,8 +243,6 @@ Item {
                 font.pointSize: 10
                 font.family: root.fontFamily
             }
-
-
         }
 
         Rectangle{

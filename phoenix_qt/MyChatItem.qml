@@ -12,8 +12,9 @@ Item {
     property var fontFamily
 
     property alias myTextId: textId.text
-    property var myChatListModel
-    property int myIndex
+    // property var myChatListModel
+    property bool isCurrentItem
+    property bool isTheme
 
     property color fillIconColor
     property color iconColor
@@ -23,115 +24,103 @@ Item {
     property color chatMessageInformationTextColor
     property color glowColor
 
+    signal currentChat()
+    signal deleteChat()
+
+    function onIsCurrentItemChanged(){
+        if(isCurrentItem===true){
+            backgroundId.color = control.selectButtonColor
+        }else{
+            backgroundId.color = control.normalButtonColor
+        }
+    }
+    function onIsThemeChanged(){
+        console.log(" pl pl plp")
+        if(isCurrentItem===true){
+            backgroundId.color = control.selectButtonColor
+        }else{
+            backgroundId.color = control.normalButtonColor
+        }
+    }
+
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.myChatListModel.currentChat === control.myChatListModel.getChat(myIndex)?control.selectButtonColor:control.normalButtonColor
+        color: control.normalButtonColor
         radius: 2
-        Rectangle{
-            id:recTexxt
+        Text {
+            id:  textId
+            color: control.chatMessageInformationTextColor
+            text: qsTr("Text Button")
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            font.pixelSize: 12
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.family: control.fontFamily
+        }
+        MouseArea {
+            id:mouseAreaChatItem
             anchors.fill:parent
-            color: "#00ffffff"
-            Text {
-                id:  textId
-                color: control.chatMessageInformationTextColor
-                text: qsTr("Text Button")
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.family: control.fontFamily
+            onClicked: {
+                control.currentChat()
             }
-            MouseArea {
-                id:mouseAreaChatItem
-                anchors.fill:parent
-                onClicked: {
-                    control.myChatListModel.currentChat = control.myChatListModel.getChat(control.myIndex);
-                    chatIcon.open()
-                }
-                hoverEnabled: true
-                onHoveredChanged: {
-                    if(containsMouse){
-                        if(control.myChatListModel.currentChat.id !== control.myChatListModel.getChat(control.myIndex).id ){
-                            backgroundId.color = control.hoverButtonColor
-                            chatIcon.open()
-                        }
+            hoverEnabled: true
+            onHoveredChanged: {
+                if(containsMouse){
+                    if(!control.isCurrentItem ){
+                        backgroundId.color = control.hoverButtonColor
+                    }
+                }else{
+                    if(control.isCurrentItem){
+                        backgroundId.color=control.selectButtonColor
                     }else{
-                        if(control.myChatListModel.currentChat.id === control.myChatListModel.getChat(control.myIndex).id){
-                            backgroundId.color=control.selectButtonColor
-                        }else{
-                            backgroundId.color=control.normalButtonColor
-                            // chatIcon.close()
-                        }
+                        backgroundId.color=control.normalButtonColor
                     }
                 }
             }
         }
 
-        Popup {
-            id: chatIcon
-            width: 60
-            height: 30
-            x: recTexxt.width -60
-            y: 0
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-
-            background:Rectangle{
-                color: "#00ffffff" // Background color of tooltip
-                radius: 4
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 3
-                anchors.bottomMargin: 0
-            }
-
-            MyIcon {
-                id: deleteIcon
-                // visible: control.myChatListModel.currentChat === control.myChatListModel.getChat(myIndex)
-                width: 30
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.topMargin: 0
-                anchors.leftMargin: 0
-                myLable: " delete this chat"
-                myIconId: "images/deleteIcon.svg"
-                myFillIconId: "images/fillDeleteIcon.svg"
-                normalColor: control.iconColor
-                hoverColor: control.fillIconColor
-                Connections {
-                    target: deleteIcon
-                    function onClicked() {
-                        // deleteIcon.visible = true
-                        // editIcon.visible = true
-                        control.myChatListModel.deleteChat(control.myIndex)
-                    }
+        MyIcon {
+            id: editIcon
+            width: 30
+            visible: control.isCurrentItem
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 2
+            anchors.topMargin: 0
+            myLable: " edit chat name"
+            myIconId: "images/editIcon.svg"
+            myFillIconId: "images/fillEditIcon.svg"
+            normalColor: control.iconColor
+            hoverColor: control.fillIconColor
+            Connections {
+                target: editIcon
+                function onActionClicked() {
                 }
             }
+        }
 
-            MyIcon {
-                id: editIcon
-                // visible: control.myChatListModel.currentChat === myChatListModel.getChat(myIndex)
-                width: 30
-                anchors.right: deleteIcon.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 0
-                anchors.topMargin: 0
-                myLable: " edit chat name"
-                myIconId: "images/editIcon.svg"
-                myFillIconId: "images/fillEditIcon.svg"
-                normalColor: control.iconColor
-                hoverColor: control.fillIconColor
-                Connections {
-                    target: editIcon
-                    function onClicked() {
-                        // deleteIcon.visible = true
-                        // editIcon.visible = true
-                    }
+        MyIcon {
+            id: deleteIcon
+            width: 30
+            visible: control.isCurrentItem
+            anchors.right: editIcon.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.topMargin: 0
+            anchors.leftMargin: 0
+            myLable: " delete this chat"
+            myIconId: "images/deleteIcon.svg"
+            myFillIconId: "images/fillDeleteIcon.svg"
+            normalColor: control.iconColor
+            hoverColor: control.fillIconColor
+            Connections {
+                target: deleteIcon
+                function onActionClicked() {
+                    control.deleteChat()
                 }
             }
         }

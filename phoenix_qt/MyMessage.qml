@@ -4,8 +4,8 @@ import Qt5Compat.GraphicalEffects
 
 Item {
     id: root
-    height: messageTextRec.height
-    width: messageTextRec.width
+    height: messageRec.height
+    width: messageRec.width
 
     property int maxWidth: 300
     property bool isFinished: true
@@ -48,9 +48,9 @@ Item {
 
     Rectangle{
         id: messageRec
-        color: messageTextRec.color
+        color: /*messageTextRec.color*/"#00ffffff"
         width:  messageTextRec.width
-        height: messageTextRec.height
+        height: messageTextRec.height + messageIcon.height
         radius: 8
         Rectangle {
             id: messageTextRec
@@ -83,39 +83,30 @@ Item {
                 spread: 0.0
                 transparentBorder: true
              }
-
             MouseArea{
                 anchors.fill: parent
                 hoverEnabled: true
                 onHoveredChanged:{
-                    if(containsMouse){
-                        messageIcon.open()
-                        if(root.isLLM && !root.isFinished){
-                            informationTokenId.open()
+                    if(containsMouse ){
+                        if(root.isLLM && !root.isFinished ){
+                            informationTokenId.visible = true
                         }
                     }else if(root.isLLM ){
-                        informationTokenId.close()
+                        informationTokenId.visible = false
                     }
                 }
             }
         }
 
-        Popup {
+        Rectangle {
             id: messageIcon
             width: 90 + nubmerOfMessage.width
-            height: 20
-            x: messageTextRec.width - messageIcon.width + 10
-            y: messageText.height + 20
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-
-            background:Rectangle{
-                color: "#00ffffff"
-                radius: 4
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 3
-                anchors.bottomMargin: 0
-            }
+            height: 22
+            anchors.right: parent.right
+            anchors.top: messageTextRec.bottom
+            anchors.rightMargin: 5
+            anchors.topMargin: 2
+            color: "#00ffffff"
 
             MyIcon {
                 id: copyIconId
@@ -132,7 +123,7 @@ Item {
                 myLable:"Copy"
                 Connections {
                     target: copyIconId
-                    function onClicked(){
+                    function onActionClicked(){
                         // messageText.text.c
                     }
                 }
@@ -152,7 +143,7 @@ Item {
                 myLable:root.isLLM? "Regenerate": "Edit"
                 Connections {
                     target: regenerateOrEditIconId
-                    function onClicked(){
+                    function onActionClicked(){
                         console.log("Hi message")
                         root.regenerateOrEdit()
                     }
@@ -174,7 +165,7 @@ Item {
                 myLable:"next"
                 Connections {
                     target: nextIcon
-                    function onClicked(){
+                    function onActionClicked(){
                         if(root.numberOfMessage !== root.numberOfRegenerateOrEdit)
                             root.nextMessage()
                     }
@@ -214,7 +205,7 @@ Item {
                 myLable:"next"
                 Connections {
                     target: beforeIcon
-                    function onClicked(){
+                    function onActionClicked(){
                         if(root.numberOfMessage !== 1)
                             root.beforMessage()
                     }
@@ -222,20 +213,17 @@ Item {
             }
         }
 
-        Popup {
+        Rectangle {
             id: informationTokenId
             width: 280
             height: 20
-            y: messageTextRec.height - 23
+            color: "#00ffffff"
+            anchors.left: messageTextRec.left
+            anchors.bottom: messageTextRec.bottom
+            anchors.leftMargin: 10
+            anchors.bottomMargin: 0
+            visible: false
 
-            background:Rectangle{
-                color: "#00ffffff"
-                radius: 4
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.rightMargin: 3
-                anchors.bottomMargin: 0
-            }
             Rectangle {
                 id: executionTimeId
                 width: 140
@@ -269,7 +257,7 @@ Item {
 
             Rectangle {
                 id: numberOfTokenId
-                width: 140
+                width: 70
                 color: "#00ffffff"
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -280,7 +268,7 @@ Item {
 
                 Text {
                     id: numberOfTokenText
-                    text: qsTr("Number of tokens: ")
+                    text: qsTr("Tokens: ")
                     color: root.chatMessageTitleTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left

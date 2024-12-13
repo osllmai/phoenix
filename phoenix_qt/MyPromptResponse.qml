@@ -53,6 +53,7 @@ Item {
     property int numberOfResponse
     property int numberOfEdit
 
+
     Rectangle{
         id: backgroundId
         color: "#00ffffff"
@@ -90,7 +91,7 @@ Item {
 
             Rectangle{
                 id: userBox
-                height: userTextRec.height +userImageRec.height+20
+                height: userTextRec.height +timeText.height+20
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: root.dateRequest !== ""?dateBoxId.bottom:parent.top
@@ -125,7 +126,7 @@ Item {
                     anchors.right: userImageRec.left
                     anchors.top: parent.top
                     anchors.rightMargin: 2
-                    anchors.topMargin: 40
+                    anchors.topMargin: 10
                     maxWidth: root.width - 90
                     isLLM: false
                     myText: root.prompt
@@ -188,7 +189,7 @@ Item {
 
             Rectangle{
                 id: llmBox
-                height: llmTextRec.height +llmImageRec.height+20
+                height: llmTextRec.height +llmTimeText.height+20
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: userBox.bottom
@@ -209,7 +210,7 @@ Item {
                     Image{
                         id: llmImage
                         anchors.fill: parent
-                        source: "images/userIcon.svg"
+                        source: "images/phoenix.png"
                         sourceSize.height: 30
                         sourceSize.width: 30
                         fillMode: Image.PreserveAspectCrop
@@ -223,7 +224,7 @@ Item {
                     anchors.left: llmImageRec.right
                     anchors.top: parent.top
                     anchors.leftMargin: 2
-                    anchors.topMargin: 30
+                    anchors.topMargin: 10
                     maxWidth: root.width -90
                     isLLM: true
                     myText: root.response

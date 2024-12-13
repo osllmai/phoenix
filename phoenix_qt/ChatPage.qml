@@ -40,31 +40,20 @@ Item {
     property var modelListModel
 
     property bool emptyConversation: root.chatModel.size == 0? true: false
-    // function onEmptyConversationChanged(){
-    //     if(emptyConversation){
-    //         console.log("***********************onEmptyConversationChanged Hi")
-    //         inputBoxRec.y = emptyMessageText.y +100
-    //     }else{
-    //         console.log("---------------------------------onEmptyConversationChanged Hi")
-    //         inputBoxRec.y = textChat.y + textChat.height
-    //     }
-    // }
 
     signal goToModelPage()
 
+    property bool isTheme
+
+    function onIsThemeChanged(){
+        console.log(" pl pl plp")
+    }
 
     Rectangle{
         id: chatPage
         color: root.chatBackgroungConverstationColor
         radius: 4
         anchors.fill: parent
-
-        // focus: true
-        // Keys.onPressed: function(event){
-        //     if(event.key & Qt.Key_5 /*&& event.key === Qt.Key_N*/){
-        //         console.log("Hi hi hi ------------------------------------------ hi hi hi")
-        //     }
-        // }
 
         Row{
             id: mainStructure
@@ -97,7 +86,6 @@ Item {
                         anchors.right: newChatBox.left
                         anchors.leftMargin: 0
                         anchors.rightMargin: 10
-                        // border.color: root.glowColor
 
                         Image {
                             id: searchIcon
@@ -166,9 +154,8 @@ Item {
                             hoverColor: root.fillIconColor
                             Connections {
                                 target: newChatIcon
-                                function onClicked() {
+                                function onActionClicked() {
                                     root.chatListModel.addChat();
-                                    // historylist.contentY = historylist.contentHeight;
                                 }
                             }
                         }
@@ -184,8 +171,8 @@ Item {
                     anchors.right: parent.right
                     anchors.top: searchAndNewChatBox.bottom
                     anchors.bottom: parent.bottom
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
+                    anchors.leftMargin: 0
+                    anchors.rightMargin: 0
                     anchors.topMargin: 0
                     anchors.bottomMargin: 10
 
@@ -195,8 +182,8 @@ Item {
                         anchors.right: parent.right
                         anchors.top: recHistoryText.bottom
                         anchors.bottom: parent.bottom
-                        anchors.leftMargin: 0
-                        anchors.rightMargin: 0
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
                         anchors.topMargin: 0
                         anchors.bottomMargin: 0
                         color: "#00ffffff"
@@ -218,9 +205,9 @@ Item {
                         anchors.right: parent.right
                         anchors.top: recHistoryText.bottom
                         anchors.bottom: parent.bottom
-                        anchors.leftMargin: 0
-                        anchors.rightMargin: 0
-                        anchors.topMargin: 16
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        anchors.topMargin: 0
                         anchors.bottomMargin: 0
                         color: "#00000000"
                         visible: root.chatListModel.size > 0
@@ -230,12 +217,19 @@ Item {
                             anchors.fill: parent
 
                             model: root.chatListModel
-                            // Component.onCompleted: chatListModel.loadChats()
+
+                            ScrollBar.vertical: ScrollBar {
+                                policy: ScrollBar.AsNeeded
+                            }
+
+                            clip: true
 
                             delegate: Rectangle{
                                 id: delegateChat
-                                width: historylist.width
+                                width: historylist.width -25
                                 height: model.date!==""? dateHistoryId.height + applicationButton.height +7:  applicationButton.height +7
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
                                 color: "#00000000"
 
                                 Text {
@@ -262,8 +256,9 @@ Item {
                                       anchors.topMargin: 0
                                       fontFamily: root.fontFamily
                                       myTextId: model.title
-                                      myChatListModel: chatListModel
-                                      myIndex:index
+                                      // myChatListModel: chatListModel
+                                      isCurrentItem: root.chatListModel.currentChat === root.chatListModel.getChat(index)
+                                      isTheme: root.isTheme
                                       fillIconColor: root.fillIconColor
                                       iconColor: root.iconColor
                                       normalButtonColor: root.normalButtonColor
@@ -272,15 +267,27 @@ Item {
                                       chatMessageInformationTextColor: root.chatMessageInformationTextColor
                                       glowColor: root.glowColor
 
+                                      Connections {
+                                          target: applicationButton
+                                          function onCurrentChat(){
+                                              root.chatListModel.currentChat = root.chatListModel.getChat(index);
+                                          }
+                                          function onDeleteChat(){
+                                              root.myChatListModel.deleteChat(index)
+                                          }
+                                      }
+
+                                      // closePupup:
                                 }
                             }
                         }
                     }
+
                     Rectangle{
                         id: recHistoryText
                         width: parent.width
-                        height: 40
-                        color: "#00ffffff"
+                        height: 60
+                        color:"#00000000"
                         Text {
                             id: historyText
                             text: qsTr("Histoty")
@@ -298,7 +305,6 @@ Item {
                         }
                     }
                 }
-
             }
 
             Rectangle{
@@ -307,7 +313,7 @@ Item {
                 color: root.chatBackgroungConverstationColor
                 anchors.left: leftSidePage.visible=== true?leftSidePage.right: parent.left
                 anchors.right: parent.right
-                anchors.top: header.bottom
+                anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.topMargin: 0
                 radius: 10
@@ -340,13 +346,6 @@ Item {
                             anchors.bottomMargin: 24
                             color: "#00ffffff"
                             visible: root.emptyConversation
-                            // AnimationText{
-                            //     // id:animationTextId
-                            //     id: emptyMessageText
-                            //     anchors.verticalCenter: parent.verticalCenter
-                            //     anchors.horizontalCenter: parent.horizontalCenter
-
-                            // }
 
                             Text {
                                 id: emptyMessageText
@@ -358,15 +357,6 @@ Item {
                                 font.family: "Times New Roman"
                             }
                         }
-                        // Text {
-                        //     id: emptyMessageListId
-                        //     color: root.informationTextColor
-                        //     text: qsTr("What can I help with?")
-                        //     anchors.verticalCenter: parent.verticalCenter
-                        //     anchors.horizontalCenter: parent.horizontalCenter
-                        //     font.pointSize: 14
-                        //     font.family: "Times New Roman"
-                        // }
 
                         Rectangle {
                             id: textChat
@@ -375,22 +365,11 @@ Item {
                             anchors.right: parent.right
                             anchors.top: parent.top
                             anchors.bottom: inputBoxRec.top
-                            anchors.leftMargin: 50
-                            anchors.rightMargin: 50
-                            anchors.topMargin: 24
-                            anchors.bottomMargin: 12
+                            anchors.leftMargin: 0
+                            anchors.rightMargin: 0
+                            anchors.topMargin: 60
+                            anchors.bottomMargin: 0
                             visible: !root.emptyConversation
-                            Connections{
-                               target: textChat
-                                function onVisibleChanged(){
-                                    if(textChat.visible == true){
-                                        console.log("Hi Zeinab :)")
-                                        inputBoxRec.y = inputBoxRec.y + 200
-                                    }else{
-                                        inputBoxRec.y = emptyMessageText.y + 50
-                                    }
-                                }
-                            }
 
                             ColumnLayout{
                                 anchors.fill: parent
@@ -399,7 +378,7 @@ Item {
                                     Layout.maximumWidth: 1280
                                     Layout.fillHeight: true
                                     Layout.fillWidth: true
-                                    Layout.margins: 20
+                                    // Layout.margins: 20
                                     Layout.leftMargin: 0
                                     Layout.rightMargin: 0
                                     Layout.alignment: Qt.AlignHCenter
@@ -407,11 +386,25 @@ Item {
                                     model: root.chatModel
                                     cacheBuffer: Math.max(0, listViewChat.contentHeight)
 
+                                    clip: true
+
+                                    ScrollBar.vertical: ScrollBar {
+                                        policy: ScrollBar.AsNeeded
+                                        background: Rectangle {
+                                            color: leftSidePage.color
+                                            radius: 4
+                                            visible: ScrollBar.AsNeeded
+                                        }
+                                    }
+
                                     delegate: Rectangle{
                                         id: myPromptResponseBox
-                                        width: listViewChat.width
+                                        width: listViewChat.width - 10 - 100
                                         height: myPromptResponseId.height
                                         color: root.chatBackgroungConverstationColor
+                                        anchors.left:parent.left
+                                        anchors.leftMargin: 60
+
                                         MyPromptResponse{
                                             id: myPromptResponseId
                                             width: parent.width
@@ -424,7 +417,8 @@ Item {
 
                                             executionTime: model.executionTime
                                             numberOfToken:model.numberOfToken
-                                            isFinished: !!root.currentChat.responseInProgress
+                                            isFinished: root.currentChat.responseInProgress
+
                                             Connections {
                                                 target: myPromptResponseId
                                                 function onRegenerateResponse(){
@@ -481,18 +475,9 @@ Item {
                                         }
                                     }
 
-                                    // function scrollToEnd() {
-                                    //     listViewChat.positionViewAtEnd()
-                                    // }
-
                                     onContentHeightChanged: {
-                                        // if (atYEnd)
                                             listViewChat.positionViewAtEnd()
-                                    }
-                                    // onHeightChanged:{
-                                    //     if (atYEnd)
-                                    //         scrollToEnd()
-                                    // }
+                                    }                                  
                                 }
                             }
                         }
@@ -505,7 +490,8 @@ Item {
                             anchors.right: parent.right
                             color: rightSidePage.color
 
-                            y: emptyMessageText.y + 50
+                            y: root.emptyConversation?inputBoxRec.y = emptyMessageText.y + 50:
+                                                                    inputBoxRec.y = rightSidePage.y + rightSidePage.height - inputBoxRec.height
 
                             Behavior on y{
                                 NumberAnimation{
@@ -566,16 +552,6 @@ Item {
                                 }
                             }
                         }
-
-                        Rectangle {
-                            id: header
-                            height: 20
-                            color: rightSidePage.color
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.leftMargin: 0
-                            anchors.rightMargin: 0
-                        }
                     }
                 }
 
@@ -584,19 +560,12 @@ Item {
                     width: Math.min(mainStructure.width / 4, 350)
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
+                    anchors.right: parent.right
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     color: root.chatBackgroungColor
                     radius:5
-                    // visible: true
 
-                    x: rightSidePage.width - modelSettings.width - 10
-
-                    Behavior on x{
-                        NumberAnimation{
-                            duration: 200
-                        }
-                    }
 
                     Rectangle {
                         id: menuSettingsId
@@ -722,6 +691,10 @@ Item {
                                     anchors.topMargin: 5
                                     anchors.bottomMargin: 5
 
+                                    ScrollBar.vertical: ScrollBar {
+                                        policy: ScrollBar.AsNeeded
+                                    }
+
                                     TextArea {
                                         id: instructionTextBox
                                         height: text.height
@@ -764,7 +737,6 @@ Item {
                             }
                         }
 
-
                         Rectangle {
                             id: modelSpace
                             radius: 4
@@ -775,6 +747,10 @@ Item {
                                 id: scrollViewSettingsId
                                 width: parent.width
                                 height: parent.height
+
+                                ScrollBar.vertical: ScrollBar {
+                                    policy: ScrollBar.AsNeeded
+                                }
 
                                 Column{
                                     width: parent.width
@@ -808,12 +784,10 @@ Item {
                                             MyIcon {
                                                 id: inferenceSettingsIconId
                                                 visible: true
-                                                // anchors.left: modelList.right
                                                 anchors.right: parent.right
                                                 width: 40
                                                 anchors.top: parent.top
                                                 anchors.bottom: parent.bottom
-                                                // anchors.leftMargin: 0
                                                 anchors.rightMargin: 0
                                                 anchors.topMargin: 0
                                                 myLable: inferenceSettingsInformationId.visible=== true? "close": "open"
@@ -823,7 +797,7 @@ Item {
                                                 hoverColor: root.fillIconColor
                                                 Connections {
                                                     target: inferenceSettingsIconId
-                                                    function onClicked () {
+                                                    function onActionClicked () {
                                                         if(inferenceSettingsInformationId.visible=== true){
                                                             inferenceSettingsInformationId.visible = false
                                                             inferenceSettingsId.height = inferenceSettingsButtonId.height
@@ -1041,7 +1015,7 @@ Item {
                                                 hoverColor: root.fillIconColor
                                                 Connections {
                                                     target: modelSettingsIconId
-                                                    function onClicked() {
+                                                    function onActionClicked() {
                                                         if(modelSettingsInformationId.visible=== true){
                                                             modelSettingsInformationId.visible = false
                                                             modelSettingsId.height = modelSettingsButtonId.height
@@ -1180,7 +1154,7 @@ Item {
                                                 hoverColor: root.fillIconColor
                                                 Connections {
                                                     target: engineSettingsIconId
-                                                    function onClicked() {
+                                                    function onActionClicked() {
                                                         if(engineSettingsInformationId.visible=== true){
                                                             engineSettingsInformationId.visible = false
                                                             engineSettingsId.height = engineSettingsButtonId.height
@@ -1238,26 +1212,26 @@ Item {
                 MyIcon {
                     id: rightDrawer
                     visible: true
-                    anchors.right: modelSettings.x != rightSidePage.width?modelSettings.left: parent.right
+                    anchors.right: modelSettings.visible=== true?modelSettings.left: parent.right
                     height: 40
                     width: 40
                     anchors.top: parent.top
                     anchors.rightMargin: 10
                     anchors.topMargin: 10
-                    myLable: modelSettings.x != rightSidePage.width? "close model settings":"open model settings"
-                    myIconId: modelSettings.x != rightSidePage.width? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
-                    myFillIconId: modelSettings.x != rightSidePage.width? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
+                    myLable: modelSettings.visible=== true? "close model settings":"open model settings"
+                    myIconId: modelSettings.visible=== true? "./images/alignRightIcon.svg": "./images/alignLeftIcon.svg"
+                    myFillIconId: modelSettings.visible=== true? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
                     heightSource: 18
                     widthSource: 18
                     normalColor: root.iconColor
                     hoverColor: root.fillIconColor
                     Connections {
                         target: rightDrawer
-                        function onClicked() {
-                            if(modelSettings.x != rightSidePage.width){
-                                modelSettings.x = rightSidePage.width
+                        function onActionClicked() {
+                            if(modelSettings.visible=== true){
+                                modelSettings.visible = false
                             }else{
-                                modelSettings.x = rightSidePage.width - modelSettings.width - 10
+                                modelSettings.visible = true
                             }
                         }
                     }
@@ -1281,7 +1255,7 @@ Item {
                     hoverColor: root.fillIconColor
                     Connections {
                         target: leftDrawer
-                        function onClicked() {
+                        function onActionClicked() {
                             if(leftSidePage.visible=== true){
                                 leftSidePage.visible = false
                             }else{
@@ -1309,7 +1283,7 @@ Item {
                     hoverColor: root.fillIconColor
                     Connections {
                         target: newChatIcon2
-                        function onClicked() {
+                        function onActionClicked() {
                             root.chatListModel.addChat();
                         }
                     }

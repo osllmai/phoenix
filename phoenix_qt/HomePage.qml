@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Layouts
-import QtQuick.Dialogs
+import QtQuick.Controls 2.15
 
 Item {
     id: root
@@ -62,12 +62,17 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         cacheBuffer: Math.max(0, gridView.contentHeight)
 
-                        cellWidth: parent.width<1400? Math.max(100, (parent.width)/3): Math.max(100, (parent.width)/4)
-                        cellHeight: Math.max(100, (parent.height)/2)
+                        cellWidth: (parent.width-100)<1400? Math.max(100, (parent.width-100)/3): Math.max(100, (parent.width-100)/4)
+                        cellHeight: 330
+
+                        ScrollBar.vertical: ScrollBar {
+                            policy: ScrollBar.AsNeeded
+                        }
+
                         model: ListModel {
                            id: model
                            ListElement {title: "Chat" ;
-                                            icon:"images/Phoenix.svg" ;
+                                            icon:"images/phoenix.png" ;
                                             about:"Phoenix: A multi-platform, open-source application built with Qt QML. It features a chatbot interface that interacts with documents locally, eliminating the need for an internet connection or a GPU. Phoenix leverages Indox and IndoxJudge to deliver high accuracy and eliminate hallucinations, ensuring reliable results, particularly in the healthcare field." ;
                                             gitHubLink:"" ;
                                             notebookLink:"";

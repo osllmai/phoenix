@@ -53,7 +53,7 @@ Item {
             yPopup: -30
             Connections {
                 target: discordIcon
-                onClicked: function () {}
+                function onActionClicked() {}
             }
         }
 
