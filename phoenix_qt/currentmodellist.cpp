@@ -201,11 +201,16 @@ bool CurrentModelList::setData(const QModelIndex &index, const QVariant &value, 
 }
 //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
+int CurrentModelList::size() const{
+    return models.size();
+}
+
 void CurrentModelList::addModel( Model *model){
     const int index = models.size();
     beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
     models.append(model);
     endInsertRows();
+    emit sizeChanged();
 }
 
 void CurrentModelList::deleteModel( Model *model){

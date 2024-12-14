@@ -35,7 +35,7 @@ Model* phoenix_databace::insertModel(const QString &name, const QString &path){
 
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
-       return model;
+        return model;
 
     QSqlQuery query(db);
 
@@ -73,7 +73,7 @@ int phoenix_databace::insertConversation(const QString &title, const QDateTime d
 }
 
 int phoenix_databace::insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
-                        const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date){
+                                    const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 
     db.setDatabaseName("./phoenix.db");
@@ -239,6 +239,24 @@ QSqlError phoenix_databace::readMessage(Message *root, const int &conversation_i
         }
         leaf.removeFirst();
     }
+    db.close();
+    return QSqlError();
+}
+
+QSqlError phoenix_databace::updateModel(const int &id, const QString &path){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("./phoenix.db");
+    if (!db.open())
+        return db.lastError();
+
+    QSqlQuery query(db);
+
+    if (!query.prepare(UPDATE_PATH_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(path);
+    query.addBindValue(id);
+    query.exec();
+
     db.close();
     return QSqlError();
 }

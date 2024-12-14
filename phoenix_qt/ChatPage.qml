@@ -273,7 +273,7 @@ Item {
                                               root.chatListModel.currentChat = root.chatListModel.getChat(index);
                                           }
                                           function onDeleteChat(){
-                                              root.myChatListModel.deleteChat(index)
+                                              root.chatListModel.deleteChat(index)
                                           }
                                       }
 

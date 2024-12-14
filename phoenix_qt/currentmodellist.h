@@ -15,6 +15,7 @@ class CurrentModelList : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(int size READ size NOTIFY sizeChanged)
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         FileSizeRole,
@@ -47,8 +48,12 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
+    int size() const;
     void addModel( Model *model);
     void deleteModel( Model *model);
+
+signals:
+    void sizeChanged();
 
 private:
     QList<Model*> models;

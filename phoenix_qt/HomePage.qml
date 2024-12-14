@@ -62,7 +62,7 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         cacheBuffer: Math.max(0, gridView.contentHeight)
 
-                        cellWidth: (parent.width-100)<1400? Math.max(100, (parent.width-100)/3): Math.max(100, (parent.width-100)/4)
+                        cellWidth: (parent.width)<1400? Math.max(100, (parent.width)/3): Math.max(100, (parent.width)/4)
                         cellHeight: 330
 
                         ScrollBar.vertical: ScrollBar {

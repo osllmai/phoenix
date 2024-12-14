@@ -210,6 +210,7 @@ Item {
                     }
                     function onLoadModelDialog(modelPath , name){
                         loadModelIcon.myTextId = name
+                        root.currentChat.loadModelRequested(modelPath);
                         loadModelPopup.close()
                     }
                 }

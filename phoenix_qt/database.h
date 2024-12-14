@@ -9,13 +9,13 @@
 #include "message.h"
 
 namespace phoenix_databace{
-    const auto FOREIGN_KEYS_SQL = QLatin1String(R"(
+const auto FOREIGN_KEYS_SQL = QLatin1String(R"(
         PRAGMA foreign_keys = ON;
         )");
 
-    //------------------------------------**************-------------------------------//
-    //------------------------------------**Model Query**-------------------------------//
-    const auto MODEL_SQL = QLatin1String(R"(
+//------------------------------------**************-------------------------------//
+//------------------------------------**Model Query**-------------------------------//
+const auto MODEL_SQL = QLatin1String(R"(
         CREATE TABLE model(
                 id INTEGER NOT NULL UNIQUE,
                 name TEXT NOT NULL,
@@ -23,23 +23,27 @@ namespace phoenix_databace{
                 PRIMARY KEY(id AUTOINCREMENT))
         )");
 
-    const auto INSERT_MODEL_SQL = QLatin1String(R"(
+const auto INSERT_MODEL_SQL = QLatin1String(R"(
         INSERT INTO model(name, path) VALUES (?, ?)
         )");
 
-    const auto READ_MODEL_SQL = QLatin1String(R"(
+const auto READ_MODEL_SQL = QLatin1String(R"(
         SELECT id, name, path FROM model
         )");
 
-    const auto DELETE_MODEL_SQL = QLatin1String(R"(
+const auto UPDATE_PATH_CONVERSATION_SQL = QLatin1String(R"(
+        UPDATE model SET path=? Where id=?
+        )");
+
+const auto DELETE_MODEL_SQL = QLatin1String(R"(
         DELETE FROM model where id = ?
         )");
-    //---------------------------------**End Model Query**----------------------------//
+//---------------------------------**End Model Query**----------------------------//
 
 
-    //--------------------------------*******************---------------------------//
-    //--------------------------------**Conversation Query**--------------------------//
-    const auto CONVERSATION_SQL = QLatin1String(R"(
+//--------------------------------*******************---------------------------//
+//--------------------------------**Conversation Query**--------------------------//
+const auto CONVERSATION_SQL = QLatin1String(R"(
         CREATE TABLE conversation(
                 id INTEGER NOT NULL UNIQUE,
                 title TEXT NOT NULL,
@@ -47,31 +51,31 @@ namespace phoenix_databace{
                 PRIMARY KEY(id AUTOINCREMENT))
         )");
 
-    const auto INSERT_CONVERSATION_SQL = QLatin1String(R"(
+const auto INSERT_CONVERSATION_SQL = QLatin1String(R"(
         INSERT INTO conversation(title, date) VALUES (?, ?)
         )");
 
-    const auto READ_CONVERSATION_SQL = QLatin1String(R"(
+const auto READ_CONVERSATION_SQL = QLatin1String(R"(
         SELECT id, title, date FROM conversation
         )");
 
-    const auto UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
+const auto UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
         UPDATE conversation SET date=? Where id=?
         )");
 
-    const auto UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
+const auto UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
         UPDATE conversation SET title=? Where id=?
         )");
 
-    const auto DELETE_CONVERSATION_SQL = QLatin1String(R"(
+const auto DELETE_CONVERSATION_SQL = QLatin1String(R"(
         DELETE FROM conversation where id = ?
         )");
-    //-----------------------------**End Conversation Query**-----------------------//
+//-----------------------------**End Conversation Query**-----------------------//
 
 
-    //----------------------------------****************------------------------------//
-    //----------------------------------**Message Query**------------------------------//
-    const auto MESSAGE_SQL = QLatin1String(R"(
+//----------------------------------****************------------------------------//
+//----------------------------------**Message Query**------------------------------//
+const auto MESSAGE_SQL = QLatin1String(R"(
         CREATE TABLE message(
                 id INTEGER NOT NULL UNIQUE,
                 text TEXT NOT NULL,
@@ -86,45 +90,48 @@ namespace phoenix_databace{
                 foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE)
         )");
 
-    const auto INSERT_MESSAGE_SQL = QLatin1String(R"(
+const auto INSERT_MESSAGE_SQL = QLatin1String(R"(
         INSERT INTO message (text, is_prompt, number_of_token, execution_time, parent_id, conversation_id, date) VALUES (?, ?, ?, ?, ?, ?, ?)
         )");
 
-    const auto FIND_ROOT_MESSAGE_SQL = QLatin1String(R"(
+const auto FIND_ROOT_MESSAGE_SQL = QLatin1String(R"(
         SELECT id FROM message WHERE parent_id = null AND conversation_id =?
         )");
 
-    const auto FIND_CHILD_MESSAGE_SQL = QLatin1String(R"(
+const auto FIND_CHILD_MESSAGE_SQL = QLatin1String(R"(
         SELECT id, text, is_prompt, number_of_token, execution_time, date FROM message WHERE parent_id = ? AND conversation_id =?
         )");
 
-    const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
+const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
         DELETE FROM message where conversation_id = ?
         )");
 
-    //-------------------------------**End Message Query**----------------------------//
+//-------------------------------**End Message Query**----------------------------//
 
 
-    //----------------------------------****************------------------------------//
-    //----------------------------------**Function Query**------------------------------//
-    QSqlError initDb();
+//----------------------------------****************------------------------------//
+//----------------------------------**Function Query**------------------------------//
+QSqlError initDb();
 
-    Model* insertModel(const QString &name, const QString &path);
+Model* insertModel(const QString &name, const QString &path);
 
-    int insertConversation(const QString &title, const QDateTime date);
+int insertConversation(const QString &title, const QDateTime date);
 
-    int insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
-                           const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date);
+int insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
+                  const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date);
 
-    QSqlError deleteModel(const int &id);
+QSqlError deleteModel(const int &id);
 
-    QSqlError deleteConversation(const int &id);
+QSqlError deleteConversation(const int &id);
 
-    QList<Model*> readModel();
+QList<Model*> readModel();
 
-    QList<Chat*> readConversation();
+QList<Chat*> readConversation();
 
-    QSqlError readMessage(Message *root, const int &conversation_id);
-    //-------------------------------**End Function Query**---------------------------//
+QSqlError readMessage(Message *root, const int &conversation_id);
+
+QSqlError updateModel(const int &id, const QString &path);
+
+//-------------------------------**End Function Query**---------------------------//
 }
 #endif // DATABASE_H

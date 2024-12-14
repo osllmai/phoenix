@@ -237,12 +237,11 @@ void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
 void ModelList::downloadRequest(const int index , const QString &directoryPath){
 
     Model *model = models[index];
-    model->setDirectoryPath(directoryPath);
+    model->setDirectoryPath(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
 
-    QString modelPath = directoryPath;
+    QString modelPath = model->directoryPath();
     modelPath.remove("file:///");
-    modelPath = modelPath + "/" + model->fileName();
 
     Download *download = new Download(index);
     connect(download, &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
@@ -286,10 +285,14 @@ void ModelList::handleDownloadFinished(const int index){
     Model *model = models[index];
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
+    phoenix_databace::updateModel(model->id(),model->directoryPath());
+
+    m_currentModelList->addModel(model);
 
     updateDownloadProgress();
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole});
+    emit currentModelListChanged();
 }
 
 void ModelList::cancelRequest(const int index){

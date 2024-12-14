@@ -29,7 +29,7 @@ private:
     QThread chatLLMThread;
     std::atomic<bool> stop;
 
-    // bool handleResponse(int32_t token, const std::string &response);
+    bool handleResponse(int32_t token, const std::string &response);
 };
 
 #endif // CHATLLM_H
