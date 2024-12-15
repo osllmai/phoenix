@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QThread>
 #include <QDebug>
-#include <Windows.h>
 
 class Chat;
+class OpenAI;
 class ChatLLM : public QObject
 {
     Q_OBJECT
@@ -25,6 +25,8 @@ public slots:
     void unLoadModel();
     void prompt(const QString &input);
 
+private slots:
+    void providerResponseRecivied(const QString &response);
 private:
     QThread chatLLMThread;
     std::atomic<bool> stop;

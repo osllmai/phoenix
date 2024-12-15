@@ -23,6 +23,10 @@ project(${PROJECTNAME} VERSION 0.1 LANGUAGES CXX)
 
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
 add_subdirectory(../phoenix/ llmodel)
 
@@ -64,6 +68,12 @@ endif()
 
 qt_add_executable(app${PROJECTNAME}
     main.cpp
+)
+
+target_include_directories(app${PROJECTNAME}
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/workflow
+    ${CMAKE_CURRENT_SOURCE_DIR}/workflow/blocks
 )
 
 qt_add_qml_module(app${PROJECTNAME}
@@ -140,7 +150,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/downIcon.svg"
         "images/fillDownIcon.svg"
         "images/mistral-ai-icon.svg"
-        "images./githubIcon.svg"
+        "images/githubIcon.svg"
         "images/discordIcon.svg"
         "images/alignLeftIcon.svg"
         "images/fillAlignLeftIcon.svg"
@@ -166,33 +176,81 @@ qt_add_qml_module(app${PROJECTNAME}
         "./models.json"
     RESOURCE_PREFIX /
 
-    SOURCES chat.h chat.cpp
-    SOURCES chatllm.h chatllm.cpp
-    SOURCES chatmodel.h chatmodel.cpp
-    SOURCES chatitem.h chatitem.cpp
-    SOURCES chatlistmodel.h chatlistmodel.cpp
-    SOURCES phoenixcontroller.h phoenixcontroller.cpp
-    SOURCES download.h download.cpp
-    SOURCES model.h model.cpp
-    SOURCES modellist.h modellist.cpp
-    SOURCES currentmodellist.h currentmodellist.cpp
-    QML_FILES SettingsSliderItem.qml
-    QML_FILES MySlider.qml
-    QML_FILES SettingsSwitchItem.qml
-    QML_FILES MySwitch.qml
-    SOURCES database.h database.cpp
-    QML_FILES Constants.qml
-    QML_FILES ApplicationSettingsPage.qml
-    QML_FILES MyComboBox.qml
-    QML_FILES MyMenuButtonItem.qml
-    QML_FILES MyPromptResponse.qml
-    QML_FILES MyMessage.qml
-    SOURCES message.h message.cpp
-    QML_FILES ModelDialog.qml
-    QML_FILES InputPromptBox.qml
-    QML_FILES SpeedDisplay.qml
-    QML_FILES CustomDot.qml
-    QML_FILES AnimationText.qml
+    SOURCES
+    chat.h chat.cpp
+    chatllm.h chatllm.cpp
+    chatmodel.h chatmodel.cpp
+    chatitem.h chatitem.cpp
+    chatlistmodel.h chatlistmodel.cpp
+    phoenixcontroller.h phoenixcontroller.cpp
+    download.h download.cpp
+    model.h model.cpp
+    modellist.h modellist.cpp
+    currentmodellist.h currentmodellist.cpp
+    message.h message.cpp
+    database.h database.cpp
+
+    providers/abstractprovider.h providers/abstractprovider.cpp
+    providers/openai.h providers/openai.cpp
+
+    workflow/relationtool.cpp
+    workflow/relationhandle.h
+    workflow/workfloweditorarea.h
+    workflow/workfloweditorarea.cpp
+    workflow/block.cpp
+    workflow/block.h
+    workflow/selecttool.h
+    workflow/directrelation.cpp
+    workflow/directrelation.h
+    workflow/relationtool.h
+    workflow/abstractrelation.cpp
+    workflow/abstractrelation.h
+    workflow/curvedrelation.cpp
+    workflow/curvedrelation.h
+    workflow/relationhandle.cpp
+    workflow/abstracttool.h
+    workflow/abstracttool.cpp
+    workflow/selecttool.cpp
+    workflow/commands/addblockcommand.cpp
+    workflow/commands/addblockcommand.h
+    workflow/commands/addrelationcommand.h workflow/commands/addrelationcommand.cpp
+    workflow/workflowtemplatesstorage.h workflow/workflowtemplatesstorage.cpp
+
+    workflow/blocks/chatinputblock.h workflow/blocks/chatinputblock.cpp
+
+    QML_FILES
+        SettingsSliderItem.qml
+        MySlider.qml
+        SettingsSwitchItem.qml
+        MySwitch.qml
+        Constants.qml
+        ApplicationSettingsPage.qml
+        MyComboBox.qml
+        MyMenuButtonItem.qml
+        MyPromptResponse.qml
+        MyMessage.qml
+        ModelDialog.qml
+        InputPromptBox.qml
+        SpeedDisplay.qml
+        CustomDot.qml
+        AnimationText.qml
+
+        workflow/SimpleRelation.qml
+        workflow/SimpleRelationHandle.qml
+        workflow/BlockHeader.qml
+        workflow/BlockBackground.qml
+        workflow/BlockEditorPage.qml
+        workflow/blocks/AstraDBBlock.qml
+        workflow/blocks/PromptBlock.qml
+        workflow/blocks/ParseDataBlock.qml
+        workflow/blocks/ChatOutputBlock.qml
+        workflow/blocks/ChatInputBlock.qml
+        workflow/blocks/NoteBlock.qml
+        workflow/blocks/AbstractBlock.qml
+        workflow/blocks/OpenAIEmbeddings.qml
+        workflow/form/TextFieldInput.qml
+        workflow/WorkFlowsPage.qml
+        workflow/WorkFlowsPartPage.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

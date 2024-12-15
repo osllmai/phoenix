@@ -1,7 +1,6 @@
 #include "chatllm.h"
 #include "chat.h"
 
-#include <Windows.h>
 #include <QDebug>
 #include <cassert>
 #include <string>
@@ -21,14 +20,16 @@ LLModel::PromptContext prompt_context;
 LLModel* model;
 std::string prompt_template;
 
-
-ChatLLM::ChatLLM(Chat *parent) :
-    QObject{nullptr},
-    stop(false)
+ChatLLM::ChatLLM(Chat *parent)
+    : QObject{nullptr}
+    , _chatGpt{new OpenAI}
+    , stop(false)
 {
     moveToThread(&chatLLMThread);
     chatLLMThread.start();
     qInfo() << "new" << QThread::currentThread();
+    _chatGpt->setApiKey("...");
+    connect(_chatGpt, &OpenAI::responseRecivied, this, &ChatLLM::providerResponseRecivied);
 }
 
 ChatLLM::~ChatLLM(){

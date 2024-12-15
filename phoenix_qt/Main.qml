@@ -5,7 +5,7 @@ import QtQuick.Controls.Basic
 // import QtQuick.Controls 6.7
 import QtQuick.Layouts
 import Phoenix
-
+import 'workflow' as Workflow
 
 Window {
     id: window
@@ -138,15 +138,15 @@ Window {
             height: phoenix.height
             color: "#00ffffff"
 
-            Column {
+            ColumnLayout {
                 id: column
-                anchors.fill: parent
+                anchors{
+                    topMargin: 10
+                    fill: parent
+                }
 
                 MyMenuItem {
                     id: homeItemMenue
-                    anchors.top: parent.top
-                    anchors.topMargin: 24
-                    anchors.horizontalCenter: parent.horizontalCenter
                     myTextId: "Home"
                     myLable: "Home"
                     myIconId: "images/homeIcon.svg"
@@ -157,20 +157,20 @@ Window {
                     checked: true
                     autoExclusive: true
 
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
                     Connections {
                         target: homeItemMenue
                         function onClicked(){
                             page.currentIndex = 0
-                            showSelectMenuId.y = homeItemMenue.y -5
+                            showSelectMenuId.selectedButton = homeItemMenue
                         }
                     }
                 }
 
                 MyMenuItem {
                     id: chatItemMenue
-                    anchors.top: homeItemMenue.bottom
-                    anchors.topMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
                     myTextId: "Chat"
                     myLable: "Chat"
                     myIconId: "images/chatIcon.svg"
@@ -180,20 +180,20 @@ Window {
                     iconColor: window.menuIconColor
                     autoExclusive: true
 
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
                     Connections {
                         target: chatItemMenue
                         function onClicked(){
                             page.currentIndex = 1
-                            showSelectMenuId.y = chatItemMenue.y -5
+                            showSelectMenuId.selectedButton = chatItemMenue
                         }
                     }
                 }
 
                 MyMenuItem {
                     id: modelsItemMenu
-                    anchors.top: chatItemMenue.bottom
-                    anchors.topMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
                     myTextId: "Models"
                     myLable: "Models"
                     myIconId: "images/modelIcon.svg"
@@ -203,20 +203,42 @@ Window {
                     iconColor: window.menuIconColor
                     autoExclusive: true
 
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
                     Connections {
                         target: modelsItemMenu
                         function onClicked(){
                             page.currentIndex = 2
-                            showSelectMenuId.y = modelsItemMenu.y -5
+                            showSelectMenuId.selectedButton = modelsItemMenu
                         }
                     }
                 }
 
+                MyMenuItem {
+                    myTextId: "Workflow"
+                    myLable: "Workflow"
+                    myIconId: "images/modelIcon.svg"
+                    myFillIconId: "images/fillModelIcon.svg"
+                    fontFamily: window.fontFamily
+                    menuIconColor: window.fillIconColor
+                    iconColor: window.menuIconColor
+                    autoExclusive: true
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
+                    onClicked: {
+                        page.currentIndex = 3
+                        showSelectMenuId.selectedButton = this
+                    }
+                }
+
+                Item { Layout.fillHeight: true }
+
                 MyMenuButtonItem {
                     id: lightDarkItemMenu
-                    anchors.bottom: settingsItemMenu.top
-                    anchors.bottomMargin: 20
-                    anchors.horizontalCenter: parent.horizontalCenter
+
                     myTextId: window.theme === "light"? "Dark": "Light"
                     myLable: window.theme === "light"? "Dark": "Light"
                     myIconId: window.theme === "light"? "images/moonIcon.svg" : "images/sunIcon.svg"
@@ -224,6 +246,10 @@ Window {
                     fontFamily: window.fontFamily
                     menuIconColor: window.fillIconColor
                     iconColor: window.menuIconColor
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
                     Connections {
                         target: lightDarkItemMenu
                         function onClicked(){
@@ -240,9 +266,6 @@ Window {
 
                 MyMenuButtonItem {
                     id: settingsItemMenu
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 24
-                    anchors.horizontalCenter: parent.horizontalCenter
                     myTextId: "Settings"
                     myLable: "Settings"
                     myIconId: "images/settingsIcon.svg"
@@ -250,6 +273,10 @@ Window {
                     fontFamily: window.fontFamily
                     menuIconColor: window.fillIconColor
                     iconColor: window.menuIconColor
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: width
+
                     Connections {
                         target: settingsItemMenu
                         function onClicked() {
@@ -299,11 +326,15 @@ Window {
             Rectangle{
                 id: showSelectMenuId
                 color: window.fillIconColor
-                height: 48
+                height: selectedButton.height
                 width: 2
                 anchors.left: parent.left
                 anchors.leftMargin: 2
-                y: homeItemMenue.y -5
+
+                visible: selectedButton !== null
+                y: selectedButton ? selectedButton.y : 0
+
+                property Item selectedButton: selectedButton
 
                 Behavior on y{
                     NumberAnimation{
@@ -312,6 +343,7 @@ Window {
                 }
             }
         }
+
         StackLayout {
             id: page
             anchors.left: menuId.right
@@ -407,7 +439,7 @@ Window {
 
                     fontFamily: window.fontFamily
 
-                    isTheme: window.isTheme
+                    // isTheme: window.isTheme
                     Connections{
                         target: chatPageId
                         function onGoToModelPage(){
@@ -452,6 +484,8 @@ Window {
                     fontFamily: window.fontFamily
                 }
             }
+
+            Workflow.WorkFlowsPartPage {}
         }
 
         states: [
