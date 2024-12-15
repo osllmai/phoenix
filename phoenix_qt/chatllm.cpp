@@ -48,8 +48,8 @@ void ChatLLM::loadModel(const QString &modelPath)
     prompt_context.n_ctx = 4096;
     prompt_context.n_predict = 4096;
     int ngl = 100;
-    model = LLModel::Implementation::construct(modelPath.toStdString(), backend, prompt_context.n_ctx);
-    prompt_template = "<|start_header_id|>user<|end_header_id|>\n\n%1<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%2<|eot_id|>";
+    // model = LLModel::Implementation::construct(modelPath.toStdString(), backend, prompt_context.n_ctx);
+    // prompt_template = "<|start_header_id|>user<|end_header_id|>\n\n%1<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%2<|eot_id|>";
 
 #if(WIN32)
     if (backend == "cuda") {

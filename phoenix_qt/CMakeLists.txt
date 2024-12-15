@@ -1,70 +1,23 @@
 cmake_minimum_required(VERSION 3.16)
 
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(APPLE)
-  option(BUILD_UNIVERSAL "Build a Universal binary on macOS" OFF)
-  if(BUILD_UNIVERSAL)
-    # Build a Universal binary on macOS
-    # This requires that the found Qt library is compiled as Universal binaries.
-    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
-  else()
-    # Build for the host architecture on macOS
-    set(CMAKE_OSX_ARCHITECTURES "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "" FORCE)
-  endif()
-endif()
-
-
 set(PROJECTNAME  Phoenix)
 project(${PROJECTNAME} VERSION 0.1 LANGUAGES CXX)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
-
-add_subdirectory(../phoenix/ llmodel)
-
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Sql)
-
-qt_standard_project_setup(REQUIRES 6.5)
-
-if(APPLE)
-elseif(UNIX)
-elseif(WIN32)
-        # Enable CUDA
-        find_package(CUDA REQUIRED)
-        set(CUDA_SEPARABLE_COMPILATION ON)
-        set(CUDA_PROPAGATE_HOST_FLAGS OFF)
-
-        # Include directories and link libraries for GPU
-        include_directories(${CUDA_INCLUDE_DIRS})
-        link_libraries(${CUDA_LIBRARIES})
-
-        # Define preprocessor macros for CUDA
-        add_definitions(-DGGML_USE_CUDA)
-endif()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 
 
+find_package(Qt6 6.4 REQUIRED COMPONENTS Core Quick Sql )
 
-# set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-# set(CMAKE_AUTOUIC ON)
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON)
-
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
-# find_package(Qt6 6.4 REQUIRED COMPONENTS Core Quick Sql )
-
-# qt_standard_project_setup()
+qt_standard_project_setup()
 
 qt_add_executable(app${PROJECTNAME}
     main.cpp
@@ -75,6 +28,7 @@ target_include_directories(app${PROJECTNAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/workflow
     ${CMAKE_CURRENT_SOURCE_DIR}/workflow/blocks
 )
+
 
 qt_add_qml_module(app${PROJECTNAME}
     URI ${PROJECTNAME}
@@ -217,6 +171,9 @@ qt_add_qml_module(app${PROJECTNAME}
     workflow/workflowtemplatesstorage.h workflow/workflowtemplatesstorage.cpp
 
     workflow/blocks/chatinputblock.h workflow/blocks/chatinputblock.cpp
+    workflow/workflowrunner.h workflow/workflowrunner.cpp
+    workflow/workflowstep.h workflow/workflowstep.cpp
+    workflow/workflowstepfield.h workflow/workflowstepfield.cpp
 
     QML_FILES
         SettingsSliderItem.qml
@@ -270,72 +227,6 @@ target_link_libraries(app${PROJECTNAME}
         Qt6::Sql
         Qt6::Core
 )
-
-
-
-target_link_libraries(app${PROJECTNAME}
-    PRIVATE llmodel
-)
-
-set(COMPONENT_NAME_MAIN ${PROJECT_NAME})
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "..." FORCE)
-endif()
-
-install(TARGETS app${PROJECTNAME} DESTINATION bin COMPONENT ${COMPONENT_NAME_MAIN})
-
-if(APPLE)
-        add_dependencies(app${PROJECTNAME} ggml-metal)
-
-        install(
-            TARGETS  llmodel
-                                llamamodel-mainline-cpu
-                                llamamodel-mainline-cpu-avxonly
-                                llamamodel-mainline-metal
-            LIBRARY DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .so/.dylib
-            RUNTIME DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .dll
-        )
-
-elseif(UNIX)
-
-elseif(WIN32)
-    # set_property(TARGET llamamodel-mainline-cuda llamamodel-mainline-cuda-avxonly
-    #              APPEND PROPERTY INSTALL_RPATH "$ORIGIN")
-
-    install(
-        TARGETS llamamodel-mainline-cuda
-                llamamodel-mainline-cuda-avxonly
-        RUNTIME_DEPENDENCY_SET llama-cuda-deps
-        LIBRARY DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .so/.dylib
-        RUNTIME DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .dll
-    )
-        install(
-            RUNTIME_DEPENDENCY_SET llama-cuda-deps
-            PRE_EXCLUDE_REGEXES "^(nvcuda|api-ms-.*)\\.dll$"
-            POST_INCLUDE_REGEXES "(^|[/\\\\])(lib)?(cuda|cublas)" POST_EXCLUDE_REGEXES .
-            DIRECTORIES "${CUDAToolkit_BIN_DIR}"
-            DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}
-        )
-
-    install(
-        TARGETS  llmodel
-                            llama-mainline-kompute
-                            llama-mainline-kompute-avxonly
-                            llamamodel-mainline-kompute
-                            llamamodel-mainline-kompute-avxonly
-        LIBRARY DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .so/.dylib
-        RUNTIME DESTINATION lib COMPONENT ${COMPONENT_NAME_MAIN}  # .dll
-    )
-
-        # # Set CUDA architecture (optional, adjust according to your GPU)
-        # set_target_properties(app${PROJECTNAME} PROPERTIES CUDA_ARCHITECTURES "52;60;61;70;75;80;86")
-
-        # # Set CUDA runtime library (static or shared)
-        # set_target_properties(app${PROJECTNAME} PROPERTIES CUDA_RUNTIME_LIBRARY Static)
-endif()
-
-
 
 include(GNUInstallDirs)
 install(TARGETS app${PROJECTNAME}
