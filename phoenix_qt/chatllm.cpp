@@ -21,15 +21,12 @@ LLModel* model;
 std::string prompt_template;
 
 ChatLLM::ChatLLM(Chat *parent)
-    : QObject{nullptr}
-    , _chatGpt{new OpenAI}
+    : QObject{parent}
     , stop(false)
 {
     moveToThread(&chatLLMThread);
     chatLLMThread.start();
     qInfo() << "new" << QThread::currentThread();
-    _chatGpt->setApiKey("...");
-    connect(_chatGpt, &OpenAI::responseRecivied, this, &ChatLLM::providerResponseRecivied);
 }
 
 ChatLLM::~ChatLLM(){
