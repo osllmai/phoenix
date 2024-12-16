@@ -43,7 +43,7 @@ Page {
         ColumnLayout {
             Label {
                 font.pixelSize: 18
-                text: "Step #" + (index + 1)
+                text: block.step.name
             }
 
             Repeater {
