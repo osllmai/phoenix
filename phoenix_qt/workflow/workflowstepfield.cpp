@@ -24,7 +24,8 @@ void WorkFlowStepField::setType(Type newType)
     if (m_type == newType)
         return;
     m_type = newType;
-    emit typeChanged();
+    Q_EMIT typeChanged();
+    Q_EMIT typeAndDirChanged();
 }
 
 QString WorkFlowStepField::name() const
@@ -53,12 +54,12 @@ void WorkFlowStepField::setDefaultValue(const QString &newDefaultValue)
     emit defaultValueChanged();
 }
 
-QString WorkFlowStepField::value() const
+QVariant WorkFlowStepField::value() const
 {
     return m_value;
 }
 
-void WorkFlowStepField::setValue(const QString &newValue)
+void WorkFlowStepField::setValue(const QVariant &newValue)
 {
     if (m_value == newValue)
         return;
@@ -76,7 +77,8 @@ void WorkFlowStepField::setDirection(Direction newDirection)
     if (m_direction == newDirection)
         return;
     m_direction = newDirection;
-    emit directionChanged();
+    Q_EMIT directionChanged();
+    Q_EMIT typeAndDirChanged();
 }
 
 QJsonObject WorkFlowStepField::serialize() const {
@@ -85,3 +87,11 @@ QJsonObject WorkFlowStepField::serialize() const {
 }
 
 void WorkFlowStepField::deserialize(const QJsonObject &obj) {}
+
+QString WorkFlowStepField::typeAndDir() const
+{
+    auto e = QMetaEnum::fromType<Direction>();
+    QString dir =  e.valueToKey(static_cast<int>(m_direction));
+
+    return typeName() + "_" + dir;
+}

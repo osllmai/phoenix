@@ -174,6 +174,8 @@ qt_add_qml_module(app${PROJECTNAME}
     workflow/workflowrunner.h workflow/workflowrunner.cpp
     workflow/workflowstep.h workflow/workflowstep.cpp
     workflow/workflowstepfield.h workflow/workflowstepfield.cpp
+    workflow/blocks/openaistep.h workflow/blocks/openaistep.cpp
+    workflow/blocks/outputstep.h workflow/blocks/outputstep.cpp
 
     QML_FILES
         SettingsSliderItem.qml
@@ -208,6 +210,9 @@ qt_add_qml_module(app${PROJECTNAME}
         workflow/form/TextFieldInput.qml
         workflow/WorkFlowsPage.qml
         workflow/WorkFlowsPartPage.qml
+        workflow/WorkFlowRunnerPage.qml
+        workflow/fields/StringInput.qml
+        workflow/fields/StringOutput.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -1,12 +1,20 @@
 #pragma once
 
-#include <block.h>
+#include <workflowstep.h>
 
-class ChatInputBlock : public Block
+class ChatInputBlock : public WorkFlowStep
 {
     Q_OBJECT
     QML_ELEMENT
 
 public:
-    ChatInputBlock(QQuickItem *parent = nullptr);
+    ChatInputBlock(WorkFlowRunner *parent);
+    void run() override;
+
+protected:
+    bool checkReady() const override;
+
+private:
+    WorkFlowStepField *_inputField;
+
 };
