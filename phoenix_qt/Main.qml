@@ -485,7 +485,7 @@ Window {
                 }
             }
 
-            Workflow.WorkFlowRunnerPage {}
+            Workflow.WorkFlowsPartPage {}
         }
 
         states: [
