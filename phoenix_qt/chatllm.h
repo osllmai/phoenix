@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QThread>
 #include <QDebug>
-#include <Windows.h>
 
 class Chat;
 class ChatLLM : public QObject

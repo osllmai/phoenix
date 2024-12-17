@@ -34,7 +34,7 @@ Item {
 
     property var fontFamily
 
-    property var chatListModel
+    property ChatListModel chatListModel
     property var currentChat
     property var chatModel
     property var modelListModel

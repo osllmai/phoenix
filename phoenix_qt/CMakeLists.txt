@@ -23,10 +23,10 @@ project(${PROJECTNAME} VERSION 0.1 LANGUAGES CXX)
 
 
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# add_subdirectory(../phoenix/ llmodel)
-
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Charts Qml Quick Sql)
+
+add_subdirectory(../phoenix/ llmodel)
+
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -104,7 +104,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/lightIcon.svg"
         "images/modelIcon.svg"
         "images/chatAddIcon.svg"
-        "images/phoenix.png"
+        "images/Phoenix.png"
         "images/searchIcon.svg"
         "images/sendIcon.svg"
         "images/sendMessageIcon.svg"
@@ -140,7 +140,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/downIcon.svg"
         "images/fillDownIcon.svg"
         "images/mistral-ai-icon.svg"
-        "images./githubIcon.svg"
+        "images/githubIcon.svg"
         "images/discordIcon.svg"
         "images/alignLeftIcon.svg"
         "images/fillAlignLeftIcon.svg"

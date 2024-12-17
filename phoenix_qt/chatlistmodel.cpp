@@ -8,8 +8,7 @@ ChatListModel::ChatListModel(QObject *parent)
     // read chat from database
 
     QList<Chat*> chatDB = phoenix_databace::readConversation();
-    for(int i=chatDB.size()-1 ; i>=0 ; i--){
-
+    for (int i = chatDB.size() - 1; i >= 0; i--) {
         //find message for this chat
         Message* root = new Message(-1,"root",true , this);
         phoenix_databace::readMessage(root, chatDB.first()->id());
@@ -24,9 +23,7 @@ ChatListModel::ChatListModel(QObject *parent)
         if(chats.size() >1)
             emit dataChanged(createIndex(1, 0), createIndex(1, 0), {DateRole});
 
-        Chat *chatOld = chatDB.first();
-        chatDB.removeFirst();
-        delete chatOld;
+        delete chatDB.takeFirst();
     }
     connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
     addChat();

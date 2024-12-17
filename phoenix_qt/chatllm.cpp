@@ -1,7 +1,6 @@
 #include "chatllm.h"
 #include "chat.h"
 
-#include <Windows.h>
 #include <QDebug>
 #include <cassert>
 #include <string>
