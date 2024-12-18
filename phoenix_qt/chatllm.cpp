@@ -14,7 +14,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "../phoenix/llmodel.h"
+// #include "../phoenix/llmodel.h"
 
 std::string answer = "";
 // LLModel::PromptContext prompt_context;
