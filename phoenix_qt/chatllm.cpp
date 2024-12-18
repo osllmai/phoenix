@@ -14,7 +14,7 @@
 #include <iostream>
 #include <cstring>
 
-// #include "../phoenix/llmodel.h"
+#include "../phoenix/llmodel.h"
 
 std::string answer = "";
 // LLModel::PromptContext prompt_context;
@@ -45,13 +45,13 @@ void ChatLLM::loadModel(const QString &modelPath)
 {
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
-//     std::string backend = "cuda";
+    std::string backend = "cuda";
 
-//     prompt_context.n_ctx = 4096;
-//     prompt_context.n_predict = 4096;
-//     int ngl = 100;
-//     model = LLModel::Implementation::construct(modelPath.toStdString(), backend, prompt_context.n_ctx);
-//     prompt_template = "<|start_header_id|>user<|end_header_id|>\n\n%1<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%2<|eot_id|>";
+    prompt_context.n_ctx = 4096;
+    prompt_context.n_predict = 4096;
+    int ngl = 100;
+    model = LLModel::Implementation::construct(modelPath.toStdString(), backend, prompt_context.n_ctx);
+    prompt_template = "<|start_header_id|>user<|end_header_id|>\n\n%1<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%2<|eot_id|>";
 
 // #if(WIN32)
 //     if (backend == "cuda") {
@@ -84,8 +84,8 @@ void ChatLLM::loadModel(const QString &modelPath)
 }
 
 void ChatLLM::unLoadModel(){
-    // delete model;
-    // model = nullptr;
+    delete model;
+    model = nullptr;
 }
 
 void ChatLLM::prompt(const QString &input){
@@ -96,26 +96,26 @@ void ChatLLM::prompt(const QString &input){
 
     qDebug() << "This is C++ talking, input: " << input;
 
-    // auto prompt_callback = [](int32_t token_id) { return true;};
+    auto prompt_callback = [](int32_t token_id) { return true;};
 
-    // auto response_callback = std::bind(&ChatLLM::handleResponse, this, std::placeholders::_1, std::placeholders::_2);
+    auto response_callback = std::bind(&ChatLLM::handleResponse, this, std::placeholders::_1, std::placeholders::_2);
 
-    // auto recalculate_callback = [](bool is_recalculating) {return is_recalculating;};
+    auto recalculate_callback = [](bool is_recalculating) {return is_recalculating;};
 
-    // std::string stdStr = input.toStdString();
+    std::string stdStr = input.toStdString();
 
-    // model->prompt( stdStr , prompt_template, prompt_callback, response_callback, recalculate_callback,prompt_context , false, nullptr);
+    model->prompt( stdStr , prompt_template, prompt_callback, response_callback, recalculate_callback,prompt_context , false, nullptr);
 
-    // QString qStr = QString::fromStdString(answer);
-    // qInfo() <<  qStr;
+    QString qStr = QString::fromStdString(answer);
+    qInfo() <<  qStr;
 
-    for(int i=0;i<30;i++){
-        emit tokenResponse("Hi  :)  ");
-        // qInfo()<<"send";
-        Sleep(50);
-        emit tokenResponse("Phoenix!, ");
-        Sleep(50);
-    }
+    // for(int i=0;i<30;i++){
+    //     emit tokenResponse("Hi  :)  ");
+    //     // qInfo()<<"send";
+    //     Sleep(50);
+    //     emit tokenResponse("Phoenix!, ");
+    //     Sleep(50);
+    // }
 
     emit finishedResponnse();
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
