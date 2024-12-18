@@ -9,11 +9,12 @@ Item {
 
     property int maxWidth: 300
     property bool isFinished: true
+    property bool isLoadModel
 
     //signal and text about message
     property bool isLLM: true
     property var myText
-    signal regenerateOrEdit()
+    signal regenerateOrEdit(var text_edit)
     signal nextMessage()
     signal beforMessage()
     property int numberOfMessage
@@ -48,32 +49,64 @@ Item {
 
     Rectangle{
         id: messageRec
-        color: /*messageTextRec.color*/"#00ffffff"
+        color: "#00ffffff"
         width:  messageTextRec.width
         height: messageTextRec.height + messageIcon.height
         radius: 8
         Rectangle {
             id: messageTextRec
             color: root.chatMessageBackgroungColor
-            width: Math.min(messageText.implicitWidth + 20, root.maxWidth)
-            height: root.isLLM == true? messageText.implicitHeight + 30: messageText.implicitHeight+ 20
+            width: messageText.implicitWidth
+            height: root.isLLM == true? messageText.implicitHeight + 15: messageText.implicitHeight
             radius: 8
 
-            Text {
+            TextArea{
                 id: messageText
-                color: root.chatMessageInformationTextColor
+                width:  root.maxWidth
                 text: root.myText
-                anchors.fill: parent
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
-                anchors.topMargin: 10
-                anchors.bottomMargin: 20
+                color: root.chatMessageInformationTextColor
+
+                padding: 10
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
-                textFormat: Text.MarkdownText
-                wrapMode: Text.Wrap
                 font.pointSize: 10
                 font.family: root.fontFamily
-                lineHeight: 1.1
+                focus: false
+                readOnly: true
+                wrapMode: Text.Wrap
+                selectByMouse: false
+                cursorVisible: false
+                persistentSelection: true
+                clip: false
+
+                background: Rectangle {
+                    color: "transparent"
+                }
+
+                onEditingFinished: {
+                    if (messageText.readOnly)
+                        return;
+                    messageText.focus = false;
+                    messageText.readOnly = true;
+                    messageText.selectByMouse = false;
+                }
+                property bool isEnter: true
+                hoverEnabled: true
+                onHoveredChanged:{
+                    if(isEnter ){
+                        if(root.isLLM && !root.isFinished ){
+                            informationTokenId.visible = true
+                        }
+                        isEnter = false
+                    }else if(root.isLLM ){
+                        informationTokenId.visible = false
+                        isEnter = true
+                    }
+                }
+
+                Accessible.role: Accessible.Button
+                Accessible.name: text
+                Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
             }
 
             layer.enabled: root.chatMessageIsGlow
@@ -83,19 +116,6 @@ Item {
                 spread: 0.0
                 transparentBorder: true
              }
-            MouseArea{
-                anchors.fill: parent
-                hoverEnabled: true
-                onHoveredChanged:{
-                    if(containsMouse ){
-                        if(root.isLLM && !root.isFinished ){
-                            informationTokenId.visible = true
-                        }
-                    }else if(root.isLLM ){
-                        informationTokenId.visible = false
-                    }
-                }
-            }
         }
 
         Rectangle {
@@ -112,6 +132,7 @@ Item {
                 id: copyIconId
                 width: 20
                 height: 20
+                visible: messageText.readOnly
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 heightSource:13
@@ -132,6 +153,8 @@ Item {
                 id: regenerateOrEditIconId
                 width: 20
                 height: 20
+                visible: messageText.readOnly
+                enabled: root.isLoadModel
                 anchors.right: copyIconId.left
                 anchors.rightMargin: 0
                 heightSource:14
@@ -144,16 +167,67 @@ Item {
                 Connections {
                     target: regenerateOrEditIconId
                     function onActionClicked(){
-                        console.log("Hi message")
-                        root.regenerateOrEdit()
+                        if(root.isLLM){
+                            root.regenerateOrEdit("");
+                        }else{
+                            messageText.focus = true;
+                            messageText.readOnly = false;
+                            messageText.selectByMouse = true;
+                        }
                     }
                 }
             }
             MyIcon {
+                id: cancelIconId
+                visible: !messageText.readOnly
+                width: 20
+                height: 20
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                heightSource:15
+                widthSource:15
+                normalColor:root.iconColor
+                hoverColor:root.fillIconColor
+                myIconId: "images/cancelCircle.svg"
+                myFillIconId: "images/fillCancelCircle.svg"
+                myLable: "Cancel"
+                Connections {
+                    target: cancelIconId
+                    function onActionClicked(){
+                        root.regenerateOrEdit("");
+                        messageText.editingFinished()
+                    }
+                }
+            }
+            MyIcon {
+                id: okIconId
+                visible: !messageText.readOnly
+                width: 20
+                height: 20
+                enabled: root.isLoadModel
+                anchors.right: cancelIconId.left
+                anchors.rightMargin: 0
+                heightSource:15
+                widthSource:15
+                normalColor:root.iconColor
+                hoverColor:root.fillIconColor
+                myIconId: "images/okCircle.svg"
+                myFillIconId: "images/fillOkCircle.svg"
+                myLable:"Save edit"
+                Connections {
+                    target: okIconId
+                    function onActionClicked(){
+                        root.regenerateOrEdit(messageText.text);
+                        messageText.editingFinished()
+                    }
+                }
+            }
+
+            MyIcon {
                 id: nextIcon
                 width: 20
                 height: 20
-                visible: root.numberOfRegenerateOrEdit>1
+                visible: messageText.readOnly && root.numberOfRegenerateOrEdit>1
                 anchors.right: regenerateOrEditIconId.left
                 anchors.rightMargin: 10
                 heightSource:13
@@ -171,12 +245,13 @@ Item {
                     }
                 }
             }
+
             Rectangle{
                 id: nubmerOfMessageRec
                 width: nubmerOfMessage.width
                 height: 20
                 color: "#00ffffff"
-                visible: root.numberOfRegenerateOrEdit>1
+                visible: messageText.readOnly && root.numberOfRegenerateOrEdit>1
                 anchors.right: nextIcon.left
                 anchors.rightMargin: 0
                 Text {
@@ -193,7 +268,7 @@ Item {
                 id: beforeIcon
                 width: 20
                 height: 20
-                visible: root.numberOfRegenerateOrEdit>1
+                visible: messageText.readOnly && root.numberOfRegenerateOrEdit>1
                 anchors.right: nubmerOfMessageRec.left
                 anchors.rightMargin: 0
                 heightSource:13

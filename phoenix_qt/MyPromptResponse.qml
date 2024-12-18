@@ -39,11 +39,12 @@ Item {
     property var responseTime
     property var dateRequest
     property bool isFinished
+    property bool isLoadModel
     property var executionTime
     property var numberOfToken
 
     signal regenerateResponse()
-    signal editPrompt()
+    signal editPrompt(var text_edit)
     signal nextPrompt()
     signal beforPrompt()
     signal nextResponse()
@@ -108,7 +109,7 @@ Item {
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.rightMargin: 0
-                    anchors.topMargin: 20
+                    anchors.topMargin: 10
                     Image{
                         id: userImage
                         anchors.fill: parent
@@ -129,14 +130,15 @@ Item {
                     anchors.topMargin: 10
                     maxWidth: root.width - 90
                     isLLM: false
+                    isLoadModel: root.isLoadModel
                     myText: root.prompt
                     executionTime: root.executionTime
                     numberOfToken:root.numberOfToken
 
                     Connections {
                         target: userTextRec
-                        function onRegenerateOrEdit(){
-                            root.editPrompt();
+                        function onRegenerateOrEdit(text_edit){
+                            root.editPrompt(text_edit);
                         }
                         function onNextMessage(){
                             root.nextPrompt()
@@ -206,7 +208,7 @@ Item {
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.leftMargin: 0
-                    anchors.topMargin: 20
+                    anchors.topMargin: 10
                     Image{
                         id: llmImage
                         anchors.fill: parent
@@ -229,12 +231,13 @@ Item {
                     isLLM: true
                     myText: root.response
                     isFinished: root.isFinished
+                    isLoadModel: root.isLoadModel
                     executionTime: root.executionTime
                     numberOfToken:root.numberOfToken
 
                     Connections {
                         target: llmTextRec
-                        function onRegenerateOrEdit(){
+                        function onRegenerateOrEdit(text_edit){
                             root.regenerateResponse();
                         }
                         function onNextMessage(){
@@ -246,7 +249,6 @@ Item {
                     }
                     numberOfMessage: root.numberOfResponse
                     numberOfRegenerateOrEdit: root.numberOfRegenerate
-
 
                     backgroungColor: root.backgroungColor
                     glowColor: root.glowColor

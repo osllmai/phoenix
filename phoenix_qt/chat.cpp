@@ -133,7 +133,6 @@ void Chat::finishedResponnse(){
 
 
 void Chat::loadModelRequested(QString modelPath){
-    modelPath.remove("file:///");
     emit loadModel(modelPath);
 }
 

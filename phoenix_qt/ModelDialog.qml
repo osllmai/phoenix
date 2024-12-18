@@ -34,23 +34,11 @@ Item {
 
     property var modelListModel
     signal goToModelPage()
-    signal loadModelDialog(var modelPath, var name)
+    signal loadModelDialog(var modelPath, var name, var promptTemplate, var systemPrompt)
 
     Rectangle{
         id: modelSettings
         anchors.fill:  parent
-        // gradient: Gradient {
-        //     GradientStop {
-        //         position: 0
-        //         color: "#ffffff"
-        //     }
-
-        //     GradientStop {
-        //         position: 1
-        //         color: "#ababb9"
-        //     }
-        //     orientation: Gradient.Vertical
-        // }
         color: root.chatBackgroungColor
         border.color: root.chatBackgroungColor
         radius:5
@@ -208,7 +196,6 @@ Item {
                             id: historylist
                             anchors.fill: parent
                             model: root.modelListModel
-                            // Component.onCompleted: chatListModel.loadChats()
                             spacing: 5
 
                             delegate: Rectangle{
@@ -254,36 +241,20 @@ Item {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             fillMode: Image.PreserveAspectFit
                                         }
-                                        // MouseArea{
-                                        //     anchors.fill: parent
-                                        //     onClicked: function() {}
-                                        // }
                                     }
                                     MouseArea {
                                         id:mouseAreaChatItem
                                         anchors.fill:parent
                                         onClicked: {
                                             delegateChat.color= root.selectButtonColor
-                                            root.loadModelDialog(model.directoryPath, model.name);
-                                            // root.myChatListModel.currentChat = root.myChatListModel.getChat(root.myIndex);
-                                            // chatIcon.open()
+                                            root.loadModelDialog(model.directoryPath, model.name, model.promptTemplate, model.systemPrompt);
                                         }
                                         hoverEnabled: true
                                         onHoveredChanged: {
                                             if(containsMouse){
                                                 delegateChat.color= root.hoverButtonColor
-                                            //     if(root.myChatListModel.currentChat !== root.myChatListModel.getChat(root.myIndex) ){
-                                            //         backgroundId.color = root.hoverButtonColor
-                                            //         chatIcon.open()
-                                            //     }
                                             }else{
                                                 delegateChat.color= root.normalButtonColor
-                                            //     if(root.myChatListModel.currentChat === root.myChatListModel.getChat(root.myIndex)){
-                                            //         backgroundId.color=root.selectButtonColor
-                                            //     }else{
-                                            //         backgroundId.color=root.normalButtonColor
-                                            //         // chatIcon.close()
-                                            //     }
                                             }
                                         }
                                     }
@@ -299,7 +270,6 @@ Item {
                     height: 50
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 0
-                    // color: "#00ffffff"
                     color: modelSettings.color
 
                     MyButton{
@@ -329,7 +299,6 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 color: "#00ffffff"
-
             }
         }
     }

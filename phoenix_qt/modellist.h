@@ -50,10 +50,10 @@ class ModelList : public QAbstractListModel
 
 public:
     explicit ModelList(QObject *parent = nullptr);
-    Q_INVOKABLE void downloadRequest(const int index , const QString &directoryPath);
+    Q_INVOKABLE void downloadRequest(const int index, QString directoryPath);
     Q_INVOKABLE void cancelRequest(const int index);
     Q_INVOKABLE void deleteRequest(const int index);
-    Q_INVOKABLE void addModel(const QString &directoryPath);
+    Q_INVOKABLE void addModel(QString directoryPath);
 
     //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//

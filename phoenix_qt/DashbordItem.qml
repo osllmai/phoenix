@@ -120,7 +120,7 @@ Item {
             anchors.topMargin: 10
             anchors.bottomMargin: 10
             font.pixelSize: informationFontSize
-            horizontalAlignment: Text.AlignLeft
+            horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
             font.family: fontFamily

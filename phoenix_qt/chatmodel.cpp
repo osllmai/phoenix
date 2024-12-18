@@ -176,6 +176,11 @@ void ChatModel::nextPrompt(const int index, const int numberOfNext){
 }
 
 void ChatModel::editPrompt(const int index,const QString &promptText){
+    //cancel edit
+    if(promptText == ""){
+        emit dataChanged(createIndex(index, 0), createIndex(index, 0), {PromptRole});
+        return;
+    }
 
     //delete next chatItem because one see branch is change
     while(index<chatItems.size()){

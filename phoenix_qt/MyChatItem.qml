@@ -26,6 +26,7 @@ Item {
 
     signal currentChat()
     signal deleteChat()
+    signal editChatName(var chatName)
 
     function onIsCurrentItemChanged(){
         if(isCurrentItem===true){
@@ -34,71 +35,116 @@ Item {
             backgroundId.color = control.normalButtonColor
         }
     }
-    function onIsThemeChanged(){
-        console.log(" pl pl plp")
-        if(isCurrentItem===true){
-            backgroundId.color = control.selectButtonColor
-        }else{
-            backgroundId.color = control.normalButtonColor
-        }
-    }
+    // function onIsThemeChanged(){
+    //     console.log(" pl pl plp")
+    //     if(isCurrentItem===true){
+    //         backgroundId.color = control.selectButtonColor
+    //     }else{
+    //         backgroundId.color = control.normalButtonColor
+    //     }
+    // }
 
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.normalButtonColor
+        color: control.isCurrentItem? control.selectButtonColor:control.normalButtonColor
         radius: 2
-        Text {
-            id:  textId
+
+        TextArea{
+            id: textId
+            text: "chat name"
             color: control.chatMessageInformationTextColor
-            text: qsTr("Text Button")
-            anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 10
-            font.pixelSize: 12
-            horizontalAlignment: Text.AlignHCenter
+            anchors.right: editIcon.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 5
+            anchors.rightMargin: 0
+            anchors.topMargin: 0
+            anchors.bottomMargin: 0
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.family: control.fontFamily
-        }
-        MouseArea {
-            id:mouseAreaChatItem
-            anchors.fill:parent
-            onClicked: {
-                control.currentChat()
+            focus: false
+            readOnly: true
+            wrapMode: Text.NoWrap
+            selectByMouse: false
+
+            background: Rectangle {
+                color: "transparent"
             }
+
+            onEditingFinished: {
+                if (textId.readOnly)
+                    return;
+                changeName();
+                console.log("Hi dear Ali nemati")
+            }
+            function changeName() {
+                control.editChatName(textId.text);
+                textId.focus = false;
+                textId.readOnly = true;
+                textId.selectByMouse = false;
+            }
+            TapHandler {
+                onTapped: {
+                    if (control.isCurrentItem)
+                        return;
+                    control.currentChat();
+                }
+            }
+
+            property bool isEnter: true
             hoverEnabled: true
             onHoveredChanged: {
-                if(containsMouse){
+                console.log("ok")
+                if(isEnter){
                     if(!control.isCurrentItem ){
                         backgroundId.color = control.hoverButtonColor
+                        console.log("hi")
                     }
+                    isEnter = false
                 }else{
                     if(control.isCurrentItem){
                         backgroundId.color=control.selectButtonColor
                     }else{
                         backgroundId.color=control.normalButtonColor
                     }
+                    isEnter = true
                 }
             }
+
+            Accessible.role: Accessible.Button
+            Accessible.name: text
+            Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
         }
 
         MyIcon {
             id: editIcon
             width: 30
             visible: control.isCurrentItem
-            anchors.right: parent.right
+            anchors.right: deleteIcon.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.rightMargin: 2
+            anchors.rightMargin: 0
             anchors.topMargin: 0
             myLable: " edit chat name"
-            myIconId: "images/editIcon.svg"
-            myFillIconId: "images/fillEditIcon.svg"
+            myIconId: textId.readOnly? "images/editIcon.svg": "images/okIcon.svg"
+            myFillIconId: textId.readOnly? "images/fillEditIcon.svg": "images/okIcon.svg"
             normalColor: control.iconColor
             hoverColor: control.fillIconColor
             Connections {
                 target: editIcon
                 function onActionClicked() {
+                    if(textId.readOnly){
+                        textId.focus = true;
+                        textId.readOnly = false;
+                        textId.selectByMouse = true;
+                    }else{
+                        textId.focus = false;
+                        textId.readOnly = true;
+                        textId.selectByMouse = false;
+                    }
                 }
             }
         }
@@ -107,11 +153,11 @@ Item {
             id: deleteIcon
             width: 30
             visible: control.isCurrentItem
-            anchors.right: editIcon.left
+            anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.topMargin: 0
-            anchors.leftMargin: 0
+            anchors.rightMargin: 2
             myLable: " delete this chat"
             myIconId: "images/deleteIcon.svg"
             myFillIconId: "images/fillDeleteIcon.svg"
@@ -133,4 +179,6 @@ Item {
              transparentBorder: true
          }
     }
+
+
 }

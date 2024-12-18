@@ -35,7 +35,7 @@ Model* phoenix_databace::insertModel(const QString &name, const QString &path){
 
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
-       return model;
+        return model;
 
     QSqlQuery query(db);
 
@@ -73,7 +73,7 @@ int phoenix_databace::insertConversation(const QString &title, const QDateTime d
 }
 
 int phoenix_databace::insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
-                        const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date){
+                                    const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 
     db.setDatabaseName("./phoenix.db");
@@ -155,20 +155,26 @@ QList<Model*> phoenix_databace::readModel(){
 
     if (!query.exec(READ_MODEL_SQL))
         return models;
+    QList<Model*> notExistListr;
     while(query.next()){
         int id = query.value(0).toInt();
         QString name = query.value(1).toString();
         QString path = query.value(2).toString();
-        bool fileExist = false;
-        path.remove("file:///");
+        bool fileExist = true;
         QFile file(path);
-        if (file.exists()){
-            fileExist = true;
+        if (!file.exists())
+            fileExist = false;
+        Model *model = new Model(id,0,0,name,"","","",path,"","","","","","./images/Phoenix.svg",0,false,fileExist);
+        models.append(model);
+        if(!fileExist){
+            notExistListr.append(model);
         }
-        models.append(new Model(id,0,0,name,"","","",path,"","","","","","./images/Phoenix.svg",0,false,fileExist));
     }
-
     db.close();
+    while(notExistListr.size()>0){
+        updateModelPath(notExistListr.first()->id(),"");
+        notExistListr.removeFirst();
+    }
     return models;
 }
 
@@ -239,6 +245,42 @@ QSqlError phoenix_databace::readMessage(Message *root, const int &conversation_i
         }
         leaf.removeFirst();
     }
+    db.close();
+    return QSqlError();
+}
+
+QSqlError phoenix_databace::updateModelPath(const int &id, const QString &path){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("./phoenix.db");
+    if (!db.open())
+        return db.lastError();
+
+    QSqlQuery query(db);
+
+    if (!query.prepare(UPDATE_PATH_MODEL_SQL))
+        return query.lastError();
+    query.addBindValue(path);
+    query.addBindValue(id);
+    query.exec();
+
+    db.close();
+    return QSqlError();
+}
+
+QSqlError phoenix_databace::updateConversationName(const int &id, const QString &name){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("./phoenix.db");
+    if (!db.open())
+        return db.lastError();
+
+    QSqlQuery query(db);
+
+    if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(name);
+    query.addBindValue(id);
+    query.exec();
+
     db.close();
     return QSqlError();
 }

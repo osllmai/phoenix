@@ -104,10 +104,6 @@ Window {
 
     property bool isTheme
 
-    function onIsThemeChanged(){
-        console.log(" pl pl plp")
-    }
-
 
     visible: true
     title: qsTr("Phoenix")
@@ -454,29 +450,6 @@ Window {
             }
         }
 
-        states: [
-            State {
-                name: "clicked"
-            }
-        ]
-
-        Rectangle{
-            id: rightRecId
-            color: parent.color
-            anchors.left: page.right
-            anchors.right: parent.right
-            anchors.top: topRecId.bottom
-            anchors.bottom: bottomRecId.top
-        }
-
-        Rectangle{
-            id: topRecId
-            color: parent.color
-            anchors.left: menuId.right
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: page.top
-        }
         Rectangle{
             id: bottomRecId
             color: parent.color
@@ -772,7 +745,7 @@ Window {
                     }
                 }
                 Text {
-                    id: cancleText
+                    id: progressBarText
                     text: "%" + (progressBar.value * 100)
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter

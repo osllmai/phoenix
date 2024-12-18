@@ -47,8 +47,8 @@ T.Button {
         x: control.xPopup
         y: control.yPopup
         width: lableFoolTipId.width + 20
-        height: 30
-        visible: control.hovered && control.havePupup // Show when the button is hovered
+        height: lableFoolTipId.height + 20
+        visible: control.hovered && control.havePupup && control.enabled// Show when the button is hovered
         background:Rectangle {
             color: "#ffffff"
             radius: 4
@@ -58,6 +58,8 @@ T.Button {
                 id: lableFoolTipId
                 text: "Customized tooltip background"
                 anchors.centerIn: parent
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignJustify
                 color: "black"
             }
             layer.enabled: true
@@ -67,6 +69,14 @@ T.Button {
                  spread: 0.3
                  transparentBorder: true
              }
+        }
+        onWidthChanged:{
+            if(customToolTipId.width > 300){
+                lableFoolTipId.width = 280
+                customToolTipId.width = 300
+                customToolTipId.y = control.yPopup - lableFoolTipId.height - 30
+                customToolTipId.x = control.xPopup - 120
+            }
         }
     }
 
@@ -87,7 +97,7 @@ T.Button {
                 visible: true
                 height: control.heightSource
                 width: control.widthSource
-                source: !control.pressed &&!control.hovered?control.myIconId: control.myFillIconId
+                source:(!control.pressed &&!control.hovered) || !control.enabled ?control.myIconId: control.myFillIconId
                 sourceSize.height: control.heightSource
                 sourceSize.width: control.widthSource
                 anchors.centerIn: parent
@@ -98,7 +108,7 @@ T.Button {
                 id: colorOverlayIconId
                 anchors.fill: iconId
                 source: iconId
-                color: control.hovered? hoverColor:normalColor
+                color: !control.hovered || !control.enabled ? control.normalColor: control.hoverColor
             }
         }
     }

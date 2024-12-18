@@ -13,6 +13,7 @@ Item {
     property color glowColor
 
     property alias myTextName: textId.text
+    property alias myTextDescription: aboutIcon.myLable
     property double sliderValue: 0.5
     property double sliderFrom: -1
     property double sliderTo: 3
@@ -35,7 +36,7 @@ Item {
         }
 
         MyIcon {
-            id: discordIcon
+            id: aboutIcon
             visible: true
             anchors.verticalCenter: textId.verticalCenter
             anchors.left: textId.right
@@ -52,7 +53,7 @@ Item {
             xPopup: -18
             yPopup: -30
             Connections {
-                target: discordIcon
+                target: aboutIcon
                 function onActionClicked() {}
             }
         }

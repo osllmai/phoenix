@@ -16,10 +16,10 @@
 
 // #include "../phoenix/llmodel.h"
 
-// std::string answer = "";
+std::string answer = "";
 // LLModel::PromptContext prompt_context;
 // LLModel* model;
-// std::string prompt_template;
+std::string prompt_template;
 
 
 ChatLLM::ChatLLM(Chat *parent) :
@@ -43,8 +43,7 @@ void ChatLLM::setStop(){
 
 void ChatLLM::loadModel(const QString &modelPath)
 {
-    // qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
-    Sleep(2000);
+    qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
 //     std::string backend = "cuda";
 
@@ -80,9 +79,8 @@ void ChatLLM::loadModel(const QString &modelPath)
 //         qDebug() << "\r" << "done loading!" ;
 //         emit loadModelResult(true);
 //     }
-
     emit loadModelResult(true);
-    // qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
+    qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 }
 
 void ChatLLM::unLoadModel(){
@@ -92,11 +90,11 @@ void ChatLLM::unLoadModel(){
 
 void ChatLLM::prompt(const QString &input){
     stop = false;
-    // qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
+    qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
 
-    // answer = "";
+    answer = "";
 
-    // qDebug() << "This is C++ talking, input: " << input;
+    qDebug() << "This is C++ talking, input: " << input;
 
     // auto prompt_callback = [](int32_t token_id) { return true;};
 
@@ -120,22 +118,22 @@ void ChatLLM::prompt(const QString &input){
     }
 
     emit finishedResponnse();
-    // qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
+    qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
 
 }
 
-// bool ChatLLM::handleResponse(int32_t token, const std::string &response){
-//     const char* responsechars = response.c_str();
+bool ChatLLM::handleResponse(int32_t token, const std::string &response){
+    const char* responsechars = response.c_str();
 
 
-//     if (!(responsechars == nullptr || responsechars[0] == '\0')) {
+    if (!(responsechars == nullptr || responsechars[0] == '\0')) {
 
-//         std::cout << responsechars << std::flush;
-//         qInfo()<<responsechars;
+        std::cout << responsechars << std::flush;
+        qInfo()<<responsechars;
 
-//         answer += responsechars;
-//         emit tokenResponse(QString::fromStdString(response));
-//     }
-//     return !stop;
-// }
+        answer += responsechars;
+        emit tokenResponse(QString::fromStdString(response));
+    }
+    return !stop;
+}
 

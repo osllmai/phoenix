@@ -38,7 +38,7 @@ Item {
     property var currentChat
 
     signal goToModelPage()
-    signal loadModelDialog(var modelPath, var name)
+    signal loadModelDialog(var promptTemplate, var systemPrompt)
     signal sendPrompt(var prompt)
 
     Rectangle {
@@ -63,10 +63,14 @@ Item {
             TextArea {
                 id: inputTextBox
                 height: text.height
-                visible: true
+                enabled: root.currentChat.isLoadModel
                 color: root.informationTextColor
                 wrapMode: Text.Wrap
                 placeholderText: root.currentChat.isLoadModel? qsTr("What is in your mind ?"): qsTr("Load a model to continue ...")
+                Accessible.role: Accessible.EditableText
+                Accessible.name: placeholderText
+                Accessible.description: qsTr("Send prompts to the model")
+
                 clip: false
                 font.pointSize: 12
                 hoverEnabled: true
@@ -114,6 +118,7 @@ Item {
             id: sendIcon
             width: 40
             height: 40
+            enabled: root.currentChat.isLoadModel
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 35
@@ -208,15 +213,15 @@ Item {
                         loadModelPopup.close()
                         root.goToModelPage()
                     }
-                    function onLoadModelDialog(modelPath , name){
+                    function onLoadModelDialog(modelPath , name, promptTemplate, systemPrompt){
                         loadModelIcon.myTextId = name
+                        root.currentChat.loadModelRequested(modelPath);
+                        root.loadModelDialog(promptTemplate, systemPrompt)
                         loadModelPopup.close()
                     }
                 }
             }
         }
-
-
 
         layer.enabled: true
         layer.effect: Glow {

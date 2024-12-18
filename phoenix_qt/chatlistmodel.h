@@ -48,8 +48,9 @@ public:
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
     Q_INVOKABLE void addChat();
-    Q_INVOKABLE Chat* getChat(int index);
-    Q_INVOKABLE void deleteChat(int index);
+    Q_INVOKABLE Chat* getChat( const int index);
+    Q_INVOKABLE void deleteChat(const int index);
+    Q_INVOKABLE void editChatName(const int index, const QString title);
 
 signals:
     void currentChatChanged();

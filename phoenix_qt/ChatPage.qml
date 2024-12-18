@@ -45,10 +45,6 @@ Item {
 
     property bool isTheme
 
-    function onIsThemeChanged(){
-        console.log(" pl pl plp")
-    }
-
     Rectangle{
         id: chatPage
         color: root.chatBackgroungConverstationColor
@@ -215,15 +211,11 @@ Item {
                         ListView {
                             id: historylist
                             anchors.fill: parent
-
                             model: root.chatListModel
-
                             ScrollBar.vertical: ScrollBar {
                                 policy: ScrollBar.AsNeeded
                             }
-
                             clip: true
-
                             delegate: Rectangle{
                                 id: delegateChat
                                 width: historylist.width -25
@@ -256,7 +248,6 @@ Item {
                                       anchors.topMargin: 0
                                       fontFamily: root.fontFamily
                                       myTextId: model.title
-                                      // myChatListModel: chatListModel
                                       isCurrentItem: root.chatListModel.currentChat === root.chatListModel.getChat(index)
                                       isTheme: root.isTheme
                                       fillIconColor: root.fillIconColor
@@ -268,16 +259,17 @@ Item {
                                       glowColor: root.glowColor
 
                                       Connections {
-                                          target: applicationButton
-                                          function onCurrentChat(){
-                                              root.chatListModel.currentChat = root.chatListModel.getChat(index);
-                                          }
-                                          function onDeleteChat(){
-                                              root.myChatListModel.deleteChat(index)
-                                          }
-                                      }
-
-                                      // closePupup:
+                                            target: applicationButton
+                                            function onCurrentChat(){
+                                                  root.chatListModel.currentChat = root.chatListModel.getChat(index);
+                                            }
+                                            function onDeleteChat(){
+                                                  root.chatListModel.deleteChat(index)
+                                            }
+                                            function onEditChatName(chatName){
+                                                root.chatListModel.editChatName(index, chatName)
+                                            }
+                                    }
                                 }
                             }
                         }
@@ -378,7 +370,6 @@ Item {
                                     Layout.maximumWidth: 1280
                                     Layout.fillHeight: true
                                     Layout.fillWidth: true
-                                    // Layout.margins: 20
                                     Layout.leftMargin: 0
                                     Layout.rightMargin: 0
                                     Layout.alignment: Qt.AlignHCenter
@@ -402,12 +393,13 @@ Item {
                                         width: listViewChat.width - 10 - 100
                                         height: myPromptResponseId.height
                                         color: root.chatBackgroungConverstationColor
-                                        anchors.left:parent.left
-                                        anchors.leftMargin: 60
+
 
                                         MyPromptResponse{
                                             id: myPromptResponseId
                                             width: parent.width
+                                            anchors.left:parent.left
+                                            anchors.leftMargin: 60
 
                                             prompt: model.prompt
                                             response: model.response
@@ -418,15 +410,16 @@ Item {
                                             executionTime: model.executionTime
                                             numberOfToken:model.numberOfToken
                                             isFinished: root.currentChat.responseInProgress
+                                            isLoadModel: root.currentChat.isLoadModel
 
                                             Connections {
                                                 target: myPromptResponseId
                                                 function onRegenerateResponse(){
                                                     root.chatModel.regenerateResponse(index)
                                                 }
-                                                function onEditPrompt(){
+                                                function onEditPrompt(text_edit){
                                                     console.log("onEditPrompt")
-                                                    root.chatModel.editPrompt(index, "Tell me about iran")
+                                                    root.chatModel.editPrompt(index, text_edit)
                                                 }
                                                 function onNextPrompt(){
                                                     console.log("onNextPrompt")
@@ -547,7 +540,9 @@ Item {
                                     function onGoToModelPage(){
                                         root.goToModelPage()
                                     }
-                                    function onLoadModelDialog(modelPath , name){
+                                    function onLoadModelDialog(promptTemplate, systemPrompt){
+                                        instructionTextBox.text = systemPrompt
+                                        promptTemplateTextBox.text = promptTemplate
                                     }
                                 }
                             }
@@ -563,6 +558,7 @@ Item {
                     anchors.right: parent.right
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
+                    anchors.rightMargin: 10
                     color: root.chatBackgroungColor
                     radius:5
 
@@ -748,10 +744,6 @@ Item {
                                 width: parent.width
                                 height: parent.height
 
-                                ScrollBar.vertical: ScrollBar {
-                                    policy: ScrollBar.AsNeeded
-                                }
-
                                 Column{
                                     width: parent.width
                                     spacing: 5
@@ -831,9 +823,10 @@ Item {
                                                 id:temperatureId
                                                 width: parent.width
                                                 myTextName: "Temperature"
-                                                sliderValue: 0.4
-                                                sliderFrom: 0
-                                                sliderTo:2
+                                                myTextDescription: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
+                                                sliderValue: 1.0
+                                                sliderFrom: 0.0
+                                                sliderTo:2.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -844,9 +837,10 @@ Item {
                                                 id:topPId
                                                 width: parent.width
                                                 myTextName: "Top-P"
-                                                sliderValue: 0.9
-                                                sliderFrom: 0
-                                                sliderTo:1
+                                                myTextDescription:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
+                                                sliderValue: 1.0
+                                                sliderFrom: 0.0
+                                                sliderTo:1.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -857,6 +851,7 @@ Item {
                                                 id:maxTokensId
                                                 width: parent.width
                                                 myTextName: "Max Tokens"
+                                                myTextDescription: "Defines the maximum number of tokens the model can process in one input or output."
                                                 sliderValue: 4096
                                                 sliderFrom: 100
                                                 sliderTo: 4096
@@ -870,9 +865,10 @@ Item {
                                                 id:frequencyPenaltyId
                                                 width: parent.width
                                                 myTextName: "Frequency Penalty"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
+                                                myTextDescription: "Reduces the likelihood of repeating the same word or phrase."
+                                                sliderValue: 0.0
+                                                sliderFrom: 0.0
+                                                sliderTo: 2.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -883,9 +879,10 @@ Item {
                                                 id:presencePenaltyId
                                                 width: parent.width
                                                 myTextName: "Presence Penalty"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
+                                                myTextDescription: "Reduces the likelihood of repeating any word or phrase already present."
+                                                sliderValue: 0.0
+                                                sliderFrom: 0.0
+                                                sliderTo: 2.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -896,10 +893,11 @@ Item {
                                                 id:promptBatchSizeId
                                                 width: parent.width
                                                 myTextName: "Prompt Batch Size"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
-                                                sliderStepSize:0.1
+                                                myTextDescription:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
+                                                sliderValue: 1
+                                                sliderFrom: 1
+                                                sliderTo: 128
+                                                sliderStepSize:1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                                 boxColor: root.chatBackgroungConverstationColor
@@ -909,9 +907,10 @@ Item {
                                                 id:minPId
                                                 width: parent.width
                                                 myTextName: "Min-P"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
+                                                myTextDescription:"Sets the minimum cumulative probability threshold for word selection."
+                                                sliderValue: 0.0
+                                                sliderFrom: 0.0
+                                                sliderTo: 1.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -922,10 +921,11 @@ Item {
                                                 id:maxLengthId
                                                 width: parent.width
                                                 myTextName: "Max Lenght"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
-                                                sliderStepSize:0.1
+                                                myTextDescription: "Defines the maximum length of input and output combined, limiting the generated text."
+                                                sliderValue: 1024
+                                                sliderFrom: 1
+                                                sliderTo: 4096
+                                                sliderStepSize:1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                                 boxColor: root.chatBackgroungConverstationColor
@@ -935,10 +935,11 @@ Item {
                                                 id:topKId
                                                 width: parent.width
                                                 myTextName: "Top-K"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
-                                                sliderStepSize:0.1
+                                                myTextDescription: "Limits word selection to the top K most probable words, controlling output diversity."
+                                                sliderValue: 1
+                                                sliderFrom: 1
+                                                sliderTo: 50000
+                                                sliderStepSize:1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                                 boxColor: root.chatBackgroungConverstationColor
@@ -948,6 +949,7 @@ Item {
                                                 id:repeatPenaltyTokensId
                                                 width: parent.width
                                                 myTextName: "Repeat Penalty Tokens"
+                                                myTextDescription: "Increases the penalty for repeating specific tokens during generation."
                                                 sliderValue: 0
                                                 sliderFrom: 0
                                                 sliderTo: 1
@@ -961,9 +963,10 @@ Item {
                                                 id:repeatPenaltyId
                                                 width: parent.width
                                                 myTextName: "Repeat Penalty"
-                                                sliderValue: 0
-                                                sliderFrom: 0
-                                                sliderTo: 1
+                                                myTextDescription: "Discourages repeating words or phrases by applying a penalty to repeated tokens."
+                                                sliderValue: 1.0
+                                                sliderFrom: 1.0
+                                                sliderTo: 2.0
                                                 sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -1180,7 +1183,8 @@ Item {
                                             SettingsSliderItem{
                                                 id:contextLengthId
                                                 myTextName: "Context Length"
-                                                sliderValue: 4096
+                                                myTextDescription: "Refers to the number of tokens the model considers from the input when generating a response."
+                                                sliderValue: 2048
                                                 sliderFrom: 120
                                                 sliderTo:4096
                                                 sliderStepSize:1
@@ -1192,6 +1196,7 @@ Item {
                                             SettingsSliderItem{
                                                 id:numberOfGPUId
                                                 myTextName: "Number of GPU layers (ngl)"
+                                                myTextDescription: "Refers to the number of layers processed using a GPU, affecting performance."
                                                 sliderValue: 40
                                                 sliderFrom: 1
                                                 sliderTo: 100

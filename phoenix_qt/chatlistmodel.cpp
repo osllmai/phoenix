@@ -120,7 +120,7 @@ void ChatListModel::setCurrentChat(Chat *chat){
 
 void ChatListModel::addChat(){
     const int index = chats.size();
-    const QString name = "new chat" +  QString::number(index);
+    const QString name = "new chat";
 
     Message *root = new Message(-1,"root",true , this);
     Chat *chat = new Chat(index, name, QDateTime::currentDateTime(),root, this);
@@ -167,6 +167,11 @@ void ChatListModel::deleteChat(int index){
     delete chat;
 
     emit sizeChanged();
+}
+
+void ChatListModel::editChatName(const int index, const QString title){
+    chats[index]->setTitle(title);
+    phoenix_databace::updateConversationName(chats[index]->id(),chats[index]->title());
 }
 
 QVariant ChatListModel::dateRequest(const int currentIndex)const{

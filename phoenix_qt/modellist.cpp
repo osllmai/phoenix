@@ -233,31 +233,26 @@ void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-
-void ModelList::downloadRequest(const int index , const QString &directoryPath){
+void ModelList::downloadRequest(const int index , QString directoryPath){
+    directoryPath.remove("file:///");
 
     Model *model = models[index];
-    model->setDirectoryPath(directoryPath);
-    model->setIsDownloading(true);
-
-    QString modelPath = directoryPath;
-    modelPath.remove("file:///");
-    modelPath = modelPath + "/" + model->fileName();
+    model->setDirectoryPath(directoryPath+ "/" + model->fileName());
+    model->setIsDownloading(true);    
 
     Download *download = new Download(index);
     connect(download, &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
     connect(download, &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
-    download->downloadModel(model->url(), modelPath);
+    download->downloadModel(model->url(), model->directoryPath());
     downloads.append(download);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
 }
 
-void ModelList::addModel(const QString &directoryPath){
-    QString modelPath = directoryPath;
-    modelPath.remove("file:///");
+void ModelList::addModel(QString directoryPath){
+    directoryPath.remove("file:///");
 
-    QFileInfo fileInfo(modelPath);
+    QFileInfo fileInfo(directoryPath);
     QString name = fileInfo.fileName();
 
     //add from database
@@ -286,10 +281,14 @@ void ModelList::handleDownloadFinished(const int index){
     Model *model = models[index];
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
+    phoenix_databace::updateModelPath(model->id(),model->directoryPath());
+
+    m_currentModelList->addModel(model);
 
     updateDownloadProgress();
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole});
+    emit currentModelListChanged();
 }
 
 void ModelList::cancelRequest(const int index){
@@ -307,7 +306,7 @@ void ModelList::cancelRequest(const int index){
 void ModelList::deleteRequest(const int index){
     Model *model = models[index];
     for(int indexSearch =0 ;indexSearch<downloads.size();indexSearch++)
-        if(downloads[indexSearch]->index() == index)
+        if(downloads[indexSearch]->index() == model->id())
             downloads[indexSearch]->removeModel();
 
     model->setIsDownloading(false);
@@ -327,15 +326,13 @@ void ModelList::deleteRequest(const int index){
         // chat->unloadAndDeleteLater();
     }else if(model->directoryPath() != ""){
         QFile file(model->directoryPath());
-        qDebug()<< model->directoryPath();
         if (file.exists()){
             file.remove();
         }
+        phoenix_databace::updateModelPath(model->id(),"");
     }
 
-
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
-
     emit currentModelListChanged();
 }
 
