@@ -68,6 +68,7 @@ Item {
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
                         }
+                        clip: true
 
                         model: ListModel {
                            id: model

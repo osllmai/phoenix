@@ -16,6 +16,7 @@ class CurrentModelList : public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(int size READ size NOTIFY sizeChanged)
+
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         FileSizeRole,

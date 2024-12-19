@@ -17,7 +17,6 @@ Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* 
     m_valueTimer(0)
 {
     QThread::currentThread()->setObjectName("Main Thread");
-    // m_date = QDateTime::currentDateTime();
 
     m_chatModel = new ChatModel(id,root,this);
 

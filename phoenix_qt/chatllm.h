@@ -10,6 +10,7 @@ class Chat;
 class ChatLLM : public QObject
 {
     Q_OBJECT
+
 public:
     ChatLLM(Chat *parent);
     virtual ~ChatLLM();

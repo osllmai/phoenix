@@ -68,7 +68,7 @@ ComboBox {
         contentItem: Text {
             text: modelData
             color: comboBoxId.informationTextColor
-            font: comboBoxId.fontFamily
+            font.family: comboBoxId.fontFamily
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }

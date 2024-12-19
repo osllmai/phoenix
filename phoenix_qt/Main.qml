@@ -1,6 +1,8 @@
 import QtQuick 6.7
 import QtCore
 import QtQuick.Controls.Basic
+// import QtCharts
+import Qt5Compat.GraphicalEffects
 
 // import QtQuick.Controls 6.7
 import QtQuick.Layouts
@@ -407,7 +409,6 @@ Window {
                     Connections{
                         target: chatPageId
                         function onGoToModelPage(){
-                            console.log(" hi dear");
                             modelsItemMenu.clicked()
                             modelsItemMenu.checked = true
                         }
@@ -474,7 +475,7 @@ Window {
                 normalColor: window.menuIconColor
                 hoverColor:window.fillIconColor
                 xPopup: -18
-                yPopup: -30
+                yPopup: -40
                 Connections {
                     target: discordIcon
                     function onActionClicked(){
@@ -499,7 +500,7 @@ Window {
                 normalColor:window.menuIconColor
                 hoverColor:window.fillIconColor
                 xPopup: -15
-                yPopup: -30
+                yPopup: -40
                 Connections {
                     target: githubIcon
                     function onActionClicked(){
@@ -549,63 +550,168 @@ Window {
                     anchors.fill: parent
                     hoverEnabled: true
                     onHoveredChanged: function(){
-                        // if(containsMouse){
-                        //     systemMonitorPupup.open()
-                        //     systemMonitorIcon.normalColor = window.fillIconColor
-                        //     systemMonitorText.color= window.fillIconColor
-                        // }else{
-                        //     systemMonitorPupup.close()
-                        //     systemMonitorIcon.normalColor = window.menuIconColor
-                        //     systemMonitorText.color=window.informationTextColor
-                        // }
+                        if(containsMouse){
+                            phoenixController.setIsSystemMonitor(true)
+                            systemMonitorPupup.open()
+                            systemMonitorIcon.normalColor = window.fillIconColor
+                            systemMonitorText.color= window.fillIconColor
+                        }else{
+                            phoenixController.setIsSystemMonitor(false)
+                            systemMonitorPupup.close()
+                            systemMonitorIcon.normalColor = window.menuIconColor
+                            systemMonitorText.color=window.informationTextColor
+                        }
                     }
                 }
             }
 
             Popup {
                 id: systemMonitorPupup
-                width: 350
-                height: 180
-                x: systemMonitorId.x -200
-                y: systemMonitorId.y-180
+                width: 180
+                height: 70
+                x: systemMonitorId.x -50
+                y: systemMonitorId.y-80
 
                 background:Rectangle{
-                    color: "#00ffffff" // Background color of tooltip
+                    color: /*"#00ffffff"*/ window.backgroungColor
                     radius: 4
                     anchors.fill: parent
-                    Rectangle{
-                        radius: 4
-                        anchors.fill: parent
-                        gradient: Gradient {
-                            GradientStop {
-                                position: 0
-                                color: "#d4afff"
-                            }
 
-                            GradientStop {
-                                position: 1
-                                color: "#fbc2eb"
+                    Rectangle{
+                        id:systemMonitorRec
+                        anchors.fill: parent
+                        color: "#ffffff"
+                        radius: 4
+                        border.color: "#cbcbcb"
+
+                        Rectangle {
+                            id: cpuRec
+                            height: 30
+                            color: "#00ffffff"
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: 7
+                            anchors.topMargin: 2
+
+                            Text {
+                                id: cpuText
+                                text: qsTr("CPU")
+                                width: memoryText.width
+                                color: "black"
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                font.pointSize: 9
+                                font.family: window.fontFamily
                             }
-                            orientation: Gradient.Vertical
+                            ProgressBar {
+                                id: progressBarCPU
+                                width: 100
+                                height: 6
+                                value: phoenixController.cpuInfo/100
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: cpuText.right
+                                anchors.leftMargin: 5
+                                background: Rectangle {
+                                    color: "#c0c0c0"
+                                    implicitHeight: 6
+                                    radius: 2
+                                    border.color: "#c0c0c0"
+                                    border.width: 2
+                                }
+
+                                contentItem: Item {
+                                    implicitHeight: 6
+                                    Rectangle {
+                                        width: progressBarCPU.visualPosition * parent.width
+                                        height: 6
+                                        radius: 2
+                                        color: "#047eff"
+                                        border.color: "#047eff"
+                                        border.width: 2
+                                    }
+                                }
+                            }
+                            Text {
+                                id: progressBarTextCPU
+                                text: "%" + phoenixController.cpuInfo
+                                color: "black"
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: progressBarCPU.right
+                                anchors.leftMargin: 5
+                                font.pixelSize: 9
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.family: window.fontFamily
+                            }
                         }
-                        SpeedDisplay {
-                            anchors.top: parent.top
-                            anchors.left:parent.left
-                            anchors.topMargin: 20
-                            anchors.leftMargin: 20
-                            kplDisplay: 100
-                            kphDisplay: 50
-                            kphFrame: 110
+                        Rectangle {
+                            id: memoryRec
+                            height: 30
+                            color: "#00ffffff"
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: 7
+                            anchors.bottomMargin: 2
+
+                            Text {
+                                id: memoryText
+                                text: qsTr("Memory")
+                                color: "black"
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.leftMargin: 0
+                                font.pointSize: 9
+                                font.family: window.fontFamily
+                            }
+                            ProgressBar {
+                                id: progressBarMemory
+                                width: 100
+                                height: 6
+                                value: phoenixController.memoryInfo /100
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: memoryText.right
+                                anchors.leftMargin: 5
+                                background: Rectangle {
+                                    color: "#c0c0c0"
+                                    implicitHeight: 6
+                                    radius: 2
+                                    border.color: "#c0c0c0"
+                                    border.width: 2
+                                }
+
+                                contentItem: Item {
+                                    implicitHeight: 6
+                                    Rectangle {
+                                        width: progressBarMemory.visualPosition * parent.width
+                                        height: 6
+                                        radius: 2
+                                        color: "#047eff"
+                                        border.color: "#047eff"
+                                        border.width: 2
+                                    }
+                                }
+                            }
+                            Text {
+                                id: progressBarTextMemory
+                                text: "%" + phoenixController.memoryInfo
+                                color: "black"
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: progressBarMemory.right
+                                anchors.leftMargin: 5
+                                font.pixelSize: 9
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.family: window.fontFamily
+                            }
                         }
-                        SpeedDisplay {
-                            anchors.top: parent.top
-                            anchors.right:parent.right
-                            anchors.topMargin: 20
-                            anchors.rightMargin: 20
-                            kplDisplay: 100
-                            kphDisplay: 50
-                            kphFrame: 110
-                        }
+                        layer.enabled: true
+                        layer.effect: Glow {
+                             samples: 30
+                             color: "#cbcbcb"
+                             spread: 0.3
+                             transparentBorder: true
+                         }
                     }
                 }
             }
@@ -615,12 +721,13 @@ Window {
                 id: executionTimeId
                 width: 130
                 color: "#00ffffff"
-                anchors.left: numberOfTokenId.right
+                anchors.left: aboutDownloadId.visible === true? aboutDownloadId.right: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.leftMargin: 0
                 anchors.topMargin: 0
                 anchors.bottomMargin: 0
+                visible:phoenixController.chatListModel.currentChat.responseInProgress
 
                 Text {
                     id: executionTimeText
@@ -643,38 +750,7 @@ Window {
             }
 
             Rectangle {
-                id: numberOfTokenId
-                width: 130
-                color: "#00ffffff"
-                anchors.left: currentDownloadId.visible === true? currentDownloadId.right: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
-                anchors.bottomMargin: 0
-
-                Text {
-                    id: numberOfTokenText
-                    text: qsTr("Number of tokens: ")
-                    color: window.informationTextColor
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
-                    font.pointSize: 8
-                }
-                Text {
-                    id: numberOfTokenValue
-                    text: qsTr("50")
-                    color: window.informationTextColor
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: numberOfTokenText.right
-                    anchors.leftMargin: 3
-                    font.pointSize: 8
-                }
-            }
-
-            Rectangle {
-                id: currentDownloadId
+                id: aboutDownloadId
                 width: 290
                 color: "#00ffffff"
                 anchors.left: parent.left
@@ -717,7 +793,7 @@ Window {
                     font.pointSize: 8
                 }
                 ProgressBar {
-                    id: progressBar
+                    id: progressBarDownload
                     width: 100
                     height: 6
                     value: phoenixController.modelList.downloadProgress/100
@@ -735,7 +811,7 @@ Window {
                     contentItem: Item {
                         implicitHeight: 6
                         Rectangle {
-                            width: progressBar.visualPosition * parent.width
+                            width: progressBarDownload.visualPosition * parent.width
                             height: 6
                             radius: 2
                             color: "#047eff"
@@ -744,21 +820,20 @@ Window {
                         }
                     }
                 }
+                property int downloadValue: (progressBarDownload.value * 100)
                 Text {
-                    id: progressBarText
-                    text: "%" + (progressBar.value * 100)
+                    id: progressBarTextDownload
+                    text: "%" + aboutDownloadId.downloadValue
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: progressBar.right
+                    anchors.left: progressBarDownload.right
                     anchors.leftMargin: 5
-                    font.pixelSize: fontSize
+                    font.pixelSize: 8
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
-                    font.family: fontFamily
+                    font.family: window.fontFamily
                 }
             }
-
-
         }
     }
 }

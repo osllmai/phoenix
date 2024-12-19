@@ -418,23 +418,18 @@ Item {
                                                     root.chatModel.regenerateResponse(index)
                                                 }
                                                 function onEditPrompt(text_edit){
-                                                    console.log("onEditPrompt")
                                                     root.chatModel.editPrompt(index, text_edit)
                                                 }
                                                 function onNextPrompt(){
-                                                    console.log("onNextPrompt")
                                                     root.chatModel.nextPrompt(index, model.numberPrompt)
                                                 }
                                                 function onBeforPrompt(){
-                                                    console.log("onBeforPrompt")
                                                     root.chatModel.nextPrompt(index, model.numberPrompt-2)
                                                 }
                                                 function onNextResponse(){
-                                                    console.log("onNextResponse")
                                                     root.chatModel.nextResponse(index, model.numberResponse)
                                                 }
                                                 function onBeforResponse(){
-                                                    console.log("onBeforResponse")
                                                     root.chatModel.nextResponse(index, model.numberResponse-2)
                                                 }
                                             }

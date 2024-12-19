@@ -265,6 +265,7 @@ void ModelList::addModel(QString directoryPath){
         endInsertRows();
         m_currentModelList->addModel(model);
     }
+    emit currentModelListChanged();
 }
 
 void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal){

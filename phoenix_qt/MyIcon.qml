@@ -36,7 +36,6 @@ T.Button {
         anchors.fill: parent
         propagateComposedEvents: true
         onClicked: (mouse)=> {
-            console.log("Hi dear this icon action ")
             control.actionClicked()
         }
     }
@@ -60,6 +59,7 @@ T.Button {
                 anchors.centerIn: parent
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignJustify
+                font.pointSize: 9
                 color: "black"
             }
             layer.enabled: true

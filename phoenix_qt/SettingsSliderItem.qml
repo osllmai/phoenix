@@ -70,7 +70,6 @@ Item {
             from: root.sliderFrom
             to: root.sliderTo
             stepSize: root.sliderStepSize
-
         }
         Rectangle{
             id:valueSliderBoxId

@@ -27,6 +27,7 @@ public:
     virtual ~Chat();
 
     Q_INVOKABLE void loadModelRequested(QString modelPath);
+
     Q_INVOKABLE void unloadModelRequested();
     // Q_INVOKABLE void reloadModelRequested(QString modelPath);
     void addChatItem(int id, QString prompt, QString response);

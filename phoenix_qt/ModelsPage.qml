@@ -40,7 +40,7 @@ Item {
 
         Rectangle {
             id: listModelId
-            color: backgroundPageColor
+            color: root.backgroundPageColor
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: headerId.bottom
@@ -74,8 +74,8 @@ Item {
 
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
-
                         }
+                        clip: true
 
                         delegate: Rectangle{
                             id: rectangleGridView
@@ -108,24 +108,6 @@ Item {
                             }
                         }
                     }
-                }
-
-                Rectangle{
-                    id: topRecId
-                    color: parent.color
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: coulumnLayoutModelId.top
-                }
-                Rectangle{
-                    id: bottomRecId
-                    color: parent.color
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: coulumnLayoutModelId.bottom
-                    anchors.bottom: parent.bottom
-                    radius: 12
                 }
             }
         }
@@ -208,9 +190,6 @@ Item {
                     fileMode: FileDialog.OpenFiles // Allow for selecting multiple files
                     onAccepted: function(){
                         root.modelListModel.addModel(currentFile)
-                    }
-                    onRejected: function(){
-                        console.log("Dialog rejected")
                     }
                 }
 

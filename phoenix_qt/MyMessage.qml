@@ -145,7 +145,9 @@ Item {
                 Connections {
                     target: copyIconId
                     function onActionClicked(){
-                        // messageText.text.c
+                        messageText.selectAll()
+                        messageText.copy()
+                        messageText.deselect()
                     }
                 }
             }

@@ -35,15 +35,6 @@ Item {
             backgroundId.color = control.normalButtonColor
         }
     }
-    // function onIsThemeChanged(){
-    //     console.log(" pl pl plp")
-    //     if(isCurrentItem===true){
-    //         backgroundId.color = control.selectButtonColor
-    //     }else{
-    //         backgroundId.color = control.normalButtonColor
-    //     }
-    // }
-
     Rectangle{
         id: backgroundId
         anchors.fill: parent
@@ -78,7 +69,6 @@ Item {
                 if (textId.readOnly)
                     return;
                 changeName();
-                console.log("Hi dear Ali nemati")
             }
             function changeName() {
                 control.editChatName(textId.text);
@@ -97,11 +87,9 @@ Item {
             property bool isEnter: true
             hoverEnabled: true
             onHoveredChanged: {
-                console.log("ok")
                 if(isEnter){
                     if(!control.isCurrentItem ){
                         backgroundId.color = control.hoverButtonColor
-                        console.log("hi")
                     }
                     isEnter = false
                 }else{

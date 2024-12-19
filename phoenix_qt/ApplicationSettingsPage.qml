@@ -65,6 +65,7 @@ Item {
                 ListElement { text: "Dark" }
                 ListElement { text: "light" }
             }
+            displayText: root.theme
             onActivated: {
                 root.themeRequested2(themeList.currentText)
             }
@@ -138,8 +139,9 @@ Item {
                 ListElement { text: "DM Sans 9pt" }
                 ListElement { text: "Tahoma" }
                 ListElement { text: "Verdana" }
-                ListElement { text: "./fontFamily/DMSans-VariableFont.ttf" }
+                // ListElement { text: "./fontFamily/DMSans-VariableFont.ttf" }
             }
+            displayText: root.fontFamily
             onActivated: {
                 root.fontFamilyRequested2(fontFamilyList.currentText)
             }
@@ -171,8 +173,8 @@ Item {
 
             font.family: root.fontFamily
             model: ListModel {
-                ListElement { text: "cpu" }
-                 ListElement { text: "gpu" }
+                ListElement { text: "CPU" }
+                 ListElement { text: "GPU" }
             }
             // Accessible.name: fontLabel.text
             // Accessible.description: fontLabel.helpText
@@ -198,20 +200,21 @@ Item {
                 from: 1
                 to: 10
                 stepSize: 1
-
             }
             Rectangle{
                 id:valueSliderBoxId
                 width: 40
                 height: 30
                 radius: 2
-                border.color: "#e0dede"
+                color: root.normalButtonColor
+                // border.color: "#e0dede"
                 anchors.verticalCenter: sliderId.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 2
                 Text {
                     id: valueSliderId
                     text: sliderId.value
+                    color: root.titleTextColor
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -222,6 +225,7 @@ Item {
             Text {
                 id: minValueSliderId
                 text: sliderId.from
+                color: root.titleTextColor
                 anchors.left: parent.left
                 anchors.top: sliderId.bottom
                 anchors.leftMargin: 5
@@ -234,6 +238,7 @@ Item {
             Text {
                 id: maxValueSliderId
                 text: sliderId.to
+                color: root.titleTextColor
                 anchors.right: valueSliderBoxId.left
                 anchors.top: sliderId.bottom
                 anchors.rightMargin: 5

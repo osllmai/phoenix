@@ -26,7 +26,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # add_subdirectory(../phoenix/ llmodel)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Sql)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Charts Qml Quick Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -217,6 +217,9 @@ target_link_libraries(app${PROJECTNAME}
         Qt6::Quick
         Qt6::Sql
         Qt6::Core
+        Qt6::Charts
+        Qt::Gui
+        Qt::Qml
 )
 
 

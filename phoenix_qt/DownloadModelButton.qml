@@ -37,16 +37,6 @@ T.Button {
     property double progressValue: 0
     property int percent: progressValue*100
 
-    onIsDownloadChanged: function(){
-        console.log("download start")
-    }
-    onIsCancelChanged: function(){
-        console.log("cancel active")
-    }
-    onProgressValueChanged: function(){
-        console.log("progressValue")
-    }
-
     background: Rectangle {
         id: backgroundId
         color: backgrounDownloadColor

@@ -1,7 +1,4 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Templates 2.1 as T
-import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
 
 Item {
@@ -43,20 +40,20 @@ Item {
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: boxColor
+        color: control.boxColor
         radius: 2
-        border.color: boxColor
+        border.color: control.boxColor
         border.width: 0
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: backgroundPageColor
+                color: control.backgroundPageColor
             }
 
             GradientStop {
                 position: 1
-                color: /*"#ababb9"*/ backgroungColor
+                color: control.backgroungColor
             }
             orientation: Gradient.Vertical
         }
@@ -65,7 +62,7 @@ Item {
             id: newChatBox
             width: 40
             height: 40
-            color: fillIconColor
+            color: control.fillIconColor
             radius: 4
             anchors.left: parent.left
             anchors.top: parent.top
@@ -76,7 +73,7 @@ Item {
                 height: 28
                 width: 28
                 anchors.verticalCenter: parent.verticalCenter
-                source: myIcon
+                source: control.myIcon
                 sourceSize.height: 28
                 sourceSize.width: 28
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -96,40 +93,40 @@ Item {
 
         Text {
             id: titleId
-            color: titleTextColor
+            color: control.titleTextColor
             text: qsTr("IndoxGen")
             anchors.verticalCenter: newChatBox.verticalCenter
             anchors.left: newChatBox.right
             anchors.leftMargin: 12
-            font.pixelSize: titleFontSize
+            font.pixelSize: control.titleFontSize
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.styleName: "Bold"
-            font.family: fontFamily
+            font.family: control.fontFamily
         }
 
         Text{
             id:informationId
-            text: about
+            text: control.about
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: newChatBox.bottom
-            anchors.bottom: downloadButton.top
+            anchors.bottom: parent.bottom
             anchors.leftMargin: 20
             anchors.rightMargin: 20
             anchors.topMargin: 10
-            anchors.bottomMargin: 10
-            font.pixelSize: informationFontSize
+            anchors.bottomMargin: 10 + goPageId.height
+            font.pixelSize: control.informationFontSize
             horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
-            font.family: fontFamily
+            font.family: control.fontFamily
             color: control.informationTextColor
         }
 
         MyButton{
             id:goPageId
-            visible: goPage !== -1
+            visible: control.goPage !== -1
             width: (parent.width-50)/2
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -139,14 +136,14 @@ Item {
             Connections {
                 target: goPageId
                 function onClicked(){
-                    chatViewRequested2()
+                    control.chatViewRequested2()
                 }
             }
         }
 
         MyButton{
             id:goToGithubId
-            visible: gitHubLink !== ""
+            visible: control.gitHubLink !== ""
             width: (parent.width-50)/2
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -156,13 +153,13 @@ Item {
             Connections {
                 target: goToGithubId
                 function onClicked(){
-                    Qt.openUrlExternally(gitHubLink)
+                    Qt.openUrlExternally(control.gitHubLink)
                 }
             }
         }
         MyButton{
             id:goToNotebookId
-            visible: notebookLink !== ""
+            visible: control.notebookLink !== ""
             width: (parent.width-50)/2
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -172,7 +169,7 @@ Item {
             Connections {
                 target: goToNotebookId
                 function onClicked(){
-                    Qt.openUrlExternally(notebookLink)
+                    Qt.openUrlExternally(control.notebookLink)
                 }
             }
         }
@@ -180,7 +177,7 @@ Item {
         layer.enabled: true
         layer.effect: Glow {
              samples: 40
-             color:  root.glowColor
+             color:  control.glowColor
              spread: 0.4
              transparentBorder: true
          }
