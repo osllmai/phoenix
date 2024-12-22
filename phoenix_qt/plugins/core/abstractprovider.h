@@ -12,5 +12,7 @@ public:
     virtual QString name() const = 0;
     virtual QString descript() const;
 
-signals:
+Q_SIGNALS:
+    void tokenRecivied(const QString &token);
+    void finished();
 };

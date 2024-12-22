@@ -87,8 +87,8 @@ Item {
 
         Text {
             id: kph_195_100
-            x: -2* root.ratio
-            y: 204* root.ratio
+            x: -2 * root.ratio
+            y: 204 * root.ratio
             color: root.textColor
             text: "50"
             font.weight: Font.Thin

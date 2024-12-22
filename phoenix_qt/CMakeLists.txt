@@ -30,25 +30,6 @@ add_subdirectory(../phoenix/ llmodel)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-# if(APPLE)
-# elseif(UNIX)
-# elseif(WIN32)
-#         # Enable CUDA
-#         find_package(CUDA REQUIRED)
-#         set(CUDA_SEPARABLE_COMPILATION ON)
-#         set(CUDA_PROPAGATE_HOST_FLAGS OFF)
-
-#         # Include directories and link libraries for GPU
-#         include_directories(${CUDA_INCLUDE_DIRS})
-#         link_libraries(${CUDA_LIBRARIES})
-
-#         # Define preprocessor macros for CUDA
-#         add_definitions(-DGGML_USE_CUDA)
-# endif()
-
-
-
-
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # set(CMAKE_AUTOUIC ON)
