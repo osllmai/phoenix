@@ -264,6 +264,7 @@ void ChatModel::updateResponse(const QString &response){
 
     ChatItem *item = chatItems[index];
     item->response()->setText(item->response()->text() + response);
+    // item->response()->setText(response);
     item->response()->setNumberOfToken(item->response()->numberOfToken()+1);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole, NumberOfTokenRole});
 }

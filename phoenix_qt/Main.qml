@@ -9,20 +9,24 @@ import QtQuick.Layouts
 import Phoenix
 
 
-Window {
+ApplicationWindow {
     id: window
 
     width: 1229
     height: 685
+    minimumWidth: 450
+    minimumHeight: 600
+
+    // palette.button: "red"
 
     property var theme: "light"
 
     //dark theme
-    property color darkBackgroundPage: "#242424"
+    property color darkBackgroundPage: /*"#242424"*/ "#333333"
     property color darkBackgroung: "#1f1f1f"
     property color darkGlow: /*"#d7d7d7"*/  "#1f1f1f"
     property color darkBox: /*"#1f1f1f"*/  "#333333"
-    property color darkHeader: "#333333"
+    property color darkHeader: /*"#333333"*/ "#242424"
     property color darkNormalButton:/* "#242424"*/ "#333333"
     property color darkSelectButton:/* "#57b9fc"*/ "#1f1f1f"
     property color darkHoverButton: "#5f5f5f"
@@ -511,7 +515,7 @@ Window {
 
             Rectangle {
                 id: systemMonitorId
-                width: 130
+                width: window.width> 700? systemMonitorIcon.width + systemMonitorText.width + 10 : systemMonitorIcon.width
                 color: "#00ffffff"
                 anchors.right: githubIcon.left
                 anchors.top: parent.top
@@ -530,10 +534,10 @@ Window {
                     anchors.topMargin: 0
                     anchors.leftMargin: 0
                     anchors.bottomMargin: 0
-                    myIconId: "images./githubIcon.svg"
-                    myFillIconId: "images./githubIcon.svg"
-                    heightSource: 18
-                    widthSource: 18
+                    myIconId: "images/systemMonitorIcon.svg"
+                    myFillIconId: "images/systemMonitorIcon.svg"
+                    heightSource: 19
+                    widthSource: 19
                     normalColor:window.menuIconColor
                     hoverColor:window.fillIconColor
                     havePupup: false
@@ -543,8 +547,10 @@ Window {
                     text: qsTr("System Monitor")
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: systemMonitorIcon.right
-                    anchors.leftMargin: 0
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    font.family: window.fontFamily
+                    visible: window.width> 700?true:false
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -716,7 +722,6 @@ Window {
                 }
             }
 
-
             Rectangle {
                 id: executionTimeId
                 width: 130
@@ -737,21 +742,23 @@ Window {
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     font.pointSize: 8
+                    font.family: window.fontFamily
                 }
                 Text {
                     id: executionTimeValue
-                    text: phoenixController.chatListModel.currentChat.valueTimer
+                    text: phoenixController.chatListModel.currentChat.valueTimer + "s"
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: executionTimeText.right
                     anchors.leftMargin: 3
                     font.pointSize: 8
+                    font.family: window.fontFamily
                 }
             }
 
             Rectangle {
                 id: aboutDownloadId
-                width: 290
+                width: downloadIcon.width+(window.width> 700?currentDownloadText.width:0)+progressBarDownload.width+ progressBarTextDownload.width + 15
                 color: "#00ffffff"
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -788,9 +795,11 @@ Window {
                     text: qsTr("Downloading model")
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: downloadIcon.right
-                    anchors.leftMargin: 0
+                    anchors.right: progressBarDownload.left
+                    anchors.rightMargin: 5
                     font.pointSize: 8
+                    font.family: window.fontFamily
+                    visible: window.width> 700?true:false
                 }
                 ProgressBar {
                     id: progressBarDownload
@@ -798,8 +807,8 @@ Window {
                     height: 6
                     value: phoenixController.modelList.downloadProgress/100
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: currentDownloadText.right
-                    anchors.leftMargin: 5
+                    anchors.right: progressBarTextDownload.left
+                    anchors.rightMargin: 5
                     background: Rectangle {
                         color: "#c0c0c0"
                         implicitHeight: 6
@@ -826,8 +835,8 @@ Window {
                     text: "%" + aboutDownloadId.downloadValue
                     color: window.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: progressBarDownload.right
-                    anchors.leftMargin: 5
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
                     font.pixelSize: 8
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter

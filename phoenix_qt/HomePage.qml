@@ -49,9 +49,10 @@ Item {
                 radius: 4
 
                 ColumnLayout{
+                    id: columnItemListId
                     anchors.fill: parent
-                    anchors.leftMargin: 50
-                    anchors.rightMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     GridView {
@@ -62,8 +63,21 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         cacheBuffer: Math.max(0, gridView.contentHeight)
 
-                        cellWidth: (parent.width)<1400? Math.max(100, (parent.width)/3): Math.max(100, (parent.width)/4)
-                        cellHeight: 330
+                        function calculationCellWidth(){
+                            if(columnItemListId.width >1650)
+                                return columnItemListId.width/5;
+                            else if(columnItemListId.width >1300)
+                                return columnItemListId.width/4;
+                            else if(columnItemListId.width >950)
+                                return columnItemListId.width/3;
+                            else if(columnItemListId.width >550)
+                                return columnItemListId.width/2;
+                            else
+                                return Math.max(columnItemListId.width,300);
+                        }
+
+                        cellWidth: calculationCellWidth()
+                        cellHeight: 300
 
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
@@ -73,7 +87,7 @@ Item {
                         model: ListModel {
                            id: model
                            ListElement {title: "Chat" ;
-                                            icon:"images/phoenix.png" ;
+                                            icon:"images/PhoenixIcon.svg" ;
                                             about:"Phoenix: A multi-platform, open-source application built with Qt QML. It features a chatbot interface that interacts with documents locally, eliminating the need for an internet connection or a GPU. Phoenix leverages Indox and IndoxJudge to deliver high accuracy and eliminate hallucinations, ensuring reliable results, particularly in the healthcare field." ;
                                             gitHubLink:"" ;
                                             notebookLink:"";

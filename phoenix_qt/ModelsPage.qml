@@ -35,7 +35,7 @@ Item {
     Rectangle {
         id: modelsPageId
         color: root.headerColor
-        radius: 12
+        // radius: 12
         anchors.fill: parent
 
         Rectangle {
@@ -45,7 +45,7 @@ Item {
             anchors.right: parent.right
             anchors.top: headerId.bottom
             anchors.bottom: parent.bottom
-            radius: 12
+            // radius: 12
 
             Rectangle {
                 id: itemId
@@ -56,8 +56,8 @@ Item {
                 ColumnLayout{
                     id: coulumnLayoutModelId
                     anchors.fill: parent
-                    anchors.leftMargin: 50
-                    anchors.rightMargin: 50
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     GridView {
@@ -68,8 +68,21 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                         cacheBuffer: Math.max(0, gridView.contentHeight)
 
-                        cellWidth: parent.width<1400? Math.max(100, (parent.width)/3): Math.max(100, (parent.width)/4)
-                        cellHeight: 330
+                        function calculationCellWidth(){
+                            if(coulumnLayoutModelId.width >1650)
+                                return coulumnLayoutModelId.width/5;
+                            else if(coulumnLayoutModelId.width >1300)
+                                return coulumnLayoutModelId.width/4;
+                            else if(coulumnLayoutModelId.width >950)
+                                return coulumnLayoutModelId.width/3;
+                            else if(coulumnLayoutModelId.width >650)
+                                return coulumnLayoutModelId.width/2;
+                            else
+                                return Math.max(coulumnLayoutModelId.width,300);
+                        }
+
+                        cellWidth: calculationCellWidth()
+                        cellHeight: 340
                         model: root.modelListModel
 
                         ScrollBar.vertical: ScrollBar {
@@ -105,6 +118,9 @@ Item {
                                 selectTextColor: root.selectTextColor
 
                                 fontFamily: root.fontFamily
+
+                                 xNotification: root.x
+                                yNotification: root.y
                             }
                         }
                     }
@@ -120,7 +136,7 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.topMargin: 0
-            radius: 12
+            // radius: 12
 
             Rectangle {
                 id: searchBox
@@ -131,6 +147,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: loadModelButton.left
                 anchors.rightMargin: 24
+                visible: searchBox.width + loadModelButton.width + instalTextRec.width<headerId.width?true:false
 
                 Image {
                     id: searchIcon
@@ -193,7 +210,7 @@ Item {
                     }
                 }
 
-                myTextId: "Load Model"
+                myTextId: "Add Model"
                 Connections {
                     target: loadModelButton
                      onClicked: fileDialogId.open();

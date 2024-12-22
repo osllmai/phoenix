@@ -253,11 +253,15 @@ void ModelList::addModel(QString directoryPath){
     directoryPath.remove("file:///");
 
     QFileInfo fileInfo(directoryPath);
-    QString name = fileInfo.fileName();
+    QString fileName = fileInfo.baseName();
+    double fileSize = (fileInfo.size()/10000000)*0.01;
 
     //add from database
-    Model *model =phoenix_databace::insertModel(name, directoryPath);
+    Model *model =phoenix_databace::insertModel(fileName, directoryPath);
     model->setDownloadFinished(true);
+    model->setFileSize(fileSize);
+    model->setIcon("images/userIcon.svg");
+    model->setInformation("This model has been successfully added to the application by you.");
     if(model != nullptr){
         const int index = models.size();
         beginInsertRows(QModelIndex(), index, index);
@@ -342,6 +346,13 @@ void ModelList::readModelFromJSONFile(){
     QFile file("./models.json");
     if (!file.open(QIODevice::ReadOnly)) {
         qCritical() << file.errorString();
+        for(int index=models.size()-1;index>=0;index--){
+            if(models[index]->downloadFinished())
+                m_currentModelList->addModel(models[index]);
+            else if(models[index]->url() == ""){
+                deleteRequest(index);
+            }
+        }
         return;
     }
     QByteArray jsonData = file.readAll();
@@ -414,8 +425,15 @@ void ModelList::readModelFromJSONFile(){
         }
     }
     for(int index=models.size()-1;index>=0;index--){
-        if(models[index]->downloadFinished())
+        if(models[index]->downloadFinished()){
+            if(models[index]->url() == ""){
+                QFileInfo fileInfo(models[index]->directoryPath());
+                models[index]->setFileSize((fileInfo.size()/10000000)*0.01);
+                models[index]->setIcon("images/userIcon.svg");
+                models[index]->setInformation("This model has been successfully added to the application by you.");
+            }
             m_currentModelList->addModel(models[index]);
+        }
         else if(models[index]->url() == ""){
             deleteRequest(index);
         }

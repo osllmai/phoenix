@@ -44,6 +44,19 @@ Item {
         radius:5
         visible: true
 
+        gradient: Gradient {
+            GradientStop {
+                position: 0
+                color: root.chatBackgroungConverstationColor
+            }
+
+            GradientStop {
+                position: 1
+                color: root.chatBackgroungColor
+            }
+            orientation: Gradient.Vertical
+        }
+
         Rectangle {
             id: menuRecId
             width: parent.width
@@ -302,5 +315,6 @@ Item {
             }
         }
     }
+
 }
 

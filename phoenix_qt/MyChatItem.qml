@@ -24,6 +24,14 @@ Item {
     property color chatMessageInformationTextColor
     property color glowColor
 
+    property color backgroundPageColor
+    property color backgroungColor
+    property color boxColor
+    property color headerColor
+    property color titleTextColor
+    property color informationTextColor
+    property color selectTextColor
+
     signal currentChat()
     signal deleteChat()
     signal editChatName(var chatName)
@@ -154,7 +162,44 @@ Item {
             Connections {
                 target: deleteIcon
                 function onActionClicked() {
+                    deleteRequest.open()
+                }
+            }
+        }
+
+        Notification{
+            id: deleteRequest
+
+            backgroundPageColor: control.backgroundPageColor
+            backgroungColor: control.backgroungColor
+            glowColor: control.glowColor
+            boxColor: control.boxColor
+            headerColor: control.headerColor
+            normalButtonColor: control.normalButtonColor
+            selectButtonColor: control.selectButtonColor
+            hoverButtonColor: control.hoverButtonColor
+            fillIconColor: control.fillIconColor
+
+            titleTextColor: control.titleTextColor
+            informationTextColor: control.informationTextColor
+            selectTextColor: control.selectTextColor
+
+            fontFamily: control.fontFamily
+
+            title:"Delete LLM Model"
+            about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
+            textBotton1: "Cancel"
+            textBotton2: "Delete"
+
+            Connections{
+                target: deleteRequest
+                function onBottonAction1(){
+                    deleteRequest.close()
+                }
+
+                function onBottonAction2(){
                     control.deleteChat()
+                    deleteRequest.close()
                 }
             }
         }

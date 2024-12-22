@@ -15,7 +15,6 @@ Item {
     property var notebookLink
     property int goPage
 
-
     property color backgroundPageColor
     property color backgroungColor
     property color glowColor
@@ -94,7 +93,7 @@ Item {
         Text {
             id: titleId
             color: control.titleTextColor
-            text: qsTr("IndoxGen")
+            text: qsTr("Title")
             anchors.verticalCenter: newChatBox.verticalCenter
             anchors.left: newChatBox.right
             anchors.leftMargin: 12
@@ -115,7 +114,7 @@ Item {
             anchors.leftMargin: 20
             anchors.rightMargin: 20
             anchors.topMargin: 10
-            anchors.bottomMargin: 10 + goPageId.height
+            anchors.bottomMargin: 20 + goPageId.height
             font.pixelSize: control.informationFontSize
             horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignTop

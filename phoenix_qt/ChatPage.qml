@@ -256,6 +256,16 @@ Item {
                                       selectButtonColor: root.selectButtonColor
                                       hoverButtonColor: root.hoverButtonColor
                                       chatMessageInformationTextColor: root.chatMessageInformationTextColor
+
+                                      backgroundPageColor: root.backgroundPageColor
+                                      backgroungColor: root.backgroungColor
+                                      boxColor: root.boxColor
+                                      headerColor: root.headerColor
+                                      titleTextColor: root.titleTextColor
+                                      informationTextColor: root.informationTextColor
+                                      selectTextColor: root.selectTextColor
+
+
                                       glowColor: root.glowColor
 
                                       Connections {
@@ -795,6 +805,12 @@ Item {
                                                     }
                                                 }
                                             }
+                                            MouseArea{
+                                                anchors.fill: parent
+                                                onClicked:{
+                                                    inferenceSettingsIconId.actionClicked()
+                                                }
+                                            }
                                         }
 
                                         Column{
@@ -1024,6 +1040,12 @@ Item {
                                                     }
                                                 }
                                             }
+                                            MouseArea{
+                                                anchors.fill: parent
+                                                onClicked:{
+                                                    modelSettingsIconId.actionClicked()
+                                                }
+                                            }
                                         }
 
                                         Column{
@@ -1161,6 +1183,12 @@ Item {
                                                             engineSettingsId.height = engineSettingsButtonId.height + engineSettingsInformationId.height
                                                         }
                                                     }
+                                                }
+                                            }
+                                            MouseArea{
+                                                anchors.fill: parent
+                                                onClicked:{
+                                                    engineSettingsIconId.actionClicked()
                                                 }
                                             }
                                         }

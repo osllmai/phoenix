@@ -11,10 +11,6 @@ T.Button {
     width: 200
     height: 30
 
-    Constants{
-        id: constantsId
-    }
-
     leftPadding: 4
     rightPadding: 4
 
@@ -23,12 +19,14 @@ T.Button {
     autoExclusive: false
     checkable: true
 
-    property color backgrounDownloadColor: "#ffffff"
-    property color backgrounDeleteColor: "#ebebeb"
-    property color borderColor: "#ebebeb"
+    property color backgrounDownloadNormalColor:  "#ebebeb" /*"#cbcdff"*/
+    property color backgrounDownloadHoverColor: "#ffffff"
+    property color backgrounDeleteNormalColor: "#5b5fc7"
+    property color backgrounDeleteHoverColor:/* "#cbcdff"*/ "#ffffff"
+    property color borderColor: "#ffffff"
     property color fontColor: "#000000"
     property int fontSize: 12
-    property var fontFamily: constantsId.fontFamily
+    property var fontFamily
 
 
     property bool isDownload
@@ -39,45 +37,47 @@ T.Button {
 
     background: Rectangle {
         id: backgroundId
-        color: backgrounDownloadColor
+        color: control.backgrounDownloadNormalColor
         radius: 2
         anchors.fill: parent
-        border.color: borderColor
+        border.color: control.borderColor
         border.width: 2
 
         Rectangle{
             id:whenDownloadModel
             anchors.fill: parent
-            border.color: borderColor
+            border.color: control.borderColor
             border.width: 2
-            visible: isDownload
+            visible: control.isDownload
+            color: "#00ffffff"
             Text {
                 id: downloadText
-                color: fontColor
+                color: control.fontColor
                 text: qsTr("Download Model")
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: fontSize
+                font.pixelSize: control.fontSize
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: fontFamily
+                font.family: control.fontFamily
             }
         }
         Rectangle{
             id: whenCancle
             anchors.fill: parent
-            visible: isCancel
-            border.color: borderColor
+            visible: control.isCancel
+            border.color: control.borderColor
             border.width: 2
+            color: "#00ffffff"
             ProgressBar {
                 id: progressBar
-                value: progressValue
+                value: control.progressValue
                 anchors.fill: parent
                 background: Rectangle {
-                    color: backgrounDownloadColor
+                    color: "#00ffffff"
                     implicitHeight: 45
                     radius: 2
-                    border.color: borderColor
+                    border.color: control.borderColor
                     border.width: 2
                 }
 
@@ -87,41 +87,54 @@ T.Button {
                         width: progressBar.visualPosition * parent.width
                         height: parent.height
                         radius: 2
-                        color: backgrounDeleteColor
-                        border.color: borderColor
+                        color: control.backgrounDeleteNormalColor
+                        border.color: control.borderColor
                         border.width: 2
                     }
                 }
             }
             Text {
-                id: cancleText
-                color: fontColor
-                text: "%" + percent
+                id: percentText
+                color: control.fontColor
+                text: "%" + control.percent
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: fontSize
+                font.pixelSize: control.fontSize
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: fontFamily
+                font.family: control.fontFamily
+                visible: !control.hovered
+            }
+            Text {
+                id: cancleText
+                color: control.fontColor
+                text: "Cancel"
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: control.fontSize
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.family: control.fontFamily
+                visible: control.hovered
             }
         }
         Rectangle{
             id:whenDeleteModel
             anchors.fill: parent
-            border.color: borderColor
+            border.color: control.borderColor
             border.width: 2
-            color: control.backgrounDeleteColor
-            visible: isDelete
+            color: "#00ffffff"
+            visible: control.isDelete
             Text {
                 id: deleteText
-                color: fontColor
+                color: control.fontColor
                 text: qsTr("Delete Model")
                 anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: fontSize
+                font.pixelSize: control.fontSize
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: fontFamily
+                font.family: control.fontFamily
             }
         }
     }
@@ -133,7 +146,7 @@ T.Button {
 
             PropertyChanges {
                 target: backgroundId
-                color: backgrounDeleteColor
+                color: isDelete? control.backgrounDeleteHoverColor: control.backgrounDownloadHoverColor
             }
         },
         State {
@@ -142,7 +155,7 @@ T.Button {
 
             PropertyChanges {
                 target: backgroundId
-                color: backgrounDownloadColor
+                color: isDelete? control.backgrounDeleteNormalColor: control.backgrounDownloadNormalColor
             }
         }
     ]

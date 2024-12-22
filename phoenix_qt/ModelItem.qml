@@ -13,11 +13,9 @@ Item{
     width: 250
     height: 250
 
-
     property var myModel
     property var myModelListModel
     property int myIndex
-
 
     property color backgroundPageColor
     property color backgroungColor
@@ -38,24 +36,27 @@ Item{
     property int titleFontSize: 14
     property int informationFontSize: 10
 
+    property int xNotification
+    property int yNotification
+
 
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: boxColor
+        color: control.boxColor
         radius: 4
-        border.color: hoverButtonColor
+        border.color: control.hoverButtonColor
         border.width: 0
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: backgroundPageColor
+                color: control.backgroundPageColor
             }
 
             GradientStop {
                 position: 1
-                color: /*"#ababb9"*/ backgroungColor
+                color: control.backgroungColor
             }
             orientation: Gradient.Vertical
         }
@@ -75,7 +76,7 @@ Item{
                 height: 32
                 width: 32
                 anchors.verticalCenter: parent.verticalCenter
-                source: myModel.icon
+                source: control.myModel.icon
                 sourceSize.height: 32
                 sourceSize.width: 32
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -90,21 +91,21 @@ Item{
         Text {
             id: modelName
             color: control.titleTextColor
-            text: myModel.name
+            text: control.myModel.name
             anchors.verticalCenter: modelIconBox.verticalCenter
             anchors.left: modelIconBox.right
             anchors.leftMargin: 10
-            font.pixelSize: titleFontSize
+            font.pixelSize: control.titleFontSize
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.styleName: "Bold"
-            font.family: fontFamily
+            font.family: control.fontFamily
         }
 
         Text{
             id:informationId
-            color: informationTextColor
-            text: myModel.information
+            color: control.informationTextColor
+            text: control.myModel.information
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: modelIconBox.bottom
@@ -113,18 +114,18 @@ Item{
             anchors.rightMargin: 20
             anchors.topMargin: 10
             anchors.bottomMargin: 10
-            font.pixelSize: informationFontSize
+            font.pixelSize: control.informationFontSize
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
-            font.family: fontFamily
+            font.family: control.fontFamily
         }
         Rectangle{
             id:informationAboutDownload
             height: 55
             color: "#00ffffff"
             radius: 10
-            border.color: informationTextColor
+            border.color: control.informationTextColor
             border.width: 1
             anchors.left: parent.left
             anchors.right: parent.right
@@ -144,30 +145,30 @@ Item{
                 color: "#00ffffff"
                 Text {
                     id: fileSizeText
-                    color: informationTextColor
+                    color: control.informationTextColor
                     text: qsTr("File size")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                 }
                 Text {
                     id: fileSizeValue
-                    color: informationTextColor
-                    text: myModel.fileSize + " GB"
+                    color: control.informationTextColor
+                    text: control.myModel.fileSize + " GB"
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                 }
             }
             Rectangle{
                 id:line1
                 width: 1
-                color:informationTextColor
+                color: control.informationTextColor
                 anchors.left: fileSizeBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -187,30 +188,30 @@ Item{
                 color: "#00ffffff"
                 Text {
                     id: ramRequiredText
-                    color: informationTextColor
+                    color: control.informationTextColor
                     text: qsTr("RAM requierd")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                 }
                 Text {
                     id: ramRequiredValue
-                    color: informationTextColor
-                    text: myModel.ramRamrequired + " GB"
+                    color: control.informationTextColor
+                    text: control.myModel.ramRamrequired + " GB"
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                 }
             }
             Rectangle{
                 id:line2
                 width: 1
-                color:informationTextColor
+                color: control.informationTextColor
                 anchors.left: ramRequiredBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -230,30 +231,30 @@ Item{
                 width: (parent.width/4)
                 Text {
                     id: parameterersText
-                    color: informationTextColor
+                    color: control.informationTextColor
                     text: qsTr("Parameters")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                 }
                 Text {
                     id: parameterersValue
-                    color: informationTextColor
-                    text: myModel.parameters
+                    color: control.informationTextColor
+                    text: control.myModel.parameters
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     font.pointSize: 8
-                    font.family: fontFamily
+                    font.family: control.fontFamily
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
             Rectangle{
                 id:line3
                 width: 1
-                color:informationTextColor
+                color: control.informationTextColor
                 anchors.left: parameterersBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -286,7 +287,7 @@ Item{
                 Text {
                     id: quantValue
                     color: control.informationTextColor
-                    text:myModel.quant
+                    text: control.myModel.quant
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     font.pointSize: 8
@@ -300,7 +301,7 @@ Item{
 
         DownloadModelButton{
             id:downloadButton
-            borderColor: hoverButtonColor
+            borderColor: control.hoverButtonColor
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -308,12 +309,12 @@ Item{
             anchors.rightMargin: 20
             anchors.bottomMargin: 20
 
-            isDownload: !myModel.isDownloading && !myModel.downloadFinished
-            isCancel: myModel.isDownloading && !myModel.downloadFinished
-            isDelete: myModel.downloadFinished
-            progressValue: myModel.downloadPercent
+            fontFamily: control.fontFamily
 
-            // myModel: myModel
+            isDownload: !control.myModel.isDownloading && !control.myModel.downloadFinished
+            isCancel: control.myModel.isDownloading && !control.myModel.downloadFinished
+            isDelete: control.myModel.downloadFinished
+            progressValue: control.myModel.downloadPercent
 
             FolderDialog {
                 id: folderDialogId
@@ -321,7 +322,7 @@ Item{
                 currentFolder: folderDialogId.currentFolder
 
                 onAccepted: {
-                    modelListModel.downloadRequest(index, currentFolder)
+                    control.myModelListModel.downloadRequest(control.myIndex, currentFolder)
                     console.log(currentFolder)
                 }
                 onRejected: {
@@ -332,15 +333,92 @@ Item{
             Connections {
                 target: downloadButton
                 function onClicked(){
-                    if(!myModel.isDownloading && !myModel.downloadFinished){
-                        folderDialogId.open();
-                    }else if(myModel.isDownloading && !myModel.downloadFinished){
-                        modelListModel.cancelRequest(index);
+                    if(!control.myModel.isDownloading && !control.myModel.downloadFinished){
+                        downloadRequest.open();
+                    }else if(control.myModel.isDownloading && !control.myModel.downloadFinished){
+                        deleteRequest.open();
                     }else {
-                        modelListModel.deleteRequest(index);
+                        deleteRequest.open();
                     }
+                }
+            }
+        }
 
+        Notification{
+            id: downloadRequest
 
+            backgroundPageColor: control.backgroundPageColor
+            backgroungColor: control.backgroungColor
+            glowColor: control.glowColor
+            boxColor: control.boxColor
+            headerColor: control.headerColor
+            normalButtonColor: control.normalButtonColor
+            selectButtonColor: control.selectButtonColor
+            hoverButtonColor: control.hoverButtonColor
+            fillIconColor: control.fillIconColor
+
+            titleTextColor: control.titleTextColor
+            informationTextColor: control.informationTextColor
+            selectTextColor: control.selectTextColor
+
+            fontFamily: control.fontFamily
+
+            title:"Path for Download"
+            about:"F://Zeinab/"
+            textBotton1: "Download In Defult Path"
+            textBotton2: "Select Folder"
+
+            Connections{
+                target: downloadRequest
+                function onBottonAction1(){
+                    control.myModelListModel.downloadRequest(control.myIndex)
+                    downloadRequest.close()
+                }
+
+                function onBottonAction2(){
+                    folderDialogId.open();
+                    downloadRequest.close()
+                }
+            }
+        }
+
+        Notification{
+            id: deleteRequest
+
+            backgroundPageColor: control.backgroundPageColor
+            backgroungColor: control.backgroungColor
+            glowColor: control.glowColor
+            boxColor: control.boxColor
+            headerColor: control.headerColor
+            normalButtonColor: control.normalButtonColor
+            selectButtonColor: control.selectButtonColor
+            hoverButtonColor: control.hoverButtonColor
+            fillIconColor: control.fillIconColor
+
+            titleTextColor: control.titleTextColor
+            informationTextColor: control.informationTextColor
+            selectTextColor: control.selectTextColor
+
+            fontFamily: control.fontFamily
+
+            title:"Delete LLM Model"
+            about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
+            textBotton1: "Cancel"
+            textBotton2: "Delete"
+
+            Connections{
+                target: deleteRequest
+                function onBottonAction1(){
+                    deleteRequest.close()
+                }
+
+                function onBottonAction2(){
+                    if(control.myModel.isDownloading && !control.myModel.downloadFinished){
+                        control.myModelListModel.cancelRequest(control.myIndex);
+                    }else {
+                        control.myModelListModel.deleteRequest(control.myIndex);
+                    }
+                    deleteRequest.close()
                 }
             }
         }

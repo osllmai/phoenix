@@ -133,6 +133,7 @@ bool ChatLLM::handleResponse(int32_t token, const std::string &response){
 
         answer += responsechars;
         emit tokenResponse(QString::fromStdString(response));
+        // emit tokenResponse(QString::fromStdString(answer));
     }
     return !stop;
 }

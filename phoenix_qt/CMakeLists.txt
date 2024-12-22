@@ -129,8 +129,8 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/image16.svg"
         "images/image17.svg"
         "images/image18.svg"
-        "images/image19.svg"
-        "images/image20.svg"
+        "images/systemMonitorIcon.svg"
+        "images/PhoenixIcon.svg"
         "images/menuExpandIeftIcon.svg"
         "images/menuExpandRightIcon.svg"
         "images/settingsModelIcon.svg"
@@ -199,6 +199,7 @@ qt_add_qml_module(app${PROJECTNAME}
     QML_FILES SpeedDisplay.qml
     QML_FILES CustomDot.qml
     QML_FILES AnimationText.qml
+    QML_FILES Notification.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
