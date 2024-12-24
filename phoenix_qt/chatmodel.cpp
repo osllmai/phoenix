@@ -3,8 +3,10 @@
 #include <QDebug>
 #include "database.h"
 
-ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
-    :m_parentId(parentId),root(rootMessage), QAbstractListModel{parent}
+ChatModel::ChatModel(const int &parentId, Message *rootMessage, QObject *parent)
+    : m_parentId(parentId)
+    , root(rootMessage)
+    , QAbstractListModel{parent}
 {
 
     Message* beforMessage =root;
@@ -31,7 +33,7 @@ int ChatModel::rowCount(const QModelIndex &parent) const {
 
 QVariant ChatModel::data(const QModelIndex &index, int role = Qt::DisplayRole) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= chatItems.count())
-        return QVariant();
+        return QVariant{};
 
     //The index is valid
     ChatItem* chatItem = chatItems[index.row()];
@@ -63,24 +65,26 @@ QVariant ChatModel::data(const QModelIndex &index, int role = Qt::DisplayRole) c
         return chatItem->numberOfRegenerate();
     }
 
-    return QVariant();
+    return QVariant{};
 }
 
 QHash<int, QByteArray> ChatModel::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[IdRole] = "id";
-    roles[DateRequestRole] = "dateRequest";
-    roles[ExecutionTimeRole] = "executionTime";
-    roles[NumberOfTokenRole] = "numberOfToken";
-    roles[PromptRole] = "prompt";
-    roles[PromptTimeRole] = "promptTime";
-    roles[NumberPromptRole] = "numberPrompt";
-    roles[NumberOfEditPromptRole] = "numberOfEditPrompt";
-    roles[ResponseRole] = "response";
-    roles[ResponseTimeRole] = "responseTime";
-    roles[NumberResponseRole] = "numberResponse";
-    roles[NumberOfRegenerateRole] = "numberOfRegenerate";
-    return roles;
+    // clang-format off
+    return {
+        {IdRole, "id"},
+        {DateRequestRole, "dateRequest"},
+        {ExecutionTimeRole, "executionTime"},
+        {NumberOfTokenRole, "numberOfToken"},
+        {PromptRole, "prompt"},
+        {PromptTimeRole, "promptTime"},
+        {NumberPromptRole, "numberPrompt"},
+        {NumberOfEditPromptRole, "numberOfEditPrompt"},
+        {ResponseRole, "response"},
+        {ResponseTimeRole, "responseTime"},
+        {NumberResponseRole, "numberResponse"},
+        {NumberOfRegenerateRole, "numberOfRegenerate"},
+    };
+    // clang-format on
 }
 
 Qt::ItemFlags ChatModel::flags(const QModelIndex &index) const {
@@ -160,7 +164,8 @@ void ChatModel::prompt(const QString &promptText){
 }
 
 /// numberOfNext betwean [0,numberOfChildList]
-void ChatModel::nextPrompt(const int index, const int numberOfNext){
+void ChatModel::nextPrompt(int index, int numberOfNext){
+
     qInfo()<<index<<"   "<<  numberOfNext;
     if(index == 0 && numberOfNext>=0 && numberOfNext < root->numberOfChildList()){
         //set next 'numberOfNext' for current child parent because I need see this child
@@ -176,7 +181,7 @@ void ChatModel::nextPrompt(const int index, const int numberOfNext){
     }
 }
 
-void ChatModel::editPrompt(const int index,const QString &promptText){
+void ChatModel::editPrompt(int index,const QString &promptText){
     //cancel edit
     if(promptText == ""){
         emit dataChanged(createIndex(index, 0), createIndex(index, 0), {PromptRole});
@@ -191,7 +196,7 @@ void ChatModel::editPrompt(const int index,const QString &promptText){
     prompt(promptText);
 }
 
-void ChatModel::nextResponse(const int index, const int numberOfNext){
+void ChatModel::nextResponse(int index, int numberOfNext){
     //set next response
     chatItems[index]->prompt()->nextChild(numberOfNext);
 
@@ -226,7 +231,8 @@ void ChatModel::nextResponse(const int index, const int numberOfNext){
     emit sizeChanged();
 }
 
-void ChatModel::regenerateResponse(const int index){
+void ChatModel::regenerateResponse(int index){
+
     //delete next chatItem because one see branch is change
     while(index<chatItems.size()){
         deleteChatItem(index);

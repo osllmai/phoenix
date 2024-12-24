@@ -45,15 +45,31 @@ class ModelList : public QAbstractListModel
         IconModelRole,
         DownloadPercentRole,
         IsDownloadingRole,
-        DownloadFinishedRole
+        DownloadFinishedRole,
+        BackendTypeRole
     };
 
+
+
 public:
+    enum class BackendType {
+        LocalModel,
+        OnlineProvider
+    };
+    Q_ENUM(BackendType)
+
     explicit ModelList(QObject *parent = nullptr);
+<<<<<<< HEAD
     Q_INVOKABLE void downloadRequest(const int index, QString directoryPath);
     Q_INVOKABLE void cancelRequest(const int index);
     Q_INVOKABLE void deleteRequest(const int index);
     Q_INVOKABLE void addModel(QString directoryPath);
+=======
+    Q_INVOKABLE void downloadRequest(int index , const QString &directoryPath);
+    Q_INVOKABLE void cancelRequest(int index);
+    Q_INVOKABLE void deleteRequest(int index);
+    Q_INVOKABLE void addModel(const QString &directoryPath);
+>>>>>>> 584d027 (--wip-- [skip ci])
 
     //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//
@@ -78,15 +94,29 @@ public:
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 public slots:
-    void handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal);
-    void handleDownloadFinished(const int index);
+    void handleDownloadProgress(int index, qint64 bytesReceived, qint64 bytesTotal);
+    void handleDownloadFinished(int index);
 
 signals:
     void currentModelListChanged();
     void downloadProgressChanged();
 
 private:
-    QList<Model*> models;
+    class OnlineProviderData {
+    public:
+        QString name;
+    };
+    class DataItem {
+    public:
+        DataItem(QSharedPointer<OnlineProviderData> provider);
+        DataItem(QSharedPointer<Model> model);
+
+        const BackendType type;
+        QSharedPointer<OnlineProviderData> provider;
+        QSharedPointer<Model >model;
+    };
+    QList<DataItem*> _data;
+    // QList<Model*> models;
     QList<Download*>downloads;
     CurrentModelList *m_currentModelList;
     int m_downloadProgress;
@@ -94,6 +124,8 @@ private:
     void readModelFromJSONFile();
     void updateDownloadProgress();
     void deleteDownloadModel(const int index);
+    void loadLocalModelsFromJson(QJsonArray jsonArray);
+    void loadOnlineProvidersFromJson(QJsonArray jsonArray);
 };
 
 #endif // MODELLIST_H

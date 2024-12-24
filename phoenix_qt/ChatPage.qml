@@ -66,6 +66,7 @@ Item {
                 Row{
                     id: searchAndNewChatBox
                     height: 60
+                    //TODO: remove anchors from this item because it's position is managed by it's parent
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
@@ -589,6 +590,7 @@ Item {
                             MyMenuSettings {
                                 id: assistantMenue
                                 width: (parent.width-10)/2
+                                //TODO: remove anchors from this item because it's position is managed by it's parent
                                 anchors.top: parent.top
                                 anchors.left: parent.left
                                 anchors.bottom: parent.bottom
@@ -615,6 +617,7 @@ Item {
                             MyMenuSettings {
                                 id: modelMenue
                                 width: (parent.width-10)/2
+                                //TODO: remove anchors from this item because it's position is managed by it's parent
                                 anchors.left: assistantMenue.right
                                 anchors.right: parent.right
                                 anchors.top: parent.top

@@ -37,11 +37,12 @@ public:
     void updateResponse(const QString &response);
     void setExecutionTime(const int executionTime);
     void setParentId(const int id);
+
     Q_INVOKABLE void prompt(const QString &promptText);
-    Q_INVOKABLE void nextPrompt(const int index, const int numberOfNext);
-    Q_INVOKABLE void editPrompt(const int index,const QString &promptText);
-    Q_INVOKABLE void nextResponse(const int index, const int numberOfNext);
-    Q_INVOKABLE void regenerateResponse(const int index);
+    Q_INVOKABLE void nextPrompt(int index, int numberOfNext);
+    Q_INVOKABLE void editPrompt(int index, const QString &promptText);
+    Q_INVOKABLE void nextResponse(int index, int numberOfNext);
+    Q_INVOKABLE void regenerateResponse(int index);
 
     //*-------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface  *------------------------------------------------------------------------------*//
@@ -68,7 +69,7 @@ public slots:
     void finishedResponnse();
 
 private:
-    Message *root = new Message(-1,"root",true , this);
+    Message *root;
     QList<ChatItem*> chatItems;
     bool m_isStart;
     int m_parentId;
