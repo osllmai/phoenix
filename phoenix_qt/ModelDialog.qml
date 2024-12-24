@@ -34,7 +34,7 @@ Item {
 
     property var modelListModel
     signal goToModelPage()
-    signal loadModelDialog(var modelPath, var name, var promptTemplate, var systemPrompt)
+    signal loadModelDialog(var model)
 
     Rectangle{
         id: modelSettings
@@ -169,7 +169,7 @@ Item {
                     anchors.topMargin: 0
                     anchors.bottomMargin: 0
                     color: "#00ffffff"
-                    visible: root.modelListModel.rowCount() == 0
+                    visible: root.modelListModel.size == 0
                     Text {
                         id: emptyModelText
                         color: "#919191"
@@ -192,7 +192,7 @@ Item {
                     anchors.topMargin: 0
                     anchors.bottomMargin: 0
                     color: "#00ffffff"
-                    visible: root.modelListModel.rowCount() > 0
+                    visible: root.modelListModel.size > 0
                     Rectangle{
                         id: rectangleListChat
                         anchors.left: parent.left
@@ -260,7 +260,7 @@ Item {
                                         anchors.fill:parent
                                         onClicked: {
                                             delegateChat.color= root.selectButtonColor
-                                            root.loadModelDialog(model.directoryPath, model.name, model.promptTemplate, model.systemPrompt);
+                                            root.loadModelDialog(root.modelListModel.getModel(index));
                                         }
                                         hoverEnabled: true
                                         onHoveredChanged: {

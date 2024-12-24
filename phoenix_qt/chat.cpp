@@ -6,15 +6,18 @@
 #include <QSqlError>
 #include <QDebug>
 #include "database.h"
+#include <model.h>
 
 Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent) :
     QObject(parent), m_id(id), m_title(title),
     m_isLoadModel(false),
+    m_loadModelInProgress(false),
     m_responseInProgress(false),
     chatLLM(new ChatLLM(this)),
     m_timer(new QTimer(this)),
     m_date(date),
-    m_valueTimer(0)
+    m_valueTimer(0),
+    m_model(nullptr)
 {
     QThread::currentThread()->setObjectName("Main Thread");
 
@@ -58,11 +61,17 @@ bool Chat::isLoadModel() const{
 ChatModel* Chat::chatModel() const{
     return m_chatModel;
 }
+bool Chat::loadModelInProgress() const{
+    return m_loadModelInProgress;
+}
 bool Chat::responseInProgress() const{
     return m_responseInProgress;
 }
 int Chat::valueTimer() const{
     return m_valueTimer;
+}
+Model* Chat::model() const{
+    return m_model;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
@@ -88,14 +97,25 @@ void Chat::setIsLoadModel(const bool isLoadModel){
     m_isLoadModel = isLoadModel;
     emit isLoadModelChanged();
 }
+void Chat::setLoadModelInProgress(const bool loadModelInProgress){
+    if(m_loadModelInProgress == loadModelInProgress)
+        return;
+    m_loadModelInProgress = loadModelInProgress;
+    emit loadModelInProgressChanged();
+}
 void Chat::setResponseInProgress(const bool responseInProgress){
     if(m_responseInProgress == responseInProgress)
         return;
     m_responseInProgress = responseInProgress;
     if(!responseInProgress)
         chatLLM->setStop();
-    qInfo()<<m_responseInProgress;
     emit responseInProgressChanged();
+}
+void Chat::setModel(Model* model){
+    if(m_model == model)
+        return;
+    m_model = model;
+    emit modelChanged();
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
@@ -104,8 +124,8 @@ void Chat::setResponseInProgress(const bool responseInProgress){
 //*----------------------------------------------------------------------------------------------* Slots *----------------------------------------------------------------------------------------------*//
 void Chat::LoadModelResult(const bool result){
     setIsLoadModel(result);
+    setLoadModelInProgress( false);
 }
-
 void Chat::promptRequested(const QString &input){
     m_timer->start(1000);
     if(!m_chatModel->isStart()){
@@ -114,13 +134,10 @@ void Chat::promptRequested(const QString &input){
     setResponseInProgress(true);
     emit prompt(input);
 }
-
 void Chat::tokenResponseRequested(const QString &token){
     m_chatModel->updateResponse(token);
 }
-
 void Chat::finishedResponnse(){
-    // m_chatModel->saveChatItem(m_id);
     setResponseInProgress(false);
     m_timer->stop();
     m_chatModel->setExecutionTime(m_valueTimer);
@@ -131,15 +148,17 @@ void Chat::finishedResponnse(){
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 
 
-void Chat::loadModelRequested(QString modelPath){
-    emit loadModel(modelPath);
+void Chat::loadModelRequested(Model *model){
+    if(m_isLoadModel == true)
+        unloadModelRequested();
+    setLoadModelInProgress(true);
+    setModel(model);
+    emit loadModel(model->directoryPath());
 }
 
 void Chat::unloadModelRequested(){
-    m_isLoadModel = false;
+    setIsLoadModel(false);
     emit unLoadModel();
 }
 
-void Chat::addChatItem(int id, QString prompt, QString response){
-    // m_chatModel->addChatItem(id, prompt, response);
-}
+void Chat::addChatItem(int id, QString prompt, QString response){}

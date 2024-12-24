@@ -38,7 +38,6 @@ Item {
     property var currentChat
 
     signal goToModelPage()
-    signal loadModelDialog(var promptTemplate, var systemPrompt)
     signal sendPrompt(var prompt)
 
     Rectangle {
@@ -151,6 +150,7 @@ Item {
             anchors.bottomMargin: 0
             MyButton{
                 id:loadModelIcon
+                visible:! root.currentChat.loadModelInProgress
                 width: 200
                 anchors.left: parent.left
                 anchors.top: parent.top
@@ -158,13 +158,26 @@ Item {
                 anchors.leftMargin: 15
                 anchors.topMargin: 5
                 anchors.bottomMargin: 5
-                myTextId: "load Model"
+                myTextId:  root.currentChat.isLoadModel? root.currentChat.model.name: "load Model"
                 Connections{
                     target:loadModelIcon
                     function onClicked(){
                         loadModelPopup.open()
                     }
                 }
+            }
+            ProgressBar {
+                id: progressBarLoadModel
+                height: 5
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.leftMargin: 15
+                anchors.rightMargin: 15
+                visible: root.currentChat.loadModelInProgress
+                value: 0.5
+                indeterminate: true
             }
         }
 
@@ -213,10 +226,8 @@ Item {
                         loadModelPopup.close()
                         root.goToModelPage()
                     }
-                    function onLoadModelDialog(modelPath , name, promptTemplate, systemPrompt){
-                        loadModelIcon.myTextId = name
-                        root.currentChat.loadModelRequested(modelPath);
-                        root.loadModelDialog(promptTemplate, systemPrompt)
+                    function onLoadModelDialog(model){
+                        root.currentChat.loadModelRequested(model);
                         loadModelPopup.close()
                     }
                 }

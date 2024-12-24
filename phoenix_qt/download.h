@@ -15,8 +15,8 @@ class Download : public QObject
     QML_ELEMENT
 
 public:
-    explicit Download(const int index, QObject *parent = nullptr);
-    void downloadModel(const QString &url, const QString &savePath);
+    explicit Download(const int index, const QString &url, const QString &modelPath, QObject *parent = nullptr);
+    void downloadModel();
     void cancelDownload();
     void removeModel();
 

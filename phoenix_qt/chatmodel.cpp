@@ -15,6 +15,7 @@ ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
                                           beforMessage);
         chatItems.append(chatItem);
         beforMessage = beforMessage->child()->child();
+        emit dataChanged(createIndex(index, 0), createIndex(index, 0), { NumberPromptRole, NumberOfEditPromptRole,NumberResponseRole,NumberOfRegenerateRole});
         index++;
     }
 }

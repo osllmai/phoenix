@@ -45,6 +45,7 @@ void ChatLLM::loadModel(const QString &modelPath)
 {
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
+    Sleep(5000);
 //     std::string backend = "cuda";
 
 //     prompt_context.n_ctx = 4096;
@@ -92,6 +93,7 @@ void ChatLLM::prompt(const QString &input){
     stop = false;
     qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
 
+    Sleep(5000);
     answer = "";
 
     qDebug() << "This is C++ talking, input: " << input;

@@ -93,6 +93,7 @@ private:
 
     void readModelFromJSONFile();
     void updateDownloadProgress();
+    void deleteDownloadModel(const int index);
 };
 
 #endif // MODELLIST_H

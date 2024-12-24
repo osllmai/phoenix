@@ -221,3 +221,8 @@ void CurrentModelList::deleteModel( Model *model){
         endRemoveRows();
     }
 }
+
+Model* CurrentModelList::getModel(const int index){
+    qInfo()<<"0-0";
+    return models[index];
+}

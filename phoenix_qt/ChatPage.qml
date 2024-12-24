@@ -60,6 +60,7 @@ Item {
                 width: Math.min(mainStructure.width / 4, 350)
                 height: mainStructure.height
                 color: root.chatBackgroungColor
+                visible: true
 
                 Row{
                     id: searchAndNewChatBox
@@ -545,10 +546,10 @@ Item {
                                     function onGoToModelPage(){
                                         root.goToModelPage()
                                     }
-                                    function onLoadModelDialog(promptTemplate, systemPrompt){
-                                        instructionTextBox.text = systemPrompt
-                                        promptTemplateTextBox.text = promptTemplate
-                                    }
+                                    // function onLoadModelDialog(promptTemplate, systemPrompt){
+                                    //     instructionTextBox.text = systemPrompt
+                                    //     promptTemplateTextBox.text = promptTemplate
+                                    // }
                                 }
                             }
                         }
@@ -566,6 +567,7 @@ Item {
                     anchors.rightMargin: 10
                     color: root.chatBackgroungColor
                     radius:5
+                    visible: false
 
 
                     Rectangle {

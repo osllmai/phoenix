@@ -1,16 +1,19 @@
 #include "download.h"
 
-Download::Download(const int index, QObject *parent)
+Download::Download(const int index, const QString &url, const QString &modelPath, QObject *parent)
     : QObject{parent}
 {
     m_index =index;
+    this->url = url;
+    this->modelPath = modelPath;
     moveToThread(&downloadThread);
     downloadThread.start();
-    qInfo() << "new" << QThread::currentThread();
+    qInfo() << "new thread for download Model"<< m_index << " ::" << QThread::currentThread();
 }
 
 Download::~Download(){
-    qInfo() << "delete" << QThread::currentThread() ;
+    qInfo() << "delete thread for download Model" << m_index << " ::" << QThread::currentThread() ;
+    delete reply;
     downloadThread.quit();
     downloadThread.wait();
 }
@@ -19,9 +22,7 @@ int Download::index() const{
     return m_index;
 }
 
-void Download::downloadModel(const QString &url, const QString &modelPath){
-    this->url = url;
-    this->modelPath = modelPath;
+void Download::downloadModel(){
     QNetworkRequest request(url);
     reply = m_manager.get(request);
     // Save the file path for when the download is complete

@@ -2,6 +2,8 @@ import QtQuick 2.15
 // import QtQuick.Templates 2.1 as T
 // import QtQuick.Layouts
 // import Qt5Compat.GraphicalEffects
+import QtQuick.Controls 2.15
+
 
 Item {
     id: root
@@ -202,6 +204,7 @@ Item {
 
                 Rectangle{
                     id: llmImageRec
+                    visible:root.response !=""
                     width: 30
                     height: 30
                     color: "#00ffffff"
@@ -218,11 +221,24 @@ Item {
                         fillMode: Image.PreserveAspectCrop
                         smooth: true
                         clip: true
-                    }
+                    }  
+                }
+                BusyIndicator {
+                    id: busyIndicator
+                    width: 40
+                    height: 40
+                    visible:root.response ==""
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.leftMargin: 0
+                    anchors.topMargin: 10
+                    wheelEnabled: false
+                    focusPolicy: Qt.NoFocus
                 }
 
                 MyMessage{
                     id: llmTextRec
+                    visible:root.response !=""
                     anchors.left: llmImageRec.right
                     anchors.top: parent.top
                     anchors.leftMargin: 2
@@ -275,6 +291,7 @@ Item {
 
                 Text {
                     id: llmTimeText
+                    visible:root.response !=""
                     color: root.chatMessageTitleTextColor
                     text: root.responseTime
                     anchors.left: llmImageRec.right

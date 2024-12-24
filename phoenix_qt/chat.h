@@ -7,6 +7,7 @@
 
 #include <chatllm.h>
 #include <chatmodel.h>
+#include <model.h>
 
 class Chat : public QObject
 {
@@ -18,18 +19,17 @@ class Chat : public QObject
 
     Q_PROPERTY(ChatModel *chatModel READ chatModel NOTIFY chatModelChanged )
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged )
+    Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged )
     Q_PROPERTY(int valueTimer READ valueTimer NOTIFY valueTimerChanged)
-
+    Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged)
 
 public:
     explicit Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent = nullptr);
     virtual ~Chat();
 
-    Q_INVOKABLE void loadModelRequested(QString modelPath);
-
+    Q_INVOKABLE void loadModelRequested(Model *model);
     Q_INVOKABLE void unloadModelRequested();
-    // Q_INVOKABLE void reloadModelRequested(QString modelPath);
     void addChatItem(int id, QString prompt, QString response);
 
     //*----------------------------------------------------------------------------------------**************----------------------------------------------------------------------------------------*//
@@ -39,8 +39,10 @@ public:
     QDateTime date() const;
     ChatModel* chatModel() const;
     bool isLoadModel() const;
+    bool loadModelInProgress() const;
     bool responseInProgress() const;
     int valueTimer() const;
+    Model* model() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -49,7 +51,9 @@ public:
     void setId(const int id);
     void setTitle(const QString title);
     void setIsLoadModel(const bool isLoadModel);
+    void setLoadModelInProgress(const bool loadModelInProgress);
     void setResponseInProgress(const bool responseInProgress);
+    void setModel(Model* model);
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 signals:
@@ -58,8 +62,10 @@ signals:
     void dateChanged();
     void chatModelChanged();
     void isLoadModelChanged();
+    void loadModelInProgressChanged();
     void responseInProgressChanged();
     void valueTimerChanged();
+    void modelChanged();
 
     void loadModel(const QString &modelPath);
     void unLoadModel();
@@ -82,9 +88,11 @@ private:
     ChatLLM *chatLLM;
     ChatModel *m_chatModel;
     bool m_isLoadModel;
+    bool m_loadModelInProgress;
     bool m_responseInProgress;
     QTimer *m_timer;
     int m_valueTimer;
+    Model *m_model;
 };
 
 #endif // CHAT_H
