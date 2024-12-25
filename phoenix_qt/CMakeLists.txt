@@ -169,7 +169,6 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/fillOkCircle.svg"
 
         "fontFamily/DMSans-VariableFont.ttf"
-        "phoenix.db"
         "models.json"
     RESOURCE_PREFIX /
 
@@ -205,19 +204,14 @@ set_target_properties(app${PROJECTNAME} PROPERTIES
 
 target_link_libraries(app${PROJECTNAME}
     PRIVATE
-        Qt6::Quick
-        Qt6::Sql
         Qt6::Core
+        Qt6::Gui
+        Qt6::Quick
+        Qt6::Qml
+        Qt6::Charts
+        Qt6::Sql
         llmodel
 )
-
-# set(COMPONENT_NAME_MAIN ${PROJECT_NAME})
-
-# if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-#   set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "..." FORCE)
-# endif()
-
-# install(TARGETS app${PROJECTNAME} DESTINATION bin COMPONENT ${COMPONENT_NAME_MAIN})
 
 include(GNUInstallDirs)
 install(TARGETS app${PROJECTNAME}
@@ -226,5 +220,5 @@ install(TARGETS app${PROJECTNAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-configure_file(phoenix.db  bin/phoenix.db  COPYONLY)
+# configure_file(phoenix.db  bin/phoenix.db  COPYONLY)
 configure_file(models.json bin/models.json COPYONLY)
