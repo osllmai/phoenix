@@ -9,7 +9,9 @@ Model::Model(const int &id, const double &fileSize, const int &ramRamrequired,  
     m_systemPrompt(systemPrompt), m_icon(icon), m_downloadPercent(downloadPercent), m_isDownloading(isDownloading), m_downloadFinished(downloadFinished), QObject(parent)
 {}
 
-Model::~Model(){}
+Model::~Model(){
+    qInfo()<<"------------------------------------------------------ this model delete: "<<m_name;
+}
 
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//

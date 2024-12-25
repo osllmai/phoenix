@@ -284,4 +284,22 @@ QSqlError phoenix_databace::updateConversationName(const int &id, const QString 
     db.close();
     return QSqlError();
 }
+
+QSqlError phoenix_databace::updateConversationDate(const int &id, const QDateTime date){
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("./phoenix.db");
+    if (!db.open())
+        return db.lastError();
+
+    QSqlQuery query(db);
+
+    if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(date);
+    query.addBindValue(id);
+    query.exec();
+
+    db.close();
+    return QSqlError();
+}
 //-------------------------------**End Function Query**---------------------------//

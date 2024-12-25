@@ -39,6 +39,7 @@ Item {
 
     signal goToModelPage()
     signal sendPrompt(var prompt)
+    signal loadModelInCurrentChat(int indexModel)
 
     Rectangle {
         id: inputBox
@@ -226,8 +227,10 @@ Item {
                         loadModelPopup.close()
                         root.goToModelPage()
                     }
-                    function onLoadModelDialog(model){
-                        root.currentChat.loadModelRequested(model);
+
+                    function onLoadModelDialog(indexModel){
+                        root.loadModelInCurrentChat(indexModel)
+                        // root.currentChat.loadModelRequested(indexModel);
                         loadModelPopup.close()
                     }
                 }

@@ -34,7 +34,7 @@ Item {
 
     property var modelListModel
     signal goToModelPage()
-    signal loadModelDialog(var model)
+    signal loadModelDialog(int indexModel)
 
     Rectangle{
         id: modelSettings
@@ -260,7 +260,7 @@ Item {
                                         anchors.fill:parent
                                         onClicked: {
                                             delegateChat.color= root.selectButtonColor
-                                            root.loadModelDialog(root.modelListModel.getModel(index));
+                                            root.loadModelDialog(index);
                                         }
                                         hoverEnabled: true
                                         onHoveredChanged: {

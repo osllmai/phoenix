@@ -42,6 +42,7 @@ Item {
     property bool emptyConversation: root.chatModel.size == 0? true: false
 
     signal goToModelPage()
+    signal loadModelInCurrentChat(int index)
 
     property bool isTheme
 
@@ -546,6 +547,11 @@ Item {
                                     function onGoToModelPage(){
                                         root.goToModelPage()
                                     }
+
+                                    function onLoadModelInCurrentChat(indexModel){
+                                        root.loadModelInCurrentChat(indexModel)
+                                    }
+
                                     // function onLoadModelDialog(promptTemplate, systemPrompt){
                                     //     instructionTextBox.text = systemPrompt
                                     //     promptTemplateTextBox.text = promptTemplate

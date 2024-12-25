@@ -128,7 +128,6 @@ ApplicationWindow {
         id: phoenixController
     }
 
-
     Rectangle {
         id: phoenix
         anchors.fill: parent
@@ -415,6 +414,9 @@ ApplicationWindow {
                         function onGoToModelPage(){
                             modelsItemMenu.clicked()
                             modelsItemMenu.checked = true
+                        }
+                        function onLoadModelInCurrentChat(index){
+                            phoenixController.addModelToCurrentChat(index)
                         }
                     }
                 }
@@ -845,4 +847,5 @@ ApplicationWindow {
             }
         }
     }
+
 }

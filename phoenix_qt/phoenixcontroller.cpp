@@ -22,6 +22,11 @@ void PhoenixController::setIsSystemMonitor(const bool isStart){
     }
 }
 
+void PhoenixController::addModelToCurrentChat(const int index){
+    Model* model = m_modelList->currentModelList()->getModel(index);
+    m_chatListModel->currentChat()->loadModelRequested(model);
+}
+
 //*---------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*---------------------------------------------------------------------------------------* Read Property *----------------------------------------------------------------------------------------*//
 ChatListModel* PhoenixController::chatListModel() const{

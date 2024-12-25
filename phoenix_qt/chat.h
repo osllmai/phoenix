@@ -28,7 +28,7 @@ public:
     explicit Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent = nullptr);
     virtual ~Chat();
 
-    Q_INVOKABLE void loadModelRequested(Model *model);
+    void loadModelRequested(Model *model);
     Q_INVOKABLE void unloadModelRequested();
     void addChatItem(int id, QString prompt, QString response);
 

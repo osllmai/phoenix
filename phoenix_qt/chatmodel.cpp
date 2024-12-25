@@ -6,6 +6,7 @@
 ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
     :m_parentId(parentId),root(rootMessage), QAbstractListModel{parent}
 {
+
     Message* beforMessage =root;
     int index = 0;
     while(beforMessage !=nullptr && beforMessage->numberOfChildList() > 0){
@@ -18,6 +19,7 @@ ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
         emit dataChanged(createIndex(index, 0), createIndex(index, 0), { NumberPromptRole, NumberOfEditPromptRole,NumberResponseRole,NumberOfRegenerateRole});
         index++;
     }
+
 }
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
@@ -159,7 +161,6 @@ void ChatModel::prompt(const QString &promptText){
 
 /// numberOfNext betwean [0,numberOfChildList]
 void ChatModel::nextPrompt(const int index, const int numberOfNext){
-
     qInfo()<<index<<"   "<<  numberOfNext;
     if(index == 0 && numberOfNext>=0 && numberOfNext < root->numberOfChildList()){
         //set next 'numberOfNext' for current child parent because I need see this child
@@ -172,7 +173,6 @@ void ChatModel::nextPrompt(const int index, const int numberOfNext){
         chatItems[index-1]->response()->nextChild(numberOfNext);
 
         nextResponse(index,chatItems[index-1]->response()->child()->numberOfCurrentChild());
-
     }
 }
 
@@ -227,7 +227,6 @@ void ChatModel::nextResponse(const int index, const int numberOfNext){
 }
 
 void ChatModel::regenerateResponse(const int index){
-
     //delete next chatItem because one see branch is change
     while(index<chatItems.size()){
         deleteChatItem(index);
@@ -275,8 +274,7 @@ int ChatModel::size(){
     return chatItems.size();
 }
 
-bool ChatModel::deleteChatItem(const int index)
-{
+bool ChatModel::deleteChatItem(const int index){
     beginRemoveRows(QModelIndex(), index, index);
     delete chatItems.takeAt(index);
     endRemoveRows();

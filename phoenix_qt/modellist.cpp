@@ -215,9 +215,11 @@ bool ModelList::setData(const QModelIndex &index, const QVariant &value, int rol
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
 CurrentModelList *ModelList::currentModelList() const{
+
     return m_currentModelList;
 }
 double ModelList::downloadProgress() const{
+
     return m_downloadProgress;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
@@ -226,6 +228,7 @@ double ModelList::downloadProgress() const{
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Write Property  *----------------------------------------------------------------------------------------*//
 void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
+
     if(m_currentModelList == currentModelList)
         return;
     m_currentModelList = currentModelList;
@@ -234,6 +237,7 @@ void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 void ModelList::downloadRequest(const int index , QString directoryPath){
+
     directoryPath.remove("file:///");
 
     Model *model = models[index];
@@ -249,9 +253,11 @@ void ModelList::downloadRequest(const int index , QString directoryPath){
     downloads.append(download);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
+
 }
 
 void ModelList::addModel(QString directoryPath){
+
     directoryPath.remove("file:///");
 
     QFileInfo fileInfo(directoryPath);
@@ -272,9 +278,11 @@ void ModelList::addModel(QString directoryPath){
         m_currentModelList->addModel(model);
     }
     emit currentModelListChanged();
+
 }
 
 void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal){
+
     Model *model = models[index];
     qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
     model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
@@ -282,9 +290,11 @@ void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceiv
     updateDownloadProgress();
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
+
 }
 
 void ModelList::handleDownloadFinished(const int index){
+
     Model *model = models[index];
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
@@ -298,9 +308,11 @@ void ModelList::handleDownloadFinished(const int index){
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     emit currentModelListChanged();
+
 }
 
 void ModelList::cancelRequest(const int index){
+
     Model *model = models[index];
     for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
         if(downloads[indexSearch]->index() == index)
@@ -312,9 +324,11 @@ void ModelList::cancelRequest(const int index){
     updateDownloadProgress();
     deleteDownloadModel(index);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
+
 }
 
 void ModelList::deleteRequest(const int index){
+
     Model *model = models[index];
 
     model->setIsDownloading(false);
@@ -342,10 +356,12 @@ void ModelList::deleteRequest(const int index){
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
     emit currentModelListChanged();
+
 }
 
 
 void ModelList::readModelFromJSONFile(){
+
     QFile file("./models.json");
     if (!file.open(QIODevice::ReadOnly)) {
         qCritical() << file.errorString();
@@ -441,9 +457,11 @@ void ModelList::readModelFromJSONFile(){
             deleteRequest(index);
         }
     }
+
 }
 
 void ModelList::updateDownloadProgress(){
+
     double totalBytesDownload =0;
     double receivedBytesDownload =0;
     for(int indexModel=0; indexModel<models.size();indexModel++){
@@ -459,9 +477,11 @@ void ModelList::updateDownloadProgress(){
 
     qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
     emit downloadProgressChanged();
+
 }
 
 void ModelList::deleteDownloadModel(const int index){
+
     if(downloads.size()>3){
         connect(downloads[3], &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(downloads[3], &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
@@ -474,4 +494,5 @@ void ModelList::deleteDownloadModel(const int index){
             delete download;
         }
     }
+
 }

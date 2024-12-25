@@ -6,6 +6,7 @@ ChatListModel::ChatListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
     // read chat from database
+
     QList<Chat*> chatDB = phoenix_databace::readConversation();
     for(int i=chatDB.size()-1 ; i>=0 ; i--){
 
@@ -29,11 +30,13 @@ ChatListModel::ChatListModel(QObject *parent)
     }
     connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
     addChat();
+
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
 //*------------------------------------------------------------------------------* QAbstractItemModel interface  *-----------------------------------------------------------------------------*//
 int ChatListModel::rowCount(const QModelIndex &parent) const {
+
     Q_UNUSED(parent)
     return chats.size();
 }
@@ -100,9 +103,11 @@ bool ChatListModel::setData(const QModelIndex &index, const QVariant &value, int
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
 Chat* ChatListModel::currentChat() const{
+
     return m_currentChat;
 }
 int ChatListModel::size() const{
+
     return chats.size();
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
@@ -115,6 +120,7 @@ void ChatListModel::setCurrentChat(Chat *chat){
         m_currentChat->unloadModelRequested();
     m_currentChat = chat;
     emit currentChatChanged();
+
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
@@ -135,7 +141,6 @@ void ChatListModel::addChat(){
 void ChatListModel::addCurrentChatToChatList(){
     int id = phoenix_databace::insertConversation(m_currentChat->title(), m_currentChat->date());
     m_currentChat->setId(id);
-
 
     beginInsertRows(QModelIndex(), 0, 0);
     chats.prepend(m_currentChat);
@@ -165,6 +170,10 @@ void ChatListModel::deleteChat(int index){
 
     phoenix_databace::deleteConversation(chat->id());
     delete chat;
+
+    if(index < chats.size()){
+        emit dataChanged(createIndex(index, 0), createIndex(index, 0), { DateRole});
+    }
 
     emit sizeChanged();
 }

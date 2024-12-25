@@ -40,8 +40,17 @@ Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* 
 }
 
 Chat::~Chat(){
+    if(m_responseInProgress)
+        chatLLM->setStop();
+    if(m_loadModelInProgress || m_isLoadModel)
+        unloadModelRequested();
+
     delete chatLLM;
     chatLLM = nullptr;
+    delete m_chatModel;
+    m_chatModel = nullptr;
+    delete m_timer;
+    m_timer = nullptr;
 }
 
 //*----------------------------------------------------------------------------------------**************----------------------------------------------------------------------------------------*//
@@ -79,25 +88,32 @@ Model* Chat::model() const{
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Write Property  *----------------------------------------------------------------------------------------*//
 void Chat::setId(const int id){
+
     if(m_id == id)
         return;
     m_id = id;
     m_chatModel->setParentId(id);
     emit idChanged();
+
 }
 void Chat::setTitle(const QString title){
+
     if(m_title == title)
         return;
     m_title = title;
     emit titleChanged();
+
 }
 void Chat::setIsLoadModel(const bool isLoadModel){
+
     if(m_isLoadModel == isLoadModel)
         return;
     m_isLoadModel = isLoadModel;
     emit isLoadModelChanged();
+
 }
 void Chat::setLoadModelInProgress(const bool loadModelInProgress){
+
     if(m_loadModelInProgress == loadModelInProgress)
         return;
     m_loadModelInProgress = loadModelInProgress;
@@ -126,7 +142,14 @@ void Chat::LoadModelResult(const bool result){
     setIsLoadModel(result);
     setLoadModelInProgress( false);
 }
+
 void Chat::promptRequested(const QString &input){
+    QDateTime now = QDateTime::currentDateTime();
+    if(m_date.daysTo(now) > 1 || m_date.toString("dd")!=now.toString("dd")){
+        m_date = now;
+        phoenix_databace::updateConversationDate(m_id,m_date);
+    }
+
     m_timer->start(1000);
     if(!m_chatModel->isStart()){
         emit startChat();
@@ -134,9 +157,11 @@ void Chat::promptRequested(const QString &input){
     setResponseInProgress(true);
     emit prompt(input);
 }
+
 void Chat::tokenResponseRequested(const QString &token){
     m_chatModel->updateResponse(token);
 }
+
 void Chat::finishedResponnse(){
     setResponseInProgress(false);
     m_timer->stop();
@@ -158,6 +183,7 @@ void Chat::loadModelRequested(Model *model){
 
 void Chat::unloadModelRequested(){
     setIsLoadModel(false);
+    setModel(nullptr);
     emit unLoadModel();
 }
 

@@ -36,18 +36,30 @@ Item {
     signal deleteChat()
     signal editChatName(var chatName)
 
-    function onIsCurrentItemChanged(){
-        if(isCurrentItem===true){
-            backgroundId.color = control.selectButtonColor
-        }else{
-            backgroundId.color = control.normalButtonColor
-        }
+    function onIsThemeChanged(){
+        console.log("HI")
     }
+
+    // function onIsCurrentItemChanged(){
+    //     if(isCurrentItem===true){
+    //         backgroundId.color = control.selectButtonColor
+    //     }else{
+    //         backgroundId.color = control.normalButtonColor
+    //     }
+    // }
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.isCurrentItem? control.selectButtonColor:control.normalButtonColor
+        color: selectColor()
         radius: 2
+
+        function selectColor(){
+            if(control.isCurrentItem){
+                return control.selectButtonColor;
+            }else{
+                return control.normalButtonColor;
+            }
+        }
 
         TextArea{
             id: textId
@@ -212,6 +224,4 @@ Item {
              transparentBorder: true
          }
     }
-
-
 }

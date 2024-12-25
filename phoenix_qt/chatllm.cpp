@@ -26,26 +26,30 @@ ChatLLM::ChatLLM(Chat *parent) :
     QObject{nullptr},
     stop(false)
 {
+
     moveToThread(&chatLLMThread);
     chatLLMThread.start();
     qInfo() << "new" << QThread::currentThread();
 }
 
 ChatLLM::~ChatLLM(){
+
     qInfo() << "delete" << QThread::currentThread() ;
     chatLLMThread.quit();
     chatLLMThread.wait();
 }
 
 void ChatLLM::setStop(){
+
     stop = true;
 }
 
 void ChatLLM::loadModel(const QString &modelPath)
 {
+
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
-    Sleep(5000);
+    Sleep(2000);
 //     std::string backend = "cuda";
 
 //     prompt_context.n_ctx = 4096;
@@ -85,15 +89,18 @@ void ChatLLM::loadModel(const QString &modelPath)
 }
 
 void ChatLLM::unLoadModel(){
+
     // delete model;
     // model = nullptr;
+
 }
 
 void ChatLLM::prompt(const QString &input){
+
     stop = false;
     qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
 
-    Sleep(5000);
+    Sleep(2000);
     answer = "";
 
     qDebug() << "This is C++ talking, input: " << input;
@@ -111,16 +118,17 @@ void ChatLLM::prompt(const QString &input){
     // QString qStr = QString::fromStdString(answer);
     // qInfo() <<  qStr;
 
-    for(int i=0;i<30;i++){
+    for(int i=0;i<40;i++){
         emit tokenResponse("Hi  :)  ");
-        // qInfo()<<"send";
-        Sleep(50);
+        qInfo()<<i;
+        Sleep(100);
         emit tokenResponse("Phoenix!, ");
-        Sleep(50);
+        Sleep(100);
     }
 
     emit finishedResponnse();
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
+
 
 }
 

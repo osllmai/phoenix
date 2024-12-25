@@ -55,7 +55,9 @@ T.Button {
         }
     }
 
-    background: Rectangle{
+    background:null
+
+    contentItem: Rectangle{
         id: backgroundId
         color: "#00ffffff"
         anchors.fill: parent
@@ -83,7 +85,7 @@ T.Button {
                 color: !control.pressed && !control.checked &&!control.hovered? control.iconColor: control.menuIconColor
             }
 
-            Text {
+            Label {
                 id: textId
                 width: backgroundId.width
                 height: 15

@@ -14,6 +14,7 @@
 #include "download.h"
 #include "modellist.h"
 #include "database.h"
+#include "model.h"
 
 #if defined(Q_OS_WIN)
 #include <windows.h>
@@ -43,6 +44,7 @@ class PhoenixController : public QObject
 public:
     explicit PhoenixController(QObject *parent = nullptr);
     Q_INVOKABLE void setIsSystemMonitor(const bool isStart);
+    Q_INVOKABLE void addModelToCurrentChat(const int index);
 
     //*---------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*---------------------------------------------------------------------------------------* Read Property *----------------------------------------------------------------------------------------*//
@@ -50,7 +52,6 @@ public:
     ModelList* modelList() const;
     int cpuInfo() const;
     int memoryInfo() const;
-
     //*-------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 signals:

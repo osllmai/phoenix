@@ -223,6 +223,10 @@ void CurrentModelList::deleteModel( Model *model){
 }
 
 Model* CurrentModelList::getModel(const int index){
-    qInfo()<<"0-0";
+    qInfo()<<"0-0    "<<models.size()<< "   "<<index<<"   ";
+    for(int i =0; i<models.size();i++){
+             qInfo()<<"0-0    "<< models[i];
+    }
+
     return models[index];
 }

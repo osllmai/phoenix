@@ -127,6 +127,7 @@ QSqlError readMessage(Message *root, const int &conversation_id);
 
 QSqlError updateModelPath(const int &id, const QString &path);
 QSqlError updateConversationName(const int &id, const QString &name);
+QSqlError updateConversationDate(const int &id, const QDateTime date);
 
 //-------------------------------**End Function Query**---------------------------//
 }

@@ -128,6 +128,7 @@ Item {
             anchors.topMargin: 2
             color: "#00ffffff"
 
+            property bool checkCopy: false
             MyIcon {
                 id: copyIconId
                 width: 20
@@ -139,8 +140,8 @@ Item {
                 widthSource:13
                 normalColor:root.iconColor
                 hoverColor:root.fillIconColor
-                myIconId: "images/copyIcon.svg"
-                myFillIconId: "images/fillCopyIcon.svg"
+                myIconId: messageIcon.checkCopy?"images/copySuccessIcon.svg": "images/copyIcon.svg"
+                myFillIconId: messageIcon.checkCopy?"images/copySuccessIcon.svg": "images/fillCopyIcon.svg"
                 myLable:"Copy"
                 Connections {
                     target: copyIconId
@@ -148,8 +149,17 @@ Item {
                         messageText.selectAll()
                         messageText.copy()
                         messageText.deselect()
+                        messageIcon.checkCopy= true
+                        successTimer.start();
                     }
                 }
+            }
+            Timer {
+                id: successTimer
+                interval: 2000
+                repeat: false
+
+                onTriggered: messageIcon.checkCopy= false
             }
             MyIcon {
                 id: regenerateOrEditIconId

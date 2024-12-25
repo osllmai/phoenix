@@ -162,6 +162,7 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/speedometer_needle_ring_195_90.png"
         "images/speedometer_needle_195_142.png"
         "images/okIcon.svg"
+        "images/copySuccessIcon.svg"
 
         "images/cancelCircle.svg"
         "images/fillCancelCircle.svg"
