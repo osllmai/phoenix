@@ -206,7 +206,6 @@ target_link_libraries(app${PROJECTNAME}
         Qt6::Sql
         Qt6::Core
         llmodel
-        SortFilterProxyModel
 )
 
 # set(COMPONENT_NAME_MAIN ${PROJECT_NAME})
