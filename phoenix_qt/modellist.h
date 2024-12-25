@@ -51,8 +51,6 @@ class ModelList : public QAbstractListModel
         BackendTypeRole
     };
 
-
-
 public:
     enum class BackendType {
         LocalModel,
@@ -68,6 +66,7 @@ public:
     Q_INVOKABLE void addModel(QString directoryPath);
 =======
     Q_INVOKABLE void downloadRequest(int index , const QString &directoryPath);
+    Q_INVOKABLE void setApiKey(int id , const QString &apiKey);
     Q_INVOKABLE void cancelRequest(int index);
     Q_INVOKABLE void deleteRequest(int index);
     Q_INVOKABLE void addModel(const QString &directoryPath);
@@ -95,6 +94,7 @@ public:
     void setCurrentModelList(CurrentModelList *currentModelList);
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
+    Model *at(int index) const;
 public slots:
     void handleDownloadProgress(int index, qint64 bytesReceived, qint64 bytesTotal);
     void handleDownloadFinished(int index);
@@ -118,8 +118,8 @@ private:
         const QSharedPointer<OnlineProviderData> provider;
         const QSharedPointer<Model> model;
     };
-    QList<DataItem*> _data;
-    // QList<Model*> models;
+    // QList<DataItem*> _data;
+    QList<Model*> _models;
     QList<Download*>downloads;
     CurrentModelList *m_currentModelList;
     int m_downloadProgress;

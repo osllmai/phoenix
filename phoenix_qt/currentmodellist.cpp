@@ -13,7 +13,7 @@ int CurrentModelList::rowCount(const QModelIndex &parent) const {
 
 QVariant CurrentModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) const {
     if (!index.isValid() || index.row() < 0 || index.row() >= models.count())
-        return QVariant();
+        return {};
 
     //The index is valid
     Model* model = models[index.row()];
@@ -53,31 +53,36 @@ QVariant CurrentModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->isDownloading();
     case DownloadFinishedRole:
         return model->downloadFinished();
+    case BackendTypeRole:
+        return QVariant::fromValue(model->backendType());
     }
 
-    return QVariant();
+    return {};
 }
 
 QHash<int, QByteArray> CurrentModelList::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[IdRole] = "id";
-    roles[FileSizeRole] = "fileSize";
-    roles[RamRamrequiredRole] = "ramRamrequired";
-    roles[ParametersRole] = "parameters";
-    roles[QuantRole] = "quant";
-    roles[TypeRole] = "type";
-    roles[PromptTemplateRole] = "promptTemplate";
-    roles[SystemPromptRole] = "systemPrompt";
-    roles[NameRole] = "name";
-    roles[InformationRole] = "information";
-    roles[FileNameRole] = "fileName";
-    roles[UrlRole] = "url";
-    roles[DirectoryPathRole] = "directoryPath";
-    roles[IconModelRole] = "icon";
-    roles[DownloadPercentRole] = "downloadPercent";
-    roles[IsDownloadingRole] = "isDownloading";
-    roles[DownloadFinishedRole] = "downloadFinished";
-    return roles;
+    // clang-format off
+    return {
+        {IdRole, "id"},
+        {FileSizeRole, "fileSize"},
+        {RamRamrequiredRole, "ramRamrequired"},
+        {ParametersRole, "parameters"},
+        {QuantRole, "quant"},
+        {TypeRole, "type"},
+        {PromptTemplateRole, "promptTemplate"},
+        {SystemPromptRole, "systemPrompt"},
+        {NameRole, "name"},
+        {InformationRole, "information"},
+        {FileNameRole, "fileName"},
+        {UrlRole, "url"},
+        {DirectoryPathRole, "directoryPath"},
+        {IconModelRole, "icon"},
+        {DownloadPercentRole, "downloadPercent"},
+        {IsDownloadingRole, "isDownloading"},
+        {DownloadFinishedRole, "downloadFinished"},
+        {BackendTypeRole, "backendType"}
+    };
+    // clang-format on
 }
 
 Qt::ItemFlags CurrentModelList::flags(const QModelIndex &index) const {
@@ -205,7 +210,14 @@ int CurrentModelList::size() const{
     return models.size();
 }
 
-void CurrentModelList::addModel( Model *model){
+void CurrentModelList::addModel(Model *model)
+{
+    auto exists = std::any_of(models.begin(), models.end(), [model](Model *m){
+        return m == model;
+    });
+    if (exists)
+        return;
+
     const int index = models.size();
     beginInsertRows(QModelIndex(), index, index);//Tell the model that you are about to add data
     models.append(model);
@@ -229,4 +241,9 @@ Model* CurrentModelList::getModel(const int index){
     }
 
     return models[index];
+}
+
+Model *CurrentModelList::at(int index) const
+{
+    return models.at(index);
 }

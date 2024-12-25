@@ -1,3 +1,0 @@
-add_subdirectory(core)
-add_subdirectory(onlineproviders)
-add_subdirectory(offlinemodels)

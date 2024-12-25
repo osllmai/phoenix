@@ -20,19 +20,26 @@ const auto MODEL_SQL = QLatin1String(R"(
                 id INTEGER NOT NULL UNIQUE,
                 name TEXT NOT NULL,
                 path TEXT NOT NULL,
+                apiKey	TEXT,
+                backendType	NUMERIC NOT NULL DEFAULT 0,
                 PRIMARY KEY(id AUTOINCREMENT))
         )");
 
 const auto INSERT_MODEL_SQL = QLatin1String(R"(
-        INSERT INTO model(name, path) VALUES (?, ?)
+        INSERT INTO model(name, path, backendType) VALUES (?, ?, ?)
         )");
 
 const auto READ_MODEL_SQL = QLatin1String(R"(
-        SELECT id, name, path FROM model
+        SELECT id, name, path, apiKey, backendType FROM model
         )");
 
 const auto UPDATE_PATH_MODEL_SQL = QLatin1String(R"(
         UPDATE model SET path=? Where id=?
+        )");
+
+
+const auto UPDATE_APIKEY_CONVERSATION_SQL = QLatin1String(R"(
+        UPDATE model SET apiKey=? Where id=?
         )");
 
 const auto DELETE_MODEL_SQL = QLatin1String(R"(
@@ -113,7 +120,8 @@ const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
 //----------------------------------**Function Query**------------------------------//
 QSqlError initDb();
 
-Model* insertModel(const QString &name, const QString &path);
+Model* insertModel(const QString &name, const QString &path, Model::BackendType backendType = Model::BackendType::LocalModel);
+
 int insertConversation(const QString &title, const QDateTime date);
 int insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
                   const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date);
@@ -125,9 +133,10 @@ QList<Model*> readModel();
 QList<Chat*> readConversation();
 QSqlError readMessage(Message *root, const int &conversation_id);
 
-QSqlError updateModelPath(const int &id, const QString &path);
-QSqlError updateConversationName(const int &id, const QString &name);
-QSqlError updateConversationDate(const int &id, const QDateTime date);
+QSqlError updateModelPath(int id, const QString &path);
+QSqlError updateConversationName(int id, const QString &name);
+QSqlError updateConversationDate(int id, const QDateTime date);
+QSqlError updateModelApiKey(int id, const QString &apiKey);
 
 //-------------------------------**End Function Query**---------------------------//
 }

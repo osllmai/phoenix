@@ -29,7 +29,10 @@ QSqlError phoenix_databace::initDb(){
     return QSqlError();
 }
 
-Model* phoenix_databace::insertModel(const QString &name, const QString &path){
+Model *phoenix_databace::insertModel(const QString &name,
+                                     const QString &path,
+                                     Model::BackendType backendType)
+{
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     Model *model = nullptr;
 
@@ -43,6 +46,7 @@ Model* phoenix_databace::insertModel(const QString &name, const QString &path){
         return model;
     query.addBindValue(name);
     query.addBindValue(path);
+    query.addBindValue(static_cast<int>(backendType));
     query.exec();
 
     model = new Model(query.lastInsertId().toInt() ,0 ,0 ,name ,"","","",path ,"","","","","","./images/Phoenix.svg" ,0,false ,false );
@@ -158,17 +162,34 @@ QList<Model*> phoenix_databace::readModel(){
     QList<Model*> notExistListr;
     while(query.next()){
         int id = query.value(0).toInt();
-        QString name = query.value(1).toString();
-        QString path = query.value(2).toString();
-        bool fileExist = true;
-        QFile file(path);
-        if (!file.exists())
-            fileExist = false;
-        Model *model = new Model(id,0,0,name,"","","",path,"","","","","","./images/Phoenix.svg",0,false,fileExist);
+        QString name = query.value("name").toString();
+        QString path = query.value("path").toString();
+
+        bool fileExist = QFile::exists(path.remove("file:///"));
+
+        auto model = new Model(id,
+                               0,
+                               0,
+                               name,
+                               "",
+                               "",
+                               "",
+                               path,
+                               "",
+                               "",
+                               "",
+                               "",
+                               "",
+                               "./images/Phoenix.svg",
+                               0,
+                               false,
+                               fileExist);
+
+        qDebug() << name << query.value("backendType");
+        model->setBackendType(static_cast<Model::BackendType>(query.value("backendType").toInt()));
+        model->setApiKey(query.value("apiKey").toString());
+
         models.append(model);
-        if(!fileExist){
-            notExistListr.append(model);
-        }
     }
     db.close();
     while(notExistListr.size()>0){
@@ -249,7 +270,7 @@ QSqlError phoenix_databace::readMessage(Message *root, const int &conversation_i
     return QSqlError();
 }
 
-QSqlError phoenix_databace::updateModelPath(const int &id, const QString &path){
+QSqlError phoenix_databace::updateModelPath(int id, const QString &path){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
@@ -303,3 +324,22 @@ QSqlError phoenix_databace::updateConversationDate(const int &id, const QDateTim
     return QSqlError();
 }
 //-------------------------------**End Function Query**---------------------------//
+
+QSqlError phoenix_databace::updateModelApiKey(int id, const QString &apiKey)
+{
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("./phoenix.db");
+    if (!db.open())
+        return db.lastError();
+
+    QSqlQuery query(db);
+
+    if (!query.prepare(UPDATE_APIKEY_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(apiKey);
+    query.addBindValue(id);
+    query.exec();
+
+    db.close();
+    return QSqlError();
+}

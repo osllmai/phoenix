@@ -1,12 +1,12 @@
 #ifndef CHATLLM_H
 #define CHATLLM_H
 
-#include <QObject>
+#include "abstractchatprovider.h"
 #include <QThread>
 #include <QDebug>
 
 class Chat;
-class ChatLLM : public QObject
+class ChatLLM : public AbstractChatProvider
 {
     Q_OBJECT
 

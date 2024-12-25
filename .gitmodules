@@ -1,6 +1,3 @@
 [submodule "phoenix/llama.cpp-mainline"]
 	path = phoenix/llama.cpp-mainline
 	url = https://github.com/nomic-ai/llama.cpp.git
-[submodule "phoenix_qt/3rdparty/SortFilterProxyModel"]
-	path = phoenix_qt/3rdparty/SortFilterProxyModel
-	url = https://github.com/HamedMasafi/SortFilterProxyModel.git

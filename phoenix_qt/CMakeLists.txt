@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
 if(APPLE)
   option(BUILD_UNIVERSAL "Build a Universal binary on macOS" OFF)
@@ -27,14 +28,13 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Charts Qml Quick Sql)
 
 add_subdirectory(../phoenix/ llmodel)
 
-
 qt_standard_project_setup(REQUIRES 6.5)
 
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# set(CMAKE_AUTOUIC ON)
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -187,6 +187,9 @@ qt_add_qml_module(app${PROJECTNAME}
         database.h database.cpp
         message.h message.cpp
         pluginloader.h pluginloader.cpp
+        abstractchatprovider.h abstractchatprovider.cpp
+        providers/openai.h providers/openai.cpp
+        modellistfilter.h modellistfilter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

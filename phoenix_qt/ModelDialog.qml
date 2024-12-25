@@ -1,7 +1,9 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Templates 2.1 as T
 import Qt5Compat.GraphicalEffects
+import Phoenix
 
 Item {
     id: root
@@ -32,9 +34,20 @@ Item {
 
     property var fontFamily
 
-    property var modelListModel
+    property CurrentModelList modelListModel
     signal goToModelPage()
     signal loadModelDialog(int indexModel)
+
+    ModelListFilter {
+        id: offlineModels
+        currentModelList: modelListModel
+        backendType: ModelListFilter.LocalModel
+    }
+    ModelListFilter {
+        id: onlineModels
+        currentModelList: modelListModel
+        backendType: ModelListFilter.OnlineProvider
+    }
 
     Rectangle{
         id: modelSettings
@@ -208,7 +221,8 @@ Item {
                         ListView {
                             id: historylist
                             anchors.fill: parent
-                            model: root.modelListModel
+                            model: offlineModels
+                            // Component.onCompleted: chatListModel.loadChats()
                             spacing: 5
 
                             delegate: Rectangle{
@@ -266,8 +280,18 @@ Item {
                                         onHoveredChanged: {
                                             if(containsMouse){
                                                 delegateChat.color= root.hoverButtonColor
+                                                //     if(root.myChatListModel.currentChat !== root.myChatListModel.getChat(root.myIndex) ){
+                                                //         backgroundId.color = root.hoverButtonColor
+                                                //         chatIcon.open()
+                                                //     }
                                             }else{
                                                 delegateChat.color= root.normalButtonColor
+                                                //     if(root.myChatListModel.currentChat === root.myChatListModel.getChat(root.myIndex)){
+                                                //         backgroundId.color=root.selectButtonColor
+                                                //     }else{
+                                                //         backgroundId.color=root.normalButtonColor
+                                                //         // chatIcon.close()
+                                                //     }
                                             }
                                         }
                                     }
@@ -306,12 +330,29 @@ Item {
                 }
             }
 
-            Rectangle {
+            Item {
                 id: modelSpace
-                radius: 4
+                // radius: 4
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                color: "#00ffffff"
+                // color: "red"
+
+                ListView {
+                    id: onlineModelslist
+                    anchors.fill: parent
+                    model: onlineModels
+                    // Component.onCompleted: chatListModel.loadChats()
+                    spacing: 5
+
+                    // required property string name: model.name
+                    delegate: ItemDelegate {
+                        text: model.name
+                        width: ListView.view.width
+
+                        // onClicked:
+                    }
+                }
+
             }
         }
     }

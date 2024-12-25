@@ -1,12 +1,45 @@
 #include "model.h"
 
+Model::Model(QObject *parent)
+    : QObject{parent}
+{}
 
-Model::Model(const int &id, const double &fileSize, const int &ramRamrequired,  const QString &name, const QString &information, const QString &fileName,
-                        const QString &url, const QString &directoryPath,  const QString &parameters, const QString &quant, const QString &type, const QString &promptTemplate,
-                        const QString &systemPrompt, const QString &icon, const double &downloadPercent, const bool &isDownloading, const bool &downloadFinished, QObject *parent)
-    : m_id(id), m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_name(name), m_information(information), m_fileName(fileName),
-    m_url(url), m_directoryPath(directoryPath), m_parameters(parameters), m_quant(quant), m_type(type), m_promptTemplate(promptTemplate),
-    m_systemPrompt(systemPrompt), m_icon(icon), m_downloadPercent(downloadPercent), m_isDownloading(isDownloading), m_downloadFinished(downloadFinished), QObject(parent)
+Model::Model(int id,
+             double fileSize,
+             int ramRamrequired,
+             const QString &name,
+             const QString &information,
+             const QString &fileName,
+             const QString &url,
+             const QString &directoryPath,
+             const QString &parameters,
+             const QString &quant,
+             const QString &type,
+             const QString &promptTemplate,
+             const QString &systemPrompt,
+             const QString &icon,
+             double downloadPercent,
+             bool isDownloading,
+             bool downloadFinished,
+             QObject *parent)
+    : m_id(id)
+    , m_fileSize(fileSize)
+    , m_ramRamrequired(ramRamrequired)
+    , m_name(name)
+    , m_information(information)
+    , m_fileName(fileName)
+    , m_url(url)
+    , m_directoryPath(directoryPath)
+    , m_parameters(parameters)
+    , m_quant(quant)
+    , m_type(type)
+    , m_promptTemplate(promptTemplate)
+    , m_systemPrompt(systemPrompt)
+    , m_icon(icon)
+    , m_downloadPercent(downloadPercent)
+    , m_isDownloading(isDownloading)
+    , m_downloadFinished(downloadFinished)
+    , QObject(parent)
 {}
 
 Model::~Model(){
@@ -207,3 +240,28 @@ void Model::setDownloadFinished(const bool downloadFinished){
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
+Model::BackendType Model::backendType() const
+{
+    return m_backendType;
+}
+
+void Model::setBackendType(BackendType newBackendType)
+{
+    if (m_backendType == newBackendType)
+        return;
+    m_backendType = newBackendType;
+    emit backendTypeChanged();
+}
+
+QString Model::apiKey() const
+{
+    return m_apiKey;
+}
+
+void Model::setApiKey(const QString &newApiKey)
+{
+    if (m_apiKey == newApiKey)
+        return;
+    m_apiKey = newApiKey;
+    emit apiKeyChanged();
+}

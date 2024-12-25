@@ -1,111 +1,76 @@
 #include "modellist.h"
 
-#include <QtSql>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QDebug>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QtSql>
 
 ModelList::ModelList(QObject *parent)
-    : QAbstractListModel(parent),m_currentModelList(new CurrentModelList(this)), m_downloadProgress(0)
+    : QAbstractListModel(parent)
+    , m_currentModelList(new CurrentModelList(this))
+    , m_downloadProgress(0)
 {
     //read from database
-    auto modelsList = phoenix_databace::readModel();
-    _data.reserve(modelsList.size());
-    for (auto &model : modelsList) {
-        _data << new DataItem{QSharedPointer<Model>{model}};
-    }
+    _models = phoenix_databace::readModel();
+
     readModelFromJSONFile();
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
 //*------------------------------------------------------------------------------* QAbstractItemModel interface *------------------------------------------------------------------------------*//
-int ModelList::rowCount(const QModelIndex &parent) const {
+int ModelList::rowCount(const QModelIndex &parent) const
+{
     Q_UNUSED(parent)
-    return _data.size();
+    return _models.size();
 }
 
-QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) const {
-    if (!index.isValid() || index.row() < 0 || index.row() >= _data.count())
+QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) const
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= _models.count())
         return {};
 
     //The index is valid
-    auto row = _data[index.row()];
+    auto model = _models[index.row()];
 
     switch (static_cast<ChatlRoles>(role)) {
     case IdRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->id();
+        return model->id();
     case NameRole:
-        if (!row->model.isNull())
-            return row->model->name();
-        if (!row->provider.isNull())
-            return row->provider->name;
+        return model->name();
     case InformationRole:
-        if (!row->model.isNull())
-            return row->model->information();
-        if (!row->provider.isNull())
-            return row->provider->description;
+        return model->information();
     case FileSizeRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->fileSize();
+        return model->fileSize();
     case RamRamrequiredRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->ramRamrequired();
+        return model->ramRamrequired();
     case ParametersRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->parameters();
+        return model->parameters();
     case QuantRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->quant();
+        return model->quant();
     case TypeRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->type();
+        return model->type();
     case PromptTemplateRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->promptTemplate();
+        return model->promptTemplate();
     case SystemPromptRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->systemPrompt();
+        return model->systemPrompt();
     case FileNameRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->fileName();
+        return model->fileName();
     case UrlRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->url();
+        return model->url();
     case DirectoryPathRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->directoryPath();
+        return model->directoryPath();
     case IconModelRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->icon();
+        return model->icon();
     case DownloadPercentRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->downloadPercent();
+        return model->downloadPercent();
     case IsDownloadingRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->isDownloading();
+        return model->isDownloading();
     case DownloadFinishedRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->downloadFinished();
+        return model->downloadFinished();
 
     case BackendTypeRole:
-        return QVariant::fromValue(row->type);
+        return QVariant::fromValue(model->backendType());
     }
 
     return {};
@@ -137,124 +102,123 @@ QHash<int, QByteArray> ModelList::roleNames() const
     // clang-format on
 }
 
-Qt::ItemFlags ModelList::flags(const QModelIndex &index) const {
+Qt::ItemFlags ModelList::flags(const QModelIndex &index) const
+{
     if (!index.isValid())
         return Qt::NoItemFlags;
     return Qt::ItemIsEditable;
 }
 
-bool ModelList::setData(const QModelIndex &index, const QVariant &value, int role) {
-    auto row  =_data[index.row()];
-    if (row->model.isNull())
-        return false;
+bool ModelList::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    auto model = _models[index.row()];
 
-    auto model = row->model;
     bool somethingChanged{false};
 
     switch (role) {
     case IdRole:
-        if( model->id()!= value.toInt()){
+        if (model->id() != value.toInt()) {
             model->setId(value.toInt());
             somethingChanged = true;
         }
         break;
     case FileSizeRole:
-        if( model->fileSize()!= value.toDouble()){
+        if (model->fileSize() != value.toDouble()) {
             model->setFileSize(value.toDouble());
             somethingChanged = true;
         }
         break;
     case RamRamrequiredRole:
-        if( model->ramRamrequired()!= value.toInt()){
+        if (model->ramRamrequired() != value.toInt()) {
             model->setRamRamrequired(value.toInt());
             somethingChanged = true;
         }
         break;
     case ParametersRole:
-        if( model->parameters()!= value.toString()){
+        if (model->parameters() != value.toString()) {
             model->setParameters(value.toString());
             somethingChanged = true;
         }
         break;
     case QuantRole:
-        if( model->quant()!= value.toString()){
+        if (model->quant() != value.toString()) {
             model->setQuant(value.toString());
             somethingChanged = true;
         }
         break;
     case TypeRole:
-        if( model->type()!= value.toString()){
+        if (model->type() != value.toString()) {
             model->setType(value.toString());
             somethingChanged = true;
         }
         break;
     case PromptTemplateRole:
-        if( model->promptTemplate()!= value.toString()){
+        if (model->promptTemplate() != value.toString()) {
             model->setPromptTemplate(value.toString());
             somethingChanged = true;
         }
         break;
     case SystemPromptRole:
-        if( model->systemPrompt()!= value.toString()){
+        if (model->systemPrompt() != value.toString()) {
             model->setSystemPrompt(value.toString());
             somethingChanged = true;
         }
         break;
     case NameRole:
-        if( model->name()!= value.toString()){
+        if (model->name() != value.toString()) {
             model->setName(value.toString());
             somethingChanged = true;
         }
         break;
     case InformationRole:
-        if( model->information()!= value.toString()){
+        if (model->information() != value.toString()) {
             model->setInformation(value.toString());
             somethingChanged = true;
         }
         break;
     case FileNameRole:
-        if( model->fileName()!= value.toString()){
+        if (model->fileName() != value.toString()) {
             model->setFileName(value.toString());
             somethingChanged = true;
         }
         break;
     case UrlRole:
-        if( model->url()!= value.toString()){
+        if (model->url() != value.toString()) {
             model->setUrl(value.toString());
             somethingChanged = true;
         }
         break;
     case DirectoryPathRole:
-        if( model->directoryPath()!= value.toString()){
+        if (model->directoryPath() != value.toString()) {
             model->setDirectoryPath(value.toString());
             somethingChanged = true;
         }
         break;
     case IconModelRole:
-        if( model->icon()!= value.toString()){
+        if (model->icon() != value.toString()) {
             model->setIcon(value.toString());
             somethingChanged = true;
         }
         break;
     case DownloadPercentRole:
-        if( model->downloadPercent()!= value.toDouble()){
+        if (model->downloadPercent() != value.toDouble()) {
             model->setDownloadPercent(value.toDouble());
             somethingChanged = true;
         }
         break;
     case IsDownloadingRole:
-        if( model->isDownloading()!= value.toBool()){
+        if (model->isDownloading() != value.toBool()) {
             model->setIsDownloading(value.toBool());
             somethingChanged = true;
         }
         break;
     case DownloadFinishedRole:
-        if( model->downloadFinished()!= value.toBool()){
+        if (model->downloadFinished() != value.toBool()) {
             model->setDownloadFinished(value.toBool());
             somethingChanged = true;
         }
     }
-    if(somethingChanged){
+    if (somethingChanged) {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -262,29 +226,33 @@ bool ModelList::setData(const QModelIndex &index, const QVariant &value, int rol
 }
 //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
-
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
-CurrentModelList *ModelList::currentModelList() const{
-
+CurrentModelList *ModelList::currentModelList() const
+{
     return m_currentModelList;
 }
-double ModelList::downloadProgress() const{
-
+double ModelList::downloadProgress() const
+{
     return m_downloadProgress;
 }
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
-
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Write Property  *----------------------------------------------------------------------------------------*//
-void ModelList::setCurrentModelList(CurrentModelList *currentModelList){
-
-    if(m_currentModelList == currentModelList)
+void ModelList::setCurrentModelList(CurrentModelList *currentModelList)
+{
+    if (m_currentModelList == currentModelList)
         return;
     m_currentModelList = currentModelList;
     emit currentModelListChanged();
 }
+
+Model *ModelList::at(int index) const
+{
+    return _models.at(index);
+}
+
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 <<<<<<< HEAD
@@ -294,46 +262,60 @@ void ModelList::downloadRequest(const int index , QString directoryPath){
 =======
 void ModelList::downloadRequest(int index, const QString &directoryPath)
 {
-    auto row  =_data[index];
-    if (row->model.isNull())
-        return;
+    auto model = _models[index];
 
     auto model = row->model;
->>>>>>> 584d027 (--wip-- [skip ci])
 
     model->setDirectoryPath(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
 
-    Download *download = new Download(index, model->url(), model->directoryPath());
-    if(downloads.size()<3){
-        connect(download, &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
-        connect(download, &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
-        download->downloadModel();
-    }
+    QString modelPath = model->directoryPath();
+    modelPath.remove("file:///");
+
+    Download *download = new Download(index);
+    connect(download,
+            &Download::downloadProgress,
+            this,
+            &ModelList::handleDownloadProgress,
+            Qt::QueuedConnection);
+    connect(download,
+            &Download::downloadFinished,
+            this,
+            &ModelList::handleDownloadFinished,
+            Qt::QueuedConnection);
+    download->downloadModel(model->url(), modelPath);
     downloads.append(download);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
-
 }
 
-void ModelList::addModel(QString directoryPath){
+void ModelList::setApiKey(int id, const QString &apiKey)
+{
+    auto modelIt = std::find_if(_models.begin(), _models.end(), [&id](Model *m) {
+        return m->id() == id;
+    });
+    if (modelIt == _models.end())
+        return;
+    phoenix_databace::updateModelApiKey(id, apiKey);
+    m_currentModelList->addModel(*modelIt);
+}
 
-    directoryPath.remove("file:///");
+void ModelList::addModel(const QString &directoryPath)
+{
+    QString modelPath = directoryPath;
+    modelPath.remove("file:///");
 
     QFileInfo fileInfo(directoryPath);
     QString fileName = fileInfo.baseName();
     double fileSize = (fileInfo.size()/10000000)*0.01;
 
     //add from database
-    Model *model =phoenix_databace::insertModel(fileName, directoryPath);
+    Model *model =phoenix_databace::insertModel(name, directoryPath);
     model->setDownloadFinished(true);
-    model->setFileSize(fileSize);
-    model->setIcon("images/userIcon.svg");
-    model->setInformation("This model has been successfully added to the application by you.");
-    if(model != nullptr){
-        const int index = _data.size();
+    if (model != nullptr) {
+        const int index = _models.size();
         beginInsertRows(QModelIndex(), index, index);
-        _data << new DataItem{QSharedPointer<Model>{model}};
+        _models << model;
         endInsertRows();
         m_currentModelList->addModel(model);
     }
@@ -348,15 +330,10 @@ void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceiv
 =======
 void ModelList::handleDownloadProgress(int index, qint64 bytesReceived, qint64 bytesTotal)
 {
-    auto row  =_data[index];
-    if (row->model.isNull())
-        return;
+    auto model = _models[index];
 
-    auto model = row->model;
-
->>>>>>> 584d027 (--wip-- [skip ci])
-    qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
-    model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+    qDebug() << static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal);
+    model->setDownloadPercent(static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal));
 
     updateDownloadProgress();
 
@@ -364,74 +341,57 @@ void ModelList::handleDownloadProgress(int index, qint64 bytesReceived, qint64 b
 
 }
 
-<<<<<<< HEAD
-void ModelList::handleDownloadFinished(const int index){
-
-    Model *model = models[index];
-=======
-void ModelList::handleDownloadFinished(int index){
-    auto row  =_data[index];
-    if (row->model.isNull())
-        return;
-
-    auto model = row->model;
-
+void ModelList::handleDownloadFinished(int index)
+{
+    auto model = _models[index];
 
 >>>>>>> 584d027 (--wip-- [skip ci])
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
-    model->setDownloadPercent(0);
-    phoenix_databace::updateModelPath(model->id(),model->directoryPath());
+    phoenix_databace::updateModel(model->id(), model->directoryPath());
 
-    m_currentModelList->addModel(model.data());
+    m_currentModelList->addModel(model);
 
     updateDownloadProgress();
     deleteDownloadModel(index);
 
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
+    emit dataChanged(createIndex(index, 0),
+                     createIndex(index, 0),
+                     {IsDownloadingRole, DownloadFinishedRole});
     emit currentModelListChanged();
 
 }
 
-<<<<<<< HEAD
-void ModelList::cancelRequest(const int index){
+void ModelList::cancelRequest(int index)
+{
+    auto model = _models[index];
 
-    Model *model = models[index];
-    for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
-=======
-void ModelList::cancelRequest(int index){
-    auto row  =_data[index];
-    if (row->model.isNull())
-        return;
-
-    auto model = row->model;
-
-
-    for(int indexSearch =0 ;indexSearch<downloads.size();indexSearch++)
->>>>>>> 584d027 (--wip-- [skip ci])
-        if(downloads[indexSearch]->index() == index)
+    for (int indexSearch = 0; indexSearch < downloads.size(); indexSearch++)
+        if (downloads[indexSearch]->index() == index)
             downloads[indexSearch]->cancelDownload();
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     model->setDownloadPercent(0);
 
     updateDownloadProgress();
-    deleteDownloadModel(index);
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
-
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 }
 
-void ModelList::deleteRequest(const int index){
+void ModelList::deleteRequest(int index)
+{
+    auto model = _models[index];
 
-    Model *model = models[index];
+    for (int indexSearch = 0; indexSearch < downloads.size(); indexSearch++)
+        if (downloads[indexSearch]->index() == index)
+            downloads[indexSearch]->removeModel();
 
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
-    m_currentModelList->deleteModel(model.data());
+    m_currentModelList->deleteModel(model);
 
-    if (model->url() == "") {
+    if (model->url().isEmpty()) {
         beginRemoveRows(QModelIndex(), index, index);
-        delete _data.takeAt(index);
+        delete _models.takeAt(index);
         endRemoveRows();
 
         //delete from database
@@ -445,7 +405,10 @@ void ModelList::deleteRequest(const int index){
         phoenix_databace::updateModelPath(model->id(),"");
     }
 
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
+    emit dataChanged(createIndex(index, 0),
+                     createIndex(index, 0),
+                     {DownloadFinishedRole, IsDownloadingRole});
+
     emit currentModelListChanged();
 
 }
@@ -468,14 +431,13 @@ void ModelList::loadLocalModelsFromJson(QJsonArray jsonArray)
         QString systemPrompt = jsonObj["systemPrompt"].toString();
         QString icon = jsonObj["icon"].toString();
 
+        auto existingModelIt = std::find_if(_models.begin(),
+                                            _models.end(),
+                                            [&modelName](Model *model) {
+                                                return model->name() == modelName;
+                                            });
 
-        auto existingModelIt= std::find_if(_data.begin(),_data.end(),[&modelName](DataItem*item){
-            if (item->model.isNull())
-                return false;
-            return item->model->name() == modelName;
-        });
-
-        if (existingModelIt == _data.end()) {
+        if (existingModelIt == _models.end()) {
             auto model = phoenix_databace::insertModel(modelName, "");
             if (model != nullptr) {
                 model->setFileName(modelFilename);
@@ -490,14 +452,14 @@ void ModelList::loadLocalModelsFromJson(QJsonArray jsonArray)
                 model->setSystemPrompt(systemPrompt);
                 model->setIcon(icon);
 
-                const int index = _data.size();
+                const int index = _models.size();
                 beginInsertRows(QModelIndex(), index, index);
-                _data << new DataItem{QSharedPointer<Model>{model}};
+                _models << model;
 
                 endInsertRows();
             }
         } else {
-            auto existingModel = (*existingModelIt)->model;
+            auto existingModel = *existingModelIt;
 
             existingModel->setFileName(modelFilename);
             existingModel->setFileSize(modelFilesize);
@@ -512,37 +474,40 @@ void ModelList::loadLocalModelsFromJson(QJsonArray jsonArray)
             existingModel->setIcon(icon);
         }
     }
-
-    auto index = static_cast<int>(_data.size()) - 1;
-
-    std::for_each(_data.rbegin(), _data.rend(), [&index, this](DataItem *item){
-        if (item->model.isNull())
-            return;
-
-        if (item->model->downloadFinished())
-            m_currentModelList->addModel(item->model.data());
-        else if (item->model->url() == "") {
-            deleteRequest(index);
-        }
-
-        index--;
-    });
 }
 
-void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray) {
+void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray)
+{
     for (const QJsonValue &value : jsonArray) {
         QJsonObject jsonObj = value.toObject();
 
         if (jsonObj == QJsonObject{})
             continue;
 
-        auto d = new OnlineProviderData;
-        d->name = jsonObj.value("name").toString();
-        d->description = jsonObj.value("description").toString();
+          auto model = new Model{this};
 
-        _data << new DataItem{QSharedPointer<OnlineProviderData>{d}};
+        auto modelName = jsonObj.value("name").toString();
+        model->setName(modelName);
+        model->setInformation(jsonObj.value("description").toString());
+        model->setBackendType(Model::BackendType::OnlineProvider);
+
+        auto existingModelIt = std::find_if(_models.begin(),
+                                            _models.end(),
+                                            [&modelName](Model *model) {
+                                                return model->name() == modelName;
+                                            });
+
+        if (existingModelIt == _models.end()) {
+            auto model = phoenix_databace::insertModel(modelName,
+                                                       "",
+                                                       Model::BackendType::OnlineProvider);
+
+            const int index = _models.size();
+            beginInsertRows(QModelIndex(), index, index);
+            _models << model;
+            endInsertRows();
+        }
     }
-
 }
 
 void ModelList::readModelFromJSONFile()
@@ -570,16 +535,38 @@ void ModelList::readModelFromJSONFile()
     auto obj = document.object();
     loadLocalModelsFromJson(obj.value("offlineModels").toArray());
     loadOnlineProvidersFromJson(obj.value("onlineModels").toArray());
+
+    auto index = static_cast<int>(_models.size()) - 1;
+
+    std::for_each(_models.rbegin(), _models.rend(), [&index, this](Model *model){
+        switch(model->backendType()) {
+        case Model::BackendType::LocalModel:
+            if (model->downloadFinished())
+                m_currentModelList->addModel(model);
+            else if (model->url() == "") {
+                qDebug() << "Model" << model->name() << "removed";
+                deleteRequest(index);
+            }
+            break;
+        case Model::BackendType::OnlineProvider:
+            if (!model->apiKey().isEmpty())
+                m_currentModelList->addModel(model);
+            break;
+        }
+
+
+        index--;
+    });
 }
 
-void ModelList::updateDownloadProgress(){
+void ModelList::updateDownloadProgress()
+{
     double totalBytesDownload = 0;
     double receivedBytesDownload = 0;
-    for (auto &&row : _data)
-        if (!row->model.isNull()) {
-            totalBytesDownload += 1;
-            receivedBytesDownload += row->model->downloadPercent();
-        }
+    for (auto &&model : _models) {
+        totalBytesDownload += 1;
+        receivedBytesDownload += model->downloadPercent();
+    }
 
     if (totalBytesDownload != 0)
         m_downloadProgress = (receivedBytesDownload / totalBytesDownload) * 100;

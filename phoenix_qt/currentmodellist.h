@@ -34,7 +34,8 @@ class CurrentModelList : public QAbstractListModel
         IconModelRole,
         DownloadPercentRole,
         IsDownloadingRole,
-        DownloadFinishedRole
+        DownloadFinishedRole,
+        BackendTypeRole
     };
 
 public:
@@ -53,6 +54,8 @@ public:
     int size() const;
     void addModel(Model *model);
     void deleteModel(Model *model);
+
+    Model *at(int index) const;
 
 signals:
     void sizeChanged();

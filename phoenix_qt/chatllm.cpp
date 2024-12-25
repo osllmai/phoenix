@@ -22,7 +22,7 @@ std::string prompt_template;
 
 
 ChatLLM::ChatLLM(Chat *parent) :
-    QObject{nullptr},
+    AbstractChatProvider{nullptr},
     stop(false)
 {
 

@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls 2.15
+import QtQuick.Controls
 import QtQuick.Templates 2.1 as T
 import QtQuick.Layouts
 import QtQuick.Dialogs
@@ -118,20 +118,49 @@ Item{
             wrapMode: Text.Wrap
             font.family: fontFamily
         }
+
+        ColumnLayout {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 20
+
+            Label {
+                text: "Api key" + (myModel.apiKey === '' || myModel.apiKey === null ? '' : " (already set)")
+                Layout.fillWidth: true
+            }
+
+            TextField {
+                Layout.fillWidth: true
+                id: apiKeyTextField
+                placeholderText: "Api key"
+            }
+
+            Button{
+                id:downloadButton
+                text: "Add"
+
+                Layout.fillWidth: true
+                Layout.topMargin: 10
+
+                onClicked: modelListModel.setApiKey(myModel.id, apiKeyTextField.text)
+            }
+
+        }
+
         Rectangle{
-            visible: false
             id:informationAboutDownload
             height: 55
             color: "#00ffffff"
             radius: 10
             border.color: informationTextColor
             border.width: 1
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: downloadButton.top
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-            anchors.bottomMargin: 10
+            visible: false
+
+
+/*
             Rectangle{
                 id:fileSizeBox
                 anchors.left: parent.left
@@ -294,8 +323,9 @@ Item{
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
-
+*/
         }
+
 
         layer.enabled: true
         layer.effect: Glow {
