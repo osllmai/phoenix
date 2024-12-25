@@ -37,6 +37,16 @@ QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) c
         if (row->type != BackendType::LocalModel)
             return {};
         return row->model->id();
+    case NameRole:
+        if (!row->model.isNull())
+            return row->model->name();
+        if (!row->provider.isNull())
+            return row->provider->name;
+    case InformationRole:
+        if (!row->model.isNull())
+            return row->model->information();
+        if (!row->provider.isNull())
+            return row->provider->description;
     case FileSizeRole:
         if (row->type != BackendType::LocalModel)
             return {};
@@ -65,15 +75,6 @@ QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) c
         if (row->type != BackendType::LocalModel)
             return {};
         return row->model->systemPrompt();
-    case NameRole:
-        if (!row->model.isNull())
-            return row->model->name();
-        if (!row->provider.isNull())
-            return row->provider->name;
-    case InformationRole:
-        if (row->type != BackendType::LocalModel)
-            return {};
-        return row->model->information();
     case FileNameRole:
         if (row->type != BackendType::LocalModel)
             return {};
@@ -104,32 +105,36 @@ QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) c
         return row->model->downloadFinished();
 
     case BackendTypeRole:
-        row->type;
+        return QVariant::fromValue(row->type);
     }
 
     return {};
 }
 
-QHash<int, QByteArray> ModelList::roleNames() const {
-    QHash<int, QByteArray> roles;
-    roles[IdRole] = "id";
-    roles[FileSizeRole] = "fileSize";
-    roles[RamRamrequiredRole] = "ramRamrequired";
-    roles[ParametersRole] = "parameters";
-    roles[QuantRole] = "quant";
-    roles[TypeRole] = "type";
-    roles[PromptTemplateRole] = "promptTemplate";
-    roles[SystemPromptRole] = "systemPrompt";
-    roles[NameRole] = "name";
-    roles[InformationRole] = "information";
-    roles[FileNameRole] = "fileName";
-    roles[UrlRole] = "url";
-    roles[DirectoryPathRole] = "directoryPath";
-    roles[IconModelRole] = "icon";
-    roles[DownloadPercentRole] = "downloadPercent";
-    roles[IsDownloadingRole] = "isDownloading";
-    roles[DownloadFinishedRole] = "downloadFinished";
-    return roles;
+QHash<int, QByteArray> ModelList::roleNames() const
+{
+    // clang-format off
+    return {
+        {IdRole, "id"},
+        {FileSizeRole, "fileSize"},
+        {RamRamrequiredRole, "ramRamrequired"},
+        {ParametersRole, "parameters"},
+        {QuantRole, "quant"},
+        {TypeRole, "type"},
+        {PromptTemplateRole, "promptTemplate"},
+        {SystemPromptRole, "systemPrompt"},
+        {NameRole, "name"},
+        {InformationRole, "information"},
+        {FileNameRole, "fileName"},
+        {UrlRole, "url"},
+        {DirectoryPathRole, "directoryPath"},
+        {IconModelRole, "icon"},
+        {DownloadPercentRole, "downloadPercent"},
+        {IsDownloadingRole, "isDownloading"},
+        {DownloadFinishedRole, "downloadFinished"},
+        {BackendTypeRole, "backendType"}
+    };
+    // clang-format on
 }
 
 Qt::ItemFlags ModelList::flags(const QModelIndex &index) const {
@@ -533,6 +538,7 @@ void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray) {
 
         auto d = new OnlineProviderData;
         d->name = jsonObj.value("name").toString();
+        d->description = jsonObj.value("description").toString();
 
         _data << new DataItem{QSharedPointer<OnlineProviderData>{d}};
     }

@@ -380,6 +380,7 @@
   "onlineModels": [
     {
       "name": "Open AI",
+      "description": "Chat with chat gpt",
       "params": [
         {
           "name": "apiKey",

@@ -26,8 +26,10 @@ class ModelList : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+
     Q_PROPERTY(CurrentModelList *currentModelList READ currentModelList WRITE setCurrentModelList NOTIFY currentModelListChanged)
     Q_PROPERTY(int downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
+
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
         FileSizeRole,
@@ -105,6 +107,7 @@ private:
     class OnlineProviderData {
     public:
         QString name;
+        QString description;
     };
     class DataItem {
     public:
@@ -112,8 +115,8 @@ private:
         DataItem(QSharedPointer<Model> model);
 
         const BackendType type;
-        QSharedPointer<OnlineProviderData> provider;
-        QSharedPointer<Model >model;
+        const QSharedPointer<OnlineProviderData> provider;
+        const QSharedPointer<Model> model;
     };
     QList<DataItem*> _data;
     // QList<Model*> models;

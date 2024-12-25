@@ -51,8 +51,8 @@ public:
     //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
     int size() const;
-    void addModel( Model *model);
-    void deleteModel( Model *model);
+    void addModel(Model *model);
+    void deleteModel(Model *model);
 
 signals:
     void sizeChanged();

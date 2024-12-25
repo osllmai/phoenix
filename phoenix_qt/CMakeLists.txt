@@ -63,6 +63,7 @@ qt_add_qml_module(app${PROJECTNAME}
         DashbordItem.qml
         MyButton.qml
         ModelItem.qml
+        OnlineModelItem.qml
         DownloadModelButton.qml
         SettingsSliderItem.qml
         MySlider.qml
@@ -205,6 +206,7 @@ target_link_libraries(app${PROJECTNAME}
         Qt6::Sql
         Qt6::Core
         llmodel
+        SortFilterProxyModel
 )
 
 # set(COMPONENT_NAME_MAIN ${PROJECT_NAME})

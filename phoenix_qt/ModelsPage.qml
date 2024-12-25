@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import Phoenix
+import Qt.labs.qmlmodels
 
 Item {
     id: root
@@ -90,37 +91,73 @@ Item {
                         }
                         clip: true
 
-                        delegate: Rectangle{
-                            id: rectangleGridView
-                            width: gridView.cellWidth
-                            height: gridView.cellHeight
-                            color: root.backgroundPageColor
-                            ModelItem {
-                                id: indoxItem
-                                anchors.fill: parent
-                                anchors.margins: 20
-                                myModel: model
-                                myModelListModel: root.modelListModel
-                                myIndex: index
+                        delegate: DelegateChooser {
+                            role: 'backendType'
 
-                                backgroundPageColor: root.backgroundPageColor
-                                backgroungColor: window.backgroungColor
-                                glowColor: window.glowColor
-                                boxColor: root.boxColor
-                                headerColor: root.headerColor
-                                normalButtonColor: root.normalButtonColor
-                                selectButtonColor: root.selectButtonColor
-                                hoverButtonColor: root.hoverButtonColor
-                                fillIconColor: root.fillIconColor
+                            DelegateChoice {
+                                roleValue: ModelList.OnlineProvider
+                                delegate: Rectangle{
+                                    width: gridView.cellWidth
+                                    height: gridView.cellHeight
+                                    color: root.backgroundPageColor
+                                    OnlineModelItem {
+                                        anchors.fill: parent
+                                        anchors.margins: 20
+                                        myModel: model
+                                        myModelListModel: root.modelListModel
+                                        myIndex: index
 
-                                titleTextColor: root.titleTextColor
-                                informationTextColor: root.informationTextColor
-                                selectTextColor: root.selectTextColor
+                                        backgroundPageColor: root.backgroundPageColor
+                                        backgroungColor: window.backgroungColor
+                                        glowColor: window.glowColor
+                                        boxColor: root.boxColor
+                                        headerColor: root.headerColor
+                                        normalButtonColor: root.normalButtonColor
+                                        selectButtonColor: root.selectButtonColor
+                                        hoverButtonColor: root.hoverButtonColor
+                                        fillIconColor: root.fillIconColor
 
-                                fontFamily: root.fontFamily
+                                        titleTextColor: root.titleTextColor
+                                        informationTextColor: root.informationTextColor
+                                        selectTextColor: root.selectTextColor
 
-                                 xNotification: root.x
-                                yNotification: root.y
+                                        fontFamily: root.fontFamily
+                                    }
+                                }
+                            }
+
+                            DelegateChoice {
+                                roleValue: ModelList.LocalModel
+                                delegate: Rectangle{
+                                    id: rectangleGridView
+                                    width: gridView.cellWidth
+                                    height: gridView.cellHeight
+                                    color: root.backgroundPageColor
+                                    ModelItem {
+                                        id: indoxItem
+                                        anchors.fill: parent
+                                        anchors.margins: 20
+                                        myModel: model
+                                        myModelListModel: root.modelListModel
+                                        myIndex: index
+
+                                        backgroundPageColor: root.backgroundPageColor
+                                        backgroungColor: window.backgroungColor
+                                        glowColor: window.glowColor
+                                        boxColor: root.boxColor
+                                        headerColor: root.headerColor
+                                        normalButtonColor: root.normalButtonColor
+                                        selectButtonColor: root.selectButtonColor
+                                        hoverButtonColor: root.hoverButtonColor
+                                        fillIconColor: root.fillIconColor
+
+                                        titleTextColor: root.titleTextColor
+                                        informationTextColor: root.informationTextColor
+                                        selectTextColor: root.selectTextColor
+
+                                        fontFamily: root.fontFamily
+                                    }
+                                }
                             }
                         }
                     }
