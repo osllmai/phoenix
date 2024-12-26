@@ -47,6 +47,11 @@ qt_add_executable(app${PROJECTNAME}
     main.cpp
 )
 
+# qt_add_qml_module(app${PROJECTNAME}
+#     URI AppStyle
+#     VERSION 1.0
+#     QML_FILES
+# )
 qt_add_qml_module(app${PROJECTNAME}
     URI ${PROJECTNAME}
     VERSION 1.0
@@ -80,6 +85,11 @@ qt_add_qml_module(app${PROJECTNAME}
         SpeedDisplay.qml
         CustomDot.qml
         AnimationText.qml
+        Notification.qml
+
+        qtquickcontrols2.conf
+        style/qmldir
+        style/TabBar.qml
 
     RESOURCES
         "images/aboutIcon.svg"
@@ -185,7 +195,6 @@ qt_add_qml_module(app${PROJECTNAME}
         currentmodellist.h currentmodellist.cpp
         database.h database.cpp
         message.h message.cpp
-        pluginloader.h pluginloader.cpp
         abstractchatprovider.h abstractchatprovider.cpp
         providers/openai.h providers/openai.cpp
         modellistfilter.h modellistfilter.cpp

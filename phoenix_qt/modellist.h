@@ -59,18 +59,12 @@ public:
     Q_ENUM(BackendType)
 
     explicit ModelList(QObject *parent = nullptr);
-<<<<<<< HEAD
-    Q_INVOKABLE void downloadRequest(const int index, QString directoryPath);
-    Q_INVOKABLE void cancelRequest(const int index);
-    Q_INVOKABLE void deleteRequest(const int index);
-    Q_INVOKABLE void addModel(QString directoryPath);
-=======
+
     Q_INVOKABLE void downloadRequest(int index , const QString &directoryPath);
     Q_INVOKABLE void setApiKey(int id , const QString &apiKey);
     Q_INVOKABLE void cancelRequest(int index);
     Q_INVOKABLE void deleteRequest(int index);
     Q_INVOKABLE void addModel(const QString &directoryPath);
->>>>>>> 584d027 (--wip-- [skip ci])
 
     //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//
@@ -104,23 +98,8 @@ signals:
     void downloadProgressChanged();
 
 private:
-    class OnlineProviderData {
-    public:
-        QString name;
-        QString description;
-    };
-    class DataItem {
-    public:
-        DataItem(QSharedPointer<OnlineProviderData> provider);
-        DataItem(QSharedPointer<Model> model);
-
-        const BackendType type;
-        const QSharedPointer<OnlineProviderData> provider;
-        const QSharedPointer<Model> model;
-    };
-    // QList<DataItem*> _data;
-    QList<Model*> _models;
-    QList<Download*>downloads;
+    QList<Model *> _models;
+    QList<Download *> downloads;
     CurrentModelList *m_currentModelList;
     int m_downloadProgress;
 

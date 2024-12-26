@@ -255,35 +255,20 @@ Model *ModelList::at(int index) const
 
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-<<<<<<< HEAD
-void ModelList::downloadRequest(const int index , QString directoryPath){
+void ModelList::downloadRequest(int index , const QString &path){
+    auto directoryPath = QString{path}.remove("file:///");
 
-    directoryPath.remove("file:///");
-=======
-void ModelList::downloadRequest(int index, const QString &directoryPath)
-{
-    auto model = _models[index];
-
-    auto model = row->model;
+    Model *model = _models[index];
 
     model->setDirectoryPath(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
 
-    QString modelPath = model->directoryPath();
-    modelPath.remove("file:///");
-
-    Download *download = new Download(index);
-    connect(download,
-            &Download::downloadProgress,
-            this,
-            &ModelList::handleDownloadProgress,
-            Qt::QueuedConnection);
-    connect(download,
-            &Download::downloadFinished,
-            this,
-            &ModelList::handleDownloadFinished,
-            Qt::QueuedConnection);
-    download->downloadModel(model->url(), modelPath);
+    Download *download = new Download(index, model->url(), model->directoryPath());
+    if(downloads.size()<3){
+        connect(download, &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
+        connect(download, &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
+        download->downloadModel();
+    }
     downloads.append(download);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
@@ -300,22 +285,24 @@ void ModelList::setApiKey(int id, const QString &apiKey)
     m_currentModelList->addModel(*modelIt);
 }
 
-void ModelList::addModel(const QString &directoryPath)
+void ModelList::addModel(const QString &path)
 {
-    QString modelPath = directoryPath;
-    modelPath.remove("file:///");
+    auto directoryPath = QString{path}.remove("file:///");
 
     QFileInfo fileInfo(directoryPath);
     QString fileName = fileInfo.baseName();
     double fileSize = (fileInfo.size()/10000000)*0.01;
 
     //add from database
-    Model *model =phoenix_databace::insertModel(name, directoryPath);
+    Model *model =phoenix_databace::insertModel(fileName, directoryPath);
     model->setDownloadFinished(true);
-    if (model != nullptr) {
+    model->setFileSize(fileSize);
+    model->setIcon("images/userIcon.svg");
+    model->setInformation("This model has been successfully added to the application by you.");
+    if(model != nullptr){
         const int index = _models.size();
         beginInsertRows(QModelIndex(), index, index);
-        _models << model;
+        _models.append(model);
         endInsertRows();
         m_currentModelList->addModel(model);
     }
@@ -323,32 +310,26 @@ void ModelList::addModel(const QString &directoryPath)
 
 }
 
-<<<<<<< HEAD
-void ModelList::handleDownloadProgress(const int index, const qint64 bytesReceived, const qint64 bytesTotal){
-
-    Model *model = models[index];
-=======
-void ModelList::handleDownloadProgress(int index, qint64 bytesReceived, qint64 bytesTotal)
+void ModelList::handleDownloadProgress(const int index,
+                                       const qint64 bytesReceived,
+                                       const qint64 bytesTotal)
 {
-    auto model = _models[index];
-
+    Model *model = _models[index];
     qDebug() << static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal);
     model->setDownloadPercent(static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal));
 
     updateDownloadProgress();
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
-
 }
 
 void ModelList::handleDownloadFinished(int index)
 {
-    auto model = _models[index];
-
->>>>>>> 584d027 (--wip-- [skip ci])
+    Model *model = _models[index];
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
-    phoenix_databace::updateModel(model->id(), model->directoryPath());
+    model->setDownloadPercent(0);
+    phoenix_databace::updateModelPath(model->id(), model->directoryPath());
 
     m_currentModelList->addModel(model);
 
@@ -357,60 +338,55 @@ void ModelList::handleDownloadFinished(int index)
 
     emit dataChanged(createIndex(index, 0),
                      createIndex(index, 0),
-                     {IsDownloadingRole, DownloadFinishedRole});
+                     {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     emit currentModelListChanged();
-
 }
 
 void ModelList::cancelRequest(int index)
 {
-    auto model = _models[index];
-
-    for (int indexSearch = 0; indexSearch < downloads.size(); indexSearch++)
-        if (downloads[indexSearch]->index() == index)
+    Model *model = _models[index];
+    for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
+        if(downloads[indexSearch]->index() == index)
             downloads[indexSearch]->cancelDownload();
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     model->setDownloadPercent(0);
 
     updateDownloadProgress();
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
+    deleteDownloadModel(index);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
 }
 
 void ModelList::deleteRequest(int index)
 {
-    auto model = _models[index];
-
-    for (int indexSearch = 0; indexSearch < downloads.size(); indexSearch++)
-        if (downloads[indexSearch]->index() == index)
-            downloads[indexSearch]->removeModel();
+    Model *model = _models[index];
 
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     m_currentModelList->deleteModel(model);
 
-    if (model->url().isEmpty()) {
+    if (model->url() == "") {
         beginRemoveRows(QModelIndex(), index, index);
         delete _models.takeAt(index);
         endRemoveRows();
 
         //delete from database
         phoenix_databace::deleteModel(model->id());
+        delete model;
+
         // chat->unloadAndDeleteLater();
     } else if (model->directoryPath() != "") {
         QFile file(model->directoryPath());
-        if (file.exists()){
+        if (file.exists()) {
             file.remove();
         }
-        phoenix_databace::updateModelPath(model->id(),"");
+        phoenix_databace::updateModelPath(model->id(), "");
     }
 
     emit dataChanged(createIndex(index, 0),
                      createIndex(index, 0),
                      {DownloadFinishedRole, IsDownloadingRole});
-
     emit currentModelListChanged();
-
 }
 
 void ModelList::loadLocalModelsFromJson(QJsonArray jsonArray)
@@ -538,13 +514,19 @@ void ModelList::readModelFromJSONFile()
 
     auto index = static_cast<int>(_models.size()) - 1;
 
-    std::for_each(_models.rbegin(), _models.rend(), [&index, this](Model *model){
-        switch(model->backendType()) {
+    std::for_each(_models.rbegin(), _models.rend(), [&index, this](Model *model) {
+        switch (model->backendType()) {
         case Model::BackendType::LocalModel:
-            if (model->downloadFinished())
+            if (model->downloadFinished()) {
+                if (model->url().isEmpty()) {
+                    QFileInfo fileInfo(model->directoryPath());
+                    model->setFileSize((fileInfo.size() / 10000000) * 0.01);
+                    model->setIcon("images/userIcon.svg");
+                    model->setInformation(
+                        "This model has been successfully added to the application by you.");
+                }
                 m_currentModelList->addModel(model);
-            else if (model->url() == "") {
-                qDebug() << "Model" << model->name() << "removed";
+            } else if (model->url().isEmpty()) {
                 deleteRequest(index);
             }
             break;
@@ -553,7 +535,6 @@ void ModelList::readModelFromJSONFile()
                 m_currentModelList->addModel(model);
             break;
         }
-
 
         index--;
     });
@@ -578,12 +559,17 @@ void ModelList::updateDownloadProgress()
 
 }
 
-ModelList::DataItem::DataItem(QSharedPointer<OnlineProviderData> p)
-    : type{ModelList::BackendType::OnlineProvider}
-    , provider{p}
-{}
-
-ModelList::DataItem::DataItem(QSharedPointer<Model> m)
-    : type{ModelList::BackendType::LocalModel}
-    , model{m}
-{}
+void ModelList::deleteDownloadModel(const int index){
+    if(downloads.size()>3){
+        connect(downloads[3], &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
+        connect(downloads[3], &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
+        downloads[3]->downloadModel();
+    }
+    for(int searchIndex = 0; searchIndex<downloads.size(); searchIndex++){
+        if(downloads[searchIndex]->index() == index){
+            Download *download = downloads[searchIndex];
+            downloads.removeAt(searchIndex);
+            delete download;
+        }
+    }
+}

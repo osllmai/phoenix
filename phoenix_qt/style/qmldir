@@ -1,0 +1,4 @@
+import QtQuick.Controls.Basic auto
+
+module AppStyle
+TabBar 1.0 TabBar.qml

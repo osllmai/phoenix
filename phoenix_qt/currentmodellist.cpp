@@ -212,10 +212,7 @@ int CurrentModelList::size() const{
 
 void CurrentModelList::addModel(Model *model)
 {
-    auto exists = std::any_of(models.begin(), models.end(), [model](Model *m){
-        return m == model;
-    });
-    if (exists)
+    if (models.contains(model))
         return;
 
     const int index = models.size();

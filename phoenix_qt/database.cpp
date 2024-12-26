@@ -288,7 +288,7 @@ QSqlError phoenix_databace::updateModelPath(int id, const QString &path){
     return QSqlError();
 }
 
-QSqlError phoenix_databace::updateConversationName(const int &id, const QString &name){
+QSqlError phoenix_databace::updateConversationName(int id, const QString &name){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("./phoenix.db");
     if (!db.open())
@@ -306,7 +306,7 @@ QSqlError phoenix_databace::updateConversationName(const int &id, const QString 
     return QSqlError();
 }
 
-QSqlError phoenix_databace::updateConversationDate(const int &id, const QDateTime date){
+QSqlError phoenix_databace::updateConversationDate(int id, const QDateTime date){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("./phoenix.db");
     if (!db.open())

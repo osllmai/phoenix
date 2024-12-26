@@ -1,5 +1,5 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
@@ -11,7 +11,7 @@ Item {
     width: 1229 - 24 - 70
     height: 685 - 48
 
-    property var modelListModel
+    property ModelList modelListModel
 
     property color backgroundPageColor
     property color backgroungColor
@@ -32,12 +32,25 @@ Item {
 
     property color borderColor: "#ebebeb"
 
+    ModelListFilter {
+        id: offlineModels
+        currentModelList: modelListModel
+        backendType: ModelListFilter.LocalModel
+        searchTerm: textArea.text
+    }
+    // ModelListFilter {
+    //     id: onlineModels
+    //     currentModelList: modelListModel
+    //     backendType: ModelListFilter.OnlineProvider
+    //     searchTerm: textArea.text
+    // }
 
     Rectangle {
         id: modelsPageId
         color: root.headerColor
         // radius: 12
         anchors.fill: parent
+
 
         Rectangle {
             id: listModelId
@@ -84,7 +97,7 @@ Item {
 
                         cellWidth: calculationCellWidth()
                         cellHeight: 340
-                        model: root.modelListModel
+                        model:  root.modelListModel
 
                         ScrollBar.vertical: ScrollBar {
                             policy: ScrollBar.AsNeeded
@@ -167,13 +180,27 @@ Item {
 
         Rectangle {
             id: headerId
-            height: 80
+            height: 100
             width: parent.width
             color: parent.color
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.topMargin: 0
             // radius: 12
+
+            TabBar {
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+
+                TabButton {
+                    text: "Local models"
+                }
+                TabButton {
+                    text: "Online providers"
+                }
+            }
 
             Rectangle {
                 id: searchBox
@@ -203,7 +230,7 @@ Item {
                     color: root.informationTextColor
                 }
 
-                TextArea {
+                TextField {
                     id: textArea
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: searchIcon.right

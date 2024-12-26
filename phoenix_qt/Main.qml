@@ -7,7 +7,7 @@ import Qt5Compat.GraphicalEffects
 // import QtQuick.Controls 6.7
 import QtQuick.Layouts
 import Phoenix
-
+import AppStyle 1.0
 
 ApplicationWindow {
     id: window
