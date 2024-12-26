@@ -7,7 +7,6 @@ import Qt5Compat.GraphicalEffects
 // import QtQuick.Controls 6.7
 import QtQuick.Layouts
 import Phoenix
-import AppStyle 1.0
 
 ApplicationWindow {
     id: window
@@ -20,6 +19,9 @@ ApplicationWindow {
     // palette.button: "red"
 
     property var theme: "light"
+
+    palette.windowText: "#474747"
+    palette.brightText: "#5b5fc7"
 
     //dark theme
     property color darkBackgroundPage: /*"#242424"*/ "#333333"
@@ -715,11 +717,11 @@ ApplicationWindow {
                         }
                         layer.enabled: true
                         layer.effect: Glow {
-                             samples: 30
-                             color: "#cbcbcb"
-                             spread: 0.3
-                             transparentBorder: true
-                         }
+                            samples: 30
+                            color: "#cbcbcb"
+                            spread: 0.3
+                            transparentBorder: true
+                        }
                     }
                 }
             }

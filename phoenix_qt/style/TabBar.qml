@@ -3,8 +3,6 @@
 
 import QtQuick
 import QtQuick.Templates as T
-import QtQuick.Controls.Material
-import QtQuick.Controls.Material.impl
 
 T.TabBar {
     id: control
@@ -33,24 +31,26 @@ T.TabBar {
         preferredHighlightBegin: 48
         preferredHighlightEnd: width - 48
 
+        delegate: Rectangle {}
         highlight: Item {
             z: 2
             Rectangle {
                 height: 2
                 width: parent.width
                 y: control.position === T.TabBar.Footer ? 0 : parent.height - height
-                color: control.Material.accentColor
+                color: control.palette.brightText
             }
         }
     }
 
-    background: Rectangle {
-        color: control.Material.backgroundColor
+    background: null
+    //     Rectangle {
+    //     color: control.Material.backgroundColor
 
-        layer.enabled: control.Material.elevation > 0
-        layer.effect: ElevationEffect {
-            elevation: control.Material.elevation
-            fullWidth: true
-        }
-    }
+    //     layer.enabled: control.Material.elevation > 0
+    //     layer.effect: ElevationEffect {
+    //         elevation: control.Material.elevation
+    //         fullWidth: true
+    //     }
+    // }
 }

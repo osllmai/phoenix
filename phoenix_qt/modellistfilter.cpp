@@ -7,7 +7,7 @@ ModelListFilter::ModelListFilter(QObject *parent)
 bool ModelListFilter::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     Q_UNUSED(source_parent)
-    auto model = m_currentModelList->at(source_row);
+    auto model = m_modelList->at(source_row);
 
     if (!model)
         return false;
@@ -16,7 +16,7 @@ bool ModelListFilter::filterAcceptsRow(int source_row, const QModelIndex &source
         && m_backendType != static_cast<BackendType>(model->backendType()))
         return false;
 
-    if (!m_searchTerm.isEmpty() && !model->name().contains(m_searchTerm))
+    if (!m_searchTerm.isEmpty() && !model->name().contains(m_searchTerm, Qt::CaseInsensitive))
         return false;
 
     return true;
@@ -50,17 +50,17 @@ void ModelListFilter::setSearchTerm(const QString &newSearchTerm)
     emit searchTermChanged();
 }
 
-CurrentModelList *ModelListFilter::currentModelList() const
+ModelList *ModelListFilter::modelList() const
 {
-    return m_currentModelList;
+    return m_modelList;
 }
 
-void ModelListFilter::setCurrentModelList(CurrentModelList *newCurrentModelList)
+void ModelListFilter::setModelList(ModelList *newModelList)
 {
-    if (m_currentModelList == newCurrentModelList)
+    if (m_modelList == newModelList)
         return;
-    m_currentModelList = newCurrentModelList;
-    setSourceModel(newCurrentModelList);
+    m_modelList = newModelList;
+    setSourceModel(newModelList);
     invalidate();
-    emit currentModelListChanged();
+    emit modelListChanged();
 }

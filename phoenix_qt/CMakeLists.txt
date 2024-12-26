@@ -87,11 +87,13 @@ qt_add_qml_module(app${PROJECTNAME}
         AnimationText.qml
         Notification.qml
 
-        qtquickcontrols2.conf
         style/qmldir
         style/TabBar.qml
+        style/TabButton.qml
+        style/Button.qml
 
     RESOURCES
+        qtquickcontrols2.conf
         "images/aboutIcon.svg"
         "images/fillAboutIcon.svg"
         "images/chatIcon.svg"
@@ -198,6 +200,7 @@ qt_add_qml_module(app${PROJECTNAME}
         abstractchatprovider.h abstractchatprovider.cpp
         providers/openai.h providers/openai.cpp
         modellistfilter.h modellistfilter.cpp
+        currentmodellistfilter.h currentmodellistfilter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

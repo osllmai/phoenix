@@ -38,15 +38,15 @@ Item {
     signal goToModelPage()
     signal loadModelDialog(int indexModel)
 
-    ModelListFilter {
+    CurrentModelListFilter {
         id: offlineModels
         currentModelList: modelListModel
-        backendType: ModelListFilter.LocalModel
+        backendType: CurrentModelListFilter.LocalModel
     }
-    ModelListFilter {
+    CurrentModelListFilter {
         id: onlineModels
         currentModelList: modelListModel
-        backendType: ModelListFilter.OnlineProvider
+        backendType: CurrentModelListFilter.OnlineProvider
     }
 
     Rectangle{

@@ -1,4 +1,6 @@
-import QtQuick.Controls.Basic auto
-
 module AppStyle
+
+import QtQuick.Controls.Basic auto
 TabBar 1.0 TabBar.qml
+TabButton 1.0 TabButton.qml
+Button 1.0 Button.qml

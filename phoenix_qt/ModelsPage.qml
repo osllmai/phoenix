@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import Phoenix
 import Qt.labs.qmlmodels
+import 'style'
 
 Item {
     id: root
@@ -32,18 +33,32 @@ Item {
 
     property color borderColor: "#ebebeb"
 
+    property int gridCellWidth: {
+        const w = listModelId.width - 20
+        if(w >1650)
+            return w/5;
+        else if(w >1300)
+            return w/4;
+        else if(w >950)
+            return w/3;
+        else if(w >650)
+            return w/2;
+        else
+            return Math.max(w,300);
+    }
+
     ModelListFilter {
         id: offlineModels
-        currentModelList: modelListModel
+        modelList: modelListModel
         backendType: ModelListFilter.LocalModel
         searchTerm: textArea.text
     }
-    // ModelListFilter {
-    //     id: onlineModels
-    //     currentModelList: modelListModel
-    //     backendType: ModelListFilter.OnlineProvider
-    //     searchTerm: textArea.text
-    // }
+    ModelListFilter {
+        id: onlineModels
+        modelList: modelListModel
+        backendType: ModelListFilter.OnlineProvider
+        searchTerm: textArea.text
+    }
 
     Rectangle {
         id: modelsPageId
@@ -61,121 +76,226 @@ Item {
             anchors.bottom: parent.bottom
             // radius: 12
 
-            Rectangle {
-                id: itemId
+            StackLayout {
                 anchors.fill: parent
-                color: parent.color
-                radius: 12
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
+                anchors.topMargin: 10
+                anchors.bottomMargin: 10
 
-                ColumnLayout{
-                    id: coulumnLayoutModelId
-                    anchors.fill: parent
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 10
-                    anchors.topMargin: 10
-                    anchors.bottomMargin: 10
-                    GridView {
-                        id: gridView
+                currentIndex: tabBar.currentIndex
 
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-                        cacheBuffer: Math.max(0, gridView.contentHeight)
+                GridView {
+                    id: gridView
 
-                        function calculationCellWidth(){
-                            if(coulumnLayoutModelId.width >1650)
-                                return coulumnLayoutModelId.width/5;
-                            else if(coulumnLayoutModelId.width >1300)
-                                return coulumnLayoutModelId.width/4;
-                            else if(coulumnLayoutModelId.width >950)
-                                return coulumnLayoutModelId.width/3;
-                            else if(coulumnLayoutModelId.width >650)
-                                return coulumnLayoutModelId.width/2;
-                            else
-                                return Math.max(coulumnLayoutModelId.width,300);
-                        }
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    cacheBuffer: Math.max(0, gridView.contentHeight)
+                    cellWidth: root.gridCellWidth
+                    cellHeight: 340
+                    model: offlineModels
 
-                        cellWidth: calculationCellWidth()
-                        cellHeight: 340
-                        model:  root.modelListModel
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                    }
+                    clip: true
 
-                        ScrollBar.vertical: ScrollBar {
-                            policy: ScrollBar.AsNeeded
-                        }
-                        clip: true
+                    delegate: Rectangle{
+                        width: gridView.cellWidth
+                        height: gridView.cellHeight
+                        color: root.backgroundPageColor
+                        ModelItem {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            myModel: model
+                            myModelListModel: root.modelListModel
+                            myIndex: index
 
-                        delegate: DelegateChooser {
-                            role: 'backendType'
+                            backgroundPageColor: root.backgroundPageColor
+                            backgroungColor: window.backgroungColor
+                            glowColor: window.glowColor
+                            boxColor: root.boxColor
+                            headerColor: root.headerColor
+                            normalButtonColor: root.normalButtonColor
+                            selectButtonColor: root.selectButtonColor
+                            hoverButtonColor: root.hoverButtonColor
+                            fillIconColor: root.fillIconColor
 
-                            DelegateChoice {
-                                roleValue: ModelList.OnlineProvider
-                                delegate: Rectangle{
-                                    width: gridView.cellWidth
-                                    height: gridView.cellHeight
-                                    color: root.backgroundPageColor
-                                    OnlineModelItem {
-                                        anchors.fill: parent
-                                        anchors.margins: 20
-                                        myModel: model
-                                        myModelListModel: root.modelListModel
-                                        myIndex: index
+                            titleTextColor: root.titleTextColor
+                            informationTextColor: root.informationTextColor
+                            selectTextColor: root.selectTextColor
 
-                                        backgroundPageColor: root.backgroundPageColor
-                                        backgroungColor: window.backgroungColor
-                                        glowColor: window.glowColor
-                                        boxColor: root.boxColor
-                                        headerColor: root.headerColor
-                                        normalButtonColor: root.normalButtonColor
-                                        selectButtonColor: root.selectButtonColor
-                                        hoverButtonColor: root.hoverButtonColor
-                                        fillIconColor: root.fillIconColor
+                            fontFamily: root.fontFamily
 
-                                        titleTextColor: root.titleTextColor
-                                        informationTextColor: root.informationTextColor
-                                        selectTextColor: root.selectTextColor
-
-                                        fontFamily: root.fontFamily
-                                    }
-                                }
-                            }
-
-                            DelegateChoice {
-                                roleValue: ModelList.LocalModel
-                                delegate: Rectangle{
-                                    id: rectangleGridView
-                                    width: gridView.cellWidth
-                                    height: gridView.cellHeight
-                                    color: root.backgroundPageColor
-                                    ModelItem {
-                                        id: indoxItem
-                                        anchors.fill: parent
-                                        anchors.margins: 20
-                                        myModel: model
-                                        myModelListModel: root.modelListModel
-                                        myIndex: index
-
-                                        backgroundPageColor: root.backgroundPageColor
-                                        backgroungColor: window.backgroungColor
-                                        glowColor: window.glowColor
-                                        boxColor: root.boxColor
-                                        headerColor: root.headerColor
-                                        normalButtonColor: root.normalButtonColor
-                                        selectButtonColor: root.selectButtonColor
-                                        hoverButtonColor: root.hoverButtonColor
-                                        fillIconColor: root.fillIconColor
-
-                                        titleTextColor: root.titleTextColor
-                                        informationTextColor: root.informationTextColor
-                                        selectTextColor: root.selectTextColor
-
-                                        fontFamily: root.fontFamily
-                                    }
-                                }
-                            }
                         }
                     }
                 }
+                GridView {
+                    id: gridViewOnline
+
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    cacheBuffer: Math.max(0, gridView.contentHeight)
+
+                    cellWidth: root.gridCellWidth
+                    cellHeight: 340
+                    model: onlineModels
+
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                    }
+                    clip: true
+
+                    delegate: Rectangle{
+                        width: gridView.cellWidth
+                        height: gridView.cellHeight
+                        color: root.backgroundPageColor
+                        OnlineModelItem {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            myModel: model
+                            myModelListModel: root.modelListModel
+                            myIndex: index
+
+                            backgroundPageColor: root.backgroundPageColor
+                            backgroungColor: window.backgroungColor
+                            glowColor: window.glowColor
+                            boxColor: root.boxColor
+                            headerColor: root.headerColor
+                            normalButtonColor: root.normalButtonColor
+                            selectButtonColor: root.selectButtonColor
+                            hoverButtonColor: root.hoverButtonColor
+                            fillIconColor: root.fillIconColor
+
+                            titleTextColor: root.titleTextColor
+                            informationTextColor: root.informationTextColor
+                            selectTextColor: root.selectTextColor
+
+                            fontFamily: root.fontFamily
+
+                        }
+                    }
+                }
+
             }
+
+            // Rectangle {
+            //     id: itemId
+            //     anchors.fill: parent
+            //     color: parent.color
+            //     radius: 12
+
+            //     ColumnLayout{
+            //         id: coulumnLayoutModelId
+            //         anchors.fill: parent
+            //         anchors.leftMargin: 10
+            //         anchors.rightMargin: 10
+            //         anchors.topMargin: 10
+            //         anchors.bottomMargin: 10
+            //         GridView {
+            //             id: gridView
+
+            //             Layout.fillHeight: true
+            //             Layout.fillWidth: true
+            //             Layout.alignment: Qt.AlignHCenter
+            //             cacheBuffer: Math.max(0, gridView.contentHeight)
+
+            //             function calculationCellWidth(){
+            //                 if(coulumnLayoutModelId.width >1650)
+            //                     return coulumnLayoutModelId.width/5;
+            //                 else if(coulumnLayoutModelId.width >1300)
+            //                     return coulumnLayoutModelId.width/4;
+            //                 else if(coulumnLayoutModelId.width >950)
+            //                     return coulumnLayoutModelId.width/3;
+            //                 else if(coulumnLayoutModelId.width >650)
+            //                     return coulumnLayoutModelId.width/2;
+            //                 else
+            //                     return Math.max(coulumnLayoutModelId.width,300);
+            //             }
+
+            //             cellWidth: calculationCellWidth()
+            //             cellHeight: 340
+            //             model: offlineModels
+
+            //             ScrollBar.vertical: ScrollBar {
+            //                 policy: ScrollBar.AsNeeded
+            //             }
+            //             clip: true
+
+            //             delegate: DelegateChooser {
+            //                 role: 'backendType'
+
+            //                 DelegateChoice {
+            //                     roleValue: ModelList.OnlineProvider
+            //                     delegate: Rectangle{
+            //                         width: gridView.cellWidth
+            //                         height: gridView.cellHeight
+            //                         color: root.backgroundPageColor
+            //                         OnlineModelItem {
+            //                             anchors.fill: parent
+            //                             anchors.margins: 20
+            //                             myModel: model
+            //                             myModelListModel: root.modelListModel
+            //                             myIndex: index
+
+            //                             backgroundPageColor: root.backgroundPageColor
+            //                             backgroungColor: window.backgroungColor
+            //                             glowColor: window.glowColor
+            //                             boxColor: root.boxColor
+            //                             headerColor: root.headerColor
+            //                             normalButtonColor: root.normalButtonColor
+            //                             selectButtonColor: root.selectButtonColor
+            //                             hoverButtonColor: root.hoverButtonColor
+            //                             fillIconColor: root.fillIconColor
+
+            //                             titleTextColor: root.titleTextColor
+            //                             informationTextColor: root.informationTextColor
+            //                             selectTextColor: root.selectTextColor
+
+            //                             fontFamily: root.fontFamily
+            //                         }
+            //                     }
+            //                 }
+
+            //                 DelegateChoice {
+            //                     roleValue: ModelList.LocalModel
+            //                     delegate: Rectangle{
+            //                         id: rectangleGridView
+            //                         width: gridView.cellWidth
+            //                         height: gridView.cellHeight
+            //                         color: root.backgroundPageColor
+            //                         ModelItem {
+            //                             id: indoxItem
+            //                             anchors.fill: parent
+            //                             anchors.margins: 20
+            //                             myModel: model
+            //                             myModelListModel: root.modelListModel
+            //                             myIndex: index
+
+            //                             backgroundPageColor: root.backgroundPageColor
+            //                             backgroungColor: window.backgroungColor
+            //                             glowColor: window.glowColor
+            //                             boxColor: root.boxColor
+            //                             headerColor: root.headerColor
+            //                             normalButtonColor: root.normalButtonColor
+            //                             selectButtonColor: root.selectButtonColor
+            //                             hoverButtonColor: root.hoverButtonColor
+            //                             fillIconColor: root.fillIconColor
+
+            //                             titleTextColor: root.titleTextColor
+            //                             informationTextColor: root.informationTextColor
+            //                             selectTextColor: root.selectTextColor
+
+            //                             fontFamily: root.fontFamily
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         Rectangle {
@@ -189,18 +309,32 @@ Item {
             // radius: 12
 
             TabBar {
+                id: tabBar
                 anchors {
                     left: parent.left
                     bottom: parent.bottom
                 }
 
-                TabButton {
-                    text: "Local models"
+                    TabButton {
+                        id: tabBarButton1
+                        text: "Local models"
+
+                        // background: null
+                        // onClicked: tabBar.currentIndex = 0
+                    }
+                    TabButton {
+                        text: "Online providers"
+                        // background: null
+                        // onClicked: tabBar.currentIndex = 1
+                    }
                 }
-                TabButton {
-                    text: "Online providers"
-                }
-            }
+
+                // Rectangle {
+                //     anchors.bottom: parent.bottom
+                //     height: 2
+                //     x: tabBar.currentIndex * tabBarButton1.width
+                // }
+            // }
 
             Rectangle {
                 id: searchBox
@@ -249,11 +383,11 @@ Item {
                 }
                 layer.enabled: true
                 layer.effect: Glow {
-                     samples: 15
-                     color: root.glowColor
-                     spread: 0.0
-                     transparentBorder: true
-                 }
+                    samples: 15
+                    color: root.glowColor
+                    spread: 0.0
+                    transparentBorder: true
+                }
             }
 
             MyButton {
@@ -277,7 +411,7 @@ Item {
                 myTextId: "Add Model"
                 Connections {
                     target: loadModelButton
-                     onClicked: fileDialogId.open();
+                    onClicked: fileDialogId.open();
                 }
             }
 
