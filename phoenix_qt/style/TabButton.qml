@@ -18,7 +18,7 @@ T.TabButton {
 
     icon.width: 24
     icon.height: 24
-    icon.color: checked ? control.palette.brightText : control.palette.windowText
+    icon.color: checked ? Theme.fillIcon : Theme.informationText
 
     contentItem: IconLabel {
         spacing: control.spacing
@@ -28,7 +28,7 @@ T.TabButton {
         icon: control.icon
         text: control.text
         font: control.font
-        color: control.checked ? control.palette.brightText : control.palette.windowText
+        color: control.checked ? Theme.fillIcon : Theme.informationText
     }
 
     background: null

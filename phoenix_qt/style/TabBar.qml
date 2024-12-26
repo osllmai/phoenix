@@ -38,7 +38,7 @@ T.TabBar {
                 height: 2
                 width: parent.width
                 y: control.position === T.TabBar.Footer ? 0 : parent.height - height
-                color: control.palette.brightText
+                color: Theme.fillIcon
             }
         }
     }

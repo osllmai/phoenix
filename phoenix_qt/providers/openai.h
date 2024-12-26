@@ -14,6 +14,8 @@ public:
     OpenAI(const QString &apiKey, QObject *parent = nullptr);
 
     void prompt(const QString &message) override;
+    void stop() override;
+
     QString apiKey() const;
     void setApiKey(const QString &newApiKey);
 
@@ -29,4 +31,5 @@ private:
     QString m_apiKey;
     QNetworkAccessManager* networkManager;
     QNetworkReply *_reply{};
+    std::atomic<bool> _stopFlag;
 };

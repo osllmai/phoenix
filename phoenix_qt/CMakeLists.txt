@@ -88,6 +88,7 @@ qt_add_qml_module(app${PROJECTNAME}
         Notification.qml
 
         style/qmldir
+        style/Theme.qml
         style/TabBar.qml
         style/TabButton.qml
         style/Button.qml

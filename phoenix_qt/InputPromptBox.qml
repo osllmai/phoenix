@@ -159,7 +159,7 @@ Item {
                 anchors.leftMargin: 15
                 anchors.topMargin: 5
                 anchors.bottomMargin: 5
-                myTextId:  root.currentChat.isLoadModel? root.currentChat.model.name: "load Model"
+                myTextId:  root.currentChat.isLoadModel? root.currentChat.model.name: "Load model"
                 Connections{
                     target:loadModelIcon
                     function onClicked(){

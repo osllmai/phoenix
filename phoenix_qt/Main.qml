@@ -1,12 +1,10 @@
-import QtQuick 6.7
 import QtCore
+import QtQuick
 import QtQuick.Controls.Basic
-// import QtCharts
 import Qt5Compat.GraphicalEffects
-
-// import QtQuick.Controls 6.7
 import QtQuick.Layouts
 import Phoenix
+import 'style' as Style
 
 ApplicationWindow {
     id: window
@@ -20,7 +18,7 @@ ApplicationWindow {
 
     property var theme: "light"
 
-    palette.windowText: "#474747"
+    palette.windowText: Style.Theme.isDark ? 'white' : 'black'
     palette.brightText: "#5b5fc7"
 
     //dark theme
@@ -125,6 +123,8 @@ ApplicationWindow {
         property alias theme: window.theme
         property alias fontFamily: window.fontFamily
     }
+
+    Component.onCompleted: Style.Theme.isDark = theme == 'dark'
 
     PhoenixController{
         id: phoenixController
@@ -233,9 +233,11 @@ ApplicationWindow {
                             if(window.theme === "light"){
                                 window.theme = "dark"
                                 window.isTheme = true
+                                Style.Theme.isDark = true
                             }else{
                                 window.theme = "light"
                                 window.isTheme = false
+                                Style.Theme.isDark = false
                             }
                         }
                     }
@@ -582,139 +584,103 @@ ApplicationWindow {
                 x: systemMonitorId.x -50
                 y: systemMonitorId.y-80
 
-                background:Rectangle{
-                    color: /*"#00ffffff"*/ window.backgroungColor
+                background: null
+                contentItem: Rectangle {
+                    color: /*"#00ffffff"*/ Style.Theme.background
                     radius: 4
                     anchors.fill: parent
+                    border.color: "#cbcbcb"
 
-                    Rectangle{
+                    GridLayout{
                         id:systemMonitorRec
                         anchors.fill: parent
-                        color: "#ffffff"
-                        radius: 4
-                        border.color: "#cbcbcb"
+                        anchors.margins: 9
 
-                        Rectangle {
-                            id: cpuRec
-                            height: 30
-                            color: "#00ffffff"
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            anchors.leftMargin: 7
-                            anchors.topMargin: 2
+                        columns: 3
+                        // color: "#ffffff"
+                        // radius: 4
 
-                            Text {
-                                id: cpuText
-                                text: qsTr("CPU")
-                                width: memoryText.width
-                                color: "black"
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.leftMargin: 0
-                                font.pointSize: 9
-                                font.family: window.fontFamily
+                        Label {
+                            id: cpuText
+                            text: qsTr("CPU")
+                            font.pointSize: 9
+                        }
+                        ProgressBar {
+                            id: progressBarCPU
+                            width: 100
+                            height: 6
+                            value: phoenixController.cpuInfo/100
+
+                            Layout.fillWidth: true
+                            background: Rectangle {
+                                color: "#c0c0c0"
+                                implicitHeight: 6
+                                radius: 2
+                                border.color: "#c0c0c0"
+                                border.width: 2
                             }
-                            ProgressBar {
-                                id: progressBarCPU
-                                width: 100
-                                height: 6
-                                value: phoenixController.cpuInfo/100
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: cpuText.right
-                                anchors.leftMargin: 5
-                                background: Rectangle {
-                                    color: "#c0c0c0"
-                                    implicitHeight: 6
+
+                            contentItem: Item {
+                                implicitHeight: 6
+                                Rectangle {
+                                    width: progressBarCPU.visualPosition * parent.width
+                                    height: 6
                                     radius: 2
-                                    border.color: "#c0c0c0"
+                                    color: "#047eff"
+                                    border.color: "#047eff"
                                     border.width: 2
                                 }
-
-                                contentItem: Item {
-                                    implicitHeight: 6
-                                    Rectangle {
-                                        width: progressBarCPU.visualPosition * parent.width
-                                        height: 6
-                                        radius: 2
-                                        color: "#047eff"
-                                        border.color: "#047eff"
-                                        border.width: 2
-                                    }
-                                }
-                            }
-                            Text {
-                                id: progressBarTextCPU
-                                text: "%" + phoenixController.cpuInfo
-                                color: "black"
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: progressBarCPU.right
-                                anchors.leftMargin: 5
-                                font.pixelSize: 9
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.family: window.fontFamily
                             }
                         }
-                        Rectangle {
-                            id: memoryRec
-                            height: 30
-                            color: "#00ffffff"
-                            anchors.left: parent.left
-                            anchors.bottom: parent.bottom
-                            anchors.leftMargin: 7
-                            anchors.bottomMargin: 2
+                        Label {
+                            id: progressBarTextCPU
+                            text: "%" + phoenixController.cpuInfo
+                            font.pixelSize: 9
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
 
-                            Text {
-                                id: memoryText
-                                text: qsTr("Memory")
-                                color: "black"
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.leftMargin: 0
-                                font.pointSize: 9
-                                font.family: window.fontFamily
+                        Label {
+                            id: memoryText
+                            text: qsTr("Memory")
+                            font.pointSize: 9
+                        }
+                        ProgressBar {
+                            id: progressBarMemory
+                            width: 100
+                            height: 6
+                            value: phoenixController.memoryInfo /100
+
+                            Layout.fillWidth: true
+
+                            background: Rectangle {
+                                color: "#c0c0c0"
+                                implicitHeight: 6
+                                radius: 2
+                                border.color: "#c0c0c0"
+                                border.width: 2
                             }
-                            ProgressBar {
-                                id: progressBarMemory
-                                width: 100
-                                height: 6
-                                value: phoenixController.memoryInfo /100
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: memoryText.right
-                                anchors.leftMargin: 5
-                                background: Rectangle {
-                                    color: "#c0c0c0"
-                                    implicitHeight: 6
+
+                            contentItem: Item {
+                                implicitHeight: 6
+                                Rectangle {
+                                    width: progressBarMemory.visualPosition * parent.width
+                                    height: 6
                                     radius: 2
-                                    border.color: "#c0c0c0"
+                                    color: "#047eff"
+                                    border.color: "#047eff"
                                     border.width: 2
                                 }
-
-                                contentItem: Item {
-                                    implicitHeight: 6
-                                    Rectangle {
-                                        width: progressBarMemory.visualPosition * parent.width
-                                        height: 6
-                                        radius: 2
-                                        color: "#047eff"
-                                        border.color: "#047eff"
-                                        border.width: 2
-                                    }
-                                }
-                            }
-                            Text {
-                                id: progressBarTextMemory
-                                text: "%" + phoenixController.memoryInfo
-                                color: "black"
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: progressBarMemory.right
-                                anchors.leftMargin: 5
-                                font.pixelSize: 9
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.family: window.fontFamily
                             }
                         }
+                        Label {
+                            id: progressBarTextMemory
+                            text: "%" + phoenixController.memoryInfo
+                            font.pixelSize: 9
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
                         layer.enabled: true
                         layer.effect: Glow {
                             samples: 30

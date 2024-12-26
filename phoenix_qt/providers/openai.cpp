@@ -30,10 +30,6 @@ void OpenAI::prompt(const QString &message)
         {"model", "gpt-4"},
         {"stream", true},
         {"messages", QJsonArray{
-                         // QJsonObject{
-                         //     {"role", "system"},
-                         //     {"content", "You are a helpful assistant."}
-                         // },
                          QJsonObject{
                              {"role", "user"},
                              {"content", message}
@@ -43,10 +39,16 @@ void OpenAI::prompt(const QString &message)
 
     // clang-format on
 
+    _stopFlag = false;
     _reply = networkManager->post(request, QJsonDocument(json).toJson());
     connect(_reply, &QNetworkReply::finished, this, &OpenAI::onReplyFinished);
     connect(_reply, &QNetworkReply::readyRead, this, &OpenAI::onReplyReadyRead);
     connect(_reply, &QNetworkReply::errorOccurred, this, &OpenAI::onReplyError);
+}
+
+void OpenAI::stop()
+{
+    _stopFlag = true;
 }
 
 QString OpenAI::apiKey() const
@@ -90,6 +92,11 @@ void OpenAI::onReplyError(QNetworkReply::NetworkError)
 
 void OpenAI::onReplyReadyRead()
 {
+    if (_stopFlag) {
+        _reply->abort();
+        return;
+    }
+
     while (_reply->canReadLine()) {
         QByteArray line = _reply->readLine().trimmed();
         if (line.startsWith("data: ")) {
