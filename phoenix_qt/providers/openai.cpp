@@ -16,6 +16,10 @@ OpenAI::OpenAI(const QString &apiKey, QObject *parent)
 
 void OpenAI::prompt(const QString &message)
 {
+    if (_reply) {
+        _reply->deleteLater();
+        _reply = nullptr;
+    }
     QUrl url("https://api.openai.com/v1/chat/completions");
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -39,8 +43,10 @@ void OpenAI::prompt(const QString &message)
 
     // clang-format on
 
-    QNetworkReply *reply = networkManager->post(request, QJsonDocument(json).toJson());
-    connect(reply, &QNetworkReply::finished, this, &OpenAI::onReplyFinished);
+    _reply = networkManager->post(request, QJsonDocument(json).toJson());
+    connect(_reply, &QNetworkReply::finished, this, &OpenAI::onReplyFinished);
+    connect(_reply, &QNetworkReply::readyRead, this, &OpenAI::onReplyReadyRead);
+    connect(_reply, &QNetworkReply::errorOccurred, this, &OpenAI::onReplyError);
 }
 
 QString OpenAI::apiKey() const
@@ -58,12 +64,8 @@ void OpenAI::setApiKey(const QString &newApiKey)
 
 void OpenAI::onReplyFinished()
 {
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    if (!reply)
-        return;
-
-    if (reply->error() == QNetworkReply::NoError) {
-        QJsonDocument jsonResponse = QJsonDocument::fromJson(reply->readAll());
+    if (_reply->error() == QNetworkReply::NoError) {
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(_reply->readAll());
         QJsonObject jsonObject = jsonResponse.object();
         QString replyText = jsonObject["choices"]
                                 .toArray()
@@ -73,9 +75,45 @@ void OpenAI::onReplyFinished()
                                 .toString();
         qDebug() << "ChatGPT reply:" << replyText;
 
-        Q_EMIT tokenResponse(replyText);
+        Q_EMIT finishedResponnse();
     } else {
-        qDebug() << "Error:" << reply->errorString();
+        qDebug() << "Error:" << _reply->errorString();
     }
-    reply->deleteLater();
+    _reply->deleteLater();
+    _reply = nullptr;
+}
+
+void OpenAI::onReplyError(QNetworkReply::NetworkError)
+{
+    Q_EMIT tokenResponse("Error:" + _reply->errorString());
+}
+
+void OpenAI::onReplyReadyRead()
+{
+    while (_reply->canReadLine()) {
+        QByteArray line = _reply->readLine().trimmed();
+        if (line.startsWith("data: ")) {
+            QByteArray jsonData = line.mid(6);
+            if (jsonData == "[DONE]") {
+                qDebug() << "Stream finished.";
+                _reply->deleteLater();
+                return;
+            }
+
+            QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+            if (doc.isObject()) {
+                QJsonObject obj = doc.object();
+                QString content = obj["choices"]
+                                      .toArray()[0]
+                                      .toObject()["delta"]
+                                      .toObject()["content"]
+                                      .toString();
+                if (!content.isEmpty()) {
+                    qDebug() << "Received content:" << content;
+
+                    Q_EMIT tokenResponse(content);
+                }
+            }
+        }
+    }
 }

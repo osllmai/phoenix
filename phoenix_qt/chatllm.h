@@ -17,8 +17,6 @@ public:
 
 signals:
     void loadModelResult(const bool result);
-    void tokenResponse(const QString &token);
-    void finishedResponnse();
 
 public slots:
     void loadModel(const QString &modelPath) override;

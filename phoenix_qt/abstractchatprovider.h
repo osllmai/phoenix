@@ -16,4 +16,5 @@ public:
 
 Q_SIGNALS:
     void tokenResponse(const QString &token);
+    void finishedResponnse();
 };

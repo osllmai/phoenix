@@ -185,22 +185,30 @@ void Chat::createBackend() {
     case Model::BackendType::LocalModel: {
         auto chatLLM = new ChatLLM{this};
         connect(chatLLM, &ChatLLM::loadModelResult, this, &Chat::LoadModelResult, Qt::QueuedConnection);
-        connect(chatLLM, &ChatLLM::tokenResponse, this, &Chat::tokenResponseRequested, Qt::QueuedConnection);
-        connect(chatLLM, &ChatLLM::finishedResponnse, this, &Chat::finishedResponnse, Qt::QueuedConnection);
         _backend = chatLLM;
         break;
     }
     case Model::BackendType::OnlineProvider:
+        //TODO: Relying on string-based object creation is a valuable approach.
         if (m_model->name() == "Open AI")
             _backend = new OpenAI{m_model->apiKey(), this};
 
         break;
     }
 
-
+    connect(_backend,
+            &AbstractChatProvider::tokenResponse,
+            this,
+            &Chat::tokenResponseRequested,
+            Qt::QueuedConnection);
+    connect(_backend,
+            &AbstractChatProvider::finishedResponnse,
+            this,
+            &Chat::finishedResponnse,
+            Qt::QueuedConnection);
 }
-//*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 
+//*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 
 void Chat::loadModelRequested(Model *model){
     if (m_isLoadModel)
@@ -208,6 +216,8 @@ void Chat::loadModelRequested(Model *model){
 
     if (model->backendType() == Model::BackendType::LocalModel)
         setLoadModelInProgress(true);
+    else
+        setIsLoadModel(true);
 
     setModel(model);
     emit loadModel(model->directoryPath());

@@ -2,6 +2,8 @@
 
 #include "abstractchatprovider.h"
 
+#include <QNetworkReply>
+
 class QNetworkAccessManager;
 class OpenAI : public AbstractChatProvider
 {
@@ -17,6 +19,8 @@ public:
 
 private Q_SLOTS:
     void onReplyFinished() ;
+    void onReplyError(QNetworkReply::NetworkError);
+    void onReplyReadyRead();
 
 Q_SIGNALS:
     void apiKeyChanged();
@@ -24,5 +28,5 @@ Q_SIGNALS:
 private:
     QString m_apiKey;
     QNetworkAccessManager* networkManager;
-
+    QNetworkReply *_reply{};
 };
