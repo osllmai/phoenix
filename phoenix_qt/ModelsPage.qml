@@ -300,7 +300,7 @@ Item {
 
         Rectangle {
             id: headerId
-            height: 100
+            height: 130
             width: parent.width
             color: parent.color
             anchors.right: parent.right
@@ -310,31 +310,19 @@ Item {
 
             TabBar {
                 id: tabBar
+                width: 260
+                // height: 190
                 anchors {
                     left: parent.left
                     bottom: parent.bottom
                 }
-
-                    TabButton {
-                        id: tabBarButton1
-                        text: "Local models"
-
-                        // background: null
-                        // onClicked: tabBar.currentIndex = 0
-                    }
-                    TabButton {
-                        text: "Online providers"
-                        // background: null
-                        // onClicked: tabBar.currentIndex = 1
-                    }
+                TabButton {
+                    text: "Local models"
                 }
-
-                // Rectangle {
-                //     anchors.bottom: parent.bottom
-                //     height: 2
-                //     x: tabBar.currentIndex * tabBarButton1.width
-                // }
-            // }
+                TabButton {
+                    text: "Online providers"
+                }
+            }
 
             Rectangle {
                 id: searchBox

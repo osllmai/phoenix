@@ -5,52 +5,46 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+
 #include "database.h"
-#include <model.h>
+#include "model.h"
+#include "providers/openai.h"
 
 Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent) :
     QObject(parent), m_id(id), m_title(title),
     m_isLoadModel(false),
     m_loadModelInProgress(false),
     m_responseInProgress(false),
-    chatLLM(new ChatLLM(this)),
-    m_timer(new QTimer(this)),
+    // chatLLM(new ChatLLM(this)),
     m_date(date),
     m_valueTimer(0),
     m_model(nullptr)
 {
     QThread::currentThread()->setObjectName("Main Thread");
 
-    m_chatModel = new ChatModel(id,root,this);
+    m_chatModel = new ChatModel(id, root, this);
 
     //load and unload model
-    connect(this, &Chat::loadModel, chatLLM, &ChatLLM::loadModel, Qt::QueuedConnection);
-    connect(chatLLM, &ChatLLM::loadModelResult, this, &Chat::LoadModelResult, Qt::QueuedConnection);
-    connect(this, &Chat::unLoadModel, chatLLM, &ChatLLM::unLoadModel, Qt::QueuedConnection);
+    // connect(this, &Chat::loadModel, chatLLM, &ChatLLM::loadModel, Qt::QueuedConnection);
+    // connect(this, &Chat::unLoadModel, chatLLM, &ChatLLM::unloadModel, Qt::QueuedConnection);
+    // connect(this, &Chat::prompt, chatLLM, &ChatLLM::prompt, Qt::QueuedConnection);
 
     //prompt
     connect(m_chatModel, &ChatModel::startPrompt, this, &Chat::promptRequested, Qt::QueuedConnection);
-    connect(this, &Chat::prompt, chatLLM, &ChatLLM::prompt, Qt::QueuedConnection);
-    connect(chatLLM, &ChatLLM::tokenResponse, this, &Chat::tokenResponseRequested, Qt::QueuedConnection);
-    connect(m_timer, &QTimer::timeout, [=](){++m_valueTimer; emit valueTimerChanged();});
 
     //finished response
-    connect(chatLLM, &ChatLLM::finishedResponnse, this, &Chat::finishedResponnse, Qt::QueuedConnection);
     connect(this, &Chat::finishedResponnseRequest, m_chatModel, &ChatModel::finishedResponnse, Qt::QueuedConnection);
 }
 
 Chat::~Chat(){
-    if(m_responseInProgress)
-        chatLLM->setStop();
+    if(m_responseInProgress && _backend)
+        _backend->stop();
     if(m_loadModelInProgress || m_isLoadModel)
         unloadModelRequested();
 
-    delete chatLLM;
-    chatLLM = nullptr;
-    delete m_chatModel;
-    m_chatModel = nullptr;
-    delete m_timer;
-    m_timer = nullptr;
+    if (_backend)
+        _backend->deleteLater();
+    m_chatModel->deleteLater();
 }
 
 //*----------------------------------------------------------------------------------------**************----------------------------------------------------------------------------------------*//
@@ -124,14 +118,21 @@ void Chat::setResponseInProgress(const bool responseInProgress){
         return;
     m_responseInProgress = responseInProgress;
     if(!responseInProgress)
-        chatLLM->setStop();
+        _backend->stop();
     emit responseInProgressChanged();
 }
 void Chat::setModel(Model* model){
     if(m_model == model)
         return;
     m_model = model;
+    createBackend();
     emit modelChanged();
+}
+
+void Chat::timerEvent(QTimerEvent *event)
+{
+    ++m_valueTimer;
+    emit valueTimerChanged();
 }
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
@@ -150,12 +151,12 @@ void Chat::promptRequested(const QString &input){
         phoenix_databace::updateConversationDate(m_id,m_date);
     }
 
-    m_timer->start(1000);
+    _timerId = startTimer(1000);
     if(!m_chatModel->isStart()){
         emit startChat();
     }
     setResponseInProgress(true);
-    emit prompt(input);
+    _backend->prompt(input);
 }
 
 void Chat::tokenResponseRequested(const QString &token){
@@ -164,19 +165,50 @@ void Chat::tokenResponseRequested(const QString &token){
 
 void Chat::finishedResponnse(){
     setResponseInProgress(false);
-    m_timer->stop();
+    killTimer(_timerId);
     m_chatModel->setExecutionTime(m_valueTimer);
     m_valueTimer = 0;
     emit valueTimerChanged();
     emit finishedResponnseRequest();
 }
+
+void Chat::createBackend() {
+    if (!m_model)
+        return ;
+
+    if (_backend) {
+        disconnect(_backend, nullptr, this, nullptr);
+        _backend->deleteLater();
+    }
+
+    switch (m_model->backendType()) {
+    case Model::BackendType::LocalModel: {
+        auto chatLLM = new ChatLLM{this};
+        connect(chatLLM, &ChatLLM::loadModelResult, this, &Chat::LoadModelResult, Qt::QueuedConnection);
+        connect(chatLLM, &ChatLLM::tokenResponse, this, &Chat::tokenResponseRequested, Qt::QueuedConnection);
+        connect(chatLLM, &ChatLLM::finishedResponnse, this, &Chat::finishedResponnse, Qt::QueuedConnection);
+        _backend = chatLLM;
+        break;
+    }
+    case Model::BackendType::OnlineProvider:
+        if (m_model->name() == "Open AI")
+            _backend = new OpenAI{m_model->apiKey(), this};
+
+        break;
+    }
+
+
+}
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
 
 
 void Chat::loadModelRequested(Model *model){
-    if(m_isLoadModel == true)
+    if (m_isLoadModel)
         unloadModelRequested();
-    setLoadModelInProgress(true);
+
+    if (model->backendType() == Model::BackendType::LocalModel)
+        setLoadModelInProgress(true);
+
     setModel(model);
     emit loadModel(model->directoryPath());
 }
@@ -184,7 +216,9 @@ void Chat::loadModelRequested(Model *model){
 void Chat::unloadModelRequested(){
     setIsLoadModel(false);
     setModel(nullptr);
-    emit unLoadModel();
+
+    if (_backend)
+        _backend->unloadModel();
 }
 
 void Chat::addChatItem(int id, QString prompt, QString response){}

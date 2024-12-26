@@ -349,7 +349,7 @@ Item {
                         text: model.name
                         width: ListView.view.width
 
-                        // onClicked:
+                        onClicked: root.loadModelDialog(index);
                     }
                 }
 

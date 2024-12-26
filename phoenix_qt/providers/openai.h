@@ -9,7 +9,7 @@ class OpenAI : public AbstractChatProvider
     Q_PROPERTY(QString apiKey READ apiKey WRITE setApiKey NOTIFY apiKeyChanged FINAL)
 
 public:
-    OpenAI();
+    OpenAI(const QString &apiKey, QObject *parent = nullptr);
 
     void prompt(const QString &message) override;
     QString apiKey() const;

@@ -22,8 +22,8 @@ std::string prompt_template;
 
 
 ChatLLM::ChatLLM(Chat *parent) :
-    AbstractChatProvider{nullptr},
-    stop(false)
+    AbstractChatProvider{parent},
+    _stopFlag(false)
 {
 
     moveToThread(&chatLLMThread);
@@ -38,9 +38,9 @@ ChatLLM::~ChatLLM(){
     chatLLMThread.wait();
 }
 
-void ChatLLM::setStop(){
-
-    stop = true;
+void ChatLLM::stop()
+{
+    _stopFlag = true;
 }
 
 void ChatLLM::loadModel(const QString &modelPath)
@@ -87,7 +87,7 @@ void ChatLLM::loadModel(const QString &modelPath)
     qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 }
 
-void ChatLLM::unLoadModel(){
+void ChatLLM::unloadModel(){
 
     // delete model;
     // model = nullptr;
@@ -96,7 +96,7 @@ void ChatLLM::unLoadModel(){
 
 void ChatLLM::prompt(const QString &input){
 
-    stop = false;
+    _stopFlag = false;
     qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
 
     QThread::msleep(5000);
@@ -144,6 +144,6 @@ bool ChatLLM::handleResponse(int32_t token, const std::string &response){
         emit tokenResponse(QString::fromStdString(response));
         // emit tokenResponse(QString::fromStdString(answer));
     }
-    return !stop;
+    return !_stopFlag;
 }
 

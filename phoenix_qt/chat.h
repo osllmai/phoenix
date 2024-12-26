@@ -5,10 +5,11 @@
 #include <QtQml>
 #include <QDateTime>
 
-#include <chatllm.h>
-#include <chatmodel.h>
-#include <model.h>
+#include "chatllm.h"
+#include "chatmodel.h"
+#include "model.h"
 
+class AbstractChatProvider;
 class Chat : public QObject
 {
     Q_OBJECT
@@ -56,6 +57,9 @@ public:
     void setModel(Model* model);
     //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
+protected:
+    void timerEvent(QTimerEvent *event) override;
+
 signals:
     void idChanged();
     void titleChanged();
@@ -82,17 +86,20 @@ public slots:
     void finishedResponnse();
 
 private:
+    void createBackend();
+
     int m_id;
     QString m_title;
     QDateTime m_date;
-    ChatLLM *chatLLM;
+    // ChatLLM *chatLLM;
+    AbstractChatProvider *_backend{};
     ChatModel *m_chatModel;
     bool m_isLoadModel;
     bool m_loadModelInProgress;
     bool m_responseInProgress;
-    QTimer *m_timer;
     int m_valueTimer;
     Model *m_model;
+    int _timerId{};
 };
 
 #endif // CHAT_H

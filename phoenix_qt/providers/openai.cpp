@@ -8,9 +8,10 @@
 #include <QNetworkRequest>
 #include <QTextStream>
 
-OpenAI::OpenAI()
-    : AbstractChatProvider{}
+OpenAI::OpenAI(const QString &apiKey, QObject *parent)
+    : AbstractChatProvider{parent}
     , networkManager{new QNetworkAccessManager{this}}
+    , m_apiKey{apiKey}
 {}
 
 void OpenAI::prompt(const QString &message)

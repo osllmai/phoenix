@@ -13,7 +13,7 @@ class ChatLLM : public AbstractChatProvider
 public:
     ChatLLM(Chat *parent);
     virtual ~ChatLLM();
-    void setStop();
+    void stop() override;
 
 signals:
     void loadModelResult(const bool result);
@@ -21,13 +21,13 @@ signals:
     void finishedResponnse();
 
 public slots:
-    void loadModel(const QString &modelPath);
-    void unLoadModel();
+    void loadModel(const QString &modelPath) override;
+    void unloadModel() override;
     void prompt(const QString &input);
 
 private:
     QThread chatLLMThread;
-    std::atomic<bool> stop;
+    std::atomic<bool> _stopFlag;
 
     bool handleResponse(int32_t token, const std::string &response);
 };
