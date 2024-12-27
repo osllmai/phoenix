@@ -367,12 +367,9 @@ void ModelList::deleteRequest(int index)
 
     if (model->url() == "") {
         beginRemoveRows(QModelIndex(), index, index);
+        phoenix_databace::deleteModel(model->id());
         delete _models.takeAt(index);
         endRemoveRows();
-
-        //delete from database
-        phoenix_databace::deleteModel(model->id());
-        delete model;
 
         // chat->unloadAndDeleteLater();
     } else if (model->directoryPath() != "") {
