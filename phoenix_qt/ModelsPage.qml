@@ -108,7 +108,7 @@ Item {
                         ModelItem {
                             anchors.fill: parent
                             anchors.margins: 20
-                            myModel: model
+                            myModel: model.object
                             myModelListModel: root.modelListModel
                             myIndex: index
 
@@ -155,7 +155,7 @@ Item {
                         OnlineModelItem {
                             anchors.fill: parent
                             anchors.margins: 20
-                            myModel: model
+                            myModel: model.object
                             myModelListModel: root.modelListModel
                             myIndex: index
 
@@ -300,7 +300,7 @@ Item {
 
         Rectangle {
             id: headerId
-            height: 130
+            height: 100
             width: parent.width
             color: parent.color
             anchors.right: parent.right

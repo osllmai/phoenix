@@ -18,9 +18,16 @@ public:
     enum class BackendType {
         LocalModel,
         OnlineProvider,
-        All
+        AllProviders
     };
     Q_ENUM(BackendType)
+
+    enum class ReadyType {
+        Ready,
+        NotReady,
+        All
+    };
+    Q_ENUM(ReadyType)
 
     explicit ModelListFilter(QObject *parent = nullptr);
 
@@ -40,7 +47,8 @@ signals:
 
 private:
     ModelList *m_modelList = nullptr;
-    BackendType m_backendType{BackendType::All};
+    BackendType m_backendType{BackendType::AllProviders};
+    ReadyType m_readyType{ReadyType::All};
     QString m_searchTerm;
 
 

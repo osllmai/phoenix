@@ -1,5 +1,7 @@
 #include "model.h"
 
+#include <QFile>
+
 Model::Model(QObject *parent)
     : QObject{parent}
 {}
@@ -264,4 +266,14 @@ void Model::setApiKey(const QString &newApiKey)
         return;
     m_apiKey = newApiKey;
     emit apiKeyChanged();
+}
+
+bool Model::isReady() const {
+    switch (m_backendType) {
+    case Model::BackendType::LocalModel:
+        return QFile::exists(m_directoryPath + "/" + m_fileName);
+    case Model::BackendType::OnlineProvider:
+        return !m_apiKey.isEmpty();
+    }
+    return false;
 }

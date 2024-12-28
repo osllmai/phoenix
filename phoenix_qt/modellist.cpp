@@ -71,6 +71,9 @@ QVariant ModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) c
 
     case BackendTypeRole:
         return QVariant::fromValue(model->backendType());
+
+    case ObjectRole:
+        return QVariant::fromValue(model);
     }
 
     return {};
@@ -97,7 +100,8 @@ QHash<int, QByteArray> ModelList::roleNames() const
         {DownloadPercentRole, "downloadPercent"},
         {IsDownloadingRole, "isDownloading"},
         {DownloadFinishedRole, "downloadFinished"},
-        {BackendTypeRole, "backendType"}
+        {BackendTypeRole, "backendType"},
+        {ObjectRole, "object"}
     };
     // clang-format on
 }
@@ -255,10 +259,20 @@ Model *ModelList::at(int index) const
 
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-void ModelList::downloadRequest(int index , const QString &path){
+void ModelList::downloadRequest(int id , const QString &path){
+    auto modelIt = std::find_if(_models.begin(), _models.end(), [&id](Model *m) {
+        return m->id() == id;
+    });
+
+    if (modelIt == _models.end())
+        return;
+
     auto directoryPath = QString{path}.remove("file:///");
 
-    Model *model = _models[index];
+    Model *model = *modelIt;
+    auto index = _models.indexOf(model);
+    if (index == -1)
+        return;
 
     model->setDirectoryPath(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
@@ -291,7 +305,7 @@ void ModelList::addModel(const QString &path)
 
     QFileInfo fileInfo(directoryPath);
     QString fileName = fileInfo.baseName();
-    double fileSize = (fileInfo.size()/10000000)*0.01;
+    double fileSize = (fileInfo.size() / 10000000) * 0.01;
 
     //add from database
     Model *model =phoenix_databace::insertModel(fileName, directoryPath);
@@ -340,6 +354,10 @@ void ModelList::handleDownloadFinished(int index)
                      createIndex(index, 0),
                      {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     emit currentModelListChanged();
+
+    auto download = qobject_cast<Download*>(sender());
+    if (download)
+        download->deleteLater();
 }
 
 void ModelList::cancelRequest(int index)
@@ -514,8 +532,7 @@ void ModelList::readModelFromJSONFile()
     auto index = static_cast<int>(_models.size()) - 1;
 
     std::for_each(_models.rbegin(), _models.rend(), [&index, this](Model *model) {
-        switch (model->backendType()) {
-        case Model::BackendType::LocalModel:
+        if (model->backendType() == Model::BackendType::LocalModel) {
             if (model->downloadFinished()) {
                 if (model->url().isEmpty()) {
                     QFileInfo fileInfo(model->directoryPath());
@@ -524,16 +541,13 @@ void ModelList::readModelFromJSONFile()
                     model->setInformation(
                         "This model has been successfully added to the application by you.");
                 }
-                m_currentModelList->addModel(model);
             } else if (model->url().isEmpty()) {
                 deleteRequest(index);
             }
-            break;
-        case Model::BackendType::OnlineProvider:
-            if (!model->apiKey().isEmpty())
-                m_currentModelList->addModel(model);
-            break;
         }
+
+        if (model->isReady())
+            m_currentModelList->addModel(model);
 
         index--;
     });

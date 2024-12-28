@@ -110,6 +110,8 @@ public:
     QString apiKey() const;
     void setApiKey(const QString &newApiKey);
 
+    bool isReady() const;
+
 signals:
     void idChanged(int id);
     void fileSizeChanged(double fileSize);

@@ -117,7 +117,7 @@ void ChatLLM::prompt(const QString &input){
     // QString qStr = QString::fromStdString(answer);
     // qInfo() <<  qStr;
 
-    for(int i=0;i<40;i++){
+    for (int i = 0; i < 40; i++) {
         emit tokenResponse("Hi  :)  ");
         // qInfo()<<"send";
         QThread::msleep(50);

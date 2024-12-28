@@ -12,9 +12,22 @@ bool ModelListFilter::filterAcceptsRow(int source_row, const QModelIndex &source
     if (!model)
         return false;
 
-    if (m_backendType != BackendType::All
+    if (m_backendType != BackendType::AllProviders
         && m_backendType != static_cast<BackendType>(model->backendType()))
         return false;
+
+    switch (m_readyType) {
+    case ModelListFilter::ReadyType::Ready:
+        if (!model->isReady())
+            return false;
+        break;
+    case ModelListFilter::ReadyType::NotReady:
+        if (model->isReady())
+            return false;
+        break;
+    case ModelListFilter::ReadyType::All:
+        break;
+    }
 
     if (!m_searchTerm.isEmpty() && !model->name().contains(m_searchTerm, Qt::CaseInsensitive))
         return false;
