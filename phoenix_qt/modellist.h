@@ -61,11 +61,11 @@ public:
 
     explicit ModelList(QObject *parent = nullptr);
 
-    Q_INVOKABLE void downloadRequest(int id, const QString &directoryPath);
+    Q_INVOKABLE void downloadRequest(int id, const QUrl &url);
     Q_INVOKABLE void setApiKey(int id , const QString &apiKey);
-    Q_INVOKABLE void cancelRequest(int index);
-    Q_INVOKABLE void deleteRequest(int index);
-    Q_INVOKABLE void addModel(const QString &directoryPath);
+    Q_INVOKABLE void cancelRequest(int id);
+    Q_INVOKABLE void deleteRequest(int id);
+    Q_INVOKABLE void addModel(const QUrl &url);
 
     //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//
@@ -91,8 +91,8 @@ public:
 
     Model *at(int index) const;
 public slots:
-    void handleDownloadProgress(int index, qint64 bytesReceived, qint64 bytesTotal);
-    void handleDownloadFinished(int index);
+    void handleDownloadProgress(int index, Model *model, qint64 bytesReceived, qint64 bytesTotal);
+    void handleDownloadFinished(int index, Model *model);
 
 signals:
     void currentModelListChanged();
@@ -104,9 +104,11 @@ private:
     CurrentModelList *m_currentModelList;
     int m_downloadProgress;
 
+    Model *findModelById(int id);
+
     void readModelFromJSONFile();
     void updateDownloadProgress();
-    void deleteDownloadModel(const int index);
+    void deleteDownloadModel(Model *model);
     void loadLocalModelsFromJson(QJsonArray jsonArray);
     void loadOnlineProvidersFromJson(QJsonArray jsonArray);
 };

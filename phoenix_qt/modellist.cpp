@@ -6,6 +6,8 @@
 #include <QSqlQuery>
 #include <QtSql>
 
+#include <iterator>
+
 ModelList::ModelList(QObject *parent)
     : QAbstractListModel(parent)
     , m_currentModelList(new CurrentModelList(this))
@@ -14,6 +16,13 @@ ModelList::ModelList(QObject *parent)
     //read from database
     _models = phoenix_databace::readModel();
 
+    QList<Model *> readyModels;
+    std::copy_if(_models.begin(), _models.end(), std::back_inserter(readyModels), [](Model *model) {
+        return model->isReady();
+    });
+    for (auto m : readyModels) {
+        qDebug() << "Model is ready: " << m->name();
+    }
     readModelFromJSONFile();
 }
 
@@ -259,30 +268,31 @@ Model *ModelList::at(int index) const
 
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
-void ModelList::downloadRequest(int id , const QString &path){
-    auto modelIt = std::find_if(_models.begin(), _models.end(), [&id](Model *m) {
-        return m->id() == id;
-    });
-
-    if (modelIt == _models.end())
+void ModelList::downloadRequest(int id, const QUrl &url)
+{
+    auto model = findModelById(id);
+    if (!model)
         return;
 
-    auto directoryPath = QString{path}.remove("file:///");
+    auto directoryPath = url.toLocalFile();
 
-    Model *model = *modelIt;
     auto index = _models.indexOf(model);
     if (index == -1)
         return;
 
-    model->setDirectoryPath(directoryPath+ "/" + model->fileName());
+    model->setDirectoryPath(directoryPath);
     model->setIsDownloading(true);
 
-    Download *download = new Download(index, model->url(), model->directoryPath());
-    if(downloads.size()<3){
+    Download *download = new Download(index,
+                                      model,
+                                      model->url(),
+                                      model->directoryPath() + "/" + model->fileName());
+    if (downloads.size() < 3) {
         connect(download, &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
         download->downloadModel();
     }
+
     downloads.append(download);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
@@ -290,18 +300,17 @@ void ModelList::downloadRequest(int id , const QString &path){
 
 void ModelList::setApiKey(int id, const QString &apiKey)
 {
-    auto modelIt = std::find_if(_models.begin(), _models.end(), [&id](Model *m) {
-        return m->id() == id;
-    });
-    if (modelIt == _models.end())
+    Model *model = findModelById(id);
+    if (!model)
         return;
+
     phoenix_databace::updateModelApiKey(id, apiKey);
-    m_currentModelList->addModel(*modelIt);
+    m_currentModelList->addModel(model);
 }
 
-void ModelList::addModel(const QString &path)
+void ModelList::addModel(const QUrl &url)
 {
-    auto directoryPath = QString{path}.remove("file:///");
+    auto directoryPath = url.toLocalFile();
 
     QFileInfo fileInfo(directoryPath);
     QString fileName = fileInfo.baseName();
@@ -324,11 +333,11 @@ void ModelList::addModel(const QString &path)
 
 }
 
-void ModelList::handleDownloadProgress(const int index,
+void ModelList::handleDownloadProgress(int index,
+                                       Model *model,
                                        const qint64 bytesReceived,
                                        const qint64 bytesTotal)
 {
-    Model *model = _models[index];
     qDebug() << static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal);
     model->setDownloadPercent(static_cast<double>(bytesReceived) / static_cast<double>(bytesTotal));
 
@@ -337,9 +346,8 @@ void ModelList::handleDownloadProgress(const int index,
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
 }
 
-void ModelList::handleDownloadFinished(int index)
+void ModelList::handleDownloadFinished(int index, Model *model)
 {
-    Model *model = _models[index];
     model->setIsDownloading(false);
     model->setDownloadFinished(true);
     model->setDownloadPercent(0);
@@ -348,7 +356,7 @@ void ModelList::handleDownloadFinished(int index)
     m_currentModelList->addModel(model);
 
     updateDownloadProgress();
-    deleteDownloadModel(index);
+    deleteDownloadModel(model);
 
     emit dataChanged(createIndex(index, 0),
                      createIndex(index, 0),
@@ -360,24 +368,56 @@ void ModelList::handleDownloadFinished(int index)
         download->deleteLater();
 }
 
-void ModelList::cancelRequest(int index)
+Model *ModelList::findModelById(int id)
 {
-    Model *model = _models[index];
-    for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
-        if(downloads[indexSearch]->index() == index)
-            downloads[indexSearch]->cancelDownload();
+    auto modelIt = std::find_if(_models.begin(), _models.end(), [&id](Model *m) {
+        return m->id() == id;
+    });
+    if (modelIt == _models.end())
+        return nullptr;
+    return *modelIt;
+}
+
+void ModelList::cancelRequest(int id)
+{
+    Model *model = findModelById(id);
+    if (!model)
+        return;
+
+    auto index = _models.indexOf(model);
+    if (index == -1)
+        return;
+
+    auto downloadIt = std::find_if(downloads.begin(), downloads.end(), [&model](Download *dl) {
+        return dl->model() == model;
+    });
+
+    if (downloadIt == downloads.end())
+        return;
+
+    auto download = *downloadIt;
+
+    download->cancelDownload();
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     model->setDownloadPercent(0);
 
     updateDownloadProgress();
-    deleteDownloadModel(index);
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
+    deleteDownloadModel(model);
+    emit dataChanged(createIndex(index, 0),
+                     createIndex(index, 0),
+                     {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
 }
 
-void ModelList::deleteRequest(int index)
+void ModelList::deleteRequest(int id)
 {
-    Model *model = _models[index];
+    Model *model = findModelById(id);
+    if (!model)
+        return;
+
+    auto index = _models.indexOf(model);
+    if (index == -1)
+        return;
 
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
@@ -570,17 +610,22 @@ void ModelList::updateDownloadProgress()
 
 }
 
-void ModelList::deleteDownloadModel(const int index){
-    if(downloads.size()>3){
+void ModelList::deleteDownloadModel(Model *model)
+{
+    auto downloadIt = std::find_if(downloads.begin(), downloads.end(), [&model](Download *dl) {
+        return dl->model() == model;
+    });
+
+    if (downloadIt == downloads.end())
+        return;
+
+    if (downloads.size() > 3) {
         connect(downloads[3], &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(downloads[3], &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
         downloads[3]->downloadModel();
     }
-    for(int searchIndex = 0; searchIndex<downloads.size(); searchIndex++){
-        if(downloads[searchIndex]->index() == index){
-            Download *download = downloads[searchIndex];
-            downloads.removeAt(searchIndex);
-            delete download;
-        }
-    }
+
+    auto dl = *downloadIt;
+    downloads.removeAt(std::distance(downloads.begin(), downloadIt));
+    dl->deleteLater();
 }

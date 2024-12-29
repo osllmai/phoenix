@@ -22,11 +22,13 @@ class Message : public QObject
     Q_PROPERTY(bool isPrompt READ isPrompt NOTIFY isPromptChanged )
 
 public:
-    explicit Message(const int &id, const QString &text, bool isPrompt, QObject *parent = nullptr );
-    explicit Message(const int &id, const QString &text, bool isPrompt, QDateTime date, int numberOfToken, int executionTime, QObject *parent = nullptr);
+    explicit Message(QObject *parent = nullptr);
+    Message(int id, const QString &text, bool isPrompt, QObject *parent = nullptr );
+    Message(int id, const QString &text, bool isPrompt, QDateTime date, int numberOfToken, int executionTime, QObject *parent = nullptr);
+
     // Message* findChild(const int index) ;
     void nextChild(const int numberOfNext);
-    void addChild( Message *message);
+    void addChild(Message *message);
 
     //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//

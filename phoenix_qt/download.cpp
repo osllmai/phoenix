@@ -1,11 +1,13 @@
 #include "download.h"
 
-Download::Download(const int index, const QString &url, const QString &modelPath, QObject *parent)
+Download::Download(
+    int index, Model *model, const QString &url, const QString &modelPath, QObject *parent)
     : QObject{parent}
+    , m_index{index}
+    , m_model{model}
+    , url{url}
+    , modelPath{modelPath}
 {
-    m_index =index;
-    this->url = url;
-    this->modelPath = modelPath;
     moveToThread(&downloadThread);
     downloadThread.start();
     qInfo() << "new thread for download Model"<< m_index << " ::" << QThread::currentThread();
@@ -16,10 +18,6 @@ Download::~Download(){
     delete reply;
     downloadThread.quit();
     downloadThread.wait();
-}
-
-int Download::index() const{
-    return m_index;
 }
 
 void Download::downloadModel(){
@@ -54,9 +52,9 @@ void Download::onDownloadFinished() {
             file.write(reply->readAll());
             file.close();
             qInfo()<<"download: "<<modelPath;
-            emit downloadFinished(m_index);
+            emit downloadFinished(m_index, m_model);
         } else {
-            qInfo()<<"download: "<<"Failed to save the file.";
+            qInfo() << "download: " << "Failed to save the file." << modelPath;
             // emit downloadFailed("Failed to save the file.");
         }
     } else {
@@ -67,5 +65,10 @@ void Download::onDownloadFinished() {
 }
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
-    emit downloadProgress(m_index, bytesReceived, bytesTotal);
+    emit downloadProgress(m_index, m_model, bytesReceived, bytesTotal);
+}
+
+Model *Download::model() const
+{
+    return m_model;
 }

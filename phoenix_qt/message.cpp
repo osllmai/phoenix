@@ -1,15 +1,40 @@
 #include "message.h"
 
-Message::Message(const int &id, const QString &text, bool isPrompt, QObject *parent ):
-    m_id(id),m_text(text), m_child(nullptr), QObject(parent),m_numberOfCurrentChild(-1),
-    m_numberOfChildList(0),m_isPrompt(isPrompt),m_numberOfToken(0),m_executionTime(0)
+Message::Message(QObject *parent)
+    : QObject{parent}
+{}
+
+Message::Message(int id, const QString &text, bool isPrompt, QObject *parent)
+    : QObject{parent}
+    , m_id(id)
+    , m_text(text)
+    , m_child(nullptr)
+    , m_numberOfCurrentChild(-1)
+    , m_numberOfChildList(0)
+    , m_isPrompt(isPrompt)
+    , m_numberOfToken(0)
+    , m_executionTime(0)
 {
     m_date = QDateTime::currentDateTime();
 }
 
-Message::Message(const int &id, const QString &text, bool isPrompt, QDateTime date, int numberOfToken, int executionTime,QObject *parent ):
-    m_id(id),m_text(text), m_child(nullptr), QObject(parent),m_numberOfCurrentChild(-1),
-    m_numberOfChildList(0),m_isPrompt(isPrompt),m_numberOfToken(numberOfToken),m_executionTime(executionTime),m_date(date)
+Message::Message(int id,
+                 const QString &text,
+                 bool isPrompt,
+                 QDateTime date,
+                 int numberOfToken,
+                 int executionTime,
+                 QObject *parent)
+    : QObject{parent}
+    , m_id(id)
+    , m_text(text)
+    , m_child(nullptr)
+    , m_numberOfCurrentChild(-1)
+    , m_numberOfChildList(0)
+    , m_isPrompt(isPrompt)
+    , m_numberOfToken(numberOfToken)
+    , m_executionTime(executionTime)
+    , m_date(date)
 {}
 
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
@@ -73,7 +98,7 @@ void Message::setExecutionTime(const int executionTime){
 //*-------------------------------------------------------------------------------------* end Write Property *--------------------------------------------------------------------------------------*//
 
 void Message::nextChild(const int numberOfNext){
-    if(numberOfNext<childList.size() && m_numberOfCurrentChild != numberOfNext){
+    if (numberOfNext < childList.size() && m_numberOfCurrentChild != numberOfNext) {
         m_numberOfCurrentChild = numberOfNext;
         m_child = childList[numberOfNext];
         emit childChanged();

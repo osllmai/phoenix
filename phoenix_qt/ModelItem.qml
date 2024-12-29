@@ -370,7 +370,7 @@ Item{
             Connections{
                 target: downloadRequest
                 function onBottonAction1(){
-                    control.myModelListModel.downloadRequest(control.myIndex)
+                    control.myModelListModel.downloadRequest(control.myModel.id)
                     downloadRequest.close()
                 }
 
@@ -413,9 +413,9 @@ Item{
 
                 function onBottonAction2(){
                     if(control.myModel.isDownloading && !control.myModel.downloadFinished){
-                        control.myModelListModel.cancelRequest(control.myIndex);
+                        control.myModelListModel.cancelRequest(control.myModel.id);
                     }else {
-                        control.myModelListModel.deleteRequest(control.myIndex);
+                        control.myModelListModel.deleteRequest(control.myModel.id);
                     }
                     deleteRequest.close()
                 }

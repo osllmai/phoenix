@@ -271,7 +271,8 @@ void Model::setApiKey(const QString &newApiKey)
 bool Model::isReady() const {
     switch (m_backendType) {
     case Model::BackendType::LocalModel:
-        return QFile::exists(m_directoryPath + "/" + m_fileName);
+        return !m_directoryPath.isEmpty() && !m_fileName.isEmpty()
+               && QFile::exists(m_directoryPath + "/" + m_fileName);
     case Model::BackendType::OnlineProvider:
         return !m_apiKey.isEmpty();
     }
