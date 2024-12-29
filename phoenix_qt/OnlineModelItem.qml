@@ -13,7 +13,7 @@ Item{
     height: 250
 
 
-    property var myModel
+    property Model myModel
     property var myModelListModel
     property int myIndex
 
@@ -128,7 +128,7 @@ Item{
             anchors.bottomMargin: 20
 
             Label {
-                text: "Api key" + (myModel.apiKey === '' || myModel.apiKey === null ? '' : " (already set)")
+                text: "Api key" + ( (myModel.apiKey === '' || myModel.apiKey === null) ? '' : " (already set)")
                 Layout.fillWidth: true
             }
 

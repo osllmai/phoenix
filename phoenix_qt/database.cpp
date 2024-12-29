@@ -186,7 +186,6 @@ QList<Model*> phoenix_databace::readModel(){
                                false,
                                fileExist);
 
-        qDebug() << name << query.value("backendType");
         model->setBackendType(static_cast<Model::BackendType>(query.value("backendType").toInt()));
         model->setApiKey(query.value("apiKey").toString());
 

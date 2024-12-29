@@ -38,6 +38,63 @@ Item {
     signal goToModelPage()
     signal loadModelDialog(int indexModel)
 
+    component ModelListDelegate : Rectangle{
+        id: delegateChat
+        width: historylist.width
+        height: 30
+        color: mouseAreaChatItem.containsPress ? root.selectButtonColor : (mouseAreaChatItem.containsMouse ? root.normalButtonColor : root.hoverButtonColor)
+        radius: 5
+
+        property string text
+
+        signal clicked()
+
+        Rectangle{
+            id:recTexxt
+            anchors.fill:parent
+            color: "#00ffffff"
+            Text {
+                id:  textId
+                color: root.chatMessageInformationTextColor
+                text: delegateChat.text
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: modelIconBox.right
+                anchors.leftMargin: 0
+                font.pixelSize: 9
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.family: root.fontFamily
+            }
+            Rectangle {
+                id: modelIconBox
+                width: 30
+                height: 30
+                color: "#00ffffff"
+                radius: 4
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.verticalCenter: parent.verticalCenter
+                Image {
+                    id: modelIcon
+                    height: 16
+                    width: 16
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: model.icon
+                    sourceSize.height: 32
+                    sourceSize.width: 32
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    fillMode: Image.PreserveAspectFit
+                }
+            }
+            MouseArea {
+                id:mouseAreaChatItem
+                anchors.fill:parent
+                onClicked: delegateChat.clicked()
+                hoverEnabled: true
+            }
+        }
+    }
+
     CurrentModelListFilter {
         id: offlineModels
         currentModelList: modelListModel
@@ -225,77 +282,10 @@ Item {
                             // Component.onCompleted: chatListModel.loadChats()
                             spacing: 5
 
-                            delegate: Rectangle{
-                                id: delegateChat
-                                width: historylist.width
-                                height: 30
-                                color: root.normalButtonColor
-                                radius: 5
-
-                                Rectangle{
-                                    id:recTexxt
-                                    anchors.fill:parent
-                                    color: "#00ffffff"
-                                    Text {
-                                        id:  textId
-                                        color: root.chatMessageInformationTextColor
-                                        text: model.name
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        anchors.left: modelIconBox.right
-                                        anchors.leftMargin: 0
-                                        font.pixelSize: 9
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        font.family: root.fontFamily
-                                    }
-                                    Rectangle {
-                                        id: modelIconBox
-                                        width: 30
-                                        height: 30
-                                        color: "#00ffffff"
-                                        radius: 4
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 0
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        Image {
-                                            id: modelIcon
-                                            height: 16
-                                            width: 16
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            source: model.icon
-                                            sourceSize.height: 32
-                                            sourceSize.width: 32
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                            fillMode: Image.PreserveAspectFit
-                                        }
-                                    }
-                                    MouseArea {
-                                        id:mouseAreaChatItem
-                                        anchors.fill:parent
-                                        onClicked: {
-                                            delegateChat.color= root.selectButtonColor
-                                            root.loadModelDialog(index);
-                                        }
-                                        hoverEnabled: true
-                                        onHoveredChanged: {
-                                            if(containsMouse){
-                                                delegateChat.color= root.hoverButtonColor
-                                                //     if(root.myChatListModel.currentChat !== root.myChatListModel.getChat(root.myIndex) ){
-                                                //         backgroundId.color = root.hoverButtonColor
-                                                //         chatIcon.open()
-                                                //     }
-                                            }else{
-                                                delegateChat.color= root.normalButtonColor
-                                                //     if(root.myChatListModel.currentChat === root.myChatListModel.getChat(root.myIndex)){
-                                                //         backgroundId.color=root.selectButtonColor
-                                                //     }else{
-                                                //         backgroundId.color=root.normalButtonColor
-                                                //         // chatIcon.close()
-                                                //     }
-                                            }
-                                        }
-                                    }
-                                }
+                            delegate: ModelListDelegate {
+                                text: model.name
+                                width: ListView.view.width
+                                onClicked: root.loadModelDialog(index);
                             }
                         }
                     }
@@ -337,6 +327,13 @@ Item {
                 Layout.fillWidth: true
                 // color: "red"
 
+                Label {
+                    anchors.centerIn: parent
+                    visible: onlineModelslist.count > 0
+                    text: qsTr("There is no model.")
+                    color: "#919191"
+                }
+
                 ListView {
                     id: onlineModelslist
                     anchors.fill: parent
@@ -344,8 +341,7 @@ Item {
                     // Component.onCompleted: chatListModel.loadChats()
                     spacing: 5
 
-                    // required property string name: model.name
-                    delegate: ItemDelegate {
+                    delegate: ModelListDelegate {
                         text: model.name
                         width: ListView.view.width
 

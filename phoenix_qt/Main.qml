@@ -502,8 +502,8 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 anchors.rightMargin: 0
                 anchors.topMargin: 0
-                myIconId: "images./githubIcon.svg"
-                myFillIconId: "images./githubIcon.svg"
+                myIconId: "images/githubIcon.svg"
+                myFillIconId: "images/githubIcon.svg"
                 myLable: "Github"
                 heightSource: 18
                 widthSource: 18

@@ -12,7 +12,7 @@ Item{
     width: 250
     height: 250
 
-    property var myModel
+    property Model myModel
     property var myModelListModel
     property int myIndex
 
@@ -321,7 +321,7 @@ Item{
                 currentFolder: folderDialogId.currentFolder
 
                 onAccepted: {
-                    control.myModelListModel.downloadRequest(control.myIndex, currentFolder)
+                    control.myModelListModel.downloadRequest(control.myModel.id, currentFolder)
                     console.log(currentFolder)
                 }
                 onRejected: {

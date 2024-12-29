@@ -220,6 +220,7 @@ target_link_libraries(app${PROJECTNAME}
         Qt6::Core
         Qt6::Gui
         Qt6::Quick
+        Qt6::Widgets
         Qt6::Qml
         Qt6::Charts
         Qt6::Sql

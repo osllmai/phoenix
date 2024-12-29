@@ -48,7 +48,8 @@ class ModelList : public QAbstractListModel
         DownloadPercentRole,
         IsDownloadingRole,
         DownloadFinishedRole,
-        BackendTypeRole
+        BackendTypeRole,
+        ObjectRole
     };
 
 public:
@@ -60,7 +61,7 @@ public:
 
     explicit ModelList(QObject *parent = nullptr);
 
-    Q_INVOKABLE void downloadRequest(int index , const QString &directoryPath);
+    Q_INVOKABLE void downloadRequest(int id, const QString &directoryPath);
     Q_INVOKABLE void setApiKey(int id , const QString &apiKey);
     Q_INVOKABLE void cancelRequest(int index);
     Q_INVOKABLE void deleteRequest(int index);
