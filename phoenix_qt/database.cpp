@@ -50,7 +50,6 @@ Model *phoenix_databace::insertModel(const QString &name,
     query.exec();
 
     model = new Model(query.lastInsertId().toInt() ,0 ,0 ,name ,"","","",path ,"","","","","","./images/Phoenix.svg" ,0,false ,false );
-    model->setBackendType(backendType);
 
     db.close();
     return model;

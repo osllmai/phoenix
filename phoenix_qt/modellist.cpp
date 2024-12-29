@@ -475,8 +475,12 @@ void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray)
         if (jsonObj == QJsonObject{})
             continue;
 
+          auto model = new Model{this};
 
         auto modelName = jsonObj.value("name").toString();
+        model->setName(modelName);
+        model->setInformation(jsonObj.value("description").toString());
+        model->setBackendType(Model::BackendType::OnlineProvider);
 
         auto existingModelIt = std::find_if(_models.begin(),
                                             _models.end(),
@@ -484,9 +488,8 @@ void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray)
                                                 return model->name() == modelName;
                                             });
 
-        Model *model;
         if (existingModelIt == _models.end()) {
-            model = phoenix_databace::insertModel(modelName,
+            auto model = phoenix_databace::insertModel(modelName,
                                                        "",
                                                        Model::BackendType::OnlineProvider);
 
@@ -494,11 +497,6 @@ void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray)
             beginInsertRows(QModelIndex(), index, index);
             _models << model;
             endInsertRows();
-
-        } else {
-            model = *existingModelIt;
-            model->setInformation(jsonObj.value("description").toString());
-            model->setBackendType(Model::BackendType::OnlineProvider);
         }
     }
 }
