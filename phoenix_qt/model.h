@@ -6,6 +6,10 @@
 
 #include "download.h"
 
+class SubModel {
+
+};
+
 class Model : public QObject
 {
     Q_OBJECT
@@ -40,7 +44,7 @@ public:
     };
     Q_ENUM(BackendType)
 
-    explicit Model(QObject *parent = nullptr);
+    explicit Model(const QJsonObject &obj, QObject *parent = nullptr);
     Model(int id,
           double fileSize,
           int ramRamrequired,

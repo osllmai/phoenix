@@ -2,7 +2,7 @@
 
 #include <QFile>
 
-Model::Model(QObject *parent)
+Model::Model(const QJsonObject &obj, QObject *parent)
     : QObject{parent}
 {}
 

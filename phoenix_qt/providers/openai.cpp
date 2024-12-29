@@ -34,7 +34,8 @@ void OpenAI::prompt(const QString &message)
                              {"role", "user"},
                              {"content", message}
                          }
-                     }}
+                    }
+        }
     };
 
     // clang-format on

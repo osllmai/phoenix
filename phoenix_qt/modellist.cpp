@@ -475,7 +475,7 @@ void ModelList::loadOnlineProvidersFromJson(QJsonArray jsonArray)
         if (jsonObj == QJsonObject{})
             continue;
 
-          auto model = new Model{this};
+        auto model = new Model{jsonObj, this};
 
         auto modelName = jsonObj.value("name").toString();
         model->setName(modelName);

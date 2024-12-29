@@ -320,16 +320,16 @@ Item {
                 }
             }
 
-            Item {
+            Rectangle {
                 id: modelSpace
                 // radius: 4
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                // color: "red"
+                color: "#00ffffff"
 
                 Label {
                     anchors.centerIn: parent
-                    visible: onlineModelslist.count > 0
+                    visible: onlineModels.count === 0
                     text: qsTr("There is no model.")
                     color: "#919191"
                 }
@@ -337,6 +337,7 @@ Item {
                 ListView {
                     id: onlineModelslist
                     anchors.fill: parent
+                    anchors.margins: 10
                     model: onlineModels
                     // Component.onCompleted: chatListModel.loadChats()
                     spacing: 5
