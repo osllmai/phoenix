@@ -3,12 +3,13 @@ import shutil
 import glob
 import subprocess
 
-BIN_PATH = "/doc/dev/work/phoenix/phoenix_qt/build/Desktop_Qt_6_8_system-Debug/bin/"
 QMAKE_PATH = "/usr/bin/qmake6"
 QTIF_PATH = "/doc/Qt/Tools/QtInstallerFramework/4.1/bin/"
-PACKAGE_DATA_FOLDER = "packages/io.phoenix.phoenix/data/"
-APP_NAME = "appPhoenix"
 CQTDEPLOYER_PATH = "/usr/bin/cqtdeployer"
+
+BIN_PATH = "/doc/dev/work/phoenix/phoenix_qt/build/Desktop_Qt_6_8_system-Debug/bin/"
+PACKAGE_DATA_FOLDER = "packages/io.phoenix.phoenix.bin/data/"
+APP_NAME = "appPhoenix"
 TEMP_FOLDER_NAME="tmp"
 OUT_PATH='DistributionKit'
 
@@ -66,7 +67,7 @@ def copyFiles():
     if os.path.exists(dest):
         shutil.rmtree(dest)
     shutil.copytree(TEMP_FOLDER_NAME, "packages/io.phoenix.phoenix.bin/data/")
-    
+
 def createPackage():
     # Call QtIF binarycreator to generate the installer
     config_file = "config/config.xml"  # Adjust as needed
@@ -96,7 +97,7 @@ if __name__ == "__main__":
         copyFilesFromBin()
         
         print("Running cqtdeployer...")
-        # runDeployer()
+        runDeployer()
         
         print("Copying files...")
         copyFiles()

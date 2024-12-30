@@ -202,6 +202,7 @@ qt_add_qml_module(app${PROJECTNAME}
         providers/openai.h providers/openai.cpp
         modellistfilter.h modellistfilter.cpp
         currentmodellistfilter.h currentmodellistfilter.cpp
+        providers/nerdtoken.h providers/nerdtoken.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
