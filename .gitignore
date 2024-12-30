@@ -83,4 +83,4 @@ build
 
 installer/DistributionKit
 installer/tmp
-installer/packages/io.phoenix.phoenix/data
+installer/packages/*/data

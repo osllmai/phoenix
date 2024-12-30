@@ -10,6 +10,7 @@ PACKAGE_DATA_FOLDER = "packages/io.phoenix.phoenix/data/"
 APP_NAME = "appPhoenix"
 CQTDEPLOYER_PATH = "/usr/bin/cqtdeployer"
 TEMP_FOLDER_NAME="tmp"
+OUT_PATH='DistributionKit'
 
 def copyFilesFromBin():
     # Create output folder if it doesn't exist, otherwise remove all its contents
@@ -49,6 +50,23 @@ def runDeployer():
         shutil.move(src, dest)
         print(f"Moved: {src} -> {dest}")
 
+def copyFolderToPackage(folder, package):
+    dest = f"packages/io.phoenix.phoenix.{package}/data/{folder}"
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    shutil.copytree(f"{OUT_PATH}/{folder}", f"packages/io.phoenix.phoenix.{package}/data/{folder}")
+
+def copyFiles():
+    copyFolderToPackage("translations", "translations")
+    copyFolderToPackage("lib", "core")
+    copyFolderToPackage("plugins", "core")
+    copyFolderToPackage("qml", "core")
+
+    dest = "packages/io.phoenix.phoenix.bin/data/"
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    shutil.copytree(TEMP_FOLDER_NAME, "packages/io.phoenix.phoenix.bin/data/")
+    
 def createPackage():
     # Call QtIF binarycreator to generate the installer
     config_file = "config/config.xml"  # Adjust as needed
@@ -65,11 +83,11 @@ def createPackage():
         binary_creator_path,
         "-c", config_file,
         "-p", package_folder,
-        "installer.exe"  # Output installer file name
+        "installer"  # Output installer file name
     ]
     print(f"Running command: {' '.join(package_command)}")
     subprocess.run(package_command, check=True)
-    print("Installer created successfully: installer.exe")
+    print("Installer created successfully: installer")
 
 # Call above methods one by one
 if __name__ == "__main__":
@@ -78,8 +96,12 @@ if __name__ == "__main__":
         copyFilesFromBin()
         
         print("Running cqtdeployer...")
-        runDeployer()
+        # runDeployer()
         
+        print("Copying files...")
+        copyFiles()
+
+
         print("Creating installer package...")
         createPackage()
         

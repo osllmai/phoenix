@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Translations</DisplayName>
+    <Description>Translations and languages files.</Description>
+    <Version>0.1</Version>
+    <ReleaseDate>2024-12-30</ReleaseDate>
+    <Default>true</Default>
+</Package>
