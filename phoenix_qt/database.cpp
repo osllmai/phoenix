@@ -13,7 +13,9 @@ QSqlError phoenix_databace::initDb(){
         return query.lastError();
 
     QStringList tables = db.tables();
-    if (tables.contains("model", Qt::CaseInsensitive) && tables.contains("conversation", Qt::CaseInsensitive) && tables.contains("message", Qt::CaseInsensitive))
+    if (tables.contains("model", Qt::CaseInsensitive)
+        && tables.contains("conversation", Qt::CaseInsensitive)
+        && tables.contains("message", Qt::CaseInsensitive))
         return QSqlError();
 
     if (!query.exec(MODEL_SQL))
@@ -341,4 +343,9 @@ QSqlError phoenix_databace::updateModelApiKey(int id, const QString &apiKey)
 
     db.close();
     return QSqlError();
+}
+
+PhoenixDatabace *PhoenixDatabace::instance() {
+    static PhoenixDatabace instance;
+    return &instance;
 }

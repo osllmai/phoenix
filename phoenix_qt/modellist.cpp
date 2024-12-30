@@ -16,6 +16,8 @@ ModelList::ModelList(QObject *parent)
     //read from database
     _models = phoenix_databace::readModel();
 
+    readModelFromJSONFile();
+
     QList<Model *> readyModels;
     std::copy_if(_models.begin(), _models.end(), std::back_inserter(readyModels), [](Model *model) {
         return model->isReady();
@@ -23,7 +25,12 @@ ModelList::ModelList(QObject *parent)
     for (auto m : readyModels) {
         qDebug() << "Model is ready: " << m->name();
     }
-    readModelFromJSONFile();
+
+    auto c = std::count_if(_models.begin(), _models.end(), [](Model *model) {
+        return model->id() == 0;
+    });
+
+    qDebug() << "Zero models:" << c;
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
@@ -363,7 +370,7 @@ void ModelList::handleDownloadFinished(int index, Model *model)
                      {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     emit currentModelListChanged();
 
-    auto download = qobject_cast<Download*>(sender());
+    auto download = qobject_cast<Download *>(sender());
     if (download)
         download->deleteLater();
 }
@@ -419,22 +426,24 @@ void ModelList::deleteRequest(int id)
     if (index == -1)
         return;
 
+    qDebug() << Q_FUNC_INFO << model->name() << model->directoryPath() << model->fileName()
+             << model->modelFilePath();
+    return;
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
     m_currentModelList->deleteModel(model);
 
-    if (model->url() == "") {
+    if (model->url().isEmpty()) {
         beginRemoveRows(QModelIndex(), index, index);
         phoenix_databace::deleteModel(model->id());
         delete _models.takeAt(index);
         endRemoveRows();
 
         // chat->unloadAndDeleteLater();
-    } else if (model->directoryPath() != "") {
-        QFile file(model->directoryPath());
-        if (file.exists()) {
-            file.remove();
-        }
+    } else if (!model->modelFilePath().isEmpty()) {
+        if (QFile::exists(model->modelFilePath()))
+            QFile::remove(model->modelFilePath());
+
         phoenix_databace::updateModelPath(model->id(), "");
     }
 
@@ -593,15 +602,18 @@ void ModelList::readModelFromJSONFile()
 
 void ModelList::updateDownloadProgress()
 {
-    double totalBytesDownload = 0;
-    double receivedBytesDownload = 0;
+    double downloadsCount = 0;
+    double downloadPercentSum = 0;
     for (auto &&model : _models) {
-        totalBytesDownload += 1;
-        receivedBytesDownload += model->downloadPercent();
+        if (model->isDownloading()) {
+            downloadsCount += 1;
+            downloadPercentSum += model->downloadPercent();
+        }
     }
 
-    if (totalBytesDownload != 0)
-        m_downloadProgress = (receivedBytesDownload / totalBytesDownload) * 100;
+    if (downloadsCount != 0)
+        m_downloadProgress = static_cast<int>(
+            (static_cast<double>(downloadPercentSum) / static_cast<double>(downloadsCount)) * 100.);
     else
         m_downloadProgress = 0;
 

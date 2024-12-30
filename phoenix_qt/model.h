@@ -115,6 +115,7 @@ public:
     void setApiKey(const QString &newApiKey);
 
     bool isReady() const;
+    QString modelFilePath() const;
 
 signals:
     void idChanged(int id);

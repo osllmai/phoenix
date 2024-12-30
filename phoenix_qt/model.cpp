@@ -278,3 +278,11 @@ bool Model::isReady() const {
     }
     return false;
 }
+
+QString Model::modelFilePath() const
+{
+    if (m_backendType == BackendType::LocalModel) {
+        return m_directoryPath + "/" + m_fileName;
+    }
+    return {};
+}

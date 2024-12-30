@@ -3,10 +3,47 @@
 
 #include <QDateTime>
 #include <QSqlError>
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include "model.h"
 #include "chat.h"
 #include "message.h"
+
+ // TODO: convert this namespace to a singleton class
+class PhoenixDatabace
+{
+public:
+    static PhoenixDatabace *instance();
+
+    // QSqlError initDb();
+
+    // Model* insertModel(const QString &name, const QString &path, Model::BackendType backendType = Model::BackendType::LocalModel);
+
+    // int insertConversation(const QString &title, const QDateTime date);
+    // int insertMessage(const QString &text,
+    //                   bool isPrompt,
+    //                   int numberOfTokens,
+    //                   int executionTime,
+    //                   const Message *parent,
+    //                   int conversation_id,
+    //                   const QDateTime date);
+
+    // QSqlError deleteModel(int id);
+    // QSqlError deleteConversation(int id);
+
+    // QList<Model*> readModel();
+    // QList<Chat*> readConversation();
+    // QSqlError readMessage(Message *root, int conversation_id);
+
+    // QSqlError updateModelPath(int id, const QString &path);
+    // QSqlError updateConversationName(int id, const QString &name);
+    // QSqlError updateConversationDate(int id, const QDateTime date);
+    // QSqlError updateModelApiKey(int id, const QString &apiKey);
+
+private:
+    QSqlDatabase _db;
+};
+
 
 namespace phoenix_databace{
 const auto FOREIGN_KEYS_SQL = QLatin1String(R"(
@@ -123,8 +160,13 @@ QSqlError initDb();
 Model* insertModel(const QString &name, const QString &path, Model::BackendType backendType = Model::BackendType::LocalModel);
 
 int insertConversation(const QString &title, const QDateTime date);
-int insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
-                  const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date);
+int insertMessage(const QString &text,
+                  const bool isPrompt,
+                  const int numberOfTokens,
+                  const int executionTime,
+                  const Message *parent,
+                  const int &conversation_id,
+                  const QDateTime date);
 
 QSqlError deleteModel(const int &id);
 QSqlError deleteConversation(const int &id);
