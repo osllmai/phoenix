@@ -4,7 +4,7 @@ CurrentModelList::CurrentModelList(QObject *parent)
     : QAbstractListModel(parent)
 {}
 
-//*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
+//*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
 //*------------------------------------------------------------------------------* QAbstractItemModel interface *------------------------------------------------------------------------------*//
 int CurrentModelList::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
@@ -223,10 +223,5 @@ void CurrentModelList::deleteModel( Model *model){
 }
 
 Model* CurrentModelList::getModel(const int index){
-    qInfo()<<"0-0    "<<models.size()<< "   "<<index<<"   ";
-    for(int i =0; i<models.size();i++){
-             qInfo()<<"0-0    "<< models[i];
-    }
-
     return models[index];
 }

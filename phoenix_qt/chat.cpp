@@ -11,6 +11,7 @@
 Chat::Chat(const int &id, const QString &title, const QDateTime date , Message* root, QObject *parent) :
     QObject(parent), m_id(id), m_title(title),
     m_isLoadModel(false),
+    m_modelSettings(new ModelSettings(id, this)),
     m_loadModelInProgress(false),
     m_responseInProgress(false),
     chatLLM(new ChatLLM(this)),
@@ -73,6 +74,9 @@ ChatModel* Chat::chatModel() const{
 bool Chat::loadModelInProgress() const{
     return m_loadModelInProgress;
 }
+ModelSettings* Chat::modelSettings() const{
+    return m_modelSettings;
+}
 bool Chat::responseInProgress() const{
     return m_responseInProgress;
 }
@@ -88,40 +92,31 @@ Model* Chat::model() const{
 //*----------------------------------------------------------------------------------------***************----------------------------------------------------------------------------------------*//
 //*----------------------------------------------------------------------------------------* Write Property  *----------------------------------------------------------------------------------------*//
 void Chat::setId(const int id){
-
     if(m_id == id)
         return;
     m_id = id;
     m_chatModel->setParentId(id);
     emit idChanged();
-
 }
 void Chat::setTitle(const QString title){
-
     if(m_title == title)
         return;
     m_title = title;
     emit titleChanged();
-
 }
 void Chat::setIsLoadModel(const bool isLoadModel){
-
     if(m_isLoadModel == isLoadModel)
         return;
     m_isLoadModel = isLoadModel;
     emit isLoadModelChanged();
-
 }
 void Chat::setLoadModelInProgress(const bool loadModelInProgress){
-
     if(m_loadModelInProgress == loadModelInProgress)
         return;
     m_loadModelInProgress = loadModelInProgress;
     emit loadModelInProgressChanged();
 }
 void Chat::setResponseInProgress(const bool responseInProgress){
-    if(m_responseInProgress == responseInProgress)
-        return;
     m_responseInProgress = responseInProgress;
     if(!responseInProgress)
         chatLLM->setStop();
@@ -162,16 +157,15 @@ void Chat::tokenResponseRequested(const QString &token){
     m_chatModel->updateResponse(token);
 }
 
-void Chat::finishedResponnse(){
+void Chat::finishedResponnse(const QString &answer){
     setResponseInProgress(false);
     m_timer->stop();
     m_chatModel->setExecutionTime(m_valueTimer);
     m_valueTimer = 0;
     emit valueTimerChanged();
-    emit finishedResponnseRequest();
+    emit finishedResponnseRequest(answer);
 }
 //*-------------------------------------------------------------------------------------------* end Slots *--------------------------------------------------------------------------------------------*//
-
 
 void Chat::loadModelRequested(Model *model){
     if(m_isLoadModel == true)

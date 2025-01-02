@@ -1,17 +1,14 @@
-#ifndef CURRENTMODELLIST_H
-#define CURRENTMODELLIST_H
+#ifndef CURRENTRESPONSEMODEL_H
+#define CURRENTRESPONSEMODEL_H
 
 #include <QObject>
 #include <QQmlEngine>
 #include <QtQml>
-#include <QFileInfo>
 
 #include <QAbstractListModel>
-#include "model.h"
-#include "download.h"
 
 
-class CurrentModelList : public QAbstractListModel
+class CurrentResponseModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
@@ -19,27 +16,12 @@ class CurrentModelList : public QAbstractListModel
 
     enum ChatlRoles {
         IdRole = Qt::UserRole + 1,
-        FileSizeRole,
-        RamRamrequiredRole,
-        ParametersRole,
-        QuantRole,
-        TypeRole,
-        PromptTemplateRole,
-        SystemPromptRole,
-        NameRole,
-        InformationRole,
-        FileNameRole,
-        UrlRole,
-        DirectoryPathRole,
-        IconModelRole,
-        DownloadPercentRole,
-        IsDownloadingRole,
-        DownloadFinishedRole
+        TextRole
     };
 
 public:
-    explicit CurrentModelList(QObject *parent = nullptr);
-    Model* getModel(const int index);
+    explicit CurrentResponseModel(QObject *parent = nullptr);
+    void updateResponse(const QString &token);
 
     //*------------------------------------------------------------------------------****************************------------------------------------------------------------------------------*//
     //*-------------------------------------------------------------------------------* QAbstractItemModel interface*------------------------------------------------------------------------------*//
@@ -51,14 +33,13 @@ public:
     //*---------------------------------------------------------------------------* end QAbstractItemModel interface *----------------------------------------------------------------------------*//
 
     int size() const;
-    void addModel( Model *model);
-    void deleteModel( Model *model);
 
 signals:
     void sizeChanged();
 
 private:
-    QList<Model*> models;
+    QList<QString> texts;
+    int numberOfTokenInLastText;
 };
 
-#endif // CURRENTMODELLIST_H
+#endif // CURRENTRESPONSEMODEL_H

@@ -66,7 +66,18 @@ Item {
                 enabled: root.currentChat.isLoadModel
                 color: root.informationTextColor
                 wrapMode: Text.Wrap
-                placeholderText: root.currentChat.isLoadModel? qsTr("What is in your mind ?"): qsTr("Load a model to continue ...")
+                placeholderText: inputTextBox.placeholderTextInput()
+
+                function placeholderTextInput(){
+                    if( root.currentChat.isLoadModel){
+                        return qsTr("What is in your mind ?");
+                    }else if( root.currentChat.loadModelInProgress){
+                        return qsTr("Loading model " + root.currentChat.model.name);
+                    }else{
+                        return qsTr("Load a model to continue ...");
+                    }
+                }
+
                 Accessible.role: Accessible.EditableText
                 Accessible.name: placeholderText
                 Accessible.description: qsTr("Send prompts to the model")

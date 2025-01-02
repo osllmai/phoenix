@@ -36,8 +36,16 @@ Item {
     signal deleteChat()
     signal editChatName(var chatName)
 
-    function onIsThemeChanged(){
-        console.log("HI")
+    // function onIsThemeChanged(){
+    //     console.log("HI")
+    // }
+
+    onIsThemeChanged:{
+        if(isCurrentItem===true){
+            backgroundId.color = control.selectButtonColor
+        }else{
+            backgroundId.color = control.normalButtonColor
+        }
     }
 
     // function onIsCurrentItemChanged(){

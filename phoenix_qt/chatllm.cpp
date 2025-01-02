@@ -40,7 +40,6 @@ ChatLLM::~ChatLLM(){
 }
 
 void ChatLLM::setStop(){
-
     stop = true;
 }
 
@@ -49,7 +48,7 @@ void ChatLLM::loadModel(const QString &modelPath)
 
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
-    Sleep(2000);
+    Sleep(1000);
 //     std::string backend = "cuda";
 
 //     prompt_context.n_ctx = 4096;
@@ -118,23 +117,21 @@ void ChatLLM::prompt(const QString &input){
     // QString qStr = QString::fromStdString(answer);
     // qInfo() <<  qStr;
 
-    for(int i=0;i<40;i++){
-        emit tokenResponse("Hi  :)  ");
-        qInfo()<<i;
-        Sleep(100);
-        emit tokenResponse("Phoenix!, ");
-        Sleep(100);
+    for(int i=0; i<3000 && stop == false; i++){
+        std::string response = std::to_string(i) + "  ";
+        qInfo()<<response;
+        answer += response.c_str();
+
+        emit tokenResponse(QString::fromStdString(response));
+        Sleep(20);
     }
 
-    emit finishedResponnse();
+    emit finishedResponnse(QString::fromStdString(answer));
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
-
-
 }
 
 bool ChatLLM::handleResponse(int32_t token, const std::string &response){
     const char* responsechars = response.c_str();
-
 
     if (!(responsechars == nullptr || responsechars[0] == '\0')) {
 

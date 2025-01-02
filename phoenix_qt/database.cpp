@@ -51,7 +51,12 @@ Model* phoenix_databace::insertModel(const QString &name, const QString &path){
     return model;
 }
 
-int phoenix_databace::insertConversation(const QString &title, const QDateTime date){
+// int phoenix_databace::insertConversation(const QString &title, const QDateTime date){
+int phoenix_databace::insertConversation(const QString &title, const QDateTime date, const bool &stream,
+                           const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                           const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                           const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                           const int &contextLength, const int &numberOfGPULayers){
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
 
     db.setDatabaseName("./phoenix.db");
@@ -64,6 +69,19 @@ int phoenix_databace::insertConversation(const QString &title, const QDateTime d
         return -1;
     query.addBindValue(title);
     query.addBindValue(date);
+    query.addBindValue(stream);
+    query.addBindValue(promptTemplate);
+    query.addBindValue(systemPrompt);
+    query.addBindValue(temperature);
+    query.addBindValue(topK);
+    query.addBindValue(topP);
+    query.addBindValue(minP);
+    query.addBindValue(repeatPenalty);
+    query.addBindValue(promptBatchSize);
+    query.addBindValue(maxTokens);
+    query.addBindValue(repeatPenaltyTokens);
+    query.addBindValue(contextLength);
+    query.addBindValue(numberOfGPULayers);
     query.exec();
 
     int id = query.lastInsertId().toInt();
@@ -195,7 +213,19 @@ QList<Chat*> phoenix_databace::readConversation(){
         QDateTime date = query.value(2).toDateTime();
         Message *root = new Message(-1,"root",true);
         chats.append(new Chat(id, title,date, root));
-        // qInfo()<< id<<"  "<<title<<"  "<<date.toString("yyyy");
+        chats.last()->modelSettings()->setStream(query.value(3).toBool());
+        chats.last()->modelSettings()->setPromptTemplate(query.value(4).toString());
+        chats.last()->modelSettings()->setSystemPrompt(query.value(5).toString());
+        chats.last()->modelSettings()->setTemperature(query.value(6).toDouble());
+        chats.last()->modelSettings()->setTopK(query.value(7).toInt());
+        chats.last()->modelSettings()->setTopP(query.value(8).toDouble());
+        chats.last()->modelSettings()->setMinP(query.value(9).toDouble());
+        chats.last()->modelSettings()->setRepeatPenalty(query.value(10).toDouble());
+        chats.last()->modelSettings()->setPromptBatchSize(query.value(11).toInt());
+        chats.last()->modelSettings()->setMaxTokens(query.value(12).toInt());
+        chats.last()->modelSettings()->setRepeatPenaltyTokens(query.value(13).toInt());
+        chats.last()->modelSettings()->setContextLength(query.value(14).toInt());
+        chats.last()->modelSettings()->setNumberOfGPULayers(query.value(15).toInt());
     }
     db.close();
     return chats;

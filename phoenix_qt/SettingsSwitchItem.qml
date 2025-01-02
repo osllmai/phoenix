@@ -8,6 +8,7 @@ Item {
 
 
     property alias myTextName: textId.text
+    property bool myValue
 
     property var fontFamily
     property color textColor: "black"
@@ -36,6 +37,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 5
+            checked: root.myValue
         }
     }
 }

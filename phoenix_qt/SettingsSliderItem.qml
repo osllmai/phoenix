@@ -125,6 +125,4 @@ Item {
             font.family: root.fontFamily
         }
     }
-
-
 }

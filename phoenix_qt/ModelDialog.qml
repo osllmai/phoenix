@@ -36,6 +36,14 @@ Item {
     signal goToModelPage()
     signal loadModelDialog(int indexModel)
 
+    // onThemeChanged:{
+    //     if(isCurrentItem===true){
+    //         backgroundId.color = control.selectButtonColor
+    //     }else{
+    //         backgroundId.color = control.normalButtonColor
+    //     }
+    // }
+
     Rectangle{
         id: modelSettings
         anchors.fill:  parent

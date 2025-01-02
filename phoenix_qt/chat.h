@@ -8,6 +8,7 @@
 #include <chatllm.h>
 #include <chatmodel.h>
 #include <model.h>
+#include <modelsettings.h>
 
 class Chat : public QObject
 {
@@ -20,6 +21,7 @@ class Chat : public QObject
     Q_PROPERTY(ChatModel *chatModel READ chatModel NOTIFY chatModelChanged )
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged )
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
+    Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged )
     Q_PROPERTY(int valueTimer READ valueTimer NOTIFY valueTimerChanged)
     Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged)
@@ -40,6 +42,7 @@ public:
     ChatModel* chatModel() const;
     bool isLoadModel() const;
     bool loadModelInProgress() const;
+    ModelSettings* modelSettings() const;
     bool responseInProgress() const;
     int valueTimer() const;
     Model* model() const;
@@ -63,6 +66,7 @@ signals:
     void chatModelChanged();
     void isLoadModelChanged();
     void loadModelInProgressChanged();
+    void modelSettingsChanged();
     void responseInProgressChanged();
     void valueTimerChanged();
     void modelChanged();
@@ -73,13 +77,13 @@ signals:
     void tokenResponse(const QString &token);
 
     void startChat();
-    void finishedResponnseRequest();
+    void finishedResponnseRequest(const QString &answer);
 
 public slots:
     void LoadModelResult(const bool result);
     void promptRequested(const QString &input);
     void tokenResponseRequested(const QString &token);
-    void finishedResponnse();
+    void finishedResponnse(const QString &answer);
 
 private:
     int m_id;
@@ -89,6 +93,7 @@ private:
     ChatModel *m_chatModel;
     bool m_isLoadModel;
     bool m_loadModelInProgress;
+    ModelSettings *m_modelSettings;
     bool m_responseInProgress;
     QTimer *m_timer;
     int m_valueTimer;

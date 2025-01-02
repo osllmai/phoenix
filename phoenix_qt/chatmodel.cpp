@@ -4,9 +4,8 @@
 #include "database.h"
 
 ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
-    :m_parentId(parentId),root(rootMessage), QAbstractListModel{parent}
+    :m_parentId(parentId), root(rootMessage), m_currentResponse(nullptr), QAbstractListModel{parent}
 {
-
     Message* beforMessage =root;
     int index = 0;
     while(beforMessage !=nullptr && beforMessage->numberOfChildList() > 0){
@@ -19,7 +18,6 @@ ChatModel::ChatModel(const int &parentId,Message* rootMessage, QObject *parent)
         emit dataChanged(createIndex(index, 0), createIndex(index, 0), { NumberPromptRole, NumberOfEditPromptRole,NumberResponseRole,NumberOfRegenerateRole});
         index++;
     }
-
 }
 
 //*------------------------------------------------------------------------------****************************-----------------------------------------------------------------------------*//
@@ -131,6 +129,9 @@ bool ChatModel::isStart() const{
         return chatItems.first()->numberOfEditPrompt() >1 || chatItems.first()->numberOfRegenerate() >1;
     return true;
 }
+CurrentResponseModel* ChatModel::currentResponse() const{
+    return m_currentResponse;
+}
 //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 
@@ -157,6 +158,8 @@ void ChatModel::prompt(const QString &promptText){
     chatItems.append(chatItem);
     endInsertRows();
     emit sizeChanged();
+
+    m_currentResponse = new CurrentResponseModel();
 }
 
 /// numberOfNext betwean [0,numberOfChildList]
@@ -257,13 +260,14 @@ void ChatModel::regenerateResponse(const int index){
     emit startPrompt("regenerate: "+chatItems[index]->response()->text());
 }
 
-
 void ChatModel::updateResponse(const QString &response){
     const int index = chatItems.size() - 1;
     if (index < 0 || index >= chatItems.size()) return;
 
     ChatItem *item = chatItems[index];
-    item->response()->setText(item->response()->text() + response);
+
+    m_currentResponse->updateResponse(response);
+    // item->response()->setText(item->response()->text() + response);
     // item->response()->setText(response);
     item->response()->setNumberOfToken(item->response()->numberOfToken()+1);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole, NumberOfTokenRole});
@@ -339,7 +343,14 @@ void ChatModel::setExecutionTime(const int executionTime){
     emit dataChanged(createIndex(chatItems.size()-1, 0), createIndex(chatItems.size()-1, 0), {ExecutionTimeRole});
 }
 
-void ChatModel::finishedResponnse(){
+void ChatModel::finishedResponnse(const QString &answer){
+    const int index = chatItems.size() - 1;
+    qInfo()<<answer;
+    chatItems.last()->response()->setText(answer);
+    delete m_currentResponse;
+    m_currentResponse = nullptr;
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {ResponseRole, NumberOfTokenRole});
+
     Message *prompt = chatItems.last()->prompt();
     Message *response = chatItems.last()->response();
     Message *parent ;

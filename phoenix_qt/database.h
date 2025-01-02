@@ -48,15 +48,35 @@ const auto CONVERSATION_SQL = QLatin1String(R"(
                 id INTEGER NOT NULL UNIQUE,
                 title TEXT NOT NULL,
                 date DATE NOT NULL,
+                stream BOOL NOT NULL,
+                promptTemplate TEXT NOT NULL,
+                systemPrompt TEXT NOT NULL,
+                temperature REAL NOT NULL,
+                topK INTEGER NOT NULL,
+                topP REAL NOT NULL,
+                minP REAL NOT NULL,
+                repeatPenalty REAL NOT NULL,
+                promptBatchSize INTEGER NOT NULL,
+                maxTokens INTEGER NOT NULL,
+                repeatPenaltyTokens INTEGER NOT NULL,
+                contextLength INTEGER NOT NULL,
+                numberOfGPULayers INTEGER NOT NULL,
                 PRIMARY KEY(id AUTOINCREMENT))
         )");
 
 const auto INSERT_CONVERSATION_SQL = QLatin1String(R"(
-        INSERT INTO conversation(title, date) VALUES (?, ?)
+        INSERT INTO conversation(title, date, stream, promptTemplate,systemPrompt,
+                                                    temperature, topK, topP, minP, repeatPenalty,
+                                                    promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers)
+                                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         )");
 
 const auto READ_CONVERSATION_SQL = QLatin1String(R"(
-        SELECT id, title, date FROM conversation
+        SELECT id, title, date, stream, promptTemplate,systemPrompt,
+                        temperature, topK, topP, minP, repeatPenalty,
+                        promptBatchSize, maxTokens, repeatPenaltyTokens,
+                        contextLength, numberOfGPULayers
+        FROM conversation
         )");
 
 const auto UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
@@ -65,6 +85,15 @@ const auto UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
 
 const auto UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
         UPDATE conversation SET title=? Where id=?
+        )");
+
+const auto UPDATE_MODEL_SETTINGS_CONVERSATION_SQL = QLatin1String(R"(
+        UPDATE conversation
+        SET stream=?, promptTemplate=?, systemPrompt=?,
+                temperature=?, topK=?, topP=?, minP=?, repeatPenalty=?,
+                promptBatchSize=?, maxTokens=?, repeatPenaltyTokens=?,
+                contextLength=?, numberOfGPULayers=?
+        Where id=?
         )");
 
 const auto DELETE_CONVERSATION_SQL = QLatin1String(R"(
@@ -114,7 +143,11 @@ const auto DELETE_MESSAGE_SQL = QLatin1String(R"(
 QSqlError initDb();
 
 Model* insertModel(const QString &name, const QString &path);
-int insertConversation(const QString &title, const QDateTime date);
+int insertConversation(const QString &title, const QDateTime date, const bool &stream,
+                    const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                    const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                    const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                    const int &contextLength, const int &numberOfGPULayers);
 int insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
                   const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date);
 

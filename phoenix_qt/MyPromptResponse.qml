@@ -42,8 +42,9 @@ Item {
     property var dateRequest
     property bool isFinished
     property bool isLoadModel
-    property var executionTime
-    property var numberOfToken
+    property int executionTime
+    property int numberOfToken
+    property var curentResponse
 
     signal regenerateResponse()
     signal editPrompt(var text_edit)
@@ -136,6 +137,7 @@ Item {
                     myText: root.prompt
                     executionTime: root.executionTime
                     numberOfToken:root.numberOfToken
+                    curentResponse: root.curentResponse
 
                     Connections {
                         target: userTextRec
@@ -202,9 +204,15 @@ Item {
                 anchors.topMargin: 0
                 color: "#00ffffff"
 
+                function waitingForFirstToken(){
+                    if(root.response == "")
+                        if(root.curentResponse.size==0)
+                            return true
+                    return false
+                }
                 Rectangle{
                     id: llmImageRec
-                    visible:root.response !=""
+                    visible: !llmBox.waitingForFirstToken()
                     width: 30
                     height: 30
                     color: "#00ffffff"
@@ -227,7 +235,7 @@ Item {
                     id: busyIndicator
                     width: 40
                     height: 40
-                    visible:root.response ==""
+                    visible: llmBox.waitingForFirstToken()
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.leftMargin: 0
@@ -238,7 +246,7 @@ Item {
 
                 MyMessage{
                     id: llmTextRec
-                    visible:root.response !=""
+                    visible: !llmBox.waitingForFirstToken()
                     anchors.left: llmImageRec.right
                     anchors.top: parent.top
                     anchors.leftMargin: 2
@@ -250,6 +258,7 @@ Item {
                     isLoadModel: root.isLoadModel
                     executionTime: root.executionTime
                     numberOfToken:root.numberOfToken
+                    curentResponse: root.curentResponse
 
                     Connections {
                         target: llmTextRec
@@ -291,7 +300,7 @@ Item {
 
                 Text {
                     id: llmTimeText
-                    visible:root.response !=""
+                    visible: !llmBox.waitingForFirstToken()
                     color: root.chatMessageTitleTextColor
                     text: root.responseTime
                     anchors.left: llmImageRec.right

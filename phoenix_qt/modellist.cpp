@@ -461,7 +461,6 @@ void ModelList::readModelFromJSONFile(){
 }
 
 void ModelList::updateDownloadProgress(){
-
     double totalBytesDownload =0;
     double receivedBytesDownload =0;
     for(int indexModel=0; indexModel<models.size();indexModel++){
@@ -477,11 +476,9 @@ void ModelList::updateDownloadProgress(){
 
     qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
     emit downloadProgressChanged();
-
 }
 
 void ModelList::deleteDownloadModel(const int index){
-
     if(downloads.size()>3){
         connect(downloads[3], &Download::downloadProgress, this, &ModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(downloads[3], &Download::downloadFinished, this, &ModelList::handleDownloadFinished, Qt::QueuedConnection);
@@ -494,5 +491,4 @@ void ModelList::deleteDownloadModel(const int index){
             delete download;
         }
     }
-
 }

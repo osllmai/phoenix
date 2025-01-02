@@ -6,7 +6,7 @@
 #include <QQmlEngine>
 #include <QAbstractListModel>
 #include "chatitem.h"
-
+#include "currentresponsemodel.h"
 
 class ChatModel : public QAbstractListModel
 {
@@ -14,6 +14,7 @@ class ChatModel : public QAbstractListModel
     QML_ELEMENT
     Q_PROPERTY(int size READ size NOTIFY sizeChanged)
     Q_PROPERTY(bool isStart READ isStart NOTIFY isStartChanged)
+    Q_PROPERTY(CurrentResponseModel *currentResponse READ currentResponse NOTIFY currentResponseChanged)
 
     enum ChatItemRoles {
         IdRole = Qt::UserRole + 1,
@@ -57,19 +58,24 @@ public:
     //*----------------------------------------------------------------------------------------* Read Property  *----------------------------------------------------------------------------------------*//
     int size() const;
     bool isStart() const;
+    CurrentResponseModel* currentResponse() const;
     //*--------------------------------------------------------------------------------------* end Read Property *-------------------------------------------------------------------------------------*//
 
 signals:
     void startPrompt(const QString &prompt);
     void sizeChanged();
     void isStartChanged();
+    void newToken(QString token);
+    void currentResponseChanged();
 
 public slots:
-    void finishedResponnse();
+    void finishedResponnse(const QString &answer);
 
 private:
     Message *root = new Message(-1,"root",true , this);
     QList<ChatItem*> chatItems;
+    CurrentResponseModel* m_currentResponse;
+
     bool m_isStart;
     int m_parentId;
 

@@ -418,10 +418,11 @@ Item {
                                             promptTime: model.promptTime
                                             responseTime: model.responseTime
                                             dateRequest: model.dateRequest
+                                            curentResponse: root.chatModel.currentResponse
 
                                             executionTime: model.executionTime
                                             numberOfToken:model.numberOfToken
-                                            isFinished: root.currentChat.responseInProgress
+                                            isFinished: !root.currentChat.responseInProgress || (index < root.chatModel.size-1)
                                             isLoadModel: root.currentChat.isLoadModel
 
                                             Connections {
@@ -669,7 +670,6 @@ Item {
                         anchors.bottomMargin: 0
                         currentIndex: 0
 
-
                         Rectangle {
                             id: assistantSpace
                             radius: 4
@@ -706,6 +706,7 @@ Item {
 
                                     TextArea {
                                         id: instructionTextBox
+                                        text: root.currentChat.modelSettings.systemPrompt
                                         height: text.height
                                         visible: true
                                         color: root.informationTextColor
@@ -835,6 +836,7 @@ Item {
                                                 id:streamId
                                                 width: parent.width
                                                 myTextName: "Stream"
+                                                myValue: root.currentChat.modelSettings.stream
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                             }
@@ -843,7 +845,7 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Temperature"
                                                 myTextDescription: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
-                                                sliderValue: 1.0
+                                                sliderValue: root.currentChat.modelSettings.temperature
                                                 sliderFrom: 0.0
                                                 sliderTo:2.0
                                                 sliderStepSize:0.1
@@ -857,7 +859,7 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Top-P"
                                                 myTextDescription:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
-                                                sliderValue: 1.0
+                                                sliderValue: root.currentChat.modelSettings.topP
                                                 sliderFrom: 0.0
                                                 sliderTo:1.0
                                                 sliderStepSize:0.1
@@ -871,38 +873,10 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Max Tokens"
                                                 myTextDescription: "Defines the maximum number of tokens the model can process in one input or output."
-                                                sliderValue: 4096
+                                                sliderValue: root.currentChat.modelSettings.maxTokens
                                                 sliderFrom: 100
                                                 sliderTo: 4096
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
-                                            }
-                                            SettingsSliderItem{
-                                                id:frequencyPenaltyId
-                                                width: parent.width
-                                                myTextName: "Frequency Penalty"
-                                                myTextDescription: "Reduces the likelihood of repeating the same word or phrase."
-                                                sliderValue: 0.0
-                                                sliderFrom: 0.0
-                                                sliderTo: 2.0
-                                                sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
-                                            }
-                                            SettingsSliderItem{
-                                                id:presencePenaltyId
-                                                width: parent.width
-                                                myTextName: "Presence Penalty"
-                                                myTextDescription: "Reduces the likelihood of repeating any word or phrase already present."
-                                                sliderValue: 0.0
-                                                sliderFrom: 0.0
-                                                sliderTo: 2.0
-                                                sliderStepSize:0.1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                                 boxColor: root.chatBackgroungConverstationColor
@@ -913,7 +887,7 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Prompt Batch Size"
                                                 myTextDescription:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
-                                                sliderValue: 1
+                                                sliderValue: root.currentChat.modelSettings.promptBatchSize
                                                 sliderFrom: 1
                                                 sliderTo: 128
                                                 sliderStepSize:1
@@ -927,24 +901,10 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Min-P"
                                                 myTextDescription:"Sets the minimum cumulative probability threshold for word selection."
-                                                sliderValue: 0.0
+                                                sliderValue: root.currentChat.modelSettings.minP
                                                 sliderFrom: 0.0
                                                 sliderTo: 1.0
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
-                                            }
-                                            SettingsSliderItem{
-                                                id:maxLengthId
-                                                width: parent.width
-                                                myTextName: "Max Lenght"
-                                                myTextDescription: "Defines the maximum length of input and output combined, limiting the generated text."
-                                                sliderValue: 1024
-                                                sliderFrom: 1
-                                                sliderTo: 4096
-                                                sliderStepSize:1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
                                                 boxColor: root.chatBackgroungConverstationColor
@@ -955,9 +915,9 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Top-K"
                                                 myTextDescription: "Limits word selection to the top K most probable words, controlling output diversity."
-                                                sliderValue: 1
+                                                sliderValue: root.currentChat.modelSettings.topK
                                                 sliderFrom: 1
-                                                sliderTo: 50000
+                                                sliderTo: 1000
                                                 sliderStepSize:1
                                                 fontFamily:root.fontFamily
                                                 textColor: root.informationTextColor
@@ -969,7 +929,7 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Repeat Penalty Tokens"
                                                 myTextDescription: "Increases the penalty for repeating specific tokens during generation."
-                                                sliderValue: 0
+                                                sliderValue: root.currentChat.modelSettings.repeatPenaltyTokens
                                                 sliderFrom: 0
                                                 sliderTo: 1
                                                 sliderStepSize:0.1
@@ -983,7 +943,7 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Repeat Penalty"
                                                 myTextDescription: "Discourages repeating words or phrases by applying a penalty to repeated tokens."
-                                                sliderValue: 1.0
+                                                sliderValue: root.currentChat.modelSettings.repeatPenalty
                                                 sliderFrom: 1.0
                                                 sliderTo: 2.0
                                                 sliderStepSize:0.1
@@ -1095,6 +1055,7 @@ Item {
 
                                                     TextArea {
                                                         id: promptTemplateTextBox
+                                                        text: root.currentChat.modelSettings.promptTemplate
                                                         height: scrollPromptTemplate.height
                                                         visible: true
                                                         color: root.informationTextColor
@@ -1215,7 +1176,7 @@ Item {
                                                 id:contextLengthId
                                                 myTextName: "Context Length"
                                                 myTextDescription: "Refers to the number of tokens the model considers from the input when generating a response."
-                                                sliderValue: 2048
+                                                sliderValue: root.currentChat.modelSettings.contextLength
                                                 sliderFrom: 120
                                                 sliderTo:4096
                                                 sliderStepSize:1
@@ -1228,7 +1189,7 @@ Item {
                                                 id:numberOfGPUId
                                                 myTextName: "Number of GPU layers (ngl)"
                                                 myTextDescription: "Refers to the number of layers processed using a GPU, affecting performance."
-                                                sliderValue: 40
+                                                sliderValue: root.currentChat.modelSettings.numberOfGPULayers
                                                 sliderFrom: 1
                                                 sliderTo: 100
                                                 sliderStepSize:1

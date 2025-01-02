@@ -201,6 +201,8 @@ qt_add_qml_module(app${PROJECTNAME}
     QML_FILES CustomDot.qml
     QML_FILES AnimationText.qml
     QML_FILES Notification.qml
+    SOURCES currentresponsemodel.h currentresponsemodel.cpp
+    SOURCES modelsettings.h modelsettings.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
