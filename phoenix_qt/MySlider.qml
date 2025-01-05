@@ -1,13 +1,6 @@
-
-
-/*
-This is a UI file (.ui.qml) that is intended to be edited in Qt Design Studio only.
-It is supposed to be strictly declarative and only uses a subset of QML. If you edit
-this file manually, you might introduce QML code that is not supported by Qt Design Studio.
-Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on .ui.qml files.
-*/
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import 'style' as Style
 
 Slider {
     id: control
@@ -17,12 +10,6 @@ Slider {
     to: 2.00
 
     background: backgroundRect
-
-    Constants{
-        id: constantsId
-    }
-
-    property var fontFamily: constantsId.fontFamily
 
     Rectangle {
         x: control.leftPadding

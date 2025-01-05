@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
 import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 T.Button {
     id: control
@@ -22,7 +22,7 @@ T.Button {
     autoExclusive: false
     checkable: true
 
-    property var fontFamily
+    // property var fontFamily
     property color menuIconColor
     property color iconColor
 
@@ -93,7 +93,7 @@ T.Button {
                 anchors.bottomMargin: 0
                 text: "Default"
                 font.weight: 400
-                font.family: control.fontFamily
+                font.family: Style.Theme.fontFamily
                 font.pixelSize: 11
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

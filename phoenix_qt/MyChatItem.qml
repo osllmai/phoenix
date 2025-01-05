@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls
 import Phoenix
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 Item {
     id: control
@@ -12,49 +12,21 @@ Item {
     property var fontFamily
 
     property alias myTextId: textId.text
-    // property var myChatListModel
     property bool isCurrentItem
     property bool isTheme
-
-    property color fillIconColor
-    property color iconColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color chatMessageInformationTextColor
-    property color glowColor
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color boxColor
-    property color headerColor
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
 
     signal currentChat()
     signal deleteChat()
     signal editChatName(var chatName)
 
-    // function onIsThemeChanged(){
-    //     console.log("HI")
-    // }
-
     onIsThemeChanged:{
         if(isCurrentItem===true){
-            backgroundId.color = control.selectButtonColor
+            backgroundId.color = Style.Theme.selectButtonColor
         }else{
-            backgroundId.color = control.normalButtonColor
+            backgroundId.color = Style.Theme.normalButtonColor
         }
     }
 
-    // function onIsCurrentItemChanged(){
-    //     if(isCurrentItem===true){
-    //         backgroundId.color = control.selectButtonColor
-    //     }else{
-    //         backgroundId.color = control.normalButtonColor
-    //     }
-    // }
     Rectangle{
         id: backgroundId
         anchors.fill: parent
@@ -63,16 +35,16 @@ Item {
 
         function selectColor(){
             if(control.isCurrentItem){
-                return control.selectButtonColor;
+                return Style.Theme.selectButtonColor;
             }else{
-                return control.normalButtonColor;
+                return Style.Theme.normalButtonColor;
             }
         }
 
         TextArea{
             id: textId
             text: "chat name"
-            color: control.chatMessageInformationTextColor
+            color: Style.Theme.chatMessageInformationTextColor
             anchors.left: parent.left
             anchors.right: editIcon.left
             anchors.top: parent.top
@@ -117,14 +89,14 @@ Item {
             onHoveredChanged: {
                 if(isEnter){
                     if(!control.isCurrentItem ){
-                        backgroundId.color = control.hoverButtonColor
+                        backgroundId.color = Style.Theme.hoverButtonColor
                     }
                     isEnter = false
                 }else{
                     if(control.isCurrentItem){
-                        backgroundId.color=control.selectButtonColor
+                        backgroundId.color=Style.Theme.selectButtonColor
                     }else{
-                        backgroundId.color=control.normalButtonColor
+                        backgroundId.color=Style.Theme.normalButtonColor
                     }
                     isEnter = true
                 }
@@ -147,8 +119,8 @@ Item {
             myLable: " edit chat name"
             myIconId: textId.readOnly? "images/editIcon.svg": "images/okIcon.svg"
             myFillIconId: textId.readOnly? "images/fillEditIcon.svg": "images/okIcon.svg"
-            normalColor: control.iconColor
-            hoverColor: control.fillIconColor
+            normalColor: Style.Theme.iconColor
+            hoverColor: Style.Theme.fillIconColor
             Connections {
                 target: editIcon
                 function onActionClicked() {
@@ -177,8 +149,8 @@ Item {
             myLable: " delete this chat"
             myIconId: "images/deleteIcon.svg"
             myFillIconId: "images/fillDeleteIcon.svg"
-            normalColor: control.iconColor
-            hoverColor: control.fillIconColor
+            normalColor: Style.Theme.iconColor
+            hoverColor: Style.Theme.fillIconColor
             Connections {
                 target: deleteIcon
                 function onActionClicked() {
@@ -189,23 +161,6 @@ Item {
 
         Notification{
             id: deleteRequest
-
-            backgroundPageColor: control.backgroundPageColor
-            backgroungColor: control.backgroungColor
-            glowColor: control.glowColor
-            boxColor: control.boxColor
-            headerColor: control.headerColor
-            normalButtonColor: control.normalButtonColor
-            selectButtonColor: control.selectButtonColor
-            hoverButtonColor: control.hoverButtonColor
-            fillIconColor: control.fillIconColor
-
-            titleTextColor: control.titleTextColor
-            informationTextColor: control.informationTextColor
-            selectTextColor: control.selectTextColor
-
-            fontFamily: control.fontFamily
-
             title:"Delete LLM Model"
             about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
             textBotton1: "Cancel"
@@ -227,7 +182,7 @@ Item {
         layer.enabled: true
         layer.effect: Glow {
              samples: 15
-             color: control.glowColor
+             color: Style.Theme.glowColor
              spread: 0.0
              transparentBorder: true
          }

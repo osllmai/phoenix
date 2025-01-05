@@ -1,34 +1,17 @@
 import QtQuick 2.15
 import QtQuick.Layouts
 import QtQuick.Controls 2.15
+import 'style' as Style
 
 Item {
     id: root
     width: 1229 - 24 - 70
     height: 685 - 48
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
-
     signal chatViewRequested1()
 
     Rectangle {
         id: homePageId
-        color: root.headerColor
+        color: Style.Theme.headerColor
         radius: 4
         anchors.fill: parent
 
@@ -45,7 +28,7 @@ Item {
             Rectangle {
                 id: itemListId
                 anchors.fill: parent
-                color: root.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
                 radius: 4
 
                 ColumnLayout{
@@ -126,7 +109,7 @@ Item {
                         delegate:Rectangle{
                             width: gridView.cellWidth
                             height: gridView.cellHeight
-                            color: root.backgroundPageColor
+                            color: Style.Theme.backgroundPageColor
                             DashbordItem {
                                 id: indoxItem
                                 anchors.fill: parent
@@ -137,27 +120,10 @@ Item {
                                 gitHubLink: model.gitHubLink
                                 notebookLink: model.notebookLink
                                 goPage: model.goPage
-
-                                backgroundPageColor: root.backgroundPageColor
-                                backgroungColor: window.backgroungColor
-                                glowColor: window.glowColor
-                                boxColor: root.boxColor
-                                headerColor: root.headerColor
-                                normalButtonColor: root.normalButtonColor
-                                selectButtonColor: root.selectButtonColor
-                                hoverButtonColor: root.hoverButtonColor
-                                fillIconColor: root.fillIconColor
-
-                                titleTextColor: root.titleTextColor
-                                informationTextColor: root.informationTextColor
-                                selectTextColor: root.selectTextColor
-
-                                fontFamily: root.fontFamily
-
                                 Connections{
                                     target: indoxItem
                                     function onChatViewRequested2() {
-                                        chatViewRequested1()
+                                        root.chatViewRequested1()
                                     }
                                 }
                             }
@@ -187,15 +153,15 @@ Item {
                 font.pixelSize: 20
                 font.styleName: "Bold"
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: root.fontFamily
-                color: root.titleTextColor
+                font.family: Style.Theme.fontFamily
+                color: Style.Theme.titleTextColor
             }
 
             Text {
                 id: informationText
                 width: 50
                 height: 20
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 text: qsTr("Get Started.")
                 anchors.left: parent.left
                 anchors.top: phoenixId.bottom
@@ -205,7 +171,7 @@ Item {
                 horizontalAlignment: Text.AlignLeft
                 wrapMode: Text.Wrap
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
     }

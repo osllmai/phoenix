@@ -139,7 +139,11 @@ void ChatListModel::addChat(){
 }
 
 void ChatListModel::addCurrentChatToChatList(){
-    int id = phoenix_databace::insertConversation(m_currentChat->title(), m_currentChat->date());
+    int id = phoenix_databace::insertConversation(m_currentChat->title(), m_currentChat->date(), m_currentChat->modelSettings()->stream(),
+                                                                        m_currentChat->modelSettings()->promptTemplate(), m_currentChat->modelSettings()->systemPrompt(), m_currentChat->modelSettings()->temperature(),
+                                                                        m_currentChat->modelSettings()->topK(), m_currentChat->modelSettings()->topP(), m_currentChat->modelSettings()->minP(), m_currentChat->modelSettings()->repeatPenalty(),
+                                                                        m_currentChat->modelSettings()->promptBatchSize(),m_currentChat->modelSettings()->maxTokens(),m_currentChat->modelSettings()->repeatPenaltyTokens(),
+                                                                        m_currentChat->modelSettings()->contextLength(),m_currentChat->modelSettings()->numberOfGPULayers());
     m_currentChat->setId(id);
 
     beginInsertRows(QModelIndex(), 0, 0);

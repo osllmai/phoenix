@@ -1,16 +1,12 @@
 import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 T.Button {
     id: control
     width: 100
     height: 30
-
-    Constants{
-        id: constantsId
-    }
 
     leftPadding: 4
     rightPadding: 4
@@ -20,8 +16,6 @@ T.Button {
 
     autoExclusive: false
     checkable: true
-
-    property var fontFamily: constantsId.fontFamily
 
     property color light: "#747474"
     property color dark: "#5b5fc7"
@@ -44,7 +38,7 @@ T.Button {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
         }
 
         border.width: 2

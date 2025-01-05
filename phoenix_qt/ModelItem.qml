@@ -1,12 +1,8 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Templates 2.1 as T
-import QtQuick.Layouts
 import QtQuick.Dialogs
 import Phoenix
-// import QtQuick.Studio.DesignEffects
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 Item{
     id: control
@@ -16,22 +12,6 @@ Item{
     property var myModel
     property var myModelListModel
     property int myIndex
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
 
     property int titleFontSize: 14
     property int informationFontSize: 10
@@ -43,20 +23,20 @@ Item{
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.boxColor
+        color: Style.Theme.boxColor
         radius: 4
-        border.color: control.hoverButtonColor
+        border.color: Style.Theme.hoverButtonColor
         border.width: 0
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: control.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
             }
 
             GradientStop {
                 position: 1
-                color: control.backgroungColor
+                color: Style.Theme.backgroungColor
             }
             orientation: Gradient.Vertical
         }
@@ -90,7 +70,7 @@ Item{
 
         Text {
             id: modelName
-            color: control.titleTextColor
+            color: Style.Theme.titleTextColor
             text: control.myModel.name
             anchors.verticalCenter: modelIconBox.verticalCenter
             anchors.left: modelIconBox.right
@@ -99,12 +79,12 @@ Item{
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.styleName: "Bold"
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
         }
 
         Text{
             id:informationId
-            color: control.informationTextColor
+            color: Style.Theme.informationTextColor
             text: control.myModel.information
             anchors.left: parent.left
             anchors.right: parent.right
@@ -118,14 +98,14 @@ Item{
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
         }
         Rectangle{
             id:informationAboutDownload
             height: 55
             color: "#00ffffff"
             radius: 10
-            border.color: control.informationTextColor
+            border.color: Style.Theme.informationTextColor
             border.width: 1
             anchors.left: parent.left
             anchors.right: parent.right
@@ -145,30 +125,30 @@ Item{
                 color: "#00ffffff"
                 Text {
                     id: fileSizeText
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: qsTr("File size")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
                 Text {
                     id: fileSizeValue
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: control.myModel.fileSize + " GB"
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
             Rectangle{
                 id:line1
                 width: 1
-                color: control.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.left: fileSizeBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -188,30 +168,30 @@ Item{
                 color: "#00ffffff"
                 Text {
                     id: ramRequiredText
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: qsTr("RAM requierd")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
                 Text {
                     id: ramRequiredValue
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: control.myModel.ramRamrequired + " GB"
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
             Rectangle{
                 id:line2
                 width: 1
-                color: control.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.left: ramRequiredBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -231,30 +211,30 @@ Item{
                 width: (parent.width/4)
                 Text {
                     id: parameterersText
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: qsTr("Parameters")
                     font.styleName: "Bold"
                     anchors.top: parent.top
                     anchors.topMargin: 10
                     anchors.horizontalCenter: parent.horizontalCenter
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
                 Text {
                     id: parameterersValue
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: control.myModel.parameters
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
                     font.pointSize: 8
-                    font.family: control.fontFamily
+                    font.family: Style.Theme.fontFamily
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
             Rectangle{
                 id:line3
                 width: 1
-                color: control.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.left: parameterersBox.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -275,7 +255,7 @@ Item{
                 anchors.bottomMargin: 0
                 Text {
                     id: quantText
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: qsTr("Quant")
                     font.styleName: "Bold"
                     anchors.top: parent.top
@@ -286,7 +266,7 @@ Item{
                 }
                 Text {
                     id: quantValue
-                    color: control.informationTextColor
+                    color: Style.Theme.informationTextColor
                     text: control.myModel.quant
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 10
@@ -301,7 +281,7 @@ Item{
 
         DownloadModelButton{
             id:downloadButton
-            borderColor: control.hoverButtonColor
+            borderColor: Style.Theme.hoverButtonColor
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -309,7 +289,7 @@ Item{
             anchors.rightMargin: 20
             anchors.bottomMargin: 20
 
-            fontFamily: control.fontFamily
+            // fontFamily: Style.Theme.fontFamily
 
             isDownload: !control.myModel.isDownloading && !control.myModel.downloadFinished
             isCancel: control.myModel.isDownloading && !control.myModel.downloadFinished
@@ -346,23 +326,6 @@ Item{
 
         Notification{
             id: downloadRequest
-
-            backgroundPageColor: control.backgroundPageColor
-            backgroungColor: control.backgroungColor
-            glowColor: control.glowColor
-            boxColor: control.boxColor
-            headerColor: control.headerColor
-            normalButtonColor: control.normalButtonColor
-            selectButtonColor: control.selectButtonColor
-            hoverButtonColor: control.hoverButtonColor
-            fillIconColor: control.fillIconColor
-
-            titleTextColor: control.titleTextColor
-            informationTextColor: control.informationTextColor
-            selectTextColor: control.selectTextColor
-
-            fontFamily: control.fontFamily
-
             title:"Path for Download"
             about:"F://Zeinab/"
             textBotton1: "Download In Defult Path"
@@ -384,23 +347,6 @@ Item{
 
         Notification{
             id: deleteRequest
-
-            backgroundPageColor: control.backgroundPageColor
-            backgroungColor: control.backgroungColor
-            glowColor: control.glowColor
-            boxColor: control.boxColor
-            headerColor: control.headerColor
-            normalButtonColor: control.normalButtonColor
-            selectButtonColor: control.selectButtonColor
-            hoverButtonColor: control.hoverButtonColor
-            fillIconColor: control.fillIconColor
-
-            titleTextColor: control.titleTextColor
-            informationTextColor: control.informationTextColor
-            selectTextColor: control.selectTextColor
-
-            fontFamily: control.fontFamily
-
             title:"Delete LLM Model"
             about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
             textBotton1: "Cancel"
@@ -426,7 +372,7 @@ Item{
         layer.enabled: true
         layer.effect: Glow {
              samples: 40
-             color: control.glowColor
+             color: Style.Theme.glowColor
              spread: 0.4
              transparentBorder: true
          }

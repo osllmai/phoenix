@@ -4,35 +4,12 @@ import QtQuick.Layouts
 
 import Phoenix
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: root
     width: 1229 - 24 - 70
     height: 685 - 48
-
-    //theme for chat page
-    property color chatBackgroungColor
-    property color chatBackgroungConverstationColor
-    property color chatMessageBackgroungColor
-    property color chatMessageTitleTextColor
-    property color chatMessageInformationTextColor
-    property bool chatMessageIsGlow
-
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
 
     property var chatListModel
     property var currentChat
@@ -48,7 +25,7 @@ Item {
 
     Rectangle{
         id: chatPage
-        color: root.chatBackgroungConverstationColor
+        color: Style.Theme.chatBackgroungConverstationColor
         radius: 4
         anchors.fill: parent
 
@@ -60,7 +37,7 @@ Item {
                 id: leftSidePage
                 width: Math.min(mainStructure.width / 4, 350)
                 height: mainStructure.height
-                color: root.chatBackgroungColor
+                color: Style.Theme.chatBackgroungColor
                 visible: true
 
                 Row{
@@ -76,7 +53,7 @@ Item {
                     Rectangle {
                         id: searchBox
                         height: 40
-                        color:root.chatBackgroungConverstationColor
+                        color:Style.Theme.chatBackgroungConverstationColor
                         width: 300
                         radius: 5
                         anchors.verticalCenter: parent.verticalCenter
@@ -99,7 +76,7 @@ Item {
                             id: colorOverlaySearchIconId
                             anchors.fill: searchIcon
                             source: searchIcon
-                            color: root.informationTextColor
+                            color: Style.Theme.informationTextColor
                         }
 
                         TextArea {
@@ -110,11 +87,11 @@ Item {
                             anchors.leftMargin: 0
                             anchors.rightMargin: 0
                             font.pointSize: 10
-                            placeholderTextColor: root.informationTextColor
-                            font.family: root.fontFamily
+                            placeholderTextColor: Style.Theme.informationTextColor
+                            font.family: Style.Theme.fontFamily
                             hoverEnabled: true
                             placeholderText: qsTr("Search History")
-                            color: root.informationTextColor
+                            color: Style.Theme.informationTextColor
                             background: Rectangle{
                                 color: "#00ffffff"
                             }
@@ -122,7 +99,7 @@ Item {
                         layer.enabled: true
                         layer.effect: Glow {
                              samples: 15
-                             color: root.glowColor
+                             color: Style.Theme.glowColor
                              spread: 0.0
                              transparentBorder: true
                          }
@@ -148,8 +125,8 @@ Item {
                             myFillIconId:  "images/chatAddIcon.svg"
                             heightSource: 19
                             widthSource: 19
-                            normalColor: root.iconColor
-                            hoverColor: root.fillIconColor
+                            normalColor: Style.Theme.iconColor
+                            hoverColor: Style.Theme.fillIconColor
                             Connections {
                                 target: newChatIcon
                                 function onActionClicked() {
@@ -231,8 +208,8 @@ Item {
                                     text: model.date
                                     height: 20
                                     font.pointSize: 10
-                                    font.family: root.fontFamily
-                                    color: root.informationTextColor
+                                    font.family: Style.Theme.fontFamily
+                                    color: Style.Theme.informationTextColor
                                     anchors.top: parent.top
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
@@ -248,28 +225,6 @@ Item {
                                       anchors.leftMargin: 0
                                       anchors.rightMargin: 0
                                       anchors.topMargin: 0
-                                      fontFamily: root.fontFamily
-                                      myTextId: model.title
-                                      isCurrentItem: root.chatListModel.currentChat === root.chatListModel.getChat(index)
-                                      isTheme: root.isTheme
-                                      fillIconColor: root.fillIconColor
-                                      iconColor: root.iconColor
-                                      normalButtonColor: root.normalButtonColor
-                                      selectButtonColor: root.selectButtonColor
-                                      hoverButtonColor: root.hoverButtonColor
-                                      chatMessageInformationTextColor: root.chatMessageInformationTextColor
-
-                                      backgroundPageColor: root.backgroundPageColor
-                                      backgroungColor: root.backgroungColor
-                                      boxColor: root.boxColor
-                                      headerColor: root.headerColor
-                                      titleTextColor: root.titleTextColor
-                                      informationTextColor: root.informationTextColor
-                                      selectTextColor: root.selectTextColor
-
-
-                                      glowColor: root.glowColor
-
                                       Connections {
                                             target: applicationButton
                                             function onCurrentChat(){
@@ -304,8 +259,8 @@ Item {
                             font.pixelSize: 16
                             horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignTop
-                            font.family: root.fontFamily
-                            color: root.titleTextColor
+                            font.family: Style.Theme.fontFamily
+                            color: Style.Theme.titleTextColor
                         }
                     }
                 }
@@ -314,7 +269,7 @@ Item {
             Rectangle{
                 id: rightSidePage
                 height: mainStructure.height
-                color: root.chatBackgroungConverstationColor
+                color: Style.Theme.chatBackgroungConverstationColor
                 anchors.left: leftSidePage.visible=== true?leftSidePage.right: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
@@ -353,7 +308,7 @@ Item {
 
                             Text {
                                 id: emptyMessageText
-                                color: root.informationTextColor
+                                color: Style.Theme.informationTextColor
                                 text: qsTr("What can I help with?")
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.horizontalCenter: parent.horizontalCenter
@@ -404,7 +359,7 @@ Item {
                                         id: myPromptResponseBox
                                         width: listViewChat.width - 10 - 100
                                         height: myPromptResponseId.height
-                                        color: root.chatBackgroungConverstationColor
+                                        color: Style.Theme.chatBackgroungConverstationColor
 
 
                                         MyPromptResponse{
@@ -450,35 +405,10 @@ Item {
                                             numberOfRegenerate: model.numberOfRegenerate
                                             numberOfResponse: model.numberResponse
                                             numberOfEdit: model.numberOfEditPrompt
-
-
-                                            backgroungColor: root.backgroungColor
-                                            glowColor: root.glowColor
-                                            boxColor: root.boxColor
-                                            normalButtonColor: root.normalButtonColor
-                                            selectButtonColor: root.selectButtonColor
-                                            hoverButtonColor: root.hoverButtonColor
-                                            fillIconColor: root.fillIconColor
-                                            iconColor: root.iconColor
-
-                                            chatBackgroungColor: root.chatBackgroungColor
-                                            chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                                            chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                                            chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                                            chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                                            chatMessageIsGlow: root.chatMessageIsGlow
-
-                                            titleTextColor: root.titleTextColor
-                                            informationTextColor: root.informationTextColor
-                                            selectTextColor: root.selectTextColor
-
-                                            fontFamily: root.fontFamily
                                         }
                                     }
 
-                                    onContentHeightChanged: {
-                                            listViewChat.positionViewAtEnd()
-                                    }                                  
+                                    onContentHeightChanged: {listViewChat.positionViewAtEnd()}
                                 }
                             }
                         }
@@ -508,29 +438,6 @@ Item {
                                 anchors.leftMargin: 80
                                 anchors.rightMargin: 80
                                 anchors.bottomMargin: 20
-
-                                backgroungColor: root.backgroungColor
-                                glowColor: root.glowColor
-                                boxColor: root.boxColor
-                                normalButtonColor: root.normalButtonColor
-                                selectButtonColor: root.selectButtonColor
-                                hoverButtonColor: root.hoverButtonColor
-                                fillIconColor: root.fillIconColor
-                                iconColor: root.iconColor
-
-                                chatBackgroungColor: root.chatBackgroungColor
-                                chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                                chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                                chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                                chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                                chatMessageIsGlow: root.chatMessageIsGlow
-
-                                titleTextColor: root.titleTextColor
-                                informationTextColor: root.informationTextColor
-                                selectTextColor: root.selectTextColor
-
-                                fontFamily: root.fontFamily
-
                                 currentChat: root.currentChat
                                 modelListModel: root.modelListModel
 
@@ -552,11 +459,6 @@ Item {
                                     function onLoadModelInCurrentChat(indexModel){
                                         root.loadModelInCurrentChat(indexModel)
                                     }
-
-                                    // function onLoadModelDialog(promptTemplate, systemPrompt){
-                                    //     instructionTextBox.text = systemPrompt
-                                    //     promptTemplateTextBox.text = promptTemplate
-                                    // }
                                 }
                             }
                         }
@@ -572,7 +474,7 @@ Item {
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     anchors.rightMargin: 10
-                    color: root.chatBackgroungColor
+                    color: Style.Theme.chatBackgroungColor
                     radius:5
                     visible: false
 
@@ -599,12 +501,6 @@ Item {
                                 myTextId: "Assistant"
                                 checked: true
                                 autoExclusive: true
-                                backgroungColor: "#00ffffff"
-                                borderColor:"#00ffffff"
-                                textColor: root.informationTextColor
-                                glowColor: root.glowColor
-                                fontFamily: root.fontFamily
-                                selectTextColor:root.fillIconColor
                                 Connections {
                                     target: assistantMenue
                                     function onClicked(){
@@ -627,12 +523,6 @@ Item {
                                 myTextId: "Model"
                                 checked: false
                                 autoExclusive: true
-                                backgroungColor: "#00ffffff"
-                                borderColor:"#00ffffff"
-                                textColor: root.informationTextColor
-                                glowColor: root.glowColor
-                                fontFamily: root.fontFamily
-                                selectTextColor:root.fillIconColor
                                 Connections {
                                     target: modelMenue
                                     function onClicked(){
@@ -644,7 +534,7 @@ Item {
                         }
                         Rectangle{
                             id: showSelectMenuId
-                            color: root.fillIconColor
+                            color: Style.Theme.fillIconColor
                             height: 2
                             width: (parent.width-30)/2
                             anchors.bottom: parent.bottom
@@ -679,7 +569,7 @@ Item {
                             Rectangle {
                                 id: instructionsBox
                                 height: 80
-                                color: root.chatBackgroungConverstationColor
+                                color: Style.Theme.chatBackgroungConverstationColor
                                 radius: 12
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -687,8 +577,6 @@ Item {
                                 anchors.leftMargin: 10
                                 anchors.rightMargin: 10
                                 anchors.topMargin: 0
-
-
                                 ScrollView {
                                     id: scrollInstruction
                                     anchors.left: parent.left
@@ -709,7 +597,7 @@ Item {
                                         text: root.currentChat.modelSettings.systemPrompt
                                         height: text.height
                                         visible: true
-                                        color: root.informationTextColor
+                                        color: Style.Theme.informationTextColor
                                         anchors.left: parent.left
                                         anchors.right: parent.right
                                         anchors.leftMargin: 0
@@ -720,11 +608,11 @@ Item {
                                         font.pointSize: 10
                                         hoverEnabled: true
                                         tabStopDistance: 80
-                                        selectionColor: root.informationTextColor
+                                        selectionColor: Style.Theme.informationTextColor
                                         cursorVisible: false
                                         persistentSelection: true
-                                        placeholderTextColor: root.informationTextColor
-                                        font.family: root.fontFamily
+                                        placeholderTextColor: Style.Theme.informationTextColor
+                                        font.family: Style.Theme.fontFamily
 
                                         onHeightChanged: {
                                             if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
@@ -740,7 +628,7 @@ Item {
                                 layer.enabled: true
                                 layer.effect: Glow {
                                      samples: 15
-                                     color: root.glowColor
+                                     color: Style.Theme.glowColor
                                      spread: 0.0
                                      transparentBorder: true
                                  }
@@ -784,8 +672,8 @@ Item {
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
                                                 font.pointSize: 10
-                                                color: root.titleTextColor
-                                                font.family: root.fontFamily
+                                                color: Style.Theme.titleTextColor
+                                                font.family: Style.Theme.fontFamily
                                             }
                                             MyIcon {
                                                 id: inferenceSettingsIconId
@@ -799,8 +687,8 @@ Item {
                                                 myLable: inferenceSettingsInformationId.visible=== true? "close": "open"
                                                 myIconId:  inferenceSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
                                                 myFillIconId: inferenceSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                                normalColor: root.iconColor
-                                                hoverColor: root.fillIconColor
+                                                normalColor: Style.Theme.iconColor
+                                                hoverColor: Style.Theme.fillIconColor
                                                 Connections {
                                                     target: inferenceSettingsIconId
                                                     function onActionClicked () {
@@ -837,8 +725,8 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Stream"
                                                 myValue: root.currentChat.modelSettings.stream
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
+                                                // fontFamily:Style.Theme.fontFamily
+                                                // textColor: Style.Theme.informationTextColor
                                             }
                                             SettingsSliderItem{
                                                 id:temperatureId
@@ -849,10 +737,6 @@ Item {
                                                 sliderFrom: 0.0
                                                 sliderTo:2.0
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:topPId
@@ -863,10 +747,6 @@ Item {
                                                 sliderFrom: 0.0
                                                 sliderTo:1.0
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:maxTokensId
@@ -877,10 +757,6 @@ Item {
                                                 sliderFrom: 100
                                                 sliderTo: 4096
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:promptBatchSizeId
@@ -891,10 +767,6 @@ Item {
                                                 sliderFrom: 1
                                                 sliderTo: 128
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:minPId
@@ -905,10 +777,6 @@ Item {
                                                 sliderFrom: 0.0
                                                 sliderTo: 1.0
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:topKId
@@ -919,10 +787,6 @@ Item {
                                                 sliderFrom: 1
                                                 sliderTo: 1000
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:repeatPenaltyTokensId
@@ -933,10 +797,6 @@ Item {
                                                 sliderFrom: 0
                                                 sliderTo: 1
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:repeatPenaltyId
@@ -947,10 +807,6 @@ Item {
                                                 sliderFrom: 1.0
                                                 sliderTo: 2.0
                                                 sliderStepSize:0.1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                         }
                                     }
@@ -978,8 +834,8 @@ Item {
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
                                                 font.pointSize: 10
-                                                color: root.titleTextColor
-                                                font.family: root.fontFamily
+                                                color: Style.Theme.titleTextColor
+                                                font.family: Style.Theme.fontFamily
                                             }
                                             MyIcon {
                                                 id: modelSettingsIconId
@@ -993,8 +849,8 @@ Item {
                                                 myLable: modelSettingsInformationId.visible=== true? "close": "open"
                                                 myIconId:  modelSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
                                                 myFillIconId: modelSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                                normalColor: root.iconColor
-                                                hoverColor: root.fillIconColor
+                                                normalColor: Style.Theme.iconColor
+                                                hoverColor: Style.Theme.fillIconColor
                                                 Connections {
                                                     target: modelSettingsIconId
                                                     function onActionClicked() {
@@ -1031,14 +887,14 @@ Item {
                                                 height: 20
                                                 text: qsTr("Prompt template")
                                                 font.pointSize: 10
-                                                font.family: root.fontFamily
-                                                color: root.informationTextColor
+                                                font.family: Style.Theme.fontFamily
+                                                color: Style.Theme.informationTextColor
                                             }
 
                                             Rectangle {
                                                 id: promptTemplateBox
                                                 height: 80
-                                                color: root.chatBackgroungConverstationColor
+                                                color: Style.Theme.chatBackgroungConverstationColor
                                                 radius: 12
                                                 width: parent.width
 
@@ -1058,7 +914,7 @@ Item {
                                                         text: root.currentChat.modelSettings.promptTemplate
                                                         height: scrollPromptTemplate.height
                                                         visible: true
-                                                        color: root.informationTextColor
+                                                        color: Style.Theme.informationTextColor
                                                         anchors.left: parent.left
                                                         anchors.right: parent.right
                                                         anchors.leftMargin: 0
@@ -1069,11 +925,11 @@ Item {
                                                         font.pointSize: 10
                                                         hoverEnabled: true
                                                         tabStopDistance: 80
-                                                        selectionColor: root.informationTextColor
+                                                        selectionColor: Style.Theme.informationTextColor
                                                         cursorVisible: false
                                                         persistentSelection: true
-                                                        placeholderTextColor: root.informationTextColor
-                                                        font.family: root.fontFamily
+                                                        placeholderTextColor: Style.Theme.informationTextColor
+                                                        font.family: Style.Theme.fontFamily
                                                         onHeightChanged: {
                                                             if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
                                                                 promptTemplateBox.height += 10;
@@ -1088,7 +944,7 @@ Item {
                                                 layer.enabled: true
                                                 layer.effect: Glow {
                                                      samples: 15
-                                                     color: root.glowColor
+                                                     color: Style.Theme.glowColor
                                                      spread: 0.0
                                                      transparentBorder: true
                                                  }
@@ -1121,26 +977,24 @@ Item {
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
                                                 font.pointSize: 10
-                                                font.family: root.fontFamily
-                                                color: root.titleTextColor
+                                                font.family: Style.Theme.fontFamily
+                                                color: Style.Theme.titleTextColor
 
                                             }
                                             MyIcon {
                                                 id: engineSettingsIconId
                                                 visible: true
-                                                // anchors.left: modelList.right
                                                 anchors.right: parent.right
                                                 width: 40
                                                 anchors.top: parent.top
                                                 anchors.bottom: parent.bottom
-                                                // anchors.leftMargin: 0
                                                 anchors.rightMargin: 0
                                                 anchors.topMargin: 0
                                                 myLable: engineSettingsInformationId.visible=== true? "close":"open"
                                                 myIconId:  engineSettingsInformationId.visible=== true?"images/upIcon.svg":"images/downIcon.svg"
                                                 myFillIconId: engineSettingsInformationId.visible=== true?"images/fillUpIcon.svg":"images/fillDownIcon.svg"
-                                                normalColor: root.iconColor
-                                                hoverColor: root.fillIconColor
+                                                normalColor: Style.Theme.iconColor
+                                                hoverColor: Style.Theme.fillIconColor
                                                 Connections {
                                                     target: engineSettingsIconId
                                                     function onActionClicked() {
@@ -1180,10 +1034,6 @@ Item {
                                                 sliderFrom: 120
                                                 sliderTo:4096
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                             SettingsSliderItem{
                                                 id:numberOfGPUId
@@ -1193,10 +1043,6 @@ Item {
                                                 sliderFrom: 1
                                                 sliderTo: 100
                                                 sliderStepSize:1
-                                                fontFamily:root.fontFamily
-                                                textColor: root.informationTextColor
-                                                boxColor: root.chatBackgroungConverstationColor
-                                                glowColor: root.glowColor
                                             }
                                         }
                                     }
@@ -1220,8 +1066,8 @@ Item {
                     myFillIconId: modelSettings.visible=== true? "./images/fillAlignRightIcon.svg": "./images/fillAlignLeftIcon"
                     heightSource: 18
                     widthSource: 18
-                    normalColor: root.iconColor
-                    hoverColor: root.fillIconColor
+                    normalColor: Style.Theme.iconColor
+                    hoverColor: Style.Theme.fillIconColor
                     Connections {
                         target: rightDrawer
                         function onActionClicked() {
@@ -1248,8 +1094,8 @@ Item {
                     myFillIconId: leftSidePage.visible=== true? "./images/fillAlignLeftIcon":"./images/fillAlignRightIcon.svg"
                     heightSource: 18
                     widthSource: 18
-                    normalColor: root.iconColor
-                    hoverColor: root.fillIconColor
+                    normalColor: Style.Theme.iconColor
+                    hoverColor: Style.Theme.fillIconColor
                     Connections {
                         target: leftDrawer
                         function onActionClicked() {
@@ -1276,8 +1122,8 @@ Item {
                     myFillIconId:  "images/chatAddIcon.svg"
                     heightSource: 19
                     widthSource: 19
-                    normalColor: root.iconColor
-                    hoverColor: root.fillIconColor
+                    normalColor: Style.Theme.iconColor
+                    hoverColor: Style.Theme.fillIconColor
                     Connections {
                         target: newChatIcon2
                         function onActionClicked() {

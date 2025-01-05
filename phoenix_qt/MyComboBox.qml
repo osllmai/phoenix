@@ -3,30 +3,13 @@ import QtQuick.Controls
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 ComboBox {
     id: comboBoxId
     font.pixelSize: 12
     spacing: 0
     padding: 10
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
-
 
     Accessible.role: Accessible.ComboBox
     contentItem: RowLayout {
@@ -39,7 +22,7 @@ ComboBox {
             rightPadding: 20
             text: comboBoxId.displayText
             font: comboBoxId.font
-            color: comboBoxId.informationTextColor
+            color: Style.Theme.informationTextColor
             verticalAlignment: Text.AlignLeft
             elide: Text.ElideRight
         }
@@ -67,14 +50,14 @@ ComboBox {
         width: comboBoxId.width -20
         contentItem: Text {
             text: modelData
-            color: comboBoxId.informationTextColor
-            font.family: comboBoxId.fontFamily
+            color: Style.Theme.informationTextColor
+            font.family: Style.Theme.fontFamily
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
         background: Rectangle {
             radius: 10
-            color: highlighted? comboBoxId.selectButtonColor: comboBoxId.normalButtonColor
+            color: highlighted? Style.Theme.selectButtonColor: Style.Theme.normalButtonColor
         }
         highlighted: comboBoxId.highlightedIndex === index
     }
@@ -102,17 +85,17 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: comboBoxId.normalButtonColor
-            border.color: comboBoxId.selectButtonColor
+            color: Style.Theme.normalButtonColor
+            border.color: Style.Theme.selectButtonColor
             border.width: 1
             radius: 10
         }
     }
     indicator: Image {}
     background: Rectangle {
-        color: comboBoxId.normalButtonColor
+        color: Style.Theme.normalButtonColor
         border.width: 1
-        border.color: comboBoxId.selectButtonColor
+        border.color: Style.Theme.selectButtonColor
         radius: 10
     }
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval

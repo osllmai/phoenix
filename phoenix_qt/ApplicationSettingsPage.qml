@@ -1,5 +1,6 @@
 import QtQuick
-import QtQuick.Controls
+// import QtQuick.Controls
+import 'style' as Style
 
 Item {
     id: root
@@ -9,24 +10,6 @@ Item {
     signal themeRequested2(var myTheme)
     signal fontSizeRequested2(var myFontSize)
     signal fontFamilyRequested2(var myFontFamily)
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var theme
-    property var fontFamily
 
     Rectangle{
         id: applicationPageId
@@ -45,27 +28,11 @@ Item {
             anchors.topMargin: 10
             width: 200
 
-            backgroundPageColor: root.backgroundPageColor
-            backgroungColor: root.backgroungColor
-            glowColor: root.glowColor
-            boxColor: root.boxColor
-            headerColor: root.headerColor
-            normalButtonColor: root.normalButtonColor
-            selectButtonColor: root.selectButtonColor
-            hoverButtonColor: root.hoverButtonColor
-            fillIconColor: root.fillIconColor
-            iconColor: root.iconColor
-
-            titleTextColor: root.titleTextColor
-            informationTextColor: root.informationTextColor
-            selectTextColor: root.selectTextColor
-
-            font.family: root.fontFamily
             model: ListModel {
                 ListElement { text: "Dark" }
                 ListElement { text: "light" }
             }
-            displayText: root.theme
+            displayText: Style.Theme.theme
             onActivated: {
                 root.themeRequested2(themeList.currentText)
             }
@@ -80,22 +47,6 @@ Item {
             anchors.topMargin: 10
             width: 200
 
-            backgroundPageColor: root.backgroundPageColor
-            backgroungColor: root.backgroungColor
-            glowColor: root.glowColor
-            boxColor: root.boxColor
-            headerColor: root.headerColor
-            normalButtonColor: root.normalButtonColor
-            selectButtonColor: root.selectButtonColor
-            hoverButtonColor: root.hoverButtonColor
-            fillIconColor: root.fillIconColor
-            iconColor: root.iconColor
-
-            titleTextColor: root.titleTextColor
-            informationTextColor: root.informationTextColor
-            selectTextColor: root.selectTextColor
-
-            font.family: root.fontFamily
             model: ListModel {
                 ListElement { name: qsTr("Small") }
                 ListElement { name: qsTr("Medium") }
@@ -115,23 +66,6 @@ Item {
             anchors.topMargin: 10
             width: 200
 
-            backgroundPageColor: root.backgroundPageColor
-            backgroungColor: root.backgroungColor
-            glowColor: root.glowColor
-            boxColor: root.boxColor
-            headerColor: root.headerColor
-            normalButtonColor: root.normalButtonColor
-            selectButtonColor: root.selectButtonColor
-            hoverButtonColor: root.hoverButtonColor
-            fillIconColor: root.fillIconColor
-            iconColor: root.iconColor
-
-            titleTextColor: root.titleTextColor
-            informationTextColor: root.informationTextColor
-            selectTextColor: root.selectTextColor
-
-            font.family: root.fontFamily
-
             model: ListModel {
                 ListElement { text: "Times New Roman" }
                 ListElement { text: "Arial" }
@@ -141,7 +75,7 @@ Item {
                 ListElement { text: "Verdana" }
                 // ListElement { text: "./fontFamily/DMSans-VariableFont.ttf" }
             }
-            displayText: root.fontFamily
+            displayText: Style.Theme.fontFamily
             onActivated: {
                 root.fontFamilyRequested2(fontFamilyList.currentText)
             }
@@ -156,28 +90,10 @@ Item {
             anchors.topMargin: 10
             width: 200
 
-            backgroundPageColor: root.backgroundPageColor
-            backgroungColor: root.backgroungColor
-            glowColor: root.glowColor
-            boxColor: root.boxColor
-            headerColor: root.headerColor
-            normalButtonColor: root.normalButtonColor
-            selectButtonColor: root.selectButtonColor
-            hoverButtonColor: root.hoverButtonColor
-            fillIconColor: root.fillIconColor
-            iconColor: root.iconColor
-
-            titleTextColor: root.titleTextColor
-            informationTextColor: root.informationTextColor
-            selectTextColor: root.selectTextColor
-
-            font.family: root.fontFamily
             model: ListModel {
                 ListElement { text: "CPU" }
                  ListElement { text: "GPU" }
             }
-            // Accessible.name: fontLabel.text
-            // Accessible.description: fontLabel.helpText
         }
 
         Rectangle {
@@ -206,26 +122,25 @@ Item {
                 width: 40
                 height: 30
                 radius: 2
-                color: root.normalButtonColor
-                // border.color: "#e0dede"
+                color: Style.Theme.normalButtonColor
                 anchors.verticalCenter: sliderId.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 2
                 Text {
                     id: valueSliderId
                     text: sliderId.value
-                    color: root.titleTextColor
+                    color: Style.Theme.titleTextColor
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 10
-                    font.family: root.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
             Text {
                 id: minValueSliderId
                 text: sliderId.from
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.left: parent.left
                 anchors.top: sliderId.bottom
                 anchors.leftMargin: 5
@@ -233,12 +148,12 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             Text {
                 id: maxValueSliderId
                 text: sliderId.to
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.right: valueSliderBoxId.left
                 anchors.top: sliderId.bottom
                 anchors.rightMargin: 5
@@ -246,7 +161,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
 
@@ -262,21 +177,21 @@ Item {
             Text {
                 id: themeText
                 text: qsTr("Theme")
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 font.pixelSize: 12
                 font.bold: true
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             Text {
                 id: themeInformationText
                 text: qsTr("The application color scheme")
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 7
                 font.pixelSize: 12
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
 
@@ -291,21 +206,21 @@ Item {
             Text {
                 id: fontSizeText
                 text: qsTr("Font Size")
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 font.pixelSize: 12
                 font.bold: true
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             Text {
                 id: fontSizeInformationText
                 text: qsTr("The size of text in the application")
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 7
                 font.pixelSize: 12
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
         Rectangle{
@@ -319,21 +234,21 @@ Item {
             Text {
                 id: fontFamilyText
                 text: qsTr("Font Family")
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 font.pixelSize: 12
                 font.bold: true
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             Text {
                 id: fontFamilyInformationText
                 text: qsTr("The fontFamily of text in the application")
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 7
                 font.pixelSize: 12
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
         Rectangle{
@@ -347,21 +262,21 @@ Item {
             Text {
                 id: deviceText
                 text: qsTr("Device")
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 font.pixelSize: 12
                 font.bold: true
-                 font.family: root.fontFamily
+                 font.family: Style.Theme.fontFamily
             }
             Text {
                 id: deviceInformationText
                 text: qsTr("The computer device used for text generation")
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 7
                 font.pixelSize: 12
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
         Rectangle{
@@ -375,21 +290,21 @@ Item {
             Text {
                 id: cpuThreadsText
                 text: qsTr("CPU Threads")
-                color: root.titleTextColor
+                color: Style.Theme.titleTextColor
                 anchors.top: parent.top
                 anchors.topMargin: 0
                 font.pixelSize: 12
                 font.bold: true
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             Text {
                 id: cpuThreadsInformationText
                 text: qsTr("The number of CPU threads used for inference and embedding.")
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 7
                 font.pixelSize: 12
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
     }

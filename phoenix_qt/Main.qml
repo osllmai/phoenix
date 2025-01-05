@@ -1,12 +1,11 @@
 import QtQuick 6.7
 import QtCore
 import QtQuick.Controls.Basic
-// import QtCharts
 import Qt5Compat.GraphicalEffects
 
-// import QtQuick.Controls 6.7
 import QtQuick.Layouts
-import Phoenix
+import Phoenix 
+import 'style' as Style
 
 
 ApplicationWindow {
@@ -17,96 +16,11 @@ ApplicationWindow {
     minimumWidth: 450
     minimumHeight: 600
 
-    // palette.button: "red"
-
-    property var theme: "light"
-
-    //dark theme
-    property color darkBackgroundPage: /*"#242424"*/ "#333333"
-    property color darkBackgroung: "#1f1f1f"
-    property color darkGlow: /*"#d7d7d7"*/  "#1f1f1f"
-    property color darkBox: /*"#1f1f1f"*/  "#333333"
-    property color darkHeader: /*"#333333"*/ "#242424"
-    property color darkNormalButton:/* "#242424"*/ "#333333"
-    property color darkSelectButton:/* "#57b9fc"*/ "#1f1f1f"
-    property color darkHoverButton: "#5f5f5f"
-    property color darkFillIcon:  "#5b5fc7" /* "#57b9fc"*/
-    property color darkMenuIcon:/* "#57b9fc"*/  "#ffffff"
-    property color darkIcon: "#ffffff"
-
-    property color darkInformationText: "#ffffff"
-    property color darkTitleText: "#cbcdff"
-    property color darkSelectText: "#000000"
-
-
-    //dark theme for chat page
-    property color darkChatBackgroung: "#242424"
-    property color darkChatBackgroungConverstation: "#333333"
-    property color darkChatMessageBackgroung:"#333333"
-    property color darkChatMessageTitleText: "#cbcdff"
-    property color darkChatMessageInformationText: "#ffffff"
-    property bool darkChatMessageIsGlow: true
-
-
-    //light theme
-    property color lightBackgroundPage: "#ffffff"
-    property color lightBackgroung: "#ebebeb"
-    property color lightGlow: "#d7d7d7"
-    property color lightBox: /*"#ebebeb"*/  "#f5f5f5"
-    property color lightHeader: "#f5f5f5"
-    property color lightNormalButton: "#f5f5f5"
-    property color lightSelectButton: "#ffffff"
-    property color lightHoverButton: "#ffffff"
-    property color lightFillIcon: "#5b5fc7"
-    property color lightMenuIcon: "#747474"
-    property color lightIcon: "#5b5fc7"
-
-    property color lightTitleText: "#000000"
-    property color lightInformationText: "#474747"
-    property color lightSelectText: "#000000"
-
-
-    //light theme for chat page
-    property color lightChatBackgroung: "#f5f5f5"
-    property color lightChatBackgroungConverstation: "#ffffff"
-    property color lightChatMessageBackgroung: "#ebebeb"
-    property color lightChatMessageTitleText: "#474747"
-    property color lightChatMessageInformationText: "#000000"
-    property bool lightChatMessageIsGlow: false
-
-
-    //general
-    property color backgroundPageColor: theme == "light"? lightBackgroundPage: darkBackgroundPage
-    property color backgroungColor: theme == "light"? lightBackgroung: darkBackgroung
-    property color glowColor: theme == "light"? lightGlow: darkGlow
-    property color boxColor: theme == "light"? lightBox: darkBox
-    property color headerColor: theme == "light"? lightHeader: darkHeader
-    property color normalButtonColor: theme == "light"? lightNormalButton: darkNormalButton
-    property color selectButtonColor: theme == "light"? lightSelectButton: darkSelectButton
-    property color hoverButtonColor: theme == "light"? lightHoverButton: darkHoverButton
-    property color fillIconColor: theme == "light"? lightFillIcon: darkFillIcon
-    property color menuIconColor: theme == "light"? lightMenuIcon: darkMenuIcon
-    property color iconColor: theme == "light"? lightIcon: darkIcon
-
-    property color titleTextColor: theme == "light"? lightTitleText: darkTitleText
-    property color informationTextColor: theme == "light"? lightInformationText: darkInformationText
-    property color selectTextColor: theme == "light"? lightSelectText: darkSelectText
-
-    //theme for chat page
-    property color chatBackgroungColor: theme == "light"? lightChatBackgroung: darkChatBackgroung
-    property color chatBackgroungConverstationColor: theme == "light"? lightChatBackgroungConverstation: darkChatBackgroungConverstation
-    property color chatMessageBackgroungColor: theme == "light"? lightChatMessageBackgroung: darkChatMessageBackgroung
-    property color chatMessageTitleTextColor: theme == "light"? lightChatMessageTitleText: darkChatMessageTitleText
-    property color chatMessageInformationTextColor: theme == "light"? lightChatMessageInformationText: darkChatMessageInformationText
-    property bool chatMessageIsGlow: theme == "light"?lightChatMessageIsGlow: darkChatMessageIsGlow
-
-
     property int pixelSizeText1: 10
     property int pixelSizeText2: 12
     property int pixelSizeText3: 14
     property int pixelSizeText4: 16
 
-    property var fontFamily: "Times New Roman"
 
     property bool isTheme
 
@@ -120,8 +34,8 @@ ApplicationWindow {
         property alias y: window.y
         property alias width: window.width
         property alias height: window.height
-        property alias theme: window.theme
-        property alias fontFamily: window.fontFamily
+        // property alias theme: Style.Theme.theme
+        // property alias fontFamily: Style.Theme.fontFamily
     }
 
     PhoenixController{
@@ -131,7 +45,7 @@ ApplicationWindow {
     Rectangle {
         id: phoenix
         anchors.fill: parent
-        color: window.backgroungColor
+        color: Style.Theme.backgroungColor
 
         Rectangle {
             id: menuId
@@ -152,9 +66,8 @@ ApplicationWindow {
                     myLable: "Home"
                     myIconId: "images/homeIcon.svg"
                     myFillIconId: "images/fillHomeIcon.svg"
-                    fontFamily: window.fontFamily
-                    menuIconColor: window.fillIconColor
-                    iconColor: window.menuIconColor
+                    menuIconColor: Style.Theme.fillIconColor
+                    iconColor: Style.Theme.menuIconColor
                     checked: true
                     autoExclusive: true
 
@@ -176,9 +89,8 @@ ApplicationWindow {
                     myLable: "Chat"
                     myIconId: "images/chatIcon.svg"
                     myFillIconId: "images/fillChatIcon.svg"
-                    fontFamily: window.fontFamily
-                    menuIconColor: window.fillIconColor
-                    iconColor: window.menuIconColor
+                    menuIconColor: Style.Theme.fillIconColor
+                    iconColor: Style.Theme.menuIconColor
                     autoExclusive: true
 
                     Connections {
@@ -199,9 +111,8 @@ ApplicationWindow {
                     myLable: "Models"
                     myIconId: "images/modelIcon.svg"
                     myFillIconId: "images/fillModelIcon.svg"
-                    fontFamily: window.fontFamily
-                    menuIconColor: window.fillIconColor
-                    iconColor: window.menuIconColor
+                    menuIconColor: Style.Theme.fillIconColor
+                    iconColor: Style.Theme.menuIconColor
                     autoExclusive: true
 
                     Connections {
@@ -218,21 +129,20 @@ ApplicationWindow {
                     anchors.bottom: settingsItemMenu.top
                     anchors.bottomMargin: 20
                     anchors.horizontalCenter: parent.horizontalCenter
-                    myTextId: window.theme === "light"? "Dark": "Light"
-                    myLable: window.theme === "light"? "Dark": "Light"
-                    myIconId: window.theme === "light"? "images/moonIcon.svg" : "images/sunIcon.svg"
-                    myFillIconId: window.theme === "light"?  "images/fillMoonIcon.svg": "images/fillSunIcon.svg"
-                    fontFamily: window.fontFamily
-                    menuIconColor: window.fillIconColor
-                    iconColor: window.menuIconColor
+                    myTextId: Style.Theme.theme === "light"? "Dark": "Light"
+                    myLable: Style.Theme.theme === "light"? "Dark": "Light"
+                    myIconId: Style.Theme.theme === "light"? "images/moonIcon.svg" : "images/sunIcon.svg"
+                    myFillIconId: Style.Theme.theme === "light"?  "images/fillMoonIcon.svg": "images/fillSunIcon.svg"
+                    menuIconColor: Style.Theme.fillIconColor
+                    iconColor: Style.Theme.menuIconColor
                     Connections {
                         target: lightDarkItemMenu
                         function onClicked(){
-                            if(window.theme === "light"){
-                                window.theme = "dark"
+                            if(Style.Theme.theme === "light"){
+                                Style.Theme.theme = "dark"
                                 window.isTheme = true
                             }else{
-                                window.theme = "light"
+                                Style.Theme.theme = "light"
                                 window.isTheme = false
                             }
                         }
@@ -248,9 +158,8 @@ ApplicationWindow {
                     myLable: "Settings"
                     myIconId: "images/settingsIcon.svg"
                     myFillIconId: "images/fillSettingsIcon.svg"
-                    fontFamily: window.fontFamily
-                    menuIconColor: window.fillIconColor
-                    iconColor: window.menuIconColor
+                    menuIconColor: Style.Theme.fillIconColor
+                    iconColor: Style.Theme.menuIconColor
                     Connections {
                         target: settingsItemMenu
                         function onClicked() {
@@ -262,35 +171,16 @@ ApplicationWindow {
                         id: settingsId
                         onSettingsDialogAccepted: page.currentIndex = 2
 
-                        theme: window.theme
-
-                        backgroundPageColor: window.backgroundPageColor
-                        backgroungColor: window.backgroungColor
-                        glowColor: window.glowColor
-                        boxColor: window.boxColor
-                        headerColor: window.headerColor
-                        normalButtonColor: window.normalButtonColor
-                        selectButtonColor: window.selectButtonColor
-                        hoverButtonColor: window.hoverButtonColor
-                        fillIconColor: window.fillIconColor
-                        iconColor: window.iconColor
-
-                        titleTextColor: window.titleTextColor
-                        informationTextColor: window.informationTextColor
-                        selectTextColor: window.selectTextColor
-
-                        fontFamily: window.fontFamily
-
                         Connections{
                             target: settingsId
                             function onThemeRequested1(myTheme){
-                                window.theme = myTheme
+                                Style.Theme.theme = myTheme
                             }
                             function onFontSizeRequested1(myFontSize){
 
                             }
                             function onFontFamilyRequested1(myFontFamily){
-                                window.fontFamily = myFontFamily
+                                Style.Theme.fontFamily = myFontFamily
                             }
                         }
                     }
@@ -299,7 +189,7 @@ ApplicationWindow {
 
             Rectangle{
                 id: showSelectMenuId
-                color: window.fillIconColor
+                color: Style.Theme.fillIconColor
                 height: 48
                 width: 2
                 anchors.left: parent.left
@@ -332,30 +222,13 @@ ApplicationWindow {
                 radius: 4
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                color: window.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
 
                 HomePage {
                     id: homePageId
 
                     height: parent.height
                     width: parent.width
-
-                    backgroundPageColor: window.backgroundPageColor
-                    backgroungColor: window.backgroungColor
-                    glowColor: window.glowColor
-                    boxColor: window.boxColor
-                    headerColor: window.headerColor
-                    normalButtonColor: window.normalButtonColor
-                    selectButtonColor: window.selectButtonColor
-                    hoverButtonColor: window.hoverButtonColor
-                    fillIconColor: window.fillIconColor
-                    iconColor: window.iconColor
-
-                    titleTextColor: window.titleTextColor
-                    informationTextColor: window.informationTextColor
-                    selectTextColor: window.selectTextColor
-
-                    fontFamily: window.fontFamily
 
                     Connections{
                         target: homePageId
@@ -374,7 +247,7 @@ ApplicationWindow {
                 radius: 4
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                color: window.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
 
                 ChatPage {
                     id: chatPageId
@@ -386,29 +259,6 @@ ApplicationWindow {
                     chatModel: phoenixController.chatListModel.currentChat.chatModel
                     modelListModel: phoenixController.modelList.currentModelList
 
-                    backgroungColor: window.backgroungColor
-                    glowColor: window.glowColor
-                    boxColor: window.boxColor
-                    normalButtonColor: window.normalButtonColor
-                    selectButtonColor: window.selectButtonColor
-                    hoverButtonColor: window.hoverButtonColor
-                    fillIconColor: window.fillIconColor
-                    iconColor: window.iconColor
-
-                    chatBackgroungColor: window.chatBackgroungColor
-                    chatBackgroungConverstationColor: window.chatBackgroungConverstationColor
-                    chatMessageBackgroungColor: window.chatMessageBackgroungColor
-                    chatMessageTitleTextColor: window.chatMessageTitleTextColor
-                    chatMessageInformationTextColor: window.chatMessageInformationTextColor
-                    chatMessageIsGlow: window.chatMessageIsGlow
-
-                    titleTextColor: window.titleTextColor
-                    informationTextColor: window.informationTextColor
-                    selectTextColor: window.selectTextColor
-
-                    fontFamily: window.fontFamily
-
-                    isTheme: window.isTheme
                     Connections{
                         target: chatPageId
                         function onGoToModelPage(){
@@ -429,30 +279,13 @@ ApplicationWindow {
                 radius: 4
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                color: window.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
 
                 ModelsPage {
                     id:modelsPageId
                     height: parent.height
                     width: parent.width
                     modelListModel: phoenixController.modelList
-
-                    backgroundPageColor: window.backgroundPageColor
-                    backgroungColor: window.backgroungColor
-                    glowColor: window.glowColor
-                    boxColor: window.boxColor
-                    headerColor: window.headerColor
-                    normalButtonColor: window.normalButtonColor
-                    selectButtonColor: window.selectButtonColor
-                    hoverButtonColor: window.hoverButtonColor
-                    fillIconColor: window.fillIconColor
-                    iconColor: window.iconColor
-
-                    titleTextColor: window.titleTextColor
-                    informationTextColor: window.informationTextColor
-                    selectTextColor: window.selectTextColor
-
-                    fontFamily: window.fontFamily
                 }
             }
         }
@@ -478,8 +311,8 @@ ApplicationWindow {
                 myLable: "Discord"
                 heightSource: 22
                 widthSource: 22
-                normalColor: window.menuIconColor
-                hoverColor:window.fillIconColor
+                normalColor: Style.Theme.menuIconColor
+                hoverColor:Style.Theme.fillIconColor
                 xPopup: -18
                 yPopup: -40
                 Connections {
@@ -503,8 +336,8 @@ ApplicationWindow {
                 myLable: "Github"
                 heightSource: 18
                 widthSource: 18
-                normalColor:window.menuIconColor
-                hoverColor:window.fillIconColor
+                normalColor:Style.Theme.menuIconColor
+                hoverColor:Style.Theme.fillIconColor
                 xPopup: -15
                 yPopup: -40
                 Connections {
@@ -540,18 +373,18 @@ ApplicationWindow {
                     myFillIconId: "images/systemMonitorIcon.svg"
                     heightSource: 19
                     widthSource: 19
-                    normalColor:window.menuIconColor
-                    hoverColor:window.fillIconColor
+                    normalColor:Style.Theme.menuIconColor
+                    hoverColor:Style.Theme.fillIconColor
                     havePupup: false
                 }
                 Text {
                     id: systemMonitorText
                     text: qsTr("System Monitor")
-                    color: window.informationTextColor
+                    color: Style.Theme.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     anchors.rightMargin: 10
-                    font.family: window.fontFamily
+                    font.family: Style.Theme.fontFamily
                     visible: window.width> 700?true:false
                 }
                 MouseArea {
@@ -561,13 +394,13 @@ ApplicationWindow {
                         if(containsMouse){
                             phoenixController.setIsSystemMonitor(true)
                             systemMonitorPupup.open()
-                            systemMonitorIcon.normalColor = window.fillIconColor
-                            systemMonitorText.color= window.fillIconColor
+                            systemMonitorIcon.normalColor = Style.Theme.fillIconColor
+                            systemMonitorText.color= Style.Theme.fillIconColor
                         }else{
                             phoenixController.setIsSystemMonitor(false)
                             systemMonitorPupup.close()
-                            systemMonitorIcon.normalColor = window.menuIconColor
-                            systemMonitorText.color=window.informationTextColor
+                            systemMonitorIcon.normalColor = Style.Theme.menuIconColor
+                            systemMonitorText.color=Style.Theme.informationTextColor
                         }
                     }
                 }
@@ -581,7 +414,7 @@ ApplicationWindow {
                 y: systemMonitorId.y-80
 
                 background:Rectangle{
-                    color: /*"#00ffffff"*/ window.backgroungColor
+                    color: Style.Theme.backgroungColor
                     radius: 4
                     anchors.fill: parent
 
@@ -610,7 +443,7 @@ ApplicationWindow {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 0
                                 font.pointSize: 9
-                                font.family: window.fontFamily
+                                font.family: Style.Theme.fontFamily
                             }
                             ProgressBar {
                                 id: progressBarCPU
@@ -650,7 +483,7 @@ ApplicationWindow {
                                 font.pixelSize: 9
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
-                                font.family: window.fontFamily
+                                font.family: Style.Theme.fontFamily
                             }
                         }
                         Rectangle {
@@ -670,7 +503,7 @@ ApplicationWindow {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 0
                                 font.pointSize: 9
-                                font.family: window.fontFamily
+                                font.family: Style.Theme.fontFamily
                             }
                             ProgressBar {
                                 id: progressBarMemory
@@ -710,7 +543,7 @@ ApplicationWindow {
                                 font.pixelSize: 9
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
-                                font.family: window.fontFamily
+                                font.family: Style.Theme.fontFamily
                             }
                         }
                         layer.enabled: true
@@ -739,22 +572,22 @@ ApplicationWindow {
                 Text {
                     id: executionTimeText
                     text: qsTr("Execution time: ")
-                    color: window.informationTextColor
+                    color: Style.Theme.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                     font.pointSize: 8
-                    font.family: window.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
                 Text {
                     id: executionTimeValue
                     text: phoenixController.chatListModel.currentChat.valueTimer + "s"
-                    color: window.informationTextColor
+                    color: Style.Theme.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: executionTimeText.right
                     anchors.leftMargin: 3
                     font.pointSize: 8
-                    font.family: window.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
 
@@ -784,8 +617,8 @@ ApplicationWindow {
                     myFillIconId: "images/downloadIcon.svg"
                     heightSource: 18
                     widthSource: 18
-                    normalColor:window.menuIconColor
-                    hoverColor:window.menuIconColor
+                    normalColor:Style.Theme.menuIconColor
+                    hoverColor:Style.Theme.menuIconColor
                     havePupup: false
                     Connections {
                         target: downloadIcon
@@ -795,12 +628,12 @@ ApplicationWindow {
                 Text {
                     id: currentDownloadText
                     text: qsTr("Downloading model")
-                    color: window.informationTextColor
+                    color: Style.Theme.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: progressBarDownload.left
                     anchors.rightMargin: 5
                     font.pointSize: 8
-                    font.family: window.fontFamily
+                    font.family: Style.Theme.fontFamily
                     visible: window.width> 700?true:false
                 }
                 ProgressBar {
@@ -835,14 +668,14 @@ ApplicationWindow {
                 Text {
                     id: progressBarTextDownload
                     text: "%" + aboutDownloadId.downloadValue
-                    color: window.informationTextColor
+                    color: Style.Theme.informationTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     anchors.rightMargin: 5
                     font.pixelSize: 8
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
-                    font.family: window.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
         }

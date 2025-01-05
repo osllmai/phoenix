@@ -1,66 +1,33 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Templates 2.1 as T
-import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: root
     width: 200
     height: 200
 
-    //theme for chat page
-    property color chatBackgroungColor
-    property color chatBackgroungConverstationColor
-    property color chatMessageBackgroungColor
-    property color chatMessageTitleTextColor
-    property color chatMessageInformationTextColor
-    property bool chatMessageIsGlow
-
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
-
     property var modelListModel
     signal goToModelPage()
     signal loadModelDialog(int indexModel)
 
-    // onThemeChanged:{
-    //     if(isCurrentItem===true){
-    //         backgroundId.color = control.selectButtonColor
-    //     }else{
-    //         backgroundId.color = control.normalButtonColor
-    //     }
-    // }
-
     Rectangle{
         id: modelSettings
         anchors.fill:  parent
-        color: root.chatBackgroungColor
-        border.color: root.chatBackgroungColor
+        color: Style.Theme.chatBackgroungColor
+        border.color: Style.Theme.chatBackgroungColor
         radius:5
         visible: true
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: root.chatBackgroungConverstationColor
+                color: Style.Theme.chatBackgroungConverstationColor
             }
 
             GradientStop {
                 position: 1
-                color: root.chatBackgroungColor
+                color: Style.Theme.chatBackgroungColor
             }
             orientation: Gradient.Vertical
         }
@@ -87,12 +54,6 @@ Item {
                     myTextId: "On-device"
                     checked: true
                     autoExclusive: true
-                    backgroungColor: "#00ffffff"
-                    borderColor:"#00ffffff"
-                    textColor: root.informationTextColor
-                    glowColor: root.glowColor
-                    fontFamily: root.fontFamily
-                    selectTextColor:root.fillIconColor
                     Connections {
                         target: onDeviceId
                         function onClicked(){
@@ -115,12 +76,6 @@ Item {
                     myTextId: "Cloud"
                     checked: false
                     autoExclusive: true
-                    backgroungColor: "#00ffffff"
-                    borderColor:"#00ffffff"
-                    textColor: root.informationTextColor
-                    glowColor: root.glowColor
-                    fontFamily: root.fontFamily
-                    selectTextColor:root.fillIconColor
                     Connections {
                         target: cloudId
                         function onClicked(){
@@ -132,7 +87,7 @@ Item {
             }
             Rectangle{
                 id: showSelectMenuId
-                color: root.fillIconColor
+                color: Style.Theme.fillIconColor
                 height: 2
                 width: (parent.width-30)/2
                 anchors.bottom: parent.bottom
@@ -223,7 +178,7 @@ Item {
                                 id: delegateChat
                                 width: historylist.width
                                 height: 30
-                                color: root.normalButtonColor
+                                color: Style.Theme.normalButtonColor
                                 radius: 5
 
                                 Rectangle{
@@ -232,7 +187,7 @@ Item {
                                     color: "#00ffffff"
                                     Text {
                                         id:  textId
-                                        color: root.chatMessageInformationTextColor
+                                        color: Style.Theme.chatMessageInformationTextColor
                                         text: model.name
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.left: modelIconBox.right
@@ -240,7 +195,7 @@ Item {
                                         font.pixelSize: 9
                                         horizontalAlignment: Text.AlignHCenter
                                         verticalAlignment: Text.AlignVCenter
-                                        font.family: root.fontFamily
+                                        font.family: Style.Theme.fontFamily
                                     }
                                     Rectangle {
                                         id: modelIconBox
@@ -267,15 +222,15 @@ Item {
                                         id:mouseAreaChatItem
                                         anchors.fill:parent
                                         onClicked: {
-                                            delegateChat.color= root.selectButtonColor
+                                            delegateChat.color= Style.Theme.selectButtonColor
                                             root.loadModelDialog(index);
                                         }
                                         hoverEnabled: true
                                         onHoveredChanged: {
                                             if(containsMouse){
-                                                delegateChat.color= root.hoverButtonColor
+                                                delegateChat.color= Style.Theme.hoverButtonColor
                                             }else{
-                                                delegateChat.color= root.normalButtonColor
+                                                delegateChat.color= Style.Theme.normalButtonColor
                                             }
                                         }
                                     }
@@ -323,6 +278,5 @@ Item {
             }
         }
     }
-
 }
 

@@ -4,35 +4,12 @@ import QtQuick.Layouts
 
 import Phoenix
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: root
     width: 200
     height: inputBox.height
-
-    //theme for chat page
-    property color chatBackgroungColor
-    property color chatBackgroungConverstationColor
-    property color chatMessageBackgroungColor
-    property color chatMessageTitleTextColor
-    property color chatMessageInformationTextColor
-    property bool chatMessageIsGlow
-
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
 
     property var modelListModel
     property var currentChat
@@ -46,7 +23,7 @@ Item {
         height: 40 + selectModelId.height
         width: parent.width
 
-        color: root.chatBackgroungConverstationColor
+        color: Style.Theme.chatBackgroungConverstationColor
         radius: 12
 
         ScrollView {
@@ -64,7 +41,7 @@ Item {
                 id: inputTextBox
                 height: text.height
                 enabled: root.currentChat.isLoadModel
-                color: root.informationTextColor
+                color: Style.Theme.informationTextColor
                 wrapMode: Text.Wrap
                 placeholderText: inputTextBox.placeholderTextInput()
 
@@ -89,8 +66,8 @@ Item {
                 selectionColor: "#fff5fe"
                 cursorVisible: false
                 persistentSelection: true
-                placeholderTextColor: root.informationTextColor
-                font.family: root.fontFamily
+                placeholderTextColor: Style.Theme.informationTextColor
+                font.family: Style.Theme.fontFamily
                 onHeightChanged: {
                     if(inputTextBox.height >30 && inputTextBox.text !== ""){
                         inputBox.height  = Math.min(inputTextBox.height + 10 + selectModelId.height, 180+selectModelId.height) ;
@@ -99,11 +76,6 @@ Item {
                     }
                 }
 
-                // onHeightChanged: {
-                //     if(inputBox.height < 150 && inputTextBox.text !== ""){
-                //         inputBox.height += 6;
-                //     }
-                // }
                 onEditingFinished: {
                     // inputBoxRec.layer.enabled= false
                 }
@@ -138,8 +110,8 @@ Item {
             myFillIconId:  root.currentChat.responseInProgress? "images/fillStopIcon.svg" : "images/fillSendIcon.svg"
             heightSource: 16
             widthSource: 16
-            normalColor: root.iconColor
-            hoverColor: root.fillIconColor
+            normalColor: Style.Theme.iconColor
+            hoverColor: Style.Theme.fillIconColor
             Connections {
                 target: sendIcon
                 function onActionClicked() {
@@ -208,29 +180,6 @@ Item {
             }
             ModelDialog{
                 id: modelListDialog
-
-                backgroungColor: root.backgroungColor
-                glowColor: root.glowColor
-                boxColor: root.boxColor
-                normalButtonColor: root.normalButtonColor
-                selectButtonColor: root.selectButtonColor
-                hoverButtonColor: root.hoverButtonColor
-                fillIconColor: root.fillIconColor
-                iconColor: root.iconColor
-
-                chatBackgroungColor: root.chatBackgroungColor
-                chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                chatMessageIsGlow: root.chatMessageIsGlow
-
-                titleTextColor: root.titleTextColor
-                informationTextColor: root.informationTextColor
-                selectTextColor: root.selectTextColor
-
-                fontFamily: root.fontFamily
-
                 modelListModel: root.modelListModel
                 Connections{
                     target: modelListDialog
@@ -241,7 +190,6 @@ Item {
 
                     function onLoadModelDialog(indexModel){
                         root.loadModelInCurrentChat(indexModel)
-                        // root.currentChat.loadModelRequested(indexModel);
                         loadModelPopup.close()
                     }
                 }
@@ -251,10 +199,9 @@ Item {
         layer.enabled: true
         layer.effect: Glow {
             samples: 15
-            color: root.glowColor
+            color: Style.Theme.glowColor
             spread: 0.0
             transparentBorder: true
          }
     }
-
 }

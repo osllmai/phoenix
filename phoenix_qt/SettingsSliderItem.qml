@@ -1,16 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: root
     width: 250
     height: 60
 
-    property var fontFamily
     property color textColor: "black"
     property color boxColor: "#e0dede"
-    property color glowColor
+    // property color glowColor
 
     property alias myTextName: textId.text
     property alias myTextDescription: aboutIcon.myLable
@@ -32,7 +32,7 @@ Item {
             anchors.leftMargin: 0
             anchors.topMargin: 0
             font.pointSize: 10
-            font.family: root.fontFamily
+            font.family: Style.Theme.fontFamily
         }
 
         MyIcon {
@@ -88,12 +88,12 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
             layer.enabled: true
             layer.effect: Glow {
                  samples: 15
-                 color: root.glowColor
+                 color: Style.Theme.glowColor
                  spread: 0.0
                  transparentBorder: true
              }
@@ -109,7 +109,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pointSize: 8
-            font.family: root.fontFamily
+            font.family: Style.Theme.fontFamily
         }
         Text {
             id: maxValueSliderId
@@ -122,7 +122,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pointSize: 8
-            font.family: root.fontFamily
+            font.family: Style.Theme.fontFamily
         }
     }
 }

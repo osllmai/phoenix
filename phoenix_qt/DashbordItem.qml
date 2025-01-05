@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: control
@@ -15,23 +16,6 @@ Item {
     property var notebookLink
     property int goPage
 
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
-
-
     property int titleFontSize: 14
     property int informationFontSize: 12
 
@@ -39,20 +23,20 @@ Item {
     Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.boxColor
+        color: Style.Theme.boxColor
         radius: 2
-        border.color: control.boxColor
+        border.color: Style.Theme.boxColor
         border.width: 0
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: control.backgroundPageColor
+                color: Style.Theme.backgroundPageColor
             }
 
             GradientStop {
                 position: 1
-                color: control.backgroungColor
+                color: Style.Theme.backgroungColor
             }
             orientation: Gradient.Vertical
         }
@@ -61,7 +45,7 @@ Item {
             id: newChatBox
             width: 40
             height: 40
-            color: control.fillIconColor
+            color: Style.Theme.fillIconColor
             radius: 4
             anchors.left: parent.left
             anchors.top: parent.top
@@ -92,7 +76,7 @@ Item {
 
         Text {
             id: titleId
-            color: control.titleTextColor
+            color: Style.Theme.titleTextColor
             text: qsTr("Title")
             anchors.verticalCenter: newChatBox.verticalCenter
             anchors.left: newChatBox.right
@@ -101,7 +85,7 @@ Item {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.styleName: "Bold"
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
         }
 
         Text{
@@ -119,8 +103,8 @@ Item {
             horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignTop
             wrapMode: Text.Wrap
-            font.family: control.fontFamily
-            color: control.informationTextColor
+            font.family: Style.Theme.fontFamily
+            color: Style.Theme.informationTextColor
         }
 
         MyButton{
@@ -176,7 +160,7 @@ Item {
         layer.enabled: true
         layer.effect: Glow {
              samples: 40
-             color:  control.glowColor
+             color:  Style.Theme.glowColor
              spread: 0.4
              transparentBorder: true
          }

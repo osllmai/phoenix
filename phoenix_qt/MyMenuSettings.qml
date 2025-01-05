@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Templates 2.1 as T
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 T.Button {
     id: control
@@ -23,7 +23,7 @@ T.Button {
     property color textColor: "#000000"
     property color selectTextColor: "#000000"
     property color glowColor: "#d7d7d7"
-    property var fontFamily
+    // property var fontFamily
 
     background: Rectangle{
         id: backgroundId
@@ -39,21 +39,10 @@ T.Button {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
             font.styleName: "Bold"
         }
-
-        // layer.enabled: true
-        // layer.effect: Glow {
-        //      samples: 15
-        //      color: control.glowColor
-        //      spread: 0.0
-        //      // radius: 2
-        //      transparentBorder: true
-        //  }
     }
-
-
 
     states: [
         State {
@@ -86,7 +75,6 @@ T.Button {
                 color: control.textColor
                 font.styleName: "Bold"
             }
-
         }
     ]
 }

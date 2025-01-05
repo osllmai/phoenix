@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import 'style' as Style
 
 Item {
     id: root
@@ -10,7 +11,6 @@ Item {
     property alias myTextName: textId.text
     property bool myValue
 
-    property var fontFamily
     property color textColor: "black"
 
     Rectangle{
@@ -29,7 +29,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pointSize: 10
-            font.family: root.fontFamily
+            font.family: Style.Theme.fontFamily
         }
 
         MySwitch{

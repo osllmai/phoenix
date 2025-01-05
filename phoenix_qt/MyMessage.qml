@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
+import 'style' as Style
 
 Item {
     id: root
@@ -28,28 +29,28 @@ Item {
     property var numberOfToken
 
     //theme for chat page
-    property color chatBackgroungColor
-    property color chatBackgroungConverstationColor
-    property color chatMessageBackgroungColor
-    property color chatMessageTitleTextColor
-    property color chatMessageInformationTextColor
-    property bool chatMessageIsGlow
+    // property color chatBackgroungColor
+    // property color chatBackgroungConverstationColor
+    // property color chatMessageBackgroungColor
+    // property color chatMessageTitleTextColor
+    // property color chatMessageInformationTextColor
+    // property bool chatMessageIsGlow
 
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
+    // property color backgroungColor
+    // property color glowColor
+    // property color boxColor
+    // property color normalButtonColor
+    // property color selectButtonColor
+    // property color hoverButtonColor
+    // property color fillIconColor
+    // property color iconColor
 
 
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
+    // property color titleTextColor
+    // property color informationTextColor
+    // property color selectTextColor
 
-    property var fontFamily
+    // property var fontFamily
 
     Rectangle{
         id: messageRec
@@ -61,7 +62,7 @@ Item {
 
         Rectangle {
             id: messageTextRec
-            color: root.chatMessageBackgroungColor
+            color: Style.Theme.chatMessageBackgroungColor
             width: messageTextRec.widthCalculation()
             height: messageTextRec.heightCalculation()
             function heightCalculation(){
@@ -92,13 +93,13 @@ Item {
                 visible: !root.isLLM
                 width:  root.maxWidth
                 text: root.myText
-                color: root.chatMessageInformationTextColor
+                color: Style.Theme.chatMessageInformationTextColor
 
                 padding: 10
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
                 font.pointSize: 10
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
                 focus: false
                 readOnly: true
                 wrapMode: Text.Wrap
@@ -141,7 +142,7 @@ Item {
             Text {
                 id: messageTextLLM
                 visible: root.isLLM && root.isFinished
-                color: root.chatMessageInformationTextColor
+                color: Style.Theme.chatMessageInformationTextColor
                 text: root.myText
                 anchors.fill: parent
                 padding: 10
@@ -150,13 +151,13 @@ Item {
                 textFormat: Text.MarkdownText
                 wrapMode: Text.Wrap
                 font.pointSize: 10
-                font.family: root.fontFamily
+                font.family: Style.Theme.fontFamily
             }
 
 
             //                 Text {
             //                     id: curentResponseTextLLM
-            //                     color: root.chatMessageInformationTextColor
+            //                     color: Style.Theme.chatMessageInformationTextColor
             //                     text: model.text
             //                     anchors.fill: parent
             //                     horizontalAlignment: Text.AlignLeft
@@ -164,7 +165,7 @@ Item {
             //                     textFormat: Text.MarkdownText
             //                     wrapMode: Text.Wrap
             //                     font.pointSize: 10
-            //                     font.family: root.fontFamily
+            //                     font.family: Style.Theme.fontFamily
 
 
 
@@ -194,12 +195,12 @@ Item {
                         Text {
                             id: curentResponseTextLLM
                             text: model.text
-                            color: root.chatMessageInformationTextColor
+                            color: Style.Theme.chatMessageInformationTextColor
                             anchors.fill: parent
                             textFormat: Text.MarkdownText
                             wrapMode: Text.Wrap
                             font.pointSize: 10
-                            font.family: root.fontFamily
+                            font.family: Style.Theme.fontFamily
                             onTextChanged:{
                                 console.log("--------------------------------- OK")
                             }
@@ -218,7 +219,7 @@ Item {
             }
 
 
-            layer.enabled: root.chatMessageIsGlow
+            layer.enabled: Style.Theme.chatMessageIsGlow
             layer.effect: Glow {
                 samples: 30
                 color: root.glowColor
@@ -381,7 +382,7 @@ Item {
     //                 anchors.verticalCenter: parent.verticalCenter
     //                 anchors.left: parent.left
     //                 anchors.leftMargin: 0
-    //                 font.family: root.fontFamily
+    //                 font.family: Style.Theme.fontFamily
     //             }
     //         }
     //         MyIcon {

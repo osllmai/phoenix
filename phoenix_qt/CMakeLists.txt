@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
 if(APPLE)
   option(BUILD_UNIVERSAL "Build a Universal binary on macOS" OFF)
@@ -51,9 +52,9 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# set(CMAKE_AUTOUIC ON)
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -62,6 +63,7 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 # qt_standard_project_setup()
 
+
 qt_add_executable(app${PROJECTNAME}
     main.cpp
 )
@@ -69,19 +71,35 @@ qt_add_executable(app${PROJECTNAME}
 qt_add_qml_module(app${PROJECTNAME}
     URI ${PROJECTNAME}
     VERSION 1.0
-    QML_FILES Main.qml
-    QML_FILES ChatPage.qml
-    QML_FILES ModelsPage.qml
-    QML_FILES MyMenuItem.qml
-    QML_FILES MyChatItem.qml
-    QML_FILES MyIcon.qml
-    QML_FILES SettingsDialog.qml
-    QML_FILES MyMenuSettings.qml
-    QML_FILES HomePage.qml
-    QML_FILES DashbordItem.qml
-    QML_FILES MyButton.qml
-    QML_FILES ModelItem.qml
-    QML_FILES DownloadModelButton.qml
+    QML_FILES
+        Main.qml
+        ChatPage.qml
+        ModelsPage.qml
+        MyMenuItem.qml
+        MyChatItem.qml
+        MyIcon.qml
+        SettingsDialog.qml
+        MyMenuSettings.qml
+        HomePage.qml
+        DashbordItem.qml
+        MyButton.qml
+        ModelItem.qml
+        DownloadModelButton.qml
+        SettingsSliderItem.qml
+        MySlider.qml
+        SettingsSwitchItem.qml
+        MySwitch.qml
+        ApplicationSettingsPage.qml
+        MyComboBox.qml
+        MyMenuButtonItem.qml
+        MyPromptResponse.qml
+        MyMessage.qml
+        ModelDialog.qml
+        InputPromptBox.qml
+        Notification.qml
+        style/qmldir
+        style/Theme.qml
+
     RESOURCES
         "images/aboutIcon.svg"
         "images/fillAboutIcon.svg"
@@ -170,39 +188,25 @@ qt_add_qml_module(app${PROJECTNAME}
         "images/fillOkCircle.svg"
 
         "fontFamily/DMSans-VariableFont.ttf"
-        "./models.json"
+        # "./models.json"
     RESOURCE_PREFIX /
 
-    SOURCES chat.h chat.cpp
-    SOURCES chatllm.h chatllm.cpp
-    SOURCES chatmodel.h chatmodel.cpp
-    SOURCES chatitem.h chatitem.cpp
-    SOURCES chatlistmodel.h chatlistmodel.cpp
-    SOURCES phoenixcontroller.h phoenixcontroller.cpp
-    SOURCES download.h download.cpp
-    SOURCES model.h model.cpp
-    SOURCES modellist.h modellist.cpp
-    SOURCES currentmodellist.h currentmodellist.cpp
-    QML_FILES SettingsSliderItem.qml
-    QML_FILES MySlider.qml
-    QML_FILES SettingsSwitchItem.qml
-    QML_FILES MySwitch.qml
-    SOURCES database.h database.cpp
-    QML_FILES Constants.qml
-    QML_FILES ApplicationSettingsPage.qml
-    QML_FILES MyComboBox.qml
-    QML_FILES MyMenuButtonItem.qml
-    QML_FILES MyPromptResponse.qml
-    QML_FILES MyMessage.qml
-    SOURCES message.h message.cpp
-    QML_FILES ModelDialog.qml
-    QML_FILES InputPromptBox.qml
-    QML_FILES SpeedDisplay.qml
-    QML_FILES CustomDot.qml
-    QML_FILES AnimationText.qml
-    QML_FILES Notification.qml
-    SOURCES currentresponsemodel.h currentresponsemodel.cpp
-    SOURCES modelsettings.h modelsettings.cpp
+    SOURCES
+        chat.h chat.cpp
+        chatllm.h chatllm.cpp
+        chatmodel.h chatmodel.cpp
+        chatitem.h chatitem.cpp
+        chatlistmodel.h chatlistmodel.cpp
+        phoenixcontroller.h phoenixcontroller.cpp
+        download.h download.cpp
+        model.h model.cpp
+        modellist.h modellist.cpp
+        currentmodellist.h currentmodellist.cpp
+        database.h database.cpp
+        message.h message.cpp
+        currentresponsemodel.h currentresponsemodel.cpp
+        modelsettings.h modelsettings.cpp
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -298,3 +302,5 @@ install(TARGETS app${PROJECTNAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+configure_file(models.json bin/models.json COPYONLY)

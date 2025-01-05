@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-
+import 'style' as Style
 
 Item {
     id : rootId
@@ -15,25 +15,6 @@ Item {
     signal fontSizeRequested1(var myFontSize)
     signal fontFamilyRequested1(var myFontFamily)
 
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var theme
-    property var fontFamily
-
     Dialog {
         id: settingsDialog
 
@@ -41,7 +22,7 @@ Item {
         y: (parent.height - height) / 2
         width: (2*parent.width)/3
         height: (2*parent.height)/3
-        font.family: rootId.fontFamily
+        font.family: Style.Theme.fontFamily
         parent: Overlay.overlay
 
         focus: true
@@ -49,11 +30,11 @@ Item {
 
         background: Rectangle{
             radius: 12
-            color: rootId.backgroungColor
+            color: Style.Theme.backgroungColor
             layer.enabled: true
             layer.effect: Glow {
                  samples: 50
-                 color: rootId.glowColor
+                 color: Style.Theme.glowColor
                  spread: 0.4
                  transparentBorder: true
              }
@@ -61,7 +42,7 @@ Item {
         Rectangle{
             id:settingsPage
             anchors.fill: parent
-            color: rootId.backgroungColor
+            color: Style.Theme.backgroungColor
             Rectangle{
                 id: titleId
                 width: parent.width
@@ -75,11 +56,11 @@ Item {
                 Text {
                     id: settingsTextId
                     text: qsTr("Settings")
-                    color: rootId.titleTextColor
+                    color: Style.Theme.titleTextColor
                     verticalAlignment: Text.AlignVCenter
                     font.styleName: "Bold"
                     font.pointSize: 12
-                    font.family: rootId.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
 
@@ -107,7 +88,7 @@ Item {
                         autoExclusive: true
                         Connections {
                             target: applicationButton
-                            onClicked: {settingsPageId.currentIndex = 0}
+                            function onClicked(){settingsPageId.currentIndex = 0}
                         }
                     }
                 }
@@ -129,31 +110,13 @@ Item {
                 Rectangle {
                     id: applicationSettingsPageBox
                     anchors.fill: settingsPageId
-                    color: rootId.backgroundPageColor
+                    color: Style.Theme.backgroundPageColor
                     radius: 12
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     ApplicationSettingsPage{
                         id: applicationSettingsPageId
                         anchors.fill: parent
-
-                        backgroundPageColor: rootId.backgroundPageColor
-                        backgroungColor: rootId.backgroungColor
-                        glowColor: rootId.glowColor
-                        boxColor: rootId.boxColor
-                        headerColor: rootId.headerColor
-                        normalButtonColor: rootId.normalButtonColor
-                        selectButtonColor: rootId.selectButtonColor
-                        hoverButtonColor: rootId.hoverButtonColor
-                        fillIconColor: rootId.fillIconColor
-                        iconColor: rootId.iconColor
-
-                        titleTextColor: rootId.titleTextColor
-                        informationTextColor: rootId.informationTextColor
-                        selectTextColor: rootId.selectTextColor
-
-                        theme: rootId.theme
-                        fontFamily: rootId.fontFamily
 
                         Connections{
                             target: applicationSettingsPageId

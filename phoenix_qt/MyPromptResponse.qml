@@ -1,38 +1,12 @@
 import QtQuick 2.15
-// import QtQuick.Templates 2.1 as T
-// import QtQuick.Layouts
-// import Qt5Compat.GraphicalEffects
 import QtQuick.Controls 2.15
+import 'style' as Style
 
 
 Item {
     id: root
     width: 400
     height: columnDelegate.height
-
-    //theme for chat page
-    property color chatBackgroungColor
-    property color chatBackgroungConverstationColor
-    property color chatMessageBackgroungColor
-    property color chatMessageTitleTextColor
-    property color chatMessageInformationTextColor
-    property bool chatMessageIsGlow
-
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
 
     //information about model
     property var prompt
@@ -85,7 +59,7 @@ Item {
                 Text {
                     id: dateId
                     text: root.dateRequest
-                    color: root.chatMessageTitleTextColor
+                    color: Style.Theme.chatMessageTitleTextColor
                     anchors.verticalCenter: parent.verticalCenter
                     font.pointSize: 10
                     font.family: "Times New Roman"
@@ -153,35 +127,11 @@ Item {
                     }
                     numberOfMessage: root.numberOfPrompt
                     numberOfRegenerateOrEdit: root.numberOfEdit
-
-
-                    backgroungColor: root.backgroungColor
-                    glowColor: root.glowColor
-                    boxColor: root.boxColor
-                    normalButtonColor: root.normalButtonColor
-                    selectButtonColor: root.selectButtonColor
-                    hoverButtonColor: root.hoverButtonColor
-                    fillIconColor: root.fillIconColor
-                    iconColor: root.iconColor
-
-                    chatBackgroungColor: root.chatBackgroungColor
-                    chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                    chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                    chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                    chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                    chatMessageIsGlow: root.chatMessageIsGlow
-
-
-                    titleTextColor: root.titleTextColor
-                    informationTextColor: root.informationTextColor
-                    selectTextColor: root.selectTextColor
-
-                    fontFamily: root.fontFamily
                 }
 
                 Text {
                     id: timeText
-                    color: root.chatMessageTitleTextColor
+                    color: Style.Theme.chatMessageTitleTextColor
                     text: root.promptTime
                     anchors.right: userImageRec.left
                     anchors.bottom: userTextRec.top
@@ -189,7 +139,7 @@ Item {
                     anchors.bottomMargin: 2
 
                     font.pointSize: 8
-                    font.family: root.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
 
@@ -274,34 +224,12 @@ Item {
                     }
                     numberOfMessage: root.numberOfResponse
                     numberOfRegenerateOrEdit: root.numberOfRegenerate
-
-                    backgroungColor: root.backgroungColor
-                    glowColor: root.glowColor
-                    boxColor: root.boxColor
-                    normalButtonColor: root.normalButtonColor
-                    selectButtonColor: root.selectButtonColor
-                    hoverButtonColor: root.hoverButtonColor
-                    fillIconColor: root.fillIconColor
-                    iconColor: root.iconColor
-
-                    chatBackgroungColor: root.chatBackgroungColor
-                    chatBackgroungConverstationColor: root.chatBackgroungConverstationColor
-                    chatMessageBackgroungColor: root.chatMessageBackgroungColor
-                    chatMessageTitleTextColor: root.chatMessageTitleTextColor
-                    chatMessageInformationTextColor: root.chatMessageInformationTextColor
-                    chatMessageIsGlow: root.chatMessageIsGlow
-
-                    titleTextColor: root.titleTextColor
-                    informationTextColor: root.informationTextColor
-                    selectTextColor: root.selectTextColor
-
-                    fontFamily: root.fontFamily
                 }
 
                 Text {
                     id: llmTimeText
                     visible: !llmBox.waitingForFirstToken()
-                    color: root.chatMessageTitleTextColor
+                    color: Style.Theme.chatMessageTitleTextColor
                     text: root.responseTime
                     anchors.left: llmImageRec.right
                     anchors.bottom: llmTextRec.top
@@ -309,7 +237,7 @@ Item {
                     anchors.bottomMargin: 2
 
                     font.pointSize: 8
-                    font.family: root.fontFamily
+                    font.family: Style.Theme.fontFamily
                 }
             }
         }

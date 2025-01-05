@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("PHOENIX");
 
     QQmlApplicationEngine engine;
+    engine.addImportPath(":/style");
     const QUrl url(u"qrc:/Phoenix/Main.qml"_qs);
 
     QObject::connect(

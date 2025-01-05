@@ -1,0 +1,5 @@
+module AppStyle
+
+import QtQuick.Controls.Basic auto
+
+singleton Theme 1.0 Theme.qml

@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import Phoenix
+import 'style' as Style
 
 Item {
     id: root
@@ -11,42 +12,20 @@ Item {
     height: 685 - 48
 
     property var modelListModel
-
-    property color backgroundPageColor
-    property color backgroungColor
-    property color glowColor
-    property color boxColor
-    property color headerColor
-    property color normalButtonColor
-    property color selectButtonColor
-    property color hoverButtonColor
-    property color fillIconColor
-    property color iconColor
-
-    property color titleTextColor
-    property color informationTextColor
-    property color selectTextColor
-
-    property var fontFamily
-
     property color borderColor: "#ebebeb"
-
 
     Rectangle {
         id: modelsPageId
-        color: root.headerColor
-        // radius: 12
+        color: Style.Theme.headerColor
         anchors.fill: parent
 
         Rectangle {
             id: listModelId
-            color: root.backgroundPageColor
+            color: Style.Theme.backgroundPageColor
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: headerId.bottom
             anchors.bottom: parent.bottom
-            // radius: 12
-
             Rectangle {
                 id: itemId
                 anchors.fill: parent
@@ -62,7 +41,6 @@ Item {
                     anchors.bottomMargin: 10
                     GridView {
                         id: gridView
-
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter
@@ -94,7 +72,7 @@ Item {
                             id: rectangleGridView
                             width: gridView.cellWidth
                             height: gridView.cellHeight
-                            color: root.backgroundPageColor
+                            color: Style.Theme.backgroundPageColor
                             ModelItem {
                                 id: indoxItem
                                 anchors.fill: parent
@@ -102,24 +80,7 @@ Item {
                                 myModel: model
                                 myModelListModel: root.modelListModel
                                 myIndex: index
-
-                                backgroundPageColor: root.backgroundPageColor
-                                backgroungColor: window.backgroungColor
-                                glowColor: window.glowColor
-                                boxColor: root.boxColor
-                                headerColor: root.headerColor
-                                normalButtonColor: root.normalButtonColor
-                                selectButtonColor: root.selectButtonColor
-                                hoverButtonColor: root.hoverButtonColor
-                                fillIconColor: root.fillIconColor
-
-                                titleTextColor: root.titleTextColor
-                                informationTextColor: root.informationTextColor
-                                selectTextColor: root.selectTextColor
-
-                                fontFamily: root.fontFamily
-
-                                 xNotification: root.x
+                                xNotification: root.x
                                 yNotification: root.y
                             }
                         }
@@ -141,7 +102,7 @@ Item {
             Rectangle {
                 id: searchBox
                 height: 40
-                color: root.normalButtonColor
+                color: Style.Theme.normalButtonColor
                 width: 300
                 radius: 5
                 anchors.verticalCenter: parent.verticalCenter
@@ -163,7 +124,7 @@ Item {
                     id: colorOverlaySearchIconId
                     anchors.fill: searchIcon
                     source: searchIcon
-                    color: root.informationTextColor
+                    color: Style.Theme.informationTextColor
                 }
 
                 TextArea {
@@ -174,11 +135,11 @@ Item {
                     anchors.leftMargin: 0
                     anchors.rightMargin: 0
                     font.pointSize: 10
-                    placeholderTextColor: root.informationTextColor
-                    font.family: root.fontFamily
+                    placeholderTextColor: Style.Theme.informationTextColor
+                    font.family: Style.Theme.fontFamily
                     hoverEnabled: true
                     placeholderText: qsTr("Search History")
-                    color: root.informationTextColor
+                    color: Style.Theme.informationTextColor
                     background: Rectangle{
                         color: "#00ffffff"
                     }
@@ -186,7 +147,7 @@ Item {
                 layer.enabled: true
                 layer.effect: Glow {
                      samples: 15
-                     color: root.glowColor
+                     color: Style.Theme.glowColor
                      spread: 0.0
                      transparentBorder: true
                  }
@@ -213,7 +174,7 @@ Item {
                 myTextId: "Add Model"
                 Connections {
                     target: loadModelButton
-                     onClicked: fileDialogId.open();
+                     function onClicked(){ fileDialogId.open();}
                 }
             }
 
@@ -234,8 +195,8 @@ Item {
                     text: qsTr("Installed Models")
                     font.pixelSize: 20
                     font.weight: 700
-                    font.family: root.fontFamily
-                    color: root.titleTextColor
+                    font.family: Style.Theme.fontFamily
+                    color: Style.Theme.titleTextColor
                 }
 
                 Text {
@@ -246,8 +207,8 @@ Item {
                     anchors.topMargin: 5
                     anchors.bottomMargin: 0
                     font.pixelSize: 14
-                    font.family: root.fontFamily
-                    color:root.informationTextColor
+                    font.family: Style.Theme.fontFamily
+                    color:Style.Theme.informationTextColor
                 }
             }
         }
