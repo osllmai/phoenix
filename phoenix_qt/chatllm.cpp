@@ -123,7 +123,7 @@ void ChatLLM::prompt(const QString &input){
         answer += response.c_str();
 
         emit tokenResponse(QString::fromStdString(response));
-        Sleep(20);
+        Sleep(30);
     }
 
     emit finishedResponnse(QString::fromStdString(answer));

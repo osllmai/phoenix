@@ -9,17 +9,15 @@ Item {
     width: 150
     height: 30
 
-    property var fontFamily
-
     property alias myTextId: textId.text
     property bool isCurrentItem
-    property bool isTheme
+    property var theme: Style.Theme.theme
 
     signal currentChat()
     signal deleteChat()
     signal editChatName(var chatName)
 
-    onIsThemeChanged:{
+    onThemeChanged:{
         if(isCurrentItem===true){
             backgroundId.color = Style.Theme.selectButtonColor
         }else{
@@ -55,7 +53,7 @@ Item {
             anchors.bottomMargin: 0
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
-            font.family: control.fontFamily
+            font.family: Style.Theme.fontFamily
             focus: false
             readOnly: true
             wrapMode: Text.NoWrap

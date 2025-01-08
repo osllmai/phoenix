@@ -18,21 +18,14 @@ T.Button {
     autoExclusive: false
     checkable: true
 
-    property color backgroungColor: "#f5f5f5"
-    property color borderColor: "#ffffff"
-    property color textColor: "#000000"
-    property color selectTextColor: "#000000"
-    property color glowColor: "#d7d7d7"
-    // property var fontFamily
-
     background: Rectangle{
         id: backgroundId
         anchors.fill: parent
-        color: control.backgroungColor
+        color: "#00ffffff"
         radius: 2
         Text {
             id: textId
-            color: control.textColor
+            color: Style.Theme.informationTextColor
             text: qsTr("Text Button")
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 12
@@ -51,7 +44,7 @@ T.Button {
 
             PropertyChanges {
                 target: textId
-                color:control. selectTextColor
+                color:Style.Theme.fillIconColor
                 font.styleName: "Bold"
             }
         },
@@ -61,7 +54,7 @@ T.Button {
 
             PropertyChanges {
                 target: textId
-                color: control.selectTextColor
+                color: Style.Theme.fillIconColor
                 font.styleName: "Bold"
             }
 
@@ -72,7 +65,7 @@ T.Button {
 
             PropertyChanges {
                 target: textId
-                color: control.textColor
+                color: Style.Theme.informationTextColor
                 font.styleName: "Bold"
             }
         }

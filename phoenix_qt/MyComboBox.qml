@@ -42,12 +42,12 @@ ComboBox {
             ColorOverlay {
                 anchors.fill: updown
                 source: updown
-                color: comboBoxId.iconColor
+                color: Style.Theme.iconColor
             }
         }
     }
     delegate: ItemDelegate {
-        width: comboBoxId.width -20
+        width: comboBoxId.width - 20
         contentItem: Text {
             text: modelData
             color: Style.Theme.informationTextColor

@@ -11,7 +11,7 @@ Item {
     property alias myTextName: textId.text
     property bool myValue
 
-    property color textColor: "black"
+    // property color textColor: "black"
 
     Rectangle{
         id: settingsSliderBox
@@ -20,7 +20,7 @@ Item {
         Text{
             id:textId
             text: "Temperature"
-            color:root.textColor
+            color:Style.Theme.informationTextColor
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.top: parent.top

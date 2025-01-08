@@ -152,6 +152,28 @@ Item {
                     anchors.bottomMargin: 10
 
                     Rectangle{
+                        id: recHistoryText
+                        width: parent.width
+                        height: 60
+                        color:"#00000000"
+                        Text {
+                            id: historyText
+                            text: qsTr("Histoty")
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.topMargin: 20
+                            anchors.leftMargin: 16
+                            font.pixelSize: 16
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignTop
+                            font.family: Style.Theme.fontFamily
+                            color: Style.Theme.titleTextColor
+                        }
+                    }
+
+                    Rectangle{
                         id: emptyChatListId
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -170,7 +192,7 @@ Item {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 10
-                            font.family: "Times New Roman"
+                            font.family: Style.Theme.fontFamily
                         }
                     }
 
@@ -225,6 +247,8 @@ Item {
                                       anchors.leftMargin: 0
                                       anchors.rightMargin: 0
                                       anchors.topMargin: 0
+                                      myTextId: model.title
+                                      isCurrentItem: root.chatListModel.currentChat === root.chatListModel.getChat(index)
                                       Connections {
                                             target: applicationButton
                                             function onCurrentChat(){
@@ -242,27 +266,6 @@ Item {
                         }
                     }
 
-                    Rectangle{
-                        id: recHistoryText
-                        width: parent.width
-                        height: 60
-                        color:"#00000000"
-                        Text {
-                            id: historyText
-                            text: qsTr("Histoty")
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.top: parent.top
-                            anchors.topMargin: 20
-                            anchors.leftMargin: 16
-                            font.pixelSize: 16
-                            horizontalAlignment: Text.AlignLeft
-                            verticalAlignment: Text.AlignTop
-                            font.family: Style.Theme.fontFamily
-                            color: Style.Theme.titleTextColor
-                        }
-                    }
                 }
             }
 
@@ -488,16 +491,12 @@ Item {
                         Row{
                             id: rowSettingsId
                             anchors.fill: parent
+                            spacing: 10
 
                             MyMenuSettings {
                                 id: assistantMenue
                                 width: (parent.width-10)/2
-                                anchors.top: parent.top
-                                anchors.left: parent.left
-                                anchors.bottom: parent.bottom
-                                anchors.leftMargin: 10
-                                anchors.topMargin: 10
-                                anchors.bottomMargin:  10
+                                height: 60
                                 myTextId: "Assistant"
                                 checked: true
                                 autoExclusive: true
@@ -512,14 +511,7 @@ Item {
                             MyMenuSettings {
                                 id: modelMenue
                                 width: (parent.width-10)/2
-                                anchors.left: assistantMenue.right
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                                anchors.bottom: parent.bottom
-                                anchors.leftMargin: 0
-                                anchors.rightMargin: 10
-                                anchors.topMargin: 10
-                                anchors.bottomMargin:  10
+                                height: 60
                                 myTextId: "Model"
                                 checked: false
                                 autoExclusive: true
@@ -725,8 +717,6 @@ Item {
                                                 width: parent.width
                                                 myTextName: "Stream"
                                                 myValue: root.currentChat.modelSettings.stream
-                                                // fontFamily:Style.Theme.fontFamily
-                                                // textColor: Style.Theme.informationTextColor
                                             }
                                             SettingsSliderItem{
                                                 id:temperatureId
@@ -736,7 +726,8 @@ Item {
                                                 sliderValue: root.currentChat.modelSettings.temperature
                                                 sliderFrom: 0.0
                                                 sliderTo:2.0
-                                                sliderStepSize:0.1
+                                                sliderStepSize:0.01
+                                                decimalPart: 2
                                             }
                                             SettingsSliderItem{
                                                 id:topPId
@@ -746,7 +737,8 @@ Item {
                                                 sliderValue: root.currentChat.modelSettings.topP
                                                 sliderFrom: 0.0
                                                 sliderTo:1.0
-                                                sliderStepSize:0.1
+                                                sliderStepSize:0.01
+                                                decimalPart: 2
                                             }
                                             SettingsSliderItem{
                                                 id:maxTokensId
@@ -776,7 +768,8 @@ Item {
                                                 sliderValue: root.currentChat.modelSettings.minP
                                                 sliderFrom: 0.0
                                                 sliderTo: 1.0
-                                                sliderStepSize:0.1
+                                                sliderStepSize:0.01
+                                                decimalPart: 2
                                             }
                                             SettingsSliderItem{
                                                 id:topKId
@@ -796,7 +789,8 @@ Item {
                                                 sliderValue: root.currentChat.modelSettings.repeatPenaltyTokens
                                                 sliderFrom: 0
                                                 sliderTo: 1
-                                                sliderStepSize:0.1
+                                                sliderStepSize:0.01
+                                                decimalPart: 2
                                             }
                                             SettingsSliderItem{
                                                 id:repeatPenaltyId
@@ -806,7 +800,8 @@ Item {
                                                 sliderValue: root.currentChat.modelSettings.repeatPenalty
                                                 sliderFrom: 1.0
                                                 sliderTo: 2.0
-                                                sliderStepSize:0.1
+                                                sliderStepSize:0.01
+                                                decimalPart: 2
                                             }
                                         }
                                     }

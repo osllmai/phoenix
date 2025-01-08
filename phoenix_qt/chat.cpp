@@ -142,6 +142,7 @@ void Chat::promptRequested(const QString &input){
     QDateTime now = QDateTime::currentDateTime();
     if(m_date.daysTo(now) > 1 || m_date.toString("dd")!=now.toString("dd")){
         m_date = now;
+        emit dateChanged();
         phoenix_databace::updateConversationDate(m_id,m_date);
     }
 

@@ -21,9 +21,12 @@ ApplicationWindow {
     property int pixelSizeText3: 14
     property int pixelSizeText4: 16
 
+    property var theme: Style.Theme.theme
 
-    property bool isTheme
-
+    onThemeChanged:{
+        systemMonitorIcon.normalColor = Style.Theme.menuIconColor
+        systemMonitorText.color=Style.Theme.informationTextColor
+    }
 
     visible: true
     title: qsTr("Phoenix")
@@ -140,10 +143,8 @@ ApplicationWindow {
                         function onClicked(){
                             if(Style.Theme.theme === "light"){
                                 Style.Theme.theme = "dark"
-                                window.isTheme = true
                             }else{
                                 Style.Theme.theme = "light"
-                                window.isTheme = false
                             }
                         }
                     }

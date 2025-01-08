@@ -17,6 +17,7 @@ QtObject {
     property color darkFillIcon:  "#5b5fc7" /* "#57b9fc"*/
     property color darkMenuIcon:/* "#57b9fc"*/  "#ffffff"
     property color darkIcon: "#ffffff"
+    property color darkColorOverlay: "#b80a0a0a"
 
     property color darkInformationText: "#ffffff"
     property color darkTitleText: "#cbcdff"
@@ -43,6 +44,7 @@ QtObject {
     property color lightFillIcon: "#5b5fc7"
     property color lightMenuIcon: "#747474"
     property color lightIcon: "#5b5fc7"
+    property color lightColorOverlay: "#99bfbfbf"
 
     property color lightTitleText: "#000000"
     property color lightInformationText: "#474747"
@@ -70,6 +72,7 @@ QtObject {
     property color fillIconColor: theme == "light"? lightFillIcon: darkFillIcon
     property color menuIconColor: theme == "light"? lightMenuIcon: darkMenuIcon
     property color iconColor: theme == "light"? lightIcon: darkIcon
+    property color colorOverlay: theme == "light"? lightColorOverlay: darkColorOverlay
 
     property color titleTextColor: theme == "light"? lightTitleText: darkTitleText
     property color informationTextColor: theme == "light"? lightInformationText: darkInformationText

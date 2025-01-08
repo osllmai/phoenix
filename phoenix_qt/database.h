@@ -77,6 +77,7 @@ const auto READ_CONVERSATION_SQL = QLatin1String(R"(
                         promptBatchSize, maxTokens, repeatPenaltyTokens,
                         contextLength, numberOfGPULayers
         FROM conversation
+        ORDER BY date ASC
         )");
 
 const auto UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(

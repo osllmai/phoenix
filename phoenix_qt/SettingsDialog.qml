@@ -24,6 +24,9 @@ Item {
         height: (2*parent.height)/3
         font.family: Style.Theme.fontFamily
         parent: Overlay.overlay
+        Overlay.modal: Rectangle {
+            color: Style.Theme.colorOverlay
+        }
 
         focus: true
         modal: true
@@ -31,13 +34,13 @@ Item {
         background: Rectangle{
             radius: 12
             color: Style.Theme.backgroungColor
-            layer.enabled: true
-            layer.effect: Glow {
-                 samples: 50
-                 color: Style.Theme.glowColor
-                 spread: 0.4
-                 transparentBorder: true
-             }
+            // layer.enabled: true
+            // layer.effect: Glow {
+            //      samples: 50
+            //      color: Style.Theme.glowColor
+            //      spread: 0.4
+            //      transparentBorder: true
+            //  }
         }
         Rectangle{
             id:settingsPage

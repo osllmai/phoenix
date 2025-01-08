@@ -1,7 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts
-
 import Phoenix
 import Qt5Compat.GraphicalEffects
 import 'style' as Style
@@ -39,7 +37,7 @@ Item {
 
             TextArea {
                 id: inputTextBox
-                height: text.height
+                // height: text.height
                 enabled: root.currentChat.isLoadModel
                 color: Style.Theme.informationTextColor
                 wrapMode: Text.Wrap

@@ -58,6 +58,7 @@ signals:
 
 public slots:
     void addCurrentChatToChatList();
+    void updateDate();
 
 private:
     Chat* m_currentChat = nullptr;

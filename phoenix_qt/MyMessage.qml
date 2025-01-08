@@ -28,30 +28,6 @@ Item {
     property var executionTime
     property var numberOfToken
 
-    //theme for chat page
-    // property color chatBackgroungColor
-    // property color chatBackgroungConverstationColor
-    // property color chatMessageBackgroungColor
-    // property color chatMessageTitleTextColor
-    // property color chatMessageInformationTextColor
-    // property bool chatMessageIsGlow
-
-    // property color backgroungColor
-    // property color glowColor
-    // property color boxColor
-    // property color normalButtonColor
-    // property color selectButtonColor
-    // property color hoverButtonColor
-    // property color fillIconColor
-    // property color iconColor
-
-
-    // property color titleTextColor
-    // property color informationTextColor
-    // property color selectTextColor
-
-    // property var fontFamily
-
     Rectangle{
         id: messageRec
         color: "#00ffffff"

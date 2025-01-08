@@ -8,8 +8,8 @@ Item {
     width: 250
     height: 60
 
-    property color textColor: "black"
-    property color boxColor: "#e0dede"
+    // property color textColor: "black"
+    // property color boxColor: "#e0dede"
     // property color glowColor
 
     property alias myTextName: textId.text
@@ -18,6 +18,7 @@ Item {
     property double sliderFrom: -1
     property double sliderTo: 3
     property double sliderStepSize: 0.1
+    property int decimalPart: 0
 
     Rectangle{
         id: settingsSliderBox
@@ -26,7 +27,7 @@ Item {
         Text{
             id:textId
             text: "Temperature"
-            color: root.textColor
+            color: Style.Theme.informationTextColor
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: 0
@@ -48,8 +49,8 @@ Item {
             myLable: "Discord"
             heightSource: 15
             widthSource: 15
-            normalColor: "#5b5fc7"
-            hoverColor: "#5b5fc7"
+            normalColor: Style.Theme.iconColor
+            hoverColor: Style.Theme.fillIconColor
             xPopup: -18
             yPopup: -30
             Connections {
@@ -76,19 +77,45 @@ Item {
             width: 40
             height: 30
             radius: 2
-            color: root.boxColor
+            color: Style.Theme.boxColor
             anchors.verticalCenter: sliderId.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 2
-            Text {
-                id: valueSliderId
-                text: sliderId.value
-                color: root.textColor
+            TextField {
+                id: valueSlider1Id
+                visible: root.sliderStepSize<1
+                text: sliderId.value.toFixed(root.decimalPart)
+                color: Style.Theme.informationTextColor
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 font.family: Style.Theme.fontFamily
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+                validator: DoubleValidator {
+                    bottom: root.sliderFrom
+                    top: root.sliderTo
+                    decimals: root.decimalPart
+                }
+            }
+            TextField {
+                id: valueSlider2Id
+                visible: root.sliderStepSize>=1
+                text: sliderId.value.toFixed(root.decimalPart)
+                color: Style.Theme.informationTextColor
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pointSize: 10
+                font.family: Style.Theme.fontFamily
+                inputMethodHints: Qt.ImhDigitsOnly
+
+                validator: IntValidator{
+                    bottom: root.sliderFrom
+                    top: root.sliderTo
+                }
+
             }
             layer.enabled: true
             layer.effect: Glow {
@@ -101,7 +128,7 @@ Item {
         Text {
             id: minValueSliderId
             text: sliderId.from
-            color: root.textColor
+            color: Style.Theme.informationTextColor
             anchors.left: parent.left
             anchors.top: sliderId.bottom
             anchors.leftMargin: 5
@@ -114,7 +141,7 @@ Item {
         Text {
             id: maxValueSliderId
             text: sliderId.to
-            color: root.textColor
+            color: Style.Theme.informationTextColor
             anchors.right: valueSliderBoxId.left
             anchors.top: sliderId.bottom
             anchors.rightMargin: 5

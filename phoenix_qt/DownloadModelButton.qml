@@ -4,6 +4,7 @@ import QtQuick.Templates 2.1 as T
 import QtQuick.Layouts
 import QtQuick.Dialogs
 import Phoenix
+import 'style' as Style
 // import QtQuick.Studio.DesignEffects
 
 T.Button {
@@ -26,7 +27,6 @@ T.Button {
     property color borderColor: "#ffffff"
     property color fontColor: "#000000"
     property int fontSize: 12
-    property var fontFamily
 
 
     property bool isDownload
@@ -59,7 +59,7 @@ T.Button {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: control.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
         Rectangle{
@@ -102,7 +102,7 @@ T.Button {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: control.fontFamily
+                font.family: Style.Theme.fontFamily
                 visible: !control.hovered
             }
             Text {
@@ -114,7 +114,7 @@ T.Button {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: control.fontFamily
+                font.family: Style.Theme.fontFamily
                 visible: control.hovered
             }
         }
@@ -134,7 +134,7 @@ T.Button {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.family: control.fontFamily
+                font.family: Style.Theme.fontFamily
             }
         }
     }

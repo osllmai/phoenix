@@ -30,10 +30,14 @@ Item{
         width: 250
         height: 200
 
-        parent: Overlay.overlay
-
         focus: true
         modal: true
+
+        parent: Overlay.overlay
+        Overlay.modal: Rectangle {
+            color: Style.Theme.colorOverlay
+        }
+
 
 
         background:Rectangle{
@@ -119,14 +123,13 @@ Item{
                     }
                 }
             }
-            layer.enabled: true
-            layer.effect: Glow {
-                 samples: 40
-                 color: Style.Theme.glowColor
-                 spread: 0.4
-                 transparentBorder: true
-             }
+            // layer.enabled: true
+            // layer.effect: Glow {
+            //      samples: 40
+            //      color: Style.Theme.glowColor
+            //      spread: 0.4
+            //      transparentBorder: true
+            //  }
         }
     }
-
 }

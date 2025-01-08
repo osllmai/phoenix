@@ -31,6 +31,8 @@ ChatListModel::ChatListModel(QObject *parent)
     connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
     addChat();
 
+    connect(m_currentChat, &Chat::dateChanged, this, &ChatListModel::updateDate, Qt::QueuedConnection);
+
 }
 
 //*------------------------------------------------------------------------------**************************-----------------------------------------------------------------------------*//
@@ -134,7 +136,9 @@ void ChatListModel::addChat(){
     if(m_currentChat != nullptr)
         disconnect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList);
 
+    disconnect(m_currentChat, &Chat::dateChanged, this, &ChatListModel::updateDate);
     setCurrentChat(chat);
+    connect(m_currentChat, &Chat::dateChanged, this, &ChatListModel::updateDate, Qt::QueuedConnection);
     connect(m_currentChat, &Chat::startChat, this, &ChatListModel::addCurrentChatToChatList, Qt::QueuedConnection);
 }
 
@@ -152,6 +156,20 @@ void ChatListModel::addCurrentChatToChatList(){
     emit sizeChanged();
     if(chats.size() >1)
         emit dataChanged(createIndex(1, 0), createIndex(1, 0), {IdRole, DateRole});
+}
+
+void ChatListModel::updateDate(){
+    qInfo()<<"----------------------------------------------------------------------------- HI DEAR ZEINAB";
+    const int index = chats.indexOf(m_currentChat);
+    chats.removeAt(index);
+    beginInsertRows(QModelIndex(), 0, 0);
+    chats.prepend(m_currentChat);
+    endInsertRows();
+    emit sizeChanged();
+    if(chats.size() >1)
+        emit dataChanged(createIndex(1, 0), createIndex(1, 0), {IdRole, DateRole});
+
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DateRole});
 }
 
 Chat* ChatListModel::getChat(int index){
@@ -201,7 +219,7 @@ QVariant ChatListModel::dateRequest(const int currentIndex)const{
     if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
         return "Yesterday";
     if(date.daysTo(now) < 7)
-        if(currentIndex != 0 && beforDate.daysTo(now)<7 && beforDate.daysTo(now)>2)
+        if(currentIndex != 0 && beforDate.daysTo(now)<7 && beforDate.toString("dd")!=now.addDays(-1).toString("dd"))
             return "";
         else
             return "Previous 7 days";
