@@ -1,17 +1,12 @@
 import QtQuick 2.15
 import QtQuick.Layouts
+import "./home"
 
 StackLayout {
     id: page
     currentIndex: 0
 
-    Rectangle {
-        id: homePage
-        radius: 4
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        color: "red"
-    }
+    HomeView{id: homeViewId}
 
     Rectangle {
         id: chatPage

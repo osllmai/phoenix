@@ -26,6 +26,10 @@ qt_add_qml_module(appphoenix_0013
         menu/MyMenuItem.qml
 
         AppBody.qml
+
+        home/HomeView.qml
+        home/Components/Header.qml
+
     RESOURCES
         component_library/style/qmldir
         "menu/image/homeIcon.svg"
