@@ -21,8 +21,11 @@ qt_add_qml_module(appphoenix_0013
         Main.qml
         component_library/style/Colors.qml
         component_library/style/RoleEnum.qml
-        menu/AppMenu.qml
+
+        AppMenu.qml
         menu/MyMenuItem.qml
+
+        AppBody.qml
     RESOURCES
         component_library/style/qmldir
         "menu/image/homeIcon.svg"

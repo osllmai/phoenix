@@ -1,11 +1,10 @@
 import QtQuick 2.15
-import '../component_library/style' as Style
+import './component_library/style' as Style
+import "./menu"
 
 Item{
     id: root
-    anchors.top: parent.top; anchors.bottom: parent.bottom
-    anchors.topMargin: 24; anchors.bottomMargin: 24;
-    width: 70
+    signal currentPage(int numberPage)
 
     Rectangle {
         id: menuId
@@ -18,7 +17,7 @@ Item{
             spacing: 0
 
             MyMenuItem {
-                id: homeItemMenue
+                id: homeItemMenu
                 myText: "Home"
                 myToolTipText: "Home"
                 myIcon: "image/homeIcon.svg"
@@ -27,16 +26,16 @@ Item{
                 autoExclusive: true
 
                 Connections {
-                    target: homeItemMenue
+                    target: homeItemMenu
                     function onClicked(){
-                        // page.currentIndex = 0
-                        showSelectMenuId.y = homeItemMenue.y
+                        root.currentPage(0)
+                        showSelectMenuId.y = homeItemMenu.y
                     }
                 }
             }
 
             MyMenuItem {
-                id: chatItemMenue
+                id: chatItemMenu
                 myText: "Chat"
                 myToolTipText: "Chat"
                 myIcon: "image/chatIcon.svg"
@@ -44,10 +43,10 @@ Item{
                 autoExclusive: true
 
                 Connections {
-                    target: chatItemMenue
+                    target: chatItemMenu
                     function onClicked(){
-                        // page.currentIndex = 1
-                        showSelectMenuId.y = chatItemMenue.y
+                        root.currentPage(1)
+                        showSelectMenuId.y = chatItemMenu.y
                     }
                 }
             }
@@ -63,7 +62,7 @@ Item{
                 Connections {
                     target: modelsItemMenu
                     function onClicked(){
-                        // page.currentIndex = 2
+                        root.currentPage(2)
                         showSelectMenuId.y = modelsItemMenu.y
                     }
                 }
@@ -73,12 +72,12 @@ Item{
         Rectangle{
             id: showSelectMenuId
             color: Style.Colors.menuShowCheckedRectangle
-            height: homeItemMenue.height
+            height: homeItemMenu.height
             width: 2
             anchors.left: parent.left
             anchors.leftMargin: 2
             radius: 4
-            y: homeItemMenue.y
+            y: homeItemMenu.y
 
             Behavior on y{
                 NumberAnimation{
