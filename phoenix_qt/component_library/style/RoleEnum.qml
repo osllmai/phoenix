@@ -5,4 +5,17 @@ QtObject {
         PageMenu,
         ButtonMenu
     }
+
+    enum BottonType{
+        Primary,
+        Danger
+    }
+
+    enum State{
+        Normal,
+        Hover,
+        Pressed,
+        Disabled,
+        Selected
+    }
 }

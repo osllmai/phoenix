@@ -21,6 +21,7 @@ qt_add_qml_module(appphoenix_0013
         Main.qml
         component_library/style/Colors.qml
         component_library/style/RoleEnum.qml
+        component_library/button/MyButton.qml
 
         AppMenu.qml
         menu/MyMenuItem.qml
@@ -29,15 +30,23 @@ qt_add_qml_module(appphoenix_0013
 
         home/HomeView.qml
         home/Components/Header.qml
+        home/Components/FeatureList.qml
+        home/Components/FeatureDelegate.qml
 
     RESOURCES
         component_library/style/qmldir
-        "menu/image/homeIcon.svg"
-        "menu/image/fillHomeIcon.svg"
-        "menu/image/chatIcon.svg"
-        "menu/image/fillChatIcon.svg"
-        "menu/image/modelIcon.svg"
-        "menu/image/fillModelIcon.svg"
+        "menu/images/homeIcon.svg"
+        "menu/images/fillHomeIcon.svg"
+        "menu/images/chatIcon.svg"
+        "menu/images/fillChatIcon.svg"
+        "menu/images/modelIcon.svg"
+        "menu/images/fillModelIcon.svg"
+
+        "home/images/indoxGenIcon.svg"
+        "home/images/inDoxIcon.svg"
+        "home/images/indoxJudgeIcon.svg"
+        "home/images/phoenixCliIcon.svg"
+        "home/images/phoenixIcon.svg"
     RESOURCE_PREFIX /
 )
 

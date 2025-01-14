@@ -117,5 +117,42 @@ Item{
 
     //header color
     readonly property color headerBackground: currentBackgroundColor[1]
+
+    //backgroundPage color
+    readonly property color pageBackground: currentBackgroundColor[1]
+
+    //icon color
+    readonly property color iconNormal: currentBackgroundColor[4]
+    readonly property color iconHoverAndChecked: currentPrimaryColor[2]
+
+    //botton primary color
+    readonly property color buttonPrimaryNormal: currentPrimaryColor[2]
+    readonly property color buttonPrimaryHover: currentPrimaryColor[3]
+    readonly property color buttonPrimaryPressed: currentPrimaryColor[4]
+    readonly property color buttonPrimaryDisabled: currentPrimaryColor[1]
+    readonly property color buttonPrimarySelected: currentPrimaryColor[0]
+    readonly property color buttonPrimaryTextNormal: currentTextColor[0]
+    readonly property color buttonPrimaryTextHover: currentTextColor[0]
+    readonly property color buttonPrimaryTextPressed: currentTextColor[0]
+    readonly property color buttonPrimaryTextDisabled: currentTextColor[3]
+    readonly property color buttonPrimaryTextSelected: currentTextColor[1]
+
+    //botton danger color
+    readonly property color buttonDangerNormal: currentErrorColor[2]
+    readonly property color buttonDangerHover: currentErrorColor[3]
+    readonly property color buttonDangerPressed: currentErrorColor[4]
+    readonly property color buttonDangerDisabled: currentErrorColor[1]
+    readonly property color buttonDangerSelected: currentErrorColor[0]
+    readonly property color buttonDangerTextNormal: currentTextColor[0]
+    readonly property color buttonDangerTextHover: currentTextColor[0]
+    readonly property color buttonDangerTextPressed: currentTextColor[0]
+    readonly property color buttonDangerTextDisabled: currentTextColor[3]
+    readonly property color buttonDangerTextSelected: currentTextColor[1]
+
+    //box color
+    readonly property color boxGradient0: currentPrimaryColor[0]
+    readonly property color boxGradient1: currentPrimaryColor[1]
+    readonly property color boxBorder: currentPrimaryColor[1]
+
     //------------------------------------end general--------------------------------------//
 }

@@ -53,22 +53,24 @@ T.Button {
              }
         }
     }
-
     background:null
 
     contentItem: Rectangle{
         id: backgroundId
         color: control.hovered ? Style.Colors.menuHoverBackground : "#00ffffff"
         anchors.fill: parent
+        Column{
+            id: column
+            anchors.fill: parent
+            spacing: 0
+        }
         Image {
             id: iconId
             visible: true
-            height: 20
-            width: 20
+            height: 20; width: 20
             source: control.checked? control.myFillIcon : control.myIcon
             anchors.horizontalCenter: parent.horizontalCenter
-            sourceSize.height: 20
-            sourceSize.width: 20
+            sourceSize.height: 20; sourceSize.width: 20
             anchors.top: parent.top
             anchors.topMargin: 10
 
@@ -79,19 +81,15 @@ T.Button {
             source: iconId
             color: control.iconColor()
         }
-
         Label {
             id: textId
-            width: backgroundId.width
             color: control.iconColor()
-            anchors.top: iconId.bottom
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+            anchors.top: iconId.bottom; anchors.bottom: parent.bottom
+            anchors.topMargin: 5
             text: "Default"
             font.weight: 400
             font.pixelSize: 11
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 }

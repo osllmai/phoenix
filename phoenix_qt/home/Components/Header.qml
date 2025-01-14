@@ -3,8 +3,6 @@ import '../../component_library/style' as Style
 
 Rectangle{
     id:headerId
-    width: parent.width
-    height: 80
     color: Style.Colors.headerBackground
     Text {
         id: phoenixId

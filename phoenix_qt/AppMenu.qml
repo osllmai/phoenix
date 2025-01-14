@@ -20,8 +20,8 @@ Item{
                 id: homeItemMenu
                 myText: "Home"
                 myToolTipText: "Home"
-                myIcon: "image/homeIcon.svg"
-                myFillIcon: "image/fillHomeIcon.svg"
+                myIcon: "images/homeIcon.svg"
+                myFillIcon: "images/fillHomeIcon.svg"
                 checked: true
                 autoExclusive: true
 
@@ -38,8 +38,8 @@ Item{
                 id: chatItemMenu
                 myText: "Chat"
                 myToolTipText: "Chat"
-                myIcon: "image/chatIcon.svg"
-                myFillIcon: "image/fillChatIcon.svg"
+                myIcon: "images/chatIcon.svg"
+                myFillIcon: "images/fillChatIcon.svg"
                 autoExclusive: true
 
                 Connections {
@@ -55,8 +55,8 @@ Item{
                 id: modelsItemMenu
                 myText: "Models"
                 myToolTipText: "Models"
-                myIcon: "image/modelIcon.svg"
-                myFillIcon: "image/fillModelIcon.svg"
+                myIcon: "images/modelIcon.svg"
+                myFillIcon: "images/fillModelIcon.svg"
                 autoExclusive: true
 
                 Connections {
