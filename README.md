@@ -17,6 +17,7 @@
 On Windows and Linux, building Phoenix with full GPU support requires the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) and the latest [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
 
 
+
 ## Cloning the Repository and Building the Project
 
 First, clone the repository and navigate into the project directory:
