@@ -4,32 +4,62 @@ import './component_library/style' as Style
 
 ApplicationWindow {
     id: window
-    width: 1229; height: 685
-    minimumWidth: 450; minimumHeight: 600
+    width: 1700; height: 900
+    minimumWidth: 400; minimumHeight: 400
     color: Style.Colors.background
 
     visible: true
-    title: qsTr("Phoenix")
+    title: qsTr("Phoenix")    
 
-    // Background  { id: background; }
+    function isDesktopSize(){
+        if(width<550)
+            return false;
+        return true;
+    }
 
-    AppMenu{
-        id:appMenuId
-        anchors.top: parent.top; anchors.bottom: parent.bottom
-        anchors.topMargin: 24; anchors.bottomMargin: 24;
-        width: 70
-        Connections{
-            target: appMenuId
-            function onCurrentPage(numberPage){
-                appBodyId.currentIndex = numberPage;
+    Item{
+        anchors.fill:parent
+        anchors.margins: 0
+        AppMenuDesktop{
+            id:appMenuDesktopId
+            visible: window.isDesktopSize()
+            clip:true
+            Connections{
+                target: appMenuDesktopId
+                function onCurrentPage(numberPage){
+                    appBodyId.currentIndex = numberPage;
+                }
+            }
+            Behavior on width {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
             }
         }
-    }
-    AppBody{
-        id:appBodyId
-        anchors.top: parent.top; anchors.bottom: parent.bottom
-        anchors.left:appMenuId.right ; anchors.right: parent.right
-        anchors.topMargin: 24; anchors.bottomMargin: 24;
-        anchors.leftMargin: 0; anchors.rightMargin: 24;
+        AppBody{
+            id:appBodyId
+            anchors.top: parent.top
+            anchors.bottom: window.isDesktopSize()? parent.bottom: appMenuApplicationId.top
+            anchors.left: window.isDesktopSize()? appMenuDesktopId.right: parent.left
+            anchors.right: parent.right
+            clip:true
+        }
+        AppMenuAplication{
+            id:appMenuApplicationId
+            visible: !window.isDesktopSize()
+            Connections{
+                target: appMenuApplicationId
+                function onCurrentPage(numberPage){
+                    appBodyId.currentIndex = numberPage;
+                }
+            }
+            Behavior on width {
+                NumberAnimation {
+                    duration: 500
+                    easing.type: Easing.InOutQuad
+                }
+            }
+        }
     }
 }

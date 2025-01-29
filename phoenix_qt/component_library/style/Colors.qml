@@ -91,20 +91,35 @@ Item{
     property var currentAvatarBGDynamicColor: avatarBGDynamicColor.light
     property alias avatarBGDynamicColor: avatarBGDynamicColor
 
+    QtObject{
+        id: overlayColor
+        readonly property var light: [/*"#091E420F"*/ "#47c8c8c8"]
+        readonly property var dark: ["#b80a0a0a"]
+    }
+    property var currentOverlayColor: overlayColor.light
+    property alias overlayColor: overlayColor
+
 
     //----------------------------------*************--------------------------------//
     //----------------------------------AppMenu Colors--------------------------------//
     readonly property color menuNormalIcon: currentBackgroundColor[4]
     readonly property color menuHoverAndCheckedIcon: currentPrimaryColor[2]
-    readonly property color menuHoverBackground: currentPrimaryColor[0]
+    readonly property color menuHoverBackground: currentBackgroundColor[2]
     readonly property color menuShowCheckedRectangle: currentPrimaryColor[2]
+    readonly property color menuBackground: currentBackgroundColor[2]
     //-------------------------------end AppMenu Colors------------------------------//
 
 
     //---------------------------------------*******--------------------------------------//
     //----------------------------------------general---------------------------------------//
     //app
-    readonly property color background: currentBackgroundColor[3]
+    readonly property color background: currentBackgroundColor[0]
+
+    //menuApp Color
+    readonly property color menu: currentBackgroundColor[1]
+
+    //ovrlay Color
+    readonly property color overlay: currentOverlayColor[0]
 
     //toolTip color
     readonly property color toolTipText: currentTextColor[6]
@@ -114,12 +129,6 @@ Item{
     //text color
     readonly property color textTitle: currentTextColor[6]
     readonly property color textInformation: currentTextColor[5]
-
-    //header color
-    readonly property color headerBackground: currentBackgroundColor[1]
-
-    //backgroundPage color
-    readonly property color pageBackground: currentBackgroundColor[1]
 
     //icon color
     readonly property color iconNormal: currentBackgroundColor[4]
@@ -131,11 +140,33 @@ Item{
     readonly property color buttonPrimaryPressed: currentPrimaryColor[4]
     readonly property color buttonPrimaryDisabled: currentPrimaryColor[1]
     readonly property color buttonPrimarySelected: currentPrimaryColor[0]
+    readonly property color buttonPrimaryBorderNormal: currentPrimaryColor[2]
+    readonly property color buttonPrimaryBorderHover: currentPrimaryColor[3]
+    readonly property color buttonPrimaryBorderPressed: currentPrimaryColor[4]
+    readonly property color buttonPrimaryBorderDisabled: currentPrimaryColor[1]
+    readonly property color buttonPrimaryBorderSelected: currentPrimaryColor[0]
     readonly property color buttonPrimaryTextNormal: currentTextColor[0]
     readonly property color buttonPrimaryTextHover: currentTextColor[0]
     readonly property color buttonPrimaryTextPressed: currentTextColor[0]
     readonly property color buttonPrimaryTextDisabled: currentTextColor[3]
     readonly property color buttonPrimaryTextSelected: currentTextColor[1]
+
+    //botton Secondary color
+    readonly property color buttonSecondaryNormal: currentPrimaryColor[0]
+    readonly property color buttonSecondaryHover: currentBackgroundColor[3]
+    readonly property color buttonSecondaryPressed: currentPrimaryColor[1]
+    readonly property color buttonSecondaryDisabled: currentPrimaryColor[1]
+    readonly property color buttonSecondarySelected: currentPrimaryColor[0]
+    readonly property color buttonSecondaryBorderNormal: currentPrimaryColor[0]
+    readonly property color buttonSecondaryBorderHover: currentPrimaryColor[2]
+    readonly property color buttonSecondaryBorderPressed: currentPrimaryColor[3]
+    readonly property color buttonSecondaryBorderDisabled: currentPrimaryColor[1]
+    readonly property color buttonSecondaryBorderSelected: currentPrimaryColor[2]
+    readonly property color buttonSecondaryTextNormal: currentTextColor[3]
+    readonly property color buttonSecondaryTextHover: currentTextColor[4]
+    readonly property color buttonSecondaryTextPressed: currentTextColor[5]
+    readonly property color buttonSecondaryTextDisabled: currentTextColor[6]
+    readonly property color buttonSecondaryTextSelected: currentPrimaryColor[2]
 
     //botton danger color
     readonly property color buttonDangerNormal: currentErrorColor[2]
@@ -143,6 +174,11 @@ Item{
     readonly property color buttonDangerPressed: currentErrorColor[4]
     readonly property color buttonDangerDisabled: currentErrorColor[1]
     readonly property color buttonDangerSelected: currentErrorColor[0]
+    readonly property color buttonDangerBorderNormal: currentErrorColor[2]
+    readonly property color buttonDangerBorderHover: currentErrorColor[3]
+    readonly property color buttonDangerBorderPressed: currentErrorColor[4]
+    readonly property color buttonDangerBorderDisabled: currentErrorColor[1]
+    readonly property color buttonDangerBorderSelected: currentErrorColor[0]
     readonly property color buttonDangerTextNormal: currentTextColor[0]
     readonly property color buttonDangerTextHover: currentTextColor[0]
     readonly property color buttonDangerTextPressed: currentTextColor[0]
@@ -150,9 +186,15 @@ Item{
     readonly property color buttonDangerTextSelected: currentTextColor[1]
 
     //box color
-    readonly property color boxGradient0: currentPrimaryColor[0]
-    readonly property color boxGradient1: currentPrimaryColor[1]
-    readonly property color boxBorder: currentPrimaryColor[1]
+    readonly property color boxNormalGradient0: currentBackgroundColor[1]
+    readonly property color boxNormalGradient1: currentBackgroundColor[3]
+    readonly property color boxHoverGradient0: currentBackgroundColor[1]
+    readonly property color boxHoverGradient1: currentBackgroundColor[3]
+    readonly property color boxBorder: currentBackgroundColor[3]
+    readonly property color boxHover: currentBackgroundColor[1]
+
+    //like color
+    readonly property color like: currentErrorColor[1]
 
     //------------------------------------end general--------------------------------------//
 }

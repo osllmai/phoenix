@@ -1,11 +1,11 @@
 import QtQuick 2.15
 
-import "./Components"
+import "./components"
 
 Item {
-    Header{
+    HomeHeader{
         id: headerId
-        width: parent.width; height: 80
+        width: parent.width; height: 60
     }
     FeatureList{
         id: featureListId

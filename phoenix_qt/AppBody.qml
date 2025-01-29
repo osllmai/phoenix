@@ -1,6 +1,7 @@
-import QtQuick 2.15
 import QtQuick.Layouts
 import "./home"
+import "./model"
+import "./chat"
 
 StackLayout {
     id: page
@@ -8,19 +9,7 @@ StackLayout {
 
     HomeView{id: homeViewId}
 
-    Rectangle {
-        id: chatPage
-        radius: 4
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        color: "blue"
-    }
+    ChatView{id: chatPage}
 
-    Rectangle {
-        id: modelsPage
-        radius: 4
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        color: "black"
-    }
+    ModelsView{id: modelsPage}
 }

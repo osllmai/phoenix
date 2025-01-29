@@ -1,12 +1,9 @@
 import QtQuick 2.15
-import QtQuick.Layouts
 import QtQuick.Controls 2.15
-import '../../component_library/style' as Style
 
-
-Rectangle {
+Item {
     id: control
-    color: Style.Colors.pageBackground
+    clip:true
 
     function calculationCellWidth(){
         if(gridView.width >1650)
@@ -38,35 +35,35 @@ Rectangle {
         model: ListModel {
             id: model
             ListElement {title: "Chat" ;
-                            icon:"../images/phoenixIcon.svg" ;
+                            icon:"../../media/icon/phoenix.svg" ;
                             about:"Phoenix: A multi-platform, open-source application built with Qt QML. It features a chatbot interface that interacts with documents locally, eliminating the need for an internet connection or a GPU. Phoenix leverages Indox and IndoxJudge to deliver high accuracy and eliminate hallucinations, ensuring reliable results, particularly in the healthcare field." ;
                             gitHubLink:"" ;
                             notebookLink:"";
                             goPage: 1
             }
             ListElement {title: "Phoenix cli" ;
-                            icon:"../images/phoenixCliIcon.svg" ;
+                            icon:"../../media/icon/phoenixCli.svg" ;
                             about:"Phoenix_cli is a command-line interface (CLI) tool developed by osllm.ai for running Large Language Models ( LLMs) on your local machine. Built on top of the Phoenix library, a C++ library designed for executing large language models, Phoenix_cli allows you to: Run models locally without relying on a server or cloud-based service." ;
                             gitHubLink:"https://github.com/osllmai/phoenix_cli" ;
                             notebookLink:"";
                             goPage:-1
             }
             ListElement {title: "InDox" ;
-                            icon:"../images/inDoxIcon.svg" ;
+                            icon:"../../media/icon/inDox.svg" ;
                             about:"Indox is an advanced search and retrieval technique that efficiently extracts data from diverse document types, including PDFs and HTML, using online or offline large language models such as Openai, Hugging Face , etc." ;
                             gitHubLink:"https://github.com/osllmai/inDox" ;
                             notebookLink:"https://colab.research.google.com/github/osllmai/inDox/blob/master/Demo/openai_unstructured.ipynb";
                             goPage:-1
             }
             ListElement {title: "IndoxJudge" ;
-                            icon:"../images/indoxJudgeIcon.svg" ;
+                            icon:"../../media/icon/indoxJudge.svg" ;
                             about:"IndoxJudge offers a comprehensive set of evaluation metrics to assess the performance and quality of large language models (LLMs). Whether you're a researcher, developer, or enthusiast, this toolkit provides essential tools to measure various aspects of LLMs, including knowledge retention, bias, toxicity, and more." ;
                             gitHubLink:"https://github.com/osllmai/indoxJudge" ;
                             notebookLink:"https://colab.research.google.com/github/osllmai/inDoxJudge/blob/main/examples/safety_evaluator.ipynb";
                             goPage:-1
             }
             ListElement {title: "IndoxGen" ;
-                            icon:"../images/indoxGenIcon.svg" ;
+                            icon:"../../media/icon/indoxGen.svg" ;
                             about:"IndoxGen is a state-of-the-art, enterprise-ready framework designed for generating high-fidelity synthetic data. Leveraging advanced AI technologies, including Large Language Models (LLMs) and incorporating human feedback loops, IndoxGen offers unparalleled flexibility and precision in synthetic data creation across various domains and use cases." ;
                             gitHubLink:"https://github.com/osllmai/IndoxGen" ;
                             notebookLink:"https://colab.research.google.com/github/osllmai/indoxGen/blob/master/examples/generated_with_llm_judge.ipynb"
@@ -81,13 +78,14 @@ Rectangle {
            FeatureDelegate {
                id: indoxItem
                anchors.fill: parent
-               anchors.margins: 20
+               anchors.margins: indoxItem.hovered? 18: 20
                myText: model.title
                myIcon: model.icon
                about: model.about
                gitHubLink: model.gitHubLink
                notebookLink: model.notebookLink
                goPage: model.goPage
+               Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
         }
     }

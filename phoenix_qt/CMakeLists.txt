@@ -22,31 +22,83 @@ qt_add_qml_module(appphoenix_0013
         component_library/style/Colors.qml
         component_library/style/RoleEnum.qml
         component_library/button/MyButton.qml
+        component_library/button/SearchButton.qml
 
-        AppMenu.qml
+        AppMenuDesktop.qml
+        AppMenuAplication.qml
         menu/MyMenuItem.qml
 
         AppBody.qml
 
         home/HomeView.qml
-        home/Components/Header.qml
-        home/Components/FeatureList.qml
-        home/Components/FeatureDelegate.qml
+        home/components/HomeHeader.qml
+        home/components/FeatureList.qml
+        home/components/FeatureDelegate.qml
+
+        model/ModelsView.qml
+        model/components/ModelHeader.qml
+        model/components/ModelBody.qml
+        model/components/ModelMenu.qml
+        model/components/offline/OfflineModelView.qml
+        model/components/offline/OfflineHeader.qml
+        model/components/offline/OfflineList.qml
+        model/components/offline/OfflineDelegate.qml
+        model/components/offline/DownloadButton.qml
+        model/components/online/OnlineModelView.qml
+        model/components/online/OnlineHeader.qml
+        model/components/online/OnlineLine.qml
+        model/components/online/OnlineDelegate.qml
+
+        chat/ChatView.qml
+        chat/components/ChatHeader.qml
+        chat/components/HistoryDrawer.qml
+        chat/components/ModelSettingsDrawer.qml
+        chat/components/ChatBody.qml
+        chat/components/chat/InputPrompt.qml
+        chat/components/history/HistoryHeader.qml
+        chat/components/history/HistoryBody.qml
+        chat/components/history/HistoryList.qml
+        chat/components/history/HistoryDelegate.qml
 
     RESOURCES
         component_library/style/qmldir
-        "menu/images/homeIcon.svg"
-        "menu/images/fillHomeIcon.svg"
-        "menu/images/chatIcon.svg"
-        "menu/images/fillChatIcon.svg"
-        "menu/images/modelIcon.svg"
-        "menu/images/fillModelIcon.svg"
+        "media/icon/add.svg"
+        "media/icon/alignLeftFill.svg"
+        "media/icon/alignLeft.svg"
+        "media/icon/alignRightFill.svg"
+        "media/icon/alignRight.svg"
+        "media/icon/chatFill.svg"
+        "media/icon/chat.svg"
+        "media/icon/homeFill.svg"
+        "media/icon/home.svg"
+        "media/icon/indoxGen.svg"
+        "media/icon/inDox.svg"
+        "media/icon/indoxJudge.svg"
+        "media/icon/modelFill.svg"
+        "media/icon/model.svg"
+        "media/icon/offline.svg"
+        "media/icon/online.svg"
+        "media/icon/phoenixCli.svg"
+        "media/icon/phoenix.svg"
+        "media/icon/like.svg"
+        "media/icon/disLike.svg"
+        "media/icon/history.svg"
+        "media/icon/settings.svg"
+        "media/icon/send.svg"
+        "media/icon/sendFill.svg"
+        "media/icon/stop.svg"
+        "media/icon/stopFill.svg"
+        "media/icon/search.svg"
+        "media/icon/close.svg"
+        "media/icon/pin.svg"
+        "media/icon/pinFill.svg"
+        "media/icon/delete.svg"
+        "media/icon/deleteFill.svg"
+        "media/icon/edit.svg"
+        "media/icon/editFill.svg"
+        "media/icon/ok.svg"
+        "media/icon/okFill.svg"
 
-        "home/images/indoxGenIcon.svg"
-        "home/images/inDoxIcon.svg"
-        "home/images/indoxJudgeIcon.svg"
-        "home/images/phoenixCliIcon.svg"
-        "home/images/phoenixIcon.svg"
     RESOURCE_PREFIX /
 )
 

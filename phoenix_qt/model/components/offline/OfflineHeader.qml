@@ -1,9 +1,9 @@
 import QtQuick 2.15
-import '../../component_library/style' as Style
+import '../../../component_library/style' as Style
 
-Rectangle{
+Item{
     id:headerId
-    color: Style.Colors.headerBackground
+    clip:true
     Text {
         id: phoenixId
         text: qsTr("Welcome to Phoenix!")

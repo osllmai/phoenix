@@ -8,6 +8,7 @@ QtObject {
 
     enum BottonType{
         Primary,
+        Secondary,
         Danger
     }
 
