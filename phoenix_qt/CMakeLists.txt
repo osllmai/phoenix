@@ -22,6 +22,7 @@ qt_add_qml_module(appphoenix_0013
         component_library/style/Colors.qml
         component_library/style/RoleEnum.qml
         component_library/button/MyButton.qml
+        component_library/button/MyIcon.qml
         component_library/button/SearchButton.qml
         component_library/button/MySlider.qml
         component_library/button/MySwitch.qml

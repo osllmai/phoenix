@@ -47,9 +47,7 @@ T.Button {
                 id: headerId
                 ToolButton {
                     id: iconButtonId
-                    background: Rectangle {
-                        color: "#00ffffff"
-                    }
+                    background: null
                     icon{
                         source: control.myIcon
                         color: Style.Colors.iconHoverAndChecked
@@ -66,11 +64,10 @@ T.Button {
                     font.styleName: "Bold"
                 }
             }
-            Rectangle{
+            Item{
                 id: bodyId
                 height: parent.height - headerId.height - buttonList.height - 20
                 width: parent.width
-                color: "#00ffffff"
                 Label{
                     id:informationId
                     text: control.about
@@ -86,16 +83,12 @@ T.Button {
             }
 
 
-            Rectangle{
+            Row{
                 id: buttonList
-                height: goPageId.height
-                width: parent.width
-                color: "#00ffffff"
+                spacing: 10
                 MyButton{
                     id:goPageId
                     visible: control.goPage !== -1
-                    width: (parent.width-10)/2
-                    anchors.left: parent.left
                     myText: "Select"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
@@ -106,8 +99,6 @@ T.Button {
                 MyButton{
                     id:goToGithubId
                     visible: control.gitHubLink !== ""
-                    width: (parent.width-10)/2
-                    anchors.left: parent.left
                     myText: "GitHub"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
@@ -120,8 +111,6 @@ T.Button {
                 MyButton{
                     id:goToNotebookId
                     visible: control.notebookLink !== ""
-                    width: (parent.width-10)/2
-                    anchors.right: parent.right
                     myText: "Notebook"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {

@@ -9,7 +9,19 @@ QtObject {
     enum BottonType{
         Primary,
         Secondary,
-        Danger
+        Danger,
+        Feature
+    }
+
+    enum IconType{
+        Primary,
+        Image,
+        FeatureBlue,
+        FeatureRed,
+        FeatureOrange,
+        FeatureMagenta,
+        FeatureYellow,
+        FeatureGreen
     }
 
     enum State{

@@ -48,6 +48,7 @@ Item{
         }
         SearchButton{
             id: searchBoxId
+            width: parent.width
             Connections{
                 target: searchBoxId
                 function onSearch(mytext){

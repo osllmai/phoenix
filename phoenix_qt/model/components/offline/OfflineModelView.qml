@@ -6,7 +6,6 @@ import '../../../component_library/style' as Style
 Item {
     OfflineHeader{
         id: headerId
-        width: parent.width; height: 80
     }
     OfflineList{
         id:appBodyId

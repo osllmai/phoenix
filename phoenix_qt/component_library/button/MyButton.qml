@@ -13,6 +13,7 @@ T.Button {
     property var myIcon: ""
     property bool textIsVisible: true
     property int bottonType: Style.RoleEnum.BottonType.Primary
+    property int iconType: Style.RoleEnum.IconType.Primary
     signal actionClicked()
 
     // ShaderEffect
@@ -79,6 +80,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureNormal;
                         default:
                             return Style.Colors.buttonPrimaryNormal;
                     }
@@ -90,6 +93,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryHover;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerHover;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureHover;
                         default:
                             return Style.Colors.buttonPrimaryHover;
                     }
@@ -101,6 +106,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryPressed;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerPressed;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeaturePressed;
                         default:
                             return Style.Colors.buttonPrimaryPressed;
                     }
@@ -112,6 +119,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryDisabled;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerDisabled;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureDisabled;
                         default:
                             return Style.Colors.buttonPrimaryDisabled;
                     }
@@ -123,6 +132,8 @@ T.Button {
                             return Style.Colors.buttonSecondarySelected;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerSelected;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureSelected;
                         default:
                             return Style.Colors.buttonPrimarySelected;
                     }
@@ -134,6 +145,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureNormal;
                         default:
                             return Style.Colors.buttonPrimaryNormal;
                     }
@@ -150,6 +163,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextNormal;
                     }
@@ -161,6 +176,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextHover;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextHover;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextHover;
                         default:
                             return Style.Colors.buttonPrimaryTextHover;
                     }
@@ -172,6 +189,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextPressed;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextPressed;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextPressed;
                         default:
                             return Style.Colors.buttonPrimaryTextPressed;
                     }
@@ -183,6 +202,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextDisabled;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextDisabled;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextDisabled;
                         default:
                             return Style.Colors.buttonPrimaryTextDisabled;
                     }
@@ -194,6 +215,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextSelected;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextSelected;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextSelected;
                         default:
                             return Style.Colors.buttonPrimaryTextSelected;
                     }
@@ -205,6 +228,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryTextNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerTextNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureTextNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextNormal;
                     }
@@ -221,6 +246,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderNormal;
                     }
@@ -232,6 +259,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderHover;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderHover;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderHover;
                         default:
                             return Style.Colors.buttonPrimaryBorderHover;
                     }
@@ -243,6 +272,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderPressed;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderPressed;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderPressed;
                         default:
                             return Style.Colors.buttonPrimaryBorderPressed;
                     }
@@ -254,6 +285,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderDisabled;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderDisabled;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderDisabled;
                         default:
                             return Style.Colors.buttonPrimaryBorderDisabled;
                     }
@@ -265,6 +298,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderSelected;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderSelected;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderSelected;
                         default:
                             return Style.Colors.buttonPrimaryBorderSelected;
                     }
@@ -276,6 +311,8 @@ T.Button {
                             return Style.Colors.buttonSecondaryBorderNormal;
                         case Style.RoleEnum.BottonType.Danger:
                             return Style.Colors.buttonDangerBorderNormal;
+                        case Style.RoleEnum.BottonType.Feature:
+                            return Style.Colors.buttonFeatureBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderNormal;
                     }

@@ -6,7 +6,7 @@ Item{
     id:headerId
     signal openModelSettingsDrawer()
     signal openHistoryDrawer()
-    clip:true
+    clip: true
 
     Row{
         spacing: 20

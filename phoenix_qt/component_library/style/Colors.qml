@@ -131,8 +131,32 @@ Item{
     readonly property color textInformation: currentTextColor[5]
 
     //icon color
-    readonly property color iconNormal: currentBackgroundColor[4]
-    readonly property color iconHoverAndChecked: currentPrimaryColor[2]
+    readonly property color iconPrimaryNormal: currentBackgroundColor[4]
+    readonly property color iconPrimaryHoverAndChecked: currentPrimaryColor[2]
+
+    readonly property color iconFeatureBlueNormal: currentInfoColor[1]
+    readonly property color iconFeatureBlueHoverAndChecked: currentInfoColor[2]
+    readonly property color iconFeatureBlueBackground: currentInfoColor[0]
+
+    readonly property color iconFeatureRedNormal: currentErrorColor[1]
+    readonly property color iconFeatureRedHoverAndChecked: currentErrorColor[2]
+    readonly property color iconFeatureRedBackground: currentErrorColor[0]
+
+    readonly property color iconFeatureOrangeNormal: currentOrangeColor[1]
+    readonly property color iconFeatureOrangeHoverAndChecked: currentOrangeColor[2]
+    readonly property color iconFeatureOrangeBackground: currentOrangeColor[0]
+
+    readonly property color iconFeatureMagentaNormal: currentMagentaColor[1]
+    readonly property color iconFeatureMagentaHoverAndChecked: currentMagentaColor[2]
+    readonly property color iconFeatureMagentaBackground: currentMagentaColor[0]
+
+    readonly property color iconFeatureYellowNormal: currentwarningColor[1]
+    readonly property color iconFeatureYellowHoverAndChecked: currentwarningColor[2]
+    readonly property color iconFeatureYellowBackground: currentwarningColor[0]
+
+    readonly property color iconFeatureGreenNormal: currentSuccessColor[1]
+    readonly property color iconFeatureGreenHoverAndChecked: currentSuccessColor[2]
+    readonly property color iconFeatureGreenBackground: currentSuccessColor[0]
 
     //botton primary color
     readonly property color buttonPrimaryNormal: currentPrimaryColor[2]
@@ -184,6 +208,24 @@ Item{
     readonly property color buttonDangerTextPressed: currentTextColor[0]
     readonly property color buttonDangerTextDisabled: currentTextColor[3]
     readonly property color buttonDangerTextSelected: currentTextColor[1]
+
+    //botton Secondary color
+    readonly property color buttonFeatureNormal: currentPrimaryColor[0]
+    readonly property color buttonFeatureHover: currentBackgroundColor[3]
+    readonly property color buttonFeaturePressed: currentPrimaryColor[1]
+    readonly property color buttonFeatureDisabled: currentPrimaryColor[1]
+    readonly property color buttonFeatureSelected: currentPrimaryColor[0]
+    readonly property color buttonFeatureBorderNormal: currentPrimaryColor[0]
+    readonly property color buttonFeatureBorderHover: currentPrimaryColor[2]
+    readonly property color buttonFeatureBorderPressed: currentPrimaryColor[3]
+    readonly property color buttonFeatureBorderDisabled: currentPrimaryColor[1]
+    readonly property color buttonFeatureBorderSelected: currentPrimaryColor[2]
+    readonly property color buttonFeatureTextNormal: currentTextColor[3]
+    readonly property color buttonFeatureTextHover: currentTextColor[4]
+    readonly property color buttonFeatureTextPressed: currentTextColor[5]
+    readonly property color buttonFeatureTextDisabled: currentTextColor[6]
+    readonly property color buttonFeatureTextSelected: currentPrimaryColor[2]
+
 
     //box color
     readonly property color boxNormalGradient0: currentBackgroundColor[1]

@@ -1,25 +1,38 @@
 import QtQuick 2.15
 import '../../../component_library/style' as Style
+import '../../../component_library/button'
 
 Item{
     id:headerId
+    width: parent.width
+    height: phoenixId.height + fillterBox.height  + 10
     clip:true
-    Text {
-        id: phoenixId
-        text: qsTr("Welcome to Phoenix!")
-        color: Style.Colors.textTitle
-        anchors.left: parent.left; anchors.top: parent.top
-        anchors.leftMargin: 24; anchors.topMargin: 12
-        font.pixelSize: 20
-        font.styleName: "Bold"
-    }
+    signal search(var text)
+    Column{
+        id: columnId
+        anchors.fill: parent
+        anchors.leftMargin: 30
+        spacing: 10
+        Text {
+            id: phoenixId
+            text: qsTr("Offline Model")
+            color: Style.Colors.textTitle
+            font.pixelSize: 20
+            font.styleName: "Bold"
+        }
 
-    Text {
-        id: informationText
-        text: qsTr("Get Started.")
-        color: Style.Colors.textInformation
-        anchors.left: parent.left; anchors.top: phoenixId.bottom
-        anchors.leftMargin: 24; anchors.topMargin: 2
-        font.pixelSize: 16
+        Row{
+            id: fillterBox
+            width: parent.width
+            SearchButton{
+                id: searchBoxId
+                Connections{
+                    target: searchBoxId
+                    function onSearch(mytext){
+                        headerId.search(mytext)
+                    }
+                }
+            }
+        }
     }
 }
