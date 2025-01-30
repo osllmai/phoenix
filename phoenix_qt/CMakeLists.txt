@@ -23,6 +23,8 @@ qt_add_qml_module(appphoenix_0013
         component_library/style/RoleEnum.qml
         component_library/button/MyButton.qml
         component_library/button/SearchButton.qml
+        component_library/button/MySlider.qml
+        component_library/button/MySwitch.qml
 
         AppMenuDesktop.qml
         AppMenuAplication.qml
@@ -59,6 +61,17 @@ qt_add_qml_module(appphoenix_0013
         chat/components/history/HistoryBody.qml
         chat/components/history/HistoryList.qml
         chat/components/history/HistoryDelegate.qml
+        chat/components/model_settings/ModelSettingsHeader.qml
+        chat/components/model_settings/ModelSettingsBody.qml
+        chat/components/model_settings/MyMenuSettings.qml
+        chat/components/model_settings/AssistantSettingsView.qml
+        chat/components/model_settings/ModelSettingsView.qml
+        chat/components/model_settings/components/ModelSettingsSlider.qml
+        chat/components/model_settings/components/ModelSettingsSwitch.qml
+        chat/components/model_settings/components/ModelInferencesSettings.qml
+        chat/components/model_settings/components/ModelInformationSettings.qml
+        chat/components/model_settings/components/ModelEngineSettings.qml
+        chat/components/model_settings/components/ModelMenuSettings.qml
 
     RESOURCES
         component_library/style/qmldir
@@ -98,6 +111,10 @@ qt_add_qml_module(appphoenix_0013
         "media/icon/editFill.svg"
         "media/icon/ok.svg"
         "media/icon/okFill.svg"
+        "media/icon/up.svg"
+        "media/icon/upFill.svg"
+        "media/icon/down.svg"
+        "media/icon/downFill.svg"
 
     RESOURCE_PREFIX /
 )

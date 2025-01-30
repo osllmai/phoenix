@@ -8,24 +8,25 @@ Item {
     anchors.horizontalCenter: parent.horizontalCenter
 
     Column{
-        spacing: 24
+        spacing: 10
         anchors.verticalCenter: parent.verticalCenter
         Text{
-            id: inDoxId
-            text: "Hello! I’m InDox."
+            id: phoenixId
+            text: "Hello! I’m Phoenix."
+            anchors.horizontalCenter: parent.horizontalCenter
             color: Style.Colors.textTitle
-            font.pixelSize: 20
+            font.pixelSize: 18
             font.styleName: "Bold"
         }
         Text{
             id: informationText
+            anchors.horizontalCenter: parent.horizontalCenter
             text: "Ask me anything! You can trust that our conversations are private, and your data is never shared for marketing."
             color: Style.Colors.textInformation
-            font.pixelSize: 16
+            font.pixelSize: 12
         }
         InputPrompt{
             id:inputBoxId
-
         }
     }
 }

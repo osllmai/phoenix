@@ -11,13 +11,12 @@ Rectangle{
 
     color: Style.Colors.menu
 
-    Rectangle{
+    Item{
         id: appInfoId
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 0
-        color: "#00ffffff"
         height: 60
         ToolButton {
             id: phoenixIconId
@@ -25,9 +24,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            background: Rectangle {
-                color: "#00ffffff"
-            }
+            background: null
             icon{
                 source: "./media/icon/phoenix.svg"
                 color: Style.Colors.menuHoverAndCheckedIcon;
@@ -52,9 +49,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.leftMargin: 2
-            background: Rectangle {
-                color: "#00ffffff"
-            }
+            background: null
             function myIcon(){
                 if(root.width>100)
                     if(!iconId.hovered)

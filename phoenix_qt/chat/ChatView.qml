@@ -8,11 +8,11 @@ Item {
         Connections{
             target: headerId
             function onOpenModelSettingsDrawer(){
-                historyId.open()
+                modelSettingsId.open()
             }
 
             function onOpenHistoryDrawer(){
-                // modelSettingsId.open()
+                historyId.open()
             }
         }
     }

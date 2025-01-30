@@ -25,26 +25,26 @@ Item{
             }
         }
         MyButton{
-            id: openHistoryId
+            id: openModelSettingsId
             myText: "Model Settings"
             myIcon: "../../media/icon/settings.svg"
-            bottonType: Style.RoleEnum.BottonType.Secondary
-            Connections {
-                target: openHistoryId
-                function onActionClicked(){
-                    headerId.openHistoryDrawer()
-                }
-            }
-        }
-        MyButton{
-            id: openModelSettingsId
-            myText: "History"
-            myIcon: "../../media/icon/history.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
                 target: openModelSettingsId
                 function onActionClicked(){
                     headerId.openModelSettingsDrawer()
+                }
+            }
+        }
+        MyButton{
+            id: openHistoryId
+            myText: "History"
+            myIcon: "../../media/icon/history.svg"
+            bottonType: Style.RoleEnum.BottonType.Secondary
+            Connections {
+                target: openHistoryId
+                function onActionClicked(){
+                    headerId.openHistoryDrawer()
                 }
             }
         }
