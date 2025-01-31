@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
 import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
+import '../../../component_library/button'
 
 T.Button {
     id: control
@@ -29,14 +30,21 @@ T.Button {
             Row {
                 id: headerId
                 width: parent.width
-                ToolButton {
+                // ToolButton {
+                //     id: logoModelId
+                //     background: null
+                //     icon {
+                //         source: control.modelIcon
+                //         color: Style.Colors.iconHoverAndChecked
+                //         width: 20; height: 20
+                //     }
+                // }
+                MyIcon {
                     id: logoModelId
-                    background: null
-                    icon {
-                        source: control.modelIcon
-                        color: Style.Colors.iconHoverAndChecked
-                        width: 20; height: 20
-                    }
+                    myIcon: control.modelIcon
+                    iconType: Style.RoleEnum.IconType.Primary
+                    isNeedHover: false
+                    width:42; height:42
                 }
                 TextArea{
                     id: titleId

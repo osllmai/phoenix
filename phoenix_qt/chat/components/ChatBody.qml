@@ -5,11 +5,14 @@ import '../../component_library/button'
 
 Item {
     id: controlId
-    width: Math.min(752, parent.width - 48)
-    anchors.horizontalCenter: parent.horizontalCenter
+    width: parent.width
+    // width: Math.min(780, parent.width - 48)
+    // anchors.horizontalCenter: parent.horizontalCenter
 
     Column{
         spacing: 10
+        width: Math.min(680, parent.width - 48)
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         Text{
             id: phoenixId
@@ -21,7 +24,9 @@ Item {
         }
         Text{
             id: informationText
-            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            wrapMode: Text.Wrap
+            horizontalAlignment: Text.AlignHCenter
             text: "Ask me anything! You can trust that our conversations are private, and your data is never shared for marketing."
             color: Style.Colors.textInformation
             font.pixelSize: 12
@@ -29,8 +34,9 @@ Item {
         InputPrompt{
             id:inputBoxId
         }
-        Row{
+        Flow{
             spacing: 5
+            width: Math.min(parent.width, documentId.width + grammarId.width + rewriteId.width + imageEditorId.width + imageId.width + 20)
             anchors.horizontalCenter: parent.horizontalCenter
             MyButton {
                 id: documentId

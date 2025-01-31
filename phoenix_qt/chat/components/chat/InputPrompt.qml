@@ -1,73 +1,85 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
+import '../../../component_library/button'
 
 Rectangle{
     id: controlId
-    height: 100; width: parent.width
-    color: Style.Colors.boxHoverGradient1
+    height: 60; width: parent.width
+    color: Style.Colors.boxNormalGradient0
+    border.width: 1
+    border.color: Style.Colors.boxBorder
     radius: 8
     Row{
         anchors.fill: parent
-        anchors.margins: 24
+        anchors.margins: 10
         spacing: 10
         ScrollView {
             id: scrollInput
             width: parent.width - iconId.width -10
+            height: parent.height
 
             TextArea {
                 id: inputTextBox
                 color: Style.Colors.textInformation
+                background: null
 
                 wrapMode: Text.Wrap
-                placeholderText: qsTr("What is in your mind ?")
+                placeholderText: qsTr("How can I help you?")
 
                 Accessible.role: Accessible.EditableText
                 Accessible.name: placeholderText
                 Accessible.description: qsTr("Send prompts to the model")
 
                 clip: false
-                font.pointSize: 12
+                font.pointSize: 10
                 hoverEnabled: true
                 tabStopDistance: 80
-                selectionColor: Style.Colors.background
+                selectionColor: Style.Colors.boxNormalGradient1
                 cursorVisible: false
                 persistentSelection: true
                 placeholderTextColor: Style.Colors.textInformation
                 onHeightChanged: {
-                    if(inputTextBox.height >controlId-48 && inputTextBox.text !== ""){
-                        controlId.height  = Math.min(controlId.height + 10 , 180) ;
+                    if(inputTextBox.height >controlId.height - 20 && inputTextBox.text !== ""){
+                        controlId.height  = Math.min(inputTextBox.height + 20 , 180) ;
                     }if(inputTextBox.text === ""){
-                        controlId.height = 100
+                        controlId.height = 60
                     }
                 }
 
                 Keys.onReturnPressed: (event)=> {
-                  if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier)
+                  if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
-                  else {
+                  }else {
                         // sendIcon.actionClicked()
                   }
                 }
 
-                background: Rectangle{
-                    color: "#00ffffff"
+                onEditingFinished: {
+                    controlId.layer.enabled= false
+                }
+                onPressed: {
+                    controlId.layer.enabled= true
+                }
+                onTextChanged: {
+                    controlId.layer.enabled= true
                 }
             }
         }
-        ToolButton {
+        MyIcon {
             id: iconId
-            // anchors.verticalCenter: parent.verticalCenter
-            background: Rectangle {
-                color: "#00ffffff"
-            }
-            icon{
-                source: iconId.hovered? "../../../media/icon/sendFill.svg": "../../../media/icon/send.svg"
-                color: Style.Colors.menuHoverAndCheckedIcon;
-                width:18; height:18
-            }
-            onClicked: function() {}
+            anchors.bottom: parent.bottom
+            myIcon: iconId.hovered? "../../../media/icon/sendFill.svg": "../../../media/icon/send.svg"
+            iconType: Style.RoleEnum.IconType.Primary
         }
     }
 
+    layer.enabled: false
+    layer.effect: Glow {
+         samples: 40
+         color:  Style.Colors.boxBorder
+         spread: 0.1
+         transparentBorder: true
+     }
 }

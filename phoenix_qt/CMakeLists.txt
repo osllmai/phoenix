@@ -58,6 +58,11 @@ qt_add_qml_module(appphoenix_0013
         chat/components/ModelSettingsDrawer.qml
         chat/components/ChatBody.qml
         chat/components/chat/InputPrompt.qml
+        chat/components/chat/ModelDialogButton.qml
+        chat/components/chat/ModelDialog.qml
+        chat/components/chat/ModelInformationPopup.qml
+        chat/components/chat/ModelCompanyMenu.qml
+        chat/components/chat/ModelItem.qml
         chat/components/history/HistoryHeader.qml
         chat/components/history/HistoryBody.qml
         chat/components/history/HistoryList.qml
@@ -73,6 +78,7 @@ qt_add_qml_module(appphoenix_0013
         chat/components/model_settings/components/ModelInformationSettings.qml
         chat/components/model_settings/components/ModelEngineSettings.qml
         chat/components/model_settings/components/ModelMenuSettings.qml
+
 
     RESOURCES
         component_library/style/qmldir

@@ -62,9 +62,7 @@ Item {
                             promptTemplateBox.height += 10;
                         }
                     }
-                    background: Rectangle{
-                        color: "#00ffffff"
-                    }
+                    background: null
                 }
             }
 

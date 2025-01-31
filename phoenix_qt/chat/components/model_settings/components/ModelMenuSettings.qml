@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../../../component_library/style' as Style
+import '../../../../component_library/button'
 
 Item {
     id:control
@@ -42,22 +43,32 @@ Item {
                 }
             }
         }
-        ToolButton {
+        // ToolButton {
+        //     id: searchIcon
+        //     height: parent.height; width: searchIcon.height
+        //     background: null
+        //     icon{
+        //         source: control.selectIcon()
+        //         color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+        //         width: 16; height: 16
+        //     }
+        //     MouseArea{
+        //         anchors.fill: parent
+        //         cursorShape: Qt.PointingHandCursor
+        //         onClicked:{
+        //             control.open()
+        //         }
+        //     }
+        MyIcon {
             id: searchIcon
-            height: parent.height; width: searchIcon.height
-            background: null
-            icon{
-                source: control.selectIcon()
-                color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
-                width: 16; height: 16
-            }
-            MouseArea{
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    control.open()
-                }
+            myIcon: control.selectIcon()
+            iconType: Style.RoleEnum.IconType.Primary
+            isNeedHover: false
+            width:42; height:42
+            onClicked:{
+                control.open()
             }
         }
     }
 }
+
