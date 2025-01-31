@@ -12,18 +12,6 @@ T.Button {
     signal deleteChat()
     signal editChatName(var chatName)
 
-    onHoveredChanged: {
-        if (control.hovered) {
-            colorAnimation.to = Style.Colors.boxHover;
-            colorAnimation.from = "#00ffffff";
-            colorAnimation.start();
-        } else {
-            colorAnimation.to = "#00ffffff";
-            colorAnimation.from = Style.Colors.boxHover;
-            colorAnimation.start();
-        }
-    }
-
     background: null
     contentItem: Rectangle {
         id: backgroundId
@@ -161,13 +149,4 @@ T.Button {
         }
     }
 
-    ColorAnimation {
-        id: colorAnimation
-        target: backgroundId
-        property: "color"
-        to: Style.Colors.boxHover;
-        from: "#00ffffff";
-        duration: 1000
-        running: false
-    }
 }

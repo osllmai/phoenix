@@ -71,9 +71,7 @@ T.Button {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 4
-            background: Rectangle {
-                color: "#00ffffff"
-            }
+            background: null
             icon{
                 source: control.checked? "../"+control.myFillIcon : "../"+control.myIcon
                 color: control.iconColor()

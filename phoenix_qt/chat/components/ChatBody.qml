@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import "./chat"
 import '../../component_library/style' as Style
+import '../../component_library/button'
 
 Item {
     id: controlId
@@ -27,6 +28,50 @@ Item {
         }
         InputPrompt{
             id:inputBoxId
+        }
+        Row{
+            spacing: 5
+            anchors.horizontalCenter: parent.horizontalCenter
+            MyButton {
+                id: documentId
+                myText: "Document"
+                myIcon: "../../media/icon/settings.svg"
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.FeatureBlue
+                isNeedAnimation: true
+            }
+            MyButton {
+                id: grammarId
+                myText: "Grammer"
+                myIcon: "../../media/icon/settings.svg"
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.FeatureRed
+                isNeedAnimation: true
+            }
+            MyButton {
+                id: rewriteId
+                myText: "Rewrite"
+                myIcon: "../../media/icon/settings.svg"
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.FeatureOrange
+                isNeedAnimation: true
+            }
+            MyButton {
+                id: imageEditorId
+                myText: "Image Editor"
+                myIcon: "../../media/icon/settings.svg"
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.FeatureGreen
+                isNeedAnimation: true
+            }
+            MyButton {
+                id: imageId
+                myText: "Image"
+                myIcon: "../../media/icon/settings.svg"
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.FeatureYellow
+                isNeedAnimation: true
+            }
         }
     }
 }

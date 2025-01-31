@@ -45,14 +45,12 @@ T.Button {
             spacing: 10
             Row{
                 id: headerId
-                ToolButton {
+                MyIcon {
                     id: iconButtonId
-                    background: null
-                    icon{
-                        source: control.myIcon
-                        color: Style.Colors.iconHoverAndChecked
-                        width:28; height:28
-                    }
+                    myIcon: control.myIcon
+                    iconType: Style.RoleEnum.IconType.Primary
+                    isNeedHover: false
+                    width:42; height:42
                 }
 
                 Text {

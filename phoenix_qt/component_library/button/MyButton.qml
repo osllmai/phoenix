@@ -6,12 +6,35 @@ import '../style' as Style
 
 T.Button {
     id: control
-    width: (textBoxId.visible? (iconId.width + textId.width + 20): control.height); height: 32
+    width: calculateWidthBotton()+3; height: 35
+
+    function calculateWidthBotton(){
+        switch(iconType){
+        case Style.RoleEnum.IconType.Primary:
+            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
+        case Style.RoleEnum.IconType.Image:
+            return (textBoxId.visible? (textId.width + imageIconId.width + 16): control.height);
+        default:
+            return (textBoxId.visible? (textId.width + iconId.width + 16): control.height);
+        }
+    }
+    function calculateHeightText(){
+        switch(iconType){
+        case Style.RoleEnum.IconType.Primary:
+            return primaryIconId.height;
+        case Style.RoleEnum.IconType.Image:
+            return imageIconId.height;
+        default:
+            return iconId.height;
+        }
+    }
+
     padding: 5
 
     property var myText: ""
     property var myIcon: ""
     property bool textIsVisible: true
+    property bool isNeedAnimation: false
     property int bottonType: Style.RoleEnum.BottonType.Primary
     property int iconType: Style.RoleEnum.IconType.Primary
     signal actionClicked()
@@ -19,6 +42,7 @@ T.Button {
     // ShaderEffect
     MouseArea {
         anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
         onClicked: (mouse)=> {
             control.state = "pressed"
             control.actionClicked()
@@ -36,17 +60,34 @@ T.Button {
     }
     background: Rectangle{
         id: backgroundId
-        width: parent.width; height: parent.height
-        radius: 8
+        width: parent.width-3; height: parent.height-3
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        radius: 12
         border.width: 1
+
+        Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}
+        Behavior on height{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.height >= control.height-3)? 200: 0}}
 
         Row{
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            ToolButton {
+            Image {
+                id: imageIconId
+                visible: control.myIcon != "" && control.iconType == Style.RoleEnum.IconType.Image
+                source: control.myIcon
+            }
+            MyIcon {
                 id: iconId
-                visible: control.myIcon != ""
-                background: Rectangle { color: "#00ffffff" }
+                visible: control.myIcon != "" && control.iconType != Style.RoleEnum.IconType.Image && control.iconType != Style.RoleEnum.IconType.Primary
+                myIcon: control.myIcon
+                iconType: control.iconType
+                isNeedHover: false
+            }
+            ToolButton {
+                id: primaryIconId
+                visible: control.myIcon != "" && control.iconType == Style.RoleEnum.IconType.Primary
+                background: null
                 icon{
                     source: control.myIcon
                     color: textId.color
@@ -55,12 +96,12 @@ T.Button {
             }
             Item{
                 id:textBoxId
-                width: textId.width + (iconId.visible? 10: 0)
+                width: textId.width + ((control.myIcon != "")? 10: 0)
                 height: textId.height
                 visible: (control.myText != "") && (control.textIsVisible)
                 Text {
                     id: textId
-                    height: iconId.height
+                    height: control.calculateHeightText()
                     text: control.myText
                     font.pixelSize: 12
                     horizontalAlignment: Text.AlignHCenter
@@ -331,10 +372,8 @@ T.Button {
             PropertyChanges {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
-            }
-            PropertyChanges {
-                target: backgroundId
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Normal)
+                width: control.width-3; height: control.height-3
             }
             PropertyChanges {
                 target: textId
@@ -347,10 +386,8 @@ T.Button {
             PropertyChanges {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
-            }
-            PropertyChanges {
-                target: backgroundId
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Hover)
+                width: control.isNeedAnimation? control.width: parent.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
@@ -363,10 +400,8 @@ T.Button {
             PropertyChanges {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
-            }
-            PropertyChanges {
-                target: backgroundId
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Pressed)
+                width: control.isNeedAnimation? control.width: parent.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
@@ -379,10 +414,8 @@ T.Button {
             PropertyChanges {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
-            }
-            PropertyChanges {
-                target: backgroundId
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Disabled)
+                width: control.width-3; height: control.height-3
             }
             PropertyChanges {
                 target: textId

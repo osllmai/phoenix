@@ -210,16 +210,16 @@ Item{
     readonly property color buttonDangerTextSelected: currentTextColor[1]
 
     //botton Secondary color
-    readonly property color buttonFeatureNormal: currentPrimaryColor[0]
-    readonly property color buttonFeatureHover: currentBackgroundColor[3]
+    readonly property color buttonFeatureNormal: "#00ffffff"
+    readonly property color buttonFeatureHover: currentBackgroundColor[2]
     readonly property color buttonFeaturePressed: currentPrimaryColor[1]
     readonly property color buttonFeatureDisabled: currentPrimaryColor[1]
     readonly property color buttonFeatureSelected: currentPrimaryColor[0]
-    readonly property color buttonFeatureBorderNormal: currentPrimaryColor[0]
-    readonly property color buttonFeatureBorderHover: currentPrimaryColor[2]
-    readonly property color buttonFeatureBorderPressed: currentPrimaryColor[3]
-    readonly property color buttonFeatureBorderDisabled: currentPrimaryColor[1]
-    readonly property color buttonFeatureBorderSelected: currentPrimaryColor[2]
+    readonly property color buttonFeatureBorderNormal: currentBackgroundColor[2]
+    readonly property color buttonFeatureBorderHover: currentBackgroundColor[3]
+    readonly property color buttonFeatureBorderPressed: currentPrimaryColor[2]
+    readonly property color buttonFeatureBorderDisabled: currentPrimaryColor[0]
+    readonly property color buttonFeatureBorderSelected: currentPrimaryColor[1]
     readonly property color buttonFeatureTextNormal: currentTextColor[3]
     readonly property color buttonFeatureTextHover: currentTextColor[4]
     readonly property color buttonFeatureTextPressed: currentTextColor[5]
