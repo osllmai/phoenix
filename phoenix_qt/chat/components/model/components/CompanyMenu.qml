@@ -6,7 +6,7 @@ Item {
     id:control
     height: 40; width: parent.width
     property var myText
-    property bool isOpen
+    property bool isOpen: true
 
     signal open()
     function selectIcon(){

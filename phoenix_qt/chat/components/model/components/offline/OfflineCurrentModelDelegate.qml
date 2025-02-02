@@ -1,26 +1,26 @@
 import QtQuick 2.15
-import '../../../../component_library/style' as Style
-import '../../../../component_library/button'
+import '../../../../../component_library/style' as Style
+import '../../../../../component_library/button'
 
 Item {
     id:control
     height: 40; width: parent.width
     property var myText
-    property bool isOpen
+    property bool isOpen: true
 
     signal open()
     function selectIcon(){
         if(isOpen){
             if(searchIcon.hovered){
-                return "../../../../media/icon/upFill.svg";
+                return "../../../../../media/icon/upFill.svg";
             }else{
-                return "../../../../media/icon/up.svg";
+                return "../../../../../media/icon/up.svg";
             }
         }else{
             if(searchIcon.hovered){
-                return "../../../../media/icon/downFill.svg";
+                return "../../../../../media/icon/downFill.svg";
             }else{
-                return "../../../../media/icon/down.svg";
+                return "../../../../../media/icon/down.svg";
             }
         }
     }

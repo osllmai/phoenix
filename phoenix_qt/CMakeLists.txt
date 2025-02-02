@@ -26,10 +26,11 @@ qt_add_qml_module(appphoenix_0013
         component_library/button/SearchButton.qml
         component_library/button/MySlider.qml
         component_library/button/MySwitch.qml
+        component_library/button/MyMenu.qml
 
         AppMenuDesktop.qml
         AppMenuAplication.qml
-        menu/MyMenuItem.qml
+        menu/MyMenuApp.qml
 
         AppBody.qml
 
@@ -41,7 +42,6 @@ qt_add_qml_module(appphoenix_0013
         model/ModelsView.qml
         model/components/ModelHeader.qml
         model/components/ModelBody.qml
-        model/components/ModelMenu.qml
         model/components/offline/OfflineModelView.qml
         model/components/offline/OfflineHeader.qml
         model/components/offline/OfflineList.qml
@@ -58,11 +58,6 @@ qt_add_qml_module(appphoenix_0013
         chat/components/ModelSettingsDrawer.qml
         chat/components/ChatBody.qml
         chat/components/chat/InputPrompt.qml
-        chat/components/chat/ModelDialogButton.qml
-        chat/components/chat/ModelDialog.qml
-        chat/components/chat/ModelInformationPopup.qml
-        chat/components/chat/ModelCompanyMenu.qml
-        chat/components/chat/ModelItem.qml
         chat/components/history/HistoryHeader.qml
         chat/components/history/HistoryBody.qml
         chat/components/history/HistoryList.qml
@@ -78,7 +73,27 @@ qt_add_qml_module(appphoenix_0013
         chat/components/model_settings/components/ModelInformationSettings.qml
         chat/components/model_settings/components/ModelEngineSettings.qml
         chat/components/model_settings/components/ModelMenuSettings.qml
+        chat/components/model/ModelButton.qml
+        chat/components/model/ModelDialog.qml
+        chat/components/model/components/CompanyMenu.qml
+        chat/components/model/components/ModelDialogHeader.qml
+        chat/components/model/components/ModelDialogBody.qml
+        chat/components/model/components/online/OnlineCurrentModelDelegate.qml
+        chat/components/model/components/online/OnlineCurrentModelList.qml
+        chat/components/model/components/online/OnlineCurrentModelinformation.qml
+        chat/components/model/components/online/OnlineCurrentView.qml
+        chat/components/model/components/online/OnlineCurrentDelegate.qml
+        chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
+        chat/components/model/components/offline/OfflineCurrentModelList.qml
+        chat/components/model/components/offline/OfflineCurrentModelinformation.qml
+        chat/components/model/components/offline/OfflineCurrentView.qml
+        chat/components/model/components/offline/OfflineCurrentDelegate.qml
 
+        SettingsDialog.qml
+        settings/SettingsHeader.qml
+        settings/SettingsBody.qml
+
+        AppFooter.qml
 
     RESOURCES
         component_library/style/qmldir

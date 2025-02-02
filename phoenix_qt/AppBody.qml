@@ -12,4 +12,5 @@ StackLayout {
     ChatView{id: chatPage}
 
     ModelsView{id: modelsPage}
+
 }

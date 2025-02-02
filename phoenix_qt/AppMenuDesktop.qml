@@ -86,7 +86,7 @@ Rectangle{
         spacing: 5
         clip:true
 
-        MyMenuItem {
+        MyMenuApp {
             id: homeItemMenu
             myText: "Home"
             myToolTipText: "Home"
@@ -104,7 +104,7 @@ Rectangle{
             }
         }
 
-        MyMenuItem {
+        MyMenuApp {
             id: chatItemMenu
             myText: "Chat"
             myToolTipText: "Chat"
@@ -121,7 +121,7 @@ Rectangle{
             }
         }
 
-        MyMenuItem {
+        MyMenuApp {
             id: modelsItemMenu
             myText: "Models"
             myToolTipText: "Models"

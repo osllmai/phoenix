@@ -37,13 +37,19 @@ ApplicationWindow {
                 }
             }
         }
-        AppBody{
-            id:appBodyId
+        Column{
             anchors.top: parent.top
             anchors.bottom: window.isDesktopSize()? parent.bottom: appMenuApplicationId.top
             anchors.left: window.isDesktopSize()? appMenuDesktopId.right: parent.left
             anchors.right: parent.right
-            clip:true
+            AppBody{
+                id:appBodyId
+                width: parent.width; height: parent.height -appFooter.height
+                clip:true
+            }
+            AppFooter{
+                id: appFooter
+            }
         }
         AppMenuAplication{
             id:appMenuApplicationId

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../../component_library/button"
 
 Item{
     id:headerId
@@ -9,7 +10,7 @@ Item{
     Row{
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        ModelMenu {
+        MyMenu {
             id: offlineModel
             myText: "Offline Model"
             myIcon: "../../media/icon/offline.svg"
@@ -24,7 +25,7 @@ Item{
                 }
             }
         }
-        ModelMenu {
+        MyMenu {
             id: onlineModel
             myText: "Online Model"
             myIcon: "../../media/icon/online.svg"
