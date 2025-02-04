@@ -12,6 +12,7 @@ include_directories(core)
 
 qt_add_executable(appphoenix_0013
     core/main.cpp
+    media/image_company/appIcon.rc
 )
 
 qt_add_resources(appphoenix_0013

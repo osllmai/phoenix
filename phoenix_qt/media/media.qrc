@@ -44,5 +44,6 @@
         <file>icon/discord.svg</file>
         <file>icon/github.svg</file>
         <file>image_company/Phoenix.png</file>
+        <file>image_company/Phoenix.ico</file>
     </qresource>
 </RCC>

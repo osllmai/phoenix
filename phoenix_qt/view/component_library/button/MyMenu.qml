@@ -122,7 +122,7 @@ T.Button {
                 target: backgroundId
                 color: control.pressed? Style.Colors.buttonFeatureHover: Style.Colors.buttonFeatureSelected
                 border.color: Style.Colors.buttonFeatureBorderHover
-                width: control.width; height: control.height
+                width: control.hovered? control.width: control.width-3; height: control.hovered? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
