@@ -8,8 +8,62 @@ find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
+include_directories(core)
+
 qt_add_executable(appphoenix_0013
-    main.cpp
+    core/main.cpp
+)
+
+qt_add_resources(appphoenix_0013
+    PREFIX /
+    FILES
+        media/icon/add.svg
+        media/icon/alignLeftFill.svg
+        media/icon/alignLeft.svg
+        media/icon/alignRightFill.svg
+        media/icon/alignRight.svg
+        media/icon/chatFill.svg
+        media/icon/chat.svg
+        media/icon/homeFill.svg
+        media/icon/home.svg
+        media/icon/indoxGen.svg
+        media/icon/inDox.svg
+        media/icon/indoxJudge.svg
+        media/icon/modelFill.svg
+        media/icon/model.svg
+        media/icon/offline.svg
+        media/icon/online.svg
+        media/icon/phoenixCli.svg
+        media/icon/phoenix.svg
+        media/icon/like.svg
+        media/icon/disLike.svg
+        media/icon/history.svg
+        media/icon/settings.svg
+        media/icon/send.svg
+        media/icon/sendFill.svg
+        media/icon/stop.svg
+        media/icon/stopFill.svg
+        media/icon/search.svg
+        media/icon/close.svg
+        media/icon/pin.svg
+        media/icon/pinFill.svg
+        media/icon/delete.svg
+        media/icon/deleteFill.svg
+        media/icon/edit.svg
+        media/icon/editFill.svg
+        media/icon/ok.svg
+        media/icon/okFill.svg
+        media/icon/up.svg
+        media/icon/upFill.svg
+        media/icon/down.svg
+        media/icon/downFill.svg
+        media/icon/systemMonitor.svg
+        media/icon/discord.svg
+        media/icon/github.svg
+
+        media/image_company/Phoenix.png
+
+        media/media.qrc
 )
 
 qt_policy(SET QTP0004 NEW)
@@ -18,127 +72,83 @@ qt_add_qml_module(appphoenix_0013
     URI phoenix_0013
     VERSION 1.0
     QML_FILES
-        Main.qml
-        component_library/style/Colors.qml
-        component_library/style/RoleEnum.qml
-        component_library/button/MyButton.qml
-        component_library/button/MyIcon.qml
-        component_library/button/SearchButton.qml
-        component_library/button/MySlider.qml
-        component_library/button/MySwitch.qml
-        component_library/button/MyMenu.qml
+        view/Main.qml
+        view/component_library/style/Colors.qml
+        view/component_library/style/RoleEnum.qml
+        view/component_library/style/qmldir
+        view/component_library/button/MyButton.qml
+        view/component_library/button/MyIcon.qml
+        view/component_library/button/SearchButton.qml
+        view/component_library/button/MySlider.qml
+        view/component_library/button/MySwitch.qml
+        view/component_library/button/MyMenu.qml
 
-        AppMenuDesktop.qml
-        AppMenuAplication.qml
-        menu/MyMenuApp.qml
+        view/AppMenuDesktop.qml
+        view/AppMenuAplication.qml
+        view/menu/MyMenuApp.qml
 
-        AppBody.qml
+        view/AppBody.qml
 
-        home/HomeView.qml
-        home/components/HomeHeader.qml
-        home/components/FeatureList.qml
-        home/components/FeatureDelegate.qml
+        view/home/HomeView.qml
+        view/home/components/HomeHeader.qml
+        view/home/components/FeatureList.qml
+        view/home/components/FeatureDelegate.qml
 
-        model/ModelsView.qml
-        model/components/ModelHeader.qml
-        model/components/ModelBody.qml
-        model/components/offline/OfflineModelView.qml
-        model/components/offline/OfflineHeader.qml
-        model/components/offline/OfflineList.qml
-        model/components/offline/OfflineDelegate.qml
-        model/components/offline/DownloadButton.qml
-        model/components/online/OnlineModelView.qml
-        model/components/online/OnlineHeader.qml
-        model/components/online/OnlineLine.qml
-        model/components/online/OnlineDelegate.qml
+        view/model/ModelsView.qml
+        view/model/components/ModelHeader.qml
+        view/model/components/ModelBody.qml
+        view/model/components/offline/OfflineModelView.qml
+        view/model/components/offline/OfflineHeader.qml
+        view/model/components/offline/OfflineList.qml
+        view/model/components/offline/OfflineDelegate.qml
+        view/model/components/offline/DownloadButton.qml
+        view/model/components/online/OnlineModelView.qml
+        view/model/components/online/OnlineHeader.qml
+        view/model/components/online/OnlineLine.qml
+        view/model/components/online/OnlineDelegate.qml
 
-        chat/ChatView.qml
-        chat/components/ChatHeader.qml
-        chat/components/HistoryDrawer.qml
-        chat/components/ModelSettingsDrawer.qml
-        chat/components/ChatBody.qml
-        chat/components/chat/InputPrompt.qml
-        chat/components/history/HistoryHeader.qml
-        chat/components/history/HistoryBody.qml
-        chat/components/history/HistoryList.qml
-        chat/components/history/HistoryDelegate.qml
-        chat/components/model_settings/ModelSettingsHeader.qml
-        chat/components/model_settings/ModelSettingsBody.qml
-        chat/components/model_settings/MyMenuSettings.qml
-        chat/components/model_settings/AssistantSettingsView.qml
-        chat/components/model_settings/ModelSettingsView.qml
-        chat/components/model_settings/components/ModelSettingsSlider.qml
-        chat/components/model_settings/components/ModelSettingsSwitch.qml
-        chat/components/model_settings/components/ModelInferencesSettings.qml
-        chat/components/model_settings/components/ModelInformationSettings.qml
-        chat/components/model_settings/components/ModelEngineSettings.qml
-        chat/components/model_settings/components/ModelMenuSettings.qml
-        chat/components/model/ModelButton.qml
-        chat/components/model/ModelDialog.qml
-        chat/components/model/components/CompanyMenu.qml
-        chat/components/model/components/ModelDialogHeader.qml
-        chat/components/model/components/ModelDialogBody.qml
-        chat/components/model/components/online/OnlineCurrentModelDelegate.qml
-        chat/components/model/components/online/OnlineCurrentModelList.qml
-        chat/components/model/components/online/OnlineCurrentModelinformation.qml
-        chat/components/model/components/online/OnlineCurrentView.qml
-        chat/components/model/components/online/OnlineCurrentDelegate.qml
-        chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
-        chat/components/model/components/offline/OfflineCurrentModelList.qml
-        chat/components/model/components/offline/OfflineCurrentModelinformation.qml
-        chat/components/model/components/offline/OfflineCurrentView.qml
-        chat/components/model/components/offline/OfflineCurrentDelegate.qml
+        view/chat/ChatView.qml
+        view/chat/components/ChatHeader.qml
+        view/chat/components/HistoryDrawer.qml
+        view/chat/components/ModelSettingsDrawer.qml
+        view/chat/components/ChatBody.qml
+        view/chat/components/chat/InputPrompt.qml
+        view/chat/components/history/HistoryHeader.qml
+        view/chat/components/history/HistoryBody.qml
+        view/chat/components/history/HistoryList.qml
+        view/chat/components/history/HistoryDelegate.qml
+        view/chat/components/model_settings/ModelSettingsHeader.qml
+        view/chat/components/model_settings/ModelSettingsBody.qml
+        view/chat/components/model_settings/MyMenuSettings.qml
+        view/chat/components/model_settings/AssistantSettingsView.qml
+        view/chat/components/model_settings/ModelSettingsView.qml
+        view/chat/components/model_settings/components/ModelSettingsSlider.qml
+        view/chat/components/model_settings/components/ModelSettingsSwitch.qml
+        view/chat/components/model_settings/components/ModelInferencesSettings.qml
+        view/chat/components/model_settings/components/ModelInformationSettings.qml
+        view/chat/components/model_settings/components/ModelEngineSettings.qml
+        view/chat/components/model_settings/components/ModelMenuSettings.qml
+        view/chat/components/model/ModelButton.qml
+        view/chat/components/model/ModelDialog.qml
+        view/chat/components/model/components/CompanyMenu.qml
+        view/chat/components/model/components/ModelDialogHeader.qml
+        view/chat/components/model/components/ModelDialogBody.qml
+        view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
+        view/chat/components/model/components/online/OnlineCurrentModelList.qml
+        view/chat/components/model/components/online/OnlineCurrentModelinformation.qml
+        view/chat/components/model/components/online/OnlineCurrentView.qml
+        view/chat/components/model/components/online/OnlineCurrentDelegate.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelList.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelinformation.qml
+        view/chat/components/model/components/offline/OfflineCurrentView.qml
+        view/chat/components/model/components/offline/OfflineCurrentDelegate.qml
 
-        SettingsDialog.qml
-        settings/SettingsHeader.qml
-        settings/SettingsBody.qml
+        view/SettingsDialog.qml
+        view/settings/SettingsHeader.qml
+        view/settings/SettingsBody.qml
 
-        AppFooter.qml
-
-    RESOURCES
-        component_library/style/qmldir
-        "media/icon/add.svg"
-        "media/icon/alignLeftFill.svg"
-        "media/icon/alignLeft.svg"
-        "media/icon/alignRightFill.svg"
-        "media/icon/alignRight.svg"
-        "media/icon/chatFill.svg"
-        "media/icon/chat.svg"
-        "media/icon/homeFill.svg"
-        "media/icon/home.svg"
-        "media/icon/indoxGen.svg"
-        "media/icon/inDox.svg"
-        "media/icon/indoxJudge.svg"
-        "media/icon/modelFill.svg"
-        "media/icon/model.svg"
-        "media/icon/offline.svg"
-        "media/icon/online.svg"
-        "media/icon/phoenixCli.svg"
-        "media/icon/phoenix.svg"
-        "media/icon/like.svg"
-        "media/icon/disLike.svg"
-        "media/icon/history.svg"
-        "media/icon/settings.svg"
-        "media/icon/send.svg"
-        "media/icon/sendFill.svg"
-        "media/icon/stop.svg"
-        "media/icon/stopFill.svg"
-        "media/icon/search.svg"
-        "media/icon/close.svg"
-        "media/icon/pin.svg"
-        "media/icon/pinFill.svg"
-        "media/icon/delete.svg"
-        "media/icon/deleteFill.svg"
-        "media/icon/edit.svg"
-        "media/icon/editFill.svg"
-        "media/icon/ok.svg"
-        "media/icon/okFill.svg"
-        "media/icon/up.svg"
-        "media/icon/upFill.svg"
-        "media/icon/down.svg"
-        "media/icon/downFill.svg"
-
-    RESOURCE_PREFIX /
+        view/AppFooter.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
