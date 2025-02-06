@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Openai",
+    "organizationName": "Openai Inc.",
+    "icon": "Openai.svg",
+    "file": "Openai_models.json",
+    "type": "online"
+  },
+  {
+    "name": "LLaMA",
+    "organizationName": "LLaMA.",
+    "icon": "LLaMA.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "Mistral",
+    "organizationName": "Mistral",
+    "icon": "Mistral.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "MPT",
+    "organizationName": "MPT",
+    "icon": "MPT.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "Phi-3",
+    "organizationName": "Phi-3",
+    "icon": "Phi-3.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "Replit",
+    "organizationName": "Replit",
+    "icon": "Replit.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "Starcoder",
+    "organizationName": "Starcoder.",
+    "icon": "Starcoder.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "Bert",
+    "organizationName": "Bert",
+    "icon": "Bert.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  },
+  {
+    "name": "qwen2",
+    "organizationName": "qwen2.",
+    "icon": "qwen2.svg",
+    "file": "offline_models.json",
+    "type": "offline"
+  }
+]

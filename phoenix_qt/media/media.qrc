@@ -45,5 +45,13 @@
         <file>icon/github.svg</file>
         <file>image_company/Phoenix.png</file>
         <file>image_company/Phoenix.ico</file>
+        <file>image_company/Bert.svg</file>
+        <file>image_company/LLaMA.svg</file>
+        <file>image_company/Mistral.svg</file>
+        <file>image_company/MPT.svg</file>
+        <file>image_company/Phi-3.svg</file>
+        <file>image_company/qwen2.svg</file>
+        <file>image_company/Replit.svg</file>
+        <file>image_company/Starcoder.svg</file>
     </qresource>
 </RCC>

@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(phoenix_0013 VERSION 0.1 LANGUAGES CXX)
+set(APP_VERSION_MAJOR 0)
+set(APP_VERSION_MINOR 0)
+set(APP_VERSION_PATCH 15)
+set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
+set(APP_VERSION "${APP_VERSION_BASE}-dev0")
+
+set(PROJECT_NAME phoenix_15)
+project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -10,12 +17,30 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 include_directories(core)
 
-qt_add_executable(appphoenix_0013
+# Include the binary directory for the generated header file
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
+qt_add_executable(app${PROJECT_NAME}
     core/main.cpp
     media/image_company/appIcon.rc
+
+
+    core/model/BackendType.h
+    core/model/model.h core/model/model.cpp
+    core/model/company.h core/model/company.cpp
+    core/model/companylist.h core/model/companylist.cpp
+    core/model/companylistfilter.h core/model/companylistfilter.cpp
+
+    core/model/offline/offlinemodel.h core/model/offline/offlinemodel.cpp
+    core/model/offline/offlinemodellist.h core/model/offline/offlinemodellist.cpp
+    core/model/offline/offlinemodellistfilter.h core/model/offline/offlinemodellistfilter.cpp
+
+    core/model/online/onlinemodel.h core/model/online/onlinemodel.cpp
+    core/model/online/onlinemodellist.h core/model/online/onlinemodellist.cpp
+    core/model/online/onlinemodellistfilter.h core/model/online/onlinemodellistfilter.cpp
 )
 
-qt_add_resources(appphoenix_0013
+qt_add_resources(app${PROJECT_NAME}
     PREFIX /
     FILES
         media/icon/add.svg
@@ -63,20 +88,27 @@ qt_add_resources(appphoenix_0013
         media/icon/github.svg
 
         media/image_company/Phoenix.png
+        media/image_company/Bert.svg
+        media/image_company/LLaMA.svg
+        media/image_company/Mistral.svg
+        media/image_company/MPT.svg
+        media/image_company/Phi-3.svg
+        media/image_company/qwen2.svg
+        media/image_company/Replit.svg
+        media/image_company/Starcoder.svg
 
         media/media.qrc
 )
 
 qt_policy(SET QTP0004 NEW)
 
-qt_add_qml_module(appphoenix_0013
-    URI phoenix_0013
+qt_add_qml_module(app${PROJECT_NAME}
+    URI ${PROJECT_NAME}
     VERSION 1.0
     QML_FILES
         view/Main.qml
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
-        view/component_library/style/qmldir
         view/component_library/button/MyButton.qml
         view/component_library/button/MyIcon.qml
         view/component_library/button/SearchButton.qml
@@ -150,26 +182,40 @@ qt_add_qml_module(appphoenix_0013
         view/settings/SettingsBody.qml
 
         view/AppFooter.qml
+
+        RESOURCES
+            view/component_library/style/qmldir
+        RESOURCE_PREFIX /
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-set_target_properties(appphoenix_0013 PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appphoenix_0013
+set_target_properties(app${PROJECT_NAME} PROPERTIES
+#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(appphoenix_0013
+target_link_libraries(app${PROJECT_NAME}
     PRIVATE Qt6::Quick
 )
 
 include(GNUInstallDirs)
-install(TARGETS appphoenix_0013
+install(TARGETS app${PROJECT_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/company.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/company.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/offline_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/openai_models.json COPYONLY)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
+                        ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
