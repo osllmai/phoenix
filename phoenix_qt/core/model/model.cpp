@@ -1,9 +1,9 @@
 #include "model.h"
 
-Model::Model(const int id, const QString& name, const QString& key, QDateTime* addModelTime,
-             const bool isLike, Company* company, const BackendType backend, QObject* parent)
-    :m_id(id), m_name(name), m_key(key), m_addModelTime(addModelTime), m_isLike(isLike),
-    m_company(company), m_backend(backend), QObject(parent)
+Model::Model(/*const int id, const QString& name, const QString& key, QDateTime* addModelTime,
+             const bool isLike, Company* company, const BackendType backend,*/ QObject* parent)
+    :/*m_id(id), m_name(name), m_key(key), m_addModelTime(addModelTime), m_isLike(isLike),
+    m_company(company), m_backend(backend),*/ QObject(parent)
 {}
 
 Model::~Model(){

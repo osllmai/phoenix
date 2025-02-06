@@ -1,6 +1,16 @@
 #include "companylist.h"
 
-CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){}
+CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
+    beginInsertRows(QModelIndex(), 0, 6);
+    m_companys.append(new Company(1, "hi", "qrc:/media/image_company/Bert.svg",BackendType::OfflineModel,this));
+    m_companys.append(new Company(1, "Hello", "qrc:/media/image_company/LLaMA.svg",BackendType::OnlineModel,this));
+    m_companys.append(new Company(1, "OpenAI", "qrc:/media/image_company/Phi-3.svg",BackendType::OfflineModel,this));
+    m_companys.append(new Company(1, "Nemati AI", "qrc:/media/image_company/qwen2.svg",BackendType::OfflineModel,this));
+    m_companys.append(new Company(1, "OK", "qrc:/media/image_company/MPT.svg",BackendType::OnlineModel,this));
+    m_companys.append(new Company(1, "LLAMA", "qrc:/media/image_company/Starcoder.svg",BackendType::OnlineModel,this));
+    m_companys.append(new Company(1, "LO LO", "qrc:/media/image_company/Replit.svg",BackendType::OfflineModel,this));
+    endInsertRows();
+}
 
 int CompanyList::count() const{return m_companys.count();}
 

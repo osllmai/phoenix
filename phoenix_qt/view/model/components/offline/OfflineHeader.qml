@@ -34,48 +34,24 @@ Item{
                 }
             }
             Item{
-                width: parent.width
-                Flow{
-                    spacing: 5
-                    anchors.right: parent.right; anchors.rightMargin: 40
-                    MyButton {
-                        id: documentId
-                        myText: "Document"
-                        myIcon: "qrc:/media/icon/settings.svg"
+                width: parent.width - searchBoxId.width - 30
+                height: parent.height
+                ListView{
+                    anchors.fill: parent
+                    layoutDirection: Qt.RightToLeft
+                    orientation: Qt.Horizontal
+                    snapMode: ListView.SnapToItem
+
+                    interactive: contentWidth > width
+                    boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                    model: zeinab
+                    delegate: MyButton {
+                        id: delegateId
+                        myText: model.name
+                        myIcon: model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
                         iconType: Style.RoleEnum.IconType.FeatureBlue
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: grammarId
-                        myText: "Grammer"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureRed
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: rewriteId
-                        myText: "Rewrite"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureOrange
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: imageEditorId
-                        myText: "Image Editor"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureGreen
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: imageId
-                        myText: "Image"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureYellow
                         isNeedAnimation: true
                     }
                 }

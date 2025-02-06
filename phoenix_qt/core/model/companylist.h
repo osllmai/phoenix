@@ -16,7 +16,7 @@ class CompanyList: public QAbstractListModel
 public:
     CompanyList(QObject* parent);
 
-    enum CompanyListRoles {
+    enum CompanyRoles {
         IDRole = Qt::UserRole + 1,
         NameRole,
         IconRole,

@@ -2,8 +2,6 @@
 #include <QQmlApplicationEngine>
 #include <QIcon>
 
-#include <memory>
-
 #include "./model/companylist.h"
 #include "./model/companylistfilter.h"
 #include "./model/BackendType.h"
@@ -37,9 +35,7 @@ int main(int argc, char *argv[])
     CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, companyList);
     offlineCompanyList->setSourceModel(companyList);
     onlineCompanyList->setSourceModel(companyList);
-
-
-    engine.rootContext()->setContextProperty("onlineFilterModel", offlineCompanyList);
+    engine.rootContext()->setContextProperty("zeinab", offlineCompanyList);
     engine.rootContext()->setContextProperty("offlineFilterModel", onlineCompanyList);
 
 

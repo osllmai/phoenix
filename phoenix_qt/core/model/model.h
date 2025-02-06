@@ -11,7 +11,6 @@
 class Model : public QObject
 {
     Q_OBJECT
-    // QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(QString name READ name CONSTANT FINAL)
     Q_PROPERTY(QString information READ information CONSTANT FINAL)
@@ -25,8 +24,8 @@ class Model : public QObject
     Q_PROPERTY(QDateTime *expireModelTime READ expireModelTime FINAL)
 
 public:
-    explicit Model(const int id, const QString& name, const QString& key, QDateTime* addModelTime,
-                   const bool isLike, Company* company, const BackendType backend, QObject* parent);
+    explicit Model(/*const int id, const QString& name, const QString& key, QDateTime* addModelTime,
+                   const bool isLike, Company* company, const BackendType backend,*/ QObject* parent);
     virtual ~Model();
 
     const int id() const;

@@ -1,14 +1,8 @@
 #include "company.h"
 
 Company::Company(const int id, const QString& name, const QString& icon,
-                 const QString backend, QObject* parent)
-    :m_id(id), m_name(name), m_icon(icon),  QObject(parent)
-{
-    if(backend == "offline")
-        m_backend = BackendType::OfflineModel;
-    if(backend == "online")
-        m_backend = BackendType::OnlineModel;
-}
+                 const BackendType backend, QObject* parent)
+    :m_id(id), m_name(name), m_icon(icon), m_backend(backend), QObject(parent){}
 
 Company::~Company(){}
 

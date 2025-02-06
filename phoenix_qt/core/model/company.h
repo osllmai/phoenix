@@ -14,7 +14,7 @@ class Company: public QObject
 
 public:
     explicit Company(const int id, const QString& name, const QString& icon,
-                                const QString backend, QObject* parent);
+                                const BackendType backend, QObject* parent);
     virtual ~Company();
 
     const int id() const;
