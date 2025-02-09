@@ -20,7 +20,7 @@ int CompanyList::rowCount(const QModelIndex &parent) const{
 }
 
 QVariant CompanyList::data(const QModelIndex &index, int role) const{
-    if (!index.isValid())
+    if (!index.isValid() || index.row() < 0 || index.row() >= m_companys.count())
         return QVariant();
 
     Company* company = m_companys.at(index.row());

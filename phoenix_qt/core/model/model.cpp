@@ -7,13 +7,15 @@ Model::Model(/*const int id, const QString& name, const QString& key, QDateTime*
 {}
 
 Model::~Model(){
-    delete m_addModelTime;
-    delete m_expireModelTime;
+    // delete m_addModelTime;
+    // delete m_expireModelTime;
 }
 
 const int Model::id() const{return m_id;}
 
 const QString &Model::name() const{return m_name;}
+
+const QString &Model::icon() const{return m_icon;}
 
 const QString &Model::promptTemplate() const{return m_promptTemplate;}
 
@@ -41,12 +43,12 @@ void Model::setIsLike(const bool isLike){
     emit isLikeChanged();
 }
 
-QDateTime *Model::addModelTime() const{return m_addModelTime;}
-void Model::setAddModelTime(QDateTime *newAddModelTime){
+QDateTime Model::addModelTime() const{return m_addModelTime;}
+void Model::setAddModelTime(QDateTime newAddModelTime){
     if (m_addModelTime == newAddModelTime)
         return;
     m_addModelTime = newAddModelTime;
     emit addModelTimeChanged();
 }
 
-QDateTime *Model::expireModelTime() const{return m_expireModelTime;}
+QDateTime Model::expireModelTime() const{return m_expireModelTime;}
