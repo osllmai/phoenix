@@ -14,7 +14,7 @@ class CompanyList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    CompanyList(QObject* parent);
+    static CompanyList* instance(QObject* parent = nullptr);
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,
@@ -35,6 +35,9 @@ signals:
 
 private:
     QList<Company*> m_companys;
+
+    explicit CompanyList(QObject* parent);
+    static CompanyList* m_instance;
 };
 
 #endif // COMPANYLIST_H

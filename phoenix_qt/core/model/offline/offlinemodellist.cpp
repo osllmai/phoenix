@@ -1,5 +1,14 @@
 #include "offlinemodellist.h"
 
+OfflineModelList* OfflineModelList::m_instance = nullptr;
+
+OfflineModelList* OfflineModelList::instance(QObject* parent) {
+    if (!m_instance) {
+        m_instance = new OfflineModelList(parent);
+    }
+    return m_instance;
+}
+
 OfflineModelList::OfflineModelList(QObject* parent) {}
 
 int OfflineModelList::count() const{return models.count();}

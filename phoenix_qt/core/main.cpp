@@ -5,6 +5,11 @@
 #include "./model/companylist.h"
 #include "./model/companylistfilter.h"
 #include "./model/BackendType.h"
+
+#include "./model/offline/offlinemodellist.h"
+#include "./model/online/onlinemodellist.h"
+
+
 #include "config.h"
 
 int main(int argc, char *argv[])
@@ -28,13 +33,14 @@ int main(int argc, char *argv[])
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
 
+    qmlRegisterSingletonInstance("companylist", 1, 0, "CompanyList", CompanyList::instance(&engine));
+    qmlRegisterSingletonInstance("onlinemodellist", 1, 0, "OnlineModelList", OnlineModelList::instance(&engine));
+    qmlRegisterSingletonInstance("offlinemodellist", 1, 0, "OfflineModelList", OfflineModelList::instance(&engine));
 
-    CompanyList* companyList = new CompanyList(&engine);
-
-    CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, companyList);
-    CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, companyList);
-    offlineCompanyList->setSourceModel(companyList);
-    onlineCompanyList->setSourceModel(companyList);
+    CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, CompanyList::instance());
+    CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, CompanyList::instance());
+    offlineCompanyList->setSourceModel(CompanyList::instance());
+    onlineCompanyList->setSourceModel(CompanyList::instance());
     engine.rootContext()->setContextProperty("zeinab", offlineCompanyList);
     engine.rootContext()->setContextProperty("offlineFilterModel", onlineCompanyList);
 

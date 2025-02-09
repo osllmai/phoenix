@@ -14,7 +14,7 @@ class OnlineModelList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    explicit OnlineModelList(QObject* parent);
+    static OnlineModelList* instance(QObject* parent = nullptr);
 
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -43,6 +43,9 @@ signals:
 
 private:
     QList<OnlineModel*> models;
+
+    explicit OnlineModelList(QObject* parent);
+    static OnlineModelList* m_instance;
 };
 
 #endif // ONLINEMODELLIST_H

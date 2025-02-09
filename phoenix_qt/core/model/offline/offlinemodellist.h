@@ -14,7 +14,7 @@ class OfflineModelList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    explicit OfflineModelList(QObject* parent);
+    static OfflineModelList* instance(QObject* parent = nullptr);
 
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -44,6 +44,9 @@ signals:
 
 private:
     QList<OfflineModel*> models;
+
+    explicit OfflineModelList(QObject* parent);
+    static OfflineModelList* m_instance;
 };
 
 #endif // OFFLINEMODELLIST_H

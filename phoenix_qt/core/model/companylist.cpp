@@ -1,5 +1,14 @@
 #include "companylist.h"
 
+CompanyList* CompanyList::m_instance = nullptr;
+
+CompanyList* CompanyList::instance(QObject* parent) {
+    if (!m_instance) {
+        m_instance = new CompanyList(parent);
+    }
+    return m_instance;
+}
+
 CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
     beginInsertRows(QModelIndex(), 0, 6);
     m_companys.append(new Company(1, "hi", "qrc:/media/image_company/Bert.svg",BackendType::OfflineModel,this));

@@ -1,5 +1,14 @@
 #include "onlinemodellist.h"
 
+OnlineModelList* OnlineModelList::m_instance = nullptr;
+
+OnlineModelList* OnlineModelList::instance(QObject* parent) {
+    if (!m_instance) {
+        m_instance = new OnlineModelList(parent);
+    }
+    return m_instance;
+}
+
 OnlineModelList::OnlineModelList(QObject *parent): QAbstractListModel(parent){}
 
 int OnlineModelList::count() const{return models.count();}
