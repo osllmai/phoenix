@@ -21,3 +21,12 @@ const bool OnlineModel::pricey() const{return m_pricey;}
 const QString &OnlineModel::output() const{return m_output;}
 
 const QString &OnlineModel::comments() const{return m_comments;}
+
+const bool OnlineModel::installModel() const{ return m_installModel;}
+void OnlineModel::setInstallModel(const bool newInstallModel){
+    if (m_installModel == newInstallModel)
+        return;
+    m_installModel = newInstallModel;
+    emit installModelChanged();
+}
+

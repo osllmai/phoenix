@@ -37,6 +37,8 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->output();
     case CommercialRole:
         return model->commercial();
+    case InstallModelRole:
+        return model->installModel();
     }
 
     return QVariant();

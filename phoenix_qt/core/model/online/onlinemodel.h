@@ -18,6 +18,7 @@ class OnlineModel : public Model
     Q_PROPERTY(bool pricey READ pricey CONSTANT FINAL)
     Q_PROPERTY(QString output READ output CONSTANT FINAL)
     Q_PROPERTY(QString comments READ comments CONSTANT FINAL)
+    Q_PROPERTY(bool installModel READ installModel WRITE setInstallModel NOTIFY installModelChanged FINAL)
 
 public:
     explicit OnlineModel(Model *parent);
@@ -42,6 +43,12 @@ public:
 
     const QString &comments() const;
 
+    const bool installModel() const;
+    void setInstallModel(const bool newInstallModel);
+
+signals:
+    void installModelChanged();
+
 private:
     QString m_type;
     double m_inputPricePer1KTokens;
@@ -52,6 +59,7 @@ private:
     bool m_pricey;
     QString m_output;
     QString m_comments;
+    bool m_installModel;
 };
 
 #endif // ONLINEMODEL_H

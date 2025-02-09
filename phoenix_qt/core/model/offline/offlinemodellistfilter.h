@@ -37,9 +37,7 @@ protected:
 
 signals:
     void searchTermChanged();
-
     void filterTypeChanged();
-
     void companyChanged();
 
 private:

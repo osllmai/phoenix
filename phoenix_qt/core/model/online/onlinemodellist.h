@@ -16,7 +16,7 @@ class OnlineModelList: public QAbstractListModel
 public:
     explicit OnlineModelList(QObject* parent);
 
-    enum OfflineModelRoles {
+    enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
         InformationRole,
@@ -26,7 +26,8 @@ public:
         TypeRole,
         ContextWindowsRole,
         OutputRole,
-        CommercialRole
+        CommercialRole,
+        InstallModelRole
     };
 
     int count() const;
