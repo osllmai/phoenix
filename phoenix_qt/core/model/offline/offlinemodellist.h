@@ -26,7 +26,9 @@ public:
         FileSizeRole,
         RamRamrequiredRole,
         ParametersRole,
-        QuantRole
+        QuantRole,
+        DownloadFinishedRole,
+        IsDownloadingRole
     };
 
     int count() const;

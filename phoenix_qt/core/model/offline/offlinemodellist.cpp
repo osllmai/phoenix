@@ -36,6 +36,10 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->parameters();
     case QuantRole:
         return model->quant();
+    case DownloadFinishedRole:
+        return model->downloadFinished();
+    case IsDownloadingRole:
+        return model->isDownloading();
     default:
         return QVariant();
     }
@@ -53,6 +57,8 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[RamRamrequiredRole] = "ramRamrequired";
     roles[ParametersRole] = "parameters";
     roles[QuantRole] = "quant";
+    roles[DownloadFinishedRole] = "downloadFinished";
+    roles[IsDownloadingRole] = "isDownloading";
     return roles;
 }
 
