@@ -15,6 +15,7 @@ class OfflineModelList: public QAbstractListModel
 
 public:
     static OfflineModelList* instance(QObject* parent = nullptr);
+    static QList<OfflineModel*> parseJson(const QList<&QString> filePaths);
 
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -43,10 +44,11 @@ signals:
     void countChanged();
 
 private:
-    QList<OfflineModel*> models;
-
     explicit OfflineModelList(QObject* parent);
     static OfflineModelList* m_instance;
+
+    QList<OfflineModel*> models;
+    QFutureWatcher<QList<OfflineModel*>> futureWatcher;
 };
 
 #endif // OFFLINEMODELLIST_H

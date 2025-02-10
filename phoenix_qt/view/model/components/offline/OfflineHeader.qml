@@ -49,7 +49,7 @@ Item{
                     delegate: MyButton {
                         id: delegateId
                         myText: model.name
-                        myIcon: model.icon
+                        myIcon: "qrc:/media/image_company/" + model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true

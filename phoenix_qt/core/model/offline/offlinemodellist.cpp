@@ -96,3 +96,49 @@ OfflineModel* OfflineModelList::at(int index) const{
     return models.at(index);
 }
 
+QList<Company*> OfflineModelList::parseJson(const QList<Company*> companys) {
+
+    QList<OfflineModel*> tempCompany;
+    int i=0;
+
+    for (Company* company : companys){
+        if(company->backend() != BackendType::OfflineModel)
+            continue;
+
+        QFile file(company->filePath());
+        if (!file.open(QIODevice::ReadOnly)) {
+            qWarning() << "Cannot open JSON file!";
+            return tempCompany;
+        }
+
+        QByteArray jsonData = file.readAll();
+        file.close();
+
+        QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+        if (!doc.isArray()) {
+            qWarning() << "Invalid JSON format!";
+            return tempCompany;
+        }
+
+        QJsonArray jsonArray = doc.array();
+        for (const QJsonValue &value : jsonArray) {
+            if (!value.isObject()) continue;
+
+            QJsonObject obj = value.toObject();
+            Company *company;
+
+            if (obj["type"].toString() == "OfflineModel") {
+                company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
+                                      BackendType::OfflineModel, obj["file"].toString(), nullptr);
+            } else if (obj["type"].toString() == "OnlineModel") {
+                company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
+                                      BackendType::OnlineModel, obj["file"].toString(), nullptr);
+            }
+
+            tempCompany.append(company);
+        }
+    }
+
+
+    return tempCompany;
+}

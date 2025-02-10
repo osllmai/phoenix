@@ -14,7 +14,7 @@ class Company: public QObject
 
 public:
     explicit Company(const int id, const QString& name, const QString& icon,
-                                const BackendType backend, QObject* parent);
+                                const BackendType backend, const QString& filePath, QObject* parent);
     virtual ~Company();
 
     const int id() const;
@@ -25,10 +25,13 @@ public:
 
     const BackendType backend() const;
 
+    const QString &filePath() const;
+
 private:
     int m_id;
     QString m_name;
     QString m_icon;
+    QString m_filePath;
     BackendType m_backend;
 };
 

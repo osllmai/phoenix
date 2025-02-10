@@ -1,5 +1,10 @@
 #include "companylist.h"
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
 CompanyList* CompanyList::m_instance = nullptr;
 
 CompanyList* CompanyList::instance(QObject* parent) {
@@ -10,15 +15,15 @@ CompanyList* CompanyList::instance(QObject* parent) {
 }
 
 CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
-    beginInsertRows(QModelIndex(), 0, 6);
-    m_companys.append(new Company(1, "hi", "qrc:/media/image_company/Bert.svg",BackendType::OfflineModel,this));
-    m_companys.append(new Company(1, "Hello", "qrc:/media/image_company/LLaMA.svg",BackendType::OnlineModel,this));
-    m_companys.append(new Company(1, "OpenAI", "qrc:/media/image_company/Phi-3.svg",BackendType::OfflineModel,this));
-    m_companys.append(new Company(1, "Nemati AI", "qrc:/media/image_company/qwen2.svg",BackendType::OfflineModel,this));
-    m_companys.append(new Company(1, "OK", "qrc:/media/image_company/MPT.svg",BackendType::OnlineModel,this));
-    m_companys.append(new Company(1, "LLAMA", "qrc:/media/image_company/Starcoder.svg",BackendType::OnlineModel,this));
-    m_companys.append(new Company(1, "LO LO", "qrc:/media/image_company/Replit.svg",BackendType::OfflineModel,this));
-    endInsertRows();
+    connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
+        beginResetModel();
+        m_companys = futureWatcher.result();
+        endResetModel();
+        emit countChanged();
+    });
+
+    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson,"./bin/company.json");
+    futureWatcher.setFuture(future);
 }
 
 int CompanyList::count() const{return m_companys.count();}
@@ -62,4 +67,43 @@ Company *CompanyList::at(int index) const{
     if (index < 0 || index >= m_companys.count())
         return nullptr;
     return m_companys.at(index);
+}
+
+QList<Company*> CompanyList::parseJson(const QString &filePath) {
+    QList<Company*> tempCompany;
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Cannot open JSON file!";
+        return tempCompany;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    if (!doc.isArray()) {
+        qWarning() << "Invalid JSON format!";
+        return tempCompany;
+    }
+
+    int i=0;
+    QJsonArray jsonArray = doc.array();
+    for (const QJsonValue &value : jsonArray) {
+        if (!value.isObject()) continue;
+
+        QJsonObject obj = value.toObject();
+        Company *company;
+
+        if (obj["type"].toString() == "OfflineModel") {
+            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
+                                  BackendType::OfflineModel, obj["file"].toString(), nullptr);
+        } else if (obj["type"].toString() == "OnlineModel") {
+            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
+                                  BackendType::OnlineModel, obj["file"].toString(), nullptr);
+        }
+
+        tempCompany.append(company);
+    }
+    return tempCompany;
 }

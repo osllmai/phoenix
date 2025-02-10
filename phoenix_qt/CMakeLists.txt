@@ -11,7 +11,7 @@ project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick Concurrent Core Qml Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -19,6 +19,10 @@ include_directories(core)
 
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 qt_add_executable(app${PROJECT_NAME}
     core/main.cpp
@@ -200,7 +204,7 @@ set_target_properties(app${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(app${PROJECT_NAME}
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Concurrent Qt6::Sql Qt::Qml Qt6::Core
 )
 
 include(GNUInstallDirs)

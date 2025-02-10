@@ -6,12 +6,15 @@
 #include <QtQml>
 #include <QAbstractListModel>
 
+#include <QFutureWatcher>
+#include <QtConcurrent>
+
 #include "company.h"
 
 class CompanyList: public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(int count READ count NOTIFY countChanged CONSTANT FINAL)
 
 public:
     static CompanyList* instance(QObject* parent = nullptr);
@@ -34,10 +37,13 @@ signals:
     void countChanged();
 
 private:
-    QList<Company*> m_companys;
-
     explicit CompanyList(QObject* parent);
     static CompanyList* m_instance;
+
+    QList<Company*> m_companys;
+    QFutureWatcher<QList<Company*>> futureWatcher;
+
+    static QList<Company*> parseJson(const QString &filePath);
 };
 
 #endif // COMPANYLIST_H
