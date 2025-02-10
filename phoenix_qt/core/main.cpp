@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterSingletonInstance("companylist", 1, 0, "CompanyList", CompanyList::instance(&engine));
     qmlRegisterSingletonInstance("onlinemodellist", 1, 0, "OnlineModelList", OnlineModelList::instance(&engine));
-    qmlRegisterSingletonInstance("offlinemodellist", 1, 0, "OfflineModelList", OfflineModelList::instance(&engine));
+    qmlRegisterSingletonInstance("offlinemodellist", 1, 0, "OfflineModelListData", OfflineModelList::instance(&engine));
 
     CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, CompanyList::instance());
     CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, CompanyList::instance());

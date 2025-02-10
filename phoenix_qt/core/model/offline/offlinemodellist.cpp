@@ -1,5 +1,10 @@
 #include "offlinemodellist.h"
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
 OfflineModelList* OfflineModelList::m_instance = nullptr;
 
 OfflineModelList* OfflineModelList::instance(QObject* parent) {
@@ -96,49 +101,64 @@ OfflineModel* OfflineModelList::at(int index) const{
     return models.at(index);
 }
 
-QList<Company*> OfflineModelList::parseJson(const QList<Company*> companys) {
+void OfflineModelList::loadFromJsonAsync(const QList<Company*> companys) {
+    connect(&futureWatcher, &QFutureWatcher<QList<OfflineModel*>>::finished, this, [this]() {
+        beginResetModel();
+        models = futureWatcher.result();
+        endResetModel();
+        for(OfflineModel* model: models){
+            qInfo()<<model->name();
+        }
+        emit countChanged();
+    });
 
-    QList<OfflineModel*> tempCompany;
+    QFuture<QList<OfflineModel*>> future = QtConcurrent::run(parseJson, companys);
+    futureWatcher.setFuture(future);
+}
+
+
+QList<OfflineModel*> OfflineModelList::parseJson(const QList<Company*> companys) {
+
+    QList<OfflineModel*> tempModel;
     int i=0;
 
     for (Company* company : companys){
         if(company->backend() != BackendType::OfflineModel)
             continue;
 
-        QFile file(company->filePath());
+        QFile file("./bin/" + company->filePath());
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
-            return tempCompany;
+            continue;
         }
 
         QByteArray jsonData = file.readAll();
         file.close();
 
-        QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-        if (!doc.isArray()) {
-            qWarning() << "Invalid JSON format!";
-            return tempCompany;
+        QJsonParseError err;
+        QJsonDocument document = QJsonDocument::fromJson(jsonData, &err);
+        if (err.error != QJsonParseError::NoError) {
+            qWarning() << "ERROR: Couldn't parse: " << jsonData << err.errorString();
+            continue;
         }
 
-        QJsonArray jsonArray = doc.array();
+        QJsonArray jsonArray = document.array();
         for (const QJsonValue &value : jsonArray) {
             if (!value.isObject()) continue;
 
             QJsonObject obj = value.toObject();
-            Company *company;
+            if(obj["type"].toString() != company->name()) continue;
 
-            if (obj["type"].toString() == "OfflineModel") {
-                company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                      BackendType::OfflineModel, obj["file"].toString(), nullptr);
-            } else if (obj["type"].toString() == "OnlineModel") {
-                company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                      BackendType::OnlineModel, obj["file"].toString(), nullptr);
-            }
+            OfflineModel *model = new OfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(), obj["filename"].toString(),
+                                                   obj["url"].toString(), obj["parameters"].toString(), obj["quant"].toString(),0.0, false, false,
 
-            tempCompany.append(company);
+                                                   i++, obj["name"].toString(), "", QDateTime::currentDateTime(), true, company, BackendType::OfflineModel,
+                                                   company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
+                                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr);
+
+            tempModel.append(model);
         }
     }
 
-
-    return tempCompany;
+    return tempModel;
 }

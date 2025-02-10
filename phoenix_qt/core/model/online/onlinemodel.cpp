@@ -1,6 +1,11 @@
 #include "onlinemodel.h"
 
-OnlineModel::OnlineModel(Model *parent): Model(parent){}
+OnlineModel::OnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                         const bool isLike, Company* company, const BackendType backend,
+                         const QString& icon , const QString& information , const QString& promptTemplate ,
+                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent)
+                         :Model(id, name, key, addModelTime, isLike, company, backend, icon, information,
+                                    promptTemplate, systemPrompt, expireModelTime, parent){}
 
 OnlineModel::~OnlineModel(){}
 

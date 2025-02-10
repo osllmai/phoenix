@@ -6,7 +6,11 @@
 #include <QtQml>
 #include <QAbstractListModel>
 
+#include <QFutureWatcher>
+#include <QtConcurrent>
+
 #include "offlinemodel.h"
+#include "../company.h"
 
 class OfflineModelList: public QAbstractListModel
 {
@@ -15,7 +19,7 @@ class OfflineModelList: public QAbstractListModel
 
 public:
     static OfflineModelList* instance(QObject* parent = nullptr);
-    static QList<OfflineModel*> parseJson(const QList<&QString> filePaths);
+    void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -49,6 +53,7 @@ private:
 
     QList<OfflineModel*> models;
     QFutureWatcher<QList<OfflineModel*>> futureWatcher;
+    static QList<OfflineModel*> parseJson(const QList<Company*> companys);
 };
 
 #endif // OFFLINEMODELLIST_H

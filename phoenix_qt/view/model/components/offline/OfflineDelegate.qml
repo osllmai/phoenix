@@ -10,9 +10,7 @@ T.Button {
     width: 250
     height: 250
 
-    property var myText: "My Model"
-    property var myIcon: "qrc:/media/icon/inDox.svg"
-    property var about: " About Model"
+    property var model
 
     background:null
 
@@ -47,7 +45,7 @@ T.Button {
                     id: logoModelId
                     background: null
                     icon{
-                        source: control.myIcon
+                        source: "qrc:/media/image_company/" + control.model.icon
                         color: Style.Colors.iconHoverAndChecked
                         width:28; height:28
                     }
@@ -55,7 +53,7 @@ T.Button {
                 Text {
                     id: titleId
                     width: parent.width - logoModelId.width - likeIconId.width
-                    text: control.myText
+                    text: control.model.name
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
@@ -76,13 +74,14 @@ T.Button {
                 id: aboutId
                 height: parent.height - headerId.height - buttonListId.height - informationAboutDownloadId.height - 30
                 width: parent.width
+                clip: true
                 Text{
                     id:informationId
-                    text: control.about
+                    text: control.model.information
                     color: Style.Colors.textInformation
                     clip: true
                     anchors.left: parent.left; anchors.right: parent.right
-                    font.pixelSize: 12
+                    font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
@@ -113,7 +112,7 @@ T.Button {
                         Text {
                             id: fileSizeValue
                             color: Style.Colors.textInformation
-                            text: "4.8 GB"
+                            text: control.model.fileSize + " GB"
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
@@ -140,7 +139,7 @@ T.Button {
                         Text {
                             id: ramRequiredValue
                             color: Style.Colors.textInformation
-                            text: "16 GB"
+                            text: control.model.ramRamrequired + " GB"
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
@@ -167,7 +166,7 @@ T.Button {
                         Text {
                             id: parameterersValue
                             color: Style.Colors.textInformation
-                            text: "1000"
+                            text: control.model.parameters
                             font.pointSize: 8
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
@@ -193,8 +192,8 @@ T.Button {
                         }
                         Text {
                             id: quantValue
-                            color: Style.Colors.textTitle
-                            text: "5.4"
+                            color: Style.Colors.textInformation
+                            text: control.model.quant
                             font.pointSize: 8
                             anchors.horizontalCenter: parent.horizontalCenter
                         }

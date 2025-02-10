@@ -20,7 +20,14 @@ class OfflineModel: public Model
     Q_PROPERTY(bool downloadFinished READ downloadFinished WRITE setDownloadFinished NOTIFY downloadFinishedChanged FINAL)
 
 public:
-    explicit OfflineModel(QObject *parent);
+    explicit OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+                          const QString& parameters, const QString& quant, const double downloadPercent,
+                          const bool isDownloading, const bool downloadFinished,
+
+                          const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                          const bool isLike, Company* company, const BackendType backend,
+                          const QString& icon , const QString& information , const QString& promptTemplate ,
+                          const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
     virtual ~OfflineModel();
 
     const double fileSize() const;

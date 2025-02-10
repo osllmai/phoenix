@@ -5,6 +5,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "./offline/offlinemodellist.h"
+
 CompanyList* CompanyList::m_instance = nullptr;
 
 CompanyList* CompanyList::instance(QObject* parent) {
@@ -18,6 +20,7 @@ CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
     connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
         beginResetModel();
         m_companys = futureWatcher.result();
+        OfflineModelList::instance()->loadFromJsonAsync(m_companys);
         endResetModel();
         emit countChanged();
     });

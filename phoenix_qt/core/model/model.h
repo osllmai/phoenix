@@ -25,8 +25,10 @@ class Model : public QObject
     Q_PROPERTY(QDateTime expireModelTime READ expireModelTime FINAL)
 
 public:
-    explicit Model(/*const int id, const QString& name, const QString& key, QDateTime* addModelTime,
-                   const bool isLike, Company* company, const BackendType backend,*/ QObject* parent);
+    explicit Model(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                   const bool isLike, Company* company, const BackendType backend,
+                   const QString& icon , const QString& information , const QString& promptTemplate ,
+                   const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
     virtual ~Model();
 
     const int id() const;

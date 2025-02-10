@@ -21,7 +21,10 @@ class OnlineModel : public Model
     Q_PROPERTY(bool installModel READ installModel WRITE setInstallModel NOTIFY installModelChanged FINAL)
 
 public:
-    explicit OnlineModel(Model *parent);
+    explicit OnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                         const bool isLike, Company* company, const BackendType backend,
+                         const QString& icon , const QString& information , const QString& promptTemplate ,
+                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
 
     virtual ~OnlineModel();
 
