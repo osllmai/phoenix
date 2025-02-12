@@ -16,18 +16,18 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
 
 OfflineModelList::OfflineModelList(QObject* parent) {}
 
-int OfflineModelList::count() const{return models.count();}
+int OfflineModelList::count() const{return m_models.count();}
 
 int OfflineModelList::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return models.count();
+    return m_models.count();
 }
 
 QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) const{
-    if (!index.isValid() || index.row() < 0 || index.row() >= models.count())
+    if (!index.isValid() || index.row() < 0 || index.row() >= m_models.count())
         return QVariant();
 
-    OfflineModel* model = models[index.row()];
+    OfflineModel* model = m_models[index.row()];
 
     switch (role) {
     case IdRole:
@@ -77,7 +77,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
 }
 
 bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, int role) {
-    OfflineModel* model = models[index.row()]; // The person to edit
+    OfflineModel* model = m_models[index.row()]; // The person to edit
     bool somethingChanged{false};
 
     switch (role) {
@@ -96,69 +96,14 @@ bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, 
 }
 
 OfflineModel* OfflineModelList::at(int index) const{
-    if (index < 0 || index >= models.count())
+    if (index < 0 || index >= m_models.count())
         return nullptr;
-    return models.at(index);
+    return m_models.at(index);
 }
 
-void OfflineModelList::loadFromJsonAsync(const QList<Company*> companys) {
-    connect(&futureWatcher, &QFutureWatcher<QList<OfflineModel*>>::finished, this, [this]() {
-        beginResetModel();
-        models = futureWatcher.result();
-        endResetModel();
-        for(OfflineModel* model: models){
-            qInfo()<<model->name();
-        }
-        emit countChanged();
-    });
-
-    QFuture<QList<OfflineModel*>> future = QtConcurrent::run(parseJson, companys);
-    futureWatcher.setFuture(future);
-}
-
-
-QList<OfflineModel*> OfflineModelList::parseJson(const QList<Company*> companys) {
-
-    QList<OfflineModel*> tempModel;
-    int i=0;
-
-    for (Company* company : companys){
-        if(company->backend() != BackendType::OfflineModel)
-            continue;
-
-        QFile file("./bin/" + company->filePath());
-        if (!file.open(QIODevice::ReadOnly)) {
-            qWarning() << "Cannot open JSON file!";
-            continue;
-        }
-
-        QByteArray jsonData = file.readAll();
-        file.close();
-
-        QJsonParseError err;
-        QJsonDocument document = QJsonDocument::fromJson(jsonData, &err);
-        if (err.error != QJsonParseError::NoError) {
-            qWarning() << "ERROR: Couldn't parse: " << jsonData << err.errorString();
-            continue;
-        }
-
-        QJsonArray jsonArray = document.array();
-        for (const QJsonValue &value : jsonArray) {
-            if (!value.isObject()) continue;
-
-            QJsonObject obj = value.toObject();
-            if(obj["type"].toString() != company->name()) continue;
-
-            OfflineModel *model = new OfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(), obj["filename"].toString(),
-                                                   obj["url"].toString(), obj["parameters"].toString(), obj["quant"].toString(),0.0, false, false,
-
-                                                   i++, obj["name"].toString(), "", QDateTime::currentDateTime(), true, company, BackendType::OfflineModel,
-                                                   company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
-                                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr);
-
-            tempModel.append(model);
-        }
-    }
-
-    return tempModel;
+void OfflineModelList::setModelList(QList<OfflineModel*> models){
+    beginResetModel();
+    m_models = models;
+    endResetModel();
+    emit countChanged();
 }

@@ -11,19 +11,19 @@ OnlineModelList* OnlineModelList::instance(QObject* parent) {
 
 OnlineModelList::OnlineModelList(QObject *parent): QAbstractListModel(parent){}
 
-int OnlineModelList::count() const{return models.count();}
+int OnlineModelList::count() const{return m_models.count();}
 
 int OnlineModelList::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return models.size();
+    return m_models.size();
 }
 
 QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayRole) const {
-    if (!index.isValid() || index.row() < 0 || index.row() >= models.count())
+    if (!index.isValid() || index.row() < 0 || index.row() >= m_models.count())
         return QVariant();
 
     //The index is valid
-    OnlineModel* model = models[index.row()];
+    OnlineModel* model = m_models[index.row()];
 
     switch (role) {
     case IdRole:
@@ -69,7 +69,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
 }
 
 bool OnlineModelList::setData(const QModelIndex &index, const QVariant &value, int role) {
-    OnlineModel* model = models[index.row()]; // The person to edit
+    OnlineModel* model = m_models[index.row()]; // The person to edit
     bool somethingChanged{false};
 
     switch (role) {
@@ -88,7 +88,14 @@ bool OnlineModelList::setData(const QModelIndex &index, const QVariant &value, i
 }
 
 OnlineModel* OnlineModelList::at(int index) const{
-    if (index < 0 || index >= models.count())
+    if (index < 0 || index >= m_models.count())
         return nullptr;
-    return models.at(index);
+    return m_models.at(index);
+}
+
+void OnlineModelList::setModelList(QList<OnlineModel*> models){
+    beginResetModel();
+    m_models = models;
+    endResetModel();
+    emit countChanged();
 }

@@ -38,11 +38,14 @@ public:
 
     Q_INVOKABLE OnlineModel* at(int index) const;
 
+public slots:
+    void setModelList(QList<OnlineModel*> models);
+
 signals:
     void countChanged();
 
 private:
-    QList<OnlineModel*> models;
+    QList<OnlineModel*> m_models;
 
     explicit OnlineModelList(QObject* parent);
     static OnlineModelList* m_instance;

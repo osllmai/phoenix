@@ -58,10 +58,6 @@ QSqlError Database::deleteModel(const int id){
     return QSqlError();
 }
 
-void Database::readModel(const QList<Company*> companys){
-
-}
-
 QSqlError Database::updateKeyModel(const int id, const QString &key){
     QSqlQuery query(m_db);
 
@@ -124,7 +120,7 @@ const QString Database::DELETE_MODEL_SQL = QLatin1String(R"(
     DELETE FROM model WHERE id=?
 )");
 
-QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
+void Database::readModel(const QList<Company*> companys){
 
     QList<OfflineModel*> tempOfflineModel;
     QList<OnlineModel*> tempOnlineModel;
@@ -164,7 +160,7 @@ QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
                                                        i++, obj["name"].toString(), "", QDateTime::currentDateTime(), true, company,
                                                        BackendType::OfflineModel,
                                                        company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
-                                                       obj["systemPrompt"].toString(), QDateTime::currentDateTime(), company);
+                                                       obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr);
 
                 tempOfflineModel.append(model);
             }
@@ -177,7 +173,7 @@ QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
                 OnlineModel *model = new OnlineModel(i++, obj["name"].toString(), "", QDateTime::currentDateTime(),
                                                     true, company, BackendType::OnlineModel, company->icon(),
                                                     obj["description"].toString(), obj["promptTemplate"].toString(),
-                                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), company,
+                                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr,
 
                                                      obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
                                                      obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
@@ -189,6 +185,6 @@ QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
             }
         }
     }
-
-    return tempOfflineModel;
+    emit setOnlineModelList(tempOnlineModel);
+    emit setOfflineModelList(tempOfflineModel);
 }

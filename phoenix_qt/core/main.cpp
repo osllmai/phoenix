@@ -11,6 +11,8 @@
 #include "./model/offline/offlinemodellist.h"
 #include "./model/online/onlinemodellist.h"
 
+#include "./model/offline/offlinemodellistfilter.h"
+#include "./model/online/onlinemodellistfilter.h"
 
 #include "config.h"
 
@@ -39,17 +41,26 @@ int main(int argc, char *argv[])
 
     CompanyList* companyList =  CompanyList::instance(&engine);
 
-    QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
-
-    qmlRegisterSingletonInstance("onlinemodellist", 1, 0, "OnlineModelList", OnlineModelList::instance(&engine));
-    qmlRegisterSingletonInstance("offlinemodellist", 1, 0, "OfflineModelListData", OfflineModelList::instance(&engine));
-
-    CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, CompanyList::instance());
-    CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, CompanyList::instance());
+    CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, companyList);
+    CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, companyList);
     offlineCompanyList->setSourceModel(companyList);
     onlineCompanyList->setSourceModel(companyList);
-    engine.rootContext()->setContextProperty("zeinab", offlineCompanyList);
-    engine.rootContext()->setContextProperty("offlineFilterModel", onlineCompanyList);
+    engine.rootContext()->setContextProperty("offlineCompanyList", offlineCompanyList);
+    engine.rootContext()->setContextProperty("onlineCompanyList", onlineCompanyList);
+
+    OfflineModelList* offlineModelList = OfflineModelList::instance(&engine);
+    OnlineModelList* onlineModelList = OnlineModelList::instance(&engine);
+
+    OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(&engine);
+    OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(&engine);
+    offlineModelListFilter->setSourceModel(offlineModelList);
+    onlineModelListFilter->setSourceModel(onlineModelList);
+    engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelList);
+    engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
+
+    QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
+    QObject::connect(database, &Database::setOnlineModelList, onlineModelList, &OnlineModelList::setModelList, Qt::QueuedConnection);
+    QObject::connect(database, &Database::setOfflineModelList, offlineModelList, &OfflineModelList::setModelList, Qt::QueuedConnection);
 
     QObject::connect(
         &engine,

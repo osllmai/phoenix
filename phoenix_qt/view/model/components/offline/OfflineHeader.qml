@@ -45,7 +45,7 @@ Item{
                     interactive: contentWidth > width
                     boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                    model: zeinab
+                    model: offlineCompanyList
                     delegate: MyButton {
                         id: delegateId
                         myText: model.name

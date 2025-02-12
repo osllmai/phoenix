@@ -1,6 +1,8 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <QObject>
+
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -12,6 +14,7 @@
 
 class Database: public QObject
 {
+    Q_OBJECT
 public:
     static Database* instance(QObject* parent);
 
@@ -26,7 +29,8 @@ public slots:
     QSqlError updateIsLikeModel(const int id, const bool isLike);
 
 signals:
-    void addOnlineModel();
+    void setOnlineModelList(QList<OnlineModel*> models);
+    void setOfflineModelList(QList<OfflineModel*> models);
 
 private:
     static Database* m_instance;
@@ -44,8 +48,6 @@ private:
     static const QString UPDATE_KEYMODEL_SQL;
     static const QString UPDATE_ISLIKE_SQL;
     static const QString DELETE_MODEL_SQL;
-
-    QList<OfflineModel*> parseModelJson(const QList<Company*> companys);
 };
 
 #endif // DATABASE_H

@@ -42,7 +42,7 @@ signals:
 
 private:
     QString m_searchTerm;
-    FilterType m_filterType{FilterType::All};
+    FilterType m_filterType;
     Company *m_company;
 };
 

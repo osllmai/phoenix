@@ -44,6 +44,9 @@ public:
 
     Q_INVOKABLE OfflineModel* at(int index) const;
 
+public slots:
+    void setModelList(QList<OfflineModel*> models);
+
 signals:
     void countChanged();
 
@@ -51,9 +54,7 @@ private:
     explicit OfflineModelList(QObject* parent);
     static OfflineModelList* m_instance;
 
-    QList<OfflineModel*> models;
-    QFutureWatcher<QList<OfflineModel*>> futureWatcher;
-    static QList<OfflineModel*> parseJson(const QList<Company*> companys);
+    QList<OfflineModel*> m_models;
 };
 
 #endif // OFFLINEMODELLIST_H

@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import offlinemodellist 1.0
 
 Item {
     id: control
@@ -39,7 +38,7 @@ Item {
         }
         clip: true
 
-        model: OfflineModelListData
+        model: offlineModelListFilter
         delegate: Rectangle{
            width: gridView.cellWidth
            height: gridView.cellHeight
@@ -47,7 +46,7 @@ Item {
 
            OfflineDelegate {
                id: indoxItem
-               model: OfflineModelListData.at(index)
+               model: offlineModelListFilter.at(index)
                anchors.fill: parent; anchors.margins: indoxItem.hovered? 18: 20
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
