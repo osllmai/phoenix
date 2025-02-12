@@ -29,6 +29,8 @@ qt_add_executable(app${PROJECT_NAME}
     media/image_company/appIcon.rc
 
 
+    core/database.h core/database.cpp
+
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
     core/model/company.h core/model/company.cpp
@@ -42,6 +44,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/model/online/onlinemodel.h core/model/online/onlinemodel.cpp
     core/model/online/onlinemodellist.h core/model/online/onlinemodellist.cpp
     core/model/online/onlinemodellistfilter.h core/model/online/onlinemodellistfilter.cpp
+
 )
 
 qt_add_resources(app${PROJECT_NAME}

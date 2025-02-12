@@ -35,6 +35,7 @@ public:
 
 signals:
     void countChanged();
+    void requestReadModel(const QList<Company*> companys);
 
 private:
     explicit CompanyList(QObject* parent);

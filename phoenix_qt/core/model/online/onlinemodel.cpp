@@ -3,9 +3,20 @@
 OnlineModel::OnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
                          const bool isLike, Company* company, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
-                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent)
+                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent,
+
+                         const QString& type, const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+                         const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                         const QString& output, const QString& comments, const bool installModel
+                         )
                          :Model(id, name, key, addModelTime, isLike, company, backend, icon, information,
-                                    promptTemplate, systemPrompt, expireModelTime, parent){}
+                                    promptTemplate, systemPrompt, expireModelTime, parent),
+
+                                    m_type(type), m_inputPricePer1KTokens(inputPricePer1KTokens),
+                                    m_outputPricePer1KTokens(outputPricePer1KTokens), m_contextWindows(contextWindows),
+                                    m_recommended(recommended), m_commercial(commercial), m_pricey(pricey),
+                                    m_output(output), m_comments(comments), m_installModel(installModel)
+{}
 
 OnlineModel::~OnlineModel(){}
 

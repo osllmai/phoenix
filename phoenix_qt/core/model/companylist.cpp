@@ -20,7 +20,7 @@ CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
     connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
         beginResetModel();
         m_companys = futureWatcher.result();
-        OfflineModelList::instance()->loadFromJsonAsync(m_companys);
+        emit requestReadModel(m_companys);
         endResetModel();
         emit countChanged();
     });
@@ -72,41 +72,3 @@ Company *CompanyList::at(int index) const{
     return m_companys.at(index);
 }
 
-QList<Company*> CompanyList::parseJson(const QString &filePath) {
-    QList<Company*> tempCompany;
-
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Cannot open JSON file!";
-        return tempCompany;
-    }
-
-    QByteArray jsonData = file.readAll();
-    file.close();
-
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-    if (!doc.isArray()) {
-        qWarning() << "Invalid JSON format!";
-        return tempCompany;
-    }
-
-    int i=0;
-    QJsonArray jsonArray = doc.array();
-    for (const QJsonValue &value : jsonArray) {
-        if (!value.isObject()) continue;
-
-        QJsonObject obj = value.toObject();
-        Company *company;
-
-        if (obj["type"].toString() == "OfflineModel") {
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                  BackendType::OfflineModel, obj["file"].toString(), nullptr);
-        } else if (obj["type"].toString() == "OnlineModel") {
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                  BackendType::OnlineModel, obj["file"].toString(), nullptr);
-        }
-
-        tempCompany.append(company);
-    }
-    return tempCompany;
-}

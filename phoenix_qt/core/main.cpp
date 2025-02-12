@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QIcon>
 
+#include "database.h"
+
 #include "./model/companylist.h"
 #include "./model/companylistfilter.h"
 #include "./model/BackendType.h"
@@ -33,17 +35,21 @@ int main(int argc, char *argv[])
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
 
-    qmlRegisterSingletonInstance("companylist", 1, 0, "CompanyList", CompanyList::instance(&engine));
+    Database* database = Database::instance(&engine);
+
+    CompanyList* companyList =  CompanyList::instance(&engine);
+
+    QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
+
     qmlRegisterSingletonInstance("onlinemodellist", 1, 0, "OnlineModelList", OnlineModelList::instance(&engine));
     qmlRegisterSingletonInstance("offlinemodellist", 1, 0, "OfflineModelListData", OfflineModelList::instance(&engine));
 
     CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, CompanyList::instance());
     CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, CompanyList::instance());
-    offlineCompanyList->setSourceModel(CompanyList::instance());
-    onlineCompanyList->setSourceModel(CompanyList::instance());
+    offlineCompanyList->setSourceModel(companyList);
+    onlineCompanyList->setSourceModel(companyList);
     engine.rootContext()->setContextProperty("zeinab", offlineCompanyList);
     engine.rootContext()->setContextProperty("offlineFilterModel", onlineCompanyList);
-
 
     QObject::connect(
         &engine,
