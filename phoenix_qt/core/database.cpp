@@ -33,19 +33,17 @@ Database* Database::instance(QObject* parent){
     return m_instance;
 }
 
-void Database::insertModel(const QString &name, const QString &key, const BackendType backend){
+int Database::insertModel(const QString &name, const QString &key){
     QSqlQuery query(m_db);
 
-    if (!query.prepare(INSERT_MODEL_SQL))
-        return;
+    query.prepare(INSERT_MODEL_SQL);
     query.addBindValue(name);
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(false);
     query.exec();
 
-    // parent = new Model(query.lastInsertId().toInt(), name, apikey, nullptr, false, BackendType::OnlineProvider,onlineModelList);
-
+    return query.lastInsertId().toInt();
 }
 
 QSqlError Database::deleteModel(const int id){
@@ -97,7 +95,7 @@ const QString Database::FOREIGN_KEYS_SQL = QLatin1String(R"(
 )");
 
 const QString Database::INSERT_MODEL_SQL = QLatin1String(R"(
-    INSERT INTO model(name, key, isLike) VALUES (?, ?, ?, ?)
+    INSERT INTO model(name, key, add_model_time, isLike) VALUES (?, ?, ?, ?)
 )");
 
 const QString Database::READALL_MODEL_SQL = QLatin1String(R"(
@@ -153,11 +151,39 @@ void Database::readModel(const QList<Company*> companys){
                 QJsonObject obj = value.toObject();
                 if(obj["type"].toString() != company->name()) continue;
 
+                int id;
+                QString name = obj["name"].toString();
+                QString key = "";
+                QDateTime addDate = QDateTime::currentDateTime();
+                bool isLike = false;
+
+                QSqlQuery query(m_db);
+                query.prepare(READ_MODEL_SQL);
+                query.addBindValue(obj["name"].toString());
+
+                if (!query.exec())
+                    continue;
+
+                if (!query.next()) {
+
+                    id = insertModel(obj["name"].toString(),"");
+
+                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
+                             << "Time:" << addDate << "IsLike:" << isLike;
+                }else{
+
+                    id = query.value(0).toInt();
+                    name = query.value(1).toString();
+                    key = query.value(2).toString();
+                    addDate = query.value(3).toDateTime();
+                    isLike = query.value(4).toBool();
+                }
+
                 OfflineModel *model = new OfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
                                                        obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                                        obj["quant"].toString(),0.0, false, false,
 
-                                                       i++, obj["name"].toString(), "", QDateTime::currentDateTime(), true, company,
+                                                       id, name, key, addDate, isLike, company,
                                                        BackendType::OfflineModel,
                                                        company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                                        obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr);
@@ -185,6 +211,17 @@ void Database::readModel(const QList<Company*> companys){
             }
         }
     }
+
+    // QSqlQuery query(m_db);
+    // query.prepare(READALL_MODEL_SQL);
+
     emit setOnlineModelList(tempOnlineModel);
     emit setOfflineModelList(tempOfflineModel);
+
+    // if (query.exec()){
+    //     while(query.next()) {
+    //         if()
+
+    //     }
+    // }
 }

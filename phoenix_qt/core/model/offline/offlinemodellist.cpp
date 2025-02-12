@@ -1,9 +1,6 @@
 #include "offlinemodellist.h"
 
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
+#include <algorithm>
 
 OfflineModelList* OfflineModelList::m_instance = nullptr;
 
@@ -106,4 +103,10 @@ void OfflineModelList::setModelList(QList<OfflineModel*> models){
     m_models = models;
     endResetModel();
     emit countChanged();
+}
+
+bool OfflineModelList::containsId(int id) const {
+    return std::any_of(m_models.begin(), m_models.end(), [id](const OfflineModel* model) {
+        return model->id() == id;
+    });
 }

@@ -38,6 +38,8 @@ public:
 
     Q_INVOKABLE OnlineModel* at(int index) const;
 
+    bool containsId(int id) const;
+
 public slots:
     void setModelList(QList<OnlineModel*> models);
 

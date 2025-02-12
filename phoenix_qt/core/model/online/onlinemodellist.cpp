@@ -1,5 +1,7 @@
 #include "onlinemodellist.h"
 
+#include <algorithm>
+
 OnlineModelList* OnlineModelList::m_instance = nullptr;
 
 OnlineModelList* OnlineModelList::instance(QObject* parent) {
@@ -98,4 +100,10 @@ void OnlineModelList::setModelList(QList<OnlineModel*> models){
     m_models = models;
     endResetModel();
     emit countChanged();
+}
+
+bool OnlineModelList::containsId(int id) const {
+    return std::any_of(m_models.begin(), m_models.end(), [id](const OnlineModel* model) {
+        return model->id() == id;
+    });
 }

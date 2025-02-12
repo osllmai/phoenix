@@ -21,7 +21,7 @@ public:
 public slots:
     void readModel(const QList<Company*> companys);
 
-    void insertModel(const QString &name, const QString &key, const BackendType backend);
+    int insertModel(const QString &name, const QString &key);
 
     QSqlError deleteModel(const int id);
 
