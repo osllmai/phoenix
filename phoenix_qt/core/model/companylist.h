@@ -14,7 +14,7 @@
 class CompanyList: public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(int count READ count NOTIFY countChanged CONSTANT FINAL)
+    Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
     static CompanyList* instance(QObject* parent = nullptr);

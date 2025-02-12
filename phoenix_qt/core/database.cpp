@@ -1,14 +1,5 @@
 #include "database.h"
 
-Database* Database::m_instance = nullptr;
-
-Database* Database::instance(QObject* parent){
-    if (!m_instance) {
-        m_instance = new Database(parent);
-    }
-    return m_instance;
-}
-
 Database::Database(QObject* parent): QObject{nullptr}{
     moveToThread(&m_dbThread);
     m_dbThread.setObjectName("database");
@@ -31,6 +22,15 @@ Database::~Database(){
     m_db.close();
     m_dbThread.quit();
     m_dbThread.wait();
+}
+
+Database* Database::m_instance = nullptr;
+
+Database* Database::instance(QObject* parent){
+    if (!m_instance) {
+        m_instance = new Database(parent);
+    }
+    return m_instance;
 }
 
 void Database::insertModel(const QString &name, const QString &key, const BackendType backend){
@@ -84,7 +84,6 @@ QSqlError Database::updateIsLikeModel(const int id, const bool isLike){
     query.exec();
     return QSqlError();
 }
-
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
     CREATE TABLE model(
@@ -174,17 +173,16 @@ QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
-                if(obj["type"].toString() != company->name()) continue;
 
                 OnlineModel *model = new OnlineModel(i++, obj["name"].toString(), "", QDateTime::currentDateTime(),
                                                     true, company, BackendType::OnlineModel, company->icon(),
                                                     obj["description"].toString(), obj["promptTemplate"].toString(),
                                                     obj["systemPrompt"].toString(), QDateTime::currentDateTime(), company,
 
-                                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toString(),
-                                                     obj["outputPricePer1KTokens"].toString(), obj["contextWindows"].toString(),
-                                                     obj["recommended"].toString(), obj["commercial"].toString(),
-                                                     obj["pricey"].toString(), obj["output"].toString(), obj["comments"].toString(),
+                                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
+                                                     obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
+                                                     obj["recommended"].toBool(), obj["commercial"].toBool(),
+                                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),
                                                      false);
 
                 tempOnlineModel.append(model);
@@ -192,6 +190,5 @@ QList<OfflineModel*> Database::parseModelJson(const QList<Company*> companys) {
         }
     }
 
-    return tempModel;
+    return tempOfflineModel;
 }
-
