@@ -64,7 +64,7 @@ T.Button {
                     background: null
                     anchors.verticalCenter: logoModelId.verticalCenter
                     icon{
-                        source: likeIconId.hovered? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
+                        source: control.model.isLike? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
                         color: Style.Colors.like
                         width:20; height:20
                     }

@@ -1,9 +1,9 @@
 #include "database.h"
 
 Database::Database(QObject* parent): QObject{nullptr}{
-    moveToThread(&m_dbThread);
-    m_dbThread.setObjectName("database");
-    m_dbThread.start();
+    // moveToThread(&m_dbThread);
+    // m_dbThread.setObjectName("database");
+    // m_dbThread.start();
 
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("./db_phoenix.db");
@@ -212,16 +212,45 @@ void Database::readModel(const QList<Company*> companys){
         }
     }
 
-    // QSqlQuery query(m_db);
-    // query.prepare(READALL_MODEL_SQL);
+    QSqlQuery query(m_db);
+    query.prepare(READALL_MODEL_SQL);
+
+    if (query.exec()){
+        while(query.next()) {
+            bool findIndex = false;
+            for(OfflineModel* offlineModel : tempOfflineModel){
+                if(offlineModel->name() == query.value(1).toString()){
+                    findIndex = true;
+                    break;
+                }
+            }
+            for(OnlineModel* onlineModel : tempOnlineModel){
+                if(onlineModel->name() == query.value(1).toString() || findIndex == true){
+                    findIndex = true;
+                    break;
+                }
+            }
+            if(findIndex == false){
+
+                int id = query.value(0).toInt();
+                QString name = query.value(1).toString();
+                QString key = query.value(2).toString();
+                QDateTime addDate = query.value(3).toDateTime();
+                bool isLike = query.value(4).toBool();
+                OfflineModel *model = new OfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
+                                                   id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                                   "", "", "","", QDateTime::currentDateTime(), nullptr);
+
+                QFile file(key);
+                if (!file.exists())
+                    deleteModel(id);
+                else
+                    tempOfflineModel.append(model);
+            }
+        }
+    }
 
     emit setOnlineModelList(tempOnlineModel);
     emit setOfflineModelList(tempOfflineModel);
 
-    // if (query.exec()){
-    //     while(query.next()) {
-    //         if()
-
-    //     }
-    // }
 }

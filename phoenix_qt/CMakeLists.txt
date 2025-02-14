@@ -45,6 +45,10 @@ qt_add_executable(app${PROJECT_NAME}
     core/model/online/onlinemodellist.h core/model/online/onlinemodellist.cpp
     core/model/online/onlinemodellistfilter.h core/model/online/onlinemodellistfilter.cpp
 
+    core/chat/conversation.h core/chat/conversation.cpp
+    core/chat/conversationlist.h core/chat/conversationlist.cpp
+    core/chat/messagelist.h core/chat/messagelist.cpp
+    core/chat/message.h core/chat/message.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}

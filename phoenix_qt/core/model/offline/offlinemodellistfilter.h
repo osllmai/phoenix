@@ -23,6 +23,8 @@ public:
     };
     Q_ENUM(FilterType)
 
+    Q_INVOKABLE User* get(int index);
+
     const QString &searchTerm() const;
     void setSearchTerm(const QString &newSearchTerm);
 
