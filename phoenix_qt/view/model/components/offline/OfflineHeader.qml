@@ -38,6 +38,7 @@ Item{
                 width: parent.width - searchBoxId.width - 30
                 height: parent.height
                 ListView{
+                    id: companyList
                     anchors.fill: parent
                     layoutDirection: Qt.RightToLeft
                     orientation: Qt.Horizontal
@@ -54,6 +55,9 @@ Item{
                         bottonType: Style.RoleEnum.BottonType.Feature
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
+                        onClicked:{
+                            offlineModelListFilter.companyId = model.id
+                        }
                     }
                 }
             }

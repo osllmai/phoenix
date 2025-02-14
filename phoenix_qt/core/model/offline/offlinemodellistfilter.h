@@ -11,7 +11,7 @@ class OfflineModelListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
-    Q_PROPERTY(Company *company READ company WRITE setCompany NOTIFY companyChanged FINAL)
+    Q_PROPERTY(int companyId READ companyId WRITE setCompanyId NOTIFY companyIdChanged FINAL)
 public:
     explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent);
 
@@ -27,19 +27,19 @@ public:
     FilterType filterType() const;
     void setFilterType(FilterType newFilterType);
 
-    Company *company() const;
-    void setCompany(Company *newCompany);
+    int companyId() const;
+    void setCompanyId(const int newCompany);
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 signals:
     void filterTypeChanged();
-    void companyChanged();
+    void companyIdChanged();
 
 private:
     FilterType m_filterType;
-    Company *m_company;
+    int m_companyId;
 };
 
 #endif // OFFLINEMODELLISTFILTER_H

@@ -53,8 +53,7 @@ int main(int argc, char *argv[])
 
     OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
     OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(&engine);
-    // offlineModelListFilter->setSourceModel(offlineModelList);
-    // onlineModelListFilter->setSourceModel(onlineModelList);
+
     engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
     engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
 

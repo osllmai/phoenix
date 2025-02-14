@@ -60,7 +60,7 @@ QVariant CompanyList::data(const QModelIndex &index, int role) const{
 
 QHash<int, QByteArray> CompanyList::roleNames() const{
     QHash<int, QByteArray> roles;
-    roles[IDRole] = "ID";
+    roles[IDRole] = "id";
     roles[NameRole] = "name";
     roles[IconRole] = "icon";
     roles[BackendRole] = "backend";

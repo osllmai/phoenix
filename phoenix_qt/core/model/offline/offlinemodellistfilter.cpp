@@ -35,7 +35,7 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::All:
         return matchesFilter;
     case FilterType::Company:
-        return matchesFilter && m_company && model->company() && model->company()->id() == m_company->id();;
+        return matchesFilter && m_companyId && model->company() && model->company()->id() == m_companyId;
     case FilterType::DownloadFinished:
         return matchesFilter && downloadFinished;
     case FilterType::Favorite:
@@ -47,22 +47,14 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     }
 }
 
-// const QString &OfflineModelListFilter::searchTerm() const{return m_searchTerm;}
-// void OfflineModelListFilter::setSearchTerm(const QString &newSearchTerm){
-//     if (m_searchTerm == newSearchTerm)
-//         return;
-//     m_searchTerm = newSearchTerm;
-//     invalidateFilter();
-//     emit searchTermChanged();
-// }
-
-Company *OfflineModelListFilter::company() const{return m_company;}
-void OfflineModelListFilter::setCompany(Company *newCompany){
-    if (m_company == newCompany)
+int OfflineModelListFilter::companyId() const{return m_companyId;}
+void OfflineModelListFilter::setCompanyId(int companyId){
+    if (m_companyId == companyId)
         return;
-    m_company = newCompany;
+    m_companyId = companyId;
     setFilterType(FilterType::Company);
-    emit companyChanged();
+    invalidateFilter();
+    emit companyIdChanged();
 }
 
 OfflineModelListFilter::FilterType OfflineModelListFilter::filterType() const{return m_filterType;}
