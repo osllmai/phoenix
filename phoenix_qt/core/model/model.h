@@ -17,7 +17,7 @@ class Model : public QObject
     Q_PROPERTY(QString information READ information CONSTANT FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate CONSTANT FINAL)
     Q_PROPERTY(QString systemPrompt READ systemPrompt CONSTANT FINAL)
-    Q_PROPERTY(Company *company READ company FINAL)
+    Q_PROPERTY(Company *company READ company CONSTANT FINAL)
     Q_PROPERTY(BackendType backend READ backend CONSTANT FINAL)
     Q_PROPERTY(QString key READ key WRITE setKey NOTIFY keyChanged FINAL)
     Q_PROPERTY(bool isLike READ isLike WRITE setIsLike NOTIFY isLikeChanged FINAL)

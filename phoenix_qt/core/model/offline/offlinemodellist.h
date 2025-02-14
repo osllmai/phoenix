@@ -25,7 +25,7 @@ public:
         IdRole = Qt::UserRole + 1,
         NameRole,
         InformationRole,
-        IconModelRole,
+        CompanyRole,
         IsLikeRole,
         AddModelTimeRole,
         FileSizeRole,
@@ -33,7 +33,8 @@ public:
         ParametersRole,
         QuantRole,
         DownloadFinishedRole,
-        IsDownloadingRole
+        IsDownloadingRole,
+        ModelObjectRole
     };
 
     int count() const;
@@ -44,7 +45,7 @@ public:
 
     Q_INVOKABLE OfflineModel* at(int index) const;
 
-    bool containsId(int id) const;
+    // bool containsId(int id) const;
 
 public slots:
     void setModelList(QList<OfflineModel*> models);

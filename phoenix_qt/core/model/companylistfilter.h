@@ -4,6 +4,8 @@
 #include <QSortFilterProxyModel>
 
 #include "BackendType.h"
+#include "./companylist.h"
+#include "./company.h"
 
 class CompanyListFilter: public QSortFilterProxyModel
 {
@@ -12,6 +14,8 @@ class CompanyListFilter: public QSortFilterProxyModel
 
 public:
     explicit CompanyListFilter(BackendType backendType, QObject *parent);
+
+    Q_INVOKABLE Company* at(int index);
 
     const BackendType backendType() const;
     void setBackendType(const BackendType type);

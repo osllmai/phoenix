@@ -23,15 +23,14 @@ public:
         IDRole = Qt::UserRole + 1,
         NameRole,
         IconRole,
-        BackendRole
+        BackendRole,
+        CompanyObjectRole
     };
 
     int count() const;
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QHash<int, QByteArray> roleNames() const;
-
-    Q_INVOKABLE Company* at(int index) const;
 
 signals:
     void countChanged();

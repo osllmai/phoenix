@@ -51,6 +51,8 @@ QVariant CompanyList::data(const QModelIndex &index, int role) const{
         return company->icon();
     case BackendRole:
         return static_cast<int>(company->backend());
+    case CompanyObjectRole:
+        return QVariant::fromValue(m_companys[index.row()]);
     default:
         return QVariant();
     }
@@ -62,14 +64,8 @@ QHash<int, QByteArray> CompanyList::roleNames() const{
     roles[NameRole] = "name";
     roles[IconRole] = "icon";
     roles[BackendRole] = "backend";
-
+    roles[CompanyObjectRole] = "companyObject";
     return roles;
-}
-
-Company *CompanyList::at(int index) const{
-    if (index < 0 || index >= m_companys.count())
-        return nullptr;
-    return m_companys.at(index);
 }
 
 QList<Company*> CompanyList::parseJson(const QString &filePath) {

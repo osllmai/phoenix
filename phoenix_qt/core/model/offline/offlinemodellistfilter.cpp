@@ -40,6 +40,15 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     }
 }
 
+OfflineModel* OfflineModelListFilter::at(int index){
+    if (index < 0 || index >= rowCount())
+        return nullptr;
+
+    QModelIndex modelIndex = this->index(index, 0);
+    QModelIndex sourceIndex = mapToSource(modelIndex);
+    return sourceModel()->data(sourceIndex, OfflineModelList::OfflineModelRoles::ModelObjectRole).value<OfflineModel*>();
+}
+
 const QString &OfflineModelListFilter::searchTerm() const{return m_searchTerm;}
 void OfflineModelListFilter::setSearchTerm(const QString &newSearchTerm){
     if (m_searchTerm == newSearchTerm)

@@ -33,8 +33,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->name();
     case InformationRole:
         return model->information();
-    case IconModelRole:
-        return model->icon();
+    case CompanyRole:
+        return QVariant::fromValue(m_models[index.row()]->company());
     case IsLikeRole:
         return model->isLike();
     case AddModelTimeRole:
@@ -51,6 +51,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->downloadFinished();
     case IsDownloadingRole:
         return model->isDownloading();
+    case ModelObjectRole:
+        return QVariant::fromValue(m_models[index.row()]);
     default:
         return QVariant();
     }
@@ -61,7 +63,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[IdRole] = "id";
     roles[NameRole] = "name";
     roles[InformationRole] = "information";
-    roles[IconModelRole] = "icon";
+    roles[CompanyRole] = "company";
     roles[IsLikeRole] = "isLike";
     roles[AddModelTimeRole] = "addModelTime";
     roles[FileSizeRole] = "fileSize";
@@ -70,6 +72,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[QuantRole] = "quant";
     roles[DownloadFinishedRole] = "downloadFinished";
     roles[IsDownloadingRole] = "isDownloading";
+    roles[ModelObjectRole] = "modelObject";
     return roles;
 }
 
@@ -103,10 +106,4 @@ void OfflineModelList::setModelList(QList<OfflineModel*> models){
     m_models = models;
     endResetModel();
     emit countChanged();
-}
-
-bool OfflineModelList::containsId(int id) const {
-    return std::any_of(m_models.begin(), m_models.end(), [id](const OfflineModel* model) {
-        return model->id() == id;
-    });
 }

@@ -44,11 +44,9 @@ Item {
            height: gridView.cellHeight
            color: "#00ffffff"
 
-           Component.onCompleted: console.log("Model Data:", offlineModelListFilter.get(index))
-
            OfflineDelegate {
                id: indoxItem
-               model: /*offlineModelListFilter.at(index)*/ offlineModelListFilter.get(index)
+               model: offlineModelListFilter.at(index)
                anchors.fill: parent; anchors.margins: indoxItem.hovered? 18: 20
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }

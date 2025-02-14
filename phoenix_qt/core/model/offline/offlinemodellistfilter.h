@@ -4,6 +4,8 @@
 #include <QSortFilterProxyModel>
 #include "../company.h"
 #include "../companylist.h"
+#include "./offlinemodel.h"
+#include "./offlinemodellist.h"
 
 class OfflineModelListFilter: public QSortFilterProxyModel
 {
@@ -23,7 +25,7 @@ public:
     };
     Q_ENUM(FilterType)
 
-    Q_INVOKABLE User* get(int index);
+    Q_INVOKABLE OfflineModel* at(int index);
 
     const QString &searchTerm() const;
     void setSearchTerm(const QString &newSearchTerm);
