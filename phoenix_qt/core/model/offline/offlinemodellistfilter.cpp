@@ -47,6 +47,19 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     }
 }
 
+void OfflineModelListFilter::filter(QString filter){
+    if(filter == "All")
+        setFilterType(FilterType::All);
+    if(filter == "Company")
+        setFilterType(FilterType::Company);
+    if(filter == "DownloadFinished")
+        setFilterType(FilterType::DownloadFinished);
+    if(filter == "Favorite")
+        setFilterType(FilterType::Favorite);
+    if(filter == "IsDownloading")
+        setFilterType(FilterType::IsDownloading);
+}
+
 int OfflineModelListFilter::companyId() const{return m_companyId;}
 void OfflineModelListFilter::setCompanyId(int companyId){
     if (m_companyId == companyId)

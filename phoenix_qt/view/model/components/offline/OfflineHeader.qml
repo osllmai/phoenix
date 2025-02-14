@@ -37,6 +37,32 @@ Item{
             Item{
                 width: parent.width - searchBoxId.width - 30
                 height: parent.height
+                // Row{
+                //     anchors.right: companyList.left
+                //     MyButton {
+                //         id: allId
+                //         myText: "All"
+                //         // myIcon: "qrc:/media/image_company/" + model.icon
+                //         bottonType: Style.RoleEnum.BottonType.Feature
+                //         iconType: Style.RoleEnum.IconType.FeatureBlue
+                //         isNeedAnimation: true
+                //         onClicked:{
+                //             offlineModelListFilter.filterType = offlineModelListFilter.Favorite
+                //         }
+                //     }
+                //     MyButton {
+                //         id: favoriteId
+                //         myText: "Favorite"
+                //         // myIcon: "qrc:/media/image_company/" + model.icon
+                //         bottonType: Style.RoleEnum.BottonType.Feature
+                //         iconType: Style.RoleEnum.IconType.FeatureBlue
+                //         isNeedAnimation: true
+                //         onClicked:{
+                //             offlineModelListFilter.filterType = offlineModelListFilter.Favorite
+                //         }
+                //     }
+                // }
+
                 ListView{
                     id: companyList
                     anchors.fill: parent
@@ -59,6 +85,31 @@ Item{
                             offlineModelListFilter.companyId = model.id
                         }
                     }
+
+                    footer: Row {
+                            spacing: 10
+                            MyButton {
+                                id: allId
+                                myText: "All"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureBlue
+                                isNeedAnimation: true
+                                onClicked: {
+                                    offlineModelListFilter.filter("All")
+                                }
+                            }
+
+                            MyButton {
+                                id: favoriteId
+                                myText: "Favorite"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureBlue
+                                isNeedAnimation: true
+                                onClicked: {
+                                    offlineModelListFilter.filter("Favorite")
+                                }
+                            }
+                        }
                 }
             }
         }
