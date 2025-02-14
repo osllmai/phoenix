@@ -10,11 +10,10 @@
 class OfflineModelListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged FINAL)
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
     Q_PROPERTY(Company *company READ company WRITE setCompany NOTIFY companyChanged FINAL)
 public:
-    explicit OfflineModelListFilter(QObject *parent);
+    explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent);
 
     enum class FilterType {
         IsDownloading,
@@ -24,11 +23,6 @@ public:
         All
     };
     Q_ENUM(FilterType)
-
-    Q_INVOKABLE OfflineModel* at(int index);
-
-    const QString &searchTerm() const;
-    void setSearchTerm(const QString &newSearchTerm);
 
     FilterType filterType() const;
     void setFilterType(FilterType newFilterType);
@@ -40,12 +34,10 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 signals:
-    void searchTermChanged();
     void filterTypeChanged();
     void companyChanged();
 
 private:
-    QString m_searchTerm;
     FilterType m_filterType;
     Company *m_company;
 };

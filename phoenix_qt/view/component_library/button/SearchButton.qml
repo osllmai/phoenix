@@ -10,7 +10,7 @@ Rectangle{
     clip: true
     property bool isTextAreaVisible: true
 
-    signal search()
+    signal search(var text)
     Row{
         anchors.fill: parent
         ToolButton {
@@ -41,6 +41,7 @@ Rectangle{
             font.pointSize: 10
             wrapMode: TextEdit.NoWrap
             background: null
+            onTextChanged: control.search(textArea.text)
         }
     }
     // Behavior on width{NumberAnimation{duration: 200}}

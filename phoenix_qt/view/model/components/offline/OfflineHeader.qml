@@ -28,8 +28,9 @@ Item{
                 id: searchBoxId
                 Connections{
                     target: searchBoxId
-                    function onSearch(mytext){
-                        headerId.search(mytext)
+                    function onSearch(myText){
+                        console.log(myText)
+                        offlineModelListFilter.setFilterFixedString(myText)
                     }
                 }
             }

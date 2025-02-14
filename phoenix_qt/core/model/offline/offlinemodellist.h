@@ -45,8 +45,6 @@ public:
 
     Q_INVOKABLE OfflineModel* at(int index) const;
 
-    // bool containsId(int id) const;
-
 public slots:
     void setModelList(QList<OfflineModel*> models);
 

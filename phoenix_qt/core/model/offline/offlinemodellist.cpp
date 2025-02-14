@@ -11,7 +11,7 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
     return m_instance;
 }
 
-OfflineModelList::OfflineModelList(QObject* parent) {}
+OfflineModelList::OfflineModelList(QObject* parent): QAbstractListModel(parent) {}
 
 int OfflineModelList::count() const{return m_models.count();}
 

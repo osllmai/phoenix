@@ -51,11 +51,11 @@ int main(int argc, char *argv[])
     OfflineModelList* offlineModelList = OfflineModelList::instance(&engine);
     OnlineModelList* onlineModelList = OnlineModelList::instance(&engine);
 
-    OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(&engine);
+    OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
     OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(&engine);
-    offlineModelListFilter->setSourceModel(offlineModelList);
-    onlineModelListFilter->setSourceModel(onlineModelList);
-    engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelList);
+    // offlineModelListFilter->setSourceModel(offlineModelList);
+    // onlineModelListFilter->setSourceModel(onlineModelList);
+    engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
     engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
 
     QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);

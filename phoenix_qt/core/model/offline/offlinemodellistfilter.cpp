@@ -1,62 +1,60 @@
 #include "offlinemodellistfilter.h"
 #include "offlinemodellist.h"
 
-OfflineModelListFilter::OfflineModelListFilter(QObject *parent)
-    :m_searchTerm(""), QSortFilterProxyModel(parent)
-{}
+OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObject *parent): QSortFilterProxyModel(parent), m_filterType(FilterType::All){
+    QSortFilterProxyModel::setSourceModel(models);
+
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
+
+    setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
+    sort(0, Qt::AscendingOrder);
+}
+
 
 bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
 
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
-    QString name = sourceModel()->data(index, OfflineModelList::NameRole).toString();
-    bool isLikeModel = sourceModel()->data(index, OfflineModelList::IsLikeRole).toBool();
-    bool isDownloading = sourceModel()->data(index, OfflineModelList::IsDownloadingRole).toBool();
-    bool downloadFinished = sourceModel()->data(index, OfflineModelList::DownloadFinishedRole).toBool();
+    if (!index.isValid())
+        return false;
 
-    // auto company = sourceModel()->at(index);
+    QString name = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::NameRole).toString();
+    bool isLikeModel = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsLikeRole).toBool();
+    bool isDownloading = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsDownloadingRole).toBool();
+    bool downloadFinished = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::DownloadFinishedRole).toBool();
+
+    QVariant modelVariant = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::ModelObjectRole);
+    OfflineModel* model = modelVariant.value<OfflineModel*>();
+
+    if (!model) return false;
+
+    QRegularExpression filterExp = filterRegularExpression();
+    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch();
 
     switch (m_filterType) {
     case FilterType::All:
-        if(!m_searchTerm.isEmpty() && !name.contains(m_searchTerm))
-            return false;
-        return true;
+        return matchesFilter;
     case FilterType::Company:
-        if(!m_searchTerm.isEmpty() && !name.contains(m_searchTerm))
-            return false;
-        // return company->id() == m_company->id();
-        return true;
+        return matchesFilter && m_company && model->company() && model->company()->id() == m_company->id();;
     case FilterType::DownloadFinished:
-        if(!m_searchTerm.isEmpty() && !name.contains(m_searchTerm))
-            return false;
-        return downloadFinished;
+        return matchesFilter && downloadFinished;
     case FilterType::Favorite:
-        if(!m_searchTerm.isEmpty() && !name.contains(m_searchTerm))
-            return false;
-        return isLikeModel;
+        return matchesFilter && isLikeModel;
     case FilterType::IsDownloading:
-        return isDownloading;
+        return matchesFilter && isDownloading;
     default:
         return true;
     }
 }
 
-OfflineModel* OfflineModelListFilter::at(int index){
-    if (index < 0 || index >= rowCount())
-        return nullptr;
-
-    QModelIndex modelIndex = this->index(index, 0);
-    QModelIndex sourceIndex = mapToSource(modelIndex);
-    return sourceModel()->data(sourceIndex, OfflineModelList::OfflineModelRoles::ModelObjectRole).value<OfflineModel*>();
-}
-
-const QString &OfflineModelListFilter::searchTerm() const{return m_searchTerm;}
-void OfflineModelListFilter::setSearchTerm(const QString &newSearchTerm){
-    if (m_searchTerm == newSearchTerm)
-        return;
-    m_searchTerm = newSearchTerm;
-    invalidateFilter();
-    emit searchTermChanged();
-}
+// const QString &OfflineModelListFilter::searchTerm() const{return m_searchTerm;}
+// void OfflineModelListFilter::setSearchTerm(const QString &newSearchTerm){
+//     if (m_searchTerm == newSearchTerm)
+//         return;
+//     m_searchTerm = newSearchTerm;
+//     invalidateFilter();
+//     emit searchTermChanged();
+// }
 
 Company *OfflineModelListFilter::company() const{return m_company;}
 void OfflineModelListFilter::setCompany(Company *newCompany){
