@@ -101,9 +101,22 @@ OfflineModel* OfflineModelList::at(int index) const{
     return m_models.at(index);
 }
 
-void OfflineModelList::setModelList(QList<OfflineModel*> models){
-    beginResetModel();
-    m_models = models;
-    endResetModel();
-    emit countChanged();
+void OfflineModelList::addModel(const double fileSize, const int ramRamrequired, const QString& fileName,
+              const QString& url, const QString& parameters, const QString& quant, const double downloadPercent,
+              const bool isDownloading, const bool downloadFinished,
+
+              const int id, const QString& name, const QString& key, QDateTime addModelTime,
+              const bool isLike, Company* company, const BackendType backend,
+              const QString& icon , const QString& information , const QString& promptTemplate ,
+              const QString& systemPrompt, QDateTime expireModelTime)
+{
+    const int index = m_models.size();
+    beginInsertRows(QModelIndex(), index, index);
+    m_models.append(new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
+                                   quant, downloadPercent, isDownloading, downloadFinished,
+
+                                   id, name, key, addModelTime, isLike, company,backend, icon, information,
+                                   promptTemplate, systemPrompt, expireModelTime, m_instance));
+    endInsertRows();
 }
+

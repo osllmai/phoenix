@@ -38,10 +38,15 @@ public:
 
     Q_INVOKABLE OnlineModel* at(int index) const;
 
-    bool containsId(int id) const;
-
 public slots:
-    void setModelList(QList<OnlineModel*> models);
+    void addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                  const bool isLike, Company* company, const BackendType backend,
+                  const QString& icon , const QString& information , const QString& promptTemplate ,
+                  const QString& systemPrompt, QDateTime expireModelTime,
+
+                  const QString& type, const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+                  const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                  const QString& output, const QString& comments, const bool installModel);
 
 signals:
     void countChanged();

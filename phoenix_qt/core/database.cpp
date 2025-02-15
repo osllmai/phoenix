@@ -1,9 +1,9 @@
 #include "database.h"
 
 Database::Database(QObject* parent): QObject{nullptr}{
-    // moveToThread(&m_dbThread);
-    // m_dbThread.setObjectName("database");
-    // m_dbThread.start();
+    moveToThread(&m_dbThread);
+    m_dbThread.setObjectName("database");
+    m_dbThread.start();
 
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("./db_phoenix.db");
@@ -120,9 +120,10 @@ const QString Database::DELETE_MODEL_SQL = QLatin1String(R"(
 
 void Database::readModel(const QList<Company*> companys){
 
-    QList<OfflineModel*> tempOfflineModel;
-    QList<OnlineModel*> tempOnlineModel;
+    // QList<OfflineModel*> tempOfflineModel;
+    // QList<OnlineModel*> tempOnlineModel;
     int i=0;
+    QList<int> allID;
 
     for (Company* company : companys){
 
@@ -179,16 +180,17 @@ void Database::readModel(const QList<Company*> companys){
                     isLike = query.value(4).toBool();
                 }
 
-                OfflineModel *model = new OfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
-                                                       obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
-                                                       obj["quant"].toString(),0.0, false, false,
+                emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
+                                   obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
+                                   obj["quant"].toString(),0.0, false, false,
 
-                                                       id, name, key, addDate, isLike, company,
-                                                       BackendType::OfflineModel,
-                                                       company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
-                                                       obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr);
+                                   id, name, key, addDate, isLike, company,
+                                   BackendType::OfflineModel,
+                                   company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
+                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime()/*, nullptr*/);
 
-                tempOfflineModel.append(model);
+                allID.append(id);
+                // tempOfflineModel.append(model);
             }
         }else{
             for (const QJsonValue &value : jsonArray) {
@@ -196,18 +198,17 @@ void Database::readModel(const QList<Company*> companys){
 
                 QJsonObject obj = value.toObject();
 
-                OnlineModel *model = new OnlineModel(i++, obj["name"].toString(), "", QDateTime::currentDateTime(),
-                                                    true, company, BackendType::OnlineModel, company->icon(),
-                                                    obj["description"].toString(), obj["promptTemplate"].toString(),
-                                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), nullptr,
+                emit addOnlineModel(i++, obj["name"].toString(), "", QDateTime::currentDateTime(),
+                                    true, company, BackendType::OnlineModel, company->icon(),
+                                    obj["description"].toString(), obj["promptTemplate"].toString(),
+                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), /*nullptr,*/
 
-                                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
-                                                     obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
-                                                     obj["recommended"].toBool(), obj["commercial"].toBool(),
-                                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),
-                                                     false);
+                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
+                                     obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
+                                     obj["recommended"].toBool(), obj["commercial"].toBool(),
+                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),false);
 
-                tempOnlineModel.append(model);
+                // allID.append(id);
             }
         }
     }
@@ -218,14 +219,8 @@ void Database::readModel(const QList<Company*> companys){
     if (query.exec()){
         while(query.next()) {
             bool findIndex = false;
-            for(OfflineModel* offlineModel : tempOfflineModel){
-                if(offlineModel->name() == query.value(1).toString()){
-                    findIndex = true;
-                    break;
-                }
-            }
-            for(OnlineModel* onlineModel : tempOnlineModel){
-                if(onlineModel->name() == query.value(1).toString() || findIndex == true){
+            for(int id : allID){
+                if(id == query.value(0).toInt()){
                     findIndex = true;
                     break;
                 }
@@ -237,20 +232,17 @@ void Database::readModel(const QList<Company*> companys){
                 QString key = query.value(2).toString();
                 QDateTime addDate = query.value(3).toDateTime();
                 bool isLike = query.value(4).toBool();
-                OfflineModel *model = new OfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
-                                                   id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
-                                                   "", "", "","", QDateTime::currentDateTime(), nullptr);
+
 
                 QFile file(key);
-                if (!file.exists())
+                if (!file.exists()){
                     deleteModel(id);
-                else
-                    tempOfflineModel.append(model);
+                }else
+                    emit addOfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
+                                         id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                         "", "", "","", QDateTime::currentDateTime()/*, nullptr*/);
             }
         }
     }
-
-    emit setOnlineModelList(tempOnlineModel);
-    emit setOfflineModelList(tempOfflineModel);
 
 }

@@ -29,8 +29,23 @@ public slots:
     QSqlError updateIsLikeModel(const int id, const bool isLike);
 
 signals:
-    void setOnlineModelList(QList<OnlineModel*> models);
-    void setOfflineModelList(QList<OfflineModel*> models);
+    void addOnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                        const bool isLike, Company* company, const BackendType backend,
+                        const QString& icon , const QString& information , const QString& promptTemplate ,
+                        const QString& systemPrompt, QDateTime expireModelTime,
+
+                        const QString& type, const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+                        const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                        const QString& output, const QString& comments, const bool installModel);
+
+    void addOfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+                         const QString& parameters, const QString& quant, const double downloadPercent,
+                         const bool isDownloading, const bool downloadFinished,
+
+                         const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                         const bool isLike, Company* company, const BackendType backend,
+                         const QString& icon , const QString& information , const QString& promptTemplate ,
+                         const QString& systemPrompt, QDateTime expireModelTime);
 
 private:
     static Database* m_instance;

@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
 
     QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
-    QObject::connect(database, &Database::setOnlineModelList, onlineModelList, &OnlineModelList::setModelList, Qt::QueuedConnection);
-    QObject::connect(database, &Database::setOfflineModelList, offlineModelList, &OfflineModelList::setModelList, Qt::QueuedConnection);
+    QObject::connect(database, &Database::addOnlineModel, onlineModelList, &OnlineModelList::addModel, Qt::QueuedConnection);
+    QObject::connect(database, &Database::addOfflineModel, offlineModelList, &OfflineModelList::addModel, Qt::QueuedConnection);
 
     QObject::connect(
         &engine,

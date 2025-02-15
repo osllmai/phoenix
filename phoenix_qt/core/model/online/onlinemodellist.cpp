@@ -95,15 +95,21 @@ OnlineModel* OnlineModelList::at(int index) const{
     return m_models.at(index);
 }
 
-void OnlineModelList::setModelList(QList<OnlineModel*> models){
-    beginResetModel();
-    m_models = models;
-    endResetModel();
-    emit countChanged();
-}
+void OnlineModelList::addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+              const bool isLike, Company* company, const BackendType backend,
+              const QString& icon , const QString& information , const QString& promptTemplate ,
+              const QString& systemPrompt, QDateTime expireModelTime,
 
-bool OnlineModelList::containsId(int id) const {
-    return std::any_of(m_models.begin(), m_models.end(), [id](const OnlineModel* model) {
-        return model->id() == id;
-    });
+              const QString& type, const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+              const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+              const QString& output, const QString& comments, const bool installModel)
+{
+    const int index = m_models.size();
+    beginInsertRows(QModelIndex(), index, index);
+    m_models.append(new OnlineModel(id, name, key, addModelTime, isLike, company, backend, icon,
+                                  information, promptTemplate, systemPrompt, expireModelTime, m_instance,
+
+                                  type, inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
+                                  recommended, commercial, pricey, output, comments, installModel));
+    endInsertRows();
 }

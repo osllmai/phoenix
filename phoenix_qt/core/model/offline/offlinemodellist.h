@@ -46,7 +46,15 @@ public:
     Q_INVOKABLE OfflineModel* at(int index) const;
 
 public slots:
-    void setModelList(QList<OfflineModel*> models);
+    // void setModelList(QList<OfflineModel*> models);
+    void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+                  const QString& parameters, const QString& quant, const double downloadPercent,
+                  const bool isDownloading, const bool downloadFinished,
+
+                  const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                  const bool isLike, Company* company, const BackendType backend,
+                  const QString& icon , const QString& information , const QString& promptTemplate ,
+                  const QString& systemPrompt, QDateTime expireModelTime/*, QObject* parent*/);
 
 signals:
     void countChanged();
