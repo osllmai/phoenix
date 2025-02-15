@@ -112,4 +112,5 @@ void OnlineModelList::addModel(const int id, const QString& name, const QString&
                                   type, inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
                                   recommended, commercial, pricey, output, comments, installModel));
     endInsertRows();
+    emit countChanged();
 }

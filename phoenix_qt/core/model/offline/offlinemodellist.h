@@ -44,9 +44,13 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE OfflineModel* at(int index) const;
+    Q_INVOKABLE void likeRequest(const int id, const bool isLike);
+    Q_INVOKABLE void downloadRequest(const int index, QString directoryPath);
+    Q_INVOKABLE void cancelRequest(const int index);
+    Q_INVOKABLE void deleteRequest(const int index);
+    Q_INVOKABLE void addRequest(QString directoryPath);
 
 public slots:
-    // void setModelList(QList<OfflineModel*> models);
     void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
                   const bool isDownloading, const bool downloadFinished,
@@ -54,10 +58,12 @@ public slots:
                   const int id, const QString& name, const QString& key, QDateTime addModelTime,
                   const bool isLike, Company* company, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime/*, QObject* parent*/);
+                  const QString& systemPrompt, QDateTime expireModelTime);
 
 signals:
     void countChanged();
+    void requestUpdateKeyModel(const int id, const QString &key);
+    void requestUpdateIsLikeModel(const int id, const bool isLike);
 
 private:
     explicit OfflineModelList(QObject* parent);

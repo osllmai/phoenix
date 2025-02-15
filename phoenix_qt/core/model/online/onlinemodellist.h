@@ -50,6 +50,8 @@ public slots:
 
 signals:
     void countChanged();
+    void requestUpdateKeyModel(const int id, const QString &key);
+    void requestUpdateIsLikeModel(const int id, const bool isLike);
 
 private:
     QList<OnlineModel*> m_models;

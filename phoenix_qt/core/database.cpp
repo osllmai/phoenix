@@ -120,8 +120,6 @@ const QString Database::DELETE_MODEL_SQL = QLatin1String(R"(
 
 void Database::readModel(const QList<Company*> companys){
 
-    // QList<OfflineModel*> tempOfflineModel;
-    // QList<OnlineModel*> tempOnlineModel;
     int i=0;
     QList<int> allID;
 
@@ -190,7 +188,6 @@ void Database::readModel(const QList<Company*> companys){
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime()/*, nullptr*/);
 
                 allID.append(id);
-                // tempOfflineModel.append(model);
             }
         }else{
             for (const QJsonValue &value : jsonArray) {
@@ -208,7 +205,6 @@ void Database::readModel(const QList<Company*> companys){
                                      obj["recommended"].toBool(), obj["commercial"].toBool(),
                                      obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),false);
 
-                // allID.append(id);
             }
         }
     }
@@ -239,8 +235,8 @@ void Database::readModel(const QList<Company*> companys){
                     deleteModel(id);
                 }else
                     emit addOfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
-                                         id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
-                                         "", "", "","", QDateTime::currentDateTime()/*, nullptr*/);
+                             id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                             "", "", "","", QDateTime::currentDateTime());
             }
         }
     }

@@ -382,7 +382,7 @@ T.Button {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Hover)
-                width: control.isNeedAnimation? control.width: parent.width-3; height: control.isNeedAnimation? control.height: control.height-3
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
@@ -396,7 +396,7 @@ T.Button {
                 target: backgroundId
                 color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Pressed)
-                width: control.isNeedAnimation? control.width: parent.width-3; height: control.isNeedAnimation? control.height: control.height-3
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId

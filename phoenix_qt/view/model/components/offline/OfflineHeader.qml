@@ -37,31 +37,6 @@ Item{
             Item{
                 width: parent.width - searchBoxId.width - 30
                 height: parent.height
-                // Row{
-                //     anchors.right: companyList.left
-                //     MyButton {
-                //         id: allId
-                //         myText: "All"
-                //         // myIcon: "qrc:/media/image_company/" + model.icon
-                //         bottonType: Style.RoleEnum.BottonType.Feature
-                //         iconType: Style.RoleEnum.IconType.FeatureBlue
-                //         isNeedAnimation: true
-                //         onClicked:{
-                //             offlineModelListFilter.filterType = offlineModelListFilter.Favorite
-                //         }
-                //     }
-                //     MyButton {
-                //         id: favoriteId
-                //         myText: "Favorite"
-                //         // myIcon: "qrc:/media/image_company/" + model.icon
-                //         bottonType: Style.RoleEnum.BottonType.Feature
-                //         iconType: Style.RoleEnum.IconType.FeatureBlue
-                //         isNeedAnimation: true
-                //         onClicked:{
-                //             offlineModelListFilter.filterType = offlineModelListFilter.Favorite
-                //         }
-                //     }
-                // }
 
                 ListView{
                     id: companyList

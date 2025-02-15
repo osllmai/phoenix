@@ -101,14 +101,34 @@ OfflineModel* OfflineModelList::at(int index) const{
     return m_models.at(index);
 }
 
-void OfflineModelList::addModel(const double fileSize, const int ramRamrequired, const QString& fileName,
-              const QString& url, const QString& parameters, const QString& quant, const double downloadPercent,
-              const bool isDownloading, const bool downloadFinished,
+void OfflineModelList::likeRequest(const int id, const bool isLike){
+    emit requestUpdateIsLikeModel(id, isLike);
+}
 
-              const int id, const QString& name, const QString& key, QDateTime addModelTime,
-              const bool isLike, Company* company, const BackendType backend,
-              const QString& icon , const QString& information , const QString& promptTemplate ,
-              const QString& systemPrompt, QDateTime expireModelTime)
+void OfflineModelList::downloadRequest(const int index, QString directoryPath){
+
+}
+
+void OfflineModelList::cancelRequest(const int index){
+
+}
+
+void OfflineModelList::deleteRequest(const int index){
+
+}
+
+void OfflineModelList::addRequest(QString directoryPath){
+
+}
+
+void OfflineModelList::addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+                                const QString& parameters, const QString& quant, const double downloadPercent,
+                                const bool isDownloading, const bool downloadFinished,
+
+                                const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                                const bool isLike, Company* company, const BackendType backend,
+                                const QString& icon , const QString& information , const QString& promptTemplate ,
+                                const QString& systemPrompt, QDateTime expireModelTime)
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
@@ -118,5 +138,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                    id, name, key, addModelTime, isLike, company,backend, icon, information,
                                    promptTemplate, systemPrompt, expireModelTime, m_instance));
     endInsertRows();
+    emit countChanged();
 }
+
 

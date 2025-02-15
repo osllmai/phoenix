@@ -57,14 +57,15 @@ T.Button {
                     font.pixelSize: 14
                     font.styleName: "Bold"
                 }
-                ToolButton {
+                MyIcon{
                     id: likeIconId
-                    background: null
+                    myIcon: model.isLike? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    icon{
-                        source: model.isLike? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
-                        color: Style.Colors.like
-                        width:20; height:20
+                    iconType: Style.RoleEnum.IconType.Like
+                    isNeedAnimation: true
+                    onClicked: {
+                        model.isLike = !model.isLike
+                        offlineModelList.likeRequest(model.id, model.isLike)
                     }
                 }
             }

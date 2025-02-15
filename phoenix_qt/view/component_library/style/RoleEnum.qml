@@ -21,7 +21,8 @@ QtObject {
         FeatureOrange,
         FeatureMagenta,
         FeatureYellow,
-        FeatureGreen
+        FeatureGreen,
+        Like
     }
 
     enum State{
