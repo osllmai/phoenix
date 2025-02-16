@@ -74,6 +74,7 @@ T.Button {
             }
             MyIcon {
                 id: iconId
+                width: 30; height: 30
                 visible: control.myIcon != "" && control.iconType != Style.RoleEnum.IconType.Image && control.iconType != Style.RoleEnum.IconType.Primary
                 myIcon: control.myIcon
                 iconType: control.iconType

@@ -12,7 +12,7 @@ ToolButton {
 
     background: Rectangle{
         id: backgroundId
-        width: parent.width-3; height: parent.height-3
+        width: parent.width-6; height: parent.height-3
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.margins: 2

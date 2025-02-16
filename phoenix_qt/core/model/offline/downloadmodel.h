@@ -12,6 +12,7 @@
 class DownloadModel : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString modelPath READ modelPath CONSTANT FINAL)
     Q_PROPERTY(bool downloadFinished READ downloadFinished WRITE setDownloadFinished NOTIFY downloadFinishedChanged FINAL)
     Q_PROPERTY(qint64 bytesTotal READ bytesTotal WRITE setBytesTotal NOTIFY bytesTotalChanged FINAL)
     Q_PROPERTY(qint64 bytesReceived READ bytesReceived WRITE setBytesReceived NOTIFY bytesReceivedChanged FINAL)
@@ -19,9 +20,6 @@ class DownloadModel : public QObject
 public:
     explicit DownloadModel(const QString &url, const QString &modelPath, QObject *parent);
     virtual ~DownloadModel();
-    void start();
-    void cancel();
-    void remove();
 
     const bool downloadFinished() const;
     void setDownloadFinished(const bool newDownloadFinished);
@@ -32,12 +30,15 @@ public:
     const qint64 bytesReceived() const;
     void setBytesReceived(const qint64 newBytesReceived);
 
+    QString modelPath() const;
+
 signals:
     void downloadFinishedChanged();
-    void bytesTotalChanged();
-    void bytesReceivedChanged();
+    void bytesReceivedChanged(qint64 bytesReceived);
+    void bytesTotalChanged(qint64 bytesTotal);
 
-private slots:
+public slots:
+    void handleDownloadCancel();
     void handleDownloadFinished();
     void handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 

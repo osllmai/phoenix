@@ -5,6 +5,7 @@
 #include <QtQml>
 
 #include "../model.h"
+#include "downloadmodel.h"
 
 class OfflineModel: public Model
 {
@@ -18,6 +19,8 @@ class OfflineModel: public Model
     Q_PROPERTY(double downloadPercent READ downloadPercent WRITE setDownloadPercent NOTIFY downloadPercentChanged FINAL)
     Q_PROPERTY(bool isDownloading READ isDownloading WRITE setIsDownloading NOTIFY isDownloadingChanged FINAL)
     Q_PROPERTY(bool downloadFinished READ downloadFinished WRITE setDownloadFinished NOTIFY downloadFinishedChanged FINAL)
+    Q_PROPERTY(qint64 bytesReceived READ bytesReceived WRITE setBytesReceived NOTIFY bytesReceivedChanged FINAL)
+    Q_PROPERTY(qint64 bytesTotal READ bytesTotal WRITE setBytesTotal NOTIFY bytesTotalChanged FINAL)
 
 public:
     explicit OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
@@ -29,6 +32,11 @@ public:
                           const QString& icon , const QString& information , const QString& promptTemplate ,
                           const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
     virtual ~OfflineModel();
+
+    Q_INVOKABLE void startDownload(QString &directoryPath);
+    Q_INVOKABLE void cancelDownload();
+    Q_INVOKABLE void removeDownload();
+    Q_INVOKABLE void addModel(QString &directoryPath);
 
     const double fileSize() const;
 
@@ -51,10 +59,24 @@ public:
     const bool downloadFinished() const;
     void setDownloadFinished(const bool downloadFinished);
 
+    qint64 bytesReceived() const;
+    void setBytesReceived(qint64 newBytesReceived);
+
+    qint64 bytesTotal() const;
+    void setBytesTotal(qint64 newBytesTotal);
+
 signals:
     void downloadPercentChanged(double downloadPercent);
     void isDownloadingChanged(bool isDownloading);
     void downloadFinishedChanged(bool downloadFinished);
+    void bytesReceivedChanged();
+    void bytesTotalChanged();
+    void cancelRequest();
+
+public slots:
+    void handleDownloadFinished();
+    void handleBytesReceived(qint64 bytesReceived);
+    void handleBytesTotal(qint64 bytesTotal);
 
 private:
     double m_fileSize;
@@ -66,6 +88,9 @@ private:
     double m_downloadPercent;
     bool m_isDownloading;
     bool m_downloadFinished;
+    DownloadModel *m_download;
+    qint64 m_bytesReceived;
+    qint64 m_bytesTotal;
 };
 
 #endif // OFFLINEMODEL_H
