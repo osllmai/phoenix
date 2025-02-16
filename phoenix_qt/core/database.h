@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QThread>
 
 #include "./model/offline/offlinemodel.h"
 #include "./model/online/onlinemodel.h"

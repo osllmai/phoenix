@@ -64,8 +64,8 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Like
                     isNeedAnimation: true
                     onClicked: {
+                        offlineModelList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
-                        offlineModelList.likeRequest(model.id, model.isLike)
                     }
                 }
             }
