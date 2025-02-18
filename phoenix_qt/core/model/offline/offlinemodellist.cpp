@@ -51,6 +51,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->downloadFinished();
     case IsDownloadingRole:
         return model->isDownloading();
+    case DownloadPercentRole:
+        return model->downloadPercent();
     case ModelObjectRole:
         return QVariant::fromValue(m_models[index.row()]);
     default:
@@ -72,6 +74,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[QuantRole] = "quant";
     roles[DownloadFinishedRole] = "downloadFinished";
     roles[IsDownloadingRole] = "isDownloading";
+    roles[DownloadPercentRole] = "downloadPercent";
     roles[ModelObjectRole] = "modelObject";
     return roles;
 }
@@ -108,19 +111,27 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
 void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     OfflineModel* offlineModel = findModelById(id);
     if(offlineModel == nullptr) return;
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - downloadRequest";
     offlineModel->startDownload(directoryPath);
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - downloadRequest";
+
 }
 
 void OfflineModelList::cancelRequest(const int id){
     OfflineModel* offlineModel = findModelById(id);
     if(offlineModel == nullptr) return;
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - cancelRequest";
     offlineModel->cancelDownload();
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - cancelRequest";
+
 }
 
 void OfflineModelList::deleteRequest(const int id){
     OfflineModel* offlineModel = findModelById(id);
     if(offlineModel == nullptr) return;
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - deleteRequest";
     offlineModel->removeDownload();
+    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - deleteRequest";
 }
 
 void OfflineModelList::addRequest(QString directoryPath){

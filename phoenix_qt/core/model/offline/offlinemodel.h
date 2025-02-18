@@ -92,7 +92,7 @@ private:
     double m_downloadPercent;
     bool m_isDownloading;
     bool m_downloadFinished;
-    DownloadModel *m_download;
+    DownloadModel *m_download = nullptr;
     qint64 m_bytesReceived;
     qint64 m_bytesTotal;
 };

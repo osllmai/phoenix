@@ -13,17 +13,7 @@ OfflineModel::OfflineModel(const double fileSize, const int ramRamrequired, cons
     m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
     m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent),
     m_isDownloading(isDownloading), m_downloadFinished(downloadFinished)
-{
-    connect(this, &OfflineModel::isDownloadingChanged, [this]() {
-        emit  modelChanged();
-    });
-    connect(this, &OfflineModel::downloadFinishedChanged, [this]() {
-        emit  modelChanged();
-    });
-    connect(this, &OfflineModel::bytesReceivedChanged, [this]() {
-        emit  modelChanged();
-    });
-}
+{}
 
 OfflineModel::~OfflineModel(){}
 
@@ -37,12 +27,17 @@ void OfflineModel::startDownload(QString &directoryPath){
     setIsDownloading(true);
     setDownloadFinished(false);
 
+    if(m_download !=nullptr){
+        delete m_download;
+        m_download = nullptr;
+    }
     m_download = new DownloadModel( m_url, directoryPath, this);
 
     connect(this, &OfflineModel::cancelRequest, m_download, &DownloadModel::handleDownloadCancel, Qt::QueuedConnection);
     connect(m_download, &DownloadModel::downloadFinishedChanged, this, &OfflineModel::handleDownloadFinished, Qt::QueuedConnection);
     connect(m_download, &DownloadModel::bytesReceivedChanged, this, &OfflineModel::handleBytesReceived, Qt::QueuedConnection);
     connect(m_download, &DownloadModel::bytesTotalChanged, this, &OfflineModel::handleBytesTotal, Qt::QueuedConnection);
+    emit  modelChanged();
 }
 
 void OfflineModel::cancelDownload(){
@@ -54,7 +49,7 @@ void OfflineModel::cancelDownload(){
     disconnect(m_download, &DownloadModel::downloadFinishedChanged, this, &OfflineModel::handleDownloadFinished);
     disconnect(m_download, &DownloadModel::bytesReceivedChanged, this, &OfflineModel::handleBytesReceived);
     disconnect(m_download, &DownloadModel::bytesTotalChanged, this, &OfflineModel::handleBytesTotal);
-    delete m_download;
+    emit  modelChanged();
 }
 
 void OfflineModel::removeDownload(){
@@ -65,6 +60,7 @@ void OfflineModel::removeDownload(){
     if (file.exists()){
         file.remove();
     }
+    emit  modelChanged();
 }
 
 void OfflineModel::addModel(QString &directoryPath){}
@@ -112,9 +108,9 @@ void OfflineModel::handleDownloadFinished(){
     disconnect(m_download, &DownloadModel::downloadFinishedChanged, this, &OfflineModel::handleDownloadFinished);
     disconnect(m_download, &DownloadModel::bytesReceivedChanged, this, &OfflineModel::handleBytesReceived);
     disconnect(m_download, &DownloadModel::bytesTotalChanged, this, &OfflineModel::handleBytesTotal);
-    delete m_download;
     setIsDownloading(false);
     setDownloadFinished(true);
+    emit  modelChanged();
 }
 
 qint64 OfflineModel::bytesReceived() const{return m_bytesReceived;}
@@ -123,6 +119,14 @@ void OfflineModel::setBytesReceived(const qint64 newBytesReceived){
         return;
     m_bytesReceived = newBytesReceived;
     emit bytesReceivedChanged();
+
+    double downloadPercent = 0;
+    if(m_bytesTotal != 0)
+        downloadPercent = (static_cast<double>(m_bytesReceived) / static_cast<double>(m_bytesTotal)) * 100;
+    setDownloadPercent(downloadPercent);
+    qInfo()<< downloadPercent <<"            "<<m_bytesReceived/1000<<"   "<<m_bytesTotal/1000;
+
+    emit  modelChanged();
 }
 void OfflineModel::handleBytesReceived(qint64 bytesReceived){setBytesReceived(bytesReceived);}
 
@@ -132,5 +136,6 @@ void OfflineModel::setBytesTotal(const qint64 newBytesTotal){
         return;
     m_bytesTotal = newBytesTotal;
     emit bytesTotalChanged();
+    emit  modelChanged();
 }
 void OfflineModel::handleBytesTotal(qint64 bytesTotal){setBytesTotal(bytesTotal);}

@@ -18,7 +18,6 @@ DownloadModel::DownloadModel(const QString &url, const QString &modelPath, QObje
 }
 
 DownloadModel::~DownloadModel(){
-    handleDownloadFinished();
     delete m_reply;
     m_downloadThread.quit();
     m_downloadThread.wait();
@@ -47,7 +46,6 @@ void DownloadModel::handleDownloadFinished() {
 void DownloadModel::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
     setBytesReceived(bytesReceived);
     setBytesTotal(bytesTotal);
-    qInfo()<< bytesReceived<<"    "<<bytesTotal;
 }
 
 QString DownloadModel::modelPath() const{return m_modelPath;}

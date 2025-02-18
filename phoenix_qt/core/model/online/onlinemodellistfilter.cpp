@@ -4,7 +4,9 @@
 
 OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject *parent)
     :m_searchTerm(""), QSortFilterProxyModel(parent)
-{}
+{
+    QSortFilterProxyModel::setSourceModel(model);
+}
 
 bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
 

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Dialogs
 
 import '../../../component_library/style' as Style
@@ -10,59 +11,44 @@ Item {
     height: 35
     width: parent.width
 
-    // function selectButton(){
-    //     if(model.downloadFinished) return deleteId;
-    //     else if(model.isDownloading) return downloadPercentId;
-    //     else return downloadId;
-    // }
-
-    function openSelectFolder(){
-        folderDialogId.open()
+    MyButton{
+        id: dounloadButton
+        visible: !model.downloadFinished && !model.isDownloading
+        myText: "Download"
+        bottonType: Style.RoleEnum.BottonType.Primary
+        onClicked:{
+            folderDialogId.open()
+        }
     }
 
-    // Loader {
-    //     id: buttonLoader
-    //     sourceComponent: control.selectButton()
-    // }
-
-    // Component {
-    //     id: downloadId
-        MyButton{
-            id: dounloadButton
-            visible: !model.downloadFinished && !model.isDownloading
-            myText: "Download"
-            bottonType: Style.RoleEnum.BottonType.Primary
-            onClicked:{
-                control.openSelectFolder()
-            }
+    MyButton{
+        id: downloadPercentButton
+        visible: model.isDownloading
+        progressBarValue: model.downloadPercent
+        bottonType: Style.RoleEnum.BottonType.Progress
+        onClicked:{
+            offlineModelList.cancelRequest(model.id)
         }
+    }
+    // MyButton{
+    //     id: downloadPercentButton
+    //     visible: model.isDownloading
+    //     myText: "Cancel"
+    //     bottonType: Style.RoleEnum.BottonType.Primary
+    //     onClicked:{
+    //         offlineModelList.cancelRequest(model.id)
+    //     }
     // }
 
-    // Component {
-    //     id: downloadPercentId
-        MyButton{
-            id: downloadPercentButton
-            visible: model.isDownloading
-            myText: "Progress"
-            bottonType: Style.RoleEnum.BottonType.Primary
-            onClicked:{
-
-            }
+    MyButton{
+        id: deleteButton
+        visible: model.downloadFinished
+        myText: "Delete"
+        bottonType: Style.RoleEnum.BottonType.Danger
+        onClicked:{
+            offlineModelList.deleteRequest(model.id)
         }
-    // }
-
-    // Component {
-    //     id: deleteId
-        MyButton{
-            id: deleteButton
-            visible: model.downloadFinished
-            myText: "Delete"
-            bottonType: Style.RoleEnum.BottonType.Danger
-            onClicked:{
-
-            }
-        }
-    // }
+    }
     FolderDialog {
         id: folderDialogId
         title: "Choose Folder"

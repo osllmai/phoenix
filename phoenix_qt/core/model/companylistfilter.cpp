@@ -2,7 +2,10 @@
 #include "companylist.h"
 
 CompanyListFilter::CompanyListFilter(QAbstractItemModel *model, BackendType backendType, QObject *parent)
-    : QSortFilterProxyModel(parent), m_backendType(backendType) {}
+    : QSortFilterProxyModel(parent), m_backendType(backendType)
+{
+    QSortFilterProxyModel::setSourceModel(model);
+}
 
 
 Company* CompanyListFilter::at(int index){

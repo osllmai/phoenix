@@ -10,7 +10,8 @@ QtObject {
         Primary,
         Secondary,
         Danger,
-        Feature
+        Feature,
+        Progress
     }
 
     enum IconType{
