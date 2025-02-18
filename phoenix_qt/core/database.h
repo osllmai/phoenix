@@ -67,6 +67,15 @@ private:
     static const QString UPDATE_KEYMODEL_SQL;
     static const QString UPDATE_ISLIKE_SQL;
     static const QString DELETE_MODEL_SQL;
+
+    static const QString CONVERSATION_SQL;
+    static const QString INSERT_CONVERSATION_SQL;
+    static const QString READ_CONVERSATION_SQL;
+    static const QString UPDATE_DATE_CONVERSATION_SQL;
+    static const QString UPDATE_TITLE_CONVERSATION_SQL;
+    static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
+    static const QString DELETE_CONVERSATION_SQL;
+
 };
 
 #endif // DATABASE_H
