@@ -41,10 +41,8 @@ int main(int argc, char *argv[])
 
     CompanyList* companyList =  CompanyList::instance(&engine);
 
-    CompanyListFilter* offlineCompanyList = new CompanyListFilter(BackendType::OfflineModel, companyList);
-    CompanyListFilter* onlineCompanyList = new CompanyListFilter(BackendType::OnlineModel, companyList);
-    offlineCompanyList->setSourceModel(companyList);
-    onlineCompanyList->setSourceModel(companyList);
+    CompanyListFilter* offlineCompanyList = new CompanyListFilter(companyList, BackendType::OfflineModel, &engine);
+    CompanyListFilter* onlineCompanyList = new CompanyListFilter(companyList, BackendType::OnlineModel, &engine);
     engine.rootContext()->setContextProperty("offlineCompanyList", offlineCompanyList);
     engine.rootContext()->setContextProperty("onlineCompanyList", onlineCompanyList);
 
@@ -55,7 +53,7 @@ int main(int argc, char *argv[])
 
 
     OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
-    OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(&engine);
+    OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
     engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
     engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
 
@@ -68,13 +66,15 @@ int main(int argc, char *argv[])
     QObject::connect(offlineModelList, &OfflineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
     QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
 
+    const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-    engine.loadFromModule("phoenix_15", "Main");
+    engine.load(url);
 
     return app.exec();
 }

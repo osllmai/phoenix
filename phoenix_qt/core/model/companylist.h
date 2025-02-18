@@ -2,8 +2,8 @@
 #define COMPANYLIST_H
 
 #include <QObject>
-#include <QQmlEngine>
 #include <QtQml>
+#include <QQmlEngine>
 #include <QAbstractListModel>
 
 #include <QFutureWatcher>
@@ -14,10 +14,11 @@
 class CompanyList: public QAbstractListModel
 {
     Q_OBJECT
+    // QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    static CompanyList* instance(QObject* parent = nullptr);
+    static CompanyList* instance(QObject* parent );
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,

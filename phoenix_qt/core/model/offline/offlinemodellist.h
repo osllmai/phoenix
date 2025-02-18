@@ -2,8 +2,8 @@
 #define OFFLINEMODELLIST_H
 
 #include <QObject>
-#include <QQmlEngine>
 #include <QtQml>
+#include <QQmlEngine>
 #include <QAbstractListModel>
 
 #include <QFutureWatcher>
@@ -15,10 +15,11 @@
 class OfflineModelList: public QAbstractListModel
 {
     Q_OBJECT
+    // QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    static OfflineModelList* instance(QObject* parent = nullptr);
+    static OfflineModelList* instance(QObject* parent );
     void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {
@@ -45,9 +46,9 @@ public:
 
     Q_INVOKABLE OfflineModel* at(int index) const;
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
-    Q_INVOKABLE void downloadRequest(const int index, QString directoryPath);
-    Q_INVOKABLE void cancelRequest(const int index);
-    Q_INVOKABLE void deleteRequest(const int index);
+    Q_INVOKABLE void downloadRequest(const int id, QString directoryPath);
+    Q_INVOKABLE void cancelRequest(const int id);
+    Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void addRequest(QString directoryPath);
 
 public slots:
@@ -70,6 +71,9 @@ private:
     static OfflineModelList* m_instance;
 
     QList<OfflineModel*> m_models;
+
+    OfflineModel* findModelById(const int id);
+
 };
 
 #endif // OFFLINEMODELLIST_H

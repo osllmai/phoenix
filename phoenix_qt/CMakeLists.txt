@@ -9,9 +9,12 @@ set(APP_VERSION "${APP_VERSION_BASE}-dev0")
 set(PROJECT_NAME phoenix_15)
 project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Concurrent Core Qml Sql)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml  Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -212,7 +215,13 @@ set_target_properties(app${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(app${PROJECT_NAME}
-    PRIVATE Qt6::Quick Qt6::Concurrent Qt6::Sql Qt::Qml Qt6::Core
+    PRIVATE
+        Qt6::Quick
+        Qt6::Concurrent
+        Qt6::Sql
+        Qt::Qml
+        Qt6::Core
+        Qt::Gui
 )
 
 include(GNUInstallDirs)

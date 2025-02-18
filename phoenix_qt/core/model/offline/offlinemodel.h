@@ -3,13 +3,14 @@
 
 #include <QObject>
 #include <QtQml>
-
+#include <QQmlEngine>
 #include "../model.h"
 #include "downloadmodel.h"
 
 class OfflineModel: public Model
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(double fileSize READ fileSize CONSTANT FINAL)
     Q_PROPERTY(int ramRamrequired READ ramRamrequired CONSTANT FINAL)
     Q_PROPERTY(QString fileName READ fileName CONSTANT FINAL)
@@ -23,20 +24,22 @@ class OfflineModel: public Model
     Q_PROPERTY(qint64 bytesTotal READ bytesTotal WRITE setBytesTotal NOTIFY bytesTotalChanged FINAL)
 
 public:
+    explicit OfflineModel(QObject* parent = nullptr) : Model(parent) {}
+
     explicit OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
-
                           const int id, const QString& name, const QString& key, QDateTime addModelTime,
                           const bool isLike, Company* company, const BackendType backend,
                           const QString& icon , const QString& information , const QString& promptTemplate ,
                           const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
+
     virtual ~OfflineModel();
 
-    Q_INVOKABLE void startDownload(QString &directoryPath);
-    Q_INVOKABLE void cancelDownload();
-    Q_INVOKABLE void removeDownload();
-    Q_INVOKABLE void addModel(QString &directoryPath);
+    void startDownload(QString &directoryPath);
+    void cancelDownload();
+    void removeDownload();
+    void addModel(QString &directoryPath);
 
     const double fileSize() const;
 
@@ -50,13 +53,13 @@ public:
 
     const QString &quant() const;
 
-    const double downloadPercent() const;
+    double downloadPercent() const;
     void setDownloadPercent(const double downloadPercent);
 
-    const bool isDownloading() const;
+    bool isDownloading() const;
     void setIsDownloading(const bool isDownloading);
 
-    const bool downloadFinished() const;
+    bool downloadFinished() const;
     void setDownloadFinished(const bool downloadFinished);
 
     qint64 bytesReceived() const;
@@ -66,12 +69,13 @@ public:
     void setBytesTotal(qint64 newBytesTotal);
 
 signals:
-    void downloadPercentChanged(double downloadPercent);
-    void isDownloadingChanged(bool isDownloading);
-    void downloadFinishedChanged(bool downloadFinished);
+    void downloadPercentChanged();
+    void isDownloadingChanged();
+    void downloadFinishedChanged();
     void bytesReceivedChanged();
     void bytesTotalChanged();
     void cancelRequest();
+    void modelChanged();
 
 public slots:
     void handleDownloadFinished();

@@ -3,12 +3,14 @@
 
 #include <QObject>
 #include <QtQml>
+#include <QQmlEngine>
 
 #include "../model.h"
 
 class OnlineModel : public Model
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QString type READ type CONSTANT FINAL)
     Q_PROPERTY(double inputPricePer1KTokens READ inputPricePer1KTokens CONSTANT FINAL)
     Q_PROPERTY(double outputPricePer1KTokens READ outputPricePer1KTokens CONSTANT FINAL)
@@ -21,6 +23,8 @@ class OnlineModel : public Model
     Q_PROPERTY(bool installModel READ installModel WRITE setInstallModel NOTIFY installModelChanged FINAL)
 
 public:
+    explicit OnlineModel(QObject* parent = nullptr) : Model(parent) {}
+
     explicit OnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
                          const bool isLike, Company* company, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,

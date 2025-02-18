@@ -11,10 +11,11 @@
 class OnlineModelList: public QAbstractListModel
 {
     Q_OBJECT
+    // QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
-    static OnlineModelList* instance(QObject* parent = nullptr);
+    static OnlineModelList* instance(QObject* parent );
 
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,

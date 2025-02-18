@@ -1,7 +1,7 @@
 #include "companylistfilter.h"
 #include "companylist.h"
 
-CompanyListFilter::CompanyListFilter(BackendType backendType, QObject *parent)
+CompanyListFilter::CompanyListFilter(QAbstractItemModel *model, BackendType backendType, QObject *parent)
     : QSortFilterProxyModel(parent), m_backendType(backendType) {}
 
 

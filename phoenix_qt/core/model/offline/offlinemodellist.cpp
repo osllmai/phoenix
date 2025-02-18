@@ -105,16 +105,22 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
     emit requestUpdateIsLikeModel(id, isLike);
 }
 
-void OfflineModelList::downloadRequest(const int index, QString directoryPath){
-
+void OfflineModelList::downloadRequest(const int id, QString directoryPath){
+    OfflineModel* offlineModel = findModelById(id);
+    if(offlineModel == nullptr) return;
+    offlineModel->startDownload(directoryPath);
 }
 
-void OfflineModelList::cancelRequest(const int index){
-
+void OfflineModelList::cancelRequest(const int id){
+    OfflineModel* offlineModel = findModelById(id);
+    if(offlineModel == nullptr) return;
+    offlineModel->cancelDownload();
 }
 
-void OfflineModelList::deleteRequest(const int index){
-
+void OfflineModelList::deleteRequest(const int id){
+    OfflineModel* offlineModel = findModelById(id);
+    if(offlineModel == nullptr) return;
+    offlineModel->removeDownload();
 }
 
 void OfflineModelList::addRequest(QString directoryPath){
@@ -132,13 +138,28 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
-    m_models.append(new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
-                                   quant, downloadPercent, isDownloading, downloadFinished,
+    OfflineModel* model = new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
+                                           quant, downloadPercent, isDownloading, downloadFinished,
 
-                                   id, name, key, addModelTime, isLike, company,backend, icon, information,
-                                   promptTemplate, systemPrompt, expireModelTime, m_instance));
+                                           id, name, key, addModelTime, isLike, company,backend, icon, information,
+                                           promptTemplate, systemPrompt, expireModelTime, m_instance);
+    m_models.append(model);
+    connect(model, &OfflineModel::modelChanged, this, [=]() {
+        int row = m_models.indexOf(model);
+        if (row != -1) {
+            QModelIndex modelIndex = createIndex(row, 0);
+            emit dataChanged(modelIndex, modelIndex);
+        }
+    });
     endInsertRows();
     emit countChanged();
 }
 
+OfflineModel* OfflineModelList::findModelById(int id) {
+    auto it = std::find_if(m_models.begin(), m_models.end(), [id](OfflineModel* model) {
+        return model->id() == id;
+    });
+
+    return (it != m_models.end()) ? *it : nullptr;
+}
 

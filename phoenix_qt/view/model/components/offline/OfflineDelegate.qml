@@ -71,7 +71,7 @@ T.Button {
             }
             Item{
                 id: aboutId
-                height: parent.height - headerId.height - buttonListId.height - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - 30
                 width: parent.width
                 clip: true
                 Text{
@@ -200,35 +200,8 @@ T.Button {
                 }
             }
 
-            Rectangle{
-                id: buttonListId
-                height: goToGithubId.height
-                width: parent.width
-                color: "#00ffffff"
-                MyButton{
-                    id:goToGithubId
-                    width: (parent.width-10)/2
-                    anchors.left: parent.left
-                    myText: "GitHub"
-                    bottonType: Style.RoleEnum.BottonType.Primary
-                    Connections {
-                        target: goToGithubId
-                        function onClicked(){
-                        }
-                    }
-                }
-                MyButton{
-                    id:goToNotebookId
-                    width: (parent.width-10)/2
-                    anchors.right: parent.right
-                    myText: "Notebook"
-                    bottonType: Style.RoleEnum.BottonType.Primary
-                    Connections {
-                        target: goToNotebookId
-                        function onClicked(){
-                        }
-                    }
-                }
+            DownloadButton{
+                id: downloadButtonId
             }
         }
 

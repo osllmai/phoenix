@@ -3,9 +3,11 @@
 DownloadModel::DownloadModel(const QString &url, const QString &modelPath, QObject *parent)
     : QObject{parent}, m_url(url), m_modelPath(modelPath)
 {
+    qInfo()<<" ----------------------------SLDP";
     moveToThread(&m_downloadThread);
-    m_downloadThread.setObjectName("m_downloadThread");
+    // m_downloadThread.setObjectName("m_downloadThread");
     m_downloadThread.start();
+    qInfo()<<"SDLF<D-----------------------";
 
     QNetworkRequest request(m_url);
     m_reply = m_manager.get(request);
@@ -45,6 +47,7 @@ void DownloadModel::handleDownloadFinished() {
 void DownloadModel::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
     setBytesReceived(bytesReceived);
     setBytesTotal(bytesTotal);
+    qInfo()<< bytesReceived<<"    "<<bytesTotal;
 }
 
 QString DownloadModel::modelPath() const{return m_modelPath;}

@@ -13,7 +13,17 @@ OfflineModel::OfflineModel(const double fileSize, const int ramRamrequired, cons
     m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
     m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent),
     m_isDownloading(isDownloading), m_downloadFinished(downloadFinished)
-{}
+{
+    connect(this, &OfflineModel::isDownloadingChanged, [this]() {
+        emit  modelChanged();
+    });
+    connect(this, &OfflineModel::downloadFinishedChanged, [this]() {
+        emit  modelChanged();
+    });
+    connect(this, &OfflineModel::bytesReceivedChanged, [this]() {
+        emit  modelChanged();
+    });
+}
 
 OfflineModel::~OfflineModel(){}
 
@@ -71,29 +81,30 @@ const QString &OfflineModel::parameters() const{return m_parameters;}
 
 const QString &OfflineModel::quant() const{return m_quant;}
 
-const double OfflineModel::downloadPercent() const{return m_downloadPercent;}
+double OfflineModel::downloadPercent() const{return m_downloadPercent;}
 void OfflineModel::setDownloadPercent(const double downloadPercent){
     if(m_downloadPercent == downloadPercent)
         return;
     m_downloadPercent = downloadPercent;
-    emit downloadPercentChanged(m_downloadPercent);
+    emit downloadPercentChanged();
 }
 
-const bool OfflineModel::isDownloading() const{return m_isDownloading;}
+bool OfflineModel::isDownloading() const{return m_isDownloading;}
 void OfflineModel::setIsDownloading(const bool isDownloading){
     if(m_isDownloading == isDownloading)
         return;
     m_isDownloading = isDownloading;
-    emit isDownloadingChanged(m_isDownloading);
+    qInfo()<<"------------**---**"<<m_isDownloading;
+    emit isDownloadingChanged();
 }
 
-const bool OfflineModel::downloadFinished() const{return m_downloadFinished;}
+bool OfflineModel::downloadFinished() const{return m_downloadFinished;}
 void OfflineModel::setDownloadFinished(const bool downloadFinished){
     if(m_downloadFinished == downloadFinished)
         return;
 
     m_downloadFinished = downloadFinished;
-    emit downloadFinishedChanged(m_downloadFinished);
+    emit downloadFinishedChanged();
 }
 void OfflineModel::handleDownloadFinished(){
     setKey(m_download->modelPath());

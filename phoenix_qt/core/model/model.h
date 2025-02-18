@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtQml>
+#include <QQmlEngine>
 #include <QDateTime>
 
 #include "BackendType.h"
@@ -11,6 +12,7 @@
 class Model : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(QString name READ name CONSTANT FINAL)
     Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
@@ -25,6 +27,8 @@ class Model : public QObject
     Q_PROPERTY(QDateTime expireModelTime READ expireModelTime FINAL)
 
 public:
+    explicit Model(QObject* parent = nullptr) : QObject(parent) {}
+
     explicit Model(const int id, const QString& name, const QString& key, QDateTime addModelTime,
                    const bool isLike, Company* company, const BackendType backend,
                    const QString& icon , const QString& information , const QString& promptTemplate ,

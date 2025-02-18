@@ -1,6 +1,9 @@
 #ifndef ONLINEMODELLISTFILTER_H
 #define ONLINEMODELLISTFILTER_H
 
+#include <QObject>
+#include <QtQml>
+#include <QQmlEngine>
 #include <QSortFilterProxyModel>
 #include "../company.h"
 #include "../companylist.h"
@@ -8,11 +11,12 @@
 class OnlineModelListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
+    // QML_ELEMENT
     Q_PROPERTY(QString searchTerm READ searchTerm WRITE setSearchTerm NOTIFY searchTermChanged FINAL)
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
     Q_PROPERTY(Company *company READ company WRITE setCompany NOTIFY companyChanged FINAL)
 public:
-    explicit OnlineModelListFilter(QObject *parent);
+    explicit OnlineModelListFilter(QAbstractItemModel *model, QObject *parent);
 
     enum class FilterType {
         InstallModel,

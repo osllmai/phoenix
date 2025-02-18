@@ -2,6 +2,9 @@
 #define COMPANYLISTFILTER_H
 
 #include <QSortFilterProxyModel>
+#include <QObject>
+#include <QtQml>
+#include <QQmlEngine>
 
 #include "BackendType.h"
 #include "./companylist.h"
@@ -10,10 +13,11 @@
 class CompanyListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
+    // QML_ELEMENT
     Q_PROPERTY(BackendType backendType READ backendType WRITE setBackendType NOTIFY backendTypeChanged)
 
 public:
-    explicit CompanyListFilter(BackendType backendType, QObject *parent);
+    explicit CompanyListFilter(QAbstractItemModel *model, BackendType backendType, QObject *parent);
 
     Q_INVOKABLE Company* at(int index);
 

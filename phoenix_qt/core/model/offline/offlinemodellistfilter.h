@@ -6,13 +6,15 @@
 #include "./offlinemodel.h"
 #include "./offlinemodellist.h"
 
+#include <QObject>
+#include <QtQml>
 #include <QQmlEngine>
 #include <QSortFilterProxyModel>
 
 class OfflineModelListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
-
+    // QML_ELEMENT
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
     Q_PROPERTY(int companyId READ companyId WRITE setCompanyId NOTIFY companyIdChanged FINAL)
 public:

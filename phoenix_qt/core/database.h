@@ -2,7 +2,8 @@
 #define DATABASE_H
 
 #include <QObject>
-
+#include <QtQml>
+#include <QQmlEngine>
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -16,6 +17,7 @@
 class Database: public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     static Database* instance(QObject* parent);
 
@@ -50,7 +52,8 @@ signals:
 
 private:
     static Database* m_instance;
-    explicit Database(QObject* parent);
+
+    explicit Database(QObject* parent = nullptr);
     virtual ~Database();
 
     QSqlDatabase m_db;

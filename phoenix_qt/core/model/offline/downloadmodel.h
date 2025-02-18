@@ -2,6 +2,9 @@
 #define DOWNLOADMODEL_H
 
 #include <QObject>
+#include <QtQml>
+#include <QQmlEngine>
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -12,12 +15,15 @@
 class DownloadModel : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QString modelPath READ modelPath CONSTANT FINAL)
     Q_PROPERTY(bool downloadFinished READ downloadFinished WRITE setDownloadFinished NOTIFY downloadFinishedChanged FINAL)
     Q_PROPERTY(qint64 bytesTotal READ bytesTotal WRITE setBytesTotal NOTIFY bytesTotalChanged FINAL)
     Q_PROPERTY(qint64 bytesReceived READ bytesReceived WRITE setBytesReceived NOTIFY bytesReceivedChanged FINAL)
 
 public:
+    explicit DownloadModel(QObject* parent = nullptr) : QObject(parent) {}
+
     explicit DownloadModel(const QString &url, const QString &modelPath, QObject *parent);
     virtual ~DownloadModel();
 

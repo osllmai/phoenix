@@ -2,7 +2,7 @@
 #include "onlinemodellist.h"
 
 
-OnlineModelListFilter::OnlineModelListFilter(QObject *parent)
+OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject *parent)
     :m_searchTerm(""), QSortFilterProxyModel(parent)
 {}
 
