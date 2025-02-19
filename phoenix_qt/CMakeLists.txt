@@ -49,10 +49,12 @@ qt_add_executable(app${PROJECT_NAME}
     core/model/online/onlinemodellist.h core/model/online/onlinemodellist.cpp
     core/model/online/onlinemodellistfilter.h core/model/online/onlinemodellistfilter.cpp
 
-    core/chat/conversation.h core/chat/conversation.cpp
-    core/chat/conversationlist.h core/chat/conversationlist.cpp
-    core/chat/messagelist.h core/chat/messagelist.cpp
-    core/chat/message.h core/chat/message.cpp
+    core/conversation/conversation.h core/conversation/conversation.cpp
+    core/conversation/conversationlist.h core/conversation/conversationlist.cpp
+    core/conversation/conversationlistfilter.h core/conversation/conversationlistfilter.cpp
+    core/conversation/chat/messagelist.h core/conversation/chat/messagelist.cpp
+    core/conversation/chat/message.h core/conversation/chat/message.cpp
+    core/conversation/chat/modelsettings.h core/conversation/chat/modelsettings.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -201,7 +203,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
-        SOURCES core/chat/conversationlistfilter.h core/chat/conversationlistfilter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
