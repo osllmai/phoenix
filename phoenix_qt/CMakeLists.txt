@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml  Sql)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -221,9 +221,9 @@ target_link_libraries(app${PROJECT_NAME}
         Qt6::Quick
         Qt6::Concurrent
         Qt6::Sql
-        Qt6::Qml
+        Qt::Qml
         Qt6::Core
-        Qt6::Gui
+        Qt::Gui
 )
 
 include(GNUInstallDirs)

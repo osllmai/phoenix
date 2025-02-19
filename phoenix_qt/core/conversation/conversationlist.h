@@ -39,7 +39,7 @@ public:
     int count() const;
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    QHash<int, QByteArray> roleNames() const override;
+    // QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 public slots:
@@ -66,7 +66,7 @@ private:
 
     QList<Conversation*> m_conversations;
 
-    Conversation* findConversationById(const int id);
+    // Conversation* findConversationById(const int id);
 };
 
 #endif // CONVERSATIONLIST_H

@@ -2,11 +2,12 @@
 #define MODELSETTINGS_H
 
 #include <QObject>
+#include <QQmlEngine>
 #include <QtQml>
 
 class ModelSettings : public QObject{
     Q_OBJECT
-    QML_ELEMENT
+    // QML_ELEMENT
     Q_PROPERTY(int id READ id FINAL )
     Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
@@ -26,7 +27,7 @@ public:
     explicit ModelSettings(const int &id, QObject *parent = nullptr);
     virtual ~ModelSettings();
 
-    int id() const;
+    const int id() const;
 
     const bool stream() const;
     void setStream(const bool stream);
