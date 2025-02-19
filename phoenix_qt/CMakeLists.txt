@@ -201,6 +201,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
+        SOURCES core/chat/conversationlistfilter.h core/chat/conversationlistfilter.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -219,9 +220,9 @@ target_link_libraries(app${PROJECT_NAME}
         Qt6::Quick
         Qt6::Concurrent
         Qt6::Sql
-        Qt::Qml
+        Qt6::Qml
         Qt6::Core
-        Qt::Gui
+        Qt6::Gui
 )
 
 include(GNUInstallDirs)

@@ -23,13 +23,25 @@ public:
 
 public slots:
     void readModel(const QList<Company*> companys);
-
     int insertModel(const QString &name, const QString &key);
-
     QSqlError deleteModel(const int id);
-
     QSqlError updateKeyModel(const int id, const QString &key);
     QSqlError updateIsLikeModel(const int id, const bool isLike);
+
+    void readConversation();
+    int insertConversation(const QString &title, const QString &description, const QDateTime date, const bool &stream,
+                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                     const int &contextLength, const int &numberOfGPULayers);
+    QSqlError deleteConversation(const int &id);
+    QSqlError updateDateConversation(const int id, const QString &description);
+    QSqlError updateTitleConversation(const int id, const QString &title);
+    QSqlError updateModelSettingsConversation(const int id, const bool &stream,
+                                        const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                        const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                        const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                        const int &contextLength, const int &numberOfGPULayers);
 
 signals:
     void addOnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,

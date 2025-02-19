@@ -15,6 +15,9 @@ Database::Database(QObject* parent): QObject{nullptr}{
         if (!tables.contains("model", Qt::CaseInsensitive)){
             query.exec(MODEL_SQL);
         }
+        if (!tables.contains("model", Qt::CaseInsensitive)){
+            query.exec(MODEL_SQL);
+        }
     }
 }
 
@@ -79,17 +82,18 @@ QSqlError Database::updateIsLikeModel(const int id, const bool isLike){
     return QSqlError();
 }
 
-int Database::insertConversation(const QString &title, const QDateTime date, const bool &stream,
+int Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const bool &stream,
                                          const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                                          const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                          const int &contextLength, const int &numberOfGPULayers){
-    QSqlQuery query(db);
+    QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
         return -1;
     query.addBindValue(title);
     query.addBindValue(date);
+    query.addBindValue(description);
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -107,68 +111,74 @@ int Database::insertConversation(const QString &title, const QDateTime date, con
 
     int id = query.lastInsertId().toInt();
 
-    db.close();
     return id;
-}
-
-int Database::insertMessage(const QString &text, const bool isPrompt, const int numberOfTokens,
-                                    const int executionTime, const Message *parent, const int &conversation_id,const QDateTime date){
-    QSqlQuery query(db);
-
-    if (!query.prepare(INSERT_MESSAGE_SQL))
-        return -1;
-    query.addBindValue(text);
-
-    query.addBindValue(isPrompt);
-    query.addBindValue(numberOfTokens);
-    query.addBindValue(executionTime);
-
-    if(parent->id() == -1)
-        query.addBindValue(0);
-    else
-        query.addBindValue(parent->id());
-    query.addBindValue(conversation_id);
-    query.addBindValue(date);
-    query.exec();
-
-    int id = query.lastInsertId().toInt();
-    qInfo()<<"insert message"<<id<<"  "<<conversation_id;
-
-    db.close();
-    return id;
-}
-
-QSqlError Database::deleteModel(const int &id){
-    QSqlQuery query(db);
-
-    if (!query.prepare(DELETE_MODEL_SQL))
-        return query.lastError();
-    query.addBindValue(id);
-    query.exec();
-
-    db.close();
-    return QSqlError();
 }
 
 QSqlError Database::deleteConversation(const int &id){
-    QSqlQuery query(db);
+    QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_CONVERSATION_SQL))
         return query.lastError();
     query.addBindValue(id);
     query.exec();
 
-    if (!query.prepare(DELETE_MESSAGE_SQL))
-        return query.lastError();
-    query.addBindValue(id);
-    query.exec();
+    // if (!query.prepare(DELETE_MESSAGE_SQL))
+    //     return query.lastError();
+    // query.addBindValue(id);
+    // query.exec();
 
-    db.close();
     return QSqlError();
 }
 
+QSqlError Database::updateDateConversation(const int id, const QString &description){
+    QSqlQuery query(m_db);
 
+    if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(description);
+    query.addBindValue(QDateTime::currentDateTime());
+    query.addBindValue(id);
+    query.exec();
+    return QSqlError();
+}
 
+QSqlError Database::updateTitleConversation(const int id, const QString &title){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(title);
+    query.addBindValue(id);
+    query.exec();
+    return QSqlError();
+}
+
+QSqlError Database::updateModelSettingsConversation(const int id, const bool &stream,
+                                                    const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                    const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                    const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                    const int &contextLength, const int &numberOfGPULayers){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(stream);
+    query.addBindValue(promptTemplate);
+    query.addBindValue(systemPrompt);
+    query.addBindValue(temperature);
+    query.addBindValue(topK);
+    query.addBindValue(topP);
+    query.addBindValue(minP);
+    query.addBindValue(repeatPenalty);
+    query.addBindValue(promptBatchSize);
+    query.addBindValue(maxTokens);
+    query.addBindValue(repeatPenaltyTokens);
+    query.addBindValue(contextLength);
+    query.addBindValue(numberOfGPULayers);
+    query.addBindValue(id);
+    query.exec();
+    return QSqlError();
+}
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
     CREATE TABLE model(
@@ -214,6 +224,7 @@ const QString Database::CONVERSATION_SQL = QLatin1String(R"(
     CREATE TABLE conversation(
         id INTEGER NOT NULL UNIQUE,
         title TEXT NOT NULL,
+        description TEXT NOT NULL,
         date DATE NOT NULL,
         stream BOOL NOT NULL,
         promptTemplate TEXT NOT NULL,
@@ -233,15 +244,15 @@ const QString Database::CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString Database::INSERT_CONVERSATION_SQL = QLatin1String(R"(
-    INSERT INTO conversation(title, date, stream, promptTemplate,systemPrompt,
+    INSERT INTO conversation(title, description, date, stream, promptTemplate,systemPrompt,
             temperature, topK, topP, minP, repeatPenalty,
             promptBatchSize, maxTokens, repeatPenaltyTokens,
             contextLength, numberOfGPULayers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
-    SELECT id, title, date, stream, promptTemplate,systemPrompt,
+    SELECT id, title, description, date, stream, promptTemplate,systemPrompt,
                     temperature, topK, topP, minP, repeatPenalty,
                     promptBatchSize, maxTokens, repeatPenaltyTokens,
                     contextLength, numberOfGPULayers
@@ -250,7 +261,7 @@ const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString Database::UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET date=? Where id=?
+    UPDATE conversation SET description=? date=? Where id=?
 )");
 
 const QString Database::UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
@@ -393,4 +404,38 @@ void Database::readModel(const QList<Company*> companys){
             }
         }
     }
+}
+
+void Database::readConversation(){
+    // QSqlQuery query(m_db);
+    // query.prepare(READALL_MODEL_SQL);
+
+    // if (query.exec()){
+    //     while(query.next()) {
+    //         bool findIndex = false;
+    //         for(int id : allID){
+    //             if(id == query.value(0).toInt()){
+    //                 findIndex = true;
+    //                 break;
+    //             }
+    //         }
+    //         if(findIndex == false){
+
+    //             int id = query.value(0).toInt();
+    //             QString name = query.value(1).toString();
+    //             QString key = query.value(2).toString();
+    //             QDateTime addDate = query.value(3).toDateTime();
+    //             bool isLike = query.value(4).toBool();
+
+
+    //             QFile file(key);
+    //             if (!file.exists()){
+    //                 deleteModel(id);
+    //             }else
+    //                 emit addOfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
+    //                                      id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+    //                                      "", "", "","", QDateTime::currentDateTime());
+    //         }
+    //     }
+    // }
 }

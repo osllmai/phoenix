@@ -5,6 +5,8 @@ class ConversationList
 {
 public:
     ConversationList();
+
+
 };
 
 #endif // CONVERSATIONLIST_H

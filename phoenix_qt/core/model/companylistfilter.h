@@ -19,8 +19,6 @@ class CompanyListFilter: public QSortFilterProxyModel
 public:
     explicit CompanyListFilter(QAbstractItemModel *model, BackendType backendType, QObject *parent);
 
-    Q_INVOKABLE Company* at(int index);
-
     const BackendType backendType() const;
     void setBackendType(const BackendType type);
 

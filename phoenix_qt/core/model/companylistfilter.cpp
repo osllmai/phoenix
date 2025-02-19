@@ -7,16 +7,6 @@ CompanyListFilter::CompanyListFilter(QAbstractItemModel *model, BackendType back
     QSortFilterProxyModel::setSourceModel(model);
 }
 
-
-Company* CompanyListFilter::at(int index){
-    if (index < 0 || index >= rowCount())
-        return nullptr;
-
-    QModelIndex modelIndex = this->index(index, 0);
-    QModelIndex sourceIndex = mapToSource(modelIndex);
-    return sourceModel()->data(sourceIndex, CompanyList::CompanyRoles::CompanyObjectRole).value<Company*>();
-}
-
 const BackendType CompanyListFilter::backendType() const{return m_backendType;}
 void CompanyListFilter::setBackendType(const BackendType backendType){
     if (m_backendType != backendType) {
