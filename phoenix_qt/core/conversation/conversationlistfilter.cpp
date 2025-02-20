@@ -1,20 +1,30 @@
 #include "conversationlistfilter.h"
+#include "conversationlist.h"
 
 ConversationListFilter::ConversationListFilter(QAbstractItemModel *model, QObject *parent)
-    : QSortFilterProxyModel(parent)
-{
-    QSortFilterProxyModel::setSourceModel(model);
-    // setFilterCaseSensitivity(Qt::CaseInsensitive);
-    // setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
-
-    // setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
-    // sort(0, Qt::AscendingOrder);
+    : QSortFilterProxyModel(parent) {
+    setSourceModel(model);
+    setSortRole(ConversationList::ConversationRoles::DateRole);
+    sort(0, Qt::DescendingOrder);
 }
 
-
-bool ConversationListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
+bool ConversationListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
 
     QModelIndex index = sourceModel()->index(sourceRow, 0, sourceParent);
+    if (!index.isValid())
+        return false;
 
-    return true;
+    QString name = sourceModel()->data(index, ConversationList::ConversationRoles::TitleRole).toString();
+    QString description = sourceModel()->data(index, ConversationList::ConversationRoles::DescriptionRole).toString();
+
+    QRegularExpression filterExp = filterRegularExpression();
+    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch() || filterExp.match(description).hasMatch();
+
+    return matchesFilter;
+}
+
+bool ConversationListFilter::lessThan(const QModelIndex &left, const QModelIndex &right) const {
+    QDateTime leftDate = sourceModel()->data(left, ConversationList::ConversationRoles::DateRole).toDateTime();
+    QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::DateRole).toDateTime();
+    return leftDate < rightDate;
 }

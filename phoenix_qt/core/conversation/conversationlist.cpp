@@ -83,12 +83,6 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
             somethingChanged = true;
         }
         break;
-    case DescriptionRole:
-        if (conversation->description() != value.toString()) {
-            conversation->setDescription(value.toString());
-            somethingChanged = true;
-        }
-        break;
     }
 
     if (somethingChanged) {
