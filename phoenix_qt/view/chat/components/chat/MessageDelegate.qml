@@ -11,7 +11,8 @@ T.Button {
     property var date: "3 Min ago"
     signal deleteChat()
     // signal editChatName(var chatName)
-    height: Math.max(textId.height, logoModelId.height)
+    height: Math.max(textId.height + dateAndIconId.height + 20, logoModelId.height)
+    width: parent.width
 
     background: null
     contentItem: Rectangle {
@@ -33,8 +34,10 @@ T.Button {
                 spacing: 2
                 TextArea{
                     id: textId
-                    text: "Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode"
+                    text: "Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode "
                     color: Style.Colors.textTitle
+                    selectionColor: "blue"
+                    selectedTextColor: "white"
                     width:  control.width - logoModelId.width
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
@@ -42,13 +45,7 @@ T.Button {
                     readOnly: true
                     wrapMode: Text.Wrap
                     selectByMouse: true
-                    background: Rectangle{
-                        color: control.hovered? Style.Colors.boxHover: "#00ffffff"
-                        border.width: 1
-                        border.color: Style.Colors.boxBorder
-                        radius: 8
-                    }
-                    property bool isEnter: true
+                    background: null
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
@@ -57,8 +54,9 @@ T.Button {
                 Row {
                     id: dateAndIconId
                     width: dateId.width + copyId.width
-                    anchors.right: parent.right
-                    height: 20
+                    height: Math.max(dateId.height, copyId.height)
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
                     property bool checkCopy: false
                     Text {
                         id: dateId

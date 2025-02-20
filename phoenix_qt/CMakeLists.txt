@@ -167,8 +167,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/ModelSettingsDrawer.qml
         view/chat/components/ChatBody.qml
         view/chat/components/chat/InputPrompt.qml
-        view/chat/components/chat/PromptDelegate.qml
-        view/chat/components/chat/ResponseDelegate.qml
+        view/chat/components/chat/MessageDelegate.qml
         view/chat/components/chat/MessageList.qml
         view/chat/components/history/HistoryHeader.qml
         view/chat/components/history/HistoryBody.qml

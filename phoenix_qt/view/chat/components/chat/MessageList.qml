@@ -19,18 +19,10 @@ Item {
 
         model:10
         delegate: Item{
-           width: listView.width; height: 122
-           PromptDelegate{
+           width: listView.width; height: promptItem.height
+           MessageDelegate{
                id: promptItem
                visible: true
-               anchors.fill: parent; anchors.margins: promptItem.hovered? 8: 12
-               Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-           }
-           ResponseDelegate{
-               id: responseItem
-               visible: false
-               anchors.fill: parent; anchors.margins: responseItem.hovered? 8: 12
-               Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
         }
     }
