@@ -29,19 +29,20 @@ public slots:
     QSqlError updateIsLikeModel(const int id, const bool isLike);
 
     void readConversation();
-    int insertConversation(const QString &title, const QString &description, const QDateTime date, const bool &stream,
-                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                     const int &contextLength, const int &numberOfGPULayers);
+    int insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                           const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                           const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                           const int &contextLength, const int &numberOfGPULayers);
     QSqlError deleteConversation(const int &id);
-    QSqlError updateDateConversation(const int id, const QString &description);
+    QSqlError updateDateConversation(const int id, const QString &description, const QString &icon);
     QSqlError updateTitleConversation(const int id, const QString &title);
+    QSqlError updateIsPinnedConversation(const int id, const bool &isPinned);
     QSqlError updateModelSettingsConversation(const int id, const bool &stream,
-                                        const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                        const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                        const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                        const int &contextLength, const int &numberOfGPULayers);
+                            const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                            const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                            const int &contextLength, const int &numberOfGPULayers);
 
 signals:
     void addOnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
@@ -61,6 +62,12 @@ signals:
                          const bool isLike, Company* company, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime);
+
+    void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                           const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                           const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                           const int &contextLength, const int &numberOfGPULayers);
 
 private:
     static Database* m_instance;
@@ -85,6 +92,7 @@ private:
     static const QString READ_CONVERSATION_SQL;
     static const QString UPDATE_DATE_CONVERSATION_SQL;
     static const QString UPDATE_TITLE_CONVERSATION_SQL;
+    static const QString UPDATE_ISPINNED_CONVERSATION_SQL;
     static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
     static const QString DELETE_CONVERSATION_SQL;
 

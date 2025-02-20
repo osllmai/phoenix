@@ -18,14 +18,18 @@ void Conversation::setTitle(const QString &title) {
 }
 
 const QString &Conversation::description() const {return m_description;}
-void Conversation::setDescription(const QString &description) {
-    if (m_description != description) {
-        m_description = description;
-        emit descriptionChanged();
-    }
-}
 
 const QDateTime Conversation::date() const {return m_date;}
+
+const QString Conversation::icon() const{return m_icon;}
+
+const bool Conversation::isPinned() const{return m_isPinned;}
+void Conversation::setIsPinned(bool isPinned){
+    if (m_isPinned != isPinned) {
+        m_isPinned = isPinned;
+        emit isPinnedChanged();
+    }
+}
 
 const bool Conversation::isLoadModel() const {return m_isLoadModel;}
 void Conversation::setIsLoadModel(bool isLoadModel) {

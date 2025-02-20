@@ -24,7 +24,13 @@ bool ConversationListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
 }
 
 bool ConversationListFilter::lessThan(const QModelIndex &left, const QModelIndex &right) const {
+    bool leftPinned = sourceModel()->data(left, ConversationList::ConversationRoles::PinnedRole).toBool();
+    bool rightPinned = sourceModel()->data(right, ConversationList::ConversationRoles::PinnedRole).toBool();
+
+    if (leftPinned != rightPinned)
+        return leftPinned > rightPinned;
+
     QDateTime leftDate = sourceModel()->data(left, ConversationList::ConversationRoles::DateRole).toDateTime();
     QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::DateRole).toDateTime();
-    return leftDate < rightDate;
+    return leftDate > rightDate;
 }

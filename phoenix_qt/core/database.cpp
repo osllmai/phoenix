@@ -82,11 +82,11 @@ QSqlError Database::updateIsLikeModel(const int id, const bool isLike){
     return QSqlError();
 }
 
-int Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const bool &stream,
-                                         const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                         const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                         const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                         const int &contextLength, const int &numberOfGPULayers){
+int Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                                 const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                                 const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                 const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                 const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
@@ -94,6 +94,8 @@ int Database::insertConversation(const QString &title, const QString &descriptio
     query.addBindValue(title);
     query.addBindValue(date);
     query.addBindValue(description);
+    query.addBindValue(icon);
+    query.addBindValue(isPinned);
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -130,12 +132,13 @@ QSqlError Database::deleteConversation(const int &id){
     return QSqlError();
 }
 
-QSqlError Database::updateDateConversation(const int id, const QString &description){
+QSqlError Database::updateDateConversation(const int id, const QString &description, const QString &icon){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
         return query.lastError();
     query.addBindValue(description);
+    query.addBindValue(icon);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
     query.exec();
@@ -148,6 +151,17 @@ QSqlError Database::updateTitleConversation(const int id, const QString &title){
     if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
         return query.lastError();
     query.addBindValue(title);
+    query.addBindValue(id);
+    query.exec();
+    return QSqlError();
+}
+
+QSqlError Database::updateIsPinnedConversation(const int id, const bool &isPinned){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_ISPINNED_CONVERSATION_SQL))
+        return query.lastError();
+    query.addBindValue(isPinned);
     query.addBindValue(id);
     query.exec();
     return QSqlError();
@@ -226,6 +240,8 @@ const QString Database::CONVERSATION_SQL = QLatin1String(R"(
         title TEXT NOT NULL,
         description TEXT NOT NULL,
         date DATE NOT NULL,
+        icon TEXT NOT NULL,
+        isPinned BOOL NOT NULL,
         stream BOOL NOT NULL,
         promptTemplate TEXT NOT NULL,
         systemPrompt TEXT NOT NULL,
@@ -244,15 +260,15 @@ const QString Database::CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString Database::INSERT_CONVERSATION_SQL = QLatin1String(R"(
-    INSERT INTO conversation(title, description, date, stream, promptTemplate,systemPrompt,
+    INSERT INTO conversation(title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
             temperature, topK, topP, minP, repeatPenalty,
             promptBatchSize, maxTokens, repeatPenaltyTokens,
             contextLength, numberOfGPULayers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
-    SELECT id, title, description, date, stream, promptTemplate,systemPrompt,
+    SELECT id, title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
                     temperature, topK, topP, minP, repeatPenalty,
                     promptBatchSize, maxTokens, repeatPenaltyTokens,
                     contextLength, numberOfGPULayers
@@ -261,11 +277,15 @@ const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString Database::UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET description=? date=? Where id=?
+    UPDATE conversation SET description=? icon=? date=? Where id=?
 )");
 
 const QString Database::UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
     UPDATE conversation SET title=? Where id=?
+)");
+
+const QString Database::UPDATE_ISPINNED_CONVERSATION_SQL = QLatin1String(R"(
+    UPDATE conversation SET isPinned=? Where id=?
 )");
 
 const QString Database::UPDATE_MODEL_SETTINGS_CONVERSATION_SQL = QLatin1String(R"(

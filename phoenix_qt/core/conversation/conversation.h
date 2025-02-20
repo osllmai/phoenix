@@ -14,8 +14,10 @@ class Conversation : public QObject
     Q_OBJECT
     Q_PROPERTY(int id READ id CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(QDateTime date READ date NOTIFY dateChanged)
+    Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(bool isPinned READ isPinned WRITE setIsPinned NOTIFY isPinnedChanged)
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged)
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged)
@@ -33,9 +35,13 @@ public:
     void setTitle(const QString &title);
 
     const QString& description() const;
-    void setDescription(const QString &description);
 
     const QDateTime date() const;
+
+    const QString icon() const;
+
+    const bool isPinned() const;
+    void setIsPinned(bool isPinned);
 
     const bool isLoadModel() const;
     void setIsLoadModel(bool isLoadModel);
@@ -65,12 +71,16 @@ signals:
     void messageListChanged();
     void modelChanged();
     void modelSettingsChanged();
+    void isPinnedChanged();
+    void iconChanged();
 
 private:
     int m_id;
     QString m_title;
     QString m_description;
     QDateTime m_date;
+    QString m_icon;
+    bool m_isPinned;
     bool m_isLoadModel;
     bool m_loadModelInProgress;
     bool m_responseInProgress;
