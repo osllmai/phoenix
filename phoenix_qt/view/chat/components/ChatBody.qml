@@ -9,11 +9,29 @@ Item {
     // width: Math.min(780, parent.width - 48)
     // anchors.horizontalCenter: parent.horizontalCenter
 
+    property bool chatIsEmpty: false
+
+    Column{
+        spacing: 10
+        width: Math.min(680, parent.width - 48)
+        anchors.horizontalCenter: parent.horizontalCenter
+        height: parent.height
+        visible: !controlId.chatIsEmpty
+        MessageList{
+            id: messageView
+            height: parent.height - inputBoxId.height - 20
+        }
+        InputPrompt{
+            id: inputBoxId
+        }
+    }
+
     Column{
         spacing: 10
         width: Math.min(680, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
+        visible: controlId.chatIsEmpty
         Text{
             id: phoenixId
             text: "Hello! I’m Phoenix."
@@ -32,7 +50,7 @@ Item {
             font.pixelSize: 12
         }
         InputPrompt{
-            id:inputBoxId
+            id:inputBoxId2
         }
         Flow{
             spacing: 5
