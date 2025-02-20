@@ -1,6 +1,7 @@
 #include "message.h"
 
-Message::Message() {}
+Message::Message(const int &id, const QString &text, const QDateTime date, const QString &icon, bool isPrompt, QObject *parent):
+    m_id(id), m_text(text), m_icon(icon), m_isPrompt(isPrompt), QObject(parent){}
 
 int Message::id() const {return m_id;}
 

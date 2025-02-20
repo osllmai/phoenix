@@ -1,10 +1,49 @@
 #ifndef MESSAGELIST_H
 #define MESSAGELIST_H
 
-class MessageList
+#include <QObject>
+#include <QtQml>
+#include <QQmlEngine>
+#include <QAbstractListModel>
+
+#include "message.h"
+
+class MessageList: public QAbstractListModel
 {
+    Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
-    MessageList();
+    static MessageList* instance(QObject* parent);
+
+    enum MessageRoles {
+        IdRole = Qt::UserRole + 1,
+        TextRole,
+        DateRole,
+        IconRole,
+        IsPromptRole
+    };
+
+    int count() const;
+    int rowCount(const QModelIndex &parent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+
+public slots:
+    void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt);
+
+signals:
+    void countChanged();
+    void requestDeleteMessage(const int &id);
+    void requestAddMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt);
+
+private:
+    explicit MessageList(QObject* parent);
+    static MessageList* m_instance;
+
+    QList<Message*> m_messages;
+
+    Message* findMessageById(const int id);
 };
 
 #endif // MESSAGELIST_H
