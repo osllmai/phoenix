@@ -5,7 +5,6 @@
 #include <QtQml>
 #include <QQmlEngine>
 #include "../model.h"
-#include "downloadmodel.h"
 
 class OfflineModel: public Model
 {
@@ -35,11 +34,6 @@ public:
                           const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
 
     virtual ~OfflineModel();
-
-    void startDownload(QString &directoryPath);
-    void cancelDownload();
-    void removeDownload();
-    void addModel(QString &directoryPath);
 
     const double fileSize() const;
 
@@ -76,6 +70,7 @@ signals:
     void bytesTotalChanged();
     void cancelRequest();
     void modelChanged();
+    void startRequest(const QString &modelPath);
 
 public slots:
     void handleDownloadFinished();
@@ -92,7 +87,6 @@ private:
     double m_downloadPercent;
     bool m_isDownloading;
     bool m_downloadFinished;
-    DownloadModel *m_download = nullptr;
     qint64 m_bytesReceived;
     qint64 m_bytesTotal;
 };

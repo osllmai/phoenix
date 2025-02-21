@@ -11,12 +11,14 @@
 
 #include "offlinemodel.h"
 #include "../company.h"
+#include "./download.h"
 
 class OfflineModelList: public QAbstractListModel
 {
     Q_OBJECT
     // QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(int downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -52,6 +54,8 @@ public:
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void addRequest(QString directoryPath);
 
+    double downloadProgress() const;
+
 public slots:
     void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
@@ -62,8 +66,12 @@ public slots:
                   const QString& icon , const QString& information , const QString& promptTemplate ,
                   const QString& systemPrompt, QDateTime expireModelTime);
 
+    void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
+    void handleDownloadFinished(const int id);
+
 signals:
     void countChanged();
+    void downloadProgressChanged();
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
 
@@ -72,8 +80,12 @@ private:
     static OfflineModelList* m_instance;
 
     QList<OfflineModel*> m_models;
+    QList<Download*>downloads;
+    int m_downloadProgress;
 
     OfflineModel* findModelById(const int id);
+    void updateDownloadProgress();
+    void deleteDownloadModel(const int id);
 
 };
 

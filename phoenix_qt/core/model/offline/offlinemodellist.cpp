@@ -109,30 +109,129 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
 }
 
 void OfflineModelList::downloadRequest(const int id, QString directoryPath){
-    OfflineModel* offlineModel = findModelById(id);
-    if(offlineModel == nullptr) return;
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - downloadRequest";
-    offlineModel->startDownload(directoryPath);
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - downloadRequest";
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    directoryPath.remove("file:///");
+
+    model->setKey(directoryPath+ "/" + model->fileName());
+    model->setIsDownloading(true);
+
+    Download *download = new Download(id, model->url(), model->key());
+    if(downloads.size()<3){
+        connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
+        connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
+        download->downloadModel();
+    }
+    downloads.append(download);
+
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
+
+
+
+    // model->startDownload(directoryPath);
+}
+
+// void OfflineModelList::cancelRequest(const int id){
+//     OfflineModel* offlineModel = findModelById(id);
+//     if(offlineModel == nullptr) return;
+//     offlineModel->cancelDownload();
+// }
+
+// void OfflineModelList::deleteRequest(const int id){
+//     OfflineModel* offlineModel = findModelById(id);
+//     if(offlineModel == nullptr) return;
+//     offlineModel->removeDownload();
+// }
+
+
+void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal){
+
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
+    model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+
+    updateDownloadProgress();
+
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
+
+}
+
+void OfflineModelList::handleDownloadFinished(const int id){
+
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    model->setIsDownloading(false);
+    model->setDownloadFinished(true);
+    model->setDownloadPercent(0);
+
+    updateDownloadProgress();
+    deleteDownloadModel(id);
+
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
+    // emit currentModelListChanged();
 
 }
 
 void OfflineModelList::cancelRequest(const int id){
-    OfflineModel* offlineModel = findModelById(id);
-    if(offlineModel == nullptr) return;
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - cancelRequest";
-    offlineModel->cancelDownload();
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - cancelRequest";
+
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
+        if(downloads[indexSearch]->id() == id)
+            downloads[indexSearch]->cancelDownload();
+    model->setIsDownloading(false);
+    model->setDownloadFinished(false);
+    model->setDownloadPercent(0);
+
+    updateDownloadProgress();
+    deleteDownloadModel(id);
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
 
 }
 
 void OfflineModelList::deleteRequest(const int id){
-    OfflineModel* offlineModel = findModelById(id);
-    if(offlineModel == nullptr) return;
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - deleteRequest";
-    offlineModel->removeDownload();
-    qInfo()<< offlineModel->name()<<" - "<< offlineModel->fileSize()<<" - deleteRequest";
+
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    model->setIsDownloading(false);
+    model->setDownloadFinished(false);
+    // m_currentModelList->deleteModel(model);
+
+    if(model->url() == ""){
+        const int newIndex = m_models.indexOf(model);
+        beginRemoveRows(QModelIndex(), newIndex, newIndex);
+        m_models.removeAll(model);
+        endRemoveRows();
+
+        //delete from database
+        // phoenix_databace::deleteModel(model->id());
+        delete model;
+
+        // chat->unloadAndDeleteLater();
+    }else if(model->key() != ""){
+        QFile file(model->key());
+        if (file.exists()){
+            file.remove();
+        }
+        // phoenix_databace::updateModelPath(model->id(),"");
+    }
+
+    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
+    // emit currentModelListChanged();
+
 }
+
+
+
+
+
+
 
 void OfflineModelList::addRequest(QString directoryPath){
 
@@ -172,5 +271,38 @@ OfflineModel* OfflineModelList::findModelById(int id) {
     });
 
     return (it != m_models.end()) ? *it : nullptr;
+}
+
+void OfflineModelList::updateDownloadProgress(){
+    double totalBytesDownload =0;
+    double receivedBytesDownload =0;
+    for (auto &&model : m_models){
+        if(model->isDownloading()){
+            totalBytesDownload += 1;
+            receivedBytesDownload += model->downloadPercent();
+        }
+    }
+    if(totalBytesDownload != 0)
+        m_downloadProgress = (receivedBytesDownload/totalBytesDownload)*100;
+    else
+        m_downloadProgress = 0;
+
+    qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
+    emit downloadProgressChanged();
+}
+
+void OfflineModelList::deleteDownloadModel(const int id){
+    if(downloads.size()>3){
+        connect(downloads[3], &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
+        connect(downloads[3], &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
+        downloads[3]->downloadModel();
+    }
+    for(int searchIndex = 0; searchIndex<downloads.size(); searchIndex++){
+        if(downloads[searchIndex]->id() == id){
+            Download *download = downloads[searchIndex];
+            downloads.removeAt(searchIndex);
+            delete download;
+        }
+    }
 }
 

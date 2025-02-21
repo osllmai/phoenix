@@ -43,7 +43,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/model/offline/offlinemodel.h core/model/offline/offlinemodel.cpp
     core/model/offline/offlinemodellist.h core/model/offline/offlinemodellist.cpp
     core/model/offline/offlinemodellistfilter.h core/model/offline/offlinemodellistfilter.cpp
-    core/model/offline/downloadmodel.h core/model/offline/downloadmodel.cpp
+    core/model/offline/download.h core/model/offline/download.cpp
 
     core/model/online/onlinemodel.h core/model/online/onlinemodel.cpp
     core/model/online/onlinemodellist.h core/model/online/onlinemodellist.cpp
