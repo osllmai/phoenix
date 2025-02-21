@@ -104,6 +104,8 @@ OfflineModel* OfflineModelList::at(int index) const{
     return m_models.at(index);
 }
 
+double OfflineModelList::downloadProgress() const{return m_downloadProgress;}
+
 void OfflineModelList::likeRequest(const int id, const bool isLike){
     emit requestUpdateIsLikeModel(id, isLike);
 }
@@ -124,52 +126,32 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
         download->downloadModel();
     }
     downloads.append(download);
-
-    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DirectoryPathRole, IsDownloadingRole});
-
-
-
-    // model->startDownload(directoryPath);
 }
-
-// void OfflineModelList::cancelRequest(const int id){
-//     OfflineModel* offlineModel = findModelById(id);
-//     if(offlineModel == nullptr) return;
-//     offlineModel->cancelDownload();
-// }
-
-// void OfflineModelList::deleteRequest(const int id){
-//     OfflineModel* offlineModel = findModelById(id);
-//     if(offlineModel == nullptr) return;
-//     offlineModel->removeDownload();
-// }
-
 
 void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal){
 
-    OfflineModel* model = findModelById(id);
-    if(model == nullptr) return;
+    // OfflineModel* model = findModelById(id);
+    // if(model == nullptr) return;
 
-    qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
-    model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+    // qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
+    // model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
 
-    updateDownloadProgress();
+    // updateDownloadProgress();
 
     // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
-
 }
 
 void OfflineModelList::handleDownloadFinished(const int id){
 
-    OfflineModel* model = findModelById(id);
-    if(model == nullptr) return;
+    // OfflineModel* model = findModelById(id);
+    // if(model == nullptr) return;
 
-    model->setIsDownloading(false);
-    model->setDownloadFinished(true);
-    model->setDownloadPercent(0);
+    // model->setIsDownloading(false);
+    // model->setDownloadFinished(true);
+    // model->setDownloadPercent(0);
 
-    updateDownloadProgress();
-    deleteDownloadModel(id);
+    // updateDownloadProgress();
+    // deleteDownloadModel(id);
 
     // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     // emit currentModelListChanged();

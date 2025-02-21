@@ -73,7 +73,7 @@ signals:
     void startRequest(const QString &modelPath);
 
 public slots:
-    void handleDownloadFinished();
+    // void handleDownloadFinished();
     void handleBytesReceived(qint64 bytesReceived);
     void handleBytesTotal(qint64 bytesTotal);
 

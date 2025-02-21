@@ -12,7 +12,6 @@
 class Download : public QObject
 {
     Q_OBJECT
-    // QML_ELEMENT
 
 public:
     explicit Download(const int id, const QString &url, const QString &modelPath, QObject *parent = nullptr);
