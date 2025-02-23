@@ -113,6 +113,7 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
 void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
 
     directoryPath.remove("file:///");
 
@@ -126,34 +127,38 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
         download->downloadModel();
     }
     downloads.append(download);
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole});
 }
 
 void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal){
 
-    // OfflineModel* model = findModelById(id);
-    // if(model == nullptr) return;
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
 
-    // qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
-    // model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+    qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
+    model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
 
-    // updateDownloadProgress();
+    updateDownloadProgress();
 
-    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadPercentRole});
 }
 
 void OfflineModelList::handleDownloadFinished(const int id){
 
-    // OfflineModel* model = findModelById(id);
-    // if(model == nullptr) return;
+    OfflineModel* model = findModelById(id);
+    if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
 
-    // model->setIsDownloading(false);
-    // model->setDownloadFinished(true);
-    // model->setDownloadPercent(0);
+    model->setIsDownloading(false);
+    model->setDownloadFinished(true);
+    model->setDownloadPercent(0);
 
-    // updateDownloadProgress();
-    // deleteDownloadModel(id);
+    updateDownloadProgress();
+    deleteDownloadModel(id);
 
-    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     // emit currentModelListChanged();
 
 }
@@ -162,6 +167,7 @@ void OfflineModelList::cancelRequest(const int id){
 
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
 
     for(int indexSearch =0 ;indexSearch<downloads.size() && indexSearch<3 ;indexSearch++)
         if(downloads[indexSearch]->id() == id)
@@ -172,7 +178,7 @@ void OfflineModelList::cancelRequest(const int id){
 
     updateDownloadProgress();
     deleteDownloadModel(id);
-    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole, DownloadPercentRole});
 
 }
 
@@ -180,6 +186,7 @@ void OfflineModelList::deleteRequest(const int id){
 
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
 
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
@@ -204,7 +211,7 @@ void OfflineModelList::deleteRequest(const int id){
         // phoenix_databace::updateModelPath(model->id(),"");
     }
 
-    // emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
     // emit currentModelListChanged();
 
 }

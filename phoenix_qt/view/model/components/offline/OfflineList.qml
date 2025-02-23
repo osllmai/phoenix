@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-// import Qt.labs.qmlmodels
 
 Item {
     id: control
@@ -19,17 +18,9 @@ Item {
             return Math.max(gridView.width,300);
     }
 
-    // OfflineModelListFilter {
-    //     id: offlineModels
-    //     modelList: modelListModel
-    //     backendType: ModelListFilter.LocalModel
-    //     searchTerm: textArea.text
-    // }
-
     GridView {
         id: gridView
         anchors.fill: parent
-        anchors.margins: 15
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: control.calculationCellWidth()
@@ -46,16 +37,6 @@ Item {
         }
         clip: true
 
-        // Component.onCompleted: {
-        //         console.log("GridView model:", model);
-        //         console.log("GridView count:", model ? model.count : "undefined");
-        //     }
-
-        // model: ListModel {
-        //     ListElement { name: "Llama 3 8B"; company: "Meta"; fileSize: "10GB" }
-        //     ListElement { name: "Mistral"; company: "Mistral AI"; fileSize: "5GB" }
-        // }
-
         model: offlineModelListFilter
         delegate: Rectangle{
            width: gridView.cellWidth
@@ -64,8 +45,6 @@ Item {
 
            OfflineDelegate {
                id: indoxItem
-               // visible: index>=0
-               // model: offlineModelListFilter.at(index)
                anchors.fill: parent; anchors.margins: indoxItem.hovered? 18: 20
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }

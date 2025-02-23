@@ -226,6 +226,23 @@ Item{
     readonly property color buttonFeatureTextDisabled: currentTextColor[6]
     readonly property color buttonFeatureTextSelected: currentPrimaryColor[2]
 
+    //botton progress color
+    readonly property color buttonProgressNormal: currentPrimaryColor[1]
+    readonly property color buttonProgressHover: currentPrimaryColor[2]
+    readonly property color buttonProgressPressed: currentPrimaryColor[3]
+    readonly property color buttonProgressDisabled: currentPrimaryColor[0]
+    readonly property color buttonProgressSelected: currentPrimaryColor[0]
+    readonly property color buttonProgressBorderNormal: currentPrimaryColor[1]
+    readonly property color buttonProgressBorderHover: currentPrimaryColor[2]
+    readonly property color buttonProgressBorderPressed: currentPrimaryColor[3]
+    readonly property color buttonProgressBorderDisabled: currentPrimaryColor[0]
+    readonly property color buttonProgressBorderSelected: currentPrimaryColor[0]
+    readonly property color buttonProgressTextNormal: currentTextColor[0]
+    readonly property color buttonProgressTextHover: currentTextColor[0]
+    readonly property color buttonProgressTextPressed: currentTextColor[0]
+    readonly property color buttonProgressTextDisabled: currentTextColor[3]
+    readonly property color buttonProgressTextSelected: currentTextColor[1]
+
 
     //box color
     readonly property color boxNormalGradient0: currentBackgroundColor[1]

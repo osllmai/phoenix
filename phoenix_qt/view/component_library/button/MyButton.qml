@@ -39,7 +39,7 @@ T.Button {
 
     property var myText: ""
     property var myIcon: ""
-    property int progressBarValue: 0
+    property double progressBarValue: 0
     property bool textIsVisible: true
     property bool isNeedAnimation: false
     property int bottonType: Style.RoleEnum.BottonType.Primary
@@ -75,25 +75,24 @@ T.Button {
         Item{
             visible: control.bottonType == Style.RoleEnum.BottonType.Progress
             anchors.fill: parent
-            ProgressBar {
-                id: progressBar
-                value: control.progressBarValue
+            clip: true
+            Rectangle {
+                id: progressBarId
                 anchors.fill: parent
-                background: Rectangle {
-                    color: "#00ffffff"
-                    implicitHeight: control.height
-                    radius: 2
-                }
+                anchors.left: parent.left
+                property color gradientColor
+                clip: true
+                radius: 12
 
-                contentItem:Item{
-                    implicitHeight: 30
-                    Rectangle {
-                        width: progressBar.visualPosition * parent.width
-                        height: control.height
-                        color: Style.Colors.buttonPrimaryTextHover
-                    }
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop { position: 0.0; color: progressBarId.gradientColor }
+                    GradientStop { position: control.progressBarValue; color: progressBarId.gradientColor }
+                    GradientStop { position: Math.min(control.progressBarValue+0.3, 1); color: Style.Colors.like }
+                    GradientStop { position: 1.0; color: Style.Colors.like }
                 }
             }
+
             Text {
                 id: progressBarTextId
                 height: control.calculateHeightText()
@@ -101,6 +100,8 @@ T.Button {
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
 
@@ -160,6 +161,8 @@ T.Button {
                             return Style.Colors.buttonDangerNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryNormal;
                     }
@@ -173,6 +176,8 @@ T.Button {
                             return Style.Colors.buttonDangerHover;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureHover;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryHover;
                     }
@@ -186,6 +191,8 @@ T.Button {
                             return Style.Colors.buttonDangerPressed;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeaturePressed;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryPressed;
                     }
@@ -199,6 +206,8 @@ T.Button {
                             return Style.Colors.buttonDangerDisabled;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureDisabled;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryDisabled;
                     }
@@ -212,6 +221,8 @@ T.Button {
                             return Style.Colors.buttonDangerSelected;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureSelected;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimarySelected;
                     }
@@ -225,6 +236,8 @@ T.Button {
                             return Style.Colors.buttonDangerNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryNormal;
                     }
@@ -243,6 +256,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextNormal;
                     }
@@ -256,6 +271,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextHover;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextHover;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextHover;
                     }
@@ -269,6 +286,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextPressed;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextPressed;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextPressed;
                     }
@@ -282,6 +301,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextDisabled;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextDisabled;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextDisabled;
                     }
@@ -295,6 +316,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextSelected;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextSelected;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextSelected;
                     }
@@ -308,6 +331,8 @@ T.Button {
                             return Style.Colors.buttonDangerTextNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureTextNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryTextNormal;
                     }
@@ -326,6 +351,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderNormal;
                     }
@@ -339,6 +366,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderHover;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderHover;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderHover;
                     }
@@ -352,6 +381,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderPressed;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderPressed;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderPressed;
                     }
@@ -365,6 +396,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderDisabled;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderDisabled;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderDisabled;
                     }
@@ -378,6 +411,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderSelected;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderSelected;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderSelected;
                     }
@@ -391,6 +426,8 @@ T.Button {
                             return Style.Colors.buttonDangerBorderNormal;
                         case Style.RoleEnum.BottonType.Feature:
                             return Style.Colors.buttonFeatureBorderNormal;
+                        case Style.RoleEnum.BottonType.Progress:
+                            return Style.Colors.buttonProgressBorderNormal;
                         default:
                             return Style.Colors.buttonPrimaryBorderNormal;
                     }
@@ -418,7 +455,11 @@ T.Button {
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarId
+                gradientColor: control.choiceBackgroundColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
             }
         },
         State {
@@ -436,7 +477,11 @@ T.Button {
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarId
+                gradientColor: control.choiceBackgroundColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Hover)
             }
         },
         State {
@@ -454,7 +499,11 @@ T.Button {
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarId
+                gradientColor: control.choiceBackgroundColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Pressed)
             }
         },
         State {
@@ -472,7 +521,11 @@ T.Button {
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarId
+                gradientColor: control.choiceBackgroundColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Disabled)
             }
         }
     ]

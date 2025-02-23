@@ -34,6 +34,7 @@ void OfflineModel::setDownloadPercent(const double downloadPercent){
     if(m_downloadPercent == downloadPercent)
         return;
     m_downloadPercent = downloadPercent;
+    qInfo()<< "------------downloadPercent: "<<m_downloadPercent;
     emit downloadPercentChanged();
 }
 
