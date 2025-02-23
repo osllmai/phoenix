@@ -23,11 +23,10 @@ public:
 
 public slots:
     void readModel(const QList<Company*> companys);
-    int insertModel(const QString &name, const QString &key);
-    QSqlError deleteModel(const int id);
-    QSqlError updateKeyModel(const int id, const QString &key);
-    QSqlError updateIsLikeModel(const int id, const bool isLike);
-
+    void deleteModel(const int id);
+    void updateKeyModel(const int id, const QString &key);
+    void updateIsLikeModel(const int id, const bool isLike);
+    void addModel(const QString &name, const QString &key);
     void readConversation();
     int insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
                            const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
@@ -83,6 +82,7 @@ private:
     static const QString INSERT_MODEL_SQL;
     static const QString READALL_MODEL_SQL;
     static const QString READ_MODEL_SQL;
+    static const QString READ_MODEL_ID_SQL;
     static const QString UPDATE_KEYMODEL_SQL;
     static const QString UPDATE_ISLIKE_SQL;
     static const QString DELETE_MODEL_SQL;
@@ -96,6 +96,7 @@ private:
     static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
     static const QString DELETE_CONVERSATION_SQL;
 
+    int insertModel(const QString &name, const QString &key);
 };
 
 #endif // DATABASE_H

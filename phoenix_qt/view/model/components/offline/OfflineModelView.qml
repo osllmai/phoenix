@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
 
@@ -35,6 +36,18 @@ Item {
             source: "qrc:/media/icon/add.svg"
             color: "white"
             width: iconButtonId.width ; height: iconButtonId.height
+        }
+        onClicked:{
+            fileDialogId.open();
+        }
+        FileDialog{
+            id: fileDialogId
+            title: "Choose file"
+            nameFilters: ["Text files (*.gguf)"]
+            fileMode: FileDialog.OpenFiles
+            onAccepted: function(){
+                offlineModelList.addRequest(currentFile)
+            }
         }
     }
 }

@@ -51,12 +51,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("offlineModelList", offlineModelList);
     engine.rootContext()->setContextProperty("onlineModelList", onlineModelList);
 
-
-    OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
-    OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
-    engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
-    engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
-
     QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
     QObject::connect(database, &Database::addOnlineModel, onlineModelList, &OnlineModelList::addModel, Qt::QueuedConnection);
     QObject::connect(database, &Database::addOfflineModel, offlineModelList, &OfflineModelList::addModel, Qt::QueuedConnection);
@@ -65,6 +59,22 @@ int main(int argc, char *argv[])
     QObject::connect(onlineModelList, &OnlineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
     QObject::connect(offlineModelList, &OfflineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
     QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
+    QObject::connect(offlineModelList, &OfflineModelList::requestAddModel, database, &Database::addModel, Qt::QueuedConnection);
+    QObject::connect(offlineModelList, &OfflineModelList::requestDeleteModel, database, &Database::deleteModel, Qt::QueuedConnection);
+
+
+    OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
+    OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
+    engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
+    engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
+
+    OfflineModelListFilter* offlineModelListIsDownloadingFilter = new OfflineModelListFilter(offlineModelList, &engine);
+    offlineModelListIsDownloadingFilter->setFilterType(OfflineModelListFilter::FilterType::IsDownloading);
+    engine.rootContext()->setContextProperty("offlineModelListIsDownloadingFilter", offlineModelListIsDownloadingFilter);
+
+    OfflineModelListFilter* offlineModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
+    offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
+    engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
 
 
 

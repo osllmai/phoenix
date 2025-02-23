@@ -33,6 +33,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->name();
     case InformationRole:
         return model->information();
+    case IconRole:
+        return model->icon();
     case CompanyRole:
         return QVariant::fromValue(m_models[index.row()]->company());
     case IsLikeRole:
@@ -65,6 +67,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[IdRole] = "id";
     roles[NameRole] = "name";
     roles[InformationRole] = "information";
+    roles[IconRole] = "icon";
     roles[CompanyRole] = "company";
     roles[IsLikeRole] = "isLike";
     roles[AddModelTimeRole] = "addModelTime";
@@ -158,9 +161,10 @@ void OfflineModelList::handleDownloadFinished(const int id){
     updateDownloadProgress();
     deleteDownloadModel(id);
 
+    requestUpdateKeyModel(model->id(), model->key());
+
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     // emit currentModelListChanged();
-
 }
 
 void OfflineModelList::cancelRequest(const int id){
@@ -200,6 +204,7 @@ void OfflineModelList::deleteRequest(const int id){
 
         //delete from database
         // phoenix_databace::deleteModel(model->id());
+        requestDeleteModel(model->id());
         delete model;
 
         // chat->unloadAndDeleteLater();
@@ -208,6 +213,7 @@ void OfflineModelList::deleteRequest(const int id){
         if (file.exists()){
             file.remove();
         }
+        requestUpdateKeyModel(model->id(), "");
         // phoenix_databace::updateModelPath(model->id(),"");
     }
 
@@ -216,14 +222,11 @@ void OfflineModelList::deleteRequest(const int id){
 
 }
 
-
-
-
-
-
-
 void OfflineModelList::addRequest(QString directoryPath){
-
+    directoryPath.remove("file:///");
+    QFileInfo fileInfo(directoryPath);
+    QString fileName = fileInfo.baseName();
+    emit requestAddModel(fileName, directoryPath);
 }
 
 void OfflineModelList::addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,

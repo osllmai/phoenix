@@ -43,7 +43,7 @@ T.Button {
                     id: logoModelId
                     background: null
                     icon{
-                        source: "qrc:/media/image_company/" + model.company.icon
+                        source: "qrc:/media/image_company/" + model.icon
                         color: Style.Colors.iconHoverAndChecked
                         width:28; height:28
                     }

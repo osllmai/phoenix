@@ -107,6 +107,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/copyFill.svg
         media/icon/copySuccess.svg
         media/icon/copySuccessFill.svg
+        media/image_company/user.svg
 
         media/image_company/Phoenix.png
         media/image_company/Bert.svg

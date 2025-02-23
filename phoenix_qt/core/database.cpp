@@ -49,37 +49,66 @@ int Database::insertModel(const QString &name, const QString &key){
     return query.lastInsertId().toInt();
 }
 
-QSqlError Database::deleteModel(const int id){
+void Database::addModel(const QString &name, const QString &key){
+    int id = insertModel(name, key);
+
+    QSqlQuery query(m_db);
+    query.prepare(READ_MODEL_ID_SQL);
+    query.addBindValue(id);
+
+    if (!query.exec())
+        return;
+
+    if (query.next()) {
+
+        id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        QString key = query.value(2).toString();
+        QDateTime addDate = query.value(3).toDateTime();
+        bool isLike = query.value(4).toBool();
+
+        QFileInfo fileInfo(key);
+        double fileSize = (fileInfo.size()/10000000)*0.01;
+        QString icon = "user.svg";
+        QString information = "This model has been successfully added to the application by you.";
+
+        emit addOfflineModel(fileSize, 0, "", "", "", "",0.0, false, true,
+                             id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                             icon, information, "","", QDateTime::currentDateTime());
+    }
+}
+
+void Database::deleteModel(const int id){
     QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_MODEL_SQL))
-        return query.lastError();
+        return/* query.lastError()*/;
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateKeyModel(const int id, const QString &key){
+void Database::updateKeyModel(const int id, const QString &key){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISLIKE_SQL))
-        return query.lastError();
+        return /*query.lastError()*/;
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateIsLikeModel(const int id, const bool isLike){
+void Database::updateIsLikeModel(const int id, const bool isLike){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISLIKE_SQL))
-        return query.lastError();
+        return /*query.lastError()*/;
     query.addBindValue(isLike);
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
 int Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -219,6 +248,10 @@ const QString Database::READALL_MODEL_SQL = QLatin1String(R"(
 
 const QString Database::READ_MODEL_SQL = QLatin1String(R"(
     SELECT id, name, key, add_model_time, isLike FROM model WHERE name=?
+)");
+
+const QString Database::READ_MODEL_ID_SQL = QLatin1String(R"(
+    SELECT id, name, key, add_model_time, isLike FROM model WHERE id=?
 )");
 
 const QString Database::UPDATE_KEYMODEL_SQL = QLatin1String(R"(
@@ -417,10 +450,16 @@ void Database::readModel(const QList<Company*> companys){
                 QFile file(key);
                 if (!file.exists()){
                     deleteModel(id);
-                }else
-                    emit addOfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
-                             id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
-                             "", "", "","", QDateTime::currentDateTime());
+                }else{
+                    QFileInfo fileInfo(key);
+                    double fileSize = (fileInfo.size()/10000000)*0.01;
+                    QString icon = "user.svg";
+                    QString information = "This model has been successfully added to the application by you.";
+
+                    emit addOfflineModel(fileSize, 0, "", "", "", "",0.0, false, true,
+                                         id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                         icon, information, "","", QDateTime::currentDateTime());
+                }
             }
         }
     }

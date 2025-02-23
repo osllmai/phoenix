@@ -28,6 +28,7 @@ public:
         IdRole = Qt::UserRole + 1,
         NameRole,
         InformationRole,
+        IconRole,
         CompanyRole,
         IsLikeRole,
         AddModelTimeRole,
@@ -72,6 +73,8 @@ public slots:
 signals:
     void countChanged();
     void downloadProgressChanged();
+    void requestAddModel(const QString &name, const QString &key);
+    void requestDeleteModel(const int id);
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
 

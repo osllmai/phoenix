@@ -96,7 +96,8 @@ T.Button {
             Text {
                 id: progressBarTextId
                 height: control.calculateHeightText()
-                text: control.hovered ? "Cancel": control.progressBarValue
+                property double progressFixedNumber: Number(control.progressBarValue* 100).toFixed(2)
+                text: control.hovered ? "Cancel":  "%" + progressFixedNumber
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
