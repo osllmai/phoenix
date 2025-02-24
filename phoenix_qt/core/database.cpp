@@ -71,10 +71,24 @@ void Database::addModel(const QString &name, const QString &key){
         double fileSize = (fileInfo.size()/10000000)*0.01;
         QString icon = "user.svg";
         QString information = "This model has been successfully added to the application by you.";
+        int ramRequ;
+        if(fileSize<0.6)
+            ramRequ = 1;
+        else if(fileSize <1.5)
+            ramRequ = 2;
+        else if(fileSize <3.0)
+            ramRequ = 4;
+        else if(fileSize <6.0)
+            ramRequ = 8;
+        else if(fileSize <10.0)
+            ramRequ = 16;
+        else
+            ramRequ = 32;
 
-        emit addOfflineModel(fileSize, 0, "", "", "", "",0.0, false, true,
+        emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
                              id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime());
+
     }
 }
 
@@ -452,11 +466,24 @@ void Database::readModel(const QList<Company*> companys){
                     deleteModel(id);
                 }else{
                     QFileInfo fileInfo(key);
-                    double fileSize = (fileInfo.size()/10000000)*0.01;
                     QString icon = "user.svg";
                     QString information = "This model has been successfully added to the application by you.";
+                    double fileSize = (fileInfo.size()/10000000)*0.01;
+                    int ramRequ;
+                    if(fileSize<0.6)
+                        ramRequ = 1;
+                    else if(fileSize <1.5)
+                        ramRequ = 2;
+                    else if(fileSize <3.0)
+                        ramRequ = 4;
+                    else if(fileSize <6.0)
+                        ramRequ = 8;
+                    else if(fileSize <10.0)
+                        ramRequ = 16;
+                    else
+                        ramRequ = 32;
 
-                    emit addOfflineModel(fileSize, 0, "", "", "", "",0.0, false, true,
+                    emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
                                          id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime());
                 }

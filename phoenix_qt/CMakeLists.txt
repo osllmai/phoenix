@@ -137,6 +137,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MySlider.qml
         view/component_library/button/MySwitch.qml
         view/component_library/button/MyMenu.qml
+        view/component_library/button/MyProgress.qml
 
         view/AppMenuDesktop.qml
         view/AppMenuAplication.qml
@@ -206,6 +207,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/SettingsBody.qml
 
         view/AppFooter.qml
+        view/component_footer/SystemMonitoring.qml
 
         RESOURCES
             view/component_library/style/qmldir
