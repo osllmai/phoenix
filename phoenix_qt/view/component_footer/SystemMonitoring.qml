@@ -22,11 +22,11 @@ T.Popup {
 
             MyProgress{
                 myText: "CPU"
-                myValue: 0.7
+                myValue: systemMonitor.cpuInfo/10000
             }
             MyProgress{
                 myText: "Memory"
-                myValue: 0.2
+                myValue: systemMonitor.memoryInfo/10000
             }
         }
 

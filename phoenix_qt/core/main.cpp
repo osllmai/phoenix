@@ -3,6 +3,7 @@
 #include <QIcon>
 
 #include "database.h"
+#include "systemmonitor.h"
 
 #include "./model/companylist.h"
 #include "./model/companylistfilter.h"
@@ -75,6 +76,9 @@ int main(int argc, char *argv[])
     OfflineModelListFilter* offlineModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
     offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
     engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
+
+    SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
+    engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 
 
 

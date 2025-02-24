@@ -21,11 +21,9 @@ Item {
             myIcon: "qrc:/media/icon/systemMonitor.svg"
             iconType: Style.RoleEnum.IconType.Primary
             onHoveredChanged: function(){
-                if(downloading.hovered){
-                    // phoenixController.setIsSystemMonitor(true)
+                if(downloading.hovered){                    
                     downloadingPupup.open()
-                }else{
-                    // phoenixController.setIsSystemMonitor(false)
+                }else{                    
                     downloadingPupup.close()
                 }
             }
@@ -46,10 +44,10 @@ Item {
             iconType: Style.RoleEnum.IconType.Primary
             onHoveredChanged: function(){
                 if(systemMonitoring.hovered){
-                    // phoenixController.setIsSystemMonitor(true)
+                    systemMonitor.runSystemMonitor(true)
                     systemMonitorPupup.open()
                 }else{
-                    // phoenixController.setIsSystemMonitor(false)
+                    systemMonitor.runSystemMonitor(false)
                     systemMonitorPupup.close()
                 }
             }

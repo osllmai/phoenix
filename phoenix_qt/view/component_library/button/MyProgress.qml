@@ -59,7 +59,7 @@ Item {
                         GradientStop { position: 0.0; color: Style.Colors.progressBarGradient0 }
                         GradientStop { position: 1.0; color: Style.Colors.progressBarGradient1 }
                     }
-                    Behavior on width{ NumberAnimation{ duration: 200}}
+                    Behavior on width{ NumberAnimation{ duration: 900}}
                 }
             }
         }
