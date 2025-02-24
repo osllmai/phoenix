@@ -255,5 +255,11 @@ Item{
     //like color
     readonly property color like: currentErrorColor[1]
 
+    //progressBar
+    readonly property color progressBarText: currentTextColor[6]
+    readonly property color progressBarBackground: currentPrimaryColor[0]
+    readonly property color progressBarGradient0: currentPrimaryColor[1]
+    readonly property color progressBarGradient1: currentPrimaryColor[3]
+
     //------------------------------------end general--------------------------------------//
 }

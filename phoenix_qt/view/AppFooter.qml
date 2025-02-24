@@ -32,7 +32,7 @@ Item {
             }
             SystemMonitoring{
                 id: systemMonitorPupup
-                x: systemMonitoring.x - 84
+                x: systemMonitoring.x - 124
                 y: systemMonitoring.y - systemMonitorPupup.height
             }
         }
