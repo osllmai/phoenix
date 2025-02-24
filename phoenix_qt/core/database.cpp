@@ -105,7 +105,7 @@ void Database::deleteModel(const int id){
 void Database::updateKeyModel(const int id, const QString &key){
     QSqlQuery query(m_db);
 
-    if (!query.prepare(UPDATE_ISLIKE_SQL))
+    if (!query.prepare(UPDATE_KEYMODEL_SQL))
         return /*query.lastError()*/;
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
@@ -394,6 +394,7 @@ void Database::readModel(const QList<Company*> companys){
                 if (!query.exec())
                     continue;
 
+                bool downloadFinished = false;
                 if (!query.next()) {
 
                     id = insertModel(obj["name"].toString(),"");
@@ -407,11 +408,15 @@ void Database::readModel(const QList<Company*> companys){
                     key = query.value(2).toString();
                     addDate = query.value(3).toDateTime();
                     isLike = query.value(4).toBool();
+                    downloadFinished = false;
+                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
+                             << "Time:" << addDate << "IsLike:" << isLike;
+
                 }
 
                 emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
-                                   obj["quant"].toString(),0.0, false, false,
+                                   obj["quant"].toString(),0.0, false, downloadFinished,
 
                                    id, name, key, addDate, isLike, company,
                                    BackendType::OfflineModel,
