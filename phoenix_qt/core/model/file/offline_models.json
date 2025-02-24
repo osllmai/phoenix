@@ -174,7 +174,7 @@
   {
     "order": "m",
     "md5sum": "15dcb4d7ea6de322756449c11a0b7545",
-    "name": "MPT Chat",
+    "name": "MPT Chat new",
     "filename": "mpt-7b-chat-newbpe-q4_0.gguf",
     "filesize": 3.91,
     "requires": "2.7.1",

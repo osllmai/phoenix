@@ -13,6 +13,29 @@ Item {
         color: Style.Colors.boxBorder
         anchors.top: parent.top
     }
+    Row{
+        anchors.left: parent.left; anchors.leftMargin: 20
+        anchors.verticalCenter: parent.verticalCenter
+        MyIcon {
+            id: downloading
+            myIcon: "qrc:/media/icon/systemMonitor.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            onHoveredChanged: function(){
+                if(downloading.hovered){
+                    // phoenixController.setIsSystemMonitor(true)
+                    downloadingPupup.open()
+                }else{
+                    // phoenixController.setIsSystemMonitor(false)
+                    downloadingPupup.close()
+                }
+            }
+            Downloading{
+                id: downloadingPupup
+                x: downloading.x
+                y: downloading.y - downloadingPupup.height
+            }
+        }
+    }
 
     Row{
         anchors.right: parent.right; anchors.rightMargin: 20

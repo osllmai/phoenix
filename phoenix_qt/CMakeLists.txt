@@ -208,6 +208,7 @@ qt_add_qml_module(app${PROJECT_NAME}
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
+        view/component_footer/Downloading.qml
 
         RESOURCES
             view/component_library/style/qmldir

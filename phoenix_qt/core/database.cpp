@@ -408,7 +408,8 @@ void Database::readModel(const QList<Company*> companys){
                     key = query.value(2).toString();
                     addDate = query.value(3).toDateTime();
                     isLike = query.value(4).toBool();
-                    downloadFinished = false;
+                    if(key != "")
+                        downloadFinished = true;
                     qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
                              << "Time:" << addDate << "IsLike:" << isLike;
 

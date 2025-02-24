@@ -14,7 +14,7 @@
 class OfflineModelListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
-    // QML_ELEMENT
+    Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
     Q_PROPERTY(int companyId READ companyId WRITE setCompanyId NOTIFY companyIdChanged FINAL)
 public:
@@ -31,6 +31,8 @@ public:
     };
     Q_ENUM(FilterType)
 
+    int count() const;
+
     FilterType filterType() const;
     void setFilterType(FilterType newFilterType);
 
@@ -41,6 +43,7 @@ protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 signals:
+    void countChanged();
     void filterTypeChanged();
     void companyIdChanged();
 

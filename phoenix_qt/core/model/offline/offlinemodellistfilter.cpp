@@ -60,6 +60,8 @@ void OfflineModelListFilter::filter(QString filter){
         setFilterType(FilterType::IsDownloading);
 }
 
+int OfflineModelListFilter::count() const { return rowCount(); }
+
 int OfflineModelListFilter::companyId() const{return m_companyId;}
 void OfflineModelListFilter::setCompanyId(int companyId){
     if (m_companyId == companyId)
@@ -68,6 +70,7 @@ void OfflineModelListFilter::setCompanyId(int companyId){
     setFilterType(FilterType::Company);
     invalidateFilter();
     emit companyIdChanged();
+    emit countChanged();
 }
 
 OfflineModelListFilter::FilterType OfflineModelListFilter::filterType() const{return m_filterType;}
@@ -77,4 +80,5 @@ void OfflineModelListFilter::setFilterType(FilterType newFilterType){
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();
+    emit countChanged();
 }

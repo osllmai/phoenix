@@ -3,19 +3,30 @@ import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects
 import '../style' as Style
 
-Rectangle {
+Item {
     id: control
     height: 30
-    width: cpuText.width + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
-    property var myText
-    property double myValue
+    width: (myIcon ==""?0:iconId.width+5) + cpuText.width + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
+
+    property var myText: ""
+    property double myValue: 0.0
+    property var myIcon: ""
     property int textLenght: 45
+    property int iconType: Style.RoleEnum.IconType.Primary
 
     Row{
         anchors.centerIn: parent
         anchors.margins: 3
         spacing: 5
 
+        MyIcon {
+            id: iconId
+            width: 30; height: 30
+            visible: control.myIcon != ""
+            myIcon: control.myIcon
+            iconType: control.iconType
+            enabled: false
+        }
         Text {
             id: cpuText
             text: control.myText
@@ -23,6 +34,7 @@ Rectangle {
             color: Style.Colors.progressBarText
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 9
+            clip: true
         }
         ProgressBar {
             id: progressBarCPU
