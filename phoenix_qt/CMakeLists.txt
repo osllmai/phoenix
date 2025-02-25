@@ -100,6 +100,8 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/upFill.svg
         media/icon/down.svg
         media/icon/downFill.svg
+        media/icon/download.svg
+        media/icon/downloadFill.svg
         media/icon/systemMonitor.svg
         media/icon/discord.svg
         media/icon/github.svg

@@ -12,7 +12,7 @@ T.Popup {
     background: Rectangle{
         id:systemMonitorRec
         anchors.fill: parent
-        color: Style.Colors.background
+        color: Style.Colors.boxNormalGradient0
         radius: 4
         border.color: Style.Colors.boxBorder
         border.width: 1

@@ -1,9 +1,10 @@
 import QtQuick 2.15
 import QtQuick.Controls.Basic
+import QtQuick.Templates 2.1 as T
 import Qt5Compat.GraphicalEffects
 import '../style' as Style
 
-Item {
+T.Button  {
     id: control
     height: 30
     width: (myIcon ==""?0:iconId.width+5) + cpuText.width + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
@@ -13,7 +14,9 @@ Item {
     property var myIcon: ""
     property int textLenght: 45
     property int iconType: Style.RoleEnum.IconType.Primary
+    enabled: false
 
+    background: null
     Row{
         anchors.centerIn: parent
         anchors.margins: 3

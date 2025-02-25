@@ -30,6 +30,8 @@
         <file>icon/close.svg</file>
         <file>icon/pin.svg</file>
         <file>icon/pinFill.svg</file>
+        <file>icon/download.svg</file>
+        <file>icon/downloadFill.svg</file>
         <file>icon/delete.svg</file>
         <file>icon/deleteFill.svg</file>
         <file>icon/edit.svg</file>

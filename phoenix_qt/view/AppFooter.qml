@@ -16,17 +16,23 @@ Item {
     Row{
         anchors.left: parent.left; anchors.leftMargin: 20
         anchors.verticalCenter: parent.verticalCenter
-        MyIcon {
+
+        MyProgress{
             id: downloading
-            myIcon: "qrc:/media/icon/systemMonitor.svg"
-            iconType: Style.RoleEnum.IconType.Primary
+            visible: offlineModelList.downloadProgress>0.0001
+            myText: "Downloading"
+            myValue: offlineModelList.downloadProgress
+            myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
+            textLenght: 70
+            enabled: true
             onHoveredChanged: function(){
-                if(downloading.hovered){                    
+                if(downloading.hovered){
                     downloadingPupup.open()
-                }else{                    
+                }else{
                     downloadingPupup.close()
                 }
             }
+
             Downloading{
                 id: downloadingPupup
                 x: downloading.x

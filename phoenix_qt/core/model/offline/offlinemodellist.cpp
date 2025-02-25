@@ -140,8 +140,8 @@ void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesRe
     if(model == nullptr) return;
     const int index = m_models.indexOf(model);
 
-    qDebug()<<static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal);
-    model->setDownloadPercent(static_cast<double>(bytesReceived)/static_cast<double>(bytesTotal));
+    model->setBytesReceived(bytesReceived);
+    model->setBytesTotal(bytesTotal);
 
     updateDownloadProgress();
 
@@ -194,7 +194,6 @@ void OfflineModelList::deleteRequest(const int id){
 
     model->setIsDownloading(false);
     model->setDownloadFinished(false);
-    // m_currentModelList->deleteModel(model);
 
     if(model->url() == ""){
         const int newIndex = m_models.indexOf(model);
@@ -203,23 +202,18 @@ void OfflineModelList::deleteRequest(const int id){
         endRemoveRows();
 
         //delete from database
-        // phoenix_databace::deleteModel(model->id());
         requestDeleteModel(model->id());
         delete model;
 
-        // chat->unloadAndDeleteLater();
     }else if(model->key() != ""){
         QFile file(model->key());
         if (file.exists()){
             file.remove();
         }
         requestUpdateKeyModel(model->id(), "");
-        // phoenix_databace::updateModelPath(model->id(),"");
     }
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
-    // emit currentModelListChanged();
-
 }
 
 void OfflineModelList::addRequest(QString directoryPath){
@@ -266,19 +260,21 @@ OfflineModel* OfflineModelList::findModelById(int id) {
 }
 
 void OfflineModelList::updateDownloadProgress(){
-    double totalBytesDownload =0;
-    double receivedBytesDownload =0;
+    qint64 totalBytesDownload =0;
+    qint64 receivedBytesDownload =0;
     for (auto &&model : m_models){
-        if(model->isDownloading()){
-            totalBytesDownload += 1;
-            receivedBytesDownload += model->downloadPercent();
+        if(model->isDownloading() && model->bytesTotal()>0.0001 && model->bytesReceived()>0.0001){
+            totalBytesDownload += model->bytesTotal();
+            receivedBytesDownload += model->bytesReceived();
         }
     }
     if(totalBytesDownload != 0)
-        m_downloadProgress = (receivedBytesDownload/totalBytesDownload)*100;
+        m_downloadProgress = static_cast<double>(receivedBytesDownload)/static_cast<double>(totalBytesDownload);
     else
         m_downloadProgress = 0;
 
+    qInfo()<<"receivedBytesDownload:  "<<receivedBytesDownload;
+    qInfo()<<"totalBytesDownload:  "<<totalBytesDownload;
     qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
     emit downloadProgressChanged();
 }

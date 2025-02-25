@@ -63,11 +63,8 @@ void OfflineModel::setBytesReceived(const qint64 newBytesReceived){
     m_bytesReceived = newBytesReceived;
     emit bytesReceivedChanged();
 
-    double downloadPercent = 0;
     if(m_bytesTotal != 0)
-        downloadPercent = (static_cast<double>(m_bytesReceived) / static_cast<double>(m_bytesTotal)) * 100;
-    setDownloadPercent(downloadPercent);
-    qInfo()<< downloadPercent <<"            "<<m_bytesReceived<<"   "<<m_bytesTotal;
+        setDownloadPercent(static_cast<double>(m_bytesReceived) / static_cast<double>(m_bytesTotal)) ;
 
     emit  modelChanged();
 }
@@ -77,9 +74,7 @@ qint64 OfflineModel::bytesTotal() const{return m_bytesTotal;}
 void OfflineModel::setBytesTotal(const qint64 newBytesTotal){
     if (m_bytesTotal == newBytesTotal)
         return;
-    qInfo()<< "OfflineModel:bytesTotal() :  bytesTotal: "<< m_bytesTotal;
     m_bytesTotal = newBytesTotal;
     emit bytesTotalChanged();
-    // emit  modelChanged();
 }
 void OfflineModel::handleBytesTotal(qint64 bytesTotal){setBytesTotal(bytesTotal);}

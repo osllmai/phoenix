@@ -16,9 +16,8 @@
 class OfflineModelList: public QAbstractListModel
 {
     Q_OBJECT
-    // QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
-    Q_PROPERTY(int downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
+    Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -84,7 +83,7 @@ private:
 
     QList<OfflineModel*> m_models;
     QList<Download*>downloads;
-    int m_downloadProgress;
+    double m_downloadProgress;
 
     OfflineModel* findModelById(const int id);
     void updateDownloadProgress();

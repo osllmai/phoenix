@@ -31,15 +31,27 @@ Item {
         }
     }
 
-    MyButton{
-        id: deleteButton
+    Row{
+        spacing: 5
         visible: model.downloadFinished
-        myText: "Delete"
-        bottonType: Style.RoleEnum.BottonType.Danger
-        onClicked:{
-            offlineModelList.deleteRequest(model.id)
+        MyButton{
+            id: deleteButton
+            myText: "Delete"
+            bottonType: Style.RoleEnum.BottonType.Danger
+            onClicked:{
+                offlineModelList.deleteRequest(model.id)
+            }
+        }
+        MyButton{
+            id: startChatButton
+            myText: "Start Chat"
+            bottonType: Style.RoleEnum.BottonType.Primary
+            onClicked:{
+                // offlineModelList.deleteRequest(model.id)
+            }
         }
     }
+
     FolderDialog {
         id: folderDialogId
         title: "Choose Folder"
