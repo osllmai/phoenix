@@ -34,6 +34,7 @@ T.Popup {
                 myText: model.name
                 myValue: model.downloadPercent
                 myIcon: "qrc:/media/image_company/" + model.icon
+                iconType: Style.RoleEnum.IconType.Image
                 textLenght: 65
             }
         }

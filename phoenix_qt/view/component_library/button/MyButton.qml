@@ -16,7 +16,7 @@ T.Button {
         case Style.RoleEnum.IconType.Primary:
             return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
         case Style.RoleEnum.IconType.Image:
-            return (textBoxId.visible? (textId.width + imageIconId.width + 16): control.height);
+            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
         default:
             return (textBoxId.visible? (textId.width + iconId.width + 16): control.height);
         }
@@ -29,7 +29,7 @@ T.Button {
         case Style.RoleEnum.IconType.Primary:
             return primaryIconId.height;
         case Style.RoleEnum.IconType.Image:
-            return imageIconId.height;
+            return primaryIconId.height;
         default:
             return iconId.height;
         }
@@ -110,15 +110,10 @@ T.Button {
             visible: control.bottonType != Style.RoleEnum.BottonType.Progress
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            Image {
-                id: imageIconId
-                visible: control.myIcon != "" && control.iconType == Style.RoleEnum.IconType.Image
-                source: control.myIcon
-            }
             MyIcon {
                 id: iconId
                 width: 30; height: 30
-                visible: control.myIcon != "" && control.iconType != Style.RoleEnum.IconType.Image && control.iconType != Style.RoleEnum.IconType.Primary
+                visible: control.myIcon != "" &&  control.iconType != Style.RoleEnum.IconType.Primary
                 myIcon: control.myIcon
                 iconType: control.iconType
                 enabled: false

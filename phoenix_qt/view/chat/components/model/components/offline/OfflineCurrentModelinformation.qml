@@ -7,7 +7,7 @@ import "../../../../../component_library/button"
 
 T.Popup {
     id: control
-    width: 250
+    width: 300
     height: 250
 
     background:null
@@ -21,12 +21,12 @@ T.Popup {
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: control.hovered? Style.Colors.boxHoverGradient0: Style.Colors.boxNormalGradient0
+                color: control.hovered? Style.Colors.background: Style.Colors.background
             }
 
             GradientStop {
                 position: 1
-                color: control.hovered? Style.Colors.boxHoverGradient1: Style.Colors.boxNormalGradient1
+                color: control.hovered? Style.Colors.boxHover: Style.Colors.boxHover
             }
             orientation: Gradient.Vertical
         }
@@ -38,14 +38,12 @@ T.Popup {
             Row{
                 id: headerId
                 width: parent.width
-                ToolButton {
+                MyIcon {
                     id: logoModelId
-                    background: null
-                    icon{
-                        source: "qrc:/media/image_company/" + model.icon
-                        color: Style.Colors.iconHoverAndChecked
-                        width:28; height:28
-                    }
+                    myIcon: "qrc:/media/image_company/" + model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 40; height: 40
                 }
                 Text {
                     id: titleId
@@ -70,7 +68,7 @@ T.Popup {
             }
             Item{
                 id: aboutId
-                height: parent.height - headerId.height - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height - informationAboutDownloadId.height - 20
                 width: parent.width
                 clip: true
                 Text{

@@ -23,6 +23,7 @@ import '../../../component_library/button'
         Item{
             width: logoButton.width + textId.width
             height: parent.height
+
             Image {
                 id: logoButton
                 source: "qrc:/media/image_company/Phoenix.png"

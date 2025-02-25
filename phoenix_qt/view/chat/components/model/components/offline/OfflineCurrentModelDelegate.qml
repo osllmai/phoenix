@@ -25,7 +25,7 @@ T.Button {
             MyIcon {
                 id: logoModelId
                 myIcon: "qrc:/media/image_company/" + model.icon
-                iconType: Style.RoleEnum.IconType.Primary
+                iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32
             }

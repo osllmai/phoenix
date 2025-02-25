@@ -54,7 +54,7 @@ Item{
                         myText: model.name
                         myIcon: "qrc:/media/image_company/" + model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
+                        iconType: Style.RoleEnum.IconType.Image
                         isNeedAnimation: true
                         onClicked:{
                             offlineModelListFilter.companyId = model.id
@@ -62,29 +62,29 @@ Item{
                     }
 
                     footer: Row {
-                            spacing: 10
-                            MyButton {
-                                id: allId
-                                myText: "All"
-                                bottonType: Style.RoleEnum.BottonType.Feature
-                                iconType: Style.RoleEnum.IconType.FeatureBlue
-                                isNeedAnimation: true
-                                onClicked: {
-                                    offlineModelListFilter.filter("All")
-                                }
-                            }
-
-                            MyButton {
-                                id: favoriteId
-                                myText: "Favorite"
-                                bottonType: Style.RoleEnum.BottonType.Feature
-                                iconType: Style.RoleEnum.IconType.FeatureBlue
-                                isNeedAnimation: true
-                                onClicked: {
-                                    offlineModelListFilter.filter("Favorite")
-                                }
+                        spacing: 10
+                        MyButton {
+                            id: allId
+                            myText: "All"
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.FeatureBlue
+                            isNeedAnimation: true
+                            onClicked: {
+                                offlineModelListFilter.filter("All")
                             }
                         }
+
+                        MyButton {
+                            id: favoriteId
+                            myText: "Favorite"
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.FeatureBlue
+                            isNeedAnimation: true
+                            onClicked: {
+                                offlineModelListFilter.filter("Favorite")
+                            }
+                        }
+                    }
                 }
             }
         }

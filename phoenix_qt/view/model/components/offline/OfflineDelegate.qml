@@ -39,14 +39,12 @@ T.Button {
             Row{
                 id: headerId
                 width: parent.width
-                ToolButton {
+                MyIcon {
                     id: logoModelId
-                    background: null
-                    icon{
-                        source: "qrc:/media/image_company/" + model.icon
-                        color: Style.Colors.iconHoverAndChecked
-                        width:28; height:28
-                    }
+                    myIcon: "qrc:/media/image_company/" + model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 40; height: 40
                 }
                 Text {
                     id: titleId
