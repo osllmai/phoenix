@@ -6,7 +6,7 @@ import '../../../component_library/style' as Style
 
 Dialog{
     id: control
-    width: 330
+    width: 300
     height: 400
     signal closeDialog()
     background: Rectangle {
@@ -17,7 +17,7 @@ Dialog{
         radius: 8
         Column{
             anchors.fill: parent
-            anchors.margins: 16
+            anchors.margins: 12
             ModelDialogHeader{
                 id: headerId
                 Connections{
@@ -34,6 +34,7 @@ Dialog{
             ModelDialogBody{
                 id: badyId
                 height: parent.height - headerId.height
+                width: parent.width
             }
         }
         layer.enabled: true

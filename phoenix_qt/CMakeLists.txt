@@ -190,19 +190,16 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/model_settings/components/ModelMenuSettings.qml
         view/chat/components/model/ModelButton.qml
         view/chat/components/model/ModelDialog.qml
-        view/chat/components/model/components/CompanyMenu.qml
         view/chat/components/model/components/ModelDialogHeader.qml
         view/chat/components/model/components/ModelDialogBody.qml
         view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
         view/chat/components/model/components/online/OnlineCurrentModelList.qml
         view/chat/components/model/components/online/OnlineCurrentModelinformation.qml
         view/chat/components/model/components/online/OnlineCurrentView.qml
-        view/chat/components/model/components/online/OnlineCurrentDelegate.qml
         view/chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
         view/chat/components/model/components/offline/OfflineCurrentModelList.qml
         view/chat/components/model/components/offline/OfflineCurrentModelinformation.qml
         view/chat/components/model/components/offline/OfflineCurrentView.qml
-        view/chat/components/model/components/offline/OfflineCurrentDelegate.qml
 
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml

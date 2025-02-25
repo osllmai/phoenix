@@ -10,12 +10,7 @@ T.Popup {
     width: 250
     height: 250
 
-    property var myText: "My Model"
-    property var myIcon: "qrc:/media/icon/inDox.svg"
-    property var about: " About Model"
-
     background:null
-
     contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent
@@ -47,7 +42,7 @@ T.Popup {
                     id: logoModelId
                     background: null
                     icon{
-                        source: control.myIcon
+                        source: "qrc:/media/image_company/" + model.icon
                         color: Style.Colors.iconHoverAndChecked
                         width:28; height:28
                     }
@@ -55,34 +50,36 @@ T.Popup {
                 Text {
                     id: titleId
                     width: parent.width - logoModelId.width - likeIconId.width
-                    text: control.myText
+                    text: model.name
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
                     font.styleName: "Bold"
                 }
-                ToolButton {
+                MyIcon{
                     id: likeIconId
-                    background: null
+                    myIcon: model.isLike? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    icon{
-                        source: likeIconId.hovered? "../../../media/icon/like.svg": "../../../media/icon/disLike.svg"
-                        color: Style.Colors.like
-                        width:20; height:20
+                    iconType: Style.RoleEnum.IconType.Like
+                    isNeedAnimation: true
+                    onClicked: {
+                        offlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
                     }
                 }
             }
             Item{
                 id: aboutId
-                height: parent.height - headerId.height - buttonListId.height - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height - informationAboutDownloadId.height - 30
                 width: parent.width
+                clip: true
                 Text{
                     id:informationId
-                    text: control.about
+                    text: model.information
                     color: Style.Colors.textInformation
                     clip: true
                     anchors.left: parent.left; anchors.right: parent.right
-                    font.pixelSize: 12
+                    font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
@@ -113,7 +110,7 @@ T.Popup {
                         Text {
                             id: fileSizeValue
                             color: Style.Colors.textInformation
-                            text: "4.8 GB"
+                            text: model.fileSize + " GB"
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
@@ -140,7 +137,7 @@ T.Popup {
                         Text {
                             id: ramRequiredValue
                             color: Style.Colors.textInformation
-                            text: "16 GB"
+                            text: model.ramRamrequired + " GB"
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
@@ -167,7 +164,7 @@ T.Popup {
                         Text {
                             id: parameterersValue
                             color: Style.Colors.textInformation
-                            text: "1000"
+                            text: model.parameters
                             font.pointSize: 8
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
@@ -193,41 +190,10 @@ T.Popup {
                         }
                         Text {
                             id: quantValue
-                            color: Style.Colors.textTitle
-                            text: "5.4"
+                            color: Style.Colors.textInformation
+                            text: model.quant
                             font.pointSize: 8
                             anchors.horizontalCenter: parent.horizontalCenter
-                        }
-                    }
-                }
-            }
-
-            Rectangle{
-                id: buttonListId
-                height: goToGithubId.height
-                width: parent.width
-                color: "#00ffffff"
-                MyButton{
-                    id:goToGithubId
-                    width: (parent.width-10)/2
-                    anchors.left: parent.left
-                    myText: "GitHub"
-                    bottonType: Style.RoleEnum.BottonType.Primary
-                    Connections {
-                        target: goToGithubId
-                        function onClicked(){
-                        }
-                    }
-                }
-                MyButton{
-                    id:goToNotebookId
-                    width: (parent.width-10)/2
-                    anchors.right: parent.right
-                    myText: "Notebook"
-                    bottonType: Style.RoleEnum.BottonType.Primary
-                    Connections {
-                        target: goToNotebookId
-                        function onClicked(){
                         }
                     }
                 }

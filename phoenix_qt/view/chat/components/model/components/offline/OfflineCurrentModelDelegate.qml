@@ -1,59 +1,45 @@
 import QtQuick 2.15
+import QtQuick.Templates 2.1 as T
 import '../../../../../component_library/style' as Style
 import '../../../../../component_library/button'
 
-Item {
-    id:control
-    height: 40; width: parent.width
-    property var myText
-    property bool isOpen: true
+T.Button {
+    id: control
+    property var modelName
+    property var modelIcon
+    signal deleteChat()
+    signal editChatName(var chatName)
 
-    signal open()
-    function selectIcon(){
-        if(isOpen){
-            if(searchIcon.hovered){
-                return "qrc:/media/icon/upFill.svg";
-            }else{
-                return "qrc:/media/icon/up.svg";
-            }
-        }else{
-            if(searchIcon.hovered){
-                return "qrc:/media/icon/downFill.svg";
-            }else{
-                return "qrc:/media/icon/down.svg";
-            }
-        }
-    }
-
-    Row{
+    background: null
+    contentItem: Rectangle {
+        id: backgroundId
         anchors.fill: parent
-        Text {
-            id: inferenceSettingsTextId
-            width: parent.width - searchIcon.width ; height: parent.height
-            text: control.myText
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 10
-            color: Style.Colors.textTitle
-            MouseArea{
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked:{
-                    control.open()
-                }
+        radius: 8
+        border.width: 1
+        border.color: Style.Colors.boxBorder
+        color: control.hovered? Style.Colors.boxHover: "#00ffffff"
+
+        Row {
+            id: headerId
+            anchors.verticalCenter: parent.verticalCenter
+            MyIcon {
+                id: logoModelId
+                myIcon: "qrc:/media/image_company/" + model.icon
+                iconType: Style.RoleEnum.IconType.Primary
+                enabled: false
+                width: 32; height: 32
             }
-        }
-        MyIcon {
-            id: searchIcon
-            myIcon: control.selectIcon()
-            iconType: Style.RoleEnum.IconType.Primary
-            enabled: false
-            Connections {
-                target: searchIcon
-                function onClicked(){
-                    control.open()
-                }
+            Text{
+                id: modelNameId
+                text: model.name
+                clip: true
+                color: Style.Colors.textTitle
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.NoWrap
+                anchors.verticalCenter: logoModelId.verticalCenter
             }
         }
     }
 }
-

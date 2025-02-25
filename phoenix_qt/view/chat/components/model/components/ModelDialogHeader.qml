@@ -5,7 +5,7 @@ import '../../../../component_library/button'
 
 Item{
     id:headerId
-    height: 100; width: parent.width
+    height: 80; width: parent.width
     clip:true
     signal search(var text)
     signal closeDialog()
@@ -46,7 +46,7 @@ Item{
             id: searchIcon
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            width:searchIcon.hovered? 25: 20; height: searchIcon.hovered? 25: 20
+            width:searchIcon.hovered? 24: 23; height: searchIcon.hovered? 24: 23
             Behavior on width{ NumberAnimation{ duration: 150}}
             Behavior on height{ NumberAnimation{ duration: 150}}
             background: null
