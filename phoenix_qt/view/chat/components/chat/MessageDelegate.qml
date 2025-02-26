@@ -39,7 +39,7 @@ T.Button {
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width:  control.width - logoModelId.width
-                    anchors.verticalCenter: logoModelId.verticalCenter
+                    // anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
                     focus: false
                     readOnly: true

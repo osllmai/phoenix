@@ -55,6 +55,9 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/chat/messagelist.h core/conversation/chat/messagelist.cpp
     core/conversation/chat/message.h core/conversation/chat/message.cpp
     core/conversation/chat/modelsettings.h core/conversation/chat/modelsettings.cpp
+    core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
+    core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
+    core/conversation/provider/provider.h core/conversation/provider/provider.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}

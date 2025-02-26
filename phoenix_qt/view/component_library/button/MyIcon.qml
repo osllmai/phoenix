@@ -10,6 +10,10 @@ ToolButton {
     property int iconType: Style.RoleEnum.IconType.Primary
     property bool isNeedAnimation: false
 
+    property var myTextToolTip: ""
+    property int xToolTip: 30
+    property int yToolTip: 23
+
     background: Rectangle{
         id: backgroundId
         width: parent.width-6; height: parent.height-3
@@ -34,6 +38,22 @@ ToolButton {
         color: control.hovered? control.choiceHoverAndCheckedColor(control.iconType):
                                             control.choiceNormalColor(control.iconType);
         width: backgroundId.width; height: backgroundId.height
+    }
+
+    ToolTip{
+        visible: control.hovered
+        text: "HIHIHIHI"
+        delay: 500
+        timeout: 2000
+        background: Rectangle{
+            id: backgroundId2
+            width: parent.width-6; height: parent.height-3
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.margins: 2
+            color: control.choiceBackgroundColor(control.iconType)
+            radius: 12
+        }
     }
 
     function choiceNormalColor(iconType) {
