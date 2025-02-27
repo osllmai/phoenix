@@ -19,8 +19,9 @@ public slots:
     virtual void unloadModel();
 
 signals:
+    void loadModelResult(const bool result, const QString warning);
     void tokenResponse(const QString &token);
-    void finishedResponnse();
+    void finishedResponnse(const QString warning);
 };
 
 #endif // PROVIDER_H
