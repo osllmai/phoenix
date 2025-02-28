@@ -38,6 +38,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE OnlineModel* at(int index) const;
+    Q_INVOKABLE void likeRequest(const int id, const bool isLike);
 
 public slots:
     void addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,

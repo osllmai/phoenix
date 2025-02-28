@@ -124,6 +124,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/image_company/qwen2.svg
         media/image_company/Replit.svg
         media/image_company/Starcoder.svg
+        media/image_company/Openai.svg
 
         media/media.qrc
 )
@@ -166,7 +167,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/model/components/offline/DownloadButton.qml
         view/model/components/online/OnlineModelView.qml
         view/model/components/online/OnlineHeader.qml
-        view/model/components/online/OnlineLine.qml
+        view/model/components/online/OnlineList.qml
         view/model/components/online/OnlineDelegate.qml
 
         view/chat/ChatView.qml

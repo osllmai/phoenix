@@ -60,6 +60,7 @@ public:
 
 signals:
     void installModelChanged();
+    void modelChanged();
 
 private:
     QString m_type;

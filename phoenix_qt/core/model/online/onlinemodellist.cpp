@@ -95,6 +95,10 @@ OnlineModel* OnlineModelList::at(int index) const{
     return m_models.at(index);
 }
 
+void OnlineModelList::likeRequest(const int id, const bool isLike){
+    emit requestUpdateIsLikeModel(id, isLike);
+}
+
 void OnlineModelList::addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
               const bool isLike, Company* company, const BackendType backend,
               const QString& icon , const QString& information , const QString& promptTemplate ,
@@ -106,11 +110,19 @@ void OnlineModelList::addModel(const int id, const QString& name, const QString&
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
-    m_models.append(new OnlineModel(id, name, key, addModelTime, isLike, company, backend, icon,
+    OnlineModel* model = new OnlineModel(id, name, key, addModelTime, isLike, company, backend, icon,
                                   information, promptTemplate, systemPrompt, expireModelTime, m_instance,
 
                                   type, inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
-                                  recommended, commercial, pricey, output, comments, installModel));
+                                  recommended, commercial, pricey, output, comments, installModel);
+    m_models.append(model);
+    connect(model, &OnlineModel::modelChanged, this, [=]() {
+        int row = m_models.indexOf(model);
+        if (row != -1) {
+            QModelIndex modelIndex = createIndex(row, 0);
+            emit dataChanged(modelIndex, modelIndex);
+        }
+    });
     endInsertRows();
     emit countChanged();
 }
