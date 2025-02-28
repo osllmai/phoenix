@@ -96,6 +96,13 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
     return false;
 }
 
+void ConversationList::addNewConversation(Model *model, const QString &firstPrompt){
+
+}
+void ConversationList::deleteConversation(const int id){
+
+}
+
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
                                        const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                                        const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
@@ -103,6 +110,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                        const int &contextLength, const int &numberOfGPULayers) {
     beginInsertRows(QModelIndex(), m_conversations.count(), m_conversations.count());
     Conversation* conversation = new Conversation(id, title, date, this);
+
     m_conversations.append(conversation);
     endInsertRows();
     emit countChanged();

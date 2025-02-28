@@ -7,6 +7,7 @@
 #include <QAbstractListModel>
 
 #include "conversation.h"
+#include "model/model.h"
 
 class ConversationList: public QAbstractListModel
 {
@@ -36,6 +37,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+
+    Q_INVOKABLE void addNewConversation(Model *model, const QString &firstPrompt);
+    Q_INVOKABLE void deleteConversation(const int id);
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,

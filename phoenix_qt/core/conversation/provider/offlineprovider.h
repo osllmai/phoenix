@@ -15,7 +15,7 @@ public:
 public slots:
     void prompt(const QString &input);
     void stop() override;
-    void loadModel(const QString &modelPath) override;
+    void loadModel(const QString &key) override;
     void unloadModel() override;
 
 signals:

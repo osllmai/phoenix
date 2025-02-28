@@ -9,7 +9,7 @@ Item {
     // width: Math.min(780, parent.width - 48)
     // anchors.horizontalCenter: parent.horizontalCenter
 
-    property bool chatIsEmpty: false
+    property bool chatIsEmpty: true
 
     Column{
         spacing: 10
@@ -54,6 +54,7 @@ Item {
         }
         Flow{
             spacing: 5
+            // width: parent.width
             width: Math.min(parent.width, documentId.width + grammarId.width + rewriteId.width + imageEditorId.width + imageId.width + 20)
             anchors.horizontalCenter: parent.horizontalCenter
             MyButton {

@@ -3,7 +3,7 @@
 Conversation::Conversation(int id, const QString &title, const QDateTime &date, QObject *parent)
     : QObject(parent), m_id(id), m_title(title), m_date(date), m_isLoadModel(false),
     m_loadModelInProgress(false), m_responseInProgress(false),
-    m_model(nullptr) {}
+    m_model(nullptr), m_modelSettings(new ModelSettings(id,this)) {}
 
 Conversation::~Conversation() {}
 
@@ -62,11 +62,10 @@ void Conversation::setModel(Model *model) {
     if (m_model != model) {
         m_model = model;
         emit modelChanged();
+        setLoadModelInProgress(true);
     }
 }
 
 ModelSettings* Conversation::modelSettings() {return m_modelSettings;}
-void Conversation::loadModelRequested(Model *model) {
-    setModel(model);
-    setIsLoadModel(true);
-}
+
+ResponseList *Conversation::responseList() const{return m_responseList;}

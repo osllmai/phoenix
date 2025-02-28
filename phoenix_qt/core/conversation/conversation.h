@@ -8,6 +8,7 @@
 #include "./chat/modelsettings.h"
 #include "./chat/messagelist.h"
 #include "../model/model.h"
+#include "./chat/responselist.h"
 
 class Conversation : public QObject
 {
@@ -24,10 +25,17 @@ class Conversation : public QObject
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
     Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
+    Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged FINAL)
 
 public:
     explicit Conversation(int id, const QString &title, const QDateTime &date, QObject *parent = nullptr);
     virtual ~Conversation();
+
+    // Q_INVOKABLE void readMessage();
+    // Q_INVOKABLE void prompt(const QString &input);
+    // Q_INVOKABLE void stop();
+    // Q_INVOKABLE void loadModel(const QString &key);
+    // Q_INVOKABLE void unloadModel();
 
     const int id() const;
 
@@ -59,20 +67,21 @@ public:
 
     ModelSettings *modelSettings();
 
-    void loadModelRequested(Model *model);
+    ResponseList *responseList() const;
 
 signals:
     void titleChanged();
     void descriptionChanged();
     void dateChanged();
+    void iconChanged();
+    void isPinnedChanged();
     void isLoadModelChanged();
     void loadModelInProgressChanged();
     void responseInProgressChanged();
     void messageListChanged();
     void modelChanged();
     void modelSettingsChanged();
-    void isPinnedChanged();
-    void iconChanged();
+    void responseListChanged();
 
 private:
     int m_id;
@@ -87,6 +96,7 @@ private:
     MessageList *m_messageList;
     Model *m_model;
     ModelSettings *m_modelSettings;
+    ResponseList *m_responseList;
 };
 
 #endif // CONVERSATION_H
