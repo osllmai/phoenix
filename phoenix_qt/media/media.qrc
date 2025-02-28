@@ -48,13 +48,13 @@
         <file>image_company/Phoenix.png</file>
         <file>image_company/Phoenix.ico</file>
         <file>image_company/Bert.svg</file>
-        <file>image_company/LLaMA.svg</file>
+        <file>image_company/MetaLlama.svg</file>
         <file>image_company/Mistral.svg</file>
-        <file>image_company/MPT.svg</file>
-        <file>image_company/Phi-3.svg</file>
-        <file>image_company/qwen2.svg</file>
+        <file>image_company/Databricks.svg</file>
+        <file>image_company/Microsoft.svg</file>
+        <file>image_company/Qwen.svg</file>
         <file>image_company/Replit.svg</file>
-        <file>image_company/Starcoder.svg</file>
+        <file>image_company/BigCode.png</file>
         <file>image_company/user.svg</file>
         <file>image_company/Openai.svg</file>
         <file>icon/copy.svg</file>

@@ -7,9 +7,9 @@
     "type": "OnlineModel"
   },
   {
-    "name": "LLaMA",
-    "organizationName": "LLaMA.",
-    "icon": "LLaMA.svg",
+    "name": "Meta Llama",
+    "organizationName": "Meta Llama",
+    "icon": "MetaLlama.svg",
     "file": "offline_models.json",
     "type": "OfflineModel"
   },
@@ -21,16 +21,16 @@
     "type": "OfflineModel"
   },
   {
-    "name": "MPT",
-    "organizationName": "MPT",
-    "icon": "MPT.svg",
+    "name": "Databricks",
+    "organizationName": "Databricks",
+    "icon": "Databricks.svg",
     "file": "offline_models.json",
     "type": "OfflineModel"
   },
   {
-    "name": "Phi-3",
-    "organizationName": "Phi-3",
-    "icon": "Phi-3.svg",
+    "name": "Microsoft",
+    "organizationName": "Microsoft",
+    "icon": "Microsoft.svg",
     "file": "offline_models.json",
     "type": "OfflineModel"
   },
@@ -42,9 +42,9 @@
     "type": "OfflineModel"
   },
   {
-    "name": "Starcoder",
-    "organizationName": "Starcoder.",
-    "icon": "Starcoder.svg",
+    "name": "BigCode",
+    "organizationName": "BigCode.",
+    "icon": "BigCode.png",
     "file": "offline_models.json",
     "type": "OfflineModel"
   },
@@ -56,9 +56,9 @@
     "type": "OfflineModel"
   },
   {
-    "name": "qwen2",
-    "organizationName": "qwen2.",
-    "icon": "qwen2.svg",
+    "name": "Qwen",
+    "organizationName": "Qwen.",
+    "icon": "Qwen.svg",
     "file": "offline_models.json",
     "type": "OfflineModel"
   }

@@ -117,13 +117,13 @@ qt_add_resources(app${PROJECT_NAME}
 
         media/image_company/Phoenix.png
         media/image_company/Bert.svg
-        media/image_company/LLaMA.svg
+        media/image_company/MetaLlama.svg
         media/image_company/Mistral.svg
-        media/image_company/MPT.svg
-        media/image_company/Phi-3.svg
-        media/image_company/qwen2.svg
+        media/image_company/Databricks.svg
+        media/image_company/Microsoft.svg
+        media/image_company/Qwen.svg
         media/image_company/Replit.svg
-        media/image_company/Starcoder.svg
+        media/image_company/BigCode.png
         media/image_company/Openai.svg
 
         media/media.qrc
