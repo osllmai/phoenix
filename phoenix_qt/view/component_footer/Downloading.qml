@@ -7,7 +7,7 @@ import '../component_library/button'
 T.Popup {
     id: systemMonitorPupup
     width: 270
-    implicitHeight: (offlineModelListIsDownloadingFilter.count * 30) + 20
+    height: 110
 
     background: Rectangle{
         id:systemMonitorRec

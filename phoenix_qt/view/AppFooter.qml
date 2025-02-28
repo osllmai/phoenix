@@ -36,7 +36,7 @@ Item {
             Downloading{
                 id: downloadingPupup
                 x: downloading.x
-                y: downloading.y - downloadingPupup.implicitHeight
+                y: downloading.y - downloadingPupup.height
             }
         }
     }

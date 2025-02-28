@@ -1,15 +1,6 @@
 #include "messagelist.h"
 #include <algorithm>
 
-MessageList* MessageList::m_instance = nullptr;
-
-MessageList* MessageList::instance(QObject* parent) {
-    if (!m_instance) {
-        m_instance = new MessageList(parent);
-    }
-    return m_instance;
-}
-
 MessageList::MessageList(QObject* parent): QAbstractListModel(parent) {}
 
 int MessageList::count() const {

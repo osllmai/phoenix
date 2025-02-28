@@ -13,7 +13,7 @@ class MessageList: public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
-    static MessageList* instance(QObject* parent);
+    explicit MessageList(QObject* parent);
 
     enum MessageRoles {
         IdRole = Qt::UserRole + 1,
@@ -38,9 +38,6 @@ signals:
     void requestAddMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt);
 
 private:
-    explicit MessageList(QObject* parent);
-    static MessageList* m_instance;
-
     QList<Message*> m_messages;
 
     Message* findMessageById(const int id);
