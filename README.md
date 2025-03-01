@@ -66,6 +66,8 @@ Please consider to watch the video tutorial on how to run the chatbot on Windows
  <img src="http://img.youtube.com/vi/vck-OCaiw10/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
 </a>
 
+
+
 ## Running the Chatbot on Mac
 
 Navigate to the bin directory and run the chat executable:
