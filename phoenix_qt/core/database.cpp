@@ -46,6 +46,7 @@ int Database::insertModel(const QString &name, const QString &key){
     query.addBindValue(false);
     query.exec();
 
+    qInfo()<<QSqlError();
     return query.lastInsertId().toInt();
 }
 
@@ -351,7 +352,6 @@ const QString Database::DELETE_CONVERSATION_SQL = QLatin1String(R"(
 
 void Database::readModel(const QList<Company*> companys){
 
-    int i=0;
     QList<int> allID;
 
     for (Company* company : companys){
@@ -361,6 +361,7 @@ void Database::readModel(const QList<Company*> companys){
             qWarning() << "Cannot open JSON file!";
             continue;
         }
+        qInfo()<<company->filePath();
 
         QByteArray jsonData = file.readAll();
         file.close();
@@ -400,7 +401,7 @@ void Database::readModel(const QList<Company*> companys){
                     id = insertModel(obj["name"].toString(),"");
 
                     qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
-                             << "Time:" << addDate << "IsLike:" << isLike;
+                             << "Time:" << addDate << "IsLike:" << isLike<<"**************";
                 }else{
 
                     id = query.value(0).toInt();
@@ -432,16 +433,51 @@ void Database::readModel(const QList<Company*> companys){
 
                 QJsonObject obj = value.toObject();
 
-                emit addOnlineModel(i++, obj["name"].toString(), "", QDateTime::currentDateTime(),
-                                    true, company, BackendType::OnlineModel, company->icon(),
+                int id;
+                QString name = obj["name"].toString();
+                QString key = "";
+                QDateTime addDate = QDateTime::currentDateTime();
+                bool isLike = false;
+
+                QSqlQuery query(m_db);
+                query.prepare(READ_MODEL_SQL);
+                query.addBindValue(obj["name"].toString());
+
+                if (!query.exec())
+                    continue;
+
+                bool installModel = false;
+                if (!query.next()) {
+
+                    id = insertModel(obj["name"].toString(),"");
+
+                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
+                             << "Time:" << addDate << "IsLike:" << isLike;
+                }else{
+
+                    id = query.value(0).toInt();
+                    name = query.value(1).toString();
+                    key = query.value(2).toString();
+                    addDate = query.value(3).toDateTime();
+                    isLike = query.value(4).toBool();
+                    if(key != "")
+                        installModel = true;
+                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
+                             << "Time:" << addDate << "IsLike:" << isLike;
+
+                }
+
+                emit addOnlineModel(id, name, key, addDate,
+                                    isLike, company, BackendType::OnlineModel, company->icon(),
                                     obj["description"].toString(), obj["promptTemplate"].toString(),
                                     obj["systemPrompt"].toString(), QDateTime::currentDateTime(), /*nullptr,*/
 
                                      obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
                                      obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
                                      obj["recommended"].toBool(), obj["commercial"].toBool(),
-                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),false);
+                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),installModel);
 
+                allID.append(id);
             }
         }
     }
