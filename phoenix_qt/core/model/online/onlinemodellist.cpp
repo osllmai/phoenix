@@ -50,6 +50,8 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->commercial();
     case InstallModelRole:
         return model->installModel();
+    case ModelObjectRole:
+        return QVariant::fromValue(m_models[index.row()]);
     }
 
     return QVariant();
@@ -67,6 +69,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     roles[ContextWindowsRole] = "contextWindows";
     roles[OutputRole] = "output";
     roles[CommercialRole] = "commercial";
+    roles[ModelObjectRole] = "modelObject";
     return roles;
 }
 

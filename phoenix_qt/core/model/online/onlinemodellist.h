@@ -28,7 +28,8 @@ public:
         ContextWindowsRole,
         OutputRole,
         CommercialRole,
-        InstallModelRole
+        InstallModelRole,
+        ModelObjectRole
     };
 
     int count() const;

@@ -1,7 +1,9 @@
 #include "offlinemodellistfilter.h"
 #include "offlinemodellist.h"
 
-OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObject *parent): QSortFilterProxyModel(parent), m_filterType(FilterType::All){
+OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObject *parent):
+    QSortFilterProxyModel(parent), m_filterType(FilterType::All)
+{
     QSortFilterProxyModel::setSourceModel(models);
 
     setFilterCaseSensitivity(Qt::CaseInsensitive);
