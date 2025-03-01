@@ -123,8 +123,8 @@ Item{
 
     //toolTip color
     readonly property color toolTipText: currentTextColor[6]
-    readonly property color toolTipBackground: currentBackgroundColor[1]
-    readonly property color toolTipGlowAndBorder: currentBackgroundColor[4]
+    readonly property color toolTipBackground: currentBackgroundColor[0]
+    readonly property color toolTipGlowAndBorder: currentBackgroundColor[3]
 
     //text color
     readonly property color textTitle: currentTextColor[6]

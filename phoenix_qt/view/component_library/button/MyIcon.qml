@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import '../style' as Style
 
 ToolButton {
@@ -11,8 +12,6 @@ ToolButton {
     property bool isNeedAnimation: false
 
     property var myTextToolTip: ""
-    property int xToolTip: 30
-    property int yToolTip: 23
 
     background: Rectangle{
         id: backgroundId
@@ -41,18 +40,31 @@ ToolButton {
     }
 
     ToolTip{
-        visible: control.hovered
-        text: "HIHIHIHI"
+        visible: control.hovered && (control.myTextToolTip != "")
         delay: 500
-        timeout: 2000
+        timeout: 10000
+        contentItem: Text {
+                text: control.myTextToolTip
+                color:Style.Colors.toolTipText
+                font.pixelSize: 10
+            }
+
         background: Rectangle{
             id: backgroundId2
-            width: parent.width-6; height: parent.height-3
+            width: parent.width; height: parent.height
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             anchors.margins: 2
-            color: control.choiceBackgroundColor(control.iconType)
-            radius: 12
+            color: Style.Colors.toolTipBackground
+            border.color: Style.Colors.toolTipGlowAndBorder
+            radius: 4
+            layer.enabled: true
+            layer.effect: Glow {
+                 samples: 30
+                 color: Style.Colors.toolTipGlowAndBorder
+                 spread: 0.4
+                 transparentBorder: true
+             }
         }
     }
 
