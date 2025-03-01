@@ -67,7 +67,6 @@ Please consider to watch the video tutorial on how to run the chatbot on Windows
 </a>
 
 
-
 ## Running the Chatbot on Mac
 
 Navigate to the bin directory and run the chat executable:
