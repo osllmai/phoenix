@@ -12,7 +12,7 @@ Item {
         ModelSettingsSlider{
             id:contextLengthId
             myTextName: "Context Length"
-            // myTextDescription: "Refers to the number of tokens the model considers from the input when generating a response."
+            myTextToolTip: "Refers to the number of tokens the model considers from the input when generating a response."
             sliderValue: 65/*root.currentChat.modelSettings.contextLength*/
             sliderFrom: 120
             sliderTo:4096
@@ -21,7 +21,7 @@ Item {
         ModelSettingsSlider{
             id:numberOfGPUId
             myTextName: "Number of GPU layers (ngl)"
-            // myTextDescription: "Refers to the number of layers processed using a GPU, affecting performance."
+            myTextToolTip: "Refers to the number of layers processed using a GPU, affecting performance."
             sliderValue: 1/*root.currentChat.modelSettings.numberOfGPULayers*/
             sliderFrom: 62
             sliderTo: 100

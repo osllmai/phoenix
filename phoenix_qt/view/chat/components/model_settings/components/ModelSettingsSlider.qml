@@ -8,88 +8,74 @@ Item {
     id: root
     height: 60; width: parent.width
 
-    property alias myTextName: textId.text
-    // property alias myTextDescription: aboutIcon.myLable
+    property var myTextName: ""
+    property var myTextToolTip: ""
     property double sliderValue: 0.5
     property double sliderFrom: -1
     property double sliderTo: 3
     property double sliderStepSize: 0.1
     property int decimalPart: 0
 
-    Rectangle{
-        id: settingsSliderBox
+    Row{
         anchors.fill: parent
-        color: "#00ffffff"
-        Text{
-            id:textId
-            text: "Temperature"
-            color: Style.Colors.textTitle
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.leftMargin: 0
-            anchors.topMargin: 0
-            font.pointSize: 10
-        }
-
-        Item{
-            id: closeBox
-            width: 30; height: 30
-            ToolButton {
-                id: searchIcon
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width:searchIcon.hovered? 30: 28; height: searchIcon.hovered? 30: 28
-                Behavior on width{ NumberAnimation{ duration: 150}}
-                Behavior on height{ NumberAnimation{ duration: 150}}
-                background: null
-                icon{
-                    source: "qrc:/media/icon/close.svg"
-                    color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
-                    width: searchIcon.width; height: searchIcon.height
+        Column{
+            width: parent.width - valueSliderBoxId.width
+            height: parent.height
+            Row{
+                Text{
+                    id:textId
+                    text: root.myTextName
+                    color: Style.Colors.textTitle
+                    font.pointSize: 10
                 }
-                MouseArea{
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked:{}
+
+                MyIcon{
+                    id: aboutIcon
+                    myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    myTextToolTip: root.myTextToolTip
+                    width: 28; height: 28
+                    anchors.verticalCenter: textId.verticalCenter
                 }
             }
-        }
+            Item{
+                id: settingsSliderBox
+                width: parent.width
+                height: 30
 
-        // MyIcon {
-        //     id: aboutIcon
-        //     visible: true
-        //     anchors.verticalCenter: textId.verticalCenter
-        //     anchors.left: textId.right
-        //     anchors.leftMargin: 5
-        //     width: 20
-        //     height: 20
-        //     myIconId: "images/aboutIcon.svg"
-        //     myFillIconId: "images/fillAboutIcon.svg"
-        //     myLable: "Discord"
-        //     heightSource: 15
-        //     widthSource: 15
-        //     normalColor: Style.Theme.iconColor
-        //     hoverColor: Style.Theme.fillIconColor
-        //     xPopup: -18
-        //     yPopup: -30
-        //     Connections {
-        //         target: aboutIcon
-        //         function onActionClicked() {}
-        //     }
-        // }
+                MySlider{
+                    id:sliderId
+                    width: parent.width
+                    value: root.sliderValue
+                    from: root.sliderFrom
+                    to: root.sliderTo
+                    stepSize: root.sliderStepSize
+                }
 
-        MySlider{
-            id:sliderId
-            anchors.left: parent.left
-            anchors.right: valueSliderBoxId.left
-            anchors.top: textId.bottom
-            anchors.leftMargin: 0
-            anchors.rightMargin: 5
-            anchors.topMargin: 10
-            value: root.sliderValue
-            from: root.sliderFrom
-            to: root.sliderTo
-            stepSize: root.sliderStepSize
+                Text {
+                    id: minValueSliderId
+                    text: sliderId.from
+                    color: Style.Colors.textTitle
+                    anchors.left: parent.left
+                    anchors.top: sliderId.bottom
+                    anchors.leftMargin: 5
+                    anchors.topMargin: 2
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 8
+                }
+                Text {
+                    id: maxValueSliderId
+                    text: sliderId.to
+                    color: Style.Colors.textTitle
+                    anchors.right: parent.right
+                    anchors.top: sliderId.bottom
+                    anchors.rightMargin: 5
+                    anchors.topMargin: 2
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 8
+                }
+            }
         }
         Rectangle{
             id:valueSliderBoxId
@@ -97,9 +83,9 @@ Item {
             height: 30
             radius: 2
             color: Style.Colors.textTitle
-            anchors.verticalCenter: sliderId.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 2
+            // anchors.verticalCenter: sliderId.verticalCenter
+            // anchors.right: parent.right
+            // anchors.rightMargin: 2
             TextField {
                 id: valueSlider1Id
                 visible: root.sliderStepSize<1
@@ -132,39 +118,7 @@ Item {
                     bottom: root.sliderFrom
                     top: root.sliderTo
                 }
-
             }
-            // layer.enabled: true
-            // layer.effect: Glow {
-            //      samples: 15
-            //      color: Style.Colors.textTitle
-            //      spread: 0.0
-            //      transparentBorder: true
-            //  }
-        }
-        Text {
-            id: minValueSliderId
-            text: sliderId.from
-            color: Style.Colors.textTitle
-            anchors.left: parent.left
-            anchors.top: sliderId.bottom
-            anchors.leftMargin: 5
-            anchors.topMargin: 2
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 8
-        }
-        Text {
-            id: maxValueSliderId
-            text: sliderId.to
-            color: Style.Colors.textTitle
-            anchors.right: valueSliderBoxId.left
-            anchors.top: sliderId.bottom
-            anchors.rightMargin: 5
-            anchors.topMargin: 2
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 8
         }
     }
 }

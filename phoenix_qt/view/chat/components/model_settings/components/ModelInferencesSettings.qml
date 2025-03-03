@@ -19,7 +19,7 @@ Item {
         ModelSettingsSlider{
             id:temperatureId
             myTextName: "Temperature"
-            // myTextDescription: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
+            myTextToolTip: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
             sliderValue: 0.8/*root.currentChat.modelSettings.temperature*/
             sliderFrom: 0.0
             sliderTo:2.0
@@ -29,7 +29,7 @@ Item {
         ModelSettingsSlider{
             id:topPId
             myTextName: "Top-P"
-            // myTextDescription:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
+            myTextToolTip:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
             sliderValue: 1.5/*root.currentChat.modelSettings.topP*/
             sliderFrom: 0.0
             sliderTo:1.0
@@ -39,7 +39,7 @@ Item {
         ModelSettingsSlider{
             id:maxTokensId
             myTextName: "Max Tokens"
-            // myTextDescription: "Defines the maximum number of tokens the model can process in one input or output."
+            myTextToolTip: "Defines the maximum number of tokens the model can process in one input or output."
             sliderValue: 560/*root.currentChat.modelSettings.maxTokens*/
             sliderFrom: 100
             sliderTo: 4096
@@ -48,7 +48,7 @@ Item {
         ModelSettingsSlider{
             id:promptBatchSizeId
             myTextName: "Prompt Batch Size"
-            // myTextDescription:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
+            myTextToolTip:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
             sliderValue: 100/*root.currentChat.modelSettings.promptBatchSize*/
             sliderFrom: 1
             sliderTo: 128
@@ -57,7 +57,7 @@ Item {
         ModelSettingsSlider{
             id:minPId
             myTextName: "Min-P"
-            // myTextDescription:"Sets the minimum cumulative probability threshold for word selection."
+            myTextToolTip:"Sets the minimum cumulative probability threshold for word selection."
             sliderValue: 1.5/*root.currentChat.modelSettings.minP*/
             sliderFrom: 0.0
             sliderTo: 1.0
@@ -67,7 +67,7 @@ Item {
         ModelSettingsSlider{
             id:topKId
             myTextName: "Top-K"
-            // myTextDescription: "Limits word selection to the top K most probable words, controlling output diversity."
+            myTextToolTip: "Limits word selection to the top K most probable words, controlling output diversity."
             sliderValue: 650/*root.currentChat.modelSettings.topK*/
             sliderFrom: 1
             sliderTo: 1000
@@ -76,7 +76,7 @@ Item {
         ModelSettingsSlider{
             id:repeatPenaltyTokensId
             myTextName: "Repeat Penalty Tokens"
-            // myTextDescription: "Increases the penalty for repeating specific tokens during generation."
+            myTextToolTip: "Increases the penalty for repeating specific tokens during generation."
             sliderValue: 1.5/*root.currentChat.modelSettings.repeatPenaltyTokens*/
             sliderFrom: 0
             sliderTo: 1
@@ -86,7 +86,7 @@ Item {
         ModelSettingsSlider{
             id:repeatPenaltyId
             myTextName: "Repeat Penalty"
-            // myTextDescription: "Discourages repeating words or phrases by applying a penalty to repeated tokens."
+            myTextToolTip: "Discourages repeating words or phrases by applying a penalty to repeated tokens."
             sliderValue: 1.5/*root.currentChat.modelSettings.repeatPenalty*/
             sliderFrom: 1.0
             sliderTo: 2.0

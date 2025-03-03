@@ -45,6 +45,8 @@ ToolButton {
         timeout: 10000
         contentItem: Text {
                 text: control.myTextToolTip
+                // width: 100
+                // wrapMode: Text.WordWrap
                 color:Style.Colors.toolTipText
                 font.pixelSize: 10
             }
