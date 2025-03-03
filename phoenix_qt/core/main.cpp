@@ -77,6 +77,10 @@ int main(int argc, char *argv[])
     offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
     engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
 
+    OnlineModelListFilter* onlineModelInstallFilter = new OnlineModelListFilter(onlineModelList, &engine);
+    onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
+    engine.rootContext()->setContextProperty("onlineModelInstallFilter", onlineModelInstallFilter);
+
     SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
     engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 

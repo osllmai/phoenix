@@ -2,7 +2,7 @@
 #include "offlinemodellist.h"
 
 OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObject *parent):
-    QSortFilterProxyModel(parent), m_filterType(FilterType::All)
+    QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1)
 {
     QSortFilterProxyModel::setSourceModel(models);
 
@@ -12,7 +12,6 @@ OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObje
     setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
     sort(0, Qt::AscendingOrder);
 }
-
 
 bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
 
@@ -38,7 +37,7 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::All:
         return matchesFilter;
     case FilterType::Company:
-        return matchesFilter && m_companyId && model->company() && model->company()->id() == m_companyId;
+        return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
     case FilterType::DownloadFinished:
         return matchesFilter && downloadFinished;
     case FilterType::Favorite:
@@ -67,19 +66,14 @@ int OfflineModelListFilter::count() const { return rowCount(); }
 
 int OfflineModelListFilter::companyId() const{return m_companyId;}
 void OfflineModelListFilter::setCompanyId(int companyId){
-    if (m_companyId == companyId)
-        return;
     m_companyId = companyId;
     setFilterType(FilterType::Company);
-    invalidateFilter();
     emit companyIdChanged();
     emit countChanged();
 }
 
 OfflineModelListFilter::FilterType OfflineModelListFilter::filterType() const{return m_filterType;}
 void OfflineModelListFilter::setFilterType(FilterType newFilterType){
-    if (m_filterType == newFilterType)
-        return;
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();

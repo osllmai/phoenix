@@ -108,12 +108,10 @@ void Database::updateKeyModel(const int id, const QString &key){
 
     if (!query.prepare(UPDATE_KEYMODEL_SQL))
         return /*query.lastError()*/;
-    qInfo()<<"------------------------------------------------------------------------------------------HIHIIHHIIHI"<<id<<key;
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
     query.exec();
-    qInfo()<<QSqlError();
     // return QSqlError();
 }
 
@@ -363,7 +361,6 @@ void Database::readModel(const QList<Company*> companys){
             qWarning() << "Cannot open JSON file!";
             continue;
         }
-        qInfo()<<company->filePath();
 
         QByteArray jsonData = file.readAll();
         file.close();
@@ -399,11 +396,7 @@ void Database::readModel(const QList<Company*> companys){
 
                 bool downloadFinished = false;
                 if (!query.next()) {
-
                     id = insertModel(obj["name"].toString(),"");
-
-                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
-                             << "Time:" << addDate << "IsLike:" << isLike<<"**************";
                 }else{
 
                     id = query.value(0).toInt();
@@ -413,9 +406,6 @@ void Database::readModel(const QList<Company*> companys){
                     isLike = query.value(4).toBool();
                     if(key != "")
                         downloadFinished = true;
-                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
-                             << "Time:" << addDate << "IsLike:" << isLike;
-
                 }
 
                 emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
@@ -450,11 +440,7 @@ void Database::readModel(const QList<Company*> companys){
 
                 bool installModel = false;
                 if (!query.next()) {
-
                     id = insertModel(obj["name"].toString(),"");
-
-                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
-                             << "Time:" << addDate << "IsLike:" << isLike;
                 }else{
 
                     id = query.value(0).toInt();
@@ -464,9 +450,6 @@ void Database::readModel(const QList<Company*> companys){
                     isLike = query.value(4).toBool();
                     if(key != "")
                         installModel = true;
-                    qDebug() << "ID:" << id << "Name:" << name << "Key:" << key
-                             << "Time:" << addDate << "IsLike:" << isLike;
-
                 }
 
                 emit addOnlineModel(id, name, key, addDate,

@@ -3,7 +3,7 @@
 
 
 OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject *parent)
-    :QSortFilterProxyModel(parent), m_filterType(FilterType::All)
+    :QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1)
 {
     QSortFilterProxyModel::setSourceModel(model);
 
@@ -36,7 +36,7 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     case FilterType::All:
         return matchesFilter;
     case FilterType::Company:
-        return matchesFilter && m_companyId && model->company() && model->company()->id() == m_companyId;
+        return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
     case FilterType::InstallModel:
         return matchesFilter && installModel;
     case FilterType::Favorite:
@@ -61,19 +61,14 @@ int OnlineModelListFilter::count() const { return rowCount(); }
 
 int OnlineModelListFilter::companyId() const{return m_companyId;}
 void OnlineModelListFilter::setCompanyId(int companyId){
-    if (m_companyId == companyId)
-        return;
     m_companyId = companyId;
     setFilterType(FilterType::Company);
-    invalidateFilter();
     emit companyIdChanged();
     emit countChanged();
 }
 
 OnlineModelListFilter::FilterType OnlineModelListFilter::filterType() const{return m_filterType;}
 void OnlineModelListFilter::setFilterType(FilterType newFilterType){
-    if (m_filterType == newFilterType)
-        return;
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();

@@ -109,7 +109,6 @@ void OnlineModelList::saveAPIKey(const int id, QString key){
     const int index = m_models.indexOf(model);
     model->setKey(key);
     model->setInstallModel(true);
-    qInfo()<< model->key()<<key;
     requestUpdateKeyModel(model->id(), model->key());
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole });
 }
