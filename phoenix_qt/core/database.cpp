@@ -108,10 +108,12 @@ void Database::updateKeyModel(const int id, const QString &key){
 
     if (!query.prepare(UPDATE_KEYMODEL_SQL))
         return /*query.lastError()*/;
+    qInfo()<<"------------------------------------------------------------------------------------------HIHIIHHIIHI"<<id<<key;
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
     query.exec();
+    qInfo()<<QSqlError();
     // return QSqlError();
 }
 

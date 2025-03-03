@@ -169,6 +169,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/model/components/online/OnlineHeader.qml
         view/model/components/online/OnlineList.qml
         view/model/components/online/OnlineDelegate.qml
+        view/model/components/online/InputApikey.qml
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -217,6 +218,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
+        QML_FILES view/model/components/online/ApikeyButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

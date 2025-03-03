@@ -37,11 +37,19 @@ Rectangle{
             persistentSelection: true
             placeholderText: qsTr("Search")
             placeholderTextColor: Style.Colors.menuNormalIcon
+            selectionColor: Style.Colors.boxNormalGradient1
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10
             wrapMode: TextEdit.NoWrap
             background: null
             onTextChanged: control.search(textArea.text)
+            Keys.onReturnPressed: (event)=> {
+              if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
+                event.accepted = false;
+              }else {
+                    control.search(textArea.text)
+              }
+            }
         }
     }
     // Behavior on width{NumberAnimation{duration: 200}}

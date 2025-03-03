@@ -68,7 +68,7 @@ T.Button {
             }
             Item{
                 id: aboutId
-                height: parent.height - headerId.height /*- downloadButtonId.height*/ - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height - apikeyButton.height - informationAboutDownloadId.height - 30
                 width: parent.width
                 clip: true
                 Text{
@@ -169,10 +169,9 @@ T.Button {
                     }
                 }
             }
-
-            // DownloadButton{
-            //     id: downloadButtonId
-            // }
+            ApikeyButton{
+                id: apikeyButton
+            }
         }
 
         layer.enabled: control.hovered? true: false

@@ -40,6 +40,8 @@ public:
 
     Q_INVOKABLE OnlineModel* at(int index) const;
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
+    Q_INVOKABLE void saveAPIKey(const int id, QString key);
+    Q_INVOKABLE void deleteRequest(const int id);
 
 public slots:
     void addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
@@ -61,6 +63,8 @@ private:
 
     explicit OnlineModelList(QObject* parent);
     static OnlineModelList* m_instance;
+
+    OnlineModel* findModelById(const int id);
 };
 
 #endif // ONLINEMODELLIST_H

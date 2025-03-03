@@ -69,6 +69,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     roles[ContextWindowsRole] = "contextWindows";
     roles[OutputRole] = "output";
     roles[CommercialRole] = "commercial";
+    roles[InstallModelRole] = "installModel";
     roles[ModelObjectRole] = "modelObject";
     return roles;
 }
@@ -102,6 +103,30 @@ void OnlineModelList::likeRequest(const int id, const bool isLike){
     emit requestUpdateIsLikeModel(id, isLike);
 }
 
+void OnlineModelList::saveAPIKey(const int id, QString key){
+    OnlineModel* model = findModelById(id);
+    if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
+    model->setKey(key);
+    model->setInstallModel(true);
+    qInfo()<< model->key()<<key;
+    requestUpdateKeyModel(model->id(), model->key());
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole });
+}
+
+void OnlineModelList::deleteRequest(const int id){
+
+    OnlineModel* model = findModelById(id);
+    if(model == nullptr) return;
+    const int index = m_models.indexOf(model);
+
+    model->setKey("");
+    model->setInstallModel(false);
+    requestUpdateKeyModel(model->id(), "");
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
+}
+
 void OnlineModelList::addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
               const bool isLike, Company* company, const BackendType backend,
               const QString& icon , const QString& information , const QString& promptTemplate ,
@@ -128,4 +153,12 @@ void OnlineModelList::addModel(const int id, const QString& name, const QString&
     });
     endInsertRows();
     emit countChanged();
+}
+
+OnlineModel* OnlineModelList::findModelById(int id) {
+    auto it = std::find_if(m_models.begin(), m_models.end(), [id](OnlineModel* model) {
+        return model->id() == id;
+    });
+
+    return (it != m_models.end()) ? *it : nullptr;
 }
