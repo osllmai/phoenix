@@ -38,7 +38,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE void addNewConversation(Model *model, const QString &firstPrompt);
+    Q_INVOKABLE void addNewConversation(/*Model *model, */const QString &firstPrompt);
     Q_INVOKABLE void deleteConversation(const int id);
 
 public slots:
@@ -50,14 +50,22 @@ public slots:
 
 signals:
     void countChanged();
+    void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                            const int &contextLength, const int &numberOfGPULayers);
     void requestDeleteConversation(const int &id);
-    void requestUpdateDateConversation(const int id, const QString &description);
+    void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateTitleConversation(const int id, const QString &title);
+    void requestUpdateIsPinnedConversation(const int id, const bool isPinned);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,
                         const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                         const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                         const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                         const int &contextLength, const int &numberOfGPULayers);
+    void requestUpdateFilterList();
+    void requestReadConversation();
 
 private:
     explicit ConversationList(QObject* parent);

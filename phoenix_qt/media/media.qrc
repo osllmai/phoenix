@@ -47,6 +47,11 @@
         <file>icon/github.svg</file>
         <file>icon/about.svg</file>
         <file>icon/aboutFill.svg</file>
+        <file>icon/document.svg</file>
+        <file>icon/grammer.svg</file>
+        <file>icon/image.svg</file>
+        <file>icon/imageEditor.svg</file>
+        <file>icon/rewrite.svg</file>
         <file>image_company/Phoenix.png</file>
         <file>image_company/Phoenix.ico</file>
         <file>image_company/Bert.svg</file>

@@ -27,17 +27,18 @@ public slots:
     void updateKeyModel(const int id, const QString &key);
     void updateIsLikeModel(const int id, const bool isLike);
     void addModel(const QString &name, const QString &key);
+
     void readConversation();
-    int insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
-                           const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+    void insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                           const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers);
-    QSqlError deleteConversation(const int &id);
-    QSqlError updateDateConversation(const int id, const QString &description, const QString &icon);
-    QSqlError updateTitleConversation(const int id, const QString &title);
-    QSqlError updateIsPinnedConversation(const int id, const bool &isPinned);
-    QSqlError updateModelSettingsConversation(const int id, const bool &stream,
+    void deleteConversation(const int &id);
+    void updateDateConversation(const int id, const QString &description, const QString &icon);
+    void updateTitleConversation(const int id, const QString &title);
+    void updateIsPinnedConversation(const int id, const bool isPinned);
+    void updateModelSettingsConversation(const int id, const bool stream,
                             const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                             const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -63,7 +64,7 @@ signals:
                          const QString& systemPrompt, QDateTime expireModelTime);
 
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
-                           const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                           const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers);

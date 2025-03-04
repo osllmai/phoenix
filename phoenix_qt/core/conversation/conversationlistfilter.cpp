@@ -34,3 +34,7 @@ bool ConversationListFilter::lessThan(const QModelIndex &left, const QModelIndex
     QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::DateRole).toDateTime();
     return leftDate > rightDate;
 }
+
+void ConversationListFilter::updateFilterList(){
+    invalidateFilter();
+}

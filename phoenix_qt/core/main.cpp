@@ -15,6 +15,9 @@
 #include "./model/offline/offlinemodellistfilter.h"
 #include "./model/online/onlinemodellistfilter.h"
 
+#include "./conversation/conversationlist.h"
+#include "./conversation/conversationlistfilter.h"
+
 #include "config.h"
 
 int main(int argc, char *argv[])
@@ -84,18 +87,21 @@ int main(int argc, char *argv[])
     SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
     engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 
+    ConversationList* conversationList = ConversationList::instance(&engine);
+    engine.rootContext()->setContextProperty("conversationList", conversationList);
+    ConversationListFilter* conversationListFilter = new ConversationListFilter(conversationList, &engine);
+    engine.rootContext()->setContextProperty("conversationListFilter", conversationListFilter);
 
+    QObject::connect(conversationList, &ConversationList::requestReadConversation, database, &Database::readConversation, Qt::QueuedConnection);
+    QObject::connect(database, &Database::addConversation, conversationList, &ConversationList::addConversation, Qt::QueuedConnection);
 
-
-    // QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
-    // QObject::connect(database, &Database::addOnlineModel, onlineModelList, &OnlineModelList::addModel, Qt::QueuedConnection);
-    // QObject::connect(database, &Database::addOfflineModel, offlineModelList, &OfflineModelList::addModel, Qt::QueuedConnection);
-
-    // QObject::connect(onlineModelList, &OnlineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
-    // QObject::connect(onlineModelList, &OnlineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
-    // QObject::connect(offlineModelList, &OfflineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
-    // QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
-
+    QObject::connect(conversationList, &ConversationList::requestInsertConversation, database, &Database::insertConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestDeleteConversation, database, &Database::deleteConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateDateConversation, database, &Database::updateDateConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateTitleConversation, database, &Database::updateTitleConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateIsPinnedConversation, database, &Database::updateIsPinnedConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateModelSettingsConversation, database, &Database::updateModelSettingsConversation, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateFilterList, conversationListFilter, &ConversationListFilter::updateFilterList, Qt::QueuedConnection);
 
     const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
 

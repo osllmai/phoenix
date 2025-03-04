@@ -126,15 +126,15 @@ void Database::updateIsLikeModel(const int id, const bool isLike){
     // return QSqlError();
 }
 
-int Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
-                                 const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+void Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+                                 const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                  const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
-        return -1;
+        return;
     query.addBindValue(title);
     query.addBindValue(date);
     query.addBindValue(description);
@@ -157,14 +157,14 @@ int Database::insertConversation(const QString &title, const QString &descriptio
 
     int id = query.lastInsertId().toInt();
 
-    return id;
+    // return id;
 }
 
-QSqlError Database::deleteConversation(const int &id){
+void Database::deleteConversation(const int &id){
     QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_CONVERSATION_SQL))
-        return query.lastError();
+        return /*query.lastError()*/;
     query.addBindValue(id);
     query.exec();
 
@@ -173,45 +173,45 @@ QSqlError Database::deleteConversation(const int &id){
     // query.addBindValue(id);
     // query.exec();
 
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateDateConversation(const int id, const QString &description, const QString &icon){
+void Database::updateDateConversation(const int id, const QString &description, const QString &icon){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
-        return query.lastError();
+        return/* query.lastError()*/;
     query.addBindValue(description);
     query.addBindValue(icon);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateTitleConversation(const int id, const QString &title){
+void Database::updateTitleConversation(const int id, const QString &title){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
-        return query.lastError();
+        return/* query.lastError()*/;
     query.addBindValue(title);
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateIsPinnedConversation(const int id, const bool &isPinned){
+void Database::updateIsPinnedConversation(const int id, const bool isPinned){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISPINNED_CONVERSATION_SQL))
-        return query.lastError();
+        return /*query.lastError()*/;
     query.addBindValue(isPinned);
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
-QSqlError Database::updateModelSettingsConversation(const int id, const bool &stream,
+void Database::updateModelSettingsConversation(const int id, const bool stream,
                                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -219,7 +219,7 @@ QSqlError Database::updateModelSettingsConversation(const int id, const bool &st
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
-        return query.lastError();
+        return /*query.lastError()*/;
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -235,7 +235,7 @@ QSqlError Database::updateModelSettingsConversation(const int id, const bool &st
     query.addBindValue(numberOfGPULayers);
     query.addBindValue(id);
     query.exec();
-    return QSqlError();
+    // return QSqlError();
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(

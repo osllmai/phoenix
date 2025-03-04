@@ -53,6 +53,7 @@ Rectangle{
                     event.accepted = false;
                   }else {
                         // sendIcon.actionClicked()
+                        conversationList.addNewConversation(inputTextBox.text)
                   }
                 }
 

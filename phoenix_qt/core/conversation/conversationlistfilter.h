@@ -9,6 +9,9 @@ class ConversationListFilter: public QSortFilterProxyModel
 public:
     explicit ConversationListFilter(QAbstractItemModel *model, QObject *parent = nullptr);
 
+public slots:
+    void updateFilterList();
+
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;

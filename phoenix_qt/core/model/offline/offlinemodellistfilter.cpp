@@ -66,6 +66,8 @@ int OfflineModelListFilter::count() const { return rowCount(); }
 
 int OfflineModelListFilter::companyId() const{return m_companyId;}
 void OfflineModelListFilter::setCompanyId(int companyId){
+    if((companyId == m_companyId) && (m_filterType == FilterType::Company))
+        return;
     m_companyId = companyId;
     setFilterType(FilterType::Company);
     emit companyIdChanged();
@@ -74,6 +76,8 @@ void OfflineModelListFilter::setCompanyId(int companyId){
 
 OfflineModelListFilter::FilterType OfflineModelListFilter::filterType() const{return m_filterType;}
 void OfflineModelListFilter::setFilterType(FilterType newFilterType){
+    if((newFilterType == m_filterType) && (m_filterType != FilterType::Company))
+        return;
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();

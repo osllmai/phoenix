@@ -10,7 +10,10 @@ ConversationList* ConversationList::instance(QObject* parent) {
     return m_instance;
 }
 
-ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent) {}
+ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent)
+{
+    emit requestReadConversation();
+}
 
 int ConversationList::count() const { return m_conversations.count(); }
 
@@ -96,9 +99,26 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
     return false;
 }
 
-void ConversationList::addNewConversation(Model *model, const QString &firstPrompt){
+void ConversationList::addNewConversation(/*Model *model, */const QString &firstPrompt){
+    QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
+    QStringList selectedWords;
+    for (const QString &word : words) {
+        if (word.length() < 20) {
+            selectedWords.append(word);
+        }
+        if (selectedWords.size() == 3) break;
+    }
+
+    QString title = selectedWords.join(" ");
+
+
+    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/icon/sendFill.svg", false, true,
+                    "### Human:\n%1\n\n### Assistant:\n",
+                    "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
+                    0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
 }
+
 void ConversationList::deleteConversation(const int id){
 
 }

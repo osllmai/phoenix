@@ -60,7 +60,7 @@ Item {
             MyButton {
                 id: documentId
                 myText: "Document"
-                myIcon: "qrc:/media/icon/settings.svg"
+                myIcon: "qrc:/media/icon/document.svg"
                 bottonType: Style.RoleEnum.BottonType.Feature
                 iconType: Style.RoleEnum.IconType.FeatureBlue
                 isNeedAnimation: true
@@ -68,7 +68,7 @@ Item {
             MyButton {
                 id: grammarId
                 myText: "Grammer"
-                myIcon: "qrc:/media/icon/settings.svg"
+                myIcon: "qrc:/media/icon/grammer.svg"
                 bottonType: Style.RoleEnum.BottonType.Feature
                 iconType: Style.RoleEnum.IconType.FeatureRed
                 isNeedAnimation: true
@@ -76,7 +76,7 @@ Item {
             MyButton {
                 id: rewriteId
                 myText: "Rewrite"
-                myIcon: "qrc:/media/icon/settings.svg"
+                myIcon: "qrc:/media/icon/rewrite.svg"
                 bottonType: Style.RoleEnum.BottonType.Feature
                 iconType: Style.RoleEnum.IconType.FeatureOrange
                 isNeedAnimation: true
@@ -84,7 +84,7 @@ Item {
             MyButton {
                 id: imageEditorId
                 myText: "Image Editor"
-                myIcon: "qrc:/media/icon/settings.svg"
+                myIcon: "qrc:/media/icon/imageEditor.svg"
                 bottonType: Style.RoleEnum.BottonType.Feature
                 iconType: Style.RoleEnum.IconType.FeatureGreen
                 isNeedAnimation: true
@@ -92,7 +92,7 @@ Item {
             MyButton {
                 id: imageId
                 myText: "Image"
-                myIcon: "qrc:/media/icon/settings.svg"
+                myIcon: "qrc:/media/icon/image.svg"
                 bottonType: Style.RoleEnum.BottonType.Feature
                 iconType: Style.RoleEnum.IconType.FeatureYellow
                 isNeedAnimation: true

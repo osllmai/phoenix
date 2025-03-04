@@ -115,6 +115,11 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/copySuccessFill.svg
         media/icon/about.svg
         media/icon/aboutFill.svg
+        media/icon/document.svg
+        media/icon/grammer.svg
+        media/icon/image.svg
+        media/icon/imageEditor.svg
+        media/icon/rewrite.svg
         media/image_company/user.svg
 
         media/image_company/Phoenix.png
