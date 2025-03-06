@@ -39,7 +39,7 @@ Item {
             myText: "Delete"
             bottonType: Style.RoleEnum.BottonType.Danger
             onClicked:{
-                offlineModelList.deleteRequest(model.id)
+                deleteModelVerificationId.open()
             }
         }
         MyButton{
@@ -48,6 +48,23 @@ Item {
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 // offlineModelList.deleteRequest(model.id)
+            }
+        }
+    }
+
+    VerificationDialog{
+        id: deleteModelVerificationId
+        titleText: "delete"
+        about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
+        textBotton1: "delete"
+        textBotton2: "cancel"
+        Connections{
+            target:deleteModelVerificationId
+            function onButtonAction1(){
+                offlineModelList.deleteRequest(model.id)
+            }
+            function onButtonAction2() {
+                deleteModelVerificationId.close()
             }
         }
     }

@@ -29,7 +29,7 @@ T.Button {
                 MyIcon {
                     id: logoModelId
                     myIcon: model.icon
-                    iconType: Style.RoleEnum.IconType.Primary
+                    iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 35; height: 35
                 }
@@ -119,7 +119,7 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: deleteId
-                        function onClicked(){conversationList.deleteRequest(model.id)}
+                        function onClicked(){deleteConversationVerificationId.open()}
                     }
                 }
                 MyIcon {
@@ -134,6 +134,22 @@ T.Button {
                         function onClicked(){conversationList.pinnedRequest(model.id, !model.pinned)}
                     }
                 }
+            }
+        }
+    }
+    VerificationDialog{
+        id: deleteConversationVerificationId
+        titleText: "delete"
+        about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
+        textBotton1: "delete"
+        textBotton2: "cancel"
+        Connections{
+            target:deleteConversationVerificationId
+            function onButtonAction1(){
+                conversationList.deleteRequest(model.id)
+            }
+            function onButtonAction2() {
+                deleteConversationVerificationId.close()
             }
         }
     }

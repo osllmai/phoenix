@@ -1,11 +1,10 @@
 #include "conversationlistfilter.h"
 #include "conversationlist.h"
 
-
 ConversationListFilter::ConversationListFilter(QAbstractItemModel *model, QObject *parent)
     : QSortFilterProxyModel(parent) {
     setSourceModel(model);
-    setSortRole(ConversationList::ConversationRoles::DateRole);
+    setSortRole(ConversationList::ConversationRoles::QDateTimeRole);
     sort(0, Qt::DescendingOrder);
 }
 
@@ -31,10 +30,15 @@ bool ConversationListFilter::lessThan(const QModelIndex &left, const QModelIndex
     if (leftPinned != rightPinned)
         return leftPinned < rightPinned;
 
-    QDateTime leftDate = sourceModel()->data(left, ConversationList::ConversationRoles::DateRole).toDateTime();
-    QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::DateRole).toDateTime();
+    QDateTime leftDate = sourceModel()->data(left, ConversationList::ConversationRoles::QDateTimeRole).toDateTime();
+    QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::QDateTimeRole).toDateTime();
+
+    if (!leftDate.isValid() || !rightDate.isValid())
+        return false;
+
     return leftDate < rightDate;
 }
+
 
 void ConversationListFilter::updateFilterList(){
     invalidateFilter();

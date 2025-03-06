@@ -66,7 +66,6 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
     core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
     core/conversation/provider/provider.h core/conversation/provider/provider.cpp
-    core/conversation/chat.h core/conversation/chat.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -160,6 +159,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MySwitch.qml
         view/component_library/button/MyMenu.qml
         view/component_library/button/MyProgress.qml
+        view/component_library/button/VerificationDialog.qml
+        view/component_library/button/NotificationDialog.qml
 
         view/AppMenuDesktop.qml
         view/AppMenuAplication.qml
@@ -185,6 +186,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/model/components/online/OnlineList.qml
         view/model/components/online/OnlineDelegate.qml
         view/model/components/online/InputApikey.qml
+        view/model/components/online/ApikeyButton.qml
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -233,7 +235,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
-        QML_FILES view/model/components/online/ApikeyButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -23,6 +23,7 @@ public:
         TitleRole,
         DescriptionRole,
         DateRole,
+        QDateTimeRole,
         ModelSettingsRole,
         IsLoadModelRole,
         loadModelInProgressRole,

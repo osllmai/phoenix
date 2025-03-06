@@ -13,9 +13,9 @@ Item{
         anchors.fill: parent
         Row{
             height: 35
-            spacing: parent.width - inDoxId.width - closeBox.width
+            spacing: parent.width - titleId.width - closeBox.width
             Text {
-                id: inDoxId
+                id: titleId
                 text: qsTr("History")
                 color: Style.Colors.textTitle
                 font.pixelSize: 20

@@ -39,6 +39,8 @@ QVariant ConversationList::data(const QModelIndex &index, int role = Qt::Display
         return conversation->title();
     case DescriptionRole:
         return conversation->description();
+    case QDateTimeRole:
+        return conversation->date();
     case DateRole:
         return dateCalculation(conversation->date());
     case PinnedRole:
@@ -115,7 +117,7 @@ void ConversationList::addRequest(/*Model *model, */const QString &firstPrompt){
 
     QString title = selectedWords.join(" ");
 
-    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/icon/sendFill.svg", false, true,
+    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/image_company/MetaLlama.svg", false, true,
                     "### Human:\n%1\n\n### Assistant:\n",
                     "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
                     0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
