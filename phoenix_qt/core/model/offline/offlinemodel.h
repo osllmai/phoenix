@@ -69,11 +69,9 @@ signals:
     void bytesReceivedChanged();
     void bytesTotalChanged();
     void cancelRequest();
-    void modelChanged();
     void startRequest(const QString &modelPath);
 
 public slots:
-    // void handleDownloadFinished();
     void handleBytesReceived(qint64 bytesReceived);
     void handleBytesTotal(qint64 bytesTotal);
 

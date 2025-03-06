@@ -87,6 +87,7 @@ signals:
     void modelChanged();
     void modelSettingsChanged();
     void responseListChanged();
+    void conversationChange();
 
 private:
     int m_id;

@@ -53,7 +53,7 @@ Rectangle{
                     event.accepted = false;
                   }else {
                         // sendIcon.actionClicked()
-                        conversationList.addNewConversation(inputTextBox.text)
+                        conversationList.addRequest(inputTextBox.text)
                   }
                 }
 
@@ -74,7 +74,7 @@ Rectangle{
             myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                conversationList.addNewConversation(inputTextBox.text)
+                conversationList.addRequest(inputTextBox.text)
             }
         }
     }

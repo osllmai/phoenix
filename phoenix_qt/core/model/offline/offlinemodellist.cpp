@@ -196,8 +196,7 @@ void OfflineModelList::deleteRequest(const int id){
     model->setDownloadFinished(false);
 
     if(model->url() == ""){
-        const int newIndex = m_models.indexOf(model);
-        beginRemoveRows(QModelIndex(), newIndex, newIndex);
+        beginRemoveRows(QModelIndex(), index, index);
         m_models.removeAll(model);
         endRemoveRows();
 
@@ -240,13 +239,6 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                            id, name, key, addModelTime, isLike, company,backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, m_instance);
     m_models.append(model);
-    connect(model, &OfflineModel::modelChanged, this, [=]() {
-        int row = m_models.indexOf(model);
-        if (row != -1) {
-            QModelIndex modelIndex = createIndex(row, 0);
-            emit dataChanged(modelIndex, modelIndex);
-        }
-    });
     endInsertRows();
     emit countChanged();
 }
@@ -263,7 +255,7 @@ void OfflineModelList::updateDownloadProgress(){
     qint64 totalBytesDownload =0;
     qint64 receivedBytesDownload =0;
     for (auto &&model : m_models){
-        if(model->isDownloading() && model->bytesTotal()>0.0001 && model->bytesReceived()>0.0001){
+        if(model->isDownloading() && model->bytesTotal()>=0.0001 && model->bytesReceived()>=0.0001){
             totalBytesDownload += model->bytesTotal();
             receivedBytesDownload += model->bytesReceived();
         }

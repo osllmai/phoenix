@@ -67,7 +67,7 @@ T.Button {
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                height: 13
+                height: 16
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
@@ -77,6 +77,7 @@ T.Button {
                 id: dateAndIconId
                 width: parent.width
                 height: 20
+                spacing: (!control.hovered && model.pinned)? editId.width + deleteId.width:0
                 Text {
                     id: dateId
                     text: model.date
@@ -97,7 +98,6 @@ T.Button {
                     Connections{
                         target: editId
                         function onClicked(){
-                            console.log("Edit")
                             if(titleId.readOnly){
                                 titleId.focus = true;
                                 titleId.readOnly = false;
@@ -107,6 +107,7 @@ T.Button {
                                 titleId.readOnly = true;
                                 titleId.selectByMouse = false;
                                 titleId.changeName();
+                                conversationList.editTitleRequest(model.id, titleId.text)
                             }
                         }
                     }
@@ -118,19 +119,19 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: deleteId
-                        function onClicked(){console.log("Delete")}
+                        function onClicked(){conversationList.deleteRequest(model.id)}
                     }
                 }
                 MyIcon {
                     id: pinId
-                    visible: control.hovered
+                    visible: control.hovered || model.pinned
                     width: 27; height: 27
                     y: deleteId.y + 4
                     myIcon: model.pinned? "qrc:/media/icon/pinFill.svg": "qrc:/media/icon/pin.svg"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: pinId
-                        function onClicked(){console.log("Pin");model.pinned=!model.pinned}
+                        function onClicked(){conversationList.pinnedRequest(model.id, !model.pinned)}
                     }
                 }
             }

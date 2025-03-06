@@ -29,11 +29,11 @@ bool ConversationListFilter::lessThan(const QModelIndex &left, const QModelIndex
     bool rightPinned = sourceModel()->data(right, ConversationList::ConversationRoles::PinnedRole).toBool();
 
     if (leftPinned != rightPinned)
-        return leftPinned > rightPinned;
+        return leftPinned < rightPinned;
 
     QDateTime leftDate = sourceModel()->data(left, ConversationList::ConversationRoles::DateRole).toDateTime();
     QDateTime rightDate = sourceModel()->data(right, ConversationList::ConversationRoles::DateRole).toDateTime();
-    return leftDate > rightDate;
+    return leftDate < rightDate;
 }
 
 void ConversationListFilter::updateFilterList(){

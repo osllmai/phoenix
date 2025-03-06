@@ -39,8 +39,10 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE void addNewConversation(/*Model *model, */const QString &firstPrompt);
-    Q_INVOKABLE void deleteConversation(const int id);
+    Q_INVOKABLE void addRequest(/*Model *model, */const QString &firstPrompt);
+    Q_INVOKABLE void deleteRequest(const int id);
+    Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
+    Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -56,7 +58,7 @@ signals:
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                             const int &contextLength, const int &numberOfGPULayers);
-    void requestDeleteConversation(const int &id);
+    void requestDeleteConversation(const int id);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateTitleConversation(const int id, const QString &title);
     void requestUpdateIsPinnedConversation(const int id, const bool isPinned);
@@ -75,6 +77,7 @@ private:
     QList<Conversation*> m_conversations;
 
     Conversation* findConversationById(const int id);
+    QVariant dateCalculation(const QDateTime date)const;
 };
 
 #endif // CONVERSATIONLIST_H

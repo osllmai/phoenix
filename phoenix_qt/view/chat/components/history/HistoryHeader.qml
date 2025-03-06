@@ -7,7 +7,6 @@ Item{
     id:headerId
     height: 90; width: parent.width
     clip:true
-    signal search(var text)
     signal closeDrawer()
     Column{
         spacing: 8
@@ -51,8 +50,8 @@ Item{
             width: parent.width
             Connections{
                 target: searchBoxId
-                function onSearch(mytext){
-                    headerId.search(mytext)
+                function onSearch(myText){
+                    conversationListFilter.setFilterFixedString(myText)
                 }
             }
         }

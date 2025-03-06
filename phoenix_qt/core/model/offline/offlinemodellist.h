@@ -48,7 +48,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE OfflineModel* at(int index) const;
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
     Q_INVOKABLE void downloadRequest(const int id, QString directoryPath);
     Q_INVOKABLE void cancelRequest(const int id);
@@ -87,6 +86,7 @@ private:
     double m_downloadProgress;
 
     OfflineModel* findModelById(const int id);
+    OfflineModel* at(int index) const;
     void updateDownloadProgress();
     void deleteDownloadModel(const int id);
 

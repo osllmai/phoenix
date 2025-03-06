@@ -34,7 +34,6 @@ void OfflineModel::setDownloadPercent(const double downloadPercent){
     if(m_downloadPercent == downloadPercent)
         return;
     m_downloadPercent = downloadPercent;
-    qInfo()<< "------------downloadPercent: "<<m_downloadPercent;
     emit downloadPercentChanged();
 }
 
@@ -55,7 +54,6 @@ void OfflineModel::setDownloadFinished(const bool downloadFinished){
     emit downloadFinishedChanged();
 }
 
-
 qint64 OfflineModel::bytesReceived() const{return m_bytesReceived;}
 void OfflineModel::setBytesReceived(const qint64 newBytesReceived){
     if (m_bytesReceived == newBytesReceived)
@@ -65,8 +63,6 @@ void OfflineModel::setBytesReceived(const qint64 newBytesReceived){
 
     if(m_bytesTotal != 0)
         setDownloadPercent(static_cast<double>(m_bytesReceived) / static_cast<double>(m_bytesTotal)) ;
-
-    emit  modelChanged();
 }
 void OfflineModel::handleBytesReceived(qint64 bytesReceived){setBytesReceived(bytesReceived);}
 

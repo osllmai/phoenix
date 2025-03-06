@@ -26,7 +26,6 @@ Drawer{
                 id: headerId
                 Connections{
                     target: headerId
-                    function onSearch(myText){}
                     function onCloseDrawer(){
                         drawerId.close()
                     }

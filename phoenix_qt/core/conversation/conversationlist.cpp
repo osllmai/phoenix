@@ -40,7 +40,7 @@ QVariant ConversationList::data(const QModelIndex &index, int role = Qt::Display
     case DescriptionRole:
         return conversation->description();
     case DateRole:
-        return conversation->date();
+        return dateCalculation(conversation->date());
     case PinnedRole:
         return conversation->isPinned();
     case IconRole:
@@ -102,7 +102,7 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
     return false;
 }
 
-void ConversationList::addNewConversation(/*Model *model, */const QString &firstPrompt){
+void ConversationList::addRequest(/*Model *model, */const QString &firstPrompt){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
     QStringList selectedWords;
@@ -121,8 +121,39 @@ void ConversationList::addNewConversation(/*Model *model, */const QString &first
                     0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
 }
 
-void ConversationList::deleteConversation(const int id){
+void ConversationList::deleteRequest(const int id){
+    Conversation* conversation = findConversationById(id);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
 
+    beginRemoveRows(QModelIndex(), index, index);
+    m_conversations.removeAll(conversation);
+    endRemoveRows();
+
+    requestDeleteConversation(conversation->id());
+    delete conversation;
+}
+
+void ConversationList::pinnedRequest(const int id, const bool isPinned){
+    Conversation* conversation = findConversationById(id);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+
+    conversation->setIsPinned(isPinned);//update instance
+    requestUpdateIsPinnedConversation(conversation->id(), isPinned);//update database
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {PinnedRole});
+}
+
+void ConversationList::editTitleRequest(const int id, const QString &title){
+    Conversation* conversation = findConversationById(id);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+
+    conversation->setTitle(title);//update instance
+    requestUpdateTitleConversation(conversation->id(), title);//update database
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
 }
 
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -158,4 +189,14 @@ Conversation* ConversationList::findConversationById(const int id) {
         return conversation->id() == id;
     });
     return (it != m_conversations.end()) ? *it : nullptr;
+}
+
+QVariant ConversationList::dateCalculation(const QDateTime date)const{
+    QDateTime now = QDateTime::currentDateTime();
+    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+        return date.toString("hh:mm");
+    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
+        return "Yesterday";
+    else
+        return date.toString("MM/dd/yyyy");
 }
