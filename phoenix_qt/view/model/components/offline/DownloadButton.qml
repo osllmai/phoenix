@@ -62,6 +62,7 @@ Item {
             target:deleteModelVerificationId
             function onButtonAction1(){
                 offlineModelList.deleteRequest(model.id)
+                deleteModelVerificationId.close()
             }
             function onButtonAction2() {
                 deleteModelVerificationId.close()

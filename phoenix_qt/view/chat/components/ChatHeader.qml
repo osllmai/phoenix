@@ -23,9 +23,15 @@ Item{
             Connections {
                 target: newChatId
                 function onClicked(){
-                    headerId.openHistoryDrawer()
+                    notificationDialogId.open()
                 }
             }
+        }
+
+        NotificationDialog{
+            id: notificationDialogId
+            titleText: "HIIIHHIIH Zeinab"
+            about:":) HI :)"
         }
 
         ModelButton{

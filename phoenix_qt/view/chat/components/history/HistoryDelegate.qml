@@ -147,6 +147,7 @@ T.Button {
             target:deleteConversationVerificationId
             function onButtonAction1(){
                 conversationList.deleteRequest(model.id)
+                deleteConversationVerificationId.close()
             }
             function onButtonAction2() {
                 deleteConversationVerificationId.close()

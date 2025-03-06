@@ -53,6 +53,7 @@ Item {
             target:deleteApikeylVerificationId
             function onButtonAction1(){
                 onlineModelList.deleteRequest(model.id)
+                deleteApikeylVerificationId.close()
             }
             function onButtonAction2() {
                 deleteApikeylVerificationId.close()
