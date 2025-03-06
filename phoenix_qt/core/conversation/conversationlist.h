@@ -16,21 +16,21 @@ class ConversationList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     static ConversationList* instance(QObject* parent);
+    void readDB();
 
     enum ConversationRoles {
         IdRole = Qt::UserRole + 1,
         TitleRole,
         DescriptionRole,
         DateRole,
-        // ModelSettingsRole,
+        ModelSettingsRole,
         IsLoadModelRole,
         loadModelInProgressRole,
         ResponseInProgressRole,
-        // MessageListRole,
-        // ModelRole,
+        MessageListRole,
         PinnedRole,
         IconRole,
-        // ConversationObjectRole
+        ConversationObjectRole
     };
 
     int count() const;

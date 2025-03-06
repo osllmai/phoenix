@@ -19,6 +19,7 @@ class CompanyList: public QAbstractListModel
 
 public:
     static CompanyList* instance(QObject* parent );
+    void readDB();
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,

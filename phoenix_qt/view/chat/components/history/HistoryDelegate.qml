@@ -31,14 +31,16 @@ T.Button {
                     myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Primary
                     enabled: false
-                    width: 38; height: 38
+                    width: 35; height: 35
                 }
                 TextArea{
                     id: titleId
                     text: model.title
+                    clip: true
+                    width: parent.width
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    font.pixelSize: 14
+                    font.pixelSize: 15
                     font.styleName: "Bold"
                     focus: false
                     readOnly: true
@@ -64,6 +66,8 @@ T.Button {
                 text: model.description
                 color: Style.Colors.textInformation
                 clip: true
+                width: parent.width
+                height: 13
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
@@ -80,7 +84,7 @@ T.Button {
                     anchors.verticalCenter: editId.verticalCenter
                     color: Style.Colors.textInformation
                     clip: true
-                    font.pixelSize: 12
+                    font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.NoWrap
@@ -126,7 +130,7 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: pinId
-                        function onClicked(){console.log("Pin")}
+                        function onClicked(){console.log("Pin");model.pinned=!model.pinned}
                     }
                 }
             }

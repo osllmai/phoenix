@@ -10,21 +10,10 @@ ConversationList* ConversationList::instance(QObject* parent) {
     return m_instance;
 }
 
-ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent)
-{
+ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent){}
+
+void ConversationList::readDB(){
     emit requestReadConversation();
-    addConversation(1,"title", "firstPrompt", QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/icon/sendFill.svg", false, true,
-                                   "### Human:\n%1\n\n### Assistant:\n",
-                                   "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                                   0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
-    addConversation(2,"title", "firstPrompt", QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/icon/sendFill.svg", false, true,
-                                   "### Human:\n%1\n\n### Assistant:\n",
-                                   "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                                   0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
-    addConversation(3,"title", "firstPrompt", QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/icon/sendFill.svg", false, true,
-                                   "### Human:\n%1\n\n### Assistant:\n",
-                                   "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                                   0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
 }
 
 int ConversationList::count() const { return m_conversations.count(); }
@@ -56,20 +45,18 @@ QVariant ConversationList::data(const QModelIndex &index, int role = Qt::Display
         return conversation->isPinned();
     case IconRole:
         return conversation->icon();
-    // case ModelSettingsRole:
-    //     return QVariant::fromValue(conversation->modelSettings());
+    case ModelSettingsRole:
+        return QVariant::fromValue(conversation->modelSettings());
     case IsLoadModelRole:
         return conversation->isLoadModel();
     case loadModelInProgressRole:
         return conversation->loadModelInProgress();
     case ResponseInProgressRole:
         return conversation->responseInProgress();
-    // case MessageListRole:
-    //     return QVariant::fromValue(conversation->messageList());
-    // case ModelRole:
-    //     return QVariant::fromValue(conversation->model());
-    // case ConversationObjectRole:
-    //     return QVariant::fromValue(conversation);
+    case MessageListRole:
+        return QVariant::fromValue(conversation->messageList());
+    case ConversationObjectRole:
+        return QVariant::fromValue(conversation);
     default:
         return QVariant();
     }
@@ -83,13 +70,12 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     roles[IconRole] = "icon";
     roles[DescriptionRole] = "description";
     roles[DateRole] = "date";
-    // roles[ModelSettingsRole] = "modelSettings";
+    roles[ModelSettingsRole] = "modelSettings";
     roles[IsLoadModelRole] = "isLoadModel";
     roles[loadModelInProgressRole] = "loadModelInProgress";
     roles[ResponseInProgressRole] = "responseInProgress";
-    // roles[MessageListRole] = "messageList";
-    // roles[ModelRole] = "model";
-    // roles[ConversationObjectRole] = "conversationObject";
+    roles[MessageListRole] = "messageList";
+    roles[ConversationObjectRole] = "conversationObject";
     return roles;
 }
 

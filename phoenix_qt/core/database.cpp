@@ -44,14 +44,16 @@ int Database::insertModel(const QString &name, const QString &key){
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(false);
-    query.exec();
+    if (!query.exec())
+        return -1;
 
-    qInfo()<<QSqlError();
     return query.lastInsertId().toInt();
 }
 
 void Database::addModel(const QString &name, const QString &key){
     int id = insertModel(name, key);
+    if(id == -1)
+        return;
 
     QSqlQuery query(m_db);
     query.prepare(READ_MODEL_ID_SQL);
@@ -97,33 +99,33 @@ void Database::deleteModel(const int id){
     QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_MODEL_SQL))
-        return/* query.lastError()*/;
+        return;
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateKeyModel(const int id, const QString &key){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_KEYMODEL_SQL))
-        return /*query.lastError()*/;
+        return ;
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateIsLikeModel(const int id, const bool isLike){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISLIKE_SQL))
-        return /*query.lastError()*/;
+        return ;
     query.addBindValue(isLike);
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -136,8 +138,8 @@ void Database::insertConversation(const QString &title, const QString &descripti
     if (!query.prepare(INSERT_CONVERSATION_SQL))
         return;
     query.addBindValue(title);
-    query.addBindValue(date);
     query.addBindValue(description);
+    query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPinned);
     query.addBindValue(stream);
@@ -153,7 +155,8 @@ void Database::insertConversation(const QString &title, const QString &descripti
     query.addBindValue(repeatPenaltyTokens);
     query.addBindValue(contextLength);
     query.addBindValue(numberOfGPULayers);
-    query.exec();
+    if (!query.exec())
+        return;
 
     int id = query.lastInsertId().toInt();
 
@@ -161,55 +164,49 @@ void Database::insertConversation(const QString &title, const QString &descripti
                          repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
 }
 
-void Database::deleteConversation(const int &id){
+void Database::deleteConversation(const int id){
     QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_CONVERSATION_SQL))
-        return /*query.lastError()*/;
+        return;
     query.addBindValue(id);
-    query.exec();
-
-    // if (!query.prepare(DELETE_MESSAGE_SQL))
-    //     return query.lastError();
-    // query.addBindValue(id);
-    // query.exec();
-
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateDateConversation(const int id, const QString &description, const QString &icon){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
-        return/* query.lastError()*/;
+        return;
     query.addBindValue(description);
     query.addBindValue(icon);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateTitleConversation(const int id, const QString &title){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
-        return/* query.lastError()*/;
+        return;
     query.addBindValue(title);
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateIsPinnedConversation(const int id, const bool isPinned){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISPINNED_CONVERSATION_SQL))
-        return /*query.lastError()*/;
+        return;
     query.addBindValue(isPinned);
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 void Database::updateModelSettingsConversation(const int id, const bool stream,
@@ -220,7 +217,7 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
-        return /*query.lastError()*/;
+        return;
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -235,8 +232,8 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     query.addBindValue(contextLength);
     query.addBindValue(numberOfGPULayers);
     query.addBindValue(id);
-    query.exec();
-    // return QSqlError();
+    if (!query.exec())
+        return;
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -409,6 +406,9 @@ void Database::readModel(const QList<Company*> companys){
                         downloadFinished = true;
                 }
 
+                if(id == -1)
+                    continue;
+
                 emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
@@ -452,6 +452,9 @@ void Database::readModel(const QList<Company*> companys){
                     if(key != "")
                         installModel = true;
                 }
+
+                if(id == -1)
+                    continue;
 
                 emit addOnlineModel(id, name, key, addDate,
                                     isLike, company, BackendType::OnlineModel, company->icon(),
@@ -521,35 +524,33 @@ void Database::readModel(const QList<Company*> companys){
 }
 
 void Database::readConversation(){
-    // QSqlQuery query(m_db);
-    // query.prepare(READALL_MODEL_SQL);
-
-    // if (query.exec()){
-    //     while(query.next()) {
-    //         bool findIndex = false;
-    //         for(int id : allID){
-    //             if(id == query.value(0).toInt()){
-    //                 findIndex = true;
-    //                 break;
-    //             }
-    //         }
-    //         if(findIndex == false){
-
-    //             int id = query.value(0).toInt();
-    //             QString name = query.value(1).toString();
-    //             QString key = query.value(2).toString();
-    //             QDateTime addDate = query.value(3).toDateTime();
-    //             bool isLike = query.value(4).toBool();
+    QSqlQuery query(m_db);
+    query.prepare(READ_CONVERSATION_SQL);
 
 
-    //             QFile file(key);
-    //             if (!file.exists()){
-    //                 deleteModel(id);
-    //             }else
-    //                 emit addOfflineModel(0.0, 0, "", "", "", "",0.0, false, false,
-    //                                      id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
-    //                                      "", "", "","", QDateTime::currentDateTime());
-    //         }
-    //     }
-    // }
+    if (query.exec()){
+        while(query.next()) {
+            emit addConversation(
+                    query.value(0).toInt(),
+                    query.value(1).toString(),
+                    query.value(2).toString(),
+                    query.value(3).toDateTime(),
+                    query.value(4).toString(),
+                    query.value(5).toBool(),
+                    query.value(6).toBool(),
+                    query.value(7).toString(),
+                    query.value(8).toString(),
+                    query.value(9).toDouble(),
+                    query.value(10).toInt(),
+                    query.value(11).toDouble(),
+                    query.value(12).toDouble(),
+                    query.value(13).toDouble(),
+                    query.value(14).toInt(),
+                    query.value(15).toInt(),
+                    query.value(16).toInt(),
+                    query.value(17).toInt(),
+                    query.value(18).toInt()
+            );
+        }
+    }
 }

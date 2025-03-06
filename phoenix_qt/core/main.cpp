@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
     QObject::connect(offlineModelList, &OfflineModelList::requestAddModel, database, &Database::addModel, Qt::QueuedConnection);
     QObject::connect(offlineModelList, &OfflineModelList::requestDeleteModel, database, &Database::deleteModel, Qt::QueuedConnection);
-
+    companyList->readDB();
 
     OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
     OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
@@ -84,8 +84,10 @@ int main(int argc, char *argv[])
     onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
     engine.rootContext()->setContextProperty("onlineModelInstallFilter", onlineModelInstallFilter);
 
+
     SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
     engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
+
 
     ConversationList* conversationList = ConversationList::instance(&engine);
     engine.rootContext()->setContextProperty("conversationList", conversationList);
@@ -102,6 +104,8 @@ int main(int argc, char *argv[])
     QObject::connect(conversationList, &ConversationList::requestUpdateIsPinnedConversation, database, &Database::updateIsPinnedConversation, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateModelSettingsConversation, database, &Database::updateModelSettingsConversation, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateFilterList, conversationListFilter, &ConversationListFilter::updateFilterList, Qt::QueuedConnection);
+    conversationList->readDB();
+
 
     const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
 

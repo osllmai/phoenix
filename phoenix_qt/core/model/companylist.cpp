@@ -16,7 +16,9 @@ CompanyList* CompanyList::instance(QObject* parent) {
     return m_instance;
 }
 
-CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){
+CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){}
+
+void CompanyList::readDB(){
     connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
         beginResetModel();
         m_companys = futureWatcher.result();

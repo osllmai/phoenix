@@ -30,7 +30,7 @@ class Conversation : public QObject
     Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged)
 
 public:
-    explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
+    explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
         m_responseList(new ResponseList(this))  {}
     explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);

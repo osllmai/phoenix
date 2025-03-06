@@ -34,7 +34,7 @@ public slots:
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers);
-    void deleteConversation(const int &id);
+    void deleteConversation(const int id);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
     void updateTitleConversation(const int id, const QString &title);
     void updateIsPinnedConversation(const int id, const bool isPinned);
