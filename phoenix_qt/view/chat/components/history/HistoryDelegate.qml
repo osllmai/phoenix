@@ -6,10 +6,6 @@ import '../../../component_library/button'
 
 T.Button {
     id: control
-    property var title: titleId.text
-    property var modelIcon: "qrc:/media/icon/inDox.svg"
-    property var description: "Description"
-    property var date: "3 Min ago"
     signal deleteChat()
     signal editChatName(var chatName)
 
@@ -32,14 +28,14 @@ T.Button {
                 width: parent.width
                 MyIcon {
                     id: logoModelId
-                    myIcon: control.modelIcon
+                    myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Primary
                     enabled: false
                     width: 38; height: 38
                 }
                 TextArea{
                     id: titleId
-                    text: "chat name"
+                    text: model.title
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
@@ -65,7 +61,7 @@ T.Button {
             }
             Text {
                 id: informationId
-                text: control.description
+                text: model.description
                 color: Style.Colors.textInformation
                 clip: true
                 font.pixelSize: 12
@@ -79,7 +75,7 @@ T.Button {
                 height: 20
                 Text {
                     id: dateId
-                    text: control.date
+                    text: model.date
                     width: parent.width - editId.width - deleteId.width - pinId.width
                     anchors.verticalCenter: editId.verticalCenter
                     color: Style.Colors.textInformation
@@ -126,7 +122,7 @@ T.Button {
                     visible: control.hovered
                     width: 27; height: 27
                     y: deleteId.y + 4
-                    myIcon: pinId.hovered? "qrc:/media/icon/pinFill.svg": "qrc:/media/icon/pin.svg"
+                    myIcon: model.pinned? "qrc:/media/icon/pinFill.svg": "qrc:/media/icon/pin.svg"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: pinId

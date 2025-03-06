@@ -1,9 +1,15 @@
 #include "conversation.h"
 
-Conversation::Conversation(int id, const QString &title, const QDateTime &date, QObject *parent)
-    : QObject(parent), m_id(id), m_title(title), m_date(date), m_isLoadModel(false),
+Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
+                           const QDateTime &date, const bool isPinned, QObject *parent)
+    : QObject(parent), m_id(id), m_title(title), m_description(description),
+    m_icon(icon), m_date(date), m_isPinned(isPinned),  m_isLoadModel(false),
     m_loadModelInProgress(false), m_responseInProgress(false),
-    m_model(nullptr), m_modelSettings(new ModelSettings(id,this)) {}
+    m_model(nullptr), m_modelSettings(new ModelSettings(id,this)),m_messageList(new MessageList(this)),
+    m_responseList(new ResponseList(this))
+{
+    qInfo()<<    m_id<<"    "<<m_title<<"   "<<m_description<<"   "<<m_icon<<"   "<<m_isPinned;
+}
 
 Conversation::~Conversation() {}
 
@@ -69,3 +75,4 @@ void Conversation::setModel(Model *model) {
 ModelSettings* Conversation::modelSettings() {return m_modelSettings;}
 
 ResponseList *Conversation::responseList() const{return m_responseList;}
+

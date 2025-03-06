@@ -12,6 +12,7 @@
 class ConversationList: public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     static ConversationList* instance(QObject* parent);
@@ -21,15 +22,15 @@ public:
         TitleRole,
         DescriptionRole,
         DateRole,
-        ModelSettingsRole,
+        // ModelSettingsRole,
         IsLoadModelRole,
         loadModelInProgressRole,
         ResponseInProgressRole,
-        MessageListRole,
-        ModelRole,
+        // MessageListRole,
+        // ModelRole,
         PinnedRole,
         IconRole,
-        ConversationObjectRole
+        // ConversationObjectRole
     };
 
     int count() const;

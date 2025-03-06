@@ -11,7 +11,7 @@
 class OnlineModelList: public QAbstractListModel
 {
     Q_OBJECT
-    // QML_ELEMENT
+    QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:

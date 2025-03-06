@@ -17,7 +17,7 @@ Item {
         }
         clip: true
 
-        model: conversationListFilter
+        model: conversationList
         delegate: Item{
            width: listView.width; height: 122
            Rectangle{

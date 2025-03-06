@@ -13,7 +13,7 @@
 class CompanyListFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
-    // QML_ELEMENT
+    QML_ELEMENT
     Q_PROPERTY(BackendType backendType READ backendType WRITE setBackendType NOTIFY backendTypeChanged)
 
 public:

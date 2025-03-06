@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtQml>
+#include <QQmlEngine>
 #include <QDateTime>
 
 #include "./chat/modelsettings.h"
@@ -13,6 +14,7 @@
 class Conversation : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
@@ -25,10 +27,13 @@ class Conversation : public QObject
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
     Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
-    Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged FINAL)
+    Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged)
 
 public:
-    explicit Conversation(int id, const QString &title, const QDateTime &date, QObject *parent = nullptr);
+    explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
+        m_responseList(new ResponseList(this))  {}
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+                          const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
     virtual ~Conversation();
 
     // Q_INVOKABLE void readMessage();
@@ -98,5 +103,6 @@ private:
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
 };
+
 
 #endif // CONVERSATION_H

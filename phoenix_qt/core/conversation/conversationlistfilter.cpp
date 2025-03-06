@@ -1,6 +1,7 @@
 #include "conversationlistfilter.h"
 #include "conversationlist.h"
 
+
 ConversationListFilter::ConversationListFilter(QAbstractItemModel *model, QObject *parent)
     : QSortFilterProxyModel(parent) {
     setSourceModel(model);

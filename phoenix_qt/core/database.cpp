@@ -15,8 +15,8 @@ Database::Database(QObject* parent): QObject{nullptr}{
         if (!tables.contains("model", Qt::CaseInsensitive)){
             query.exec(MODEL_SQL);
         }
-        if (!tables.contains("model", Qt::CaseInsensitive)){
-            query.exec(MODEL_SQL);
+        if (!tables.contains("conversation", Qt::CaseInsensitive)){
+            query.exec(CONVERSATION_SQL);
         }
     }
 }
@@ -157,7 +157,8 @@ void Database::insertConversation(const QString &title, const QString &descripti
 
     int id = query.lastInsertId().toInt();
 
-    // return id;
+    emit addConversation(id, title, description, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
+                         repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
 }
 
 void Database::deleteConversation(const int &id){

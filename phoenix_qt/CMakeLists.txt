@@ -18,7 +18,14 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml Sql)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-include_directories(core)
+include_directories(${CMAKE_SOURCE_DIR}/core)
+include_directories(${CMAKE_SOURCE_DIR}/core/model/)
+include_directories(${CMAKE_SOURCE_DIR}/core/model/offline)
+include_directories(${CMAKE_SOURCE_DIR}/core/model/online)
+include_directories(${CMAKE_SOURCE_DIR}/core/conversation)
+include_directories(${CMAKE_SOURCE_DIR}/core/conversation/chat)
+include_directories(${CMAKE_SOURCE_DIR}/core/conversation/provider)
+
 
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
@@ -59,6 +66,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
     core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
     core/conversation/provider/provider.h core/conversation/provider/provider.cpp
+    core/conversation/chat.h core/conversation/chat.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}

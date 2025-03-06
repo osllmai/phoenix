@@ -16,6 +16,7 @@
 class OfflineModelList: public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
 

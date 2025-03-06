@@ -73,6 +73,9 @@ Rectangle{
             anchors.bottom: parent.bottom
             myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
             iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                conversationList.addNewConversation(inputTextBox.text)
+            }
         }
     }
 
