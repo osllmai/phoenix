@@ -12,7 +12,7 @@ Drawer{
 
     parent: Overlay.overlay
     Overlay.modal: Rectangle {
-        color: Style.Colors.overlay
+        color: Style.Colors.overlayDrawer
     }
     background: null
     Rectangle {

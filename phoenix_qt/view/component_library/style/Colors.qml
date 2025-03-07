@@ -93,8 +93,8 @@ Item{
 
     QtObject{
         id: overlayColor
-        readonly property var light: [/* "#47c8c8c8"*/"#b80a0a0a"]
-        readonly property var dark: ["#b80a0a0a"]
+        readonly property var light: [ "#47c8c8c8", "#b80a0a0a"]
+        readonly property var dark: ["#b80a0a0a", "#b80a0a0a"]
     }
     property var currentOverlayColor: overlayColor.light
     property alias overlayColor: overlayColor
@@ -119,7 +119,8 @@ Item{
     readonly property color menu: currentBackgroundColor[1]
 
     //ovrlay Color
-    readonly property color overlay: currentOverlayColor[0]
+    readonly property color overlay: currentOverlayColor[1]
+    readonly property color overlayDrawer: currentOverlayColor[0]
 
     //toolTip color
     readonly property color toolTipText: currentTextColor[6]

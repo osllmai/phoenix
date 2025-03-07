@@ -22,6 +22,7 @@ class OfflineModelList: public QAbstractListModel
 
 public:
     static OfflineModelList* instance(QObject* parent );
+    OfflineModel* findModelById(const int id);
     void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {
@@ -85,7 +86,6 @@ private:
     QList<Download*>downloads;
     double m_downloadProgress;
 
-    OfflineModel* findModelById(const int id);
     OfflineModel* at(int index) const;
     void updateDownloadProgress();
     void deleteDownloadModel(const int id);

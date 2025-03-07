@@ -2,7 +2,6 @@
 #define DATABASE_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QDateTime>
 #include <QSqlError>
@@ -44,6 +43,9 @@ public slots:
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                             const int &contextLength, const int &numberOfGPULayers);
 
+    void readMessages(const int idConversation);
+    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+
 signals:
     void addOnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
                         const bool isLike, Company* company, const BackendType backend,
@@ -68,6 +70,9 @@ signals:
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers);
+
+    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+
 
 private:
     static Database* m_instance;
@@ -96,6 +101,11 @@ private:
     static const QString UPDATE_ISPINNED_CONVERSATION_SQL;
     static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
     static const QString DELETE_CONVERSATION_SQL;
+
+    static const QString MESSAGE_SQL;
+    static const QString INSERT_MESSAGE_SQL;
+    static const QString READ_MESSAGE_ID_SQL;
+    static const QString DELETE_MESSAGE_SQL;
 
     int insertModel(const QString &name, const QString &key);
 };

@@ -74,3 +74,33 @@ ModelSettings* Conversation::modelSettings() {return m_modelSettings;}
 
 ResponseList *Conversation::responseList() const{return m_responseList;}
 
+void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
+    m_messageList->addMessage(id, text, date, icon, isPrompt);
+}
+
+void Conversation::readMessages(){
+    emit requestReadMessages(m_id);
+}
+
+void Conversation::prompt(const QString &input){
+    emit requestInsertMessage(m_id, input, m_model->icon(), true);
+}
+
+void Conversation::stop(){
+
+}
+
+void Conversation::loadModel(const int id){
+    OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
+    if(offlineModel != nullptr){
+        setModel(offlineModel);
+    }
+    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+    if(onlineModel != nullptr){
+        setModel(onlineModel);
+    }
+}
+
+void Conversation::unloadModel(){
+
+}

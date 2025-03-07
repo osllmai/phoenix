@@ -18,6 +18,9 @@ Database::Database(QObject* parent): QObject{nullptr}{
         if (!tables.contains("conversation", Qt::CaseInsensitive)){
             query.exec(CONVERSATION_SQL);
         }
+        if (!tables.contains("message", Qt::CaseInsensitive)){
+            query.exec(MESSAGE_SQL);
+        }
     }
 }
 
@@ -172,6 +175,12 @@ void Database::deleteConversation(const int id){
     query.addBindValue(id);
     if (!query.exec())
         return;
+
+    if (!query.prepare(DELETE_MESSAGE_SQL))
+        return;
+    query.addBindValue(id);
+    if (!query.exec())
+        return;
 }
 
 void Database::updateDateConversation(const int id, const QString &description, const QString &icon){
@@ -234,6 +243,26 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     query.addBindValue(id);
     if (!query.exec())
         return;
+}
+
+void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
+    QDateTime date = QDateTime::currentDateTime();
+
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(INSERT_CONVERSATION_SQL))
+        return;
+    query.addBindValue(idConversation);
+    query.addBindValue(text);
+    query.addBindValue(date);
+    query.addBindValue(icon);
+    query.addBindValue(isPrompt);
+    if (!query.exec())
+        return;
+
+    int id = query.lastInsertId().toInt();
+
+    emit addMessage(idConversation, id, text, date, icon, isPrompt);
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -347,6 +376,31 @@ const QString Database::DELETE_CONVERSATION_SQL = QLatin1String(R"(
     DELETE FROM conversation where id = ?
 )");
 
+
+const QString Database::MESSAGE_SQL = QLatin1String(R"(
+    CREATE TABLE message(
+            conversation_id INTEGER NOT NULL,
+            id INTEGER NOT NULL UNIQUE,
+            text TEXT NOT NULL,
+            date DATE NOT NULL,
+            icon TEXT NOT NULL,
+            isPrompt BOOL NOT NULL,
+            PRIMARY KEY(id AUTOINCREMENT),
+            foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
+    )
+)");
+
+const QString Database::READ_MESSAGE_ID_SQL = QLatin1String(R"(
+    SELECT id, text, date, icon, isPrompt FROM model WHERE conversation_id=?
+)");
+
+const QString Database::INSERT_MESSAGE_SQL = QLatin1String(R"(
+    INSERT INTO message(conversation_id, text, date, icon, isPrompt) VALUES (?, ?, ?, ?, ?)
+)");
+
+const QString Database::DELETE_MESSAGE_SQL = QLatin1String(R"(
+    DELETE FROM message WHERE conversation_id=?
+)");
 
 void Database::readModel(const QList<Company*> companys){
 
@@ -551,6 +605,25 @@ void Database::readConversation(){
                     query.value(17).toInt(),
                     query.value(18).toInt()
             );
+        }
+    }
+}
+
+
+void Database::readMessages(const int idConversation){
+    QSqlQuery query(m_db);
+    query.prepare(READ_MESSAGE_ID_SQL);
+
+    if (query.exec()){
+        while(query.next()) {
+            emit addMessage(
+                idConversation,
+                query.value(1).toInt(),
+                query.value(2).toString(),
+                query.value(3).toDateTime(),
+                query.value(4).toString(),
+                query.value(5).toBool()
+                );
         }
     }
 }

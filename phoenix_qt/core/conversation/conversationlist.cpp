@@ -132,7 +132,7 @@ void ConversationList::deleteRequest(const int id){
     m_conversations.removeAll(conversation);
     endRemoveRows();
 
-    requestDeleteConversation(conversation->id());
+    emit requestDeleteConversation(conversation->id());
     delete conversation;
 }
 
@@ -142,7 +142,7 @@ void ConversationList::pinnedRequest(const int id, const bool isPinned){
     const int index = m_conversations.indexOf(conversation);
 
     conversation->setIsPinned(isPinned);//update instance
-    requestUpdateIsPinnedConversation(conversation->id(), isPinned);//update database
+    emit requestUpdateIsPinnedConversation(conversation->id(), isPinned);//update database
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {PinnedRole});
 }
@@ -153,7 +153,7 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
     const int index = m_conversations.indexOf(conversation);
 
     conversation->setTitle(title);//update instance
-    requestUpdateTitleConversation(conversation->id(), title);//update database
+    emit requestUpdateTitleConversation(conversation->id(), title);//update database
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
 }
@@ -182,9 +182,24 @@ void ConversationList::addConversation(const int id, const QString &title, const
     conversation->modelSettings()->setNumberOfGPULayers(numberOfGPULayers);
 
     m_conversations.append(conversation);
+    connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 }
+
+void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
+    findConversationById(idConversation)->addMessage(id, text, date, icon, isPrompt);
+}
+
+void ConversationList::readMessages(const int idConversation){
+    emit requestReadMessages(idConversation);
+}
+
+void ConversationList::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
+    emit requestInsertMessage(idConversation, text, icon, isPrompt);
+}
+
 
 Conversation* ConversationList::findConversationById(const int id) {
     auto it = std::find_if(m_conversations.begin(), m_conversations.end(), [id](Conversation* conversation) {

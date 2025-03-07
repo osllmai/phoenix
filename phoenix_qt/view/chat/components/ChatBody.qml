@@ -17,10 +17,10 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         height: parent.height
         visible: !controlId.chatIsEmpty
-        MessageList{
-            id: messageView
-            height: parent.height - inputBoxId.height - 20
-        }
+        // MessageList{
+        //     id: messageView
+        //     height: parent.height - inputBoxId.height - 20
+        // }
         InputPrompt{
             id: inputBoxId
         }

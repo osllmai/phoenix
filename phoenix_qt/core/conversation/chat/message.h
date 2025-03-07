@@ -2,18 +2,19 @@
 #define MESSAGE_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QDateTime>
 
 class Message : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged FINAL)
     Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY dateChanged FINAL)
     Q_PROPERTY(QString icon READ icon WRITE setIcon NOTIFY iconChanged FINAL)
     Q_PROPERTY(bool isPrompt READ isPrompt WRITE setIsPrompt NOTIFY isPromptChanged FINAL)
+
 public:
     explicit Message(const int &id, const QString &text, const QDateTime date, const QString &icon, bool isPrompt, QObject *parent = nullptr );
 

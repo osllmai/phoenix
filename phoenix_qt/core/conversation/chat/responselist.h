@@ -2,13 +2,13 @@
 #define RESPONSELIST_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QAbstractListModel>
 
 class ResponseList: public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     explicit ResponseList(QObject* parent = nullptr);

@@ -2,7 +2,6 @@
 #define MESSAGELIST_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QAbstractListModel>
 
@@ -11,6 +10,7 @@
 class MessageList: public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     explicit MessageList(QObject* parent);

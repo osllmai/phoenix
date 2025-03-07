@@ -2,7 +2,6 @@
 #define CONVERSATION_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QDateTime>
 
@@ -10,6 +9,8 @@
 #include "./chat/messagelist.h"
 #include "../model/model.h"
 #include "./chat/responselist.h"
+#include "../model/offline/offlinemodellist.h"
+#include "../model/online/onlinemodellist.h"
 
 class Conversation : public QObject
 {
@@ -25,7 +26,7 @@ class Conversation : public QObject
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged)
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
-    Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
     Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged)
 
@@ -36,11 +37,13 @@ public:
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
     virtual ~Conversation();
 
-    // Q_INVOKABLE void readMessage();
-    // Q_INVOKABLE void prompt(const QString &input);
-    // Q_INVOKABLE void stop();
-    // Q_INVOKABLE void loadModel(const QString &key);
-    // Q_INVOKABLE void unloadModel();
+    Q_INVOKABLE void readMessages();
+    Q_INVOKABLE void prompt(const QString &input);
+    Q_INVOKABLE void stop();
+    Q_INVOKABLE void loadModel(const int id);
+    Q_INVOKABLE void unloadModel();
+
+    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
 
     const int id() const;
 
@@ -88,6 +91,9 @@ signals:
     void modelSettingsChanged();
     void responseListChanged();
     void conversationChange();
+
+    void requestReadMessages(const int idConversation);
+    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
 
 private:
     int m_id;

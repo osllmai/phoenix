@@ -2,7 +2,6 @@
 #define CONVERSATIONLIST_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QAbstractListModel>
 
@@ -23,14 +22,14 @@ public:
         TitleRole,
         DescriptionRole,
         DateRole,
+        PinnedRole,
+        IconRole,
         QDateTimeRole,
         ModelSettingsRole,
         IsLoadModelRole,
         loadModelInProgressRole,
         ResponseInProgressRole,
         MessageListRole,
-        PinnedRole,
-        IconRole,
         ConversationObjectRole
     };
 
@@ -52,6 +51,10 @@ public slots:
                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                   const int &contextLength, const int &numberOfGPULayers);
 
+    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+    void readMessages(const int idConversation);
+    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+
 signals:
     void countChanged();
     void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -70,6 +73,9 @@ signals:
                         const int &contextLength, const int &numberOfGPULayers);
     void requestUpdateFilterList();
     void requestReadConversation();
+
+    void requestReadMessages(const int idConversation);
+    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
 
 private:
     explicit ConversationList(QObject* parent);

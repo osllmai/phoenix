@@ -3,12 +3,11 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QtQml>
 
 class ModelSettings : public QObject{
     Q_OBJECT
-    // QML_ELEMENT
-    Q_PROPERTY(int id READ id FINAL )
+    QML_ELEMENT
+    Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
     Q_PROPERTY(QString systemPrompt READ systemPrompt WRITE setSystemPrompt NOTIFY systemPromptChanged FINAL)

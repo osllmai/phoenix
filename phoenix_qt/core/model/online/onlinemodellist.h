@@ -16,6 +16,7 @@ class OnlineModelList: public QAbstractListModel
 
 public:
     static OnlineModelList* instance(QObject* parent );
+    OnlineModel* findModelById(const int id);
 
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -63,8 +64,6 @@ private:
 
     explicit OnlineModelList(QObject* parent);
     static OnlineModelList* m_instance;
-
-    OnlineModel* findModelById(const int id);
 };
 
 #endif // ONLINEMODELLIST_H
