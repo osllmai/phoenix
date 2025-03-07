@@ -34,19 +34,20 @@ Dialog {
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
+        color: Style.Colors.background
 
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: control.hovered? Style.Colors.boxHoverGradient0: Style.Colors.boxNormalGradient0
-            }
+        // gradient: Gradient {
+        //     GradientStop {
+        //         position: 0
+        //         color: Style.Colors.boxHoverGradient0
+        //     }
 
-            GradientStop {
-                position: 1
-                color: control.hovered? Style.Colors.boxHoverGradient1: Style.Colors.boxNormalGradient1
-            }
-            orientation: Gradient.Vertical
-        }
+        //     GradientStop {
+        //         position: 1
+        //         color: Style.Colors./*boxHoverGradient1*/boxHoverGradient0
+        //     }
+        //     orientation: Gradient.Vertical
+        // }
 
         Column{
             anchors.fill: parent
@@ -61,6 +62,7 @@ Dialog {
                     color: Style.Colors.textTitle
                     font.pixelSize: 20
                     font.styleName: "Bold"
+                    anchors.verticalCenter: closeBox.verticalCenter
                 }
                 Item{
                     id: closeBox
@@ -93,38 +95,33 @@ Dialog {
                 clip: true
                 width: parent.width
                 height: parent.height - buttonBoxId.height - titleBoxId.height
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignJustify
-                verticalAlignment: Text.AlignTop
+                font.pixelSize: 14
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.Wrap
             }
             Row{
                 id: buttonBoxId
                 spacing: 5
+                anchors.right: parent.right
+
                 MyButton{
                     id: botton1
                     myText: dialogId.textBotton1
-                    bottonType: Style.RoleEnum.BottonType.Danger
+                    bottonType: Style.RoleEnum.BottonType.Secondary
                     onClicked:{
-                        buttonAction1()
+                       buttonAction1()
                     }
                 }
                 MyButton{
                     id: botton2
                     myText: dialogId.textBotton2
-                    bottonType: Style.RoleEnum.BottonType.Primary
+                    bottonType: Style.RoleEnum.BottonType.Danger
                     onClicked:{
-                       buttonAction2()
+                        buttonAction2()
                     }
                 }
             }
         }
-        layer.enabled: control.hovered? true: false
-        layer.effect: Glow {
-             samples: 40
-             color:  Style.Colors.boxBorder
-             spread: 0.1
-             transparentBorder: true
-         }
     }
 }

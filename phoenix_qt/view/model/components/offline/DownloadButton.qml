@@ -54,17 +54,17 @@ Item {
 
     VerificationDialog{
         id: deleteModelVerificationId
-        titleText: "delete"
-        about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
-        textBotton1: "delete"
-        textBotton2: "cancel"
+        titleText: "Delete"
+        about:"Do you really want to delete these Model?"
+        textBotton1: "Cancel"
+        textBotton2: "Delete"
         Connections{
             target:deleteModelVerificationId
             function onButtonAction1(){
-                offlineModelList.deleteRequest(model.id)
                 deleteModelVerificationId.close()
             }
             function onButtonAction2() {
+                offlineModelList.deleteRequest(model.id)
                 deleteModelVerificationId.close()
             }
         }

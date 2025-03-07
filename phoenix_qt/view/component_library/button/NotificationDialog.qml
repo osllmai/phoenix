@@ -5,10 +5,10 @@ import '../style' as Style
 
 Dialog {
     id: control
-    x: parent.width - width - 15
-    y: parent.height - height - 15
+    x: parent.width - width - 10
+    y: parent.height - height - 40
     width: 250
-    height: 200
+    height: 100
 
     property var titleText
     property var about
@@ -47,14 +47,15 @@ Dialog {
             orientation: Gradient.Vertical
         }
 
-        Column {
+        Column{
+            anchors.fill: parent
             spacing: 10
-
+            anchors.margins: 20
             Text {
                 id: titleId
                 text: control.titleText
                 color: Style.Colors.textTitle
-                font.pixelSize: 20
+                font.pixelSize: 16
                 font.styleName: "Bold"
             }
 
@@ -64,37 +65,32 @@ Dialog {
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                height: control.height - progressBarCPU.height - titleId.height - 20
-                font.pixelSize: 12
+                font.pixelSize: 14
                 wrapMode: Text.Wrap
             }
+        }
 
-            ProgressBar {
-                id: progressBarCPU
-                width: parent.width
-                height: 6
-                value: control.progressValue
-                anchors.verticalCenter: parent.verticalCenter
+        ProgressBar {
+            id: progressBarCPU
+            width: parent.width
+            height: 6
+            value: control.progressValue
+            anchors.bottom: parent.bottom
 
-                background: Rectangle {
-                    color: Style.Colors.progressBarBackground
-                    implicitHeight: 6
+            background: null
+
+            contentItem: Item {
+                implicitHeight: 6
+                Rectangle {
+                    width: progressBarCPU.visualPosition * parent.width
+                    height: 6
                     radius: 2
-                }
-
-                contentItem: Item {
-                    implicitHeight: 6
-                    Rectangle {
-                        width: progressBarCPU.visualPosition * parent.width
-                        height: 6
-                        radius: 2
-                        gradient: Gradient {
-                            orientation: Gradient.Horizontal
-                            GradientStop { position: 0.0; color: Style.Colors.progressBarGradient0 }
-                            GradientStop { position: 1.0; color: Style.Colors.progressBarGradient1 }
-                        }
-                        Behavior on width { NumberAnimation { duration: 900 } }
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+                        GradientStop { position: 0.0; color: Style.Colors.progressBarGradient0 }
+                        GradientStop { position: 1.0; color: Style.Colors.progressBarGradient1 }
                     }
+                    Behavior on width { NumberAnimation { duration: 100 } }
                 }
             }
         }
@@ -119,6 +115,7 @@ Dialog {
             } else {
                 control.close();
                 stop();
+                progressValue = 0;
             }
         }
     }

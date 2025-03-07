@@ -93,7 +93,7 @@ Item{
 
     QtObject{
         id: overlayColor
-        readonly property var light: [/*"#091E420F"*/ "#47c8c8c8"]
+        readonly property var light: [/* "#47c8c8c8"*/"#b80a0a0a"]
         readonly property var dark: ["#b80a0a0a"]
     }
     property var currentOverlayColor: overlayColor.light

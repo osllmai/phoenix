@@ -77,10 +77,7 @@ T.Button {
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
                 }
-
             }
-
-
             Row{
                 id: buttonList
                 spacing: 10
@@ -91,7 +88,9 @@ T.Button {
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
                         target: goPageId
-                        function onClicked(){}
+                        function onClicked(){
+                            appBodyId.currentIndex = 1
+                        }
                     }
                 }
                 MyButton{

@@ -66,12 +66,20 @@ Item {
         MyIcon {
             id: githubIcon
             myIcon: "qrc:/media/icon/github.svg"
+            myTextToolTip: "Github"
             iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                Qt.openUrlExternally("https://github.com/osllmai")
+            }
         }
         MyIcon {
             id: discordIcon
             myIcon: "qrc:/media/icon/discord.svg"
+            myTextToolTip: "Discord"
             iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")
+            }
         }
     }
 }

@@ -139,17 +139,17 @@ T.Button {
     }
     VerificationDialog{
         id: deleteConversationVerificationId
-        titleText: "delete"
-        about:"Are you sure you want to delete the LLM model? \nThis action is irreversible and may result in the loss of data or settings associated with the model."
-        textBotton1: "delete"
-        textBotton2: "cancel"
+        titleText: "Delete"
+        about:"Do you really want to delete these conversation?"
+        textBotton1: "Cancel"
+        textBotton2: "Delete"
         Connections{
             target:deleteConversationVerificationId
             function onButtonAction1(){
-                conversationList.deleteRequest(model.id)
                 deleteConversationVerificationId.close()
             }
             function onButtonAction2() {
+                conversationList.deleteRequest(model.id)
                 deleteConversationVerificationId.close()
             }
         }

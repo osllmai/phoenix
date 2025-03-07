@@ -21,9 +21,10 @@ T.Button {
     property alias myToolTipText: toolTipId.text
     property var myIcon
     property var myFillIcon
+    property int numberPage
 
     function iconColor(){
-        if(!control.pressed && !control.checked &&!control.hovered)
+        if(!control.pressed /*&& !control.checked*/ &&!control.hovered &&(appBodyId.currentIndex != numberPage))
             return Style.Colors.menuNormalIcon;
         else
             return Style.Colors.menuHoverAndCheckedIcon;
@@ -61,7 +62,7 @@ T.Button {
 
     contentItem: Rectangle{
         id: backgroundId
-        color: control.hovered || control.checked ? Style.Colors.menuHoverBackground : "#00ffffff"
+        color: control.hovered/* || control.checked*/ || (appBodyId.currentIndex == numberPage) ? Style.Colors.menuHoverBackground : "#00ffffff"
         anchors.fill: parent
         radius: 10
         clip: true
@@ -73,7 +74,7 @@ T.Button {
             anchors.leftMargin: 4
             background: null
             icon{
-                source: control.checked? control.myFillIcon : control.myIcon
+                source: (appBodyId.currentIndex == numberPage)? control.myFillIcon : control.myIcon
                 color: control.iconColor()
                 width:18; height:18
             }
