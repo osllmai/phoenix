@@ -17,13 +17,14 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: newChatId
+            visible: !conversationList.isEmptyConversation
             myText: "New Chat"
             myIcon: "qrc:/media/icon/add.svg"
             bottonType: Style.RoleEnum.BottonType.Primary
             Connections {
                 target: newChatId
                 function onClicked(){
-                    notificationDialogId.open()
+                    conversationList.isEmptyConversation = true
                 }
             }
         }

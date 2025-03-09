@@ -7,7 +7,7 @@ Dialog {
     id: dialogId
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    width: 250
+    width: 300
     height: 200
 
     property var titleText

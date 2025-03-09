@@ -13,7 +13,7 @@ Item {
             id:contextLengthId
             myTextName: "Context Length"
             myTextToolTip: "Refers to the number of tokens the model considers from the input when generating a response."
-            sliderValue: 65/*root.currentChat.modelSettings.contextLength*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 65
             sliderFrom: 120
             sliderTo:4096
             sliderStepSize:1
@@ -22,7 +22,7 @@ Item {
             id:numberOfGPUId
             myTextName: "Number of GPU layers (ngl)"
             myTextToolTip: "Refers to the number of layers processed using a GPU, affecting performance."
-            sliderValue: 1/*root.currentChat.modelSettings.numberOfGPULayers*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 1
             sliderFrom: 62
             sliderTo: 100
             sliderStepSize:1

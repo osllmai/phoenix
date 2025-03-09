@@ -39,7 +39,7 @@ Item {
 
                 TextArea {
                     id: promptTemplateTextBox
-                    // text: root.currentChat.modelSettings.promptTemplate
+                    text: control.existConversation? conversationList.currentConversation.id: ""
                     height: scrollPromptTemplate.height
                     visible: true
                     color: Style.Colors.textTitle
@@ -65,14 +65,6 @@ Item {
                     background: null
                 }
             }
-
-            // layer.enabled: true
-            // layer.effect: Glow {
-            //      samples: 15
-            //      color: Style.Theme.glowColor
-            //      spread: 0.0
-            //      transparentBorder: true
-            //  }
         }
     }
 }

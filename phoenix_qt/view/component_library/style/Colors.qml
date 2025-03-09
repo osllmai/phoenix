@@ -261,6 +261,7 @@ Item{
     readonly property color boxHoverGradient0: currentBackgroundColor[1]
     readonly property color boxHoverGradient1: currentBackgroundColor[3]
     readonly property color boxBorder: currentBackgroundColor[3]
+    readonly property color boxChecked: currentPrimaryColor[0]
     readonly property color boxHover: currentBackgroundColor[1]
 
     //like color

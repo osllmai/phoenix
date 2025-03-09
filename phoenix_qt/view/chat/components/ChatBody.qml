@@ -9,14 +9,12 @@ Item {
     // width: Math.min(780, parent.width - 48)
     // anchors.horizontalCenter: parent.horizontalCenter
 
-    property bool chatIsEmpty: true
-
     Column{
         spacing: 10
         width: Math.min(680, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         height: parent.height
-        visible: !controlId.chatIsEmpty
+        visible: !conversationList.isEmptyConversation
         // MessageList{
         //     id: messageView
         //     height: parent.height - inputBoxId.height - 20
@@ -31,7 +29,7 @@ Item {
         width: Math.min(680, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        visible: controlId.chatIsEmpty
+        visible: conversationList.isEmptyConversation
         Text{
             id: phoenixId
             text: "Hello! I’m Phoenix."

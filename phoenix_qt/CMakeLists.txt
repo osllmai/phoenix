@@ -202,14 +202,12 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/history/HistoryDelegate.qml
         view/chat/components/model_settings/ModelSettingsHeader.qml
         view/chat/components/model_settings/ModelSettingsBody.qml
-        view/chat/components/model_settings/MyMenuSettings.qml
-        view/chat/components/model_settings/AssistantSettingsView.qml
-        view/chat/components/model_settings/ModelSettingsView.qml
+        view/chat/components/model_settings/ModelAssistantSettings.qml
+        view/chat/components/model_settings/ModelInferencesSettings.qml
+        view/chat/components/model_settings/ModelInformationSettings.qml
+        view/chat/components/model_settings/ModelEngineSettings.qml
         view/chat/components/model_settings/components/ModelSettingsSlider.qml
         view/chat/components/model_settings/components/ModelSettingsSwitch.qml
-        view/chat/components/model_settings/components/ModelInferencesSettings.qml
-        view/chat/components/model_settings/components/ModelInformationSettings.qml
-        view/chat/components/model_settings/components/ModelEngineSettings.qml
         view/chat/components/model_settings/components/ModelMenuSettings.qml
         view/chat/components/model/ModelButton.qml
         view/chat/components/model/ModelDialog.qml

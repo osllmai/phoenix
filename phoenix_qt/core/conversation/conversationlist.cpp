@@ -10,7 +10,7 @@ ConversationList* ConversationList::instance(QObject* parent) {
     return m_instance;
 }
 
-ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent){}
+ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent), m_isEmptyConversation(true){}
 
 void ConversationList::readDB(){
     emit requestReadConversation();
@@ -104,7 +104,7 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
     return false;
 }
 
-void ConversationList::addRequest(/*Model *model, */const QString &firstPrompt){
+void ConversationList::addRequest(const int idModel, const QString &firstPrompt){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
     QStringList selectedWords;
@@ -192,6 +192,11 @@ void ConversationList::addMessage(const int idConversation, const int id, const 
     findConversationById(idConversation)->addMessage(id, text, date, icon, isPrompt);
 }
 
+void ConversationList::selectCurrentConversationRequest(const int id){
+    setCurrentConversation(findConversationById(id));
+    setIsEmptyConversation(false);
+}
+
 void ConversationList::readMessages(const int idConversation){
     emit requestReadMessages(idConversation);
 }
@@ -211,9 +216,35 @@ Conversation* ConversationList::findConversationById(const int id) {
 QVariant ConversationList::dateCalculation(const QDateTime date)const{
     QDateTime now = QDateTime::currentDateTime();
     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
-        return date.toString("hh:mm");
-    if(date.daysTo(now) < 2 && date.toString("dd")==now.addDays(-1).toString("dd"))
-        return "Yesterday";
+        return date.toString("hh:mm") + " Today";
+    if(date.daysTo(now) < 7)
+        return date.toString("dddd");
+    if(date.toString("yyyy") == now.toString("yyyy"))
+        return date.toString("MMMM dd");
     else
         return date.toString("MM/dd/yyyy");
+}
+
+bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation;}
+void ConversationList::setIsEmptyConversation(bool newIsEmptyConversation){
+    if (m_isEmptyConversation == newIsEmptyConversation)
+        return;
+    m_isEmptyConversation = newIsEmptyConversation;
+    emit isEmptyConversationChanged();
+}
+
+Conversation *ConversationList::previousConversation() {return m_previousConversation;}
+void ConversationList::setPreviousConversation(Conversation *newPreviousConversation){
+    if (m_previousConversation == newPreviousConversation)
+        return;
+    m_previousConversation = newPreviousConversation;
+    emit previousConversationChanged();
+}
+
+Conversation *ConversationList::currentConversation() { return m_currentConversation;}
+void ConversationList::setCurrentConversation(Conversation *newCurrentConversation){
+    if (m_currentConversation == newCurrentConversation)
+        return;
+    m_currentConversation = newCurrentConversation;
+    emit currentConversationChanged();
 }

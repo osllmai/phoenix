@@ -79,7 +79,7 @@ Item {
         }
         Rectangle{
             id:valueSliderBoxId
-            width: 40
+            width: 50
             height: 30
             radius: 2
             color: Style.Colors.textTitle

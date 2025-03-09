@@ -18,6 +18,7 @@ Item {
 
              TextArea {
                  id: instructionTextBox
+                 text: control.existConversation? conversationList.currentConversation.id: ""
                  visible: true
                  color: Style.Colors.textInformation
                  wrapMode: Text.WordWrap

@@ -3,7 +3,7 @@ import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects
 import '../style' as Style
 
-Dialog {
+Popup{
     id: control
     x: parent.width - width - 10
     y: parent.height - height - 40

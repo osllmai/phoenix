@@ -38,7 +38,6 @@ Drawer{
             ModelSettingsBody{
                 id: historyBadyId
                 height: parent.height - headerId.height
-                width: parent.width
             }
         }
     }

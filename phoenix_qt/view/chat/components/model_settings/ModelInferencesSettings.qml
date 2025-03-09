@@ -1,11 +1,15 @@
 import QtQuick 2.15
 
 Item {
+    id: control
     width: parent.width
     height: streamId.height + temperatureId.height + topPId.height +
             maxTokensId.height + promptBatchSizeId.height + minPId.height +
             topKId.height + repeatPenaltyTokensId.height + repeatPenaltyId.height
     visible: false
+
+    property bool existConversation: !conversationList.isEmptyConversation
+
     Column{
         id: inferenceSettingsInformationId
         anchors.left: parent.left
@@ -14,13 +18,13 @@ Item {
         ModelSettingsSwitch{
             id:streamId
             myTextName: "Stream"
-            myValue: /*root.currentChat.modelSettings.stream*/true
+            myValue: control.existConversation? conversationList.currentConversation.id: true
         }
         ModelSettingsSlider{
             id:temperatureId
             myTextName: "Temperature"
             myTextToolTip: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
-            sliderValue: 0.8/*root.currentChat.modelSettings.temperature*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 0.8
             sliderFrom: 0.0
             sliderTo:2.0
             sliderStepSize:0.01
@@ -30,7 +34,7 @@ Item {
             id:topPId
             myTextName: "Top-P"
             myTextToolTip:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
-            sliderValue: 1.5/*root.currentChat.modelSettings.topP*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 1.5
             sliderFrom: 0.0
             sliderTo:1.0
             sliderStepSize:0.01
@@ -40,7 +44,7 @@ Item {
             id:maxTokensId
             myTextName: "Max Tokens"
             myTextToolTip: "Defines the maximum number of tokens the model can process in one input or output."
-            sliderValue: 560/*root.currentChat.modelSettings.maxTokens*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 560
             sliderFrom: 100
             sliderTo: 4096
             sliderStepSize:1
@@ -49,7 +53,7 @@ Item {
             id:promptBatchSizeId
             myTextName: "Prompt Batch Size"
             myTextToolTip:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
-            sliderValue: 100/*root.currentChat.modelSettings.promptBatchSize*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 100
             sliderFrom: 1
             sliderTo: 128
             sliderStepSize:1
@@ -58,7 +62,7 @@ Item {
             id:minPId
             myTextName: "Min-P"
             myTextToolTip:"Sets the minimum cumulative probability threshold for word selection."
-            sliderValue: 1.5/*root.currentChat.modelSettings.minP*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 1.5
             sliderFrom: 0.0
             sliderTo: 1.0
             sliderStepSize:0.01
@@ -68,7 +72,7 @@ Item {
             id:topKId
             myTextName: "Top-K"
             myTextToolTip: "Limits word selection to the top K most probable words, controlling output diversity."
-            sliderValue: 650/*root.currentChat.modelSettings.topK*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 650
             sliderFrom: 1
             sliderTo: 1000
             sliderStepSize:1
@@ -77,7 +81,7 @@ Item {
             id:repeatPenaltyTokensId
             myTextName: "Repeat Penalty Tokens"
             myTextToolTip: "Increases the penalty for repeating specific tokens during generation."
-            sliderValue: 1.5/*root.currentChat.modelSettings.repeatPenaltyTokens*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 1.5
             sliderFrom: 0
             sliderTo: 1
             sliderStepSize:0.01
@@ -87,7 +91,7 @@ Item {
             id:repeatPenaltyId
             myTextName: "Repeat Penalty"
             myTextToolTip: "Discourages repeating words or phrases by applying a penalty to repeated tokens."
-            sliderValue: 1.5/*root.currentChat.modelSettings.repeatPenalty*/
+            sliderValue: control.existConversation? conversationList.currentConversation.id: 1.5
             sliderFrom: 1.0
             sliderTo: 2.0
             sliderStepSize:0.01

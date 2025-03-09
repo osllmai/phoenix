@@ -13,6 +13,10 @@ class ConversationList: public QAbstractListModel
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(Conversation *currentConversation READ currentConversation NOTIFY currentConversationChanged FINAL)
+    Q_PROPERTY(Conversation *previousConversation READ previousConversation NOTIFY previousConversationChanged FINAL)
+    Q_PROPERTY(bool isEmptyConversation READ isEmptyConversation WRITE setIsEmptyConversation NOTIFY isEmptyConversationChanged FINAL)
+
 public:
     static ConversationList* instance(QObject* parent);
     void readDB();
@@ -39,10 +43,20 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE void addRequest(/*Model *model, */const QString &firstPrompt);
+    Q_INVOKABLE void addRequest(const int idModel, const QString &firstPrompt);
+    Q_INVOKABLE void selectCurrentConversationRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
     Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
+
+    Conversation *currentConversation();
+    void setCurrentConversation(Conversation *newCurrentConversation);
+
+    Conversation *previousConversation();
+    void setPreviousConversation(Conversation *newPreviousConversation);
+
+    bool isEmptyConversation() const;
+    void setIsEmptyConversation(bool newIsEmptyConversation);
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -57,6 +71,10 @@ public slots:
 
 signals:
     void countChanged();
+    void currentConversationChanged();
+    void previousConversationChanged();
+    void isEmptyConversationChanged();
+
     void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
@@ -77,6 +95,7 @@ signals:
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
 
+
 private:
     explicit ConversationList(QObject* parent);
     static ConversationList* m_instance;
@@ -85,6 +104,9 @@ private:
 
     Conversation* findConversationById(const int id);
     QVariant dateCalculation(const QDateTime date)const;
+    Conversation *m_currentConversation;
+    Conversation *m_previousConversation;
+    bool m_isEmptyConversation;
 };
 
 #endif // CONVERSATIONLIST_H
