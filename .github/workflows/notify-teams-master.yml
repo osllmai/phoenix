@@ -42,16 +42,27 @@ jobs:
           WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
         run: |
           MESSAGE="🚀 New Deployment Initiated!\\n"
+          
           MESSAGE+="---\\n"
+
           MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n"
+          
           MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n"
+          
           MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n"
+          
           MESSAGE+="👤 Triggered by: **$ACTOR**\\n"
+          
           MESSAGE+="📅 Timestamp: $TIMESTAMP\\n"
+          
           MESSAGE+="📢 Event Type: $EVENT_TYPE\\n"
+          
           MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n"
+          
           MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n"
+          
           MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n"
+          
           MESSAGE+="---\\n"
 
           if [ "$FILE_COUNT" -gt "0" ]; then
