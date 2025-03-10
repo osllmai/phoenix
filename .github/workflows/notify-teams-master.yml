@@ -1,8 +1,8 @@
-name: GitHub to Teams Notification (Master)
+name: GitHub to Teams Notification
 
 on:
   push:
-    branches: [ "master" , "Development" ]
+    branches: [ "master", "development" ]
   workflow_dispatch:
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Send GitHub Event Notification to Microsoft Teams
         env:
-          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
         run: |
           MESSAGE="🚀 New Deployment Initiated!\\n\\n"
           MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
