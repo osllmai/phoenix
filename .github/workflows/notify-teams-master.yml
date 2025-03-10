@@ -42,7 +42,7 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
         run: |
-          MESSAGE="🚀 New Deployment Initiated!\\n\\n"
+          MESSAGE="🚀 New Deployment in the 🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH) Initiated!\\n\\n"
           MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
           MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n\\n"
           MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n\\n"
