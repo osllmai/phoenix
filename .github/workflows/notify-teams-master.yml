@@ -2,7 +2,7 @@ name: GitHub to Teams Notification (Master)
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" , "Development" ]
   workflow_dispatch:
 
 jobs:
@@ -32,8 +32,9 @@ jobs:
       - name: Get Changed Files and Stats
         id: changed_files
         run: |
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | awk '{print "- " $0}' | tr '\n' '\\n')
-          FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | awk '{print "- " $0}' | tr '\n' ' \\n ')
+          FILE_COUNT=$(echo "$CHANGED_FILES" | grep -o '\\n' | wc -l)
+          FILE_COUNT=$((FILE_COUNT+1)) # Adjust for single-file cases
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
           echo "FILE_COUNT=$FILE_COUNT" >> $GITHUB_ENV
 
@@ -41,38 +42,23 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
         run: |
-          MESSAGE="🚀 New Deployment Initiated!\\n"
-          
-          MESSAGE+="---\\n"
-
-          MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n"
-          
-          MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n"
-          
-          MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n"
-          
-          MESSAGE+="👤 Triggered by: **$ACTOR**\\n"
-          
-          MESSAGE+="📅 Timestamp: $TIMESTAMP\\n"
-          
-          MESSAGE+="📢 Event Type: $EVENT_TYPE\\n"
-          
-          MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n"
-          
-          MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n"
-          
-          MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n"
-          
-          MESSAGE+="---\\n"
+          MESSAGE="🚀 New Deployment Initiated!\\n\\n"
+          MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
+          MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n\\n"
+          MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n\\n"
+          MESSAGE+="👤 Triggered by: **$ACTOR**\\n\\n"
+          MESSAGE+="📅 Timestamp: $TIMESTAMP\\n\\n"
+          MESSAGE+="📢 Event Type: $EVENT_TYPE\\n\\n"
+          MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n\\n"
+          MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
+          MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n\\n"
 
           if [ "$FILE_COUNT" -gt "0" ]; then
-            MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n"
-            MESSAGE+="$CHANGED_FILES\\n"
-          else
-            MESSAGE+="✅ No files changed in this deployment.\\n"
+            MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n\\n"
+            MESSAGE+="$CHANGED_FILES\\n\\n"
           fi
 
-          MESSAGE+="🔄 Status: IN_PROGRESS\\n"
+          MESSAGE+="🔄 Status: IN_PROGRESS\\n\\n"
 
           curl -H "Content-Type: application/json" -X POST -d \
           "{\"text\": \"${MESSAGE}\"}" "${WEBHOOK_URL}"
