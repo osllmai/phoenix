@@ -1,0 +1,46 @@
+name: GitHub to Teams Notification (Master)
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  notify_teams:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          clean: false
+
+      - name: Send GitHub Event Notification to Microsoft Teams
+        env:
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
+        run: |
+          EVENT_NAME="${{ github.event_name }}"
+          ACTOR="${{ github.actor }}"
+          REPO="${{ github.repository }}"
+          BRANCH="${{ github.ref }}"
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+
+          MESSAGE="📢 *GitHub Event Triggered: ${EVENT_NAME}*\\n"
+          MESSAGE+="👤 *Actor:* ${ACTOR}\\n"
+          MESSAGE+="📦 *Repository:* ${REPO}\\n"
+          MESSAGE+="🌿 *Branch:* ${BRANCH#refs/heads/}\\n"
+
+          if [ "$EVENT_NAME" = "push" ]; then
+            MESSAGE+="💬 *Commit Message:* ${COMMIT_MSG}\\n"
+          elif [ "$EVENT_NAME" = "pull_request" ]; then
+            MESSAGE+="📑 *PR Title:* ${PR_TITLE}\\n"
+            MESSAGE+="🔗 *[View PR](${PR_URL})*\\n"
+          fi
+
+          # Sending the notification using curl
+          curl -H "Content-Type: application/json" -X POST -d \
+          "{\"text\": \"${MESSAGE}\"}" "${WEBHOOK_URL}"
