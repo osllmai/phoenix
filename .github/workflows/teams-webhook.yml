@@ -1,0 +1,25 @@
+name: Notify Microsoft Teams on Push
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to trigger the notification
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Microsoft Teams
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "0076D7",
+            "summary": "GitHub Notification",
+            "sections": [{
+              "activityTitle": "🚀 New Commit in Repository",
+              "activitySubtitle": "Branch: ${{ github.ref }}",
+              "activityText": "**Committer:** ${{ github.actor }}\n**Commit Message:** ${{ github.event.head_commit.message }}",
+              "markdown": true
+            }]
+          }' "${{ secrets.TEAMS_WEBHOOK_URL }}"
