@@ -2,7 +2,7 @@ name: GitHub to Teams Notification (Development)
 
 on:
   push:
-    branches: [ "Development" ]
+    branches: [ "development" ]
   workflow_dispatch:
 
 jobs:
