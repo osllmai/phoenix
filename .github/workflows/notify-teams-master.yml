@@ -1,101 +1,67 @@
-name: development
+name: GitHub to Teams Notification (Master)
 
 on:
   push:
-    branches: [ "development" ]
-  pull_request:
-    branches: [ "development" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: [ self-hosted, development_runner ]
+  notify_teams:
+    runs-on: ubuntu-latest
     steps:
 
-      - name: Pulling ...
+      - name: Checkout Repository
         uses: actions/checkout@v3
         with:
           clean: false
-          
+
       - name: Gather Deployment Information
         id: gather_info
         run: |
           echo "DEPLOY_NUMBER=#${{ github.run_number }}" >> $GITHUB_ENV
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "EVENT_TYPE=${{ github.event_name }}" >> $GITHUB_ENV
           echo "ACTOR=@${{ github.actor }}" >> $GITHUB_ENV
+          echo "COMMIT_AUTHOR=@$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
           echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
           echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
           echo "COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)" >> $GITHUB_ENV
           echo "TIMESTAMP=$(date -u "+%A, %B %d %Y, %I:%M:%S %p UTC")" >> $GITHUB_ENV
           echo "GITHUB_RUN_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
-          echo "COMMIT_AUTHOR=@$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
 
       - name: Get Changed Files and Stats
         id: changed_files
         run: |
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | awk '{print "- [$0](https://github.com/${{ github.repository }}/commit/${{ github.sha }}#diff-$(echo -n $0 | sha256sum | cut -c1-6))"}' | tr '\n' '\\n')
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | awk '{print "- " $0}' | tr '\n' '\\n')
           FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
           echo "CHANGED_FILES=${CHANGED_FILES}" >> $GITHUB_ENV
           echo "FILE_COUNT=$FILE_COUNT" >> $GITHUB_ENV
 
       - name: Send GitHub Event Notification to Microsoft Teams
         env:
-          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_DEVELOPMENT_URL }}
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
         run: |
-          MESSAGE="**Deploy $DEPLOY_NUMBER (commit [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)) on [$REPO](https://github.com/$REPO)**\\n"
-          MESSAGE+="👤 by **$ACTOR** on **$TIMESTAMP**\\n"
-          MESSAGE+="\\n"
-          MESSAGE+="**Event type:** 🟣 PUSH\\n"
-          MESSAGE+="**Status:** ⏳ IN_PROGRESS\\n"
-          MESSAGE+="\\n"
-          MESSAGE+="**Commit message:**\\n> $COMMIT_MSG\\n"
-          MESSAGE+="\\n"
-          MESSAGE+="**Repository & branch:** [View branch](https://github.com/$REPO/tree/$BRANCH)\\n"
-          MESSAGE+="\\n"
+          MESSAGE="🚀 New Deployment Initiated!\\n"
+          MESSAGE+="---\\n"
+          MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n"
+          MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n"
+          MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n"
+          MESSAGE+="👤 Triggered by: **$ACTOR**\\n"
+          MESSAGE+="📅 Timestamp: $TIMESTAMP\\n"
+          MESSAGE+="📢 Event Type: $EVENT_TYPE\\n"
+          MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n"
+          MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n"
+          MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n"
+          MESSAGE+="---\\n"
 
           if [ "$FILE_COUNT" -gt "0" ]; then
-            MESSAGE+="**Files changed ($FILE_COUNT):**\\n"
+            MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n"
             MESSAGE+="$CHANGED_FILES\\n"
           else
             MESSAGE+="✅ No files changed in this deployment.\\n"
           fi
 
-          MESSAGE+="\\n"
-          MESSAGE+="📝 **Thanks to:** **$COMMIT_AUTHOR**\\n"
-          MESSAGE+="\\n"
-          MESSAGE+="[View build/deploy status]($GITHUB_RUN_URL)  |  [Review commit diffs](https://github.com/$REPO/commit/$COMMIT_HASH)\\n"
+          MESSAGE+="🔄 Status: IN_PROGRESS\\n"
 
           curl -H "Content-Type: application/json" -X POST -d \
           "{\"text\": \"${MESSAGE}\"}" "${WEBHOOK_URL}"
-
-      - name: Create .env file
-        run: |
-          # Remove existing .env file if exists (optional)
-          if [ -f .env ]; then rm .env; fi
-          
-          # Django settings
-          echo "DJANGO_SETTINGS_MODULE=${{ secrets.DJANGO_SETTINGS_MODULE_DEV }}" >> .env
-          echo "NERD_SECRET_KEY=${{ secrets.NERD_SECRET_KEY_DEV }}" >> .env
-          echo "NERD_DOMAIN=${{ secrets.NERD_DOMAIN_DEV }}" >> .env
-          
-          # Postgres
-          echo "POSTGRES_DB=${{ secrets.NERD_POSTGRES_DB_DEV }}" >> .env
-          echo "POSTGRES_USER=${{ secrets.NERD_POSTGRES_USER_DEV }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.NERD_POSTGRES_PASSWORD_DEV }}" >> .env
-          echo "POSTGRES_HOST=${{ secrets.NERD_POSTGRES_HOST_DEV }}" >> .env
-          echo "POSTGRES_PORT=${{ secrets.NERD_POSTGRES_PORT_DEV }}" >> .env
-          
-          # Redis
-          echo "NERD_REDIS_HOST=${{ secrets.NERD_REDIS_HOST_DEV }}" >> .env
-          echo "NERD_REDIS_PORT=${{ secrets.NERD_REDIS_PORT_DEV }}" >> .env
-          echo "NERD_REDIS_DB_STOP_GENERATE=${{ secrets.NERD_REDIS_DB_STOP_GENERATE_DEV }}" >> .env
-          
-          # Celery
-          echo "NERD_REDIS_DB_CELERY=${{ secrets.NERD_REDIS_DB_CELERY_DEV }}" >> .env
-          echo "NERD_CELERY_FLOWER_USER=${{ secrets.NERD_CELERY_FLOWER_USER_DEV }}" >> .env
-          echo "NERD_CELERY_FLOWER_PASSWORD=${{ secrets.NERD_CELERY_FLOWER_PASSWORD_DEV }}" >> .env
-          
-      - name: Build and Run Docker container
-        run: |
-          docker compose -f docker/development/docker-compose.yml build
-          docker compose -f docker/development/docker-compose.yml up -d
