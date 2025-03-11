@@ -205,7 +205,6 @@ void ConversationList::insertMessage(const int idConversation, const QString &te
     emit requestInsertMessage(idConversation, text, icon, isPrompt);
 }
 
-
 Conversation* ConversationList::findConversationById(const int id) {
     auto it = std::find_if(m_conversations.begin(), m_conversations.end(), [id](Conversation* conversation) {
         return conversation->id() == id;

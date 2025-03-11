@@ -4,7 +4,7 @@ import '../../../component_library/style' as Style
 import "../../../component_library/button"
 
 Item{
-    id:headerId
+    id: headerId
     height: 90; width: parent.width
     clip:true
     signal closeDrawer()

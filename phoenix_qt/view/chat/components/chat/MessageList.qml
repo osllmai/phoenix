@@ -6,10 +6,12 @@ Item {
     id: control
     width: parent.width
     clip: true
+    visible: !conversationList.isEmptyConversation
 
     ListView {
         id: listView
         anchors.fill: parent
+        visible: !conversationList.isEmptyConversation
         cacheBuffer: Math.max(0, listView.contentHeight)
 
         ScrollBar.vertical: ScrollBar {
@@ -17,7 +19,7 @@ Item {
         }
         clip: true
 
-        model:10
+        model: conversationList.currentConversation.messageList
         delegate: Item{
            width: listView.width; height: promptItem.height
            MessageDelegate{

@@ -111,5 +111,4 @@ private:
     ResponseList *m_responseList;
 };
 
-
 #endif // CONVERSATION_H

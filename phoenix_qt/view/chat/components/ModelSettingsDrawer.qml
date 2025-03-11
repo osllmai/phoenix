@@ -26,18 +26,13 @@ Drawer{
                 id: headerId
                 Connections{
                     target: headerId
-                    function onSearch(myText){}
                     function onCloseDrawer(){
                         drawerId.close()
-                    }
-                    function onCurrentPage(numberPage){
-                        historyBadyId.currentIndex = numberPage;
                     }
                 }
             }
             ModelSettingsBody{
                 id: historyBadyId
-                height: parent.height - headerId.height
             }
         }
     }

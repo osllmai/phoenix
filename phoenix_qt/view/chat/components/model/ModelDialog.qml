@@ -8,7 +8,8 @@ Dialog{
     id: control
     width: 300
     height: 400
-    signal closeDialog()
+    // signal closeDialog()
+
     background: Rectangle {
         color: Style.Colors.background
         anchors.fill: parent
@@ -23,9 +24,9 @@ Dialog{
                 Connections{
                     target: headerId
                     function onSearch(myText){}
-                    function onCloseDialog(){
-                        control.closeDialog()
-                    }
+                    // function onCloseDialog(){
+                    //     control.closeDialog()
+                    // }
                     function onCurrentPage(numberPage){
                         badyId.currentIndex = numberPage;
                     }

@@ -11,6 +11,13 @@ Rectangle{
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
+
+    function sendPrompt(prompt){
+        if(modelButtonId.id !== -1){
+            console.log("LOKOKOKOOLOKLKOOLOLLLLLOlKLKOKo")
+        }
+    }
+
     Row{
         anchors.fill: parent
         anchors.margins: 10
@@ -53,7 +60,8 @@ Rectangle{
                     event.accepted = false;
                   }else {
                         // sendIcon.actionClicked()
-                        conversationList.addRequest(inputTextBox.text)
+                        // conversationList.addRequest(inputTextBox.text);
+                                              sendPrompt(inputTextBox.text)
                   }
                 }
 

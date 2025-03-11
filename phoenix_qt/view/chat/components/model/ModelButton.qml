@@ -7,10 +7,12 @@ import '../../../component_library/button'
  T.Button{
     id:control
     height: 35; width: logoButton.width + textId.width + openButton.width + 35 + 15
-    property var myText
-    property bool isOpen
+    property int modelId: -1
+    property string modelName: "Phoenix"
+    property string modelIcon: "qrc:/media/image_company/Phoenix.png"
+    property bool isClose: false
 
-    signal open()
+        // signal open()
 
     background: Rectangle{
         id: backgroundId
@@ -26,9 +28,9 @@ import '../../../component_library/button'
 
             Image {
                 id: logoButton
-                source: "qrc:/media/image_company/Phoenix.png"
-                sourceSize.height: control.height - 10
-                sourceSize.width: control.height - 10
+                source: control.modelIcon
+                sourceSize.height: control.height - 15
+                sourceSize.width: control.height - 15
                 fillMode: Image.PreserveAspectCrop
                 anchors.verticalCenter: parent.verticalCenter
                 smooth: true
@@ -39,7 +41,7 @@ import '../../../component_library/button'
             Text {
                 id: textId
                 height: parent.height
-                text: control.myText
+                text: control.modelName
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 color: Style.Colors.textTitle
@@ -48,12 +50,23 @@ import '../../../component_library/button'
             }
             MyIcon {
                 id: openButton
-                myIcon: control.isOpen?"qrc:/media/icon/up.svg": "qrc:/media/icon/down.svg"
+                myIcon: "qrc:/media/icon/down.svg"
                 iconType: Style.RoleEnum.IconType.Primary
                 Connections {
                     target: openButton
                     function onClicked(){
-                        control.open()
+                        if(openButton.myIcon === "qrc:/media/icon/up.svg" && control.isClose){
+                            console.log("HI HI HIH HI HI")
+                            currentModelDialogId.close()
+                            openButton.myIcon = "qrc:/media/icon/down.svg"
+                            control.isClose = false
+                        }else{
+                            console.log("Dady dady")
+                            currentModelDialogId.open()
+                            openButton.myIcon = "qrc:/media/icon/up.svg"
+                        }
+
+                        // control.open()
                     }
                 }
                 anchors.left: textId.right
@@ -61,11 +74,11 @@ import '../../../component_library/button'
             }
         }
     }
-    MouseArea{
+    MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked:{
-            control.open()
+        onClicked: {
+            openButton.click()
         }
     }
 

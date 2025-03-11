@@ -3,7 +3,8 @@ import QtQuick.Controls 2.15
 import "./components"
 
 Item {
-    anchors.fill: parent
+    height: parent.height - headerId.height
+    width: parent.width
     ScrollView{
         id: scrollViewSettingsId
         anchors.fill: parent

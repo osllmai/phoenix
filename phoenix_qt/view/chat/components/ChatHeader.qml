@@ -37,20 +37,19 @@ Item{
 
         ModelButton{
             id: modelButtonId
-            myText: "Phoenix"
-            isOpen: false
-            Connections {
-                target: modelButtonId
-                function onOpen(){
-                    if(!modelButtonId.isOpen){
-                        currentModelDialogId.open()
-                        modelButtonId.isOpen = true
-                    }else{
-                        modelButtonId.isOpen = false
-                        currentModelDialogId.close()
-                    }
-                }
-            }
+            // isOpen: false
+            // Connections {
+            //     target: modelButtonId
+            //     function onOpen(){
+            //         if(!currentModelDialogId.opened){
+            //             currentModelDialogId.open()
+            //             // modelButtonId.isOpen = true
+            //         }else{
+            //             // modelButtonId.isOpen = false
+            //             currentModelDialogId.close()
+            //         }
+            //     }
+            // }
         }
     }
 
@@ -88,11 +87,8 @@ Item{
         id: currentModelDialogId
         y: modelButtonId.y + modelButtonId.height + 20 + 24
         x: modelButtonId.x + 20
-        Connections {
-            target: currentModelDialogId
-            function onCloseDialog(){
-                currentModelDialogId.close()
-            }
+        onClosed: {
+            modelButtonId.isClose = true;
         }
     }
 }

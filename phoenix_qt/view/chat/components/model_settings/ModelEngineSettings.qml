@@ -1,9 +1,14 @@
 import QtQuick 2.15
+import "./components"
 
 Item {
+    id: control
     width: parent.width
     height: contextLengthId.height + numberOfGPUId.height
     visible: false
+
+    property bool existConversation: !conversationList.isEmptyConversation
+
     Column{
         id: engineSettingsInformationId
         anchors.left: parent.left

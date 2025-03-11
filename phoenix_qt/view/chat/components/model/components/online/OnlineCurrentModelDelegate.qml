@@ -10,6 +10,12 @@ T.Button {
     signal deleteChat()
     signal editChatName(var chatName)
 
+    onClicked: {
+        modelButtonId.modelName = model.name
+        modelButtonId.modelId = model.id
+        modelButtonId.modelIcon = "qrc:/media/image_company/" + model.icon
+    }
+
     background: null
     contentItem: Rectangle {
         id: backgroundId
@@ -17,7 +23,7 @@ T.Button {
         radius: 8
         border.width: 1
         border.color: Style.Colors.boxBorder
-        color: control.hovered? Style.Colors.boxHover: "#00ffffff"
+        color: (control.hovered || (modelButtonId.modelId === model.id)) ? Style.Colors.boxHover: "#00ffffff"
 
         Row {
             id: headerId
