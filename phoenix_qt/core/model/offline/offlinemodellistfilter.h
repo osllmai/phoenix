@@ -19,6 +19,7 @@ class OfflineModelListFilter: public QSortFilterProxyModel
     Q_PROPERTY(FilterType filterType READ filterType WRITE setFilterType NOTIFY filterTypeChanged FINAL)
     Q_PROPERTY(int companyId READ companyId WRITE setCompanyId NOTIFY companyIdChanged FINAL)
 public:
+    explicit OfflineModelListFilter(QObject* parent = nullptr) : QSortFilterProxyModel(parent) {}
     explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent);
 
     Q_INVOKABLE void filter(QString filter);

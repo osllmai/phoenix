@@ -16,7 +16,7 @@
 class Database: public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_SINGLETON
 public:
     static Database* instance(QObject* parent);
 

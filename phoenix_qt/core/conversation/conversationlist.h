@@ -11,11 +11,16 @@
 class ConversationList: public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(Conversation *currentConversation READ currentConversation NOTIFY currentConversationChanged FINAL)
     Q_PROPERTY(Conversation *previousConversation READ previousConversation NOTIFY previousConversationChanged FINAL)
     Q_PROPERTY(bool isEmptyConversation READ isEmptyConversation WRITE setIsEmptyConversation NOTIFY isEmptyConversationChanged FINAL)
+
+    Q_PROPERTY(int modelId READ modelId WRITE setModelId NOTIFY modelIdChanged FINAL)
+    Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
+    Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
 
 public:
     static ConversationList* instance(QObject* parent);
@@ -43,11 +48,12 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE void addRequest(const int idModel, const QString &firstPrompt);
+    Q_INVOKABLE void addRequest(const QString &firstPrompt);
     Q_INVOKABLE void selectCurrentConversationRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
     Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
+    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon);
 
     Conversation *currentConversation();
     void setCurrentConversation(Conversation *newCurrentConversation);
@@ -57,6 +63,18 @@ public:
 
     bool isEmptyConversation() const;
     void setIsEmptyConversation(bool newIsEmptyConversation);
+
+    int modelId() const;
+    void setModelId(int newModelId);
+
+    QString modelIcon() const;
+    void setModelIcon(const QString &newModelIcon);
+
+    QString modelText() const;
+    void setModelText(const QString &newModelText);
+
+    bool modelSelect() const;
+    void setModelSelect(bool newModelSelect);
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -74,6 +92,10 @@ signals:
     void currentConversationChanged();
     void previousConversationChanged();
     void isEmptyConversationChanged();
+    void modelIdChanged();
+    void modelIconChanged();
+    void modelTextChanged();
+    void modelSelectChanged();
 
     void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
@@ -95,9 +117,8 @@ signals:
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
 
-
 private:
-    explicit ConversationList(QObject* parent);
+    explicit ConversationList(QObject* parent = nullptr);
     static ConversationList* m_instance;
 
     QList<Conversation*> m_conversations;
@@ -107,6 +128,11 @@ private:
     Conversation *m_currentConversation;
     Conversation *m_previousConversation;
     bool m_isEmptyConversation;
+
+    int m_modelId;
+    QString m_modelIcon;
+    QString m_modelText;
+    bool m_modelSelect;
 };
 
 #endif // CONVERSATIONLIST_H

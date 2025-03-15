@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "../../conversation/conversationlist.h"
+
 OfflineModelList* OfflineModelList::m_instance = nullptr;
 
 OfflineModelList* OfflineModelList::instance(QObject* parent) {
@@ -211,6 +213,8 @@ void OfflineModelList::deleteRequest(const int id){
         }
         requestUpdateKeyModel(model->id(), "");
     }
+
+    ConversationList::instance(this)->setModelSelect(false);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 }

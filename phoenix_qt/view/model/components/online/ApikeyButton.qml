@@ -27,7 +27,7 @@ Item {
         visible: model.installModel
         MyButton{
             id: deleteButton
-            myText: "Delete"
+            myText: "Delete Api key"
             bottonType: Style.RoleEnum.BottonType.Danger
             onClicked:{
                 deleteApikeylVerificationId.open()

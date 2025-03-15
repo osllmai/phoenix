@@ -17,6 +17,7 @@ class CompanyListFilter: public QSortFilterProxyModel
     Q_PROPERTY(BackendType backendType READ backendType WRITE setBackendType NOTIFY backendTypeChanged)
 
 public:
+    explicit CompanyListFilter(QObject* parent = nullptr) : QSortFilterProxyModel(parent) {}
     explicit CompanyListFilter(QAbstractItemModel *model, BackendType backendType, QObject *parent);
 
     const BackendType backendType() const;

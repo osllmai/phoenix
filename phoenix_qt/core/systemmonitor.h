@@ -14,7 +14,7 @@ struct CpuStats {
 class SystemMonitor: public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(int cpuInfo READ cpuInfo NOTIFY cpuInfoChanged FINAL)
     Q_PROPERTY(int memoryInfo READ memoryInfo NOTIFY memoryInfoChanged FINAL)
 

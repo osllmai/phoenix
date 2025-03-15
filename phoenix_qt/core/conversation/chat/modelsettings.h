@@ -23,6 +23,7 @@ class ModelSettings : public QObject{
     Q_PROPERTY(int numberOfGPULayers READ numberOfGPULayers WRITE setNumberOfGPULayers NOTIFY numberOfGPULayersChanged FINAL)
 
 public:
+    explicit ModelSettings(QObject* parent = nullptr) : QObject(parent) {}
     explicit ModelSettings(const int &id, QObject *parent = nullptr);
     virtual ~ModelSettings();
 

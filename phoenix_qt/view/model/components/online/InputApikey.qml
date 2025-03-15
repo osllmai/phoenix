@@ -17,6 +17,7 @@ Rectangle{
         anchors.fill: parent
         TextArea {
             id: textArea
+            text: model.key
             width: parent.width - iconId.width
             anchors.verticalCenter: iconId.verticalCenter
             hoverEnabled: true
@@ -34,7 +35,7 @@ Rectangle{
                 event.accepted = false;
               }else {
                     control.saveAPIKey(textArea.text)
-                    textArea.text = ""
+                    // textArea.text = ""
               }
             }
         }
@@ -46,7 +47,7 @@ Rectangle{
             width: 28; height: 28
             onClicked: {
                 control.saveAPIKey(textArea.text)
-                textArea.text = ""
+                // textArea.text = ""
             }
         }
     }

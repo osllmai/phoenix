@@ -7,18 +7,18 @@ import '../../../component_library/button'
 T.Button {
     id: control
     property var myText: textId.text
-    property var modelIcon: "qrc:/media/icon/inDox.svg"
-    property var date: "3 Min ago"
-    signal deleteChat()
+    property string modelIcon: "qrc:/media/icon/inDox.svg"
+    property string date: "3 Min ago"
+    // signal deleteChat()
     // signal editChatName(var chatName)
-    height: Math.max(textId.height + dateAndIconId.height + 20, logoModelId.height)
+    height: textId.height + dateAndIconId.height  + 2
     width: parent.width
 
     background: null
-    contentItem: Rectangle {
-        id: backgroundId
-        anchors.fill: parent
-        color: "#00ffffff"
+     contentItem: Rectangle {
+         id: backgroundId
+         anchors.fill: parent
+         color: "#00ffffff"
 
         Row {
             id: headerId
@@ -32,13 +32,14 @@ T.Button {
             }
             Column {
                 spacing: 2
+                width: parent.width
                 TextArea{
                     id: textId
                     text: "Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode "
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
-                    width:  control.width - logoModelId.width
+                    width:  parent.width - logoModelId.width
                     // anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
                     focus: false
@@ -102,7 +103,8 @@ T.Button {
                         onTriggered: dateAndIconId.checkCopy= false
                     }
                 }
+
             }
         }
-    }
+     }
 }

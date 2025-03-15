@@ -13,7 +13,7 @@ class MessageList: public QAbstractListModel
     QML_ELEMENT
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
-    explicit MessageList(QObject* parent);
+    explicit MessageList(QObject* parent = nullptr);
 
     enum MessageRoles {
         IdRole = Qt::UserRole + 1,

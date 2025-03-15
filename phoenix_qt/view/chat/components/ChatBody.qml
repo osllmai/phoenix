@@ -4,10 +4,10 @@ import '../../component_library/style' as Style
 import '../../component_library/button'
 
 Item {
-    id: controlId
+    id: control
     width: parent.width
-    // width: Math.min(780, parent.width - 48)
-    // anchors.horizontalCenter: parent.horizontalCenter
+
+    signal openModelList()
 
     Column{
         spacing: 10
@@ -15,13 +15,30 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         height: parent.height
         visible: !conversationList.isEmptyConversation
-        // MessageList{
-        //     id: messageView
-        //     height: parent.height - inputBoxId.height - 20
-        // }
+        MyMessageList{
+            id: myMessageView
+        }
         InputPrompt{
             id: inputBoxId
+            Connections{
+                target: inputBoxId
+                function onSendPrompt(prompt){
+                    if((conversationList.modelSelect) && (prompt !== "")){
+                        console.log("LOKOKOKOOLOKLKOOLOLLLLLOlKLKOKo");
+                        conversationList.addRequest(prompt)
+                    }else{
+                        notificationDialogId.open()
+                        control.openModelList()
+                    }
+                }
+            }
         }
+    }
+
+    NotificationDialog{
+        id: notificationDialogId
+        titleText: "HIIIHHIIH Zeinab"
+        about:":) HI :)"
     }
 
     Column{
@@ -49,6 +66,17 @@ Item {
         }
         InputPrompt{
             id:inputBoxId2
+            Connections{
+                target: inputBoxId2
+                function onSendPrompt(prompt){
+                    if((conversationList.modelSelect) && (prompt !== "")){
+                        console.log("HIIIIIII                      HIIIIIIIII ");
+                    }else{
+                        notificationDialogId.open()
+                        control.openModelList()
+                    }
+                }
+            }
         }
         Flow{
             spacing: 5

@@ -10,6 +10,10 @@ Item{
     signal openHistoryDrawer()
     clip: true
 
+    function openModelList(){
+        currentModelDialogId.open();
+    }
+
     Row{
         spacing: 20
         anchors.left: parent.left; anchors.leftMargin: 24
@@ -25,31 +29,14 @@ Item{
                 target: newChatId
                 function onClicked(){
                     conversationList.isEmptyConversation = true
+                    console.log(conversationList)
+                    console.log(conversationList.currentConversation)
+                   console.log(conversationList.currentConversation.messageList)
                 }
             }
         }
-
-        NotificationDialog{
-            id: notificationDialogId
-            titleText: "HIIIHHIIH Zeinab"
-            about:":) HI :)"
-        }
-
         ModelButton{
             id: modelButtonId
-            // isOpen: false
-            // Connections {
-            //     target: modelButtonId
-            //     function onOpen(){
-            //         if(!currentModelDialogId.opened){
-            //             currentModelDialogId.open()
-            //             // modelButtonId.isOpen = true
-            //         }else{
-            //             // modelButtonId.isOpen = false
-            //             currentModelDialogId.close()
-            //         }
-            //     }
-            // }
         }
     }
 

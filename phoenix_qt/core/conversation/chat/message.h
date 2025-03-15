@@ -16,6 +16,7 @@ class Message : public QObject
     Q_PROPERTY(bool isPrompt READ isPrompt WRITE setIsPrompt NOTIFY isPromptChanged FINAL)
 
 public:
+    explicit Message(QObject* parent = nullptr) : QObject(parent) {}
     explicit Message(const int &id, const QString &text, const QDateTime date, const QString &icon, bool isPrompt, QObject *parent = nullptr );
 
     int id() const;

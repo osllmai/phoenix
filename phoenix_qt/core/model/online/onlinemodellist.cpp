@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "../../conversation/conversationlist.h"
+
 OnlineModelList* OnlineModelList::m_instance = nullptr;
 
 OnlineModelList* OnlineModelList::instance(QObject* parent) {
@@ -32,6 +34,8 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->id();
     case NameRole:
         return model->name();
+    case KeyRole:
+        return model->key();
     case InformationRole:
         return model->information();
     case IconModelRole:
@@ -61,6 +65,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconModelRole] = "icon";
     roles[IsLikeRole] = "isLike";
@@ -122,6 +127,8 @@ void OnlineModelList::deleteRequest(const int id){
     model->setKey("");
     model->setInstallModel(false);
     requestUpdateKeyModel(model->id(), "");
+
+    ConversationList::instance(this)->setModelSelect(false);
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
 }

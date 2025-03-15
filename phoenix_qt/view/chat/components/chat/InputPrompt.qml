@@ -12,11 +12,7 @@ Rectangle{
     border.color: Style.Colors.boxBorder
     radius: 8
 
-    function sendPrompt(prompt){
-        if(modelButtonId.id !== -1){
-            console.log("LOKOKOKOOLOKLKOOLOLLLLLOlKLKOKo")
-        }
-    }
+    signal sendPrompt(var prompt)
 
     Row{
         anchors.fill: parent
@@ -59,9 +55,7 @@ Rectangle{
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
                   }else {
-                        // sendIcon.actionClicked()
-                        // conversationList.addRequest(inputTextBox.text);
-                                              sendPrompt(inputTextBox.text)
+                        sendPrompt(inputTextBox.text)
                   }
                 }
 
@@ -82,7 +76,7 @@ Rectangle{
             myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                conversationList.addRequest(inputTextBox.text)
+                sendPrompt(inputTextBox.text)
             }
         }
     }

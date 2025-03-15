@@ -10,7 +10,13 @@ ConversationList* ConversationList::instance(QObject* parent) {
     return m_instance;
 }
 
-ConversationList::ConversationList(QObject* parent): QAbstractListModel(parent), m_isEmptyConversation(true){}
+ConversationList::ConversationList(QObject* parent):
+    QAbstractListModel(parent),
+    m_currentConversation(nullptr),
+    m_previousConversation(nullptr),
+    m_isEmptyConversation(true),
+    m_modelSelect(false)
+{}
 
 void ConversationList::readDB(){
     emit requestReadConversation();
@@ -104,7 +110,7 @@ bool ConversationList::setData(const QModelIndex &index, const QVariant &value, 
     return false;
 }
 
-void ConversationList::addRequest(const int idModel, const QString &firstPrompt){
+void ConversationList::addRequest(const QString &firstPrompt){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
     QStringList selectedWords;
@@ -156,6 +162,13 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
     emit requestUpdateTitleConversation(conversation->id(), title);//update database
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
+}
+
+void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon){
+    setModelId(id);
+    setModelText(text);
+    setModelIcon(icon);
+    setModelSelect(true);
 }
 
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -222,6 +235,38 @@ QVariant ConversationList::dateCalculation(const QDateTime date)const{
         return date.toString("MMMM dd");
     else
         return date.toString("MM/dd/yyyy");
+}
+
+bool ConversationList::modelSelect() const{return m_modelSelect;}
+void ConversationList::setModelSelect(bool newModelSelect){
+    if (m_modelSelect == newModelSelect)
+        return;
+    m_modelSelect = newModelSelect;
+    emit modelSelectChanged();
+}
+
+QString ConversationList::modelText() const{return m_modelText;}
+void ConversationList::setModelText(const QString &newModelText){
+    if (m_modelText == newModelText)
+        return;
+    m_modelText = newModelText;
+    emit modelTextChanged();
+}
+
+QString ConversationList::modelIcon() const{return m_modelIcon;}
+void ConversationList::setModelIcon(const QString &newModelIcon){
+    if (m_modelIcon == newModelIcon)
+        return;
+    m_modelIcon = newModelIcon;
+    emit modelIconChanged();
+}
+
+int ConversationList::modelId() const{return m_modelId;}
+void ConversationList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
+        return;
+    m_modelId = newModelId;
+    emit modelIdChanged();
 }
 
 bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation;}

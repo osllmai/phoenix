@@ -3,16 +3,13 @@ import QtQuick.Templates 2.1 as T
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
-
  T.Button{
     id:control
     height: 35; width: logoButton.width + textId.width + openButton.width + 35 + 15
-    property int modelId: -1
-    property string modelName: "Phoenix"
-    property string modelIcon: "qrc:/media/image_company/Phoenix.png"
+    property int modelId: conversationList.modelSelect? conversationList.modelId: -1
+    property string modelName: conversationList.modelSelect? conversationList.modelText:"Phoenix"
+    property string modelIcon: conversationList.modelSelect? conversationList.modelIcon:"qrc:/media/image_company/Phoenix.png"
     property bool isClose: false
-
-        // signal open()
 
     background: Rectangle{
         id: backgroundId
@@ -65,8 +62,6 @@ import '../../../component_library/button'
                             currentModelDialogId.open()
                             openButton.myIcon = "qrc:/media/icon/up.svg"
                         }
-
-                        // control.open()
                     }
                 }
                 anchors.left: textId.right

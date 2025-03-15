@@ -11,7 +11,7 @@
 class OnlineModelList: public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 
 public:
@@ -21,6 +21,7 @@ public:
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        KeyRole,
         InformationRole,
         IconModelRole,
         IsLikeRole,
