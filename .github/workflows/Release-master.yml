@@ -2,7 +2,7 @@ name: GitHub Auto Tag & Release
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "development" ]
   workflow_dispatch:
 
 permissions:
@@ -18,21 +18,38 @@ jobs:
         with:
           fetch-depth: 0  # Fetch full history to get all tags
 
+      - name: Determine Branch and Set Label
+        id: branch_label
+        run: |
+          BRANCH_NAME=${{ github.ref_name }}
+
+          if [[ "$BRANCH_NAME" == "master" ]]; then
+            LABEL="Master"
+          elif [[ "$BRANCH_NAME" == "development" ]]; then
+            LABEL="Dev"
+          else
+            echo "Error: Unsupported branch '$BRANCH_NAME'."
+            exit 1
+          fi
+
+          echo "LABEL=$LABEL"
+          echo "LABEL=$LABEL" >> $GITHUB_ENV
+
       - name: Fetch Latest Tag and Determine Next Version
         id: versioning
         run: |
           # Fetch all tags
           git fetch --tags
 
-          # Get latest tag that matches semantic versioning with -Master
-          LATEST_TAG=$(git tag -l "v*-Master" --sort=-v:refname | head -n 1 | tr -d '\r')
+          # Get latest tag for the current branch (Master or Development)
+          LATEST_TAG=$(git tag -l "v*-${LABEL}" --sort=-v:refname | head -n 1 | tr -d '\r')
 
-          # If no tags exist, start with v0.1.0-Master
+          # If no tags exist, start with v0.1.0-Master or v0.1.0-Dev
           if [[ -z "$LATEST_TAG" ]]; then
-            NEW_TAG="v0.1.0-Master"
+            NEW_TAG="v0.1.0-${LABEL}"
           else
             # Extract version numbers from LATEST_TAG
-            if [[ "$LATEST_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-Master$ ]]; then
+            if [[ "$LATEST_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-${LABEL}$ ]]; then
               MAJOR="${BASH_REMATCH[1]}"
               MINOR="${BASH_REMATCH[2]}"
               PATCH="${BASH_REMATCH[3]}"
@@ -43,7 +60,7 @@ jobs:
 
             # Increment patch version (e.g., v0.1.0-Master → v0.1.1-Master)
             PATCH=$((PATCH + 1))
-            NEW_TAG="v$MAJOR.$MINOR.$PATCH-Master"
+            NEW_TAG="v$MAJOR.$MINOR.$PATCH-${LABEL}"
           fi
 
           echo "LATEST_TAG=$LATEST_TAG"
