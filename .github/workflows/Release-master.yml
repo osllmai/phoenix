@@ -89,3 +89,6 @@ jobs:
           gh release create "$NEW_TAG" \
             --title "Release $NEW_TAG" \
             --notes "Automated release generated for $NEW_TAG."
+
+
+            
