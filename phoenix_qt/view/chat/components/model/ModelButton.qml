@@ -16,7 +16,7 @@ import '../../../component_library/button'
         width: parent.width; height: parent.height
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        radius: 12
+        radius: 8
         border.width: 1
 
         Item{

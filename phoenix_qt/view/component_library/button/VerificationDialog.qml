@@ -8,7 +8,7 @@ Dialog {
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
     width: 300
-    height: 200
+    height: titleBoxId.height + informationId.height + buttonBoxId.height
 
     property var titleText
     property var about
@@ -30,7 +30,11 @@ Dialog {
     background: null
     contentItem:Rectangle{
         id: backgroundId
-        anchors.fill: parent
+        // anchors.fill: parent
+
+        width: 250
+        height: titleBoxId.height + informationId.height + buttonBoxId.height
+
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
@@ -50,7 +54,10 @@ Dialog {
         // }
 
         Column{
-            anchors.fill: parent
+            // anchors.fill: parent
+            width: 250
+            height: titleBoxId.height + informationId.height + buttonBoxId.height
+
             anchors.margins: 16
             Row{
                 id: titleBoxId
@@ -94,7 +101,7 @@ Dialog {
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                height: parent.height - buttonBoxId.height - titleBoxId.height
+                // height: parent.height - buttonBoxId.height - titleBoxId.height
                 font.pixelSize: 14
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

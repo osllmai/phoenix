@@ -11,7 +11,7 @@ Item {
 
     Column{
         spacing: 10
-        width: Math.min(680, parent.width - 48)
+        width: Math.min(700, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         height: parent.height
         visible: !conversationList.isEmptyConversation
@@ -24,8 +24,7 @@ Item {
                 target: inputBoxId
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
-                        console.log("LOKOKOKOOLOKLKOOLOLLLLLOlKLKOKo");
-                        conversationList.addRequest(prompt)
+                        conversationList.currentConversation.prompt(prompt, conversationList.modelId)
                     }else{
                         notificationDialogId.open()
                         control.openModelList()
@@ -37,13 +36,13 @@ Item {
 
     NotificationDialog{
         id: notificationDialogId
-        titleText: "HIIIHHIIH Zeinab"
-        about:":) HI :)"
+        titleText: "No model selected"
+        about:"Sorry! No model is currently active. Please try again later or check the settings."
     }
 
     Column{
-        spacing: 10
-        width: Math.min(680, parent.width - 48)
+        spacing: 16
+        width: Math.min(700, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         visible: conversationList.isEmptyConversation
@@ -52,7 +51,7 @@ Item {
             text: "Hello! I’m Phoenix."
             anchors.horizontalCenter: parent.horizontalCenter
             color: Style.Colors.textTitle
-            font.pixelSize: 18
+            font.pixelSize: 24
             font.styleName: "Bold"
         }
         Text{
@@ -62,7 +61,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             text: "Ask me anything! You can trust that our conversations are private, and your data is never shared for marketing."
             color: Style.Colors.textInformation
-            font.pixelSize: 12
+            font.pixelSize: 14
         }
         InputPrompt{
             id:inputBoxId2
@@ -70,7 +69,7 @@ Item {
                 target: inputBoxId2
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
-                        console.log("HIIIIIII                      HIIIIIIIII ");
+                        conversationList.addRequest(prompt)
                     }else{
                         notificationDialogId.open()
                         control.openModelList()
@@ -80,7 +79,6 @@ Item {
         }
         Flow{
             spacing: 5
-            // width: parent.width
             width: Math.min(parent.width, documentId.width + grammarId.width + rewriteId.width + imageEditorId.width + imageId.width + 20)
             anchors.horizontalCenter: parent.horizontalCenter
             MyButton {

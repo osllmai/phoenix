@@ -25,9 +25,10 @@ Item {
     Row{
         spacing: 5
         visible: model.installModel
+        anchors.right: parent.right
         MyButton{
             id: deleteButton
-            myText: "Delete Api key"
+            myText: "Delete"
             bottonType: Style.RoleEnum.BottonType.Danger
             onClicked:{
                 deleteApikeylVerificationId.open()
@@ -35,6 +36,7 @@ Item {
         }
         MyButton{
             id: startChatButton
+            width: control.width - deleteButton.width - 5
             myText: "Start Chat"
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{

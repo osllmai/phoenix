@@ -38,7 +38,7 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
-    Q_INVOKABLE void prompt(const QString &input);
+    Q_INVOKABLE void prompt(const QString &input, const int idModel);
     Q_INVOKABLE void stop();
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
@@ -94,6 +94,12 @@ signals:
 
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    // void updateDateConversation(const int id, const QString &description, const QString &icon);
+    // void updateModelSettingsConversation(const int id, const bool &stream,
+    //                                  const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+    //                                  const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+    //                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+    //                                  const int &contextLength, const int &numberOfGPULayers);
 
 private:
     int m_id;

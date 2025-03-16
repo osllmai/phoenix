@@ -86,6 +86,12 @@ public slots:
     void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
     void readMessages(const int idConversation);
     void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void updateDateConversation(const int id, const QString &description, const QString &icon);
+    void updateModelSettingsConversation(const int id, const bool &stream,
+                                                const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                const int &contextLength, const int &numberOfGPULayers);
 
 signals:
     void countChanged();

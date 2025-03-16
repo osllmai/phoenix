@@ -250,7 +250,7 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
 
     QSqlQuery query(m_db);
 
-    if (!query.prepare(INSERT_CONVERSATION_SQL))
+    if (!query.prepare(INSERT_MESSAGE_SQL))
         return;
     query.addBindValue(idConversation);
     query.addBindValue(text);
@@ -391,7 +391,7 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
 )");
 
 const QString Database::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, date, icon, isPrompt FROM model WHERE conversation_id=?
+    SELECT id, text, date, icon, isPrompt FROM message WHERE conversation_id=?
 )");
 
 const QString Database::INSERT_MESSAGE_SQL = QLatin1String(R"(
@@ -614,16 +614,18 @@ void Database::readMessages(const int idConversation){
     QSqlQuery query(m_db);
     query.prepare(READ_MESSAGE_ID_SQL);
 
+    query.addBindValue(idConversation);
     if (query.exec()){
         while(query.next()) {
             emit addMessage(
                 idConversation,
-                query.value(1).toInt(),
-                query.value(2).toString(),
-                query.value(3).toDateTime(),
-                query.value(4).toString(),
-                query.value(5).toBool()
+                query.value(0).toInt(),
+                query.value(1).toString(),
+                query.value(2).toDateTime(),
+                query.value(3).toString(),
+                query.value(4).toBool()
                 );
+            qInfo()<<idConversation<<query.value(1).toInt()<<query.value(2).toString();
         }
     }
 }

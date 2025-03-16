@@ -66,7 +66,7 @@ T.Button {
         width: parent.width-3; height: parent.height-3
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        radius: 12
+        radius: 8
         border.width: 1
 
         Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}

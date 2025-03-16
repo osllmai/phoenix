@@ -6,11 +6,6 @@ import '../../../component_library/button'
 
 T.Button {
     id: control
-    property var myText: textId.text
-    property string modelIcon: "qrc:/media/icon/inDox.svg"
-    property string date: "3 Min ago"
-    // signal deleteChat()
-    // signal editChatName(var chatName)
     height: textId.height + dateAndIconId.height  + 2
     width: parent.width
 
@@ -25,8 +20,8 @@ T.Button {
             width: parent.width
             MyIcon {
                 id: logoModelId
-                myIcon: control.modelIcon
-                iconType: Style.RoleEnum.IconType.Primary
+                myIcon: model.icon
+                iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 35; height: 35
             }
@@ -35,12 +30,11 @@ T.Button {
                 width: parent.width
                 TextArea{
                     id: textId
-                    text: "Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode chat or edit the chat when in edit mode, Select the current chat or edit the chat when in edit mode "
+                    text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width:  parent.width - logoModelId.width
-                    // anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
@@ -62,8 +56,7 @@ T.Button {
                     Text {
                         id: dateId
                         visible: control.hovered
-                        text: control.date
-                        // width: parent.width - copyId.width
+                        text: model.date
                         anchors.verticalCenter: copyId.verticalCenter
                         color: Style.Colors.textInformation
                         clip: true
@@ -103,7 +96,6 @@ T.Button {
                         onTriggered: dateAndIconId.checkCopy= false
                     }
                 }
-
             }
         }
      }

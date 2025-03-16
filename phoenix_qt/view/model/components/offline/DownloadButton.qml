@@ -13,6 +13,8 @@ Item {
 
     MyButton{
         id: dounloadButton
+        anchors.right: parent.right
+        anchors.left: parent.left
         visible: !model.downloadFinished && !model.isDownloading
         myText: "Download"
         bottonType: Style.RoleEnum.BottonType.Primary
@@ -34,6 +36,7 @@ Item {
     Row{
         spacing: 5
         visible: model.downloadFinished
+        anchors.right: parent.right
         MyButton{
             id: deleteButton
             myText: "Delete"
@@ -44,6 +47,7 @@ Item {
         }
         MyButton{
             id: startChatButton
+            width: control.width - deleteButton.width - 5
             myText: "Start Chat"
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{

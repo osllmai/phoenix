@@ -82,8 +82,11 @@ void Conversation::readMessages(){
     emit requestReadMessages(m_id);
 }
 
-void Conversation::prompt(const QString &input){
-    emit requestInsertMessage(m_id, input, m_model->icon(), true);
+void Conversation::prompt(const QString &input, const int idModel){
+    if(!m_isLoadModel){
+        loadModel(idModel);
+    }
+    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/"+m_model->icon(), true);
 }
 
 void Conversation::stop(){

@@ -45,7 +45,7 @@ T.Button {
                     myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
-                    width: 35; height: 35
+                    width: 30; height: 30
                 }
                 TextArea{
                     id: titleId

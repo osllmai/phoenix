@@ -15,8 +15,8 @@ Rectangle{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: 0
-        height: 60
+        // anchors.topMargin: 10
+        height: 80
         ToolButton {
             id: phoenixIconId
             visible: root.width>80
@@ -27,19 +27,19 @@ Rectangle{
             icon{
                 source: "qrc:/media/icon/phoenix.svg"
                 color: Style.Colors.menuHoverAndCheckedIcon;
-                width:18; height:18
+                width:24; height:24
             }
         }
         Label {
             id: textId
             visible: root.width>100
-            color: Style.Colors.menuHoverAndCheckedIcon;
+            color: Style.Colors.textColor
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: phoenixIconId.right
             anchors.leftMargin: 2
             text: "Phoenix"
             font.weight: 400
-            font.pixelSize: 14
+            font.pixelSize: 20
             font.styleName: "Bold"
             clip: true
         }
