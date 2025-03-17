@@ -6,9 +6,9 @@ import '../../../component_library/style' as Style
 
 Dialog{
     id: control
-    width: 330
+    width: 300
     height: 400
-    signal closeDialog()
+
     background: Rectangle {
         color: Style.Colors.background
         anchors.fill: parent
@@ -17,15 +17,12 @@ Dialog{
         radius: 8
         Column{
             anchors.fill: parent
-            anchors.margins: 16
+            anchors.margins: 12
             ModelDialogHeader{
                 id: headerId
                 Connections{
                     target: headerId
                     function onSearch(myText){}
-                    function onCloseDialog(){
-                        control.closeDialog()
-                    }
                     function onCurrentPage(numberPage){
                         badyId.currentIndex = numberPage;
                     }
@@ -34,6 +31,7 @@ Dialog{
             ModelDialogBody{
                 id: badyId
                 height: parent.height - headerId.height
+                width: parent.width
             }
         }
         layer.enabled: true

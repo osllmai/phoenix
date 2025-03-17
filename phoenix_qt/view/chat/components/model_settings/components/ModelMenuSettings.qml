@@ -47,11 +47,8 @@ Item {
             myIcon: control.selectIcon()
             iconType: Style.RoleEnum.IconType.Primary
             enabled: false
-            Connections {
-                target: searchIcon
-                function onClicked(){
-                    control.open()
-                }
+            onClicked:{
+                control.open()
             }
         }
     }

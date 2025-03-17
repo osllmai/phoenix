@@ -27,6 +27,12 @@ Item {
         cellWidth: control.calculationCellWidth()
         cellHeight: 300
 
+        interactive: contentHeight > height
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        flickDeceleration: 500
+        maximumFlickVelocity: 6000
+
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }

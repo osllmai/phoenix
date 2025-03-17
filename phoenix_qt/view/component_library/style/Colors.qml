@@ -93,8 +93,8 @@ Item{
 
     QtObject{
         id: overlayColor
-        readonly property var light: [/*"#091E420F"*/ "#47c8c8c8"]
-        readonly property var dark: ["#b80a0a0a"]
+        readonly property var light: [ "#47c8c8c8", "#b80a0a0a"]
+        readonly property var dark: ["#b80a0a0a", "#b80a0a0a"]
     }
     property var currentOverlayColor: overlayColor.light
     property alias overlayColor: overlayColor
@@ -119,12 +119,13 @@ Item{
     readonly property color menu: currentBackgroundColor[1]
 
     //ovrlay Color
-    readonly property color overlay: currentOverlayColor[0]
+    readonly property color overlay: currentOverlayColor[1]
+    readonly property color overlayDrawer: currentOverlayColor[0]
 
     //toolTip color
     readonly property color toolTipText: currentTextColor[6]
-    readonly property color toolTipBackground: currentBackgroundColor[1]
-    readonly property color toolTipGlowAndBorder: currentBackgroundColor[4]
+    readonly property color toolTipBackground: currentBackgroundColor[0]
+    readonly property color toolTipGlowAndBorder: currentBackgroundColor[3]
 
     //text color
     readonly property color textTitle: currentTextColor[6]
@@ -226,6 +227,33 @@ Item{
     readonly property color buttonFeatureTextDisabled: currentTextColor[6]
     readonly property color buttonFeatureTextSelected: currentPrimaryColor[2]
 
+    //botton progress color
+    readonly property color buttonProgressNormal: currentPrimaryColor[1]
+    readonly property color buttonProgressHover: currentPrimaryColor[2]
+    readonly property color buttonProgressPressed: currentPrimaryColor[2]
+    readonly property color buttonProgressDisabled: currentPrimaryColor[1]
+    readonly property color buttonProgressSelected: currentPrimaryColor[1]
+    readonly property color buttonProgressNormalGradient0: currentPrimaryColor[2]
+    readonly property color buttonProgressHoverGradient0: currentPrimaryColor[3]
+    readonly property color buttonProgressPressedGradient0: currentPrimaryColor[3]
+    readonly property color buttonProgressDisabledGradient0: currentPrimaryColor[0]
+    readonly property color buttonProgressSelectedGradient0: currentPrimaryColor[0]
+    readonly property color buttonProgressNormalGradient1: currentPrimaryColor[3]
+    readonly property color buttonProgressHoverGradient1: currentPrimaryColor[4]
+    readonly property color buttonProgressPressedGradient1: currentPrimaryColor[4]
+    readonly property color buttonProgressDisabledGradient1: currentPrimaryColor[3]
+    readonly property color buttonProgressSelectedGradient1: currentPrimaryColor[3]
+    readonly property color buttonProgressBorderNormal: currentPrimaryColor[1]
+    readonly property color buttonProgressBorderHover: currentPrimaryColor[2]
+    readonly property color buttonProgressBorderPressed: currentPrimaryColor[3]
+    readonly property color buttonProgressBorderDisabled: currentPrimaryColor[0]
+    readonly property color buttonProgressBorderSelected: currentPrimaryColor[0]
+    readonly property color buttonProgressTextNormal: currentTextColor[0]
+    readonly property color buttonProgressTextHover: currentTextColor[0]
+    readonly property color buttonProgressTextPressed: currentTextColor[0]
+    readonly property color buttonProgressTextDisabled: currentTextColor[3]
+    readonly property color buttonProgressTextSelected: currentTextColor[1]
+
 
     //box color
     readonly property color boxNormalGradient0: currentBackgroundColor[1]
@@ -233,10 +261,17 @@ Item{
     readonly property color boxHoverGradient0: currentBackgroundColor[1]
     readonly property color boxHoverGradient1: currentBackgroundColor[3]
     readonly property color boxBorder: currentBackgroundColor[3]
+    readonly property color boxChecked: currentPrimaryColor[0]
     readonly property color boxHover: currentBackgroundColor[1]
 
     //like color
     readonly property color like: currentErrorColor[1]
+
+    //progressBar
+    readonly property color progressBarText: currentTextColor[6]
+    readonly property color progressBarBackground: currentPrimaryColor[0]
+    readonly property color progressBarGradient0: currentPrimaryColor[1]
+    readonly property color progressBarGradient1: currentPrimaryColor[3]
 
     //------------------------------------end general--------------------------------------//
 }

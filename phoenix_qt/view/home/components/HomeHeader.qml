@@ -16,7 +16,7 @@ Item{
             id: inDoxId
             text: qsTr("Welcome to Phoenix!")
             color: Style.Colors.textTitle
-            font.pixelSize: 20
+            font.pixelSize: 24
             font.styleName: "Bold"
         }
 

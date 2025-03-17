@@ -6,8 +6,6 @@ Item{
     width: parent.width; height: 90
     clip:true
 
-    signal currentPage(int numberPage)
-
     Row{
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
@@ -21,7 +19,7 @@ Item{
             Connections {
                 target: offlineModel
                 function onClicked(){
-                    headerId.currentPage(0)
+                    modelBodyId.currentIndex = 0
                 }
             }
         }
@@ -33,7 +31,7 @@ Item{
             Connections {
                 target: onlineModel
                 function onClicked(){
-                    headerId.currentPage(1)
+                    modelBodyId.currentIndex = 1
                 }
             }
         }

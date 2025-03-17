@@ -7,16 +7,15 @@ Item{
     id:headerId
     height: 90; width: parent.width
     clip:true
-    signal search(var text)
     signal closeDrawer()
     Column{
         spacing: 8
         anchors.fill: parent
         Row{
             height: 35
-            spacing: parent.width - inDoxId.width - closeBox.width
+            spacing: parent.width - titleId.width - closeBox.width
             Text {
-                id: inDoxId
+                id: titleId
                 text: qsTr("History")
                 color: Style.Colors.textTitle
                 font.pixelSize: 20
@@ -51,8 +50,8 @@ Item{
             width: parent.width
             Connections{
                 target: searchBoxId
-                function onSearch(mytext){
-                    headerId.search(mytext)
+                function onSearch(myText){
+                    conversationListFilter.setFilterFixedString(myText)
                 }
             }
         }

@@ -25,19 +25,7 @@ T.Button {
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
-
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: control.hovered? Style.Colors.boxHoverGradient0: Style.Colors.boxNormalGradient0
-            }
-
-            GradientStop {
-                position: 1
-                color: control.hovered? Style.Colors.boxHoverGradient1: Style.Colors.boxNormalGradient1
-            }
-            orientation: Gradient.Vertical
-        }
+        color: Style.Colors.boxHover
 
         Column{
             anchors.fill: parent
@@ -77,13 +65,11 @@ T.Button {
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
                 }
-
             }
-
-
             Row{
                 id: buttonList
                 spacing: 10
+                anchors.right: parent.right
                 MyButton{
                     id:goPageId
                     visible: control.goPage !== -1
@@ -91,7 +77,9 @@ T.Button {
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
                         target: goPageId
-                        function onClicked(){}
+                        function onClicked(){
+                            appBodyId.currentIndex = 1
+                        }
                     }
                 }
                 MyButton{

@@ -7,7 +7,6 @@ Rectangle{
     id: root
     width: 200
     anchors.top: parent.top; anchors.bottom: parent.bottom
-    signal currentPage(int numberPage)
 
     color: Style.Colors.menu
 
@@ -16,8 +15,7 @@ Rectangle{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: 0
-        height: 60
+        height: 80
         ToolButton {
             id: phoenixIconId
             visible: root.width>80
@@ -28,19 +26,19 @@ Rectangle{
             icon{
                 source: "qrc:/media/icon/phoenix.svg"
                 color: Style.Colors.menuHoverAndCheckedIcon;
-                width:18; height:18
+                width:24; height:24
             }
         }
         Label {
             id: textId
             visible: root.width>100
-            color: Style.Colors.menuHoverAndCheckedIcon;
+            color: Style.Colors.textColor
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: phoenixIconId.right
             anchors.leftMargin: 2
             text: "Phoenix"
             font.weight: 400
-            font.pixelSize: 14
+            font.pixelSize: 20
             font.styleName: "Bold"
             clip: true
         }
@@ -94,12 +92,12 @@ Rectangle{
             myFillIcon: "qrc:/media/icon/homeFill.svg"
             checked: true
             autoExclusive: true
+            numberPage:0
 
             Connections {
                 target: homeItemMenu
                 function onClicked(){
-                    root.currentPage(0)
-                    showSelectMenuId.y = homeItemMenu.y + appInfoId.height
+                    appBodyId.currentIndex = 0
                 }
             }
         }
@@ -111,12 +109,12 @@ Rectangle{
             myIcon: "qrc:/media/icon/chat.svg"
             myFillIcon: "qrc:/media/icon/chatFill.svg"
             autoExclusive: true
+            numberPage:1
 
             Connections {
                 target: chatItemMenu
                 function onClicked(){
-                    root.currentPage(1)
-                    showSelectMenuId.y = chatItemMenu.y + appInfoId.height
+                    appBodyId.currentIndex = 1
                 }
             }
         }
@@ -128,15 +126,25 @@ Rectangle{
             myIcon: "qrc:/media/icon/model.svg"
             myFillIcon: "qrc:/media/icon/modelFill.svg"
             autoExclusive: true
+            numberPage:2
 
             Connections {
                 target: modelsItemMenu
                 function onClicked(){
-                    root.currentPage(2)
-                    showSelectMenuId.y = modelsItemMenu.y + appInfoId.height
+                    appBodyId.currentIndex = 2
                 }
             }
         }
+    }
+
+    function setShowSelectMenu(){
+        if(appBodyId.currentIndex === 0)
+            return homeItemMenu.y + appInfoId.height
+        if(appBodyId.currentIndex === 1)
+            return chatItemMenu.y + appInfoId.height
+        if(appBodyId.currentIndex === 2)
+            return modelsItemMenu.y + appInfoId.height
+        return homeItemMenu.y + appInfoId.height
     }
 
     Rectangle{
@@ -147,7 +155,7 @@ Rectangle{
         anchors.left: parent.left
         anchors.leftMargin: 10
         radius: 300
-        y: homeItemMenu.y + appInfoId.height
+        y: setShowSelectMenu()
 
         Behavior on y{
             NumberAnimation{

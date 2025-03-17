@@ -1,20 +1,30 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import '../style' as Style
 
 ToolButton {
     id: control
-    width:30; height:30
+    width: (control.hovered && isNeedAnimation)? 36:33; height:  (control.hovered && isNeedAnimation)? 36:33
 
     property var myIcon
     property int iconType: Style.RoleEnum.IconType.Primary
+    property bool isNeedAnimation: false
+
+    property string myTextToolTip: ""
 
     background: Rectangle{
-        anchors.fill: parent
+        id: backgroundId
+        width: parent.width-6; height: parent.height-3
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
         anchors.margins: 2
         color: control.choiceBackgroundColor(control.iconType)
         radius: 12
     }
+
+    Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}
+    Behavior on height{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.height >= control.height-3)? 200: 0}}
 
     HoverHandler {
         id: hoverHandler
@@ -26,7 +36,36 @@ ToolButton {
         source: control.myIcon
         color: control.hovered? control.choiceHoverAndCheckedColor(control.iconType):
                                             control.choiceNormalColor(control.iconType);
-        width: control.width; height: control.height
+        width: backgroundId.width; height: backgroundId.height
+    }
+
+    ToolTip{
+        visible: control.hovered && (control.myTextToolTip != "")
+        delay: 500
+        timeout: 10000
+        contentItem: Text {
+                text: control.myTextToolTip
+                color:Style.Colors.toolTipText
+                font.pixelSize: 10
+            }
+
+        background: Rectangle{
+            id: backgroundId2
+            width: parent.width; height: parent.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.margins: 2
+            color: Style.Colors.toolTipBackground
+            border.color: Style.Colors.toolTipGlowAndBorder
+            radius: 4
+            layer.enabled: true
+            layer.effect: Glow {
+                 samples: 30
+                 color: Style.Colors.toolTipGlowAndBorder
+                 spread: 0.4
+                 transparentBorder: true
+             }
+        }
     }
 
     function choiceNormalColor(iconType) {
@@ -47,6 +86,8 @@ ToolButton {
                 return enabled? Style.Colors.iconFeatureYellowNormal: Style.Colors.iconFeatureYellowHoverAndChecked;
             case Style.RoleEnum.IconType.FeatureGreen:
                 return enabled? Style.Colors.iconFeatureGreenNormal: Style.Colors.iconFeatureGreenHoverAndChecked;
+            case Style.RoleEnum.IconType.Like:
+                return enabled? Style.Colors.like: Style.Colors.like;
             default:
                 return enabled? Style.Colors.iconPrimaryNormal: Style.Colors.iconPrimaryHoverAndChecked;
         }
@@ -70,6 +111,8 @@ ToolButton {
                 return Style.Colors.iconFeatureYellowHoverAndChecked;
             case Style.RoleEnum.IconType.FeatureGreen:
                 return Style.Colors.iconFeatureGreenHoverAndChecked;
+            case Style.RoleEnum.IconType.Like:
+                return Style.Colors.like;
             default:
                 return Style.Colors.iconPrimaryHoverAndChecked;
         }
@@ -93,6 +136,8 @@ ToolButton {
                 return Style.Colors.iconFeatureYellowBackground;
             case Style.RoleEnum.IconType.FeatureGreen:
                 return Style.Colors.iconFeatureGreenBackground;
+            case Style.RoleEnum.IconType.Like:
+                return "#00ffffff";
             default:
                 return "#00ffffff";
         }

@@ -1,23 +1,21 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
+import "../../../component_library/button"
 
 Item{
-    id:headerId
+    id: headerId
     height: 90; width: parent.width
     clip:true
-    signal search(var text)
     signal closeDrawer()
-    signal currentPage(int numberPage)
-
     Column{
         spacing: 8
         anchors.fill: parent
         Row{
             height: 35
-            spacing: parent.width - inDoxId.width - closeBox.width
+            spacing: parent.width - titleId.width - closeBox.width
             Text {
-                id: inDoxId
+                id: titleId
                 text: qsTr("Model Settings")
                 color: Style.Colors.textTitle
                 font.pixelSize: 20
@@ -47,49 +45,12 @@ Item{
                 }
             }
         }
-        Row{
+        SearchButton{
+            id: searchBoxId
             width: parent.width
-            spacing: 10
-            MyMenuSettings{
-                id: assistantMenuId
-                myText: "Assistant"
-                checked: true
-                autoExclusive: true
-                Connections {
-                    target: assistantMenuId
-                    function onClicked(){
-                        headerId.currentPage(0)
-                        showSelectMenuId.x = assistantMenuId.x
-                    }
-                }
-            }
-            MyMenuSettings{
-                id: modelMenuId
-                myText: "Model"
-                checked: false
-                autoExclusive: true
-                Connections {
-                    target: modelMenuId
-                    function onClicked(){
-                        headerId.currentPage(1)
-                        showSelectMenuId.x = modelMenuId.x
-                    }
-                }
-            }
-        }
-    }
-    Rectangle{
-        id: showSelectMenuId
-        color: Style.Colors.menuShowCheckedRectangle
-        width: assistantMenuId.width
-        height: 3
-        radius: 300
-        x: assistantMenuId.x
-        y: assistantMenuId.y + assistantMenuId.height + 35 + 8
-
-        Behavior on x{
-            NumberAnimation{
-                duration: 200
+            Connections{
+                target: searchBoxId
+                function onSearch(myText){}
             }
         }
     }

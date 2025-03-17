@@ -10,6 +10,10 @@ Item{
     signal openHistoryDrawer()
     clip: true
 
+    function openModelList(){
+        currentModelDialogId.open();
+    }
+
     Row{
         spacing: 20
         anchors.left: parent.left; anchors.leftMargin: 24
@@ -17,33 +21,19 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: newChatId
+            visible: !conversationList.isEmptyConversation
             myText: "New Chat"
             myIcon: "qrc:/media/icon/add.svg"
             bottonType: Style.RoleEnum.BottonType.Primary
             Connections {
                 target: newChatId
                 function onClicked(){
-                    headerId.openHistoryDrawer()
+                    conversationList.isEmptyConversation = true
                 }
             }
         }
-
         ModelButton{
             id: modelButtonId
-            myText: "Phoenix"
-            isOpen: false
-            Connections {
-                target: modelButtonId
-                function onOpen(){
-                    if(!modelButtonId.isOpen){
-                        currentModelDialogId.open()
-                        modelButtonId.isOpen = true
-                    }else{
-                        modelButtonId.isOpen = false
-                        currentModelDialogId.close()
-                    }
-                }
-            }
         }
     }
 
@@ -81,11 +71,8 @@ Item{
         id: currentModelDialogId
         y: modelButtonId.y + modelButtonId.height + 20 + 24
         x: modelButtonId.x + 20
-        Connections {
-            target: currentModelDialogId
-            function onCloseDialog(){
-                currentModelDialogId.close()
-            }
+        onClosed: {
+            modelButtonId.isClose = true;
         }
     }
 }

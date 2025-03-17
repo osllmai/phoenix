@@ -11,6 +11,9 @@ Rectangle{
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
+
+    signal sendPrompt(var prompt)
+
     Row{
         anchors.fill: parent
         anchors.margins: 10
@@ -52,7 +55,8 @@ Rectangle{
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
                   }else {
-                        // sendIcon.actionClicked()
+                        sendPrompt(inputTextBox.text)
+                        inputTextBox.text = ""
                   }
                 }
 
@@ -72,6 +76,10 @@ Rectangle{
             anchors.bottom: parent.bottom
             myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
             iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                sendPrompt(inputTextBox.text)
+                inputTextBox.text = ""
+            }
         }
     }
 

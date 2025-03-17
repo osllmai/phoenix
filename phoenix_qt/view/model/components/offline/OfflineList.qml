@@ -21,22 +21,26 @@ Item {
     GridView {
         id: gridView
         anchors.fill: parent
-        anchors.margins: 15
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: control.calculationCellWidth()
         cellHeight: 300
+
+        interactive: contentHeight > height
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        flickDeceleration: 500
+        maximumFlickVelocity: 6000
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
         clip: true
 
-        model:10
-        delegate: Rectangle{
+        model: offlineModelListFilter
+        delegate: Item{
            width: gridView.cellWidth
            height: gridView.cellHeight
-           color: "#00ffffff"
 
            OfflineDelegate {
                id: indoxItem

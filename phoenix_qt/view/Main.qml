@@ -24,12 +24,6 @@ ApplicationWindow {
             id:appMenuDesktopId
             visible: window.isDesktopSize()
             clip:true
-            Connections{
-                target: appMenuDesktopId
-                function onCurrentPage(numberPage){
-                    appBodyId.currentIndex = numberPage;
-                }
-            }
             Behavior on width {
                 NumberAnimation {
                     duration: 500

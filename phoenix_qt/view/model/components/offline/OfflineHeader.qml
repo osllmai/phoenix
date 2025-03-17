@@ -28,55 +28,61 @@ Item{
                 id: searchBoxId
                 Connections{
                     target: searchBoxId
-                    function onSearch(mytext){
-                        headerId.search(mytext)
+                    function onSearch(myText){
+                        offlineModelListFilter.setFilterFixedString(myText)
                     }
                 }
             }
             Item{
-                width: parent.width
-                Flow{
-                    spacing: 5
-                    anchors.right: parent.right; anchors.rightMargin: 40
-                    MyButton {
-                        id: documentId
-                        myText: "Document"
-                        myIcon: "qrc:/media/icon/settings.svg"
+                width: parent.width - searchBoxId.width - 30
+                height: parent.height
+
+                ListView{
+                    id: companyList
+                    anchors.fill: parent
+                    layoutDirection: Qt.RightToLeft
+                    orientation: Qt.Horizontal
+                    snapMode: ListView.SnapToItem
+
+                    interactive: contentWidth > width
+                    boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                    model: offlineCompanyList
+                    delegate: MyButton {
+                        id: delegateId
+                        myText: model.name
+                        myIcon: "qrc:/media/image_company/" + model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
+                        iconType: Style.RoleEnum.IconType.Image
                         isNeedAnimation: true
+                        onClicked:{
+                            offlineModelListFilter.companyId = model.id
+                        }
                     }
-                    MyButton {
-                        id: grammarId
-                        myText: "Grammer"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureRed
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: rewriteId
-                        myText: "Rewrite"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureOrange
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: imageEditorId
-                        myText: "Image Editor"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureGreen
-                        isNeedAnimation: true
-                    }
-                    MyButton {
-                        id: imageId
-                        myText: "Image"
-                        myIcon: "qrc:/media/icon/settings.svg"
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureYellow
-                        isNeedAnimation: true
+
+                    footer: Row {
+                        spacing: 10
+                        MyButton {
+                            id: allId
+                            myText: "All"
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.FeatureBlue
+                            isNeedAnimation: true
+                            onClicked: {
+                                offlineModelListFilter.filter("All")
+                            }
+                        }
+
+                        MyButton {
+                            id: favoriteId
+                            myText: "Favorite"
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.FeatureBlue
+                            isNeedAnimation: true
+                            onClicked: {
+                                offlineModelListFilter.filter("Favorite")
+                            }
+                        }
                     }
                 }
             }

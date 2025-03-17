@@ -7,13 +7,10 @@ Item {
         id: headerId
         Connections{
             target: headerId
-            function onCurrentPage(numberPage){
-                appBodyId.currentIndex = numberPage;
-            }
         }
     }
     ModelBody{
-        id:appBodyId
+        id:modelBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right
         clip:true

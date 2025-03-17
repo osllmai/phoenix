@@ -10,7 +10,8 @@ QtObject {
         Primary,
         Secondary,
         Danger,
-        Feature
+        Feature,
+        Progress
     }
 
     enum IconType{
@@ -21,7 +22,8 @@ QtObject {
         FeatureOrange,
         FeatureMagenta,
         FeatureYellow,
-        FeatureGreen
+        FeatureGreen,
+        Like
     }
 
     enum State{

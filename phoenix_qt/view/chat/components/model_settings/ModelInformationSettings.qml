@@ -1,11 +1,15 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import '../../../../component_library/style' as Style
+import '../../../component_library/style' as Style
 
 Item {
+    id: control
     width: parent.width
     height: promptTemplateTextId.height + promptTemplateBox.height
     visible: false
+
+    property bool existConversation: !conversationList.isEmptyConversation
+
     Column{
         id: modelSettingsInformationId
         anchors.left: parent.left
@@ -39,7 +43,7 @@ Item {
 
                 TextArea {
                     id: promptTemplateTextBox
-                    // text: root.currentChat.modelSettings.promptTemplate
+                    text: control.existConversation? conversationList.currentConversation.id: ""
                     height: scrollPromptTemplate.height
                     visible: true
                     color: Style.Colors.textTitle
@@ -65,14 +69,6 @@ Item {
                     background: null
                 }
             }
-
-            // layer.enabled: true
-            // layer.effect: Glow {
-            //      samples: 15
-            //      color: Style.Theme.glowColor
-            //      spread: 0.0
-            //      transparentBorder: true
-            //  }
         }
     }
 }

@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Openai",
+    "organizationName": "Openai Inc.",
+    "icon": "Openai.svg",
+    "file": "openai_models.json",
+    "type": "OnlineModel"
+  },
+  {
+    "name": "Mistral",
+    "organizationName": "Mistral Inc.",
+    "icon": "Mistral.svg",
+    "file": "mistral_models.json",
+    "type": "OnlineModel"
+  },
+  {
+    "name": "Meta Llama",
+    "organizationName": "Meta Llama",
+    "icon": "MetaLlama.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Mistral",
+    "organizationName": "Mistral",
+    "icon": "Mistral.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Databricks",
+    "organizationName": "Databricks",
+    "icon": "Databricks.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Microsoft",
+    "organizationName": "Microsoft",
+    "icon": "Microsoft.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Replit",
+    "organizationName": "Replit",
+    "icon": "Replit.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "BigCode",
+    "organizationName": "BigCode.",
+    "icon": "BigCode.png",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Bert",
+    "organizationName": "Bert",
+    "icon": "Bert.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  },
+  {
+    "name": "Qwen",
+    "organizationName": "Qwen.",
+    "icon": "Qwen.svg",
+    "file": "offline_models.json",
+    "type": "OfflineModel"
+  }
+]
