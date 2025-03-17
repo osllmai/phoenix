@@ -51,7 +51,9 @@ Item {
             myText: "Start Chat"
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
-                // offlineModelList.deleteRequest(model.id)
+                conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon)
+                conversationList.isEmptyConversation = true
+                appBodyId.currentIndex = 1
             }
         }
     }

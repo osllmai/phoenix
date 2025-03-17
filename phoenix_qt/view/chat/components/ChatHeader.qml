@@ -29,9 +29,6 @@ Item{
                 target: newChatId
                 function onClicked(){
                     conversationList.isEmptyConversation = true
-                    console.log(conversationList)
-                    console.log(conversationList.currentConversation)
-                   console.log(conversationList.currentConversation.messageList)
                 }
             }
         }

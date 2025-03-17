@@ -9,7 +9,7 @@ Item {
         id: headerId
     }
     OfflineList{
-        id:appBodyId
+        id:offlineBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right
         anchors.topMargin: 8
