@@ -56,6 +56,7 @@ Rectangle{
                     event.accepted = false;
                   }else {
                         sendPrompt(inputTextBox.text)
+                        inputTextBox.text = ""
                   }
                 }
 

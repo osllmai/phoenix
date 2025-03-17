@@ -15,9 +15,9 @@ Item {
          ScrollView {
              id: scrollInstruction
              anchors.fill:parent; anchors.margins: 10
-             // ScrollBar.vertical: ScrollBar {
-             //     policy: ScrollBar.AsNeeded
-             // }
+             ScrollBar.vertical: ScrollBar {
+                 policy: ScrollBar.AsNeeded
+             }
 
              TextArea {
                  id: instructionTextBox

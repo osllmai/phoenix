@@ -51,10 +51,13 @@ public:
     void setTitle(const QString &title);
 
     const QString& description() const;
+    void setDescription(const QString &description);
 
     const QDateTime date() const;
+    void setDate(QDateTime date);
 
     const QString icon() const;
+    void setIcon(const QString &icon);
 
     const bool isPinned() const;
     void setIsPinned(bool isPinned);
@@ -94,12 +97,12 @@ signals:
 
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
-    // void updateDateConversation(const int id, const QString &description, const QString &icon);
-    // void updateModelSettingsConversation(const int id, const bool &stream,
-    //                                  const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-    //                                  const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-    //                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-    //                                  const int &contextLength, const int &numberOfGPULayers);
+    void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
+    void requestUpdateModelSettingsConversation(const int id, const bool &stream,
+                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                     const int &contextLength, const int &numberOfGPULayers);
 
 private:
     int m_id;

@@ -18,15 +18,6 @@ Popup{
         progressTimer.restart();
     }
 
-    // focus: true
-    // modal: true
-    // closePolicy: Popup.NoAutoClose
-
-    // parent: Overlay.overlay
-    // Overlay.modal: Rectangle {
-    //     color: Style.Colors.overlay
-    // }
-
     background: null
     contentItem: Rectangle {
         id: backgroundId

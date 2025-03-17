@@ -52,5 +52,4 @@ Rectangle{
             }
         }
     }
-    // Behavior on width{NumberAnimation{duration: 200}}
 }

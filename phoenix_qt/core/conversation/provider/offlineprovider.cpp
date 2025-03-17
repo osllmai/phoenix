@@ -121,8 +121,6 @@ void OfflineProvider::prompt(const QString &input){
 
     emit finishedResponnse("");
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
-
-
 }
 
 bool OfflineProvider::handleResponse(int32_t token, const std::string &response){

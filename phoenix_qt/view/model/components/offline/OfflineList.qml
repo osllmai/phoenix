@@ -38,10 +38,9 @@ Item {
         clip: true
 
         model: offlineModelListFilter
-        delegate: Rectangle{
+        delegate: Item{
            width: gridView.cellWidth
            height: gridView.cellHeight
-           color: "#00ffffff"
 
            OfflineDelegate {
                id: indoxItem

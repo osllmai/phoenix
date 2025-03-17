@@ -29,7 +29,6 @@ Item{
                 Connections{
                     target: searchBoxId
                     function onSearch(myText){
-                        console.log(myText)
                         onlineModelListFilter.setFilterFixedString(myText)
                     }
                 }

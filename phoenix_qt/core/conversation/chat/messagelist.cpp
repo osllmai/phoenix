@@ -24,7 +24,7 @@ QVariant MessageList::data(const QModelIndex &index, int role) const {
     case TextRole:
         return message->text();
     case DateRole:
-        return message->date();
+        return dateCalculation(message->date());
     case IconRole:
         return message->icon();
     case IsPromptRole:
@@ -67,8 +67,8 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
     return false;
 }
 
-void MessageList::addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt) {
-    beginInsertRows(QModelIndex(), m_messages.count(), m_messages.count());
+void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt) {
+    beginInsertRows(QModelIndex(), m_messages.size(), m_messages.size());
     Message* message = new Message(id, text, date, icon, isPrompt, this);
     m_messages.append(message);
     endInsertRows();
@@ -81,4 +81,16 @@ Message* MessageList::findMessageById(const int id) {
         return message->id() == id;
     });
     return (it != m_messages.end()) ? *it : nullptr;
+}
+
+QVariant MessageList::dateCalculation(const QDateTime date)const{
+    QDateTime now = QDateTime::currentDateTime();
+    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+        return date.toString("hh:mm") + " Today";
+    if(date.daysTo(now) < 7)
+        return date.toString("hh:mm") + " " + date.toString("dddd");
+    if(date.toString("yyyy") == now.toString("yyyy"))
+        return date.toString("hh:mm") + " " + date.toString("MMMM dd");
+    else
+        return date.toString("hh:mm") + " " + date.toString("MM/dd/yyyy");
 }

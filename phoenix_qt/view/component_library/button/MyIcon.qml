@@ -11,7 +11,7 @@ ToolButton {
     property int iconType: Style.RoleEnum.IconType.Primary
     property bool isNeedAnimation: false
 
-    property var myTextToolTip: ""
+    property string myTextToolTip: ""
 
     background: Rectangle{
         id: backgroundId
@@ -45,8 +45,6 @@ ToolButton {
         timeout: 10000
         contentItem: Text {
                 text: control.myTextToolTip
-                // width: 100
-                // wrapMode: Text.WordWrap
                 color:Style.Colors.toolTipText
                 font.pixelSize: 10
             }

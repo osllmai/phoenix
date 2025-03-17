@@ -9,12 +9,9 @@ Item {
     property alias myTextName: textId.text
     property bool myValue
 
-    // property color textColor: "black"
-
-    Rectangle{
+    Item{
         id: settingsSliderBox
         anchors.fill: parent
-        color: "#00ffffff"
         Text{
             id:textId
             text: "Temperature"

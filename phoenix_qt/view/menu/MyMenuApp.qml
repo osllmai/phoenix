@@ -24,7 +24,7 @@ T.Button {
     property int numberPage
 
     function iconColor(){
-        if(!control.pressed &&!control.hovered &&(appBodyId.currentIndex != numberPage))
+        if(!control.pressed &&!control.hovered &&(appBodyId.currentIndex !== numberPage))
             return Style.Colors.menuNormalIcon;
         else
             return Style.Colors.menuHoverAndCheckedIcon;
@@ -62,7 +62,7 @@ T.Button {
 
     contentItem: Rectangle{
         id: backgroundId
-        color: control.hovered || (appBodyId.currentIndex == numberPage) ? Style.Colors.menuHoverBackground : "#00ffffff"
+        color: control.hovered || (appBodyId.currentIndex === numberPage) ? Style.Colors.menuHoverBackground : "#00ffffff"
         anchors.fill: parent
         radius: 10
         clip: true

@@ -17,20 +17,7 @@ T.Button {
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
-        color: Style.Colors.boxNormalGradient0
-
-        // gradient: Gradient {
-        //     GradientStop {
-        //         position: 0
-        //         color: control.hovered? Style.Colors.boxHoverGradient0: Style.Colors.boxNormalGradient0
-        //     }
-
-        //     GradientStop {
-        //         position: 1
-        //         color: control.hovered? Style.Colors.boxHoverGradient1: Style.Colors.boxNormalGradient1
-        //     }
-        //     orientation: Gradient.Vertical
-        // }
+        color: Style.Colors.boxHover
 
         Column{
             anchors.fill: parent

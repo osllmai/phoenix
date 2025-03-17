@@ -47,7 +47,6 @@ Rectangle{
             width: 28; height: 28
             onClicked: {
                 control.saveAPIKey(textArea.text)
-                // textArea.text = ""
             }
         }
     }

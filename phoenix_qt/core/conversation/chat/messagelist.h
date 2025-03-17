@@ -41,6 +41,8 @@ private:
     QList<Message*> m_messages;
 
     Message* findMessageById(const int id);
+
+    QVariant dateCalculation(const QDateTime date)const;
 };
 
 #endif // MESSAGELIST_H

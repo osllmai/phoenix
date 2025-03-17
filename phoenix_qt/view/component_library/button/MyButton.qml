@@ -37,8 +37,8 @@ T.Button {
 
     padding: 5
 
-    property var myText: ""
-    property var myIcon: ""
+    property string myText: ""
+    property string myIcon: ""
     property double progressBarValue: 0
     property bool textIsVisible: true
     property bool isNeedAnimation: false
@@ -56,7 +56,7 @@ T.Button {
         interval: 150
         repeat: false
         onTriggered: {
-            if(control.state == "pressed")
+            if(control.state === "pressed")
                 control.state = "hover"
         }
     }

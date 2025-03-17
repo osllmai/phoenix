@@ -9,9 +9,9 @@ T.Button  {
     height: 30
     width: (myIcon ==""?0:iconId.width+5) + cpuText.width + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
 
-    property var myText: ""
+    property string myText: ""
     property double myValue: 0.0
-    property var myIcon: ""
+    property string myIcon: ""
     property int textLenght: 45
     property int iconType: Style.RoleEnum.IconType.Primary
     enabled: false

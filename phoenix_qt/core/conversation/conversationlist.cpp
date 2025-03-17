@@ -123,12 +123,10 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
     QString title = selectedWords.join(" ");
 
-    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), /*model->icon()*/"qrc:/media/image_company/MetaLlama.svg", false, true,
+    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
                     "### Human:\n%1\n\n### Assistant:\n",
                     "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                    0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80);
-    m_currentConversation->prompt(firstPrompt, m_modelId);
-    selectCurrentConversationRequest(m_currentConversation->id());
+                    0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -177,7 +175,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                        const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                                        const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                        const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                       const int &contextLength, const int &numberOfGPULayers) {
+                                       const int &contextLength, const int &numberOfGPULayers, const bool selectConversation) {
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
     Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned, this);
@@ -199,16 +197,28 @@ void ConversationList::addConversation(const int id, const QString &title, const
     m_conversations.append(conversation);
     connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
-    // connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
-    // connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 
-    setCurrentConversation(conversation);
+    if(selectConversation){
+        setPreviousConversation(m_currentConversation);
+        setCurrentConversation(conversation);
+        m_currentConversation->prompt(description, m_modelId);
+        setIsEmptyConversation(false);
+    }
 }
 
 void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
-    findConversationById(idConversation)->addMessage(id, text, date, icon, isPrompt);
+    Conversation* conversation = findConversationById(idConversation);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    conversation->addMessage(id, text, date, icon, isPrompt);
+    conversation->setDate(date);
+    conversation->setDescription(text);
+    conversation->setIcon(icon);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole, IconRole, DateRole});
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){

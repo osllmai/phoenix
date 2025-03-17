@@ -81,7 +81,7 @@ public slots:
                   const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                   const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                  const int &contextLength, const int &numberOfGPULayers);
+                  const int &contextLength, const int &numberOfGPULayersconst, bool selectConversation);
 
     void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
     void readMessages(const int idConversation);
@@ -107,7 +107,7 @@ signals:
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                            const int &contextLength, const int &numberOfGPULayers);
+                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
     void requestDeleteConversation(const int id);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateTitleConversation(const int id, const QString &title);

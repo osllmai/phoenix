@@ -32,13 +32,10 @@ SystemMonitor::SystemMonitor(QObject* parent)
 }
 
 void SystemMonitor::runSystemMonitor(const bool isRun){
-    if(isRun == true){
-        qInfo()<< "start";
+    if(isRun == true)
         m_timer->start(1000);
-    }else{
+    else
         m_timer->stop();
-        qInfo()<< "stop";
-    }
 }
 
 const int SystemMonitor::cpuInfo() const{return m_cpuInfo;}
@@ -119,5 +116,4 @@ void SystemMonitor::getSystemMonitor(){
     }
     emit cpuInfoChanged();
     emit memoryInfoChanged();
-    qInfo()<<"HI";
 }

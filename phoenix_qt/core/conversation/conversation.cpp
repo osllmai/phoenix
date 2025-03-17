@@ -21,11 +21,29 @@ void Conversation::setTitle(const QString &title) {
     }
 }
 
-const QString &Conversation::description() const {return m_description;}
+const QString &Conversation::description() const { return m_description; }
+void Conversation::setDescription(const QString &description) {
+    if (m_description != description) {
+        m_description = description;
+        emit descriptionChanged();
+    }
+}
 
-const QDateTime Conversation::date() const {return m_date;}
+const QDateTime Conversation::date() const { return m_date; }
+void Conversation::setDate(QDateTime date) {
+    if (m_date != date) {
+        m_date = date;
+        emit dateChanged();
+    }
+}
 
-const QString Conversation::icon() const{return m_icon;}
+const QString Conversation::icon() const { return m_icon; }
+void Conversation::setIcon(const QString &icon) {
+    if (m_icon != icon) {
+        m_icon = icon;
+        emit iconChanged();
+    }
+}
 
 const bool Conversation::isPinned() const{return m_isPinned;}
 void Conversation::setIsPinned(bool isPinned){

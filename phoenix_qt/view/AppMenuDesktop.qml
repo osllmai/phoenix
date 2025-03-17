@@ -15,7 +15,6 @@ Rectangle{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        // anchors.topMargin: 10
         height: 80
         ToolButton {
             id: phoenixIconId
@@ -139,11 +138,11 @@ Rectangle{
     }
 
     function setShowSelectMenu(){
-        if(appBodyId.currentIndex == 0)
+        if(appBodyId.currentIndex === 0)
             return homeItemMenu.y + appInfoId.height
-        if(appBodyId.currentIndex == 1)
+        if(appBodyId.currentIndex === 1)
             return chatItemMenu.y + appInfoId.height
-        if(appBodyId.currentIndex == 2)
+        if(appBodyId.currentIndex === 2)
             return modelsItemMenu.y + appInfoId.height
         return homeItemMenu.y + appInfoId.height
     }

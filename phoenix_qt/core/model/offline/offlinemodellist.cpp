@@ -269,9 +269,6 @@ void OfflineModelList::updateDownloadProgress(){
     else
         m_downloadProgress = 0;
 
-    qInfo()<<"receivedBytesDownload:  "<<receivedBytesDownload;
-    qInfo()<<"totalBytesDownload:  "<<totalBytesDownload;
-    qInfo()<<"m_downloadProgress:  "<<m_downloadProgress;
     emit downloadProgressChanged();
 }
 

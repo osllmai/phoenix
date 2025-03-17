@@ -8,11 +8,9 @@ Download::Download(const int id, const QString &url, const QString &modelPath, Q
     this->modelPath = modelPath;
     moveToThread(&downloadThread);
     downloadThread.start();
-    qInfo() << "new thread for download Model"<< m_id << " ::" << QThread::currentThread();
 }
 
 Download::~Download(){
-    qInfo() << "delete thread for download Model" << m_id << " ::" << QThread::currentThread() ;
     delete reply;
     downloadThread.quit();
     downloadThread.wait();
@@ -53,14 +51,11 @@ void Download::onDownloadFinished() {
         if (file.open(QIODevice::WriteOnly)) {
             file.write(reply->readAll());
             file.close();
-            qInfo()<<"download: "<<modelPath;
             emit downloadFinished(m_id);
         } else {
-            qInfo()<<"download: "<<"Failed to save the file.";
             // emit downloadFailed("Failed to save the file.");
         }
     } else {
-        qInfo()<<"download: "<<reply->errorString();
         // emit downloadFailed(reply->errorString());
     }
     reply->deleteLater();

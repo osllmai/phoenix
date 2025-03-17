@@ -22,6 +22,5 @@ Dialog {
         id:settingsPage
         anchors.fill: parent
         color: Style.Theme.backgroungColor
-
     }
 }

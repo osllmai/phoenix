@@ -60,7 +60,7 @@ T.Button {
                         anchors.verticalCenter: copyId.verticalCenter
                         color: Style.Colors.textInformation
                         clip: true
-                        font.pixelSize: 12
+                        font.pixelSize: 10
                         horizontalAlignment: Text.AlignJustify
                         verticalAlignment: Text.AlignTop
                         wrapMode: Text.NoWrap
@@ -70,10 +70,10 @@ T.Button {
                         visible: control.hovered
                         myIcon: selectIcon()
                         iconType: Style.RoleEnum.IconType.Primary
+                        width: 26; height: 26
                         Connections{
                             target: copyId
                             function onClicked(){
-                                console.log("Delete")
                                 textId.selectAll()
                                 textId.copy()
                                 textId.deselect()

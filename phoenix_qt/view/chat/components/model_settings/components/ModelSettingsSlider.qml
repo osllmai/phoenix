@@ -8,8 +8,8 @@ Item {
     id: root
     height: 60; width: parent.width
 
-    property var myTextName: ""
-    property var myTextToolTip: ""
+    property string myTextName: ""
+    property string myTextToolTip: ""
     property double sliderValue: 0.5
     property double sliderFrom: -1
     property double sliderTo: 3

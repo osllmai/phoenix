@@ -135,7 +135,7 @@ void Database::insertConversation(const QString &title, const QString &descripti
                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                 const int &contextLength, const int &numberOfGPULayers){
+                                 const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
@@ -164,7 +164,7 @@ void Database::insertConversation(const QString &title, const QString &descripti
     int id = query.lastInsertId().toInt();
 
     emit addConversation(id, title, description, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
-                         repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
+                         repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers, selectConversation);
 }
 
 void Database::deleteConversation(const int id){
@@ -188,6 +188,7 @@ void Database::updateDateConversation(const int id, const QString &description, 
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
         return;
+
     query.addBindValue(description);
     query.addBindValue(icon);
     query.addBindValue(QDateTime::currentDateTime());
@@ -263,6 +264,8 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
     int id = query.lastInsertId().toInt();
 
     emit addMessage(idConversation, id, text, date, icon, isPrompt);
+
+    updateDateConversation(idConversation, text, icon);
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -352,7 +355,7 @@ const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString Database::UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET description=? icon=? date=? Where id=?
+    UPDATE conversation SET description=?, icon=?, date=? WHERE id=?
 )");
 
 const QString Database::UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
@@ -603,7 +606,8 @@ void Database::readConversation(){
                     query.value(15).toInt(),
                     query.value(16).toInt(),
                     query.value(17).toInt(),
-                    query.value(18).toInt()
+                    query.value(18).toInt(),
+                    false
             );
         }
     }
@@ -616,7 +620,7 @@ void Database::readMessages(const int idConversation){
 
     query.addBindValue(idConversation);
     if (query.exec()){
-        while(query.next()) {
+         while(query.next()){
             emit addMessage(
                 idConversation,
                 query.value(0).toInt(),
@@ -625,7 +629,6 @@ void Database::readMessages(const int idConversation){
                 query.value(3).toString(),
                 query.value(4).toBool()
                 );
-            qInfo()<<idConversation<<query.value(1).toInt()<<query.value(2).toString();
-        }
+         }
     }
 }
