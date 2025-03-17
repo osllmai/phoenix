@@ -25,7 +25,7 @@ Item {
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
                         conversationList.currentConversation.prompt(prompt, conversationList.modelId)
-                    }else{
+                    }else if((prompt !== "")){
                         notificationDialogId.open()
                         control.openModelList()
                     }
@@ -70,7 +70,7 @@ Item {
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
                         conversationList.addRequest(prompt)
-                    }else{
+                    }else if((prompt !== "")){
                         notificationDialogId.open()
                         control.openModelList()
                     }

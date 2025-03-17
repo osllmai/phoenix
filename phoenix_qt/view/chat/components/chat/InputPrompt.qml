@@ -78,6 +78,7 @@ Rectangle{
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 sendPrompt(inputTextBox.text)
+                inputTextBox.text = ""
             }
         }
     }

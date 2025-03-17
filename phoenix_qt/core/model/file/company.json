@@ -3,7 +3,14 @@
     "name": "Openai",
     "organizationName": "Openai Inc.",
     "icon": "Openai.svg",
-    "file": "Openai_models.json",
+    "file": "openai_models.json",
+    "type": "OnlineModel"
+  },
+  {
+    "name": "Mistral",
+    "organizationName": "Mistral Inc.",
+    "icon": "Mistral.svg",
+    "file": "mistral_models.json",
     "type": "OnlineModel"
   },
   {

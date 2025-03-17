@@ -21,7 +21,7 @@ T.Button {
         radius: 8
         border.width: 1
         border.color: Style.Colors.boxBorder
-        color: (control.hovered || conversationList.modelSelect) ? Style.Colors.boxHover: "#00ffffff"
+        color: (control.hovered || (conversationList.modelSelect &&(conversationList.modelId === model.id) ))? Style.Colors.boxHover: "#00ffffff"
 
         Row {
             id: headerId

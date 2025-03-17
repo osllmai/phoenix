@@ -269,6 +269,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/offline_models.json COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/openai_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/mistral_models.json COPYONLY)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
                         ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
