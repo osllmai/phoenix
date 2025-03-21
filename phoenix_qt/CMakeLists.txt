@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 0)
-set(APP_VERSION_PATCH 15)
+set(APP_VERSION_PATCH 16)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}-dev0")
 
@@ -14,7 +14,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml Sql)
+
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network)
+
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -66,6 +69,8 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
     core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
     core/conversation/provider/provider.h core/conversation/provider/provider.cpp
+
+    core/conversation/provider/onlineProvider/provider.py
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -248,11 +253,12 @@ set_target_properties(app${PROJECT_NAME} PROPERTIES
 
 target_link_libraries(app${PROJECT_NAME}
     PRIVATE
-        Qt6::Quick
-        Qt6::Concurrent
-        Qt6::Sql
+        Qt${QT_VERSION_MAJOR}::Quick
+        Qt${QT_VERSION_MAJOR}::Concurrent
+        Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Network
+        Qt${QT_VERSION_MAJOR}::Core
         Qt::Qml
-        Qt6::Core
         Qt::Gui
 )
 
@@ -274,3 +280,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
                         ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
+

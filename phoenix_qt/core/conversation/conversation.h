@@ -11,6 +11,7 @@
 #include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
+#include "./provider/provider.h"
 
 class Conversation : public QObject
 {
@@ -80,6 +81,11 @@ public:
 
     ResponseList *responseList() const;
 
+public slots:
+    void loadModelResult(const bool result, const QString &warning);
+    void tokenResponse(const QString &token);
+    void finishedResponse(const QString &warning);
+
 signals:
     void titleChanged();
     void descriptionChanged();
@@ -103,6 +109,10 @@ signals:
                                      const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                      const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                      const int &contextLength, const int &numberOfGPULayers);
+    void requestLoadModel(const QString &model, const QString &key);
+    void requestUnLoadModel();
+    void requestPrompt(const QString &input);
+    void requestStop();
 
 private:
     int m_id;
@@ -118,6 +128,7 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
+    Provider *m_provider;
 };
 
 #endif // CONVERSATION_H

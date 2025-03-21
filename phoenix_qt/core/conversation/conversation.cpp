@@ -1,12 +1,15 @@
 #include "conversation.h"
 
+#include "./provider/onlineprovider.h"
+#include "./provider/provider.h"
+
 Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
                            const QDateTime &date, const bool isPinned, QObject *parent)
     : QObject(parent), m_id(id), m_title(title), m_description(description),
     m_icon(icon), m_date(date), m_isPinned(isPinned),  m_isLoadModel(false),
     m_loadModelInProgress(false), m_responseInProgress(false),
     m_model(new Model(this)), m_modelSettings(new ModelSettings(id,this)),m_messageList(new MessageList(this)),
-    m_responseList(new ResponseList(this))
+    m_responseList(new ResponseList(this)), m_provider(nullptr)
 {}
 
 Conversation::~Conversation() {}
@@ -103,8 +106,46 @@ void Conversation::readMessages(){
 void Conversation::prompt(const QString &input, const int idModel){
     if(!m_isLoadModel){
         loadModel(idModel);
+        setIsLoadModel(true);
+        if(m_model->backend() == BackendType::OfflineModel){
+
+        }else if(m_model->backend() == BackendType::OnlineModel){
+            if(m_provider != nullptr){
+                //disconnect load and unload model
+                disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
+                disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
+                disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+
+                //disconnect prompt
+                connect(this, &Conversation::requestPrompt, m_provider, &Provider::prompt);
+                disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
+
+                //disconnect finished response
+                disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
+                disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
+                delete m_provider;
+            }
+
+            m_provider = new OnlineProvider(this);
+
+            // //load and unload model
+            connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+            connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
+            connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+
+            //prompt
+            connect(this, &Conversation::requestPrompt, m_provider, &Provider::prompt, Qt::QueuedConnection);
+            connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
+
+            //finished response
+            connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
+            connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
+
+        }
     }
-    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/"+m_model->icon(), true);
+    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true);
+
+    m_provider->prompt(input);
 }
 
 void Conversation::stop(){
@@ -125,3 +166,16 @@ void Conversation::loadModel(const int id){
 void Conversation::unloadModel(){
 
 }
+
+void Conversation::loadModelResult(const bool result, const QString &warning){
+
+}
+
+void Conversation::tokenResponse(const QString &token){
+    emit requestInsertMessage(m_id, token, "qrc:/media/image_company/" + m_model->icon(), true);
+}
+
+void Conversation::finishedResponse(const QString &warning){
+
+}
+

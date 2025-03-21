@@ -14,12 +14,9 @@
 
 // #include "../phoenix/llmodel.h"
 
-std::string answer = "";
-// LLModel::PromptContext prompt_context;
-// LLModel* model;
-std::string prompt_template;
 
-OfflineProvider::OfflineProvider(Provider *parent)
+
+OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
 {
     moveToThread(&chatLLMThread);
@@ -37,7 +34,7 @@ void OfflineProvider::stop(){
     _stopFlag = true;
 }
 
-void OfflineProvider::loadModel(const QString &modelPath)
+void OfflineProvider::loadModel(const QString &model, const QString &key)
 {
 
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
@@ -77,11 +74,11 @@ void OfflineProvider::loadModel(const QString &modelPath)
     //         qDebug() << "\r" << "done loading!" ;
     //         emit loadModelResult(true);
     //     }
-    emit loadModelResult(true, "");
+    emit requestLoadModelResult(true, "");
     qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 }
 
-void OfflineProvider::unloadModel(){
+void OfflineProvider::unLoadModel(){
 
         // delete model;
         // model = nullptr;
@@ -112,14 +109,14 @@ void OfflineProvider::prompt(const QString &input){
     // qInfo() <<  qStr;
 
     for (int i = 0; i < 40; i++) {
-        emit tokenResponse("Hi  :)  ");
+        emit requestTokenResponse("Hi  :)  ");
         // qInfo()<<"send";
         QThread::msleep(50);
-        emit tokenResponse("Phoenix!, ");
+        emit requestTokenResponse("Phoenix!, ");
         QThread::msleep(50);
     }
 
-    emit finishedResponnse("");
+    emit requestFinishedResponse("");
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
 }
 
@@ -133,7 +130,7 @@ bool OfflineProvider::handleResponse(int32_t token, const std::string &response)
         qInfo()<<responsechars;
 
         answer += responsechars;
-        emit tokenResponse(QString::fromStdString(response));
+        emit requestTokenResponse(QString::fromStdString(response));
         // emit tokenResponse(QString::fromStdString(answer));
     }
     return !_stopFlag;

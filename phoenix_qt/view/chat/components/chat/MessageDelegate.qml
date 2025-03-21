@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
-import QtQuick.Controls 2.15
+import QtQuick.Controls 6.6
+
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
@@ -28,19 +29,36 @@ T.Button {
             Column {
                 spacing: 2
                 width: parent.width
-                TextArea{
+                // TextArea{
+                //     id: textId
+                //     text: model.text
+                //     color: Style.Colors.textTitle
+                //     selectionColor: "blue"
+                //     selectedTextColor: "white"
+                //     width:  parent.width - logoModelId.width
+                //     font.pixelSize: 14
+                //     focus: false
+                //     readOnly: true
+                //     wrapMode: Text.Wrap
+                //     selectByMouse: true
+                //     background: null
+                //     Accessible.role: Accessible.Button
+                //     Accessible.name: text
+                //     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
+                // }
+                TextEdit {
                     id: textId
                     text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width:  parent.width - logoModelId.width
+                    textFormat: TextEdit.MarkdownText
+                    clip: true
                     font.pixelSize: 14
-                    focus: false
+                    wrapMode: TextEdit.Wrap
                     readOnly: true
-                    wrapMode: Text.Wrap
                     selectByMouse: true
-                    background: null
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")

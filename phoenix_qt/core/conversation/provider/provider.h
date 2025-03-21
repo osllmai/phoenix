@@ -15,13 +15,13 @@ public:
 public slots:
     virtual void prompt(const QString &input);
     virtual void stop();
-    virtual void loadModel(const QString &key);
-    virtual void unloadModel();
+    virtual void loadModel(const QString &model, const QString &key);
+    virtual void unLoadModel();
 
 signals:
-    void loadModelResult(const bool result, const QString warning);
-    void tokenResponse(const QString &token);
-    void finishedResponnse(const QString warning);
+    void requestLoadModelResult(const bool result, const QString &warning);
+    void requestTokenResponse(const QString &token);
+    void requestFinishedResponse(const QString &warning);
 };
 
 #endif // PROVIDER_H

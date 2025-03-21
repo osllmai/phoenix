@@ -4,5 +4,5 @@ Provider::Provider(QObject *parent): QObject(parent) {}
 
 void Provider::prompt(const QString &input){}
 void Provider::stop(){}
-void Provider::loadModel(const QString &modelPath){}
-void Provider::unloadModel(){}
+void Provider::loadModel(const QString &model, const QString &key){}
+void Provider::unLoadModel(){}

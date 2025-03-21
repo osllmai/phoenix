@@ -47,7 +47,7 @@ T.Button {
                     enabled: false
                     width: 30; height: 30
                 }
-                TextArea{
+                TextArea {
                     id: titleId
                     text: model.title
                     clip: true
@@ -62,12 +62,12 @@ T.Button {
                     selectByMouse: false
 
                     background: null
+
                     function changeName() {
                         control.editChatName(titleId.text);
                         titleId.focus = false;
                         titleId.readOnly = true;
                         titleId.selectByMouse = false;
-
                     }
 
                     property bool isEnter: true
@@ -81,7 +81,14 @@ T.Button {
                             control.clicked()
                         }
                     }
+
+                    Keys.onPressed: (event) => {
+                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                            event.accepted = true;
+                        }
+                    }
                 }
+
             }
             Text {
                 id: informationId
