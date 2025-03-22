@@ -31,7 +31,6 @@ Dialog {
     contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent
-
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
@@ -40,6 +39,7 @@ Dialog {
         Column{
             anchors.fill: parent
             anchors.margins: 16
+            spacing: 10
             Row{
                 id: titleBoxId
                 height: 35
@@ -82,10 +82,10 @@ Dialog {
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                // height: parent.height - buttonBoxId.height - titleBoxId.height
+                height: parent.height - buttonBoxId.height - titleBoxId.height - 20
                 font.pixelSize: 14
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                verticalAlignment: Text.AlignTop
                 wrapMode: Text.Wrap
             }
             Row{

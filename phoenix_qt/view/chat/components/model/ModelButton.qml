@@ -53,12 +53,10 @@ import '../../../component_library/button'
                     target: openButton
                     function onClicked(){
                         if(openButton.myIcon === "qrc:/media/icon/up.svg" && control.isClose){
-                            console.log("HI HI HIH HI HI")
                             currentModelDialogId.close()
                             openButton.myIcon = "qrc:/media/icon/down.svg"
                             control.isClose = false
                         }else{
-                            console.log("Dady dady")
                             currentModelDialogId.open()
                             openButton.myIcon = "qrc:/media/icon/up.svg"
                         }

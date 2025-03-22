@@ -21,7 +21,6 @@ Item {
                     target: modelInferencesMenu
                     function onOpen(){
                         modelInferencesBody.visible = !modelInferencesBody.visible
-                        console.log("Inference Settings")
                     }
                 }
             }
@@ -37,7 +36,6 @@ Item {
                     target: modelInformationMenu
                     function onOpen(){
                         modelInformationBody.visible = !modelInformationBody.visible
-                        console.log("Model Settings")
                     }
                 }
             }
@@ -53,7 +51,6 @@ Item {
                     target: modelEnginMenu
                     function onOpen(){
                         modelEnginBody.visible = !modelEnginBody.visible
-                        console.log("Engine Settings")
                     }
                 }
             }
@@ -68,7 +65,6 @@ Item {
                     target: assistantMenu
                     function onOpen(){
                         assistantBody.visible = !assistantBody.visible
-                        console.log("Assistant Settings")
                     }
                 }
             }
