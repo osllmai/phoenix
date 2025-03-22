@@ -6,7 +6,7 @@ Item {
     width: parent.width
     height: streamId.height + temperatureId.height + topPId.height +
             maxTokensId.height + promptBatchSizeId.height + minPId.height +
-            topKId.height + repeatPenaltyTokensId.height + repeatPenaltyId.height
+            topKId.height + repeatPenaltyTokensId.height + repeatPenaltyId.height + 40
     visible: false
 
     property bool existConversation: !conversationList.isEmptyConversation
@@ -15,6 +15,7 @@ Item {
         id: inferenceSettingsInformationId
         anchors.left: parent.left
         anchors.right: parent.right; anchors.rightMargin: 16
+        spacing: 5
 
         ModelSettingsSwitch{
             id:streamId

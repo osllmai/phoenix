@@ -4,7 +4,7 @@ import "./components"
 Item {
     id: control
     width: parent.width
-    height: contextLengthId.height + numberOfGPUId.height
+    height: contextLengthId.height + numberOfGPUId.height + 5
     visible: false
 
     property bool existConversation: !conversationList.isEmptyConversation
@@ -13,6 +13,7 @@ Item {
         id: engineSettingsInformationId
         anchors.left: parent.left
         anchors.right: parent.right; anchors.rightMargin: 16
+        spacing: 5
 
         ModelSettingsSlider{
             id:contextLengthId

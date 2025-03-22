@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-// import Qt5Compat.GraphicalEffects
 import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
@@ -19,9 +18,13 @@ Item {
     Row{
         anchors.fill: parent
         Column{
+            id: sliderColumnId
             width: parent.width - valueSliderBoxId.width
-            height: parent.height
+
             Row{
+                height: 22
+                anchors.left: parent.left
+                anchors.leftMargin: 5
                 Text{
                     id:textId
                     text: root.myTextName
@@ -31,9 +34,9 @@ Item {
 
                 MyIcon{
                     id: aboutIcon
+                    width: 28; height: 28
                     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     myTextToolTip: root.myTextToolTip
-                    width: 28; height: 28
                     anchors.verticalCenter: textId.verticalCenter
                 }
             }
@@ -57,8 +60,8 @@ Item {
                     color: Style.Colors.textTitle
                     anchors.left: parent.left
                     anchors.top: sliderId.bottom
-                    anchors.leftMargin: 5
-                    anchors.topMargin: 2
+                    anchors.leftMargin: 10
+                    anchors.topMargin: 0
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 8
@@ -69,8 +72,8 @@ Item {
                     color: Style.Colors.textTitle
                     anchors.right: parent.right
                     anchors.top: sliderId.bottom
-                    anchors.rightMargin: 5
-                    anchors.topMargin: 2
+                    anchors.rightMargin: 10
+                    anchors.topMargin: 0
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 8
@@ -79,13 +82,11 @@ Item {
         }
         Rectangle{
             id:valueSliderBoxId
-            width: 50
-            height: 30
-            radius: 2
-            color: Style.Colors.textTitle
-            // anchors.verticalCenter: sliderId.verticalCenter
-            // anchors.right: parent.right
-            // anchors.rightMargin: 2
+            color: Style.Colors.background
+            border.color: Style.Colors.boxBorder
+            anchors.verticalCenter: sliderColumnId.verticalCenter
+            width: 50; height: 30
+            radius: 8
             TextField {
                 id: valueSlider1Id
                 visible: root.sliderStepSize<1
@@ -96,6 +97,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
+                background: null
 
                 validator: DoubleValidator {
                     bottom: root.sliderFrom
@@ -113,6 +115,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10
                 inputMethodHints: Qt.ImhDigitsOnly
+                background: null
 
                 validator: IntValidator{
                     bottom: root.sliderFrom

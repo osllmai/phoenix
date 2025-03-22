@@ -4,7 +4,6 @@ import '../style' as Style
 
 Switch {
     id: control
-
     readonly property int baseSize: 7
 
     background: backgroundItem
