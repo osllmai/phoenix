@@ -4,11 +4,11 @@ OfflineModel::OfflineModel(const double fileSize, const int ramRamrequired, cons
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
 
-                           const int id, const QString& name, const QString& key, QDateTime addModelTime,
+                           const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                            const bool isLike, Company* company, const BackendType backend,
                            const QString& icon , const QString& information , const QString& promptTemplate ,
                            const QString& systemPrompt, QDateTime expireModelTime, QObject* parent)
-    : Model(id, name, key, addModelTime, isLike, company, backend, icon, information,
+    : Model(id, modelName, name, key, addModelTime, isLike, company, backend, icon, information,
             promptTemplate, systemPrompt, expireModelTime, parent),
     m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
     m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent),

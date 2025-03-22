@@ -29,36 +29,20 @@ T.Button {
             Column {
                 spacing: 2
                 width: parent.width
-                // TextArea{
-                //     id: textId
-                //     text: model.text
-                //     color: Style.Colors.textTitle
-                //     selectionColor: "blue"
-                //     selectedTextColor: "white"
-                //     width:  parent.width - logoModelId.width
-                //     font.pixelSize: 14
-                //     focus: false
-                //     readOnly: true
-                //     wrapMode: Text.Wrap
-                //     selectByMouse: true
-                //     background: null
-                //     Accessible.role: Accessible.Button
-                //     Accessible.name: text
-                //     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
-                // }
-                TextEdit {
+                TextArea{
                     id: textId
                     text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width:  parent.width - logoModelId.width
-                    textFormat: TextEdit.MarkdownText
-                    clip: true
                     font.pixelSize: 14
-                    wrapMode: TextEdit.Wrap
+                    focus: false
                     readOnly: true
+                    wrapMode: Text.Wrap
+                    textFormat: TextEdit.RichText
                     selectByMouse: true
+                    background: null
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")

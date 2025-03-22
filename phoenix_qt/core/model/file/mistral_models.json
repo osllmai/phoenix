@@ -1,8 +1,8 @@
 [
   {
     "number": "1",
-    "modelName": "mistral-large-2407",
-    "name": "Mistral Large (2407)",
+    "modelName": "mistral-large",
+    "name": "Mistral Large",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0075,
     "outputPricePer1KTokens": 0.0225,
@@ -19,8 +19,8 @@
   },
   {
     "number": "2",
-    "modelName": "mistral-medium-2407",
-    "name": "Mistral Medium (2407)",
+    "modelName": "mistral-medium",
+    "name": "Mistral Medium",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0027,
     "outputPricePer1KTokens": 0.0081,
@@ -37,8 +37,8 @@
   },
   {
     "number": "3",
-    "modelName": "mistral-small-2402",
-    "name": "Mistral Small (2402)",
+    "modelName": "mistral-small",
+    "name": "Mistral Small",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0002,
     "outputPricePer1KTokens": 0.0006,
@@ -55,7 +55,7 @@
   },
   {
     "number": "4",
-    "modelName": "open-mistral-7b",
+    "modelName": "open-mistral-nemo",
     "name": "Open Mistral 7B",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.00015,
@@ -73,7 +73,7 @@
   },
   {
     "number": "5",
-    "modelName": "open-mixtral-8x7b",
+    "modelName": "open-mistral-nemo",
     "name": "Open Mixtral 8x7B",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0004,
@@ -109,7 +109,7 @@
   },
   {
     "number": "7",
-    "modelName": "mistral-large-2402",
+    "modelName": "mistral-large",
     "name": "Mistral Large (2402)",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.006,
@@ -127,7 +127,7 @@
   },
   {
     "number": "8",
-    "modelName": "mistral-medium-2312",
+    "modelName": "mistral-medium",
     "name": "Mistral Medium (2312)",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0024,

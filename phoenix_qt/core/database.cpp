@@ -92,7 +92,7 @@ void Database::addModel(const QString &name, const QString &key){
             ramRequ = 32;
 
         emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                             id, "", name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime());
 
     }
@@ -470,7 +470,7 @@ void Database::readModel(const QList<Company*> companys){
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
-                                   id, name, key, addDate, isLike, company,
+                                   id, "", name, key, addDate, isLike, company,
                                    BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime()/*, nullptr*/);
@@ -513,7 +513,7 @@ void Database::readModel(const QList<Company*> companys){
                 if(id == -1)
                     continue;
 
-                emit addOnlineModel(id, name, key, addDate,
+                emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
                                     isLike, company, BackendType::OnlineModel, company->icon(),
                                     obj["description"].toString(), obj["promptTemplate"].toString(),
                                     obj["systemPrompt"].toString(), QDateTime::currentDateTime(), /*nullptr,*/
@@ -572,7 +572,7 @@ void Database::readModel(const QList<Company*> companys){
                         ramRequ = 32;
 
                     emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                         id, "", name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime());
                 }
             }

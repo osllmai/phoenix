@@ -133,7 +133,7 @@ void OnlineModelList::deleteRequest(const int id){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
 }
 
-void OnlineModelList::addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+void OnlineModelList::addModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
               const bool isLike, Company* company, const BackendType backend,
               const QString& icon , const QString& information , const QString& promptTemplate ,
               const QString& systemPrompt, QDateTime expireModelTime,
@@ -144,7 +144,7 @@ void OnlineModelList::addModel(const int id, const QString& name, const QString&
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
-    OnlineModel* model = new OnlineModel(id, name, key, addModelTime, isLike, company, backend, icon,
+    OnlineModel* model = new OnlineModel(id, modelName, name, key, addModelTime, isLike, company, backend, icon,
                                   information, promptTemplate, systemPrompt, expireModelTime, m_instance,
 
                                   type, inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,

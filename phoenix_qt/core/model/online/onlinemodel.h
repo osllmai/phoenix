@@ -2,7 +2,6 @@
 #define ONLINEMODEL_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 
 #include "../model.h"
@@ -25,7 +24,7 @@ class OnlineModel : public Model
 public:
     explicit OnlineModel(QObject* parent = nullptr) : Model(parent) {}
 
-    explicit OnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
+    explicit OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                          const bool isLike, Company* company, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime, QObject* parent,

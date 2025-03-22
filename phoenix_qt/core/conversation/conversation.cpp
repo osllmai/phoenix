@@ -127,6 +127,7 @@ void Conversation::prompt(const QString &input, const int idModel){
             }
 
             m_provider = new OnlineProvider(this);
+            m_provider->loadModel(m_model->modelName(),m_model->key());
 
             // //load and unload model
             connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
@@ -142,6 +143,9 @@ void Conversation::prompt(const QString &input, const int idModel){
             connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
 
         }
+    }
+    if(idModel != m_model->id()){
+        m_provider->loadModel(m_model->modelName(),m_model->key());
     }
     emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true);
 

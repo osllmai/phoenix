@@ -46,8 +46,8 @@ public:
     Q_INVOKABLE void deleteRequest(const int id);
 
 public slots:
-    void addModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                  const bool isLike, Company* company, const BackendType backend,
+    void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
+                  QDateTime addModelTime, const bool isLike, Company* company, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
                   const QString& systemPrompt, QDateTime expireModelTime,
 

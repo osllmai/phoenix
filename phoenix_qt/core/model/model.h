@@ -2,7 +2,6 @@
 #define MODEL_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QDateTime>
 
@@ -15,6 +14,7 @@ class Model : public QObject
     QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(QString name READ name CONSTANT FINAL)
+    Q_PROPERTY(QString modelName READ modelName CONSTANT FINAL)
     Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
     Q_PROPERTY(QString information READ information CONSTANT FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate CONSTANT FINAL)
@@ -24,13 +24,13 @@ class Model : public QObject
     Q_PROPERTY(QString key READ key WRITE setKey NOTIFY keyChanged FINAL)
     Q_PROPERTY(bool isLike READ isLike WRITE setIsLike NOTIFY isLikeChanged FINAL)
     Q_PROPERTY(QDateTime addModelTime READ addModelTime WRITE setAddModelTime NOTIFY addModelTimeChanged FINAL)
-    Q_PROPERTY(QDateTime expireModelTime READ expireModelTime FINAL)
+    Q_PROPERTY(QDateTime expireModelTime READ expireModelTime CONSTANT FINAL)
 
 public:
     explicit Model(QObject* parent = nullptr) : QObject(parent) {}
 
-    explicit Model(const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                   const bool isLike, Company* company, const BackendType backend,
+    explicit Model(const int id, const QString& modelName, const QString& name, const QString& key,
+                   QDateTime addModelTime, const bool isLike, Company* company, const BackendType backend,
                    const QString& icon , const QString& information , const QString& promptTemplate ,
                    const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
     virtual ~Model();
@@ -38,6 +38,8 @@ public:
     const int id() const;
 
     const QString &name() const;
+
+    const QString modelName() const;
 
     const QString &icon() const;
 
@@ -70,6 +72,7 @@ signals:
 private:
     int m_id;
     QString m_name;
+    QString m_modelName;
     QString m_icon;
     QString m_information;
     QString m_promptTemplate;

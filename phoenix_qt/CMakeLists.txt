@@ -283,4 +283,3 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
-
