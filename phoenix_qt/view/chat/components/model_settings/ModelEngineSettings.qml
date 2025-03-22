@@ -5,9 +5,8 @@ Item {
     id: control
     width: parent.width
     height: contextLengthId.height + numberOfGPUId.height + 5
-    visible: false
-
     property bool existConversation: !conversationList.isEmptyConversation
+    visible: false
 
     Column{
         id: engineSettingsInformationId
