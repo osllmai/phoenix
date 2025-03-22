@@ -1,16 +1,14 @@
 import QtQuick
 import QtQuick.Controls
+import Qt5Compat.GraphicalEffects
 import './component_library/style' as Style
 
 Dialog {
     id: dialogId
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    width: 300
-    height: 200
-
-    property var titleText
-    property var about
+    width: Math.min( 600 , parent.width)
+    height: Math.min( 400 , parent.height)
 
     signal buttonAction1()
     signal buttonAction2()
@@ -23,7 +21,7 @@ Dialog {
 
     parent: Overlay.overlay
     Overlay.modal: Rectangle {
-        color: Style.Colors.overlay
+        color: Style.Colors.overlayDrawer
     }
 
     background: null
@@ -45,7 +43,7 @@ Dialog {
                 spacing: parent.width - titleId.width - closeBox.width
                 Text {
                     id: titleId
-                    text: dialogId.titleText
+                    text: "Settings"
                     color: Style.Colors.textTitle
                     font.pixelSize: 20
                     font.styleName: "Bold"
@@ -77,11 +75,10 @@ Dialog {
             }
             Text {
                 id: informationId
-                text: dialogId.about
+                text: "About"
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                // height: parent.height - buttonBoxId.height - titleBoxId.height
                 font.pixelSize: 14
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -94,5 +91,12 @@ Dialog {
 
             }
         }
+        layer.enabled: true
+        layer.effect: Glow {
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 }

@@ -98,6 +98,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/disLike.svg
         media/icon/history.svg
         media/icon/settings.svg
+        media/icon/settingsFill.svg
         media/icon/send.svg
         media/icon/sendFill.svg
         media/icon/stop.svg
@@ -167,9 +168,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/VerificationDialog.qml
         view/component_library/button/NotificationDialog.qml
 
-        view/AppMenuDesktop.qml
-        view/AppMenuAplication.qml
-        view/menu/MyMenuApp.qml
+        view/AppMenu.qml
+        view/menu/MyMenuButton.qml
 
         view/AppBody.qml
 

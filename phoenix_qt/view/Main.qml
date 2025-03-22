@@ -20,7 +20,7 @@ ApplicationWindow {
     Item{
         anchors.fill:parent
         anchors.margins: 0
-        AppMenuDesktop{
+        AppMenu{
             id:appMenuDesktopId
             visible: window.isDesktopSize()
             clip:true
@@ -33,7 +33,7 @@ ApplicationWindow {
         }
         Column{
             anchors.top: parent.top
-            anchors.bottom: window.isDesktopSize()? parent.bottom: appMenuApplicationId.top
+            anchors.bottom: parent.bottom
             anchors.left: window.isDesktopSize()? appMenuDesktopId.right: parent.left
             anchors.right: parent.right
             AppBody{
@@ -43,22 +43,6 @@ ApplicationWindow {
             }
             AppFooter{
                 id: appFooter
-            }
-        }
-        AppMenuAplication{
-            id:appMenuApplicationId
-            visible: !window.isDesktopSize()
-            Connections{
-                target: appMenuApplicationId
-                function onCurrentPage(numberPage){
-                    appBodyId.currentIndex = numberPage;
-                }
-            }
-            Behavior on width {
-                NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
             }
         }
     }

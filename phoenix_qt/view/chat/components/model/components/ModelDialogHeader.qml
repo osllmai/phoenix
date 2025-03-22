@@ -8,7 +8,6 @@ Item{
     height: 80; width: parent.width
     clip:true
     signal search(var text)
-    signal closeDialog()
     signal currentPage(int numberPage)
 
     Row{
@@ -58,7 +57,7 @@ Item{
             MouseArea{
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{headerId.closeDialog()}
+                onClicked:{currentModelDialogId.close()}
             }
         }
     }
