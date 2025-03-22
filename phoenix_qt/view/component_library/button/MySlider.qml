@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import '../style' as Style
 
 Slider {
     id: control
@@ -21,14 +22,18 @@ Slider {
         width: control.availableWidth
         height: implicitHeight
         radius: 2
-        color: "#bdbebf"
+        color: Style.Colors.boxBorder
 
         Rectangle {
             id: groove
             height: parent.height
-            color: "#047eff"
-            radius: 2
             width: control.visualPosition * parent.width
+            radius: 2
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop { position: 0.0; color: Style.Colors.progressBarGradient0 }
+                GradientStop { position: 1.0; color: Style.Colors.progressBarGradient1 }
+            }
         }
     }
 
@@ -45,8 +50,8 @@ Slider {
         implicitWidth: 15
         implicitHeight: 15
         radius: 13
-        color: "#f6f6f6"
-        border.color: "#047eff"
+        color: Style.Colors.background
+        border.color: Style.Colors.progressBarGradient1
     }
     states: [
         State {
@@ -55,7 +60,7 @@ Slider {
 
             PropertyChanges {
                 target: groove
-                color: "#047eff"
+                color: Style.Colors.progressBarGradient1
             }
         },
         State {
@@ -64,13 +69,13 @@ Slider {
 
             PropertyChanges {
                 target: handleItem
-                color: "#047eff"
-                border.color: "#ffffff"
+                color: Style.Colors.progressBarGradient1
+                border.color: Style.Colors.background
             }
 
             PropertyChanges {
                 target: groove
-                color: "#047eff"
+                color: Style.Colors.progressBarGradient1
             }
         }
     ]
