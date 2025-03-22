@@ -23,7 +23,7 @@ Switch {
         implicitWidth: control.baseSize * 4.8
         implicitHeight: control.baseSize * 2.6
         x: control.leftPadding
-        color: "#e9e9e9"
+        color: Style.Colors.boxBorder
         anchors.verticalCenter: parent.verticalCenter
         radius: control.baseSize * 1.3
 
@@ -33,7 +33,7 @@ Switch {
             width: control.baseSize * 2.6
             height: control.baseSize * 2.6
             radius: control.baseSize * 1.3
-            color: "#e9e9e9"
+            color: Style.Colors.boxBorder
         }
     }
     states: [
@@ -43,13 +43,13 @@ Switch {
 
             PropertyChanges {
                 target: rectangle
-                color: "#cccccc"
+                color: Style.Colors.boxBorder
             }
 
             PropertyChanges {
                 target: switchHandle
                 color: "#00000000"
-                border.color: "#aeaeae"
+                border.color: Style.Colors.boxBorder
             }
         },
         State {
@@ -58,8 +58,8 @@ Switch {
 
             PropertyChanges {
                 target: switchHandle
-                color: "#047eff"
-                border.color: "#ffffff"
+                color: Style.Colors.progressBarGradient1
+                border.color: control.background
             }
 
             PropertyChanges {
@@ -73,13 +73,13 @@ Switch {
 
             PropertyChanges {
                 target: rectangle
-                color: "#e9e9e9"
+                color: Style.Colors.boxBorder
             }
 
             PropertyChanges {
                 target: switchHandle
                 color: "#00000000"
-                border.color: "#047eff"
+                border.color: Style.Colors.progressBarGradient1
             }
         },
         State {
@@ -89,13 +89,13 @@ Switch {
             PropertyChanges {
                 target: rectangle
                 x: parent.width - width
-                color: "#e9e9e9"
+                color: Style.Colors.boxBorder
             }
 
             PropertyChanges {
                 target: switchHandle
-                color: "#b1047eff"
-                border.color: "#ffffff"
+                color: Style.Colors.progressBarGradient1
+                border.color: control.background
             }
         }
     ]
