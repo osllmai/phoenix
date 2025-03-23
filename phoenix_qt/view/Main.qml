@@ -11,12 +11,7 @@ ApplicationWindow {
 
     property string theme: "light"
     onThemeChanged: {
-        console.log("HIIIIIIIHIIHIHIHIHIIHIIIHIIHII")
-        console.log(window.theme)
-        console.log(Style.Colors.theme)
         Style.Colors.theme = window.theme
-        console.log(window.theme)
-        console.log(Style.Colors.theme)
     }
 
     Settings{

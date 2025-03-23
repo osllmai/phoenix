@@ -114,9 +114,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/ok.svg
         media/icon/okFill.svg
         media/icon/up.svg
-        media/icon/upFill.svg
         media/icon/down.svg
-        media/icon/downFill.svg
         media/icon/download.svg
         media/icon/downloadFill.svg
         media/icon/systemMonitor.svg
@@ -159,6 +157,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
+        view/component_library/button/MyComboBox.qml
         view/component_library/button/MyIcon.qml
         view/component_library/button/SearchButton.qml
         view/component_library/button/MySlider.qml
