@@ -8,7 +8,7 @@ Dialog {
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
     width: 300
-    height: 200
+    height: 180
 
     property var titleText
     property var about
@@ -111,5 +111,12 @@ Dialog {
                 }
             }
         }
+        layer.enabled: true
+        layer.effect: Glow {
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 }

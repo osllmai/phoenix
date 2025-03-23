@@ -263,9 +263,9 @@ QVariant ConversationList::dateCalculation(const QDateTime date)const{
     QDateTime now = QDateTime::currentDateTime();
     if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
         return date.toString("hh:mm") + " Today";
-    if(date.daysTo(now) < 7)
+    else if(date.daysTo(now) < 7)
         return date.toString("dddd");
-    if(date.toString("yyyy") == now.toString("yyyy"))
+    else if(date.toString("yyyy") == now.toString("yyyy"))
         return date.toString("MMMM dd");
     else
         return date.toString("MM/dd/yyyy");

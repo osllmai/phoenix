@@ -70,13 +70,13 @@ Popup{
             }
         }
 
-        layer.enabled: control.hovered ? true : false
+        layer.enabled: true
         layer.effect: Glow {
-            samples: 40
-            color: Style.Colors.boxBorder
-            spread: 0.1
-            transparentBorder: true
-        }
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 
     Timer {

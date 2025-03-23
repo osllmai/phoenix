@@ -1,4 +1,5 @@
 import QtQuick
+import QtCore
 import QtQuick.Controls.Basic
 import './component_library/style' as Style
 
@@ -7,6 +8,27 @@ ApplicationWindow {
     width: 1700; height: 900
     minimumWidth: 400; minimumHeight: 400
     color: Style.Colors.background
+
+    property string theme: "light"
+    onThemeChanged: {
+        console.log("HIIIIIIIHIIHIHIHIHIIHIIIHIIHII")
+        console.log(window.theme)
+        console.log(Style.Colors.theme)
+        Style.Colors.theme = window.theme
+        console.log(window.theme)
+        console.log(Style.Colors.theme)
+    }
+
+    Settings{
+        category: "window"
+        property alias x: window.x
+        property alias y: window.y
+        property alias width: window.width
+        property alias height: window.height
+        property alias theme: window.theme
+        // property alias fontFamily: Style.Theme.fontFamily
+    }
+
 
     visible: true
     title: qsTr("Phoenix")    

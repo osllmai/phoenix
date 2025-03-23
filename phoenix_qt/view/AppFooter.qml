@@ -36,7 +36,7 @@ Item {
             Downloading{
                 id: downloadingPupup
                 x: downloading.x
-                y: downloading.y - downloadingPupup.height
+                y: downloading.y - downloadingPupup.height - 10
             }
         }
     }
@@ -60,7 +60,7 @@ Item {
             SystemMonitoring{
                 id: systemMonitorPupup
                 x: systemMonitoring.x - 124
-                y: systemMonitoring.y - systemMonitorPupup.height
+                y: systemMonitoring.y - systemMonitorPupup.height - 10
             }
         }
         MyIcon {

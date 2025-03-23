@@ -7,8 +7,8 @@ Dialog {
     id: dialogId
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    width: Math.min( 600 , parent.width)
-    height: Math.min( 400 , parent.height)
+    width: Math.min( 600 , parent.width-20)
+    height: Math.min( 400 , parent.height-20)
 
     signal buttonAction1()
     signal buttonAction2()
@@ -83,12 +83,6 @@ Dialog {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 wrapMode: Text.Wrap
-            }
-            Row{
-                id: buttonBoxId
-                spacing: 5
-                anchors.right: parent.right
-
             }
         }
         layer.enabled: true

@@ -33,7 +33,7 @@ Rectangle{
         Label {
             id: textId
             visible: root.width>100
-            color: Style.Colors.textColor
+            color: Style.Colors.textTitle
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: phoenixIconId.right
             anchors.leftMargin: 2
@@ -146,7 +146,7 @@ Rectangle{
         iconType: Style.RoleEnum.IconType.Primary
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.bottom: parent.bottom; anchors.bottomMargin: 10
-        onClicked: { settingsDialogId.open() }
+        onClicked: { settingsDialogId.open(); window.theme==="light"?window.theme = "dark": window.theme="light" }
     }
 
     SettingsDialog{
