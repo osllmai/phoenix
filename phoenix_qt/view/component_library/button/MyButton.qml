@@ -95,7 +95,7 @@ T.Button {
                 }
             }
 
-            Text {
+            Label {
                 id: progressBarTextId
                 height: control.calculateHeightText()
                 property double progressFixedNumber: Number(control.progressBarValue* 100).toFixed(2)
@@ -135,7 +135,7 @@ T.Button {
                 width: textId.width + ((control.myIcon != "")? 10: 0)
                 height: textId.height
                 visible: (control.myText != "") && (control.textIsVisible)
-                Text {
+                Label {
                     id: textId
                     height: control.calculateHeightText()
                     text: control.myText

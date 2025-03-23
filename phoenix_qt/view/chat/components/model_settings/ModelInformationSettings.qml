@@ -15,7 +15,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right; anchors.rightMargin: 16
 
-        Text {
+        Label {
             id: promptTemplateTextId
             height: 20
             text: qsTr("Prompt template")

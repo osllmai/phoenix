@@ -90,7 +90,7 @@ T.Button {
                 }
 
             }
-            Text {
+            Label {
                 id: informationId
                 text: model.description
                 color: Style.Colors.textInformation
@@ -107,7 +107,7 @@ T.Button {
                 width: parent.width
                 height: 20
                 spacing: (!control.hovered &&! control.checkselectItem && model.pinned)? editId.width + deleteId.width:0
-                Text {
+                Label {
                     id: dateId
                     text: model.date
                     width: parent.width - editId.width - deleteId.width - pinId.width

@@ -55,7 +55,7 @@ T.Button {
                     anchors.left: parent.left
                     anchors.leftMargin: 10
                     property bool checkCopy: false
-                    Text {
+                    Label {
                         id: dateId
                         visible: control.hovered
                         text: model.date

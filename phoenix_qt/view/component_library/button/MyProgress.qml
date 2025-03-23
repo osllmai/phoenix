@@ -30,7 +30,7 @@ T.Button  {
             iconType: control.iconType
             enabled: false
         }
-        Text {
+        Label {
             id: cpuText
             text: control.myText
             width: control.textLenght
@@ -66,7 +66,7 @@ T.Button  {
                 }
             }
         }
-        Text {
+        Label {
             id: progressBarTextCPU
             text: "% " + Number(control.myValue * 100).toFixed(2)
             color: Style.Colors.progressBarText

@@ -41,7 +41,7 @@ T.Button {
                     width:42; height:42
                 }
 
-                Text {
+                Label {
                     id: titleId
                     text: control.myText
                     color: Style.Colors.textTitle

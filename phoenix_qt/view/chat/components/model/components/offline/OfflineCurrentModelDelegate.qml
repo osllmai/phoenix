@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Templates 2.1 as T
 import '../../../../../component_library/style' as Style
 import '../../../../../component_library/button'
@@ -33,7 +34,7 @@ T.Button {
                 enabled: false
                 width: 32; height: 32
             }
-            Text{
+            Label {
                 id: modelNameId
                 text: model.name
                 clip: true

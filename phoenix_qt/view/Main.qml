@@ -14,6 +14,8 @@ ApplicationWindow {
         Style.Colors.theme = window.theme
     }
 
+    font.family: "Times New Roman"
+
     Settings{
         category: "window"
         property alias x: window.x

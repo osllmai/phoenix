@@ -31,7 +31,7 @@ Popup{
             anchors.fill: parent
             anchors.margins: 20
             spacing: 10
-            Text {
+            Label {
                 id: titleId
                 text: control.titleText
                 color: Style.Colors.textTitle
@@ -39,7 +39,7 @@ Popup{
                 font.styleName: "Bold"
             }
 
-            Text {
+            Label {
                 id: informationId
                 text: control.about
                 color: Style.Colors.textInformation

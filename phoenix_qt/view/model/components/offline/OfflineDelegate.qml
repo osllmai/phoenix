@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import QtQuick.Templates 2.1 as T
 import '../../../component_library/style' as Style
@@ -33,7 +34,7 @@ T.Button {
                     enabled: false
                     width: 40; height: 40
                 }
-                Text {
+                Label {
                     id: titleId
                     width: parent.width - logoModelId.width - likeIconId.width
                     text: model.name
@@ -59,7 +60,7 @@ T.Button {
                 height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - 30
                 width: parent.width
                 clip: true
-                Text{
+                Label {
                     id:informationId
                     text: model.information
                     color: Style.Colors.textInformation
@@ -85,7 +86,7 @@ T.Button {
                         width: (parent.width/4)-8
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: fileSizeText
                             color: Style.Colors.textInformation
                             text: qsTr("File size")
@@ -93,7 +94,7 @@ T.Button {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: fileSizeValue
                             color: Style.Colors.textInformation
                             text: model.fileSize + " GB"
@@ -112,7 +113,7 @@ T.Button {
                         width: (parent.width/4)+ 17
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: ramRequiredText
                             color: Style.Colors.textInformation
                             text: qsTr("RAM requierd")
@@ -120,7 +121,7 @@ T.Button {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: ramRequiredValue
                             color: Style.Colors.textInformation
                             text: model.ramRamrequired + " GB"
@@ -139,7 +140,7 @@ T.Button {
                         width: (parent.width/4)
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: parameterersText
                             color: Style.Colors.textInformation
                             text: qsTr("Parameters")
@@ -147,7 +148,7 @@ T.Button {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: parameterersValue
                             color: Style.Colors.textInformation
                             text: model.parameters
@@ -166,7 +167,7 @@ T.Button {
                         width: (parent.width/4)-20
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: quantText
                             color: Style.Colors.textInformation
                             text: qsTr("Quant")
@@ -174,7 +175,7 @@ T.Button {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: quantValue
                             color: Style.Colors.textInformation
                             text: model.quant

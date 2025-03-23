@@ -14,7 +14,7 @@ Item{
         Row{
             height: 35
             spacing: parent.width - titleId.width - closeBox.width
-            Text {
+            Label {
                 id: titleId
                 text: qsTr("History")
                 color: Style.Colors.textTitle

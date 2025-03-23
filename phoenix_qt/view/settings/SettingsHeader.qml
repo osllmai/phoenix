@@ -1,12 +1,12 @@
 import QtQuick 2.15
-import QtQuick.Controls
+import QtQuick.Controls 2.15
 import '../component_library/style' as Style
 
 Row{
     id: titleBoxId
     height: 35
     spacing: parent.width - titleId.width - closeBox.width
-    Text {
+    Label {
         id: titleId
         text: "Settings"
         color: Style.Colors.textTitle

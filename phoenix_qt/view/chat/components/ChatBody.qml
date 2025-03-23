@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import "./chat"
 import '../../component_library/style' as Style
 import '../../component_library/button'
@@ -46,7 +47,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         visible: conversationList.isEmptyConversation
-        Text{
+        Label {
             id: phoenixId
             text: "Hello! I’m Phoenix."
             anchors.horizontalCenter: parent.horizontalCenter
@@ -54,7 +55,7 @@ Item {
             font.pixelSize: 24
             font.styleName: "Bold"
         }
-        Text{
+        Label {
             id: informationText
             width: parent.width
             wrapMode: Text.Wrap

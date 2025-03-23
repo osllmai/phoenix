@@ -15,7 +15,7 @@ ComboBox {
     contentItem: RowLayout {
         id: contentRow
         spacing: 0
-        Text {
+        Label {
             id: textId
             Layout.fillWidth: true
             leftPadding: 10
@@ -36,7 +36,7 @@ ComboBox {
                 sourceSize.height: comboBoxId.font.pixelSize
                 mipmap: true
                 visible: false
-                source: popupId.visible? "images/upIcon.svg":"images/downIcon.svg"
+                source: popupId.visible? "images/up.svg":"images/down.svg"
             }
 
             ColorOverlay {
@@ -48,7 +48,7 @@ ComboBox {
     }
     delegate: ItemDelegate {
         width: comboBoxId.width - 20
-        contentItem: Text {
+        contentItem: Label {
             text: modelData
             color: Style.Theme.informationTextColor
             font.family: Style.Theme.fontFamily

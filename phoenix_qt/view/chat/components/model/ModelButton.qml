@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Templates 2.1 as T
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
@@ -35,7 +36,7 @@ import '../../../component_library/button'
                 anchors.left: parent.left
                 anchors.leftMargin: 5
             }
-            Text {
+            Label {
                 id: textId
                 height: parent.height
                 text: control.modelName

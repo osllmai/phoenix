@@ -43,7 +43,7 @@ ToolButton {
         visible: control.hovered && (control.myTextToolTip != "")
         delay: 500
         timeout: 10000
-        contentItem: Text {
+        contentItem: Label {
                 text: control.myTextToolTip
                 color:Style.Colors.toolTipText
                 font.pixelSize: 10

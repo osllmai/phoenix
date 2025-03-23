@@ -44,7 +44,7 @@ Dialog {
                 id: titleBoxId
                 height: 35
                 spacing: parent.width - titleId.width - closeBox.width
-                Text {
+                Label {
                     id: titleId
                     text: dialogId.titleText
                     color: Style.Colors.textTitle
@@ -76,7 +76,7 @@ Dialog {
                     }
                 }
             }
-            Text {
+            Label {
                 id: informationId
                 text: dialogId.about
                 color: Style.Colors.textInformation

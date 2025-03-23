@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
@@ -13,7 +14,7 @@ Item{
         anchors.fill: parent
         anchors.leftMargin: 30
         spacing: 10
-        Text {
+        Label {
             id: phoenixId
             text: qsTr("Online Model")
             color: Style.Colors.textTitle

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import '../../component_library/style' as Style
 
 Item{
@@ -12,7 +13,7 @@ Item{
         anchors.leftMargin: 24
         anchors.top: parent.top
         anchors.topMargin: 24
-        Text {
+        Label {
             id: inDoxId
             text: qsTr("Welcome to Phoenix!")
             color: Style.Colors.textTitle
@@ -20,7 +21,7 @@ Item{
             font.styleName: "Bold"
         }
 
-        Text {
+        Label {
             id: informationText
             text: qsTr("Get Started.")
             color: Style.Colors.textInformation

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
@@ -27,7 +28,7 @@ Item {
 
     Row{
         anchors.fill: parent
-        Text {
+        Label {
             id: inferenceSettingsTextId
             width: parent.width - searchIcon.width ; height: parent.height
             text: control.myText

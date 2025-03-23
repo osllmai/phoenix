@@ -25,7 +25,7 @@ Item {
                 height: 22
                 anchors.left: parent.left
                 anchors.leftMargin: 5
-                Text{
+                Label {
                     id:textId
                     text: root.myTextName
                     color: Style.Colors.textTitle
@@ -54,7 +54,7 @@ Item {
                     stepSize: root.sliderStepSize
                 }
 
-                Text {
+                Label {
                     id: minValueSliderId
                     text: sliderId.from
                     color: Style.Colors.textTitle
@@ -66,7 +66,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     font.pointSize: 8
                 }
-                Text {
+                Label {
                     id: maxValueSliderId
                     text: sliderId.to
                     color: Style.Colors.textTitle
