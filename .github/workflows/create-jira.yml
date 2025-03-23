@@ -1,0 +1,24 @@
+name: Create Jira Ticket  # Name of the workflow
+
+on:
+  issues:
+    types: [opened]  # Trigger the workflow only when a new GitHub issue is created
+
+jobs:
+  create_jira:
+    runs-on: ubuntu-latest  # The environment this job will run on
+
+    steps:
+      - name: Create Jira issue  # Step name in the GitHub Actions UI
+        uses: atlassian/gajira-create@v3  # Official Atlassian action for creating Jira issues
+
+        with:
+          jira-base-url: ${{ secrets.JIRA_BASE_URL }}  # e.g., https://yourcompany.atlassian.net
+          jira-user-email: ${{ secrets.JIRA_USER_EMAIL }}  # Your Jira account email
+          jira-api-token: ${{ secrets.JIRA_API_TOKEN }}  # API token from Atlassian
+          project: PROJKEY  # Your Jira project key, like "DEV" or "BUG"
+          summary: "${{ github.event.issue.title }}"  # Title of the GitHub issue
+          description: |
+            ${{ github.event.issue.body }}
+
+            [GitHub Issue Link](${{ github.event.issue.html_url }})
