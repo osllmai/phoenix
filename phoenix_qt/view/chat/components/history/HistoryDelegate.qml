@@ -101,6 +101,7 @@ T.Button {
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
+                elide: Label.ElideRight
             }
             Row {
                 id: dateAndIconId

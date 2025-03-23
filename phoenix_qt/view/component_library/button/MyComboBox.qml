@@ -12,52 +12,34 @@ ComboBox {
     padding: 10
 
     Accessible.role: Accessible.ComboBox
-    contentItem: RowLayout {
+    contentItem: Row {
         id: contentRow
         spacing: 0
         Label {
             id: textId
-            Layout.fillWidth: true
-            leftPadding: 10
-            rightPadding: 20
             text: comboBoxId.displayText
-            font: comboBoxId.font
-            color: Style.Theme.informationTextColor
+            clip: true
+            width: parent.width - iconId.width
+            color: Style.Colors.textTitle
             verticalAlignment: Text.AlignLeft
             elide: Text.ElideRight
         }
-        Item {
-            Layout.preferredWidth: updown.width
-            Layout.preferredHeight: updown.height
-            Image {
-                id: updown
-                anchors.verticalCenter: parent.verticalCenter
-                sourceSize.width: comboBoxId.font.pixelSize
-                sourceSize.height: comboBoxId.font.pixelSize
-                mipmap: true
-                visible: false
-                source: popupId.visible? "images/up.svg":"images/down.svg"
-            }
-
-            ColorOverlay {
-                anchors.fill: updown
-                source: updown
-                color: Style.Theme.iconColor
-            }
+        MyIcon{
+            id:iconId
+            myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
         }
     }
     delegate: ItemDelegate {
         width: comboBoxId.width - 20
         contentItem: Label {
             text: modelData
-            color: Style.Theme.informationTextColor
-            font.family: Style.Theme.fontFamily
+            color: Style.Colors.textInformation
             elide: Text.ElideRight
             verticalAlignment: Text.AlignVCenter
         }
         background: Rectangle {
             radius: 10
-            color: highlighted? Style.Theme.selectButtonColor: Style.Theme.normalButtonColor
+            color: highlighted ? Style.Colors.boxHover : Style.Colors.background
         }
         highlighted: comboBoxId.highlightedIndex === index
     }
@@ -65,19 +47,19 @@ ComboBox {
         id: popupId
         y: comboBoxId.height - 1
         width: comboBoxId.width
-        implicitHeight: contentItem.implicitHeight + 20
+        implicitHeight: Math.min(contentItem.implicitHeight + 20, 260)
         padding: 0
 
         contentItem: Rectangle {
             implicitWidth: myListView.contentWidth
             implicitHeight: myListView.contentHeight
-            color: "transparent"
+            color: Style.Colors.background
             ListView {
                 id: myListView
                 anchors.fill: parent
                 anchors.margins: 10
                 clip: true
-                implicitHeight: contentHeight
+                implicitHeight: Math.min(contentHeight, 240)
                 model: comboBoxId.popup.visible ? comboBoxId.delegateModel : null
                 currentIndex: comboBoxId.highlightedIndex
                 ScrollIndicator.vertical: ScrollIndicator { }
@@ -85,17 +67,17 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: Style.Theme.normalButtonColor
-            border.color: Style.Theme.selectButtonColor
+            color: Style.Colors.background
+            border.color: Style.Colors.boxBorder
             border.width: 1
             radius: 10
         }
     }
     indicator: Image {}
     background: Rectangle {
-        color: Style.Theme.normalButtonColor
+        color: Style.Colors.background
         border.width: 1
-        border.color: Style.Theme.selectButtonColor
+        border.color: Style.Colors.boxBorder
         radius: 10
     }
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval

@@ -40,7 +40,7 @@ T.Button {
                     focus: false
                     readOnly: true
                     wrapMode: Text.Wrap
-                    textFormat: TextEdit.RichText
+                    textFormat: TextArea.MarkdownText
                     selectByMouse: true
                     background: null
                     Accessible.role: Accessible.Button

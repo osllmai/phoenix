@@ -146,7 +146,7 @@ Rectangle{
         iconType: Style.RoleEnum.IconType.Primary
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.bottom: parent.bottom; anchors.bottomMargin: 10
-        onClicked: { settingsDialogId.open(); window.theme==="light"?window.theme = "dark": window.theme="light" }
+        onClicked: { settingsDialogId.open(); }
     }
 
     SettingsDialog{
