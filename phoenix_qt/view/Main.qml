@@ -23,7 +23,7 @@ ApplicationWindow {
         property alias width: window.width
         property alias height: window.height
         property alias theme: window.theme
-        // property alias fontFamily: Style.Theme.fontFamily
+        property alias fontFamily: window.font.family
     }
 
 

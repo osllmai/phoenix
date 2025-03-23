@@ -1,5 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QFontDatabase>
+#include <QPalette>
 #include <QIcon>
 
 #include "database.h"
@@ -37,6 +40,12 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
+
+    QStringList fontFamilies = QFontDatabase::families();
+    engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
+
+    bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
+    engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
