@@ -20,6 +20,12 @@
         <file>icon/phoenix.svg</file>
         <file>icon/like.svg</file>
         <file>icon/disLike.svg</file>
+        <file>icon/favorite.svg</file>
+        <file>icon/disFavorite.svg</file>
+        <file>icon/likeFill.svg</file>
+        <file>icon/disLikeFill.svg</file>
+        <file>icon/speaker.svg</file>
+        <file>icon/speakerFill.svg</file>
         <file>icon/history.svg</file>
         <file>icon/settings.svg</file>
         <file>icon/settingsFill.svg</file>

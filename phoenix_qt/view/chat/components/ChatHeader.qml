@@ -11,7 +11,7 @@ Item{
     clip: true
 
     Row{
-        spacing: 20
+        spacing: 10
         anchors.left: parent.left; anchors.leftMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter
@@ -34,7 +34,7 @@ Item{
     }
 
     Row{
-        spacing: 20
+        spacing: 10
         anchors.right: parent.right; anchors.rightMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter

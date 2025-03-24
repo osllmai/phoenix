@@ -16,7 +16,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -96,6 +96,12 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/phoenix.svg
         media/icon/like.svg
         media/icon/disLike.svg
+        media/icon/favorite.svg
+        media/icon/disFavorite.svg
+        media/icon/likeFill.svg
+        media/icon/disLikeFill.svg
+        media/icon/speaker.svg
+        media/icon/speakerFill.svg
         media/icon/history.svg
         media/icon/settings.svg
         media/icon/settingsFill.svg
@@ -243,7 +249,7 @@ qt_add_qml_module(app${PROJECT_NAME}
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 set_target_properties(app${PROJECT_NAME} PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
+   MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -257,6 +263,7 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Sql
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt::Qml
         Qt::Gui
 )
