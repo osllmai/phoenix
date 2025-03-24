@@ -91,9 +91,119 @@ ComboBox {
     }
     indicator: Image {}
     background: Rectangle {
+        id: backgroundId
         color: Style.Colors.background
         border.width: 1; border.color: Style.Colors.boxBorder
         radius: 10
     }
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
+
+
+    function choiceBackgroundColor(state) {
+        switch (state) {
+                case Style.RoleEnum.State.Normal:
+                    return Style.Colors.buttonSecondaryNormal;
+
+                case Style.RoleEnum.State.Hover:
+                    return Style.Colors.buttonSecondaryHover;
+
+                case Style.RoleEnum.State.Pressed:
+                    return Style.Colors.buttonSecondaryPressed;
+
+                case Style.RoleEnum.State.Disabled:
+                    return Style.Colors.buttonSecondaryDisabled;
+
+                case Style.RoleEnum.State.Selected:
+                        return Style.Colors.buttonSecondarySelected;
+
+                default:
+                    return Style.Colors.buttonSecondaryNormal;
+            }
+    }
+
+    function choiceTextColor(state) {
+        switch (state) {
+                case Style.RoleEnum.State.Normal:
+                    return Style.Colors.buttonSecondaryTextNormal;
+
+                case Style.RoleEnum.State.Hover:
+                    return Style.Colors.buttonSecondaryTextHover;
+
+                case Style.RoleEnum.State.Pressed:
+                    return Style.Colors.buttonSecondaryTextPressed;
+
+                case Style.RoleEnum.State.Disabled:
+                    return Style.Colors.buttonSecondaryTextDisabled;
+
+                case Style.RoleEnum.State.Selected:
+                    return Style.Colors.buttonSecondaryTextSelected;
+
+                default:
+                    return Style.Colors.buttonSecondaryTextNormal;
+            }
+    }
+
+    property bool isNormal: !comboBoxId.hovered && !comboBoxId.pressed && comboBoxId.enabled
+    property bool isHover: comboBoxId.hovered && !comboBoxId.pressed && comboBoxId.enabled
+    property bool isPressed: comboBoxId.pressed && comboBoxId.enabled
+    property bool isDisabled: !comboBoxId.enabled
+
+    states: [
+        State {
+            name: "normal"
+            when: comboBoxId.isNormal
+            PropertyChanges {
+                target: backgroundId
+                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
+                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
+                width: comboBoxId.width-3; height: comboBoxId.height-3
+            }
+            PropertyChanges {
+                target: textId
+                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+            }
+        },
+        State {
+            name: "hover"
+            when: comboBoxId.isHover
+            PropertyChanges {
+                target: backgroundId
+                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
+                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
+                width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
+            }
+            PropertyChanges {
+                target: textId
+                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+            }
+        },
+        State {
+            name: "pressed"
+            when: comboBoxId.isPressed
+            PropertyChanges {
+                target: backgroundId
+                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
+                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
+                width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
+            }
+            PropertyChanges {
+                target: textId
+                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+            }
+        },
+        State {
+            name: "disabled"
+            when: comboBoxId.isDisabled
+            PropertyChanges {
+                target: backgroundId
+                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
+                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
+                width: comboBoxId.width-3; height: comboBoxId.height-3
+            }
+            PropertyChanges {
+                target: textId
+                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+            }
+        }
+    ]
 }
