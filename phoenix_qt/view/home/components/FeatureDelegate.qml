@@ -72,72 +72,11 @@ T.Button {
                         toolTip.y = mouseY
                     }
 
-                    ToolTip {
+                    MyToolTip{
                         id: toolTip
-                        visible: infoMouseArea.containsMouse
-                        width: 400
-                        delay: 500
-                        timeout: 5000
-                        contentItem: Label {
-                            id: toolTipId
-                            width: 400
-                            text: control.about
-                            wrapMode: Text.Wrap
-                            color: Style.Colors.toolTipText
-                            font.pixelSize: 10
-                        }
-
-                        background: Rectangle {
-                            width: toolTipId.width + 20
-                            height: toolTipId.height + 10
-                            color: Style.Colors.toolTipBackground
-                            border.color: Style.Colors.toolTipGlowAndBorder
-                            radius: 4
-                            layer.enabled: true
-                            layer.effect: Glow {
-                                samples: 30
-                                color: Style.Colors.toolTipGlowAndBorder
-                                spread: 0.4
-                                transparentBorder: true
-                            }
-                        }
+                        toolTipText: control.about
                     }
                 }
-
-                // ToolTip{
-                //     visible: control.hovered
-                //     width: 400
-                //     x: informationId.x
-                //     y: informationId.y
-                //     delay: 500
-                //     timeout: 10000
-                //     contentItem: Label {
-                //         id: toolTipId
-                //         width: 400
-                //         text: control.about
-                //         wrapMode: Text.Wrap
-                //         color:Style.Colors.toolTipText
-                //         font.pixelSize: 10
-                //     }
-
-                //     background: Rectangle{
-                //         id: backgroundId2
-                //         width: toolTipId.parent; height: toolTipId.height + 10
-                //         anchors.horizontalCenter: parent.horizontalCenter
-                //         anchors.verticalCenter: parent.verticalCenter
-                //         anchors.margins: 2
-                //         color: Style.Colors.toolTipBackground
-                //         border.color: Style.Colors.toolTipGlowAndBorder
-                //         radius: 4
-                //         layer.enabled: true
-                //         layer.effect: Glow {
-                //              samples: 30
-                //              color: Style.Colors.toolTipGlowAndBorder
-                //              spread: 0.4
-                //              transparentBorder: true
-                //          }
-                //     }
-                // }
             }
             Row{
                 id: buttonList

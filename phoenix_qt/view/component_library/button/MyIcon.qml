@@ -12,6 +12,7 @@ ToolButton {
     property bool isNeedAnimation: false
 
     property string myTextToolTip: ""
+     property int myWidthToolTip: 150
 
     background: Rectangle{
         id: backgroundId
@@ -39,33 +40,12 @@ ToolButton {
         width: backgroundId.width; height: backgroundId.height
     }
 
-    ToolTip{
+    MyToolTip{
+        x: control.x - (width/2)
+        y: control.y - height - 1
         visible: control.hovered && (control.myTextToolTip !== "")
-        delay: 500
-        timeout: 10000
-        contentItem: Label {
-                text: control.myTextToolTip
-                color:Style.Colors.toolTipText
-                font.pixelSize: 10
-            }
-
-        background: Rectangle{
-            id: backgroundId2
-            width: parent.width; height: parent.height
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.margins: 2
-            color: Style.Colors.toolTipBackground
-            border.color: Style.Colors.toolTipGlowAndBorder
-            radius: 4
-            layer.enabled: true
-            layer.effect: Glow {
-                 samples: 30
-                 color: Style.Colors.toolTipGlowAndBorder
-                 spread: 0.4
-                 transparentBorder: true
-             }
-        }
+        width: control.myWidthToolTip
+        toolTipText: control.myTextToolTip
     }
 
     function choiceNormalColor(iconType) {

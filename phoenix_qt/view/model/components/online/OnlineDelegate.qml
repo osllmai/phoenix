@@ -54,22 +54,33 @@ T.Button {
                     }
                 }
             }
-            Item{
-                id: aboutId
+            Label {
+                id:informationId
                 height: parent.height - headerId.height - apikeyButton.height - informationAboutDownloadId.height - 30
                 width: parent.width
+                text: model.information
+                color: Style.Colors.textInformation
+                anchors.left: parent.left; anchors.right: parent.right
+                font.pixelSize: 10
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                elide: Label.ElideRight
                 clip: true
-                Label {
-                    id:informationId
-                    text: model.information
-                    color: Style.Colors.textInformation
-                    anchors.left: parent.left; anchors.right: parent.right
-                    font.pixelSize: 10
-                    horizontalAlignment: Text.AlignJustify
-                    verticalAlignment: Text.AlignTop
-                    wrapMode: Text.Wrap
-                    elide: Label.ElideRight
-                    clip: true
+                MouseArea {
+                    id: infoMouseArea
+                    anchors.fill: informationId
+                    hoverEnabled: true
+
+                    onPositionChanged: {
+                        toolTip.x = mouseX
+                        toolTip.y = mouseY
+                    }
+
+                    MyToolTip{
+                        id: toolTip
+                        toolTipText: model.information
+                    }
                 }
             }
             Rectangle{
