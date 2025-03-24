@@ -10,10 +10,6 @@ Item{
     signal openHistoryDrawer()
     clip: true
 
-    function openModelList(){
-        currentModelDialogId.open();
-    }
-
     Row{
         spacing: 20
         anchors.left: parent.left; anchors.leftMargin: 24
@@ -32,8 +28,8 @@ Item{
                 }
             }
         }
-        ModelButton{
-            id: modelButtonId
+        ModelComboBox{
+            id: currentModelComboBoxId
         }
     }
 
@@ -44,7 +40,6 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: openModelSettingsId
-            myText: "Model Settings"
             myIcon: "qrc:/media/icon/settings.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
@@ -56,7 +51,6 @@ Item{
         }
         MyButton{
             id: openHistoryId
-            myText: "History"
             myIcon: "qrc:/media/icon/history.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
@@ -65,14 +59,6 @@ Item{
                     headerId.openHistoryDrawer()
                 }
             }
-        }
-    }
-    ModelDialog{
-        id: currentModelDialogId
-        y: modelButtonId.y + modelButtonId.height + 20 + 24
-        x: modelButtonId.x + 20
-        onClosed: {
-            modelButtonId.isClose = true;
         }
     }
 }

@@ -19,12 +19,6 @@ Item {
     ChatBody{
         id: chatBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
-        Connections{
-            target: chatBodyId
-            function onOpenModelList(){
-                headerId.openModelList();
-            }
-        }
     }
     HistoryDrawer{
         id: historyId

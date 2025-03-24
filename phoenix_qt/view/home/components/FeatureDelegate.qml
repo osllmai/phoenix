@@ -50,21 +50,94 @@ T.Button {
                     font.styleName: "Bold"
                 }
             }
-            Item{
-                id: bodyId
+            Label{
+                id: informationId
                 height: parent.height - headerId.height - buttonList.height - 20
                 width: parent.width
-                Label{
-                    id:informationId
-                    text: control.about
-                    color: Style.Colors.textInformation
-                    clip: true
-                    anchors.left: parent.left; anchors.right: parent.right
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignJustify
-                    verticalAlignment: Text.AlignTop
-                    wrapMode: Text.Wrap
+                text: control.about
+                color: Style.Colors.textInformation
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                elide: Label.ElideRight
+                clip: true
+                MouseArea {
+                    id: infoMouseArea
+                    anchors.fill: informationId
+                    hoverEnabled: true
+
+                    onPositionChanged: {
+                        toolTip.x = mouseX
+                        toolTip.y = mouseY
+                    }
+
+                    ToolTip {
+                        id: toolTip
+                        visible: infoMouseArea.containsMouse
+                        width: 400
+                        delay: 500
+                        timeout: 5000
+                        contentItem: Label {
+                            id: toolTipId
+                            width: 400
+                            text: control.about
+                            wrapMode: Text.Wrap
+                            color: Style.Colors.toolTipText
+                            font.pixelSize: 10
+                        }
+
+                        background: Rectangle {
+                            width: toolTipId.width + 20
+                            height: toolTipId.height + 10
+                            color: Style.Colors.toolTipBackground
+                            border.color: Style.Colors.toolTipGlowAndBorder
+                            radius: 4
+                            layer.enabled: true
+                            layer.effect: Glow {
+                                samples: 30
+                                color: Style.Colors.toolTipGlowAndBorder
+                                spread: 0.4
+                                transparentBorder: true
+                            }
+                        }
+                    }
                 }
+
+                // ToolTip{
+                //     visible: control.hovered
+                //     width: 400
+                //     x: informationId.x
+                //     y: informationId.y
+                //     delay: 500
+                //     timeout: 10000
+                //     contentItem: Label {
+                //         id: toolTipId
+                //         width: 400
+                //         text: control.about
+                //         wrapMode: Text.Wrap
+                //         color:Style.Colors.toolTipText
+                //         font.pixelSize: 10
+                //     }
+
+                //     background: Rectangle{
+                //         id: backgroundId2
+                //         width: toolTipId.parent; height: toolTipId.height + 10
+                //         anchors.horizontalCenter: parent.horizontalCenter
+                //         anchors.verticalCenter: parent.verticalCenter
+                //         anchors.margins: 2
+                //         color: Style.Colors.toolTipBackground
+                //         border.color: Style.Colors.toolTipGlowAndBorder
+                //         radius: 4
+                //         layer.enabled: true
+                //         layer.effect: Glow {
+                //              samples: 30
+                //              color: Style.Colors.toolTipGlowAndBorder
+                //              spread: 0.4
+                //              transparentBorder: true
+                //          }
+                //     }
+                // }
             }
             Row{
                 id: buttonList

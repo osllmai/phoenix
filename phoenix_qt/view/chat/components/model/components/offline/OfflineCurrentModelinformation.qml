@@ -75,12 +75,13 @@ T.Popup {
                     id:informationId
                     text: model.information
                     color: Style.Colors.textInformation
-                    clip: true
                     anchors.left: parent.left; anchors.right: parent.right
                     font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
+                    elide: Label.ElideRight
+                    clip: true
                 }
             }
             Rectangle{

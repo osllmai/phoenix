@@ -57,7 +57,7 @@ Item{
             MouseArea{
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{currentModelDialogId.close()}
+                onClicked:{comboBoxId.popup.close()}
             }
         }
     }

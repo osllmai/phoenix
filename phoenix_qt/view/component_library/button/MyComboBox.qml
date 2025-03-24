@@ -7,6 +7,8 @@ import '../style' as Style
 
 ComboBox {
     id: comboBoxId
+    height: 35
+    width: 200
     font.pixelSize: 12
     leftPadding: 10
 

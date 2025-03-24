@@ -213,8 +213,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/model_settings/components/ModelSettingsSlider.qml
         view/chat/components/model_settings/components/ModelSettingsSwitch.qml
         view/chat/components/model_settings/components/ModelMenuSettings.qml
-        view/chat/components/model/ModelButton.qml
-        view/chat/components/model/ModelDialog.qml
+        view/chat/components/model/ModelComboBox.qml
         view/chat/components/model/components/ModelDialogHeader.qml
         view/chat/components/model/components/ModelDialogBody.qml
         view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml

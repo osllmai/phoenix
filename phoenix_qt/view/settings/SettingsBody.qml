@@ -5,9 +5,6 @@ import '../component_library/button'
 Column{
     MyComboBox {
         id: themeList
-        height: 35
-        width: 200
-
         model: ListModel {
             ListElement { text: "Dark" }
             ListElement { text: "Light" }
@@ -20,9 +17,6 @@ Column{
     }
     MyComboBox {
         id: fontFamilyList
-        height: 35
-        width: 200
-
         model: availableFonts
         displayText: window.font.family
         onActivated: {

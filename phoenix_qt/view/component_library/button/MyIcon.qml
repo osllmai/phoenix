@@ -40,7 +40,7 @@ ToolButton {
     }
 
     ToolTip{
-        visible: control.hovered && (control.myTextToolTip != "")
+        visible: control.hovered && (control.myTextToolTip !== "")
         delay: 500
         timeout: 10000
         contentItem: Label {
