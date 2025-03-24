@@ -4,14 +4,14 @@ import QtQuick 2.15
 
 Item{
     id: colorId
-    property string theme: "light"
+    property string theme: "Light"
 
     QtObject{
         id: textColor
         readonly property var light: ["#FFFFFF", "#B3B9C4", "#F7F8F9", "#44546F","#2C3E5D", "#172B4D", "#000000"]
         readonly property var dark: ["#000000", "#8C9BAB", "#9BB4CA80", "#9FADBC", "#B6C2CF", "#B6C2CF", "#FFFFFF" ]
     }
-    property var currentTextColor: ((colorId.theme === "dark"))? textColor.light: textColor.dark
+    property var currentTextColor: (colorId.theme === "Light")? textColor.light: textColor.dark
     property alias textColor: textColor
 
     QtObject{
@@ -19,7 +19,7 @@ Item{
         readonly property var light: ["#FFFFFF", "#F7F8F9", "#F1F2F4", "#DCDFE4", "#758195"]
         readonly property var dark: ["#161A1D", "#1D2125", "#22272B", "#2C333A", "#738496"]
     }
-    property var currentBackgroundColor: ((colorId.theme === "dark"))? backgroundColor.light: backgroundColor.dark
+    property var currentBackgroundColor: (colorId.theme === "Light")? backgroundColor.light: backgroundColor.dark
     property alias backgroundColor: backgroundColor
 
     QtObject{
@@ -27,7 +27,7 @@ Item{
         readonly property var light: ["#F3F0FF", "#9F8FEF", "#6E5DC6", "#352C63", "#2B273F"]
         readonly property var dark: ["#2B273F", "#6E5DC6", "#9F8FEF", "#DFD8FD", "#F3F0FF"]
     }
-    property var currentPrimaryColor: ((colorId.theme === "dark"))? primaryColor.light: primaryColor.dark
+    property var currentPrimaryColor: (colorId.theme === "Light")? primaryColor.light: primaryColor.dark
     property alias primaryColor: primaryColor
 
     QtObject{
@@ -35,7 +35,7 @@ Item{
         readonly property var light: ["#FFECEB", "#F87168", "#C9372C", "#5D1F1A", "#42221F"]
         readonly property var dark: ["#42221F", "#C9372C", "#F87168", "#FFD5D2", "#FFECEB"]
     }
-    property var currentErrorColor: ((colorId.theme === "dark"))? errorColor.light: errorColor.dark
+    property var currentErrorColor: (colorId.theme === "Light")? errorColor.light: errorColor.dark
     property alias errorColor: errorColor
 
     QtObject{
@@ -43,7 +43,7 @@ Item{
         readonly property var light: ["#DCFFF1", "#4BCE97", "#1F845A", "#164B35", "#1C3329"]
         readonly property var dark: ["#1C3329", "#1F845A", "#4BCE97", "#164B35", "#DCFFF1"]
     }
-    property var currentSuccessColor: ((colorId.theme === "dark"))? successColor.light: successColor.dark
+    property var currentSuccessColor: (colorId.theme === "Light")? successColor.light: successColor.dark
     property alias successColor: successColor
 
     QtObject{
@@ -51,7 +51,7 @@ Item{
         readonly property var light: ["#FFF7D6", "#E2B203", "#B38600", "#533F04", "#332E1B"]
         readonly property var dark: ["#332E1B", "#B38600", "#E2B203", "#F8E6A0", "#FFF7D6"]
     }
-    property var currentwarningColor: ((colorId.theme === "dark"))? warningColor.light: warningColor.dark
+    property var currentwarningColor: (colorId.theme === "Light")? warningColor.light: warningColor.dark
     property alias warningColor: warningColor
 
     QtObject{
@@ -59,7 +59,7 @@ Item{
         readonly property var light: ["#E9F2FF", "#579DFF", "#0C66E4", "#09326C", "#1C2B41"]
         readonly property var dark: ["#1C2B41", "#0C66E4", "#579DFF", "#CCE0FF", "#E9F2FF"]
     }
-    property var currentInfoColor: ((colorId.theme === "dark"))? infoColor.light: infoColor.dark
+    property var currentInfoColor: (colorId.theme === "Light")? infoColor.light: infoColor.dark
     property alias infoColor: infoColor
 
     QtObject{
@@ -67,7 +67,7 @@ Item{
         readonly property var light: ["#091E4208", "#091E420F", "#091E424F", "#091E424F", "#091E427D"]
         readonly property var dark: ["#BCD6F00A", "#A1BDD914", "#A6C5E229", "#BFDBF847", "#9BB4CA80"]
     }
-    property var currentColorForBlueLayers: ((colorId.theme === "dark"))? colorForBlueLayers.light: colorForBlueLayers.dark
+    property var currentColorForBlueLayers: (colorId.theme === "Light")? colorForBlueLayers.light: colorForBlueLayers.dark
     property alias colorForBlueLayers: colorForBlueLayers
 
     QtObject{
@@ -75,7 +75,7 @@ Item{
         readonly property var light: ["#FFF3EB", "#FEC195", "#A54800", "#702E00", "#38291E"]
         readonly property var dark: ["#38291E", "#A54800", "#FEC195", "#FEDEC8", "#FFF3EB"]
     }
-    property var currentOrangeColor: ((colorId.theme === "dark"))? orangeColor.light: orangeColor.dark
+    property var currentOrangeColor: (colorId.theme === "Light")? orangeColor.light: orangeColor.dark
     property alias orangeColor: orangeColor
 
     QtObject{
@@ -83,7 +83,7 @@ Item{
         readonly property var light: ["#FFECF8", "#F797D2", "#943D73", "#50253F", "#3D2232"]
         readonly property var dark: ["#3D2232", "#943D73", "#F797D2", "#FDD0EC", "#FFECF8"]
     }
-    property var currentMagentaColor: ((colorId.theme === "dark"))? magentaColor.light: magentaColor.dark
+    property var currentMagentaColor: (colorId.theme === "Light")? magentaColor.light: magentaColor.dark
     property alias magentaColor: magentaColor
 
     QtObject{
@@ -91,7 +91,7 @@ Item{
         readonly property var light: ["#82B536", "#F15B50", "#F38A3F", "#CF9F02", "#2ABB7F", "#42B2D7", "#388BFF", "#8F7EE7", "#DA62AC", "#DCDFE4"]
         readonly property var dark: ["#82B536", "#F15B50", "#F38A3F", "#CF9F02", "#2ABB7F", "#42B2D7", "#388BFF", "#8F7EE7", "#DA62AC", "#2C333A"]
     }
-    property var currentAvatarBGDynamicColor: ((colorId.theme === "dark"))? avatarBGDynamicColor.light: avatarBGDynamicColor.dark
+    property var currentAvatarBGDynamicColor: (colorId.theme === "Light")? avatarBGDynamicColor.light: avatarBGDynamicColor.dark
     property alias avatarBGDynamicColor: avatarBGDynamicColor
 
     QtObject{
@@ -99,7 +99,7 @@ Item{
         readonly property var light: [ "#47c8c8c8", "#b80a0a0a"]
         readonly property var dark: ["#b80a0a0a", "#b80a0a0a"]
     }
-    property var currentOverlayColor: ((colorId.theme === "dark"))? overlayColor.light: overlayColor.dark
+    property var currentOverlayColor: (colorId.theme === "Light")? overlayColor.light: overlayColor.dark
     property alias overlayColor: overlayColor
 
 

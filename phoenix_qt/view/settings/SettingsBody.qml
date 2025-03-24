@@ -10,13 +10,12 @@ Column{
 
         model: ListModel {
             ListElement { text: "Dark" }
-            ListElement { text: "light" }
-            ListElement { text: "System Defula" }
-
+            ListElement { text: "Light" }
+            ListElement { text: "System Defualt" }
         }
-        displayText: "Style.Theme.theme"
+        displayText: window.theme
         onActivated: {
-            // root.themeRequested2(themeList.currentText)
+            window.theme = themeList.currentText
         }
     }
     MyComboBox {
@@ -25,9 +24,9 @@ Column{
         width: 200
 
         model: availableFonts
-        displayText: "Style.Theme.fontFamily"
+        displayText: window.font.family
         onActivated: {
-            // root.fontFamilyRequested2(fontFamilyList.currentText)
+            window.font.family = fontFamilyList.currentText
         }
     }
 }
