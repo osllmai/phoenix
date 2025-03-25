@@ -30,9 +30,10 @@ import '../../../../component_library/button'
         border.width: 1
         Row{
             anchors.fill: parent
+            leftPadding: 10
             Label {
                 id: textId
-                width: parent.width - iconOpenId.width ; height: parent.height
+                width: parent.width - iconOpenId.width - 10 ; height: parent.height
                 text: control.myText
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 10

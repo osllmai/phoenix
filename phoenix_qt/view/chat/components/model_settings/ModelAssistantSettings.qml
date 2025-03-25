@@ -4,6 +4,9 @@ import '../../../component_library/style' as Style
 
 Item {
     id: control
+    width: parent.width
+    height: instructionsBox.height
+    visible: false
 
     property bool existConversation: !conversationList.isEmptyConversation
 
@@ -42,4 +45,5 @@ Item {
              }
          }
      }
- }
+
+}

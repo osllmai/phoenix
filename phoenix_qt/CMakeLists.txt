@@ -16,7 +16,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -265,6 +265,7 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::TextToSpeech
+        # Qt${QT_VERSION_MAJOR}::Speech
         Qt::Qml
         Qt::Gui
 )

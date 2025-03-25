@@ -15,7 +15,7 @@ Item {
             spacing: 10
 
             Rectangle{
-                width: parent.width; height: modelInferencesMenu.height + (modelInferencesBody.visible?modelInferencesBody.height:0) + 20
+                width: parent.width ; height: modelInferencesMenu.height + (modelInferencesBody.visible?modelInferencesBody.height:0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
                 radius: 8
                 Column{
@@ -39,7 +39,7 @@ Item {
             }
 
             Rectangle{
-                width: parent.width; height: modelInformationMenu.height + (modelInformationBody.visible?modelInformationBody.height:0) + 20
+                width: parent.width ; height: modelInformationMenu.height + (modelInformationBody.visible?modelInformationBody.height:0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
                 radius: 8
                 Column{
@@ -63,7 +63,7 @@ Item {
             }
 
             Rectangle{
-                width: parent.width; height: modelEnginMenu.height + (modelEnginBody.visible?modelEnginBody.height:0) +  20
+                width: parent.width ; height: modelEnginMenu.height + (modelEnginBody.visible?modelEnginBody.height:0) +  20
                 border.width: 1; border.color: Style.Colors.boxBorder
                 radius: 8
                 Column{
@@ -87,7 +87,7 @@ Item {
             }
 
             Rectangle{
-                width: parent.width; height: assistantMenu.height + (assistantBody.visible?assistantBody.height:0) + 20
+                width: parent.width  ; height: assistantMenu.height + (assistantBody.visible?assistantBody.height:0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
                 radius: 8
                 Column{

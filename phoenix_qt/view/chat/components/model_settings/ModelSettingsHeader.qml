@@ -5,7 +5,7 @@ import "../../../component_library/button"
 
 Item{
     id: headerId
-    height: 90; width: parent.width
+    height: 40; width: parent.width
     clip:true
     signal closeDrawer()
     Column{
@@ -43,14 +43,6 @@ Item{
                         onClicked:{headerId.closeDrawer()}
                     }
                 }
-            }
-        }
-        SearchButton{
-            id: searchBoxId
-            width: parent.width
-            Connections{
-                target: searchBoxId
-                function onSearch(myText){}
             }
         }
     }

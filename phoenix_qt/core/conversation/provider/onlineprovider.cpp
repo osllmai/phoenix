@@ -53,7 +53,7 @@ void OnlineProvider::prompt(const QString &input){
         QProcess process;
         process.setProcessChannelMode(QProcess::MergedChannels);
 
-        process.start("python", QStringList() << "bin/main.py"/* << m_model << m_key << input*/);
+        process.start("python", QStringList() << "bin/main_provider.py"/* << m_model << m_key << input*/);
 
         while (process.state() == QProcess::Running) {
             if (process.waitForReadyRead(100)) {

@@ -6,7 +6,8 @@ import '../../../component_library/button'
 
 Rectangle{
     id: controlId
-    height: 60; width: parent.width
+    height: 60; width: Math.min(700, parent.width - 48)
+    anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
     border.width: 1
     border.color: Style.Colors.boxBorder

@@ -7,14 +7,12 @@ import '../../component_library/button'
 Item {
     id: control
     width: parent.width
-
+    height: parent.height
     signal openModelList()
 
     Column{
         spacing: 10
-        width: Math.min(700, parent.width - 48)
-        anchors.horizontalCenter: parent.horizontalCenter
-        height: parent.height
+        anchors.fill: parent
         visible: !conversationList.isEmptyConversation
         MyMessageList{
             id: myMessageView
