@@ -71,6 +71,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/provider/provider.h core/conversation/provider/provider.cpp
 
     core/conversation/provider/onlineProvider/provider.py
+    core/conversation/provider/onlineProvider/main_provider.py
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -287,5 +288,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
                         ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/main_provider.py
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/main_provider.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.json COPYONLY)
