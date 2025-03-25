@@ -8,8 +8,8 @@ Dialog {
     id: dialogId
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    width: Math.min( 600 , parent.width-20)
-    height: Math.min( 400 , parent.height-20)
+    width: Math.min( 800 , parent.width-20)
+    height: Math.min( 600 , parent.height-20)
 
     signal buttonAction1()
     signal buttonAction2()
@@ -34,18 +34,27 @@ Dialog {
         border.width: 1
         border.color: Style.Colors.boxBorder
         color: Style.Colors.background
-
-        Column{
+        Row{
             anchors.fill: parent
-            anchors.margins: 16
-            SettingsHeader{
-                id:settingsHeaderId
+            SettingsMenu{
+                id: settingsMenuId
             }
 
-            SettingsBody{
-                id: settingsBodyId
+            Column{
+                width: parent.width - settingsMenuId.width
+                height: parent.height
+                anchors.margins: 16
+                SettingsHeader{
+                    id:settingsHeaderId
+                }
+
+                SettingsBody{
+                    id: settingsBodyId
+                }
             }
         }
+
+
         layer.enabled: true
         layer.effect: Glow {
              samples: 40

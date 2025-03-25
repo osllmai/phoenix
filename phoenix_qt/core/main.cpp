@@ -6,6 +6,7 @@
 #include <QIcon>
 
 #include "database.h"
+#include "speechtotext.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -46,6 +47,8 @@ int main(int argc, char *argv[])
 
     bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
     engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
+
+    // qmlRegisterType<SpeechToText>("com.example.speech", 1, 0, "SpeechToText");
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");

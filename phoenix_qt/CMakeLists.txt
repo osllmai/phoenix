@@ -18,6 +18,8 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
 
+add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
+
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -244,6 +246,14 @@ qt_add_qml_module(app${PROJECT_NAME}
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
         QML_FILES view/component_library/button/MyToolTip.qml
+        SOURCES core/speechtotext.h core/speechtotext.cpp
+        QML_FILES view/settings/SettingsMenu.qml
+        QML_FILES view/settings/components/SettingsAbout.qml
+        QML_FILES view/settings/components/SettingsTheme.qml
+        QML_FILES view/settings/components/SettingsSpeech.qml
+        QML_FILES view/settings/components/SettingsTerms_of_Use.qml
+        QML_FILES view/settings/components/SettingsPrivacy.qml
+        QML_FILES view/settings/components/SettingsMenuButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -268,6 +278,7 @@ target_link_libraries(app${PROJECT_NAME}
         # Qt${QT_VERSION_MAJOR}::Speech
         Qt::Qml
         Qt::Gui
+        whisper
 )
 
 include(GNUInstallDirs)
