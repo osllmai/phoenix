@@ -4,7 +4,7 @@ import '../component_library/style' as Style
 
 Row{
     id: titleBoxId
-    height: 35
+    height: 50
     spacing: parent.width - titleId.width - closeBox.width
     Label {
         id: titleId

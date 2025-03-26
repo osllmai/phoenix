@@ -14,14 +14,14 @@ Item{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: 80
+        height: 60
         Label {
             id: textId
             visible: root.width>100
             color: Style.Colors.textTitle
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: 15
             text: "Settings"
             font.weight: 400
             font.pixelSize: 20

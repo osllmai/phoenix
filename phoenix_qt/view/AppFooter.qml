@@ -40,7 +40,6 @@ Item {
             }
         }
     }
-
     Row{
         anchors.right: parent.right; anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter

@@ -46,6 +46,7 @@ Dialog {
                 anchors.margins: 16
                 SettingsHeader{
                     id:settingsHeaderId
+                    visible: false
                 }
 
                 SettingsBody{

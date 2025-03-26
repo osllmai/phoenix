@@ -41,8 +41,6 @@ ToolButton {
     }
 
     MyToolTip{
-        x: control.x - (width/2)
-        y: control.y - height - 1
         visible: control.hovered && (control.myTextToolTip !== "")
         width: control.myWidthToolTip
         toolTipText: control.myTextToolTip

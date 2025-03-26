@@ -254,6 +254,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         QML_FILES view/settings/components/SettingsTerms_of_Use.qml
         QML_FILES view/settings/components/SettingsPrivacy.qml
         QML_FILES view/settings/components/SettingsMenuButton.qml
+        QML_FILES view/settings/components/SettingsComboBox.qml
+        QML_FILES view/settings/components/SettingsSlider.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
