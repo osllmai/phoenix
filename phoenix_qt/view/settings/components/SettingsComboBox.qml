@@ -8,15 +8,17 @@ Item {
     height: 60; width: parent.width
 
     property var model
+    property string displayText
+    property string myTextName: ""
+    property string myTextToolTip: ""
+    signal activated()
 
     Row{
         anchors.fill: parent
         Row{
             id: informationSliderId
-            height: 22
-            width: 60
-            anchors.left: parent.left
-            anchors.leftMargin: 5
+            width: 100
+            height: parent.height
             Label {
                 id:textId
                 text: root.myTextName
@@ -35,9 +37,10 @@ Item {
 
         MyComboBox{
             id: settingsSliderBox
-            width: parent.width - informationSliderId.width
-            height: 30
+            width: root.width - informationSliderId.width
             model: root.model
+            displayText: root.displayText
+            onActivated: { root.activated() }
         }
     }
 }

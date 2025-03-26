@@ -277,7 +277,6 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::TextToSpeech
-        # Qt${QT_VERSION_MAJOR}::Speech
         Qt::Qml
         Qt::Gui
         whisper

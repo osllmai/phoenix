@@ -126,6 +126,13 @@ Item{
         }
     }
 
+    Rectangle{
+        id:line
+        width: 1; height: parent.height
+        color: Style.Colors.boxBorder
+        anchors.right: parent.right
+    }
+
     function setShowSelectMenu(){
         if(settingsBodyId.currentIndex === 0)
             return themeItemMenu.y + appInfoId.height

@@ -40,8 +40,8 @@ T.Button {
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
-                    wrapMode: Text.Wrap
-                    textFormat: TextArea.MarkdownText
+                    wrapMode: TextEdit.Wrap
+                    textFormat: TextEdit.MarkdownText
                     selectByMouse: true
                     background: null
                     Accessible.role: Accessible.Button
