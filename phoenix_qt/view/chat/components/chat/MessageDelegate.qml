@@ -121,51 +121,55 @@ T.Button {
                         visible: control.hovered
                         myIcon: speakerId.selectIcon()
                         iconType: Style.RoleEnum.IconType.Primary
-                        width: 26; height: 26
+                        width: 26
+                        height: 26
                         enabled: true
 
-                        // enabled: speakerId.speakerOn ?
-                        //         [TextToSpeech.Paused, TextToSpeech.Ready].includes(textToSpeechId.state) :
-                        //         [TextToSpeech.Speaking, TextToSpeech.Paused].includes(textToSpeechId.state)
-                        property bool speakerOn: false
-                        Connections{
+                        Connections {
                             target: speakerId
-                            function onClicked(){
-                                console.log("Button clicked!")
-                                speakerId.speakerOn = !speakerId.speakerOn
-                                console.log("Speaker on: " + speakerId.speakerOn)
+                            function onClicked() {
+                                if (!textId.text || textId.text.length === 0)
+                                    return
 
-                                if (speakerId.speakerOn) {
-                                    let voices = textToSpeechId.availableVoices()
-                                    if (voices.length > 0) {
-                                        textToSpeechId.voice = voices[0]
-                                    }
-                                    if (textId && textId.text.length > 0) {
-                                        textToSpeechId.say(textId.text)
-                                    } else {
-                                        console.log("Error: No text to read!")
-                                    }
+                                let voices = textToSpeechId.availableVoices()
+                                if (voices.length === 0)
+                                    return
+
+                                let indexOfVoice = voices.indexOf(textToSpeechId.voice)
+                                if (indexOfVoice === -1)
+                                    indexOfVoice = 0
+
+                                textToSpeechId.voice = voices[indexOfVoice]
+
+                                if (textToSpeechId.state !== TextToSpeech.Speaking) {
+
+                                    textToSpeechId.say(textId.text)
+                                    textToSpeechId.messageId = model.id
+                                } else if (textToSpeechId.messageId === model.id) {
+                                    textToSpeechId.pause()
                                 } else {
-                                    textToSpeechId.stop()
+                                    textToSpeechId.pause()
+                                    successTimer.start()
                                 }
                             }
                         }
-                        function selectIcon(){
-                            if(speakerId.speakerOn == false){
-                                return speakerId.hovered? "qrc:/media/icon/speakerFill.svg": "qrc:/media/icon/speaker.svg"
-                            }else{
-                                return speakerId.hovered? "qrc:/media/icon/stopFill.svg": "qrc:/media/icon/stop.svg"
+                        Timer {
+                            id: successTimer
+                            interval: 1000
+                            repeat: false
+                            onTriggered: speakerId.clicked()
+                        }
+
+                        function selectIcon() {
+                            if ((textToSpeechId.state === TextToSpeech.Speaking) && (textToSpeechId.messageId === model.id)) {
+                                return speakerId.hovered ? "qrc:/media/icon/stopFill.svg" : "qrc:/media/icon/stop.svg"
+                            } else {
+                                return speakerId.hovered ? "qrc:/media/icon/speakerFill.svg" : "qrc:/media/icon/speaker.svg"
                             }
                         }
-                    }
-                    Timer {
-                        id: successTimer
-                        interval: 2000
-                        repeat: false
-                        onTriggered: dateAndIconId.checkCopy= false
                     }
                 }
             }
         }
-     }
+    }
 }

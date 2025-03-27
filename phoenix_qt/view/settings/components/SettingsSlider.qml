@@ -5,7 +5,7 @@ import '../../component_library/button'
 
 Item {
     id: root
-    height: 60; width: parent.width
+    height: 35; width: parent.width
 
     property string myTextName: ""
     property string myTextToolTip: ""
@@ -16,33 +16,19 @@ Item {
     property int decimalPart: 0
 
     Row{
-        anchors.fill: parent
-        Row{
-            id: informationSliderId
-            height: 22
-            width: 60
-            anchors.left: parent.left
-            anchors.leftMargin: 5
-            Label {
-                id:textId
-                text: root.myTextName
-                color: Style.Colors.textTitle
-                font.pointSize: 10
-            }
-
-            MyIcon{
-                id: aboutIcon
-                width: 28; height: 28
-                myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
-                myTextToolTip: root.myTextToolTip
-                anchors.verticalCenter: textId.verticalCenter
-            }
+        Label {
+            id:textId
+            text: root.myTextName
+            width: 100
+            color: Style.Colors.textTitle
+            font.pixelSize: 14
+            anchors.verticalCenter: parent.verticalCenter
         }
 
         Item{
             id: settingsSliderBox
-            width: parent.width - informationSliderId.width - valueSliderBoxId.width
-            height: 30
+            width: 200
+            height: 35
 
             MySlider{
                 id:sliderId
@@ -51,6 +37,8 @@ Item {
                 from: root.sliderFrom
                 to: root.sliderTo
                 stepSize: root.sliderStepSize
+                anchors.verticalCenter: parent.verticalCenter
+                onValueChanged: root.sliderValue = value
             }
 
             Label {
@@ -76,50 +64,6 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pointSize: 8
-            }
-        }
-
-        Rectangle{
-            id:valueSliderBoxId
-            color: Style.Colors.background
-            border.color: Style.Colors.boxBorder
-            anchors.verticalCenter: sliderColumnId.verticalCenter
-            width: 50; height: 30
-            radius: 8
-            TextField {
-                id: valueSlider1Id
-                visible: root.sliderStepSize<1
-                text: sliderId.value.toFixed(root.decimalPart)
-                color: Style.Colors.textTitle
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: 10
-                inputMethodHints: Qt.ImhFormattedNumbersOnly
-                background: null
-
-                validator: DoubleValidator {
-                    bottom: root.sliderFrom
-                    top: root.sliderTo
-                    decimals: root.decimalPart
-                }
-            }
-            TextField {
-                id: valueSlider2Id
-                visible: root.sliderStepSize>=1
-                text: sliderId.value.toFixed(root.decimalPart)
-                color: Style.Colors.textTitle
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font.pointSize: 10
-                inputMethodHints: Qt.ImhDigitsOnly
-                background: null
-
-                validator: IntValidator{
-                    bottom: root.sliderFrom
-                    top: root.sliderTo
-                }
             }
         }
     }

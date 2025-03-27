@@ -27,56 +27,38 @@ ApplicationWindow {
         property alias fontFamily: window.font.family
     }
 
+
     TextToSpeech {
         id: textToSpeechId
         volume: 0.8
         pitch: 0
         rate: 0
 
-        onStateChanged: (state) => {
+        property int messageId: -1
+
+        onStateChanged: function(state) { updateStateLabel(state); }
+
+        function updateStateLabel(state)
+        {
             switch (state) {
                 case TextToSpeech.Ready:
-                    console.log("TTS Ready")
+                    console.log("Ready")
                     break
                 case TextToSpeech.Speaking:
-                    console.log("TTS Speaking")
+                    console.log("Speaking")
                     break
                 case TextToSpeech.Paused:
-                    console.log("TTS Paused")
+                    console.log("Paused...")
                     break
                 case TextToSpeech.Error:
-                    console.log("TTS Error!")
+                    console.log("Error!")
                     break
             }
-        }
-
-
-        // onStateChanged: updateStateLabel(state)
-
-        // function updateStateLabel(state)
-        // {
-        //     switch (state) {
-        //         case TextToSpeech.Ready:
-        //             statusLabel.text = qsTr("Ready")
-        //             break
-        //         case TextToSpeech.Speaking:
-        //             statusLabel.text = qsTr("Speaking")
-        //             break
-        //         case TextToSpeech.Paused:
-        //             statusLabel.text = qsTr("Paused...")
-        //             break
-        //         case TextToSpeech.Error:
-        //             statusLabel.text = qsTr("Error!")
-        //             break
-        //     }
-        // }
-        onSayingWord: (word, id, start, length)=> {
-            input.select(start, start + length)
         }
     }
 
     visible: true
-    title: qsTr("Phoenix")    
+    title: qsTr("Phoenix")
 
     function isDesktopSize(){
         if(width<550)
@@ -119,53 +101,4 @@ ApplicationWindow {
         color: Style.Colors.boxBorder
         anchors.top: parent.top
     }
-
-    // footer: Label {
-    //     id: statusLabel
-    // }
-
-    // Component.onCompleted: {
-    //     // enginesComboBox.currentIndex = tts.availableEngines().indexOf(tts.engine)
-    //     // some engines initialize asynchronously
-    //     if (textToSpeechId.state === TextToSpeech.Ready) {
-    //         // engineReady()
-    //     } else {
-    //         textToSpeechId.stateChanged.connect(root.engineReady)
-    //     }
-
-    //     textToSpeechId.updateStateLabel(textToSpeechId.state)
-    // }
-
-    // function engineReady() {
-    //     tts.stateChanged.disconnect(root.engineReady)
-    //     if (tts.state !== TextToSpeech.Ready) {
-    //         tts.updateStateLabel(tts.state)
-    //         return;
-    //     }
-    //     updateLocales()
-    //     updateVoices()
-    // }
-
-    // function updateLocales() {
-    //     let allLocales = tts.availableLocales().map((locale) => locale.nativeLanguageName)
-    //     let currentLocaleIndex = allLocales.indexOf(tts.locale.nativeLanguageName)
-    //     localesComboBox.model = allLocales
-    //     localesComboBox.currentIndex = currentLocaleIndex
-    // }
-
-    // function updateVoices() {
-    //     voicesComboBox.model = tts.availableVoices().map((voice) => voice.name)
-    //     let indexOfVoice = tts.availableVoices().indexOf(tts.voice)
-    //     voicesComboBox.currentIndex = indexOfVoice
-    // }
-
-    Component.onCompleted: {
-        let voices = textToSpeechId.availableVoices()
-        if (voices.length === 0) {
-            console.log("Error: No available voices in Component.onCompleted!")
-        } else {
-            console.log("Available voices:", voices)
-        }
-    }
-
 }

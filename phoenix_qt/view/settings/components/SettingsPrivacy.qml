@@ -7,7 +7,7 @@ Item {
     anchors.fill: parent
     ScrollView {
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.rightMargin: 10
         TextArea{
             id: textId
             text:"# Privacy Policy:
@@ -500,7 +500,7 @@ If you have any questions about this Privacy Policy, You can contact us
 at support: <support@nerdstudio.ai>
 
 "
-            color: Style.Colors.textTitle
+            color: Style.Colors.textInformation
             anchors.fill: parent
             anchors.margins: 10
             selectionColor: "blue"
@@ -509,6 +509,7 @@ at support: <support@nerdstudio.ai>
             width: parent.width
             focus: false
             readOnly: true
+            horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.MarkdownText
             onLinkActivated: function(link) {

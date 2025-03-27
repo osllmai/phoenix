@@ -7,7 +7,7 @@ Item {
     anchors.fill: parent
     ScrollView {
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.rightMargin: 10
         TextArea{
             id: textId
             text:"# Nerd Studio AI
@@ -67,7 +67,7 @@ Feel free to reach out if you need any help or have any questions:
 
 **Email:** Support@nerdstudio.ai
 "
-            color: Style.Colors.textTitle
+            color: Style.Colors.textInformation
             anchors.fill: parent
             anchors.margins: 10
             selectionColor: "blue"
@@ -76,6 +76,7 @@ Feel free to reach out if you need any help or have any questions:
             width: parent.width
             focus: false
             readOnly: true
+            horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.MarkdownText
             onLinkActivated: function(link) {

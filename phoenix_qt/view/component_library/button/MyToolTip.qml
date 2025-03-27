@@ -7,7 +7,7 @@ ToolTip {
     id: toolTip
     visible: infoMouseArea.containsMouse
     width: 400
-    delay: 500
+    delay: 2000
     timeout: 5000
 
     property string toolTipText

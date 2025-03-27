@@ -7,7 +7,7 @@ Item {
     anchors.fill: parent
     ScrollView {
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.rightMargin: 10
         TextArea{
             id: textId
             text:"# Terms of Use:
@@ -893,7 +893,7 @@ using the Service and website.
 - **Email**: [support@nerdstudio.ai](mailto:support@nerdstudio.ai)
 
 "
-            color: Style.Colors.textTitle
+            color: Style.Colors.textInformation
             anchors.fill: parent
             anchors.margins: 10
             selectionColor: "blue"
@@ -902,6 +902,7 @@ using the Service and website.
             width: parent.width
             focus: false
             readOnly: true
+            horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.MarkdownText
             onLinkActivated: function(link) {

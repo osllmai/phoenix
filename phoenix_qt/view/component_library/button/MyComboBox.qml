@@ -40,9 +40,9 @@ ComboBox {
 
     delegate: ItemDelegate {
         function selectColor(){
-            if(comboBoxId.displayText === modelData){
-                return /*Style.Colors.boxChecked*/ "red"
-            }else if(comboBoxId.highlightedIndex === index){
+           /* if(comboBoxId.displayText === modelData){
+                return Style.Colors.boxChecked
+            }else */if(comboBoxId.highlightedIndex === index){
                 return Style.Colors.boxHover
             }else{
                 return "#00ffffff"
