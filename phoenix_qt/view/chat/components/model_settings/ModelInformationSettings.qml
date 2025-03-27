@@ -25,48 +25,35 @@ Item {
 
         Rectangle {
             id: promptTemplateBox
-            height: 80
-            color: "white"
+            height: 80; width: parent.width
+            color: Style.Colors.boxHover
             radius: 12
-            width: parent.width
-
             ScrollView {
                 id: scrollPromptTemplate
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
-                anchors.topMargin: 5
-                anchors.bottomMargin: 5
-
+                anchors.fill:parent; anchors.margins: 10
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
                 TextArea {
                     id: promptTemplateTextBox
                     text: control.existConversation? conversationList.currentConversation.id: ""
-                    height: scrollPromptTemplate.height
                     visible: true
-                    color: Style.Colors.textTitle
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.leftMargin: 0
-                    anchors.rightMargin: 0
+                    color: Style.Colors.textInformation
                     wrapMode: Text.WordWrap
                     placeholderText: qsTr("Eg. You are a helpful assistant")
-                    clip: false
+                    clip: true
                     font.pointSize: 10
                     hoverEnabled: true
                     tabStopDistance: 80
-                    selectionColor: Style.Colors.textTitle
-                    cursorVisible: false
+                    selectionColor: "white"
                     persistentSelection: true
-                    placeholderTextColor: Style.Colors.textTitle
+                    placeholderTextColor: Style.Colors.textInformation
+                    background: null
                     onHeightChanged: {
                         if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
                             promptTemplateBox.height += 10;
                         }
                     }
-                    background: null
                 }
             }
         }
