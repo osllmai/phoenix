@@ -12,6 +12,12 @@ Item {
         anchors.fill: parent
         cacheBuffer: Math.max(0, listView.contentHeight)
 
+        interactive: contentHeight > height
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        flickDeceleration: 500
+        maximumFlickVelocity: 6000
+
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
