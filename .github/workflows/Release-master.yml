@@ -91,7 +91,7 @@ jobs:
           
           # Create release with commit message
           gh release create "$NEW_TAG" \
-            --title "Release $NEW_TAG" \
+            --title "$NEW_TAG" \
             --notes "$COMMIT_MSG"
 
 
