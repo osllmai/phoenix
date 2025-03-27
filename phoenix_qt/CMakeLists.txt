@@ -140,6 +140,14 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/image.svg
         media/icon/imageEditor.svg
         media/icon/rewrite.svg
+        media/icon/themeDark.png
+        media/icon/themeDefualt.png
+        media/icon/themeLight.png
+        media/icon/rewrite.svg
+        media/icon/colorPalette.svg
+        media/icon/colorPaletteFill.svg
+        media/icon/privacy.svg
+        media/icon/privacyFill.svg
         media/image_company/user.svg
 
         media/image_company/Phoenix.png
@@ -255,6 +263,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         QML_FILES view/settings/components/SettingsPrivacy.qml
         QML_FILES view/settings/components/SettingsMenuButton.qml
         QML_FILES view/settings/components/SettingsSlider.qml
+        QML_FILES view/settings/components/ThemeOption.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

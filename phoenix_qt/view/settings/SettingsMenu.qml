@@ -43,8 +43,8 @@ Item{
             id: themeItemMenu
             myText: "Theme"
             myToolTipText: "Theme"
-            myIcon: "qrc:/media/icon/home.svg"
-            myFillIcon: "qrc:/media/icon/homeFill.svg"
+            myIcon: "qrc:/media/icon/colorPalette.svg"
+            myFillIcon: "qrc:/media/icon/colorPaletteFill.svg"
             checked: true
             autoExclusive: true
             numberPage:0
@@ -95,8 +95,8 @@ Item{
             id: privacyItemMenu
             myText: "Privacy"
             myToolTipText: "Privacy"
-            myIcon: "qrc:/media/icon/model.svg"
-            myFillIcon: "qrc:/media/icon/modelFill.svg"
+            myIcon: "qrc:/media/icon/privacy.svg"
+            myFillIcon: "qrc:/media/icon/privacyFill.svg"
             autoExclusive: true
             numberPage:3
 

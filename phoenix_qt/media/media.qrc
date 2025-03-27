@@ -73,5 +73,12 @@
         <file>icon/copyFill.svg</file>
         <file>icon/copySuccess.svg</file>
         <file>icon/copySuccessFill.svg</file>
+        <file>icon/themeDark.png</file>
+        <file>icon/themeDefualt.png</file>
+        <file>icon/themeLight.png</file>
+        <file>icon/colorPalette.svg</file>
+        <file>icon/colorPaletteFill.svg</file>
+        <file>icon/privacy.svg</file>
+        <file>icon/privacyFill.svg</file>
     </qresource>
 </RCC>
