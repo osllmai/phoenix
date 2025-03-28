@@ -38,17 +38,13 @@ jobs:
       - name: Fetch Latest Tag and Determine Next Version
         id: versioning
         run: |
-          # Fetch all tags
           git fetch --tags
 
-          # Get latest tag for the current branch (Master or Development)
           LATEST_TAG=$(git tag -l "v*-${LABEL}" --sort=-v:refname | head -n 1 | tr -d '\r')
 
-          # If no tags exist, start with v0.1.0-Master or v0.1.0-Dev
           if [[ -z "$LATEST_TAG" ]]; then
             NEW_TAG="v0.1.0-${LABEL}"
           else
-            # Extract version numbers from LATEST_TAG
             if [[ "$LATEST_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-${LABEL}$ ]]; then
               MAJOR="${BASH_REMATCH[1]}"
               MINOR="${BASH_REMATCH[2]}"
@@ -58,15 +54,10 @@ jobs:
               exit 1
             fi
 
-            # Increment patch version (e.g., v0.1.0-Master → v0.1.1-Master)
             PATCH=$((PATCH + 1))
             NEW_TAG="v$MAJOR.$MINOR.$PATCH-${LABEL}"
           fi
 
-          echo "LATEST_TAG=$LATEST_TAG"
-          echo "NEW_TAG=$NEW_TAG"
-
-          # Store variables in GitHub Actions environment
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
@@ -113,9 +104,8 @@ jobs:
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: ${{ env.MESSAGE }}
         run: |
           gh release create "$NEW_TAG" \
             --title "$NEW_TAG" \
-            --notes "$COMMIT_MSG"
-
-          echo -e "${MESSAGE}"
+            --notes "$MESSAGE"
