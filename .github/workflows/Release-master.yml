@@ -84,28 +84,40 @@ jobs:
           TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
           EVENT_TYPE=${{ github.event_name }}
           COMMIT_MSG=$(git log -1 --pretty=%B)
+          WORKFLOW_NAME="${{ github.workflow }}"
+          STATUS="${{ job.status }}"
 
-          # Get list of changed files in this commit
+          # Changed files
           CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH | sed 's/^/- /')
           FILE_COUNT=$(echo "$CHANGED_FILES" | grep -c '^' || true)
 
-          MESSAGE="🚀 New Deployment in the 🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH) Initiated!\\n\\n"
-          MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
-          MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n\\n"
-          MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n\\n"
-          MESSAGE+="👤 Triggered by: **$ACTOR**\\n\\n"
-          MESSAGE+="📅 Timestamp: $TIMESTAMP\\n\\n"
-          MESSAGE+="📢 Event Type: $EVENT_TYPE\\n\\n"
-          MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n\\n"
-          MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
-          MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n\\n"
+          # Pull request number (if any)
+          PR_LINE=""
+          if [[ "$EVENT_TYPE" == "pull_request" ]]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            PR_LINE="📬 Pull Request: [#${PR_NUMBER}](https://github.com/${REPO}/pull/${PR_NUMBER})\\n\\n"
+          fi
+
+          # Build final Markdown message
+          MESSAGE="## 🚀 New Deployment to [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
+          MESSAGE+="**📦 Deploy Number:** $DEPLOY_NUMBER\\n\\n"
+          MESSAGE+="**🧪 Workflow:** $WORKFLOW_NAME\\n\\n"
+          MESSAGE+="$PR_LINE"
+          MESSAGE+="**🔗 [View Workflow Run]($GITHUB_RUN_URL)**\\n\\n"
+          MESSAGE+="**🔄 Commit:** [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n\\n"
+          MESSAGE+="**👤 Triggered by:** $ACTOR\\n\\n"
+          MESSAGE+="**📅 Timestamp:** $TIMESTAMP\\n\\n"
+          MESSAGE+="**📢 Event Type:** $EVENT_TYPE\\n\\n"
+          MESSAGE+="**📂 Repository:** [$REPO](https://github.com/$REPO)\\n\\n"
+          MESSAGE+="**💬 Commit Message:** _${COMMIT_MSG}_\\n\\n"
 
           if [ "$FILE_COUNT" -gt "0" ]; then
-            MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n\\n"
+            MESSAGE+="## 📑 Files Changed ($FILE_COUNT)\\n\\n"
             MESSAGE+="$CHANGED_FILES\\n\\n"
           fi
 
-          MESSAGE+="🔄 Status: IN_PROGRESS\\n\\n"
+          MESSAGE+="## 📍 Status\\n\\n"
+          MESSAGE+="**$STATUS**\\n\\n"
 
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo -e "$MESSAGE" >> $GITHUB_ENV
