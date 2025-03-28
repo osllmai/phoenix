@@ -13,9 +13,9 @@ ApplicationWindow {
     property string theme: "Light"
     onThemeChanged: {
         console.log(theme)
-        if((window.theme === "Dark") || (window.theme === "Light"))
+        if ((window.theme === "Dark") || (window.theme === "Light"))
             Style.Colors.theme = window.theme
-        else if(isDarkTheme)
+        else if (isDarkTheme)
             Style.Colors.theme = "Dark"
         else
             Style.Colors.theme = "Light"
@@ -23,36 +23,33 @@ ApplicationWindow {
 
     font.family: "Constantia"
 
-    property double speechVolume: 0.8
-    property double speechPitch: 0
-    property double speechRate: 0
-
-    Settings{
+    Settings {
+        id: appSettings
         category: "window"
+
         property alias x: window.x
         property alias y: window.y
         property alias width: window.width
         property alias height: window.height
         property alias theme: window.theme
         property alias fontFamily: window.font.family
-        property alias speechVolume: window.speechVolume
-        property alias speechPitch: window.speechPitch
-        property alias speechRate: window.speechRate
-    }
 
+        property real speechVolume: value("speechVolume", 0.8)
+        property real speechPitch: value("speechPitch", 0.0)
+        property real speechRate: value("speechRate", 0.0)
+    }
 
     TextToSpeech {
         id: textToSpeechId
-        volume: 0.8
-        pitch: 0
-        rate: 0
+        volume: appSettings.speechVolume
+        pitch: appSettings.speechPitch
+        rate: appSettings.speechRate
 
         property int messageId: -1
 
-        onStateChanged: function(state) { updateStateLabel(state); }
+        onStateChanged: function (state) { updateStateLabel(state); }
 
-        function updateStateLabel(state)
-        {
+        function updateStateLabel(state) {
             switch (state) {
                 case TextToSpeech.Ready:
                     console.log("Ready")
@@ -73,44 +70,41 @@ ApplicationWindow {
     visible: true
     title: qsTr("Phoenix")
 
-    function isDesktopSize(){
-        if(width<550)
-            return false;
-        return true;
+    function isDesktopSize() {
+        return width >= 550;
     }
 
-    Item{
-        anchors.fill:parent
+    Item {
+        anchors.fill: parent
         anchors.margins: 0
-        AppMenu{
-            id:appMenuDesktopId
+
+        AppMenu {
+            id: appMenuDesktopId
             visible: window.isDesktopSize()
-            clip:true
-            Behavior on width {
-                NumberAnimation {
-                    duration: 500
-                    easing.type: Easing.InOutQuad
-                }
-            }
+            clip: true
         }
-        Column{
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: window.isDesktopSize()? appMenuDesktopId.right: parent.left
-            anchors.right: parent.right
-            AppBody{
-                id:appBodyId
-                width: parent.width; height: parent.height -appFooter.height
-                clip:true
+
+        Column {
+            anchors.fill: parent
+            anchors.leftMargin: window.isDesktopSize() ? appMenuDesktopId.width : 0
+
+            AppBody {
+                id: appBodyId
+                width: parent.width
+                height: parent.height - appFooter.height
+                clip: true
             }
-            AppFooter{
+
+            AppFooter {
                 id: appFooter
             }
         }
     }
-    Rectangle{
-        id:line
-        width: parent.width; height: 1
+
+    Rectangle {
+        id: line
+        width: parent.width
+        height: 1
         color: Style.Colors.boxBorder
         anchors.top: parent.top
     }
