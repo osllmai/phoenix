@@ -8,6 +8,10 @@ Item{
     width: parent.width; height: 80
     signal openModelSettingsDrawer()
     signal openHistoryDrawer()
+    function openModelComboBox(){
+        currentModelComboBoxId.popup.open();
+    }
+
     clip: true
 
     Row{

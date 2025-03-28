@@ -57,7 +57,8 @@ Rectangle{
                     event.accepted = false;
                   }else {
                         sendPrompt(inputTextBox.text)
-                        inputTextBox.text = ""
+                        if(conversationList.modelSelect)
+                              inputTextBox.text = ""
                   }
                 }
 
@@ -79,7 +80,8 @@ Rectangle{
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 sendPrompt(inputTextBox.text)
-                inputTextBox.text = ""
+                if(conversationList.modelSelect)
+                      inputTextBox.text = ""
             }
         }
     }
