@@ -54,6 +54,11 @@ Item {
                             promptTemplateBox.height += 10;
                         }
                     }
+                    onTextChanged: {
+                        if(control.existConversation){
+                            conversationList.currentConversation.modelSettings.promptTemplate = promptTemplateTextBox.text
+                        }
+                    }
                 }
             }
         }

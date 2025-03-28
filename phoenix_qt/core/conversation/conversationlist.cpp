@@ -178,21 +178,11 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                        const int &contextLength, const int &numberOfGPULayers, const bool selectConversation) {
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
-    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned, this);
-
-    conversation->modelSettings()->setStream(stream);
-    conversation->modelSettings()->setPromptTemplate(promptTemplate);
-    conversation->modelSettings()->setSystemPrompt(systemPrompt);
-    conversation->modelSettings()->setTemperature(temperature);
-    conversation->modelSettings()->setTopK(topK);
-    conversation->modelSettings()->setTopP(topP);
-    conversation->modelSettings()->setMinP(minP);
-    conversation->modelSettings()->setRepeatPenalty(repeatPenalty);
-    conversation->modelSettings()->setPromptBatchSize(promptBatchSize);
-    conversation->modelSettings()->setMaxTokens(maxTokens);
-    conversation->modelSettings()->setRepeatPenaltyTokens(repeatPenaltyTokens);
-    conversation->modelSettings()->setContextLength(contextLength);
-    conversation->modelSettings()->setNumberOfGPULayers(numberOfGPULayers);
+    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned,
+                                                  stream, promptTemplate, systemPrompt,
+                                                  temperature, topK, topP, minP, repeatPenalty,
+                                                  promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                                  contextLength, numberOfGPULayers, this);
 
     m_conversations.append(conversation);
     connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);

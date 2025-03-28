@@ -28,6 +28,7 @@ Item {
         MySwitch{
             id:switchId
             checked: root.myValue
+            onCheckedChanged: myValue = checked
         }
     }
 }

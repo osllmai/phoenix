@@ -1,6 +1,26 @@
 #include "modelsettings.h"
 
 ModelSettings::ModelSettings(const int &id, QObject *parent ):QObject(parent), m_id(id){}
+ModelSettings::ModelSettings(const int &id, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                             const int &contextLength, const int &numberOfGPULayers, QObject *parent)
+    : QObject(parent),
+    m_id(id),
+    m_stream(stream),
+    m_promptTemplate(promptTemplate),
+    m_systemPrompt(systemPrompt),
+    m_temperature(temperature),
+    m_topK(topK),
+    m_topP(topP),
+    m_minP(minP),
+    m_repeatPenalty(repeatPenalty),
+    m_promptBatchSize(promptBatchSize),
+    m_maxTokens(maxTokens),
+    m_repeatPenaltyTokens(repeatPenaltyTokens),
+    m_contextLength(contextLength),
+    m_numberOfGPULayers(numberOfGPULayers)
+{}
 
 ModelSettings::~ModelSettings(){}
 

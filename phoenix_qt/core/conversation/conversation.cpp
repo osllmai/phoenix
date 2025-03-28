@@ -10,9 +10,77 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_loadModelInProgress(false), m_responseInProgress(false),
     m_model(new Model(this)), m_modelSettings(new ModelSettings(id,this)),m_messageList(new MessageList(this)),
     m_responseList(new ResponseList(this)), m_provider(nullptr)
-{}
+{
+    connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::systemPromptChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::temperatureChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::topKChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::topPChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::minPChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::repeatPenaltyChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::promptBatchSizeChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::maxTokensChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::repeatPenaltyTokensChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::contextLengthChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+}
 
-Conversation::~Conversation() {}
+Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
+                           const QDateTime &date, const bool isPinned,
+                           const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                           const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                           const int &contextLength, const int &numberOfGPULayers , QObject *parent)
+    : QObject(parent),
+    m_id(id),
+    m_title(title),
+    m_description(description),
+    m_icon(icon),
+    m_date(date),
+    m_isPinned(isPinned),
+    m_isLoadModel(false),
+    m_loadModelInProgress(false),
+    m_responseInProgress(false),
+    m_model(new Model(this)),
+    m_modelSettings(new ModelSettings(id, stream, promptTemplate, systemPrompt,
+                                      temperature, topK, topP, minP, repeatPenalty,
+                                      promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                      contextLength, numberOfGPULayers, this)),
+    m_messageList(new MessageList(this)),
+    m_responseList(new ResponseList(this)),
+    m_provider(nullptr)
+{
+    connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::systemPromptChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::temperatureChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::topKChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::topPChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::minPChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::repeatPenaltyChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::promptBatchSizeChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::maxTokensChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::repeatPenaltyTokensChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::contextLengthChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
+}
+
+Conversation::~Conversation() {
+    disconnect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::systemPromptChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::temperatureChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::topKChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::topPChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::minPChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::repeatPenaltyChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::promptBatchSizeChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::maxTokensChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::repeatPenaltyTokensChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::contextLengthChanged, this, &Conversation::updateModelSettingsConversation);
+    disconnect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation);
+}
 
 const int Conversation::id() const {return m_id;}
 
@@ -117,7 +185,7 @@ void Conversation::prompt(const QString &input, const int idModel){
                 disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
 
                 //disconnect prompt
-                connect(this, &Conversation::requestPrompt, m_provider, &Provider::prompt);
+                disconnect(this, &Conversation::requestPrompt, m_provider, &Provider::prompt);
                 disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
 
                 //disconnect finished response
@@ -183,3 +251,12 @@ void Conversation::finishedResponse(const QString &warning){
 
 }
 
+void Conversation::updateModelSettingsConversation(){
+    emit requestUpdateModelSettingsConversation(m_modelSettings->id(), m_modelSettings->stream(),
+                                                m_modelSettings->promptTemplate(), m_modelSettings->systemPrompt(),
+                                                m_modelSettings->temperature(), m_modelSettings->topK(),
+                                                m_modelSettings->topP(), m_modelSettings->minP(),
+                                                m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
+                                                m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
+                                                m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}

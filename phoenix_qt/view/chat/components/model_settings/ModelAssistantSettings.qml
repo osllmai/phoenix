@@ -42,6 +42,11 @@ Item {
                          instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
                      }
                  }
+                 onTextChanged: {
+                     if(control.existConversation){
+                         conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text
+                     }
+                 }
              }
          }
      }

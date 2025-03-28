@@ -22,6 +22,10 @@ Item {
             sliderFrom: 120
             sliderTo:4096
             sliderStepSize:1
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.contextLength = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:numberOfGPUId
@@ -31,6 +35,10 @@ Item {
             sliderFrom: 62
             sliderTo: 100
             sliderStepSize:1
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.numberOfGPULayers = sliderValue;
+            }
         }
     }
 }

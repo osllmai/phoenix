@@ -21,6 +21,10 @@ Item {
             id:streamId
             myTextName: "Stream"
             myValue: control.existConversation? conversationList.currentConversation.modelSettings.stream: true
+            onMyValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.stream = myValue;
+            }
         }
         ModelSettingsSlider{
             id:temperatureId
@@ -31,6 +35,10 @@ Item {
             sliderTo:2.0
             sliderStepSize:0.01
             decimalPart: 2
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.temperature = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:topPId
@@ -41,6 +49,10 @@ Item {
             sliderTo:1.0
             sliderStepSize:0.01
             decimalPart: 2
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.topP = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:maxTokensId
@@ -50,6 +62,10 @@ Item {
             sliderFrom: 100
             sliderTo: 4096
             sliderStepSize:1
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.maxTokens = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:promptBatchSizeId
@@ -59,6 +75,10 @@ Item {
             sliderFrom: 1
             sliderTo: 128
             sliderStepSize:1
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.promptBatchSize = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:minPId
@@ -69,6 +89,10 @@ Item {
             sliderTo: 1.0
             sliderStepSize:0.01
             decimalPart: 2
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.minP = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:topKId
@@ -78,6 +102,10 @@ Item {
             sliderFrom: 1
             sliderTo: 1000
             sliderStepSize:1
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.topK = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:repeatPenaltyTokensId
@@ -88,6 +116,10 @@ Item {
             sliderTo: 1
             sliderStepSize:0.01
             decimalPart: 2
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.repeatPenaltyTokens = sliderValue;
+            }
         }
         ModelSettingsSlider{
             id:repeatPenaltyId
@@ -98,6 +130,10 @@ Item {
             sliderTo: 2.0
             sliderStepSize:0.01
             decimalPart: 2
+            onSliderValueChanged: {
+                if(control.existConversation)
+                    conversationList.currentConversation.modelSettings.repeatPenalty = sliderValue;
+            }
         }
     }
 }

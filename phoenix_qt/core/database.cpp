@@ -226,6 +226,8 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
                                                     const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
+    qInfo()<<stream<<temperature;
+
     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
         return;
     query.addBindValue(stream);

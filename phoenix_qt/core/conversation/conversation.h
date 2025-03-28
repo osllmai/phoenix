@@ -36,6 +36,12 @@ public:
         m_responseList(new ResponseList(this))  {}
     explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+                          const QDateTime &date, const bool isPinned,
+                          const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                          const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                          const int &contextLength, const int &numberOfGPULayers, QObject *parent = nullptr);
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
@@ -85,6 +91,7 @@ public slots:
     void loadModelResult(const bool result, const QString &warning);
     void tokenResponse(const QString &token);
     void finishedResponse(const QString &warning);
+    void updateModelSettingsConversation();
 
 signals:
     void titleChanged();

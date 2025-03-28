@@ -52,6 +52,7 @@ Item {
                     from: root.sliderFrom
                     to: root.sliderTo
                     stepSize: root.sliderStepSize
+                    onValueChanged: sliderValue = value
                 }
 
                 Label {
