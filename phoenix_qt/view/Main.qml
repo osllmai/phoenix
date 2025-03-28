@@ -7,7 +7,7 @@ import './component_library/style' as Style
 ApplicationWindow {
     id: window
     width: 1700; height: 900
-    minimumWidth: 400; minimumHeight: 400
+    minimumWidth: 1400; minimumHeight: 800
     color: Style.Colors.background
 
     property string theme: "Light"

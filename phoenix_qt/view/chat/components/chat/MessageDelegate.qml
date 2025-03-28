@@ -149,12 +149,19 @@ T.Button {
                                     textToSpeechId.pause()
                                 } else {
                                     textToSpeechId.pause()
-                                    successTimer.start()
+                                    speakerTimer.start()
                                 }
                             }
                         }
                         Timer {
                             id: successTimer
+                            interval: 1000
+                            repeat: false
+                            onTriggered: dateAndIconId.checkCopy = false
+                        }
+
+                        Timer {
+                            id: speakerTimer
                             interval: 1000
                             repeat: false
                             onTriggered: speakerId.clicked()
