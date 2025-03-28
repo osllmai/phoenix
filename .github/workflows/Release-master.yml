@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # Ensures GitHub Actions can push tags and create releases
+  contents: write
 
 jobs:
   tag_and_release:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch full history to get all tags
+          fetch-depth: 0
 
       - name: Determine Branch and Set Label
         id: branch_label
@@ -32,7 +32,6 @@ jobs:
             exit 1
           fi
 
-          echo "LABEL=$LABEL"
           echo "LABEL=$LABEL" >> $GITHUB_ENV
 
       - name: Fetch Latest Tag and Determine Next Version
@@ -86,6 +85,10 @@ jobs:
           EVENT_TYPE=${{ github.event_name }}
           COMMIT_MSG=$(git log -1 --pretty=%B)
 
+          # Get list of changed files in this commit
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r $COMMIT_HASH | sed 's/^/- /')
+          FILE_COUNT=$(echo "$CHANGED_FILES" | grep -c '^' || true)
+
           MESSAGE="🚀 New Deployment in the 🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH) Initiated!\\n\\n"
           MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
           MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n\\n"
@@ -97,21 +100,17 @@ jobs:
           MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
           MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n\\n"
 
-
-
-          
           if [ "$FILE_COUNT" -gt "0" ]; then
             MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n\\n"
             MESSAGE+="$CHANGED_FILES\\n\\n"
           fi
 
           MESSAGE+="🔄 Status: IN_PROGRESS\\n\\n"
-          
+
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo -e "$MESSAGE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,6 +119,7 @@ jobs:
           gh release create "$NEW_TAG" \
             --title "$NEW_TAG" \
             --notes "$MESSAGE"
+
 
       - name: Send GitHub Event Notification to Microsoft Teams
         env:
