@@ -82,16 +82,40 @@ jobs:
           git tag "$NEW_TAG"
           git push origin "$NEW_TAG"
 
+      - name: Prepare Deployment Message
+        id: prepare_message
+        run: |
+          BRANCH=${{ github.ref_name }}
+          REPO=${{ github.repository }}
+          DEPLOY_NUMBER=${{ github.run_number }}
+          GITHUB_RUN_URL="https://github.com/${REPO}/actions/runs/${{ github.run_id }}"
+          COMMIT_HASH=${{ github.sha }}
+          ACTOR=${{ github.actor }}
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          EVENT_TYPE=${{ github.event_name }}
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+
+          MESSAGE="🚀 New Deployment in the 🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH) Initiated!\\n\\n"
+          MESSAGE+="📦 Deploy: $DEPLOY_NUMBER\\n\\n"
+          MESSAGE+="🔗 [View Workflow Run]($GITHUB_RUN_URL)\\n\\n"
+          MESSAGE+="🔄 Commit: [$COMMIT_HASH](https://github.com/$REPO/commit/$COMMIT_HASH)\\n\\n"
+          MESSAGE+="👤 Triggered by: **$ACTOR**\\n\\n"
+          MESSAGE+="📅 Timestamp: $TIMESTAMP\\n\\n"
+          MESSAGE+="📢 Event Type: $EVENT_TYPE\\n\\n"
+          MESSAGE+="📂 Repository: [$REPO](https://github.com/$REPO)\\n\\n"
+          MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
+          MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n\\n"
+
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo -e "$MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the latest commit message
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          
-          # Create release with commit message
           gh release create "$NEW_TAG" \
             --title "$NEW_TAG" \
             --notes "$COMMIT_MSG"
 
-
+          echo -e "${MESSAGE}"
