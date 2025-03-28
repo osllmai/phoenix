@@ -97,10 +97,21 @@ jobs:
           MESSAGE+="🌿 Branch: [$BRANCH](https://github.com/$REPO/tree/$BRANCH)\\n\\n"
           MESSAGE+="💬 Commit Message: _${COMMIT_MSG}_\\n\\n"
 
+
+
+          
+          if [ "$FILE_COUNT" -gt "0" ]; then
+            MESSAGE+="📑 Files Changed ($FILE_COUNT):\\n\\n"
+            MESSAGE+="$CHANGED_FILES\\n\\n"
+          fi
+
+          MESSAGE+="🔄 Status: IN_PROGRESS\\n\\n"
+          
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo -e "$MESSAGE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+          
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,3 +120,10 @@ jobs:
           gh release create "$NEW_TAG" \
             --title "$NEW_TAG" \
             --notes "$MESSAGE"
+
+      - name: Send GitHub Event Notification to Microsoft Teams
+        env:
+          WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_MASTER_URL }}
+        run: |
+              curl -H "Content-Type: application/json" -X POST -d \
+              "{\"text\": \"${MESSAGE}\"}" "${WEBHOOK_URL}"
