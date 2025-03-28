@@ -6,7 +6,7 @@ import '../../component_library/style' as Style
 Item {
     Column {
         anchors.fill: parent
-        anchors.topMargin: 60
+        anchors.topMargin: 10
         anchors.leftMargin: 20
         spacing: 20
 
@@ -46,11 +46,14 @@ Item {
                 ThemeOption {
                     id: defaultModeId
                     myIcon: "qrc:/media/icon/themeDefualt.png"
-                    checked: true
+                    checked: window.theme === "Defualt"
+                    myText:"Auto"
                     autoExclusive: true
                     Connections {
                         target: defaultModeId
                         function onClicked(){
+                            window.theme = "Defualt"
+                            console.log(window.theme)
                         }
                     }
                 }
@@ -58,11 +61,14 @@ Item {
                 ThemeOption {
                     id: lightModeId
                     myIcon: "qrc:/media/icon/themeLight.png"
-                    checked: false
+                    checked: window.theme === "Light"
                     autoExclusive: true
+                    myText: "Light"
                     Connections {
                         target: lightModeId
                         function onClicked(){
+                            window.theme = "Light"
+                            console.log(window.theme)
                         }
                     }
                 }
@@ -70,11 +76,14 @@ Item {
                 ThemeOption {
                     id: darkModeId
                     myIcon: "qrc:/media/icon/themeDark.png"
-                    checked: false
+                    checked: window.theme === "Dark"
+                    myText: "Dark"
                     autoExclusive: true
                     Connections {
                         target: darkModeId
                         function onClicked(){
+                            window.theme = "Dark"
+                            console.log(window.theme)
                         }
                     }
                 }

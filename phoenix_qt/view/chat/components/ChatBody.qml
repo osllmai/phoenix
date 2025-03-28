@@ -58,7 +58,7 @@ Item {
             width: parent.width
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
-            text: "Ask me anything! You can trust that our conversations are private, and your data is never shared for marketing."
+            text: "Ask me anything!"
             color: Style.Colors.textInformation
             font.pixelSize: 14
         }

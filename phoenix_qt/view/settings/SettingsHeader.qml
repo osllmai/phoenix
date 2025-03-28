@@ -2,21 +2,16 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../component_library/style' as Style
 
-Row{
+Item{
     id: titleBoxId
     height: 50
-    spacing: parent.width - titleId.width - closeBox.width
-    Label {
-        id: titleId
-        text: "Settings"
-        color: Style.Colors.textTitle
-        font.pixelSize: 20
-        font.styleName: "Bold"
-        anchors.verticalCenter: closeBox.verticalCenter
-    }
+    width: parent.width
+
     Item{
         id: closeBox
         width: 35; height: 35
+        anchors.right: parent.right; anchors.rightMargin: 10;
+        anchors.top: parent.top; anchors.topMargin: 10;
         ToolButton {
             id: searchIcon
             anchors.verticalCenter: parent.verticalCenter
@@ -27,7 +22,7 @@ Row{
             background: null
             icon{
                 source: "qrc:/media/icon/close.svg"
-                color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+                color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
                 width: searchIcon.width; height: searchIcon.height
             }
             MouseArea{

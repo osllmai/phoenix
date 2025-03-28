@@ -12,7 +12,7 @@ T.Button {
     signal editChatName(var chatName)
 
     onClicked: {
-        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon)
+        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
     }
 
     background: null

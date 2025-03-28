@@ -24,7 +24,7 @@ Item {
 
              TextArea {
                  id: instructionTextBox
-                 text: control.existConversation? conversationList.currentConversation.id: ""
+                 text: control.existConversation? conversationList.currentConversation.modelSettings.systemPrompt: ""
                  visible: true
                  color: Style.Colors.textInformation
                  wrapMode: Text.WordWrap

@@ -17,6 +17,7 @@ Item {
             Rectangle{
                 width: parent.width ; height: modelInferencesMenu.height + (modelInferencesBody.visible?(modelInferencesBody.height+10):0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
                 radius: 8
                 Column{
                     anchors.fill: parent
@@ -42,6 +43,7 @@ Item {
             Rectangle{
                 width: parent.width ; height: modelInformationMenu.height + (modelInformationBody.visible?(modelInformationBody.height+10):0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
                 radius: 8
                 Column{
                     anchors.fill: parent
@@ -67,6 +69,7 @@ Item {
             Rectangle{
                 width: parent.width ; height: modelEnginMenu.height + (modelEnginBody.visible?(modelEnginBody.height+10):0) +  20
                 border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
                 radius: 8
                 Column{
                     anchors.fill: parent
@@ -92,6 +95,7 @@ Item {
             Rectangle{
                 width: parent.width  ; height: assistantMenu.height + (assistantBody.visible?(assistantBody.height+10):0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
                 radius: 8
                 Column{
                     anchors.fill: parent

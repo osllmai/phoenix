@@ -8,7 +8,7 @@ Item {
     id: control
     Column {
         anchors.fill: parent
-        anchors.topMargin: 60
+        anchors.topMargin: 10
         anchors.leftMargin: 20
         spacing: 10
 
@@ -87,7 +87,7 @@ Item {
             id: volumeSlider
             myTextName: "Volume:"
             myTextToolTip: "Volume"
-            sliderValue: 0.8
+            sliderValue: window.speechVolume
             sliderFrom: 0.0
             sliderTo:1.0
             sliderStepSize: 0.2
@@ -98,7 +98,7 @@ Item {
             id: pitchSlider
             myTextName: "Pitch:"
             myTextToolTip: "Pitch"
-            sliderValue: 0
+            sliderValue: window.speechPitch
             sliderFrom: -1.0
             sliderTo:1.0
             sliderStepSize: 0.5
@@ -109,7 +109,7 @@ Item {
             id: rateSlider
             myTextName: "Rate:"
             myTextToolTip: "Rate"
-            sliderValue: 0
+            sliderValue: window.speechRate
             sliderFrom: -1.0
             sliderTo:1.0
             sliderStepSize: 0.5

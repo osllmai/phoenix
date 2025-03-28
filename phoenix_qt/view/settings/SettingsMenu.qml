@@ -76,7 +76,7 @@ Item{
 
         SettingsMenuButton {
             id: terms_of_UseItemMenu
-            myText: "Terms_of_Use"
+            myText: "Terms of Use"
             myToolTipText: "Terms_of_Use"
             myIcon: "qrc:/media/icon/model.svg"
             myFillIcon: "qrc:/media/icon/modelFill.svg"

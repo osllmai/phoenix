@@ -44,10 +44,14 @@ Dialog {
                 width: parent.width - settingsMenuId.width
                 height: parent.height
                 anchors.margins: 16
+
+                SettingsHeader{
+                    id:settingsHeaderId
+                }
                 SettingsBody{
                     id: settingsBodyId
                     width: parent.width
-                    height: parent.height
+                    height: parent.height - settingsHeaderId.height
                 }
             }
         }

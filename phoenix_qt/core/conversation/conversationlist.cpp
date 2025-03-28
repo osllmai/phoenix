@@ -124,9 +124,7 @@ void ConversationList::addRequest(const QString &firstPrompt){
     QString title = selectedWords.join(" ");
 
     emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
-                    "### Human:\n%1\n\n### Assistant:\n",
-                    "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                    0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
+                    m_modelPromptTemplate, m_modelSystemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -164,10 +162,12 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
 }
 
-void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon){
+void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
     setModelId(id);
     setModelText(text);
     setModelIcon(icon);
+    setModelPromptTemplate(promptTemplate);
+    setModelSystemPrompt(systemPrompt);
     setModelSelect(true);
 }
 
@@ -271,12 +271,12 @@ QVariant ConversationList::dateCalculation(const QDateTime date)const{
         return date.toString("MM/dd/yyyy");
 }
 
-bool ConversationList::modelSelect() const{return m_modelSelect;}
-void ConversationList::setModelSelect(bool newModelSelect){
-    if (m_modelSelect == newModelSelect)
+int ConversationList::modelId() const{return m_modelId;}
+void ConversationList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
         return;
-    m_modelSelect = newModelSelect;
-    emit modelSelectChanged();
+    m_modelId = newModelId;
+    emit modelIdChanged();
 }
 
 QString ConversationList::modelText() const{return m_modelText;}
@@ -295,12 +295,28 @@ void ConversationList::setModelIcon(const QString &newModelIcon){
     emit modelIconChanged();
 }
 
-int ConversationList::modelId() const{return m_modelId;}
-void ConversationList::setModelId(int newModelId){
-    if (m_modelId == newModelId)
+QString ConversationList::modelSystemPrompt() const{ return m_modelSystemPrompt; }
+void ConversationList::setModelSystemPrompt(const QString &newModelSystemPrompt){
+    if (m_modelSystemPrompt == newModelSystemPrompt)
         return;
-    m_modelId = newModelId;
-    emit modelIdChanged();
+    m_modelSystemPrompt = newModelSystemPrompt;
+    emit modelSystemPromptChanged();
+}
+
+QString ConversationList::modelPromptTemplate() const{ return m_modelPromptTemplate; }
+void ConversationList::setModelPromptTemplate(const QString &newModelPromptTemplate){
+    if (m_modelPromptTemplate == newModelPromptTemplate)
+        return;
+    m_modelPromptTemplate = newModelPromptTemplate;
+    emit modelPromptTemplateChanged();
+}
+
+bool ConversationList::modelSelect() const{return m_modelSelect;}
+void ConversationList::setModelSelect(bool newModelSelect){
+    if (m_modelSelect == newModelSelect)
+        return;
+    m_modelSelect = newModelSelect;
+    emit modelSelectChanged();
 }
 
 bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation;}

@@ -65,7 +65,7 @@ Dialog {
                         background: null
                         icon{
                             source: "qrc:/media/icon/close.svg"
-                            color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+                            color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
                             width: searchIcon.width; height: searchIcon.height
                         }
                         MouseArea{

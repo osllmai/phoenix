@@ -4,7 +4,6 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
-    anchors.fill: parent
     ScrollView {
         anchors.fill: parent
         anchors.rightMargin: 10
@@ -509,6 +508,7 @@ at support: <support@nerdstudio.ai>
             width: parent.width
             focus: false
             readOnly: true
+            clip: true
             horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.MarkdownText

@@ -4,7 +4,6 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
-    anchors.fill: parent
     ScrollView {
         anchors.fill: parent
         anchors.rightMargin: 10
@@ -75,6 +74,7 @@ Feel free to reach out if you need any help or have any questions:
             font.pixelSize: 14
             width: parent.width
             focus: false
+            clip: true
             readOnly: true
             horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap

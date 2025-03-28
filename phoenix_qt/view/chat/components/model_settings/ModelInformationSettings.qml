@@ -36,7 +36,7 @@ Item {
                 }
                 TextArea {
                     id: promptTemplateTextBox
-                    text: control.existConversation? conversationList.currentConversation.id: ""
+                    text: control.existConversation? conversationList.currentConversation.modelSettings.promptTemplate: ""
                     visible: true
                     color: Style.Colors.textInformation
                     wrapMode: Text.WordWrap

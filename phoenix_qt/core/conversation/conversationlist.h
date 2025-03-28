@@ -20,6 +20,8 @@ class ConversationList: public QAbstractListModel
     Q_PROPERTY(int modelId READ modelId WRITE setModelId NOTIFY modelIdChanged FINAL)
     Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
     Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(QString modelPromptTemplate READ modelPromptTemplate NOTIFY modelPromptTemplateChanged FINAL)
+    Q_PROPERTY(QString modelSystemPrompt READ modelSystemPrompt NOTIFY modelSystemPromptChanged FINAL)
     Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
 
 public:
@@ -53,7 +55,7 @@ public:
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
     Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
-    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon);
+    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
 
     Conversation *currentConversation();
     void setCurrentConversation(Conversation *newCurrentConversation);
@@ -75,6 +77,12 @@ public:
 
     bool modelSelect() const;
     void setModelSelect(bool newModelSelect);
+
+    QString modelPromptTemplate() const;
+    void setModelPromptTemplate(const QString &newModelPromptTemplate);
+
+    QString modelSystemPrompt() const;
+    void setModelSystemPrompt(const QString &newModelSystemPrompt);
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -123,6 +131,9 @@ signals:
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
 
+    void modelPromptTemplateChanged();
+    void modelSystemPromptChanged();
+
 private:
     explicit ConversationList(QObject* parent = nullptr);
     static ConversationList* m_instance;
@@ -138,6 +149,8 @@ private:
     int m_modelId;
     QString m_modelIcon;
     QString m_modelText;
+    QString m_modelPromptTemplate;
+    QString m_modelSystemPrompt;
     bool m_modelSelect;
 };
 

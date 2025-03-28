@@ -12,10 +12,20 @@ ApplicationWindow {
 
     property string theme: "Light"
     onThemeChanged: {
-        Style.Colors.theme = window.theme
+        console.log(theme)
+        if((window.theme === "Dark") || (window.theme === "Light"))
+            Style.Colors.theme = window.theme
+        else if(isDarkTheme)
+            Style.Colors.theme = "Dark"
+        else
+            Style.Colors.theme = "Light"
     }
 
-    font.family: "Times New Roman"
+    font.family: "Constantia"
+
+    property double speechVolume: 0.8
+    property double speechPitch: 0
+    property double speechRate: 0
 
     Settings{
         category: "window"
@@ -25,6 +35,9 @@ ApplicationWindow {
         property alias height: window.height
         property alias theme: window.theme
         property alias fontFamily: window.font.family
+        property alias speechVolume: window.speechVolume
+        property alias speechPitch: window.speechPitch
+        property alias speechRate: window.speechRate
     }
 
 

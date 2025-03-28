@@ -9,7 +9,7 @@ import '../../../component_library/button'
 T.Button {
     id: control
     height: textId.height + dateAndIconId.height  + 2
-    width: Math.min(700, parent.width - 48)
+    width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
     background: null
