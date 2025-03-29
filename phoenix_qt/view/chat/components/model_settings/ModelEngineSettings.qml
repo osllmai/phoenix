@@ -7,8 +7,10 @@ Item {
     width: parent.width
     height: contextLengthId.height + numberOfGPUId.height + 5
     property bool existConversation: !conversationList.isEmptyConversation
+
     property int contextLengthId: control.existConversation? conversationList.currentConversation.modelSettings.contextLength: 120
     property int numberOfGPULayers: control.existConversation? conversationList.currentConversation.modelSettings.numberOfGPULayers: 10
+
     property var conversation: control.existConversation? conversationList.currentConversation: null
     onConversationChanged: {
         contextLengthId.sliderValue = control.contextLengthId

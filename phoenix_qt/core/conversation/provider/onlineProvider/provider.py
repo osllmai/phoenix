@@ -84,10 +84,10 @@ class Provider:
         # Validate the model
         self._validate_model(self.provider, self.model_name)
 
-        if self.provider == "openai":
+        if self.provider == "Openai":
             self.client = OpenAI(api_key=self.api_key)
             self.async_client = AsyncOpenAI(api_key=self.api_key)
-        elif self.provider == "mistral":
+        elif self.provider == "Mistral":
             self.client = Mistral(api_key=self.api_key)
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
@@ -190,7 +190,7 @@ class Provider:
         self.stop_generation = False
         filtered_kwargs = self._filter_parameters(kwargs)
 
-        if self.provider == "openai":
+        if self.provider == "Openai":
             messages = self._format_messages_openai(user_prompt, system_prompt)
 
             if stream:
@@ -198,7 +198,7 @@ class Provider:
             else:
                 return self._complete_openai(messages, **filtered_kwargs)
 
-        elif self.provider == "mistral":
+        elif self.provider == "Mistral":
             # Convert messages to Mistral format
             mistral_messages = self._format_messages_mistral(user_prompt, system_prompt)
 
@@ -240,7 +240,7 @@ class Provider:
         self.stop_generation = False
         filtered_kwargs = self._filter_parameters(kwargs)
 
-        if self.provider == "openai":
+        if self.provider == "Openai":
             messages = self._format_messages_openai(user_prompt, system_prompt)
 
             if stream:
@@ -248,7 +248,7 @@ class Provider:
             else:
                 return await self._complete_openai_async(messages, **filtered_kwargs)
 
-        elif self.provider == "mistral":
+        elif self.provider == "Mistral":
             # Convert messages to Mistral format
             mistral_messages = self._format_messages_mistral(user_prompt, system_prompt)
 

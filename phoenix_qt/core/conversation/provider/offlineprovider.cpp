@@ -85,7 +85,10 @@ void OfflineProvider::unLoadModel(){
 
 }
 
-void OfflineProvider::prompt(const QString &input){
+void OfflineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                             const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                             const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                             const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){
 
     _stopFlag = false;
     qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";

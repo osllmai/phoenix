@@ -13,7 +13,10 @@ public:
     virtual ~OfflineProvider();
 
 public slots:
-    void prompt(const QString &input) override;
+    void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers) override;
     void stop() override;
     void loadModel(const QString &model, const QString &key) override;
     void unLoadModel() override;

@@ -1,5 +1,5 @@
 {
-  "openai": {
+  "Openai": {
     "description": "OpenAI API provider",
     "supported_models": [
       "gpt-3.5-turbo",
@@ -60,7 +60,7 @@
       }
     }
   },
-  "mistral": {
+  "Mistral": {
     "description": "Mistral AI provider",
     "supported_models": [
       "mistral-tiny",

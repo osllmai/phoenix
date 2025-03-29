@@ -41,7 +41,8 @@ public:
         loadModelInProgressRole,
         ResponseInProgressRole,
         MessageListRole,
-        ConversationObjectRole
+        ConversationObjectRole,
+        CurrentResponseRole
     };
 
     int count() const;
@@ -100,6 +101,7 @@ public slots:
                                                 const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                                 const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                                 const int &contextLength, const int &numberOfGPULayers);
+    void upadateCurrentResponse(const int idConversation);
 
 signals:
     void countChanged();
@@ -110,6 +112,8 @@ signals:
     void modelIconChanged();
     void modelTextChanged();
     void modelSelectChanged();
+    void modelPromptTemplateChanged();
+    void modelSystemPromptChanged();
 
     void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
@@ -130,9 +134,6 @@ signals:
 
     void requestReadMessages(const int idConversation);
     void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
-
-    void modelPromptTemplateChanged();
-    void modelSystemPromptChanged();
 
 private:
     explicit ConversationList(QObject* parent = nullptr);

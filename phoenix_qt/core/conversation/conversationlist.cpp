@@ -65,6 +65,8 @@ QVariant ConversationList::data(const QModelIndex &index, int role = Qt::Display
         return QVariant::fromValue(conversation->messageList());
     case ConversationObjectRole:
         return QVariant::fromValue(conversation);
+    case CurrentResponseRole:
+        return conversation->currentResponse();
     default:
         return QVariant();
     }
@@ -169,6 +171,10 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
     setModelSelect(true);
+    if(!m_isEmptyConversation){
+        m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    }
 }
 
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -189,6 +195,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
     connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpadateCurrentResponse, this, &ConversationList::upadateCurrentResponse, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 
@@ -217,6 +224,10 @@ void ConversationList::selectCurrentConversationRequest(const int id){
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();
     setIsEmptyConversation(false);
+    if(m_modelSelect){
+        m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    }
 }
 
 void ConversationList::readMessages(const int idConversation){
@@ -249,16 +260,28 @@ Conversation* ConversationList::findConversationById(const int id) {
     return (it != m_conversations.end()) ? *it : nullptr;
 }
 
-QVariant ConversationList::dateCalculation(const QDateTime date)const{
+QVariant ConversationList::dateCalculation(const QDateTime date) const {
     QDateTime now = QDateTime::currentDateTime();
-    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+    if (date.date() == now.date())
         return date.toString("hh:mm") + " Today";
-    else if(date.daysTo(now) < 7)
+
+    int daysDiff = date.daysTo(now);
+
+    // qInfo()<<daysDiff<<"  "<<date<<"    "<<now;
+    if (daysDiff < 7 && date.date().year() == now.date().year())
         return date.toString("dddd");
-    else if(date.toString("yyyy") == now.toString("yyyy"))
+
+    if (date.date().year() == now.date().year())
         return date.toString("MMMM dd");
-    else
-        return date.toString("MM/dd/yyyy");
+
+    return date.toString("MM/dd/yyyy");
+}
+
+void ConversationList::upadateCurrentResponse(const int idConversation){
+    Conversation* conversation = findConversationById(idConversation);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {CurrentResponseRole});
 }
 
 int ConversationList::modelId() const{return m_modelId;}

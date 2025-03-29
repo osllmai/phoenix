@@ -5,18 +5,24 @@ from provider import Provider
 
 if __name__ == "__main__":
 
-    model = "mistral/mistral-small"
-    api_key = ""
-    stream = False
-    user_prompt = "tell me about iran"
-    system_prompt = "You are a helpful assistant."
+    sys.stdout.reconfigure(encoding='utf-8')
 
-    # if len(sys.argv) > 1:
-    #     model = sys.argv[1]
-    # if len(sys.argv) > 2:
-    #     api_key = sys.argv[2]
-    # if len(sys.argv) > 3:
-    #     prompt = sys.argv[3]
+    model = sys.argv[1]
+    api_key = sys.argv[2]
+    user_prompt = sys.argv[3]
+    stream = bool(int(sys.argv[4]))
+    prompt_template = sys.argv[5]
+    system_prompt = sys.argv[6]
+    temperature = float(sys.argv[7])
+    top_k = int(sys.argv[8])
+    top_p = float(sys.argv[9])
+    min_p = float(sys.argv[10])
+    repeat_penalty = float(sys.argv[11])
+    prompt_batch_size = int(sys.argv[12])
+    max_tokens = int(sys.argv[13])
+    repeat_penalty_tokens = int(sys.argv[14])
+    context_length = int(sys.argv[15])
+    number_of_gpu_layers = int(sys.argv[16])
 
     client = Provider()
     client.load_model(model=model, api_key=api_key)
@@ -25,7 +31,8 @@ if __name__ == "__main__":
         chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)
 
         for chunk in chat_response:
-            sys.stdout.write(chunk, end="", flush=True)
+            sys.stdout.write(chunk)
+
     else:
         chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)
         sys.stdout.write(chat_response)

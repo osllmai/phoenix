@@ -13,7 +13,10 @@ public:
     explicit Provider(QObject *parent = nullptr);
 
 public slots:
-    virtual void prompt(const QString &input);
+    virtual void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                        const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                        const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                        const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers);
     virtual void stop();
     virtual void loadModel(const QString &model, const QString &key);
     virtual void unLoadModel();
