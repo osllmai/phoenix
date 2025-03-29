@@ -127,21 +127,16 @@ Item {
         let engineIndex = availableEngines.indexOf(textToSpeechId.engine);
         enginesComboBox.currentIndex = engineIndex >= 0 ? engineIndex : 0;
 
-        if (textToSpeechId.state === TextToSpeech.Ready) {
+        if (textToSpeechId.state === TextToSpeech.Ready)
             control.engineReady();
-        } else {
+        else
             textToSpeechId.stateChanged.connect(control.engineReady);
-        }
-
-        textToSpeechId.updateStateLabel(textToSpeechId.state);
     }
 
     function engineReady() {
         textToSpeechId.stateChanged.disconnect(control.engineReady);
-        if (textToSpeechId.state !== TextToSpeech.Ready) {
-            textToSpeechId.updateStateLabel(textToSpeechId.state);
+        if (textToSpeechId.state !== TextToSpeech.Ready)
             return;
-        }
         control.updateLocales();
         control.updateVoices();
     }

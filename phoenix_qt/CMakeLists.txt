@@ -313,3 +313,5 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProv
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/main_provider.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.json
+                        ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.json COPYONLY)

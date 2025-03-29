@@ -12,7 +12,6 @@ ApplicationWindow {
 
     property string theme: "Light"
     onThemeChanged: {
-        console.log(theme)
         if ((window.theme === "Dark") || (window.theme === "Light"))
             Style.Colors.theme = window.theme
         else if (isDarkTheme)
@@ -46,25 +45,6 @@ ApplicationWindow {
         rate: appSettings.speechRate
 
         property int messageId: -1
-
-        onStateChanged: function (state) { updateStateLabel(state); }
-
-        function updateStateLabel(state) {
-            switch (state) {
-                case TextToSpeech.Ready:
-                    console.log("Ready")
-                    break
-                case TextToSpeech.Speaking:
-                    console.log("Speaking")
-                    break
-                case TextToSpeech.Paused:
-                    console.log("Paused...")
-                    break
-                case TextToSpeech.Error:
-                    console.log("Error!")
-                    break
-            }
-        }
     }
 
     visible: true

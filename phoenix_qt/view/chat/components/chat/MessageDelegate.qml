@@ -30,13 +30,13 @@ T.Button {
             Column {
                 spacing: 2
                 width: parent.width
-                TextArea{
+                TextArea {
                     id: textId
-                    text: model.text
+                    text: formatMarkdown(model.text)
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
-                    width:  parent.width - logoModelId.width
+                    width: parent.width - logoModelId.width
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
@@ -47,8 +47,22 @@ T.Button {
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: textId.hoveredLink ? Qt.PointingHandCursor : Qt.IBeamCursor
+                    }
+
                     onLinkActivated: function(url) {
                         Qt.openUrlExternally(url)
+                    }
+
+                    function formatMarkdown(inputText) {
+                        return inputText
+                            .replace(/```([\s\S]*?)```/g, '<pre style="background:#f4f4f4; border-radius:5px; padding:10px; font-family:monospace; overflow:auto;">$1</pre>')
+
+                            .replace(/`([^`]+)`/g, '<code style="background:#e8e8e8; padding:2px 5px; border-radius:3px;">$1</code>');
                     }
                 }
 

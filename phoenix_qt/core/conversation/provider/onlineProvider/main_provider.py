@@ -28,12 +28,18 @@ if __name__ == "__main__":
     client = Provider()
     client.load_model(model=model, api_key=api_key)
 
+    number = 0
+
     if stream:
         chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)
 
         for chunk in chat_response:
-            sys.stdout.write(chunk)
-            sys.stdout.flush()
+            if number < 20:
+                sys.stdout.write(chunk)
+                sys.stdout.flush()
+            if number == 20:
+                sys.stdout.write(chunk)
+            number += 1
             # stop = ?
             # if stop == False:
             #     sys.stdout.write(chunk)
