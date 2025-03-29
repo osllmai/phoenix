@@ -20,7 +20,8 @@ public:
         TextRole,
         DateRole,
         IconRole,
-        IsPromptRole
+        IsPromptRole,
+        LikeRole
     };
 
     int count() const;
@@ -30,12 +31,12 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 public slots:
-    void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt);
+    void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
 
 signals:
     void countChanged();
     void requestDeleteMessage(const int &id);
-    void requestAddMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt);
+    void requestAddMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
 
 private:
     QList<Message*> m_messages;

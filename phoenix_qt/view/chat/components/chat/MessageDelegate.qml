@@ -47,6 +47,9 @@ T.Button {
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
+                    onLinkActivated: function(url) {
+                        Qt.openUrlExternally(url)
+                    }
                 }
 
                 Row {

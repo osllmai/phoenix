@@ -86,30 +86,8 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     roles[ResponseInProgressRole] = "responseInProgress";
     roles[MessageListRole] = "messageList";
     roles[ConversationObjectRole] = "conversationObject";
+    roles[CurrentResponseRole] = "currentResponse";
     return roles;
-}
-
-bool ConversationList::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (!index.isValid() || index.row() < 0 || index.row() >= m_conversations.count())
-        return false;
-
-    Conversation* conversation = m_conversations[index.row()];
-    bool somethingChanged = false;
-
-    switch (role) {
-    case TitleRole:
-        if (conversation->title() != value.toString()) {
-            conversation->setTitle(value.toString());
-            somethingChanged = true;
-        }
-        break;
-    }
-
-    if (somethingChanged) {
-        emit dataChanged(index, index, QVector<int>() << role);
-        return true;
-    }
-    return false;
 }
 
 void ConversationList::addRequest(const QString &firstPrompt){
@@ -125,8 +103,16 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
     QString title = selectedWords.join(" ");
 
+    QString _systemPrompt = "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n";
+    QString _propmtTemplate = "### Human:\n%1\n\n### Assistant:\n";
+
+    if(m_modelSystemPrompt != "")
+        _systemPrompt = m_modelSystemPrompt;
+    if(m_modelPromptTemplate != "")
+        _propmtTemplate = m_modelPromptTemplate;
+
     emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
-                    m_modelPromptTemplate, m_modelSystemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
+                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -162,6 +148,10 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
     emit requestUpdateTitleConversation(conversation->id(), title);//update database
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
+}
+
+void ConversationList::likeMessageRequest(const int conversationId, const int messageId, const int like){
+    emit requestUpdateLikeMessage(conversationId, messageId, like);
 }
 
 void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
@@ -207,11 +197,11 @@ void ConversationList::addConversation(const int id, const QString &title, const
     }
 }
 
-void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
+void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
     Conversation* conversation = findConversationById(idConversation);
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
-    conversation->addMessage(id, text, date, icon, isPrompt);
+    conversation->addMessage(id, text, date, icon, isPrompt, like);
     conversation->setDate(date);
     conversation->setDescription(text);
     conversation->setIcon(icon);
@@ -234,8 +224,8 @@ void ConversationList::readMessages(const int idConversation){
     emit requestReadMessages(idConversation);
 }
 
-void ConversationList::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
-    emit requestInsertMessage(idConversation, text, icon, isPrompt);
+void ConversationList::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){
+    emit requestInsertMessage(idConversation, text, icon, isPrompt, like);
 }
 
 void ConversationList::updateDateConversation(const int id, const QString &description, const QString &icon){

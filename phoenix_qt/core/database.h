@@ -42,9 +42,10 @@ public slots:
                             const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                             const int &contextLength, const int &numberOfGPULayers);
+    void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
     void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
 
 signals:
     void addOnlineModel(const int id, const QString& modelName, const QString& name, const QString& key,
@@ -71,7 +72,7 @@ signals:
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
-    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
 
 private:
@@ -106,6 +107,7 @@ private:
     static const QString INSERT_MESSAGE_SQL;
     static const QString READ_MESSAGE_ID_SQL;
     static const QString DELETE_MESSAGE_SQL;
+    static const QString UPDATE_LIKE_MESSAGE_SQL;
 
     int insertModel(const QString &name, const QString &key);
 };

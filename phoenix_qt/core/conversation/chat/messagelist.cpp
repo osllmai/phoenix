@@ -29,6 +29,8 @@ QVariant MessageList::data(const QModelIndex &index, int role) const {
         return message->icon();
     case IsPromptRole:
         return message->isPrompt();
+    case LikeRole:
+        return message->like();
     default:
         return QVariant();
     }
@@ -41,6 +43,7 @@ QHash<int, QByteArray> MessageList::roleNames() const {
     roles[DateRole] = "date";
     roles[IconRole] = "icon";
     roles[IsPromptRole] = "isPrompt";
+    roles[LikeRole] = "like";
     return roles;
 }
 
@@ -58,6 +61,12 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
             somethingChanged = true;
         }
         break;
+    case LikeRole:
+        if (message->like() != value.toInt()) {
+            message->setLike(value.toInt());
+            somethingChanged = true;
+        }
+        break;
     }
 
     if (somethingChanged) {
@@ -67,13 +76,13 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
     return false;
 }
 
-void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt) {
+void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt, const int like) {
     beginInsertRows(QModelIndex(), m_messages.size(), m_messages.size());
-    Message* message = new Message(id, text, date, icon, isPrompt, this);
+    Message* message = new Message(id, text, date, icon, isPrompt, like, this);
     m_messages.append(message);
     endInsertRows();
     emit countChanged();
-    emit requestAddMessage(id, text, date, icon, isPrompt);
+    emit requestAddMessage(id, text, date, icon, isPrompt, like);
 }
 
 Message* MessageList::findMessageById(const int id) {

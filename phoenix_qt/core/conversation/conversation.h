@@ -51,7 +51,7 @@ public:
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
 
-    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
     const int id() const;
 
@@ -113,7 +113,7 @@ signals:
     void conversationChange();
 
     void requestReadMessages(const int idConversation);
-    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
     void requestUpdateMessage(const int idConversation, const int id, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,

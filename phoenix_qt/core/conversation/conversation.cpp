@@ -164,8 +164,8 @@ ModelSettings* Conversation::modelSettings() {return m_modelSettings;}
 
 ResponseList *Conversation::responseList() const{return m_responseList;}
 
-void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
-    m_messageList->addMessage(id, text, date, icon, isPrompt);
+void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
+    m_messageList->addMessage(id, text, date, icon, isPrompt, like);
     setCurrentResponse("");
 }
 
@@ -217,7 +217,8 @@ void Conversation::prompt(const QString &input, const int idModel){
         m_provider->loadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
         qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
     }
-    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true);
+
+    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
 
     setResponseInProgress(true);
     m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
@@ -259,7 +260,7 @@ void Conversation::tokenResponse(const QString &token){
 }
 
 void Conversation::finishedResponse(const QString &warning){
-    emit requestInsertMessage(m_id, m_currentResponse, "qrc:/media/image_company/" + m_model->icon(), true);
+    emit requestInsertMessage(m_id, m_currentResponse, "qrc:/media/image_company/" + m_model->icon(), false, 0);
     setResponseInProgress(false);
 }
 

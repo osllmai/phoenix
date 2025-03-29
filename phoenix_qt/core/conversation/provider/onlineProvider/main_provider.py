@@ -23,6 +23,7 @@ if __name__ == "__main__":
     repeat_penalty_tokens = int(sys.argv[14])
     context_length = int(sys.argv[15])
     number_of_gpu_layers = int(sys.argv[16])
+    stop = False
 
     client = Provider()
     client.load_model(model=model, api_key=api_key)
@@ -32,6 +33,13 @@ if __name__ == "__main__":
 
         for chunk in chat_response:
             sys.stdout.write(chunk)
+            sys.stdout.flush()
+            # stop = ?
+            # if stop == False:
+            #     sys.stdout.write(chunk)
+            #     sys.stdout.flush()
+            # else
+
 
     else:
         chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)

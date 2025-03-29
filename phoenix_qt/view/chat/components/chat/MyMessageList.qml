@@ -32,5 +32,11 @@ Item {
                id: promptItem
            }
         }
+
+        onContentHeightChanged: {
+            if (listView.atYEnd) {
+                listView.positionViewAtEnd();
+            }
+        }
     }
 }

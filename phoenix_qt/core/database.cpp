@@ -246,7 +246,7 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
         return;
 }
 
-void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
+void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){
     QDateTime date = QDateTime::currentDateTime();
 
     QSqlQuery query(m_db);
@@ -258,14 +258,27 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPrompt);
+    query.addBindValue(like);
     if (!query.exec())
         return;
 
     int id = query.lastInsertId().toInt();
 
-    emit addMessage(idConversation, id, text, date, icon, isPrompt);
+    emit addMessage(idConversation, id, text, date, icon, isPrompt, like);
 
     updateDateConversation(idConversation, text, icon);
+}
+
+void Database::updateLikeMessage(const int conversationId, const int messageId, const int like){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_LIKE_MESSAGE_SQL))
+        return;
+    query.addBindValue(like);
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+    if (!query.exec())
+        return;
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -388,21 +401,26 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
             date DATE NOT NULL,
             icon TEXT NOT NULL,
             isPrompt BOOL NOT NULL,
+            like INTEGER NOT NULL,
             PRIMARY KEY(id AUTOINCREMENT),
             foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
     )
 )");
 
 const QString Database::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, date, icon, isPrompt FROM message WHERE conversation_id=?
+    SELECT id, text, date, icon, isPrompt, like FROM message WHERE conversation_id=?
 )");
 
 const QString Database::INSERT_MESSAGE_SQL = QLatin1String(R"(
-    INSERT INTO message(conversation_id, text, date, icon, isPrompt) VALUES (?, ?, ?, ?, ?)
+    INSERT INTO message(conversation_id, text, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::DELETE_MESSAGE_SQL = QLatin1String(R"(
     DELETE FROM message WHERE conversation_id=?
+)");
+
+const QString Database::UPDATE_LIKE_MESSAGE_SQL = QLatin1String(R"(
+    UPDATE conversation SET like=? Where conversation_id=? , id=?
 )");
 
 void Database::readModel(const QList<Company*> companys){
@@ -627,7 +645,8 @@ void Database::readMessages(const int idConversation){
                 query.value(1).toString(),
                 query.value(2).toDateTime(),
                 query.value(3).toString(),
-                query.value(4).toBool()
+                query.value(4).toBool(),
+                query.value(5).toInt()
                 );
          }
     }
