@@ -5,7 +5,7 @@ from provider import Provider
 
 if __name__ == "__main__":
 
-    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stdout.reconfigure(encoding="utf-8")
 
     model = sys.argv[1]
     api_key = sys.argv[2]
@@ -28,25 +28,36 @@ if __name__ == "__main__":
     client = Provider()
     client.load_model(model=model, api_key=api_key)
 
-    number = 0
-
     if stream:
-        chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)
+        try:
+            chat_response = client.prompt(
+                user_prompt=user_prompt,
+                system_prompt=system_prompt,
+                stream=stream,
+                temperature=temperature,
+                top_p=top_p,
+                max_tokens=max_tokens,
+            )
 
-        for chunk in chat_response:
-            if number < 20:
+            for chunk in chat_response:
+                if client.stop_generation:
+                    sys.stdout.write("\n[Stream stopped by user]\n")
+                    sys.stdout.flush()
+                    break
                 sys.stdout.write(chunk)
                 sys.stdout.flush()
-            if number == 20:
-                sys.stdout.write(chunk)
-            number += 1
-            # stop = ?
-            # if stop == False:
-            #     sys.stdout.write(chunk)
-            #     sys.stdout.flush()
-            # else
-
-
+        except Exception as e:
+            sys.stderr.write(f"Error during streaming: {str(e)}\n")
+            sys.stderr.flush()
+        finally:
+            client.stop_generation = False
     else:
-        chat_response = client.prompt(user_prompt=user_prompt, system_prompt=system_prompt, stream=stream)
+        chat_response = client.prompt(
+            user_prompt=user_prompt,
+            system_prompt=system_prompt,
+            stream=stream,
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+        )
         sys.stdout.write(chat_response)

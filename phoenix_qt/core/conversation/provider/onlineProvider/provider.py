@@ -34,18 +34,26 @@ class Provider:
         self._load_providers_config()
 
     def _load_providers_config(self):
-        """Load provider configurations from the providers.json file.
+        """Load provider configurations from the company.json file.
 
         The configuration file contains information about supported models and
         parameters for each provider.
 
         Raises:
-            FileNotFoundError: If providers.json is not found
-            json.JSONDecodeError: If providers.json is not valid JSON
+            FileNotFoundError: If company.json is not found
+            json.JSONDecodeError: If company.json is not valid JSON
         """
-        config_path = os.path.join(os.path.dirname(__file__), "provider.json")
+        config_path = os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "model",
+            "file",
+            "company.json",
+        )
+
         with open(config_path, "r") as f:
-            self.providers_config = json.load(f)
+            self.companies_config = json.load(f)
 
     def _validate_model(self, provider, model_name):
         """Validate that the requested model is supported by the provider.
@@ -58,12 +66,43 @@ class Provider:
             ValueError: If the provider is not supported or the model is not
                 supported by the provider
         """
-        if provider not in self.providers_config:
+        # Find the provider in the companies list
+        provider_config = next(
+            (comp for comp in self.companies_config if comp["name"] == provider), None
+        )
+
+        if not provider_config:
             raise ValueError(f"Unsupported provider: {provider}")
 
-        supported_models = self.providers_config[provider].get("supported_models", [])
-        if model_name not in supported_models:
-            raise ValueError(f"Model {model_name} is not supported by {provider}")
+        # Only validate for online models
+        if provider_config["type"] != "OnlineModel":
+            raise ValueError(f"Provider {provider} is not an online model provider")
+
+        # Load the models file for this provider
+        models_file_path = os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "model",
+            "file",
+            provider_config["file"],
+        )
+
+        try:
+            with open(models_file_path, "r") as f:
+                models_data = json.load(f)
+
+            # Check if the model exists in the models list
+            supported_models = [
+                model["modelName"] for model in models_data if model.get("modelName")
+            ]
+            if model_name not in supported_models:
+                raise ValueError(f"Model {model_name} is not supported by {provider}")
+
+        except FileNotFoundError:
+            raise ValueError(f"Models file not found for provider: {provider}")
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid models file for provider: {provider}")
 
     def load_model(self, model: str, api_key: str):
         """Initialize the appropriate client based on the provider and model.
@@ -151,13 +190,16 @@ class Provider:
         Returns:
             Dict: Filtered dictionary containing only supported parameters
         """
-        if self.provider in self.providers_config:
-            supported_params = (
-                self.providers_config[self.provider]
-                .get("supported_parameters", {})
-                .keys()
-            )
+        # Find the provider in the companies list
+        provider_config = next(
+            (comp for comp in self.companies_config if comp["name"] == self.provider),
+            None,
+        )
+
+        if provider_config and "supported_parameters" in provider_config:
+            supported_params = provider_config["supported_parameters"].keys()
             return {k: v for k, v in kwargs.items() if k in supported_params}
+
         return kwargs
 
     def prompt(
@@ -297,56 +339,46 @@ class Provider:
     def _stream_openai(
         self, messages: List[Dict], **kwargs
     ) -> Generator[str, None, None]:
-        """Stream a response using OpenAI's API.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Yields:
-            str: Chunks of the generated response text
-
-        Note:
-            The generation can be stopped by setting stop_generation to True
-        """
+        """Stream a response using OpenAI's API."""
         response = self.client.chat.completions.create(
             model=self.model_name, messages=messages, stream=True, **kwargs
         )
-
-        for chunk in response:
-            if self.stop_generation:
-                response.close()
-                break
-
-            if chunk.choices[0].delta.content:
-                yield chunk.choices[0].delta.content
+        try:
+            for chunk in response:
+                if self.stop_generation:
+                    response.close()
+                    break
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+        finally:
+            # Ensure cleanup happens even if an exception occurs
+            try:
+                if hasattr(response, "close"):
+                    response.close()
+            except:
+                pass
 
     async def _stream_openai_async(
         self, messages: List[Dict], **kwargs
     ) -> AsyncGenerator[str, None]:
-        """Stream a response using OpenAI's API asynchronously.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Yields:
-            str: Chunks of the generated response text
-
-        Note:
-            The generation can be stopped by setting stop_generation to True
-        """
+        """Stream a response using OpenAI's API asynchronously."""
         response = await self.async_client.chat.completions.create(
             model=self.model_name, messages=messages, stream=True, **kwargs
         )
-
-        async for chunk in response:
-            if self.stop_generation:
-                await response.aclose()
-                break
-
-            if chunk.choices[0].delta.content:
-                yield chunk.choices[0].delta.content
+        try:
+            async for chunk in response:
+                if self.stop_generation:
+                    await response.aclose()
+                    break
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+        finally:
+            # Ensure cleanup happens even if an exception occurs
+            try:
+                if hasattr(response, "aclose"):
+                    await response.aclose()
+            except:
+                pass
 
     def _complete_mistral(self, messages: List[Dict], **kwargs) -> str:
         """Generate a complete response using Mistral's API.
@@ -378,50 +410,45 @@ class Provider:
         )
         return response.choices[0].message.content
 
-    def _stream_mistral(
-        self, messages: List[Dict], **kwargs
-    ) -> Generator[str, None, None]:
-        """Stream a response using Mistral's API.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Yields:
-            str: Chunks of the generated response text
-
-        Note:
-            The generation can be stopped by setting stop_generation to True
-        """
-        response = self.client.chat.stream(
-            model=self.model_name, messages=messages, **kwargs
-        )
-
-        for chunk in response:
-            if self.stop_generation:
-                break
-            if chunk.data.choices[0].delta.content:
-                yield chunk.data.choices[0].delta.content
-
     async def _stream_mistral_async(
         self, messages: List[Dict], **kwargs
     ) -> AsyncGenerator[str, None]:
-        """Stream a response using Mistral's API asynchronously.
+        """Stream a response using Mistral's API asynchronously."""
+        try:
+            async for chunk in self.client.chat.stream_async(
+                model=self.model_name, messages=messages, **kwargs
+            ):
+                if self.stop_generation:
+                    break
+                if chunk.data.choices[0].delta.content:
+                    yield chunk.data.choices[0].delta.content
+        finally:
+            try:
+                if (
+                    hasattr(self.client.chat, "_current_response")
+                    and self.client.chat._current_response
+                ):
+                    await self.client.chat._current_response.aclose()
+            except:
+                pass
 
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Yields:
-            str: Chunks of the generated response text
-
-        Note:
-            The generation can be stopped by setting stop_generation to True
-        """
-        async for chunk in self.client.chat.stream_async(  # Updated method name
+    def _stream_mistral(
+        self, messages: List[Dict], **kwargs
+    ) -> Generator[str, None, None]:
+        """Stream a response using Mistral's API."""
+        response = self.client.chat.stream(
             model=self.model_name, messages=messages, **kwargs
-        ):
-            if self.stop_generation:
-                break
-            if chunk.data.choices[0].delta.content:
-                yield chunk.data.choices[0].delta.content
+        )
+        try:
+            for chunk in response:
+                if self.stop_generation:
+                    break
+                if chunk.data.choices[0].delta.content:
+                    yield chunk.data.choices[0].delta.content
+        finally:
+            # Ensure cleanup happens even if an exception occurs
+            try:
+                if hasattr(response, "close"):
+                    response.close()
+            except:
+                pass
