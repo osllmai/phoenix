@@ -230,7 +230,7 @@ void Conversation::prompt(const QString &input, const int idModel){
 }
 
 void Conversation::stop(){
-
+    qInfo()<<"Stop";
 }
 
 void Conversation::loadModel(const int id){

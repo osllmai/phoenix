@@ -28,6 +28,7 @@ if __name__ == "__main__":
     client = Provider()
     client.load_model(model=model, api_key=api_key)
 
+    i=0
     if stream:
         try:
             chat_response = client.prompt(
@@ -40,12 +41,15 @@ if __name__ == "__main__":
             )
 
             for chunk in chat_response:
+                if i>20:
+                    client.stop()
                 if client.stop_generation:
                     sys.stdout.write("\n[Stream stopped by user]\n")
                     sys.stdout.flush()
                     break
                 sys.stdout.write(chunk)
                 sys.stdout.flush()
+                i +=1
         except Exception as e:
             sys.stderr.write(f"Error during streaming: {str(e)}\n")
             sys.stderr.flush()

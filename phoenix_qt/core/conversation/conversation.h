@@ -34,7 +34,7 @@ class Conversation : public QObject
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
-        m_responseList(new ResponseList(this))  {}
+        m_responseList(new ResponseList(this)), m_responseInProgress(false) {}
     explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
     explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,

@@ -40,7 +40,7 @@ Item {
             myText: "Start Chat"
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
-                conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon)
+                conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
                 conversationList.isEmptyConversation = true
                 appBodyId.currentIndex = 1
             }

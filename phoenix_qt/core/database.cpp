@@ -226,8 +226,10 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
                                                     const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
-    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
+    qInfo()<<"HIHIHIHIHIIHHHIIH";
+    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
         return;
+    }
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -242,8 +244,10 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     query.addBindValue(contextLength);
     query.addBindValue(numberOfGPULayers);
     query.addBindValue(id);
-    if (!query.exec())
+    if (!query.exec()){
+        qInfo()<<query.lastError().text();
         return;
+    }
 }
 
 void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){

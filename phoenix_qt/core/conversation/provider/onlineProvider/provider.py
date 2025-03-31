@@ -47,6 +47,7 @@ class Provider:
             os.path.dirname(
                 os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
             ),
+            "core",
             "model",
             "file",
             "company.json",
@@ -83,6 +84,7 @@ class Provider:
             os.path.dirname(
                 os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
             ),
+            "core",
             "model",
             "file",
             provider_config["file"],

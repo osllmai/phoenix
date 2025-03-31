@@ -18,7 +18,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -287,7 +287,7 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt::Qml
         Qt::Gui
-        whisper
+        # whisper
 )
 
 include(GNUInstallDirs)
@@ -313,5 +313,3 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProv
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/main_provider.py COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
                         ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.json COPYONLY)

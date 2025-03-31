@@ -87,7 +87,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                 QString outputString = QString::fromUtf8(output);
                 response = response + outputString;
                 numberOfResponse++;
-                qDebug() << response<<"        "<<numberOfResponse;
+                qDebug() << outputString<<"        "<<numberOfResponse;
                 if (!response.isEmpty() && numberOfResponse > 20000) {
                     qDebug() << response<<"        "<<numberOfResponse;
                     emit requestTokenResponse(response);
@@ -96,6 +96,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                 }
             }
         }
+        qInfo()<<"FInish";
         if (numberOfResponse != 0) {
             qDebug() << response<<"        "<<numberOfResponse;
             emit requestTokenResponse(response);

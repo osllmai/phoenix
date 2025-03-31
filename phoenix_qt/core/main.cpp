@@ -6,7 +6,7 @@
 #include <QIcon>
 
 #include "database.h"
-#include "speechtotext.h"
+// #include "speechtotext.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"

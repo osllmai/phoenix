@@ -15,6 +15,20 @@ Rectangle{
 
     signal sendPrompt(var prompt)
 
+    function selectIcon(){
+        if(conversationList.currentConversation.responseInProgress){
+            if(iconId.hovered)
+                return "qrc:/media/icon/stopFill.svg"
+            else
+                return "qrc:/media/icon/stop.svg"
+        }else{
+            if(iconId.hovered)
+                return "qrc:/media/icon/sendFill.svg"
+            else
+                return "qrc:/media/icon/send.svg"
+        }
+    }
+
     Row{
         anchors.fill: parent
         anchors.margins: 10
@@ -76,12 +90,16 @@ Rectangle{
         MyIcon {
             id: iconId
             anchors.bottom: parent.bottom
-            myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
+            myIcon: selectIcon()
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                sendPrompt(inputTextBox.text)
-                if(conversationList.modelSelect)
-                      inputTextBox.text = ""
+                if(conversationList.currentConversation.responseInProgress){
+                    conversationList.currentConversation.stop()
+                }else{
+                    sendPrompt(inputTextBox.text)
+                    if(conversationList.modelSelect)
+                          inputTextBox.text = ""
+                }
             }
         }
     }
