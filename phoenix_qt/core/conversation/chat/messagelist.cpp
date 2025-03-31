@@ -103,3 +103,35 @@ QVariant MessageList::dateCalculation(const QDateTime date)const{
     else
         return date.toString("hh:mm") + " " + date.toString("MM/dd/yyyy");
 }
+
+void MessageList::updateLastMessage(const QString &newText) {
+    if (m_messages.isEmpty()) {
+        return; // No messages to update
+    }
+
+    Message* lastMessage = m_messages.last(); // Get the last message
+    if (!lastMessage) {
+        return;
+    }
+
+    lastMessage->setText(lastMessage->text() + newText); // Update the text
+    QModelIndex lastIndex = index(m_messages.size() - 1);
+    emit dataChanged(lastIndex, lastIndex, {TextRole});
+}
+
+
+QVariantMap MessageList::lastMessageInfo() const {
+    QVariantMap result;
+    if (m_messages.isEmpty()) {
+        return result; // Return empty if there are no messages
+    }
+
+    Message* lastMessage = m_messages.last();
+    if (!lastMessage) {
+        return result;
+    }
+
+    result["id"] = lastMessage->id();
+    result["text"] = lastMessage->text();
+    return result;
+}

@@ -65,8 +65,6 @@ QVariant ConversationList::data(const QModelIndex &index, int role = Qt::Display
         return QVariant::fromValue(conversation->messageList());
     case ConversationObjectRole:
         return QVariant::fromValue(conversation);
-    case CurrentResponseRole:
-        return conversation->currentResponse();
     default:
         return QVariant();
     }
@@ -86,7 +84,6 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     roles[ResponseInProgressRole] = "responseInProgress";
     roles[MessageListRole] = "messageList";
     roles[ConversationObjectRole] = "conversationObject";
-    roles[CurrentResponseRole] = "currentResponse";
     return roles;
 }
 
@@ -162,8 +159,10 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelSystemPrompt(systemPrompt);
     setModelSelect(true);
     if(!m_isEmptyConversation){
-        m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
-        m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+        if(m_modelPromptTemplate != "")
+            m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        if(m_modelSystemPrompt != "")
+            m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
     }
 }
 
@@ -185,7 +184,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
     connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestUpadateCurrentResponse, this, &ConversationList::upadateCurrentResponse, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 
@@ -197,8 +196,8 @@ void ConversationList::addConversation(const int id, const QString &title, const
     }
 }
 
-void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
-    Conversation* conversation = findConversationById(idConversation);
+void ConversationList::addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
+    Conversation* conversation = findConversationById(conversationId);
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
     conversation->addMessage(id, text, date, icon, isPrompt, like);
@@ -215,17 +214,28 @@ void ConversationList::selectCurrentConversationRequest(const int id){
         m_currentConversation->readMessages();
     setIsEmptyConversation(false);
     if(m_modelSelect){
-        m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
-        m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+        if(m_modelPromptTemplate != "")
+            m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        if(m_modelSystemPrompt != "")
+            m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
     }
 }
 
-void ConversationList::readMessages(const int idConversation){
-    emit requestReadMessages(idConversation);
+void ConversationList::readMessages(const int conversationId){
+    emit requestReadMessages(conversationId);
 }
 
-void ConversationList::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){
-    emit requestInsertMessage(idConversation, text, icon, isPrompt, like);
+void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like){
+    emit requestInsertMessage(conversationId, text, icon, isPrompt, like);
+}
+
+void ConversationList::updateTextMessage(const int conversationId, const int messageId, const QString &text){
+    emit requestUpdateTextMessage(conversationId, messageId, text);
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    conversation->setDescription(text);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole});
 }
 
 void ConversationList::updateDateConversation(const int id, const QString &description, const QString &icon){
@@ -265,13 +275,6 @@ QVariant ConversationList::dateCalculation(const QDateTime date) const {
         return date.toString("MMMM dd");
 
     return date.toString("MM/dd/yyyy");
-}
-
-void ConversationList::upadateCurrentResponse(const int idConversation){
-    Conversation* conversation = findConversationById(idConversation);
-    if(conversation == nullptr) return;
-    const int index = m_conversations.indexOf(conversation);
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {CurrentResponseRole});
 }
 
 int ConversationList::modelId() const{return m_modelId;}

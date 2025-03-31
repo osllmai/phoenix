@@ -30,7 +30,6 @@ class Conversation : public QObject
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
     Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged)
-    Q_PROPERTY(QString currentResponse READ currentResponse NOTIFY currentResponseChanged FINAL)
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
@@ -88,9 +87,6 @@ public:
 
     ResponseList *responseList() const;
 
-    QString currentResponse() const;
-    void setCurrentResponse(const QString &newCurrentResponse);
-
 public slots:
     void loadModelResult(const bool result, const QString &warning);
     void tokenResponse(const QString &token);
@@ -112,9 +108,9 @@ signals:
     void responseListChanged();
     void conversationChange();
 
-    void requestReadMessages(const int idConversation);
-    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
-    void requestUpdateMessage(const int idConversation, const int id, const QString &text);
+    void requestReadMessages(const int conversationId);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,
                                      const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
@@ -124,8 +120,6 @@ signals:
     void requestLoadModel(const QString &model, const QString &key);
     void requestUnLoadModel();
     void requestStop();
-    void currentResponseChanged();
-    void requestUpadateCurrentResponse(const int idConversation);
 
 private:
     int m_id;
@@ -141,7 +135,6 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
-    QString m_currentResponse;
     Provider *m_provider;
 };
 

@@ -23,7 +23,10 @@ Item {
                 target: inputBoxId
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
-                        conversationList.currentConversation.prompt(prompt, conversationList.modelId)
+                        if(conversationList.currentConversation.responseInProgress)
+                            conversationList.currentConversation.stop()
+                        else
+                            conversationList.currentConversation.prompt(prompt, conversationList.modelId)
                     }else if((prompt !== "")){
                         notificationDialogId.open()
                         control.openModelList()

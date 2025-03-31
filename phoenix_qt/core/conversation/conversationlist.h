@@ -92,16 +92,16 @@ public slots:
                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                   const int &contextLength, const int &numberOfGPULayersconst, bool selectConversation);
 
-    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
-    void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void readMessages(const int conversationId);
+    void insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void updateTextMessage(const int conversationId, const int messageId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
     void updateModelSettingsConversation(const int id, const bool &stream,
                                                 const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                                                 const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                                 const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                                 const int &contextLength, const int &numberOfGPULayers);
-    void upadateCurrentResponse(const int idConversation);
 
 signals:
     void countChanged();
@@ -133,8 +133,9 @@ signals:
     void requestReadConversation();
     void requestUpdateLikeMessage(const int conversationId, const int messageId, const int like);
 
-    void requestReadMessages(const int idConversation);
-    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestReadMessages(const int conversationId);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
 
 private:
     explicit ConversationList(QObject* parent = nullptr);

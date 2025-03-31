@@ -16,7 +16,7 @@ Rectangle{
     signal sendPrompt(var prompt)
 
     function selectIcon(){
-        if(conversationList.currentConversation.responseInProgress){
+        if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
             if(iconId.hovered)
                 return "qrc:/media/icon/stopFill.svg"
             else
@@ -93,7 +93,7 @@ Rectangle{
             myIcon: selectIcon()
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                if(conversationList.currentConversation.responseInProgress){
+                if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
                     conversationList.currentConversation.stop()
                 }else{
                     sendPrompt(inputTextBox.text)

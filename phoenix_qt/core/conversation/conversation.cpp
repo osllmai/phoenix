@@ -9,7 +9,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_icon(icon), m_date(date), m_isPinned(isPinned),  m_isLoadModel(false),
     m_loadModelInProgress(false), m_responseInProgress(false),
     m_model(new Model(this)), m_modelSettings(new ModelSettings(id,this)),m_messageList(new MessageList(this)),
-    m_responseList(new ResponseList(this)), m_provider(nullptr), m_currentResponse("")
+    m_responseList(new ResponseList(this)), m_provider(nullptr)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -49,8 +49,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
                                       contextLength, numberOfGPULayers, this)),
     m_messageList(new MessageList(this)),
     m_responseList(new ResponseList(this)),
-    m_provider(nullptr),
-    m_currentResponse("")
+    m_provider(nullptr)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -166,7 +165,6 @@ ResponseList *Conversation::responseList() const{return m_responseList;}
 
 void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
     m_messageList->addMessage(id, text, date, icon, isPrompt, like);
-    setCurrentResponse("");
 }
 
 void Conversation::readMessages(){
@@ -219,6 +217,7 @@ void Conversation::prompt(const QString &input, const int idModel){
     }
 
     emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
+    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
     setResponseInProgress(true);
     m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
@@ -231,6 +230,7 @@ void Conversation::prompt(const QString &input, const int idModel){
 
 void Conversation::stop(){
     qInfo()<<"Stop";
+    m_provider->stop();
 }
 
 void Conversation::loadModel(const int id){
@@ -254,13 +254,18 @@ void Conversation::loadModelResult(const bool result, const QString &warning){
 
 void Conversation::tokenResponse(const QString &token){
     if(m_isLoadModel && m_responseInProgress){
-        setCurrentResponse(m_currentResponse + token);
-        emit requestUpadateCurrentResponse(m_id);
+        messageList()->updateLastMessage(token);
     }
 }
 
 void Conversation::finishedResponse(const QString &warning){
-    emit requestInsertMessage(m_id, m_currentResponse, "qrc:/media/image_company/" + m_model->icon(), false, 0);
+    QVariantMap lastMessage = messageList()->lastMessageInfo();
+    if (!lastMessage.isEmpty()) {
+        int lastId = lastMessage["id"].toInt();
+        QString lastText = lastMessage["text"].toString();
+
+        emit requestUpdateTextMessage(m_id, lastId, lastText);
+    }
     setResponseInProgress(false);
 }
 
@@ -274,10 +279,3 @@ void Conversation::updateModelSettingsConversation(){
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
-QString Conversation::currentResponse() const{return m_currentResponse;}
-void Conversation::setCurrentResponse(const QString &newCurrentResponse){
-    if (m_currentResponse == newCurrentResponse)
-        return;
-    m_currentResponse = newCurrentResponse;
-    emit currentResponseChanged();
-}

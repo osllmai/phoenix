@@ -51,7 +51,7 @@ void OnlineProvider::unLoadModel(){
 void OnlineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
                             const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
                             const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
-                            const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){
+                            const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers) {
 
     QThread::create([this, input, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
                      repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers]() {
@@ -79,34 +79,51 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
 
         process.start("python", arguments);
 
+        if (!process.waitForStarted()) {
+            qCritical() << "Python process failed to start: " << process.errorString();
+            return;
+        }
+
         QString response = "";
         int numberOfResponse = 0;
+
         while (process.state() == QProcess::Running) {
-            if (process.waitForReadyRead(100)) {
+            QString stopFlagStr = _stopFlag ? "true\n" : "false\n";
+            process.write(stopFlagStr.toUtf8());
+            process.waitForBytesWritten();
+            qInfo() << "Sent stop flag: " << stopFlagStr.trimmed();
+
+            if (process.waitForReadyRead(500)) {
                 QByteArray output = process.readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
-                response = response + outputString;
+                response += outputString;
                 numberOfResponse++;
-                qDebug() << outputString<<"        "<<numberOfResponse;
-                if (!response.isEmpty() && numberOfResponse > 20000) {
-                    qDebug() << response<<"        "<<numberOfResponse;
+
+                qDebug() << "Received from Python:" << outputString.trimmed();
+
+                if (!response.isEmpty() && numberOfResponse > 1) {
                     emit requestTokenResponse(response);
                     response = "";
                     numberOfResponse = 0;
                 }
             }
+
+            if (_stopFlag) {
+                qInfo() << "Stopping Python process.";
+                process.write("stop\n");
+                process.waitForBytesWritten();
+                break;
+            }
         }
-        qInfo()<<"FInish";
-        if (numberOfResponse != 0) {
-            qDebug() << response<<"        "<<numberOfResponse;
+        _stopFlag = false;
+
+        qInfo() << "Process finished.";
+        if (!response.isEmpty()) {
             emit requestTokenResponse(response);
-            response = "";
-            numberOfResponse = 0;
         }
         emit requestFinishedResponse("");
     })->start();
 }
-
 
 bool OnlineProvider::handleResponse(int32_t token, const std::string &response){
     return true;

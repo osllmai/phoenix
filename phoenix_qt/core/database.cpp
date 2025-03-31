@@ -226,8 +226,8 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
                                                     const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
-    qInfo()<<"HIHIHIHIHIIHHHIIH";
     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
+        qInfo()<<query.lastError().text();
         return;
     }
     query.addBindValue(stream);
@@ -283,6 +283,32 @@ void Database::updateLikeMessage(const int conversationId, const int messageId, 
     query.addBindValue(messageId);
     if (!query.exec())
         return;
+}
+
+void Database::updateTextMessage(const int conversationId, const int messageId, const QString &text){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_TEXT_MESSAGE_SQL))
+        return;
+
+    query.addBindValue(text);
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+    if (!query.exec())
+        return;
+
+    //Find icon for update Conversation in DB
+    if (!query.prepare(READ_ICON_MESSAGE_SQL))
+        return ;
+
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+
+    if (!query.exec())
+        return ;
+
+    if (query.next())
+        updateDateConversation(conversationId, text, query.value(0).toString());
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -401,7 +427,7 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
     CREATE TABLE message(
             conversation_id INTEGER NOT NULL,
             id INTEGER NOT NULL UNIQUE,
-            text TEXT NOT NULL,
+            text TEXT,
             date DATE NOT NULL,
             icon TEXT NOT NULL,
             isPrompt BOOL NOT NULL,
@@ -424,7 +450,15 @@ const QString Database::DELETE_MESSAGE_SQL = QLatin1String(R"(
 )");
 
 const QString Database::UPDATE_LIKE_MESSAGE_SQL = QLatin1String(R"(
-    UPDATE conversation SET like=? Where conversation_id=? , id=?
+    UPDATE message SET like=? Where conversation_id=? AND id=?
+)");
+
+const QString Database::UPDATE_TEXT_MESSAGE_SQL = QLatin1String(R"(
+    UPDATE message SET text=? Where conversation_id=? AND id=?
+)");
+
+const QString Database::READ_ICON_MESSAGE_SQL = QLatin1String(R"(
+    SELECT icon FROM message WHERE conversation_id=? AND id=?
 )");
 
 void Database::readModel(const QList<Company*> companys){

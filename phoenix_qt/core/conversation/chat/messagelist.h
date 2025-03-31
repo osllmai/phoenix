@@ -29,9 +29,11 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+    QVariantMap lastMessageInfo() const;
 
 public slots:
     void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
+    void updateLastMessage(const QString &newText);
 
 signals:
     void countChanged();
