@@ -135,3 +135,11 @@ QVariantMap MessageList::lastMessageInfo() const {
     result["text"] = lastMessage->text();
     return result;
 }
+
+void MessageList::likeMessageRequest(const int messageId, const int like){
+    Message* message = findMessageById(messageId);
+    if(message == nullptr) return;
+    const int index = m_messages.indexOf(message);
+    message->setLike(like);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {LikeRole});
+}

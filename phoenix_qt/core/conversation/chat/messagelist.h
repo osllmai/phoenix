@@ -31,6 +31,8 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QVariantMap lastMessageInfo() const;
 
+    void likeMessageRequest(const int messageId, const int like);
+
 public slots:
     void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
     void updateLastMessage(const QString &newText);

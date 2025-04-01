@@ -98,25 +98,33 @@ T.Button {
                     }
                     MyIcon {
                         id: likeId
-                        visible: control.hovered
-                        myIcon: "qrc:/media/icon/like.svg"
+                        visible: control.hovered && (model.like>=0)
+                        myIcon: (model.like == 0)? "qrc:/media/icon/like.svg": "qrc:/media/icon/likeFill.svg"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
                             target: likeId
                             function onClicked(){
+                                if(model.like === 0)
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, +1)
+                                else
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, 0)
                             }
                         }
                     }
                     MyIcon {
                         id: disLikeId
-                        visible: control.hovered
-                        myIcon: "qrc:/media/icon/disLike.svg"
+                        visible: control.hovered && (model.like<=0)
+                        myIcon: (model.like == 0)? "qrc:/media/icon/disLike.svg": "qrc:/media/icon/disLikeFill.svg"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
                             target: disLikeId
                             function onClicked(){
+                                if(model.like === 0)
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, -1)
+                                else
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, 0)
                             }
                         }
                     }

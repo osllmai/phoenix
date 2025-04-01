@@ -149,6 +149,9 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
 
 void ConversationList::likeMessageRequest(const int conversationId, const int messageId, const int like){
     emit requestUpdateLikeMessage(conversationId, messageId, like);
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    conversation->likeMessageRequest(messageId, like);
 }
 
 void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){

@@ -284,3 +284,6 @@ void Conversation::updateModelSettingsConversation(){
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
+void Conversation::likeMessageRequest( const int messageId, const int like){
+    m_messageList->likeMessageRequest(messageId, like);
+}

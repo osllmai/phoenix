@@ -50,6 +50,8 @@ public:
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
 
+    void likeMessageRequest( const int messageId, const int like);
+
     void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
     const int id() const;
