@@ -111,6 +111,7 @@ signals:
     void requestReadMessages(const int conversationId);
     void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
+    void requestUpdateDescriptionText(const int conversationId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,
                                      const QString &promptTemplate, const QString &systemPrompt, const double &temperature,

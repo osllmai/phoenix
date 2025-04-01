@@ -185,6 +185,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
     connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateDescriptionText, this, &ConversationList::updateDescriptionText, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 
@@ -201,10 +202,18 @@ void ConversationList::addMessage(const int conversationId, const int id, const 
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
     conversation->addMessage(id, text, date, icon, isPrompt, like);
-    conversation->setDate(date);
     conversation->setDescription(text);
+    conversation->setDate(date);
     conversation->setIcon(icon);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole, IconRole, DateRole});
+}
+
+void ConversationList::updateDescriptionText(const int conversationId, const QString &text){
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    conversation->setDescription(text);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole});
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){

@@ -96,6 +96,7 @@ public slots:
     void readMessages(const int conversationId);
     void insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
     void updateTextMessage(const int conversationId, const int messageId, const QString &text);
+    void updateDescriptionText(const int conversationId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
     void updateModelSettingsConversation(const int id, const bool &stream,
                                                 const QString &promptTemplate, const QString &systemPrompt, const double &temperature,

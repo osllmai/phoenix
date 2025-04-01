@@ -67,13 +67,17 @@ Rectangle{
                 }
 
                 Keys.onReturnPressed: (event)=> {
-                  if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
-                    event.accepted = false;
-                  }else {
-                        sendPrompt(inputTextBox.text)
-                        if(conversationList.modelSelect)
-                              inputTextBox.text = ""
-                  }
+                      if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
+                        event.accepted = false;
+                      }else {
+                              if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
+                                  conversationList.currentConversation.stop()
+                            else{
+                              sendPrompt(inputTextBox.text)
+                              if(conversationList.modelSelect)
+                                    inputTextBox.text = ""
+                            }
+                        }
                 }
 
                 onEditingFinished: {
