@@ -45,6 +45,7 @@ qt_add_executable(app${PROJECT_NAME}
 
     core/database.h core/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
+    core/speechtotext.h core/speechtotext.cpp
 
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
@@ -180,6 +181,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MyProgress.qml
         view/component_library/button/VerificationDialog.qml
         view/component_library/button/NotificationDialog.qml
+        view/component_library/button/MyToolTip.qml
 
         view/AppMenu.qml
         view/menu/MyMenuButton.qml
@@ -242,6 +244,15 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
         view/settings/SettingsBody.qml
+        view/settings/SettingsMenu.qml
+        view/settings/components/SettingsAbout.qml
+        view/settings/components/SettingsTheme.qml
+        view/settings/components/SettingsSpeech.qml
+        view/settings/components/SettingsTerms_of_Use.qml
+        view/settings/components/SettingsPrivacy.qml
+        view/settings/components/SettingsMenuButton.qml
+        view/settings/components/SettingsSlider.qml
+        view/settings/components/ThemeOption.qml
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
@@ -250,17 +261,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
-        QML_FILES view/component_library/button/MyToolTip.qml
-        SOURCES core/speechtotext.h core/speechtotext.cpp
-        QML_FILES view/settings/SettingsMenu.qml
-        QML_FILES view/settings/components/SettingsAbout.qml
-        QML_FILES view/settings/components/SettingsTheme.qml
-        QML_FILES view/settings/components/SettingsSpeech.qml
-        QML_FILES view/settings/components/SettingsTerms_of_Use.qml
-        QML_FILES view/settings/components/SettingsPrivacy.qml
-        QML_FILES view/settings/components/SettingsMenuButton.qml
-        QML_FILES view/settings/components/SettingsSlider.qml
-        QML_FILES view/settings/components/ThemeOption.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -296,14 +296,14 @@ install(TARGETS app${PROJECT_NAME}
 
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/company.json ${BIN_DIR}/company.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/company.json ${BIN_DIR}/company.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
 
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
 endif()
