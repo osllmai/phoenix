@@ -5,7 +5,7 @@ a = Analysis(
     ['main_provider.py'],
     pathex=[],
     binaries=[],
-    datas=[('provider.py', '.'), ('main_provider.py', '.')],
+    datas=[('provider.py', '.'), ('main_provider.py', '.'), ('../file/company.json', '.'), ('../file/mistral_models.json', '.'), ('../file/openai_models.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
