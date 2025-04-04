@@ -1,30 +1,11 @@
 #include "onlineprovider.h"
 
 #include <QDebug>
-#include <cassert>
-#include <string>
-#include <cstring>
-#include <cstdio>
-#include <cassert>
-#include <string>
-#include <vector>
-#include <cstring>
-#include <iostream>
-#include <cstring>
-
 #include <QProcess>
-#include <QDebug>
 #include <QThread>
 
-// #include "../phoenix/llmodel.h"
-
-// std::string answer = "";
-// LLModel::PromptContext prompt_context;
-// LLModel* model;
-// std::string prompt_template;
-
 OnlineProvider::OnlineProvider(QObject* parent)
-    :Provider(parent), _stopFlag(false)
+    : Provider(parent), _stopFlag(false)
 {
     moveToThread(&chatLLMThread);
     chatLLMThread.start();
@@ -57,10 +38,11 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                      repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers]() {
         QProcess process;
         process.setProcessChannelMode(QProcess::MergedChannels);
+        process.setReadChannel(QProcess::StandardOutput);
 
+        QString exePath = "bin/main_provider.exe";
         QStringList arguments;
-        arguments << "bin/main_provider.py"
-                  << m_model
+        arguments << m_model
                   << m_key
                   << input
                   << (stream ? "1" : "0")
@@ -77,50 +59,38 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                   << QString::number(contextLength)
                   << QString::number(numberOfGPULayers);
 
-        process.start("python", arguments);
+        process.start(exePath, arguments);
 
         if (!process.waitForStarted()) {
-            qCritical() << "Python process failed to start: " << process.errorString();
+            qCritical() << "Failed to start process: " << process.errorString();
             return;
         }
 
-        QString response = "";
-        int numberOfResponse = 0;
-
         while (process.state() == QProcess::Running) {
-            QString stopFlagStr = _stopFlag ? "true\n" : "false\n";
+            QString stopFlagStr = _stopFlag ? "t" : "f";
             process.write(stopFlagStr.toUtf8());
             process.waitForBytesWritten();
-            qInfo() << "Sent stop flag: " << stopFlagStr.trimmed();
 
             if (process.waitForReadyRead(500)) {
                 QByteArray output = process.readAllStandardOutput();
-                QString outputString = QString::fromUtf8(output);
-                response += outputString;
-                numberOfResponse++;
+                QString outputString = QString::fromUtf8(output, output.size());;
 
-                qDebug() << "Received from Python:" << outputString.trimmed();
-
-                if (!response.isEmpty() && numberOfResponse > 1) {
-                    emit requestTokenResponse(response);
-                    response = "";
-                    numberOfResponse = 0;
+                if (!outputString.isEmpty()) {
+                    emit requestTokenResponse(outputString);
                 }
+                qInfo()<<outputString;
             }
 
             if (_stopFlag) {
-                qInfo() << "Stopping Python process.";
-                process.write("stop\n");
+                process.write("t");
                 process.waitForBytesWritten();
                 break;
             }
         }
+
         _stopFlag = false;
 
         qInfo() << "Process finished.";
-        if (!response.isEmpty()) {
-            emit requestTokenResponse(response);
-        }
         emit requestFinishedResponse("");
     })->start();
 }
@@ -128,4 +98,3 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
 bool OnlineProvider::handleResponse(int32_t token, const std::string &response){
     return true;
 }
-

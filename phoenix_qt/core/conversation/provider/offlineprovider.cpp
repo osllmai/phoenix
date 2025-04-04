@@ -39,8 +39,8 @@ void OfflineProvider::loadModel(const QString &model, const QString &key)
 
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
-    QThread::msleep(5000);
-    //     std::string backend = "cuda";
+    // QThread::msleep(5000);
+        std::string backend = "cuda";
 
     //     prompt_context.n_ctx = 4096;
     //     prompt_context.n_predict = 4096;
@@ -96,7 +96,7 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
     QThread::msleep(5000);
     answer = "";
 
-    qDebug() << "This is C++ talking, input: " << input;
+    // qDebug() << "This is C++ talking, input: " << input;
 
     // auto prompt_callback = [](int32_t token_id) { return true;};
 
@@ -111,13 +111,13 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
     // QString qStr = QString::fromStdString(answer);
     // qInfo() <<  qStr;
 
-    for (int i = 0; i < 40; i++) {
-        emit requestTokenResponse("Hi  :)  ");
-        // qInfo()<<"send";
-        QThread::msleep(50);
-        emit requestTokenResponse("Phoenix!, ");
-        QThread::msleep(50);
-    }
+    // for (int i = 0; i < 40; i++) {
+    //     emit requestTokenResponse("Hi  :)  ");
+    //     // qInfo()<<"send";
+    //     QThread::msleep(50);
+    //     emit requestTokenResponse("Phoenix!, ");
+    //     QThread::msleep(50);
+    // }
 
     emit requestFinishedResponse("");
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
@@ -129,10 +129,10 @@ bool OfflineProvider::handleResponse(int32_t token, const std::string &response)
 
     if (!(responsechars == nullptr || responsechars[0] == '\0')) {
 
-        std::cout << responsechars << std::flush;
-        qInfo()<<responsechars;
+        // std::cout << responsechars << std::flush;
+        // qInfo()<<responsechars;
 
-        answer += responsechars;
+        // answer += responsechars;
         emit requestTokenResponse(QString::fromStdString(response));
         // emit tokenResponse(QString::fromStdString(answer));
     }

@@ -71,9 +71,6 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
     core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
     core/conversation/provider/provider.h core/conversation/provider/provider.cpp
-
-    core/conversation/provider/onlineProvider/provider.py
-    core/conversation/provider/onlineProvider/main_provider.py
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -297,19 +294,16 @@ install(TARGETS app${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/company.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/company.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/offline_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/openai_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/mistral_models.json COPYONLY)
+set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
-                        ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/company.json ${BIN_DIR}/company.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/main_provider.py
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/main_provider.py COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/provider.py COPYONLY)
+if(WIN32)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
+else()
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/conversation/provider/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
+endif()

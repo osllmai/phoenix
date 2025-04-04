@@ -26,9 +26,7 @@ private:
     std::atomic<bool> _stopFlag;
 
     std::string answer = "";
-    // LLModel::PromptContext prompt_context;
-    // LLModel* model;
-    std::string prompt_template;
+    QString m_model;
 
     bool handleResponse(int32_t token, const std::string &response);
 };
