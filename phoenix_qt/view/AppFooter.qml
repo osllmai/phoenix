@@ -66,7 +66,8 @@ Item {
             id: githubIcon
             myIcon: "qrc:/media/icon/github.svg"
             myTextToolTip: "Github"
-            myWidthToolTip: 46
+            myWidthToolTip: 60
+            toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 Qt.openUrlExternally("https://github.com/osllmai")
@@ -76,7 +77,8 @@ Item {
             id: discordIcon
             myIcon: "qrc:/media/icon/discord.svg"
             myTextToolTip: "Discord"
-            myWidthToolTip: 52
+            myWidthToolTip: 65
+            toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")

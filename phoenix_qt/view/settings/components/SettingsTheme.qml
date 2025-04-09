@@ -40,7 +40,7 @@ Item {
                 font.pixelSize: 14
             }
 
-            Row {
+            Flow {
                 spacing: 15
 
                 ThemeOption {

@@ -7,7 +7,7 @@ import './component_library/style' as Style
 ApplicationWindow {
     id: window
     width: 1700; height: 900
-    minimumWidth: 1400; minimumHeight: 800
+    minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
     property string theme: "Light"
@@ -50,8 +50,29 @@ ApplicationWindow {
     visible: true
     title: qsTr("Phoenix")
 
-    function isDesktopSize() {
-        return width >= 550;
+    property bool isDesktopSize: width >= 630;
+    onIsDesktopSizeChanged: {
+        appMenuApplicationId.close()
+        if(window.isDesktopSize){
+            window.isOpenMenu = true
+        }
+    }
+
+    property bool isOpenMenu: true
+    onIsOpenMenuChanged: {
+        if(window.isOpenMenu){
+            if(window.isDesktopSize){
+                appMenuDesktopId.width = 200
+            }else{
+                appMenuApplicationId.open()
+            }
+        }else{
+            if(window.isDesktopSize){
+                appMenuDesktopId.width = 60
+            }else{
+                appMenuApplicationId.open()
+            }
+        }
     }
 
     Item {
@@ -60,13 +81,13 @@ ApplicationWindow {
 
         AppMenu {
             id: appMenuDesktopId
-            visible: window.isDesktopSize()
+            visible: window.isDesktopSize
             clip: true
         }
 
         Column {
             anchors.fill: parent
-            anchors.leftMargin: window.isDesktopSize() ? appMenuDesktopId.width : 0
+            anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
 
             AppBody {
                 id: appBodyId
@@ -87,5 +108,9 @@ ApplicationWindow {
         height: 1
         color: Style.Colors.boxBorder
         anchors.top: parent.top
+    }
+
+    AppMenuDrawer{
+        id: appMenuApplicationId
     }
 }

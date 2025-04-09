@@ -13,6 +13,7 @@ ToolButton {
 
     property string myTextToolTip: ""
      property int myWidthToolTip: 150
+    property bool toolTipInCenter: false
 
     background: Rectangle{
         id: backgroundId
@@ -44,6 +45,7 @@ ToolButton {
         visible: control.hovered && (control.myTextToolTip !== "")
         width: control.myWidthToolTip
         toolTipText: control.myTextToolTip
+        toolTipInCenter: control.toolTipInCenter
     }
 
     function choiceNormalColor(iconType) {

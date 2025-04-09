@@ -6,7 +6,7 @@ import '../../component_library/style' as Style
 
 T.Button {
     id: control
-    height: 65
+    height: (control.myIcon !== "")? 65: 35
     width: 100
 
     leftPadding: 4; rightPadding: 4
@@ -14,7 +14,7 @@ T.Button {
     checkable: true
 
     property alias myText: textId.text
-    property var myIcon
+    property string myIcon: ""
 
     function iconColor(){
         if(!control.pressed && !control.checked &&!control.hovered)
@@ -45,25 +45,28 @@ T.Button {
         Behavior on height{ NumberAnimation{ duration: 200}}
 
 
-        MyIcon {
-            id: iconId
-            myIcon: control.myIcon
-            iconType: Style.RoleEnum.IconType.FeatureBlue
-            anchors.top: parent.top; anchors.topMargin: 7
+        Column{
+            anchors.centerIn: parent.Center
             anchors.horizontalCenter: parent.horizontalCenter
-            enabled: false
-        }
+            anchors.verticalCenter: parent.verticalCenter
+            MyIcon {
+                id: iconId
+                visible: control.myIcon !== ""
+                myIcon: control.myIcon
+                iconType: Style.RoleEnum.IconType.FeatureBlue
+                anchors.horizontalCenter: parent.horizontalCenter
+                enabled: false
+            }
 
-        Label {
-            id: textId
-            color: Style.Colors.buttonFeatureTextNormal
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: iconId.bottom; anchors.topMargin: 2
-            text: "Default"
-            font.weight: 400
-            font.pixelSize: 12
-            visible: control.width>60
-            clip: true
+            Label {
+                id: textId
+                color: Style.Colors.buttonFeatureTextNormal
+                text: "Default"
+                font.weight: 400
+                font.pixelSize: 12
+                visible: control.width>60
+                clip: true
+            }
         }
     }
 

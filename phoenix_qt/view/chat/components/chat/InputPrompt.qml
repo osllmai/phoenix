@@ -58,11 +58,22 @@ Rectangle{
                 cursorVisible: false
                 persistentSelection: true
                 placeholderTextColor: Style.Colors.textInformation
-                onHeightChanged: {
-                    if(inputTextBox.height >controlId.height - 20 && inputTextBox.text !== ""){
-                        controlId.height  = Math.min(inputTextBox.height + 20 , 180) ;
-                    }if(inputTextBox.text === ""){
-                        controlId.height = 60
+
+                onTextChanged: {
+                    controlId.layer.enabled = true
+                    adjustHeight()
+                }
+
+                onContentHeightChanged: {
+                    adjustHeight()
+                }
+
+                function adjustHeight() {
+                    const newHeight = Math.max(40, inputTextBox.contentHeight);
+                    if (inputTextBox.text === "") {
+                        controlId.height = 60;
+                    } else {
+                        controlId.height = Math.min(newHeight + 20, 180); // اضافه کردن padding
                     }
                 }
 
@@ -70,23 +81,20 @@ Rectangle{
                       if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                         event.accepted = false;
                       }else {
-                              if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
-                                  conversationList.currentConversation.stop()
-                            else{
-                              sendPrompt(inputTextBox.text)
-                              if(conversationList.modelSelect)
-                                    inputTextBox.text = ""
-                            }
+                          if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
+                              conversationList.currentConversation.stop()
+                        else{
+                          sendPrompt(inputTextBox.text)
+                          if(conversationList.modelSelect)
+                                inputTextBox.text = ""
                         }
+                    }
                 }
 
                 onEditingFinished: {
                     controlId.layer.enabled= false
                 }
                 onPressed: {
-                    controlId.layer.enabled= true
-                }
-                onTextChanged: {
                     controlId.layer.enabled= true
                 }
             }

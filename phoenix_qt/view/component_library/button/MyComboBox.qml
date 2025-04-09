@@ -39,18 +39,7 @@ ComboBox {
     }
 
     delegate: ItemDelegate {
-        function selectColor(){
-           /* if(comboBoxId.displayText === modelData){
-                return Style.Colors.boxChecked
-            }else */if(comboBoxId.highlightedIndex === index){
-                return Style.Colors.boxHover
-            }else{
-                return "#00ffffff"
-            }
-
-        }
-
-        width: comboBoxId.width - 20
+        height: 35; width: popupId.width - 50
         contentItem: Label {
             text: modelData
             color: Style.Colors.textInformation
@@ -59,6 +48,7 @@ ComboBox {
         }
         background: Rectangle {
             radius: 10
+            width: popupId.width - 50; height: 35
             color: highlighted ? Style.Colors.boxHover : Style.Colors.background
         }
         highlighted: comboBoxId.highlightedIndex === index
@@ -68,7 +58,7 @@ ComboBox {
         id: popupId
         y: comboBoxId.height - 4
         width: comboBoxId.width
-        implicitHeight: Math.min(contentItem.implicitHeight + 20, 260)
+        implicitHeight: Math.min(contentItem.implicitHeight + 50, 260)
 
         background: null
         contentItem: Rectangle {

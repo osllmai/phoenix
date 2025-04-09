@@ -19,7 +19,7 @@ Rectangle{
         height: 80
         ToolButton {
             id: phoenixIconId
-            visible: root.width>80
+            // visible: root.width>80
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
@@ -42,37 +42,6 @@ Rectangle{
             font.pixelSize: 20
             font.styleName: "Bold"
             clip: true
-        }
-        ToolButton {
-            id: iconId
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.leftMargin: 2
-            background: null
-            function myIcon(){
-                if(root.width>100)
-                    if(!iconId.hovered)
-                        return "qrc:/media/icon/alignLeft.svg"
-                    else
-                        return "qrc:/media/icon/alignLeftFill.svg"
-                else
-                    if(!iconId.hovered)
-                        return "qrc:/media/icon/alignRight.svg"
-                    else
-                        return "qrc:/media/icon/alignRightFill.svg"
-            }
-
-            icon{
-                source: iconId.myIcon()
-                color: Style.Colors.menuHoverAndCheckedIcon;
-                width:18; height:18
-            }
-            onClicked: function() {
-                if(root.width<100)
-                    root.width = 200
-                else
-                    root.width = 60
-            }
         }
     }
 
@@ -143,6 +112,8 @@ Rectangle{
         width: 36; height: 36
         myIcon: settingsIcon.hovered? "qrc:/media/icon/settingsFill.svg": "qrc:/media/icon/settings.svg"
         myTextToolTip: "Settings"
+        myWidthToolTip: 60
+        toolTipInCenter: true
         iconType: Style.RoleEnum.IconType.Primary
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.bottom: parent.bottom; anchors.bottomMargin: 10
@@ -180,3 +151,4 @@ Rectangle{
         }
     }
 }
+

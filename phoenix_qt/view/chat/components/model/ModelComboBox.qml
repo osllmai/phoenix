@@ -8,7 +8,7 @@ import '../../../component_library/button'
 ComboBox {
     id: comboBoxId
     height: 35
-    width: 200
+    width: 160
     font.pixelSize: 12
     property int modelId: conversationList.modelSelect? conversationList.modelId: -1
     property string modelName: conversationList.modelSelect? conversationList.modelText:"Phoenix"
@@ -57,7 +57,7 @@ ComboBox {
         id: popupId
         y: comboBoxId.height + 10
         width: 300
-        height: 400
+        height: 300
         // implicitHeight: Math.min(contentItem.implicitHeight + 20, 260)
 
         background: null
@@ -68,23 +68,24 @@ ComboBox {
             border.color: Style.Colors.boxBorder
             radius: 8
             Column{
-             anchors.fill: parent
-             anchors.margins: 12
-             ModelDialogHeader{
-                 id: headerId
-                 Connections{
-                     target: headerId
-                     function onSearch(myText){}
-                     function onCurrentPage(numberPage){
-                         badyId.currentIndex = numberPage;
+                 anchors.fill: parent
+                 anchors.margins: 12
+                 spacing: 10
+                 ModelDialogHeader{
+                     id: headerId
+                     Connections{
+                         target: headerId
+                         function onSearch(myText){}
+                         function onCurrentPage(numberPage){
+                             badyId.currentIndex = numberPage;
+                         }
                      }
                  }
-             }
-             ModelDialogBody{
-                 id: badyId
-                 height: parent.height - headerId.height
-                 width: parent.width
-             }
+                 ModelDialogBody{
+                     id: badyId
+                     height: parent.height - headerId.height - 10
+                     width: parent.width
+                 }
             }
             layer.enabled: true
             layer.effect: Glow {

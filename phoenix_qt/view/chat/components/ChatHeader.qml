@@ -19,6 +19,9 @@ Item{
         anchors.left: parent.left; anchors.leftMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter
+        MyOpenMenuButton{
+            id: openMenuId
+        }
         MyButton{
             id: newChatId
             visible: !conversationList.isEmptyConversation
