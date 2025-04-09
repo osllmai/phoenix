@@ -12,6 +12,33 @@ ComboBox {
     font.pixelSize: 12
     leftPadding: 10
 
+    property var fullModel: []
+    property string searchText: ""
+
+    onModelChanged: {
+        fullModel = model
+        filterModel(searchText)
+    }
+
+
+    function filterModel(text) {
+        searchText = text
+        if (text === "") {
+            comboBoxId.model = fullModel
+            return
+        }
+
+        comboBoxId.model = fullModel.filter(function(item) {
+            return item.toLowerCase().indexOf(text.toLowerCase()) !== -1
+        })
+    }
+
+
+    Component.onCompleted: {
+        fullModel = comboBoxId.model
+        filterModel("")
+    }
+
     Accessible.role: Accessible.ComboBox
     contentItem: Row {
         id: contentRow
@@ -67,9 +94,21 @@ ComboBox {
             color: Style.Colors.background
             border.width: 1; border.color: Style.Colors.boxBorder
             radius: 10
+            SearchButton{
+                id: searchBoxId
+                width: parent.width
+                Connections{
+                    target: searchBoxId
+                    function onSearch(myText){
+                        comboBoxId.filterModel(myText)
+                    }
+                }
+            }
             ListView {
                 id: myListView
-                anchors.fill: parent
+                width: parent.width
+                height: parent.height - searchBoxId.height
+                anchors.top: searchBoxId.bottom
                 anchors.margins: 10
                 clip: true
                 cacheBuffer: Math.max(0, myListView.contentHeight)
