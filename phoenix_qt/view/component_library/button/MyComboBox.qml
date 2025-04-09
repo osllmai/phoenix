@@ -72,6 +72,12 @@ ComboBox {
                 anchors.fill: parent
                 anchors.margins: 10
                 clip: true
+                cacheBuffer: Math.max(0, myListView.contentHeight)
+                interactive: contentHeight > height
+                boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+                ScrollBar.vertical: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
                 implicitHeight: Math.min(contentHeight, 240)
                 model: comboBoxId.popup.visible ? comboBoxId.delegateModel : null
                 currentIndex: comboBoxId.highlightedIndex

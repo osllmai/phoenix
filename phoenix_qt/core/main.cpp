@@ -22,7 +22,7 @@
 #include "./conversation/conversationlist.h"
 #include "./conversation/conversationlistfilter.h"
 
-#include "config.h"
+#include "../cmake/config.h.in"
 
 int main(int argc, char *argv[])
 {

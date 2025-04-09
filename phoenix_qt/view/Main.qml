@@ -10,7 +10,7 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
-    property string theme: "Light"
+    property string theme: "Defualt"
     onThemeChanged: {
         if ((window.theme === "Dark") || (window.theme === "Light"))
             Style.Colors.theme = window.theme

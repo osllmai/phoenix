@@ -1,15 +1,25 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+
 import '../../component_library/style' as Style
 
 Item {
     id: controlId
     clip: true
-    ScrollView {
+    Flickable {
         anchors.fill: parent
         anchors.rightMargin: 10
-        anchors.bottomMargin: 10
+        anchors.bottomMargin: 20
         clip: true
+        contentHeight: textId.implicitHeight
+
+        interactive: true
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
+
         TextArea{
             id: textId
             text:"# Nerd Studio AI
@@ -75,13 +85,14 @@ Feel free to reach out if you need any help or have any questions:
             selectionColor: "blue"
             selectedTextColor: "white"
             font.pixelSize: 14
-            width: parent.width
+            width: parent.width - 20
             focus: false
             clip: true
             readOnly: true
             horizontalAlignment: Text.AlignJustify
             wrapMode: TextEdit.Wrap
             textFormat: TextEdit.MarkdownText
+
             onLinkActivated: function(link) {
                 Qt.openUrlExternally(link)
             }

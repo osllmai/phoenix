@@ -53,10 +53,7 @@ Item {
                     autoExclusive: true
                     Connections {
                         target: defaultModeId
-                        function onClicked(){
-                            window.theme = "Defualt"
-                            console.log(window.theme)
-                        }
+                        function onClicked(){window.theme = "Defualt";}
                     }
                 }
 
@@ -68,10 +65,7 @@ Item {
                     myText: "Light"
                     Connections {
                         target: lightModeId
-                        function onClicked(){
-                            window.theme = "Light"
-                            console.log(window.theme)
-                        }
+                        function onClicked(){ window.theme = "Light";}
                     }
                 }
 
@@ -83,10 +77,7 @@ Item {
                     autoExclusive: true
                     Connections {
                         target: darkModeId
-                        function onClicked(){
-                            window.theme = "Dark"
-                            console.log(window.theme)
-                        }
+                        function onClicked(){window.theme = "Dark";}
                     }
                 }
             }
