@@ -20,26 +20,3 @@ Drawer{
         id: settingsMenuId
     }
 }
-
-// Popup {
-//     id: drawerId
-//     modal: true
-//     focus: true
-//     x: 0
-//     y: 0
-//     width: settingsMenuId.width
-//     height: parent.height
-//     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-//     background: null
-
-//     Behavior on x {
-//         NumberAnimation {
-//             duration: 250
-//             easing.type: Easing.InOutQuad
-//         }
-//     }
-
-//     SettingsMenu {
-//         anchors.fill: parent
-//     }
-// }

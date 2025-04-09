@@ -4,9 +4,19 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
-    ScrollView {
+    Flickable {
         anchors.fill: parent
         anchors.rightMargin: 10
+        anchors.bottomMargin: 20
+        clip: true
+        contentHeight: textId.implicitHeight
+
+        interactive: true
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
         TextArea{
             id: textId
             text:"# Terms of Use:

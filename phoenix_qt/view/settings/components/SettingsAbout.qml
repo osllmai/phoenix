@@ -19,7 +19,6 @@ Item {
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
         }
-
         TextArea{
             id: textId
             text:"# Nerd Studio AI

@@ -99,7 +99,7 @@ T.Button {
                     MyIcon {
                         id: likeId
                         visible: control.hovered && (model.like>=0)
-                        myIcon: (model.like == 0)? "qrc:/media/icon/like.svg": "qrc:/media/icon/likeFill.svg"
+                        myIcon: (model.like === 0)? "qrc:/media/icon/like.svg": "qrc:/media/icon/likeFill.svg"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
@@ -115,7 +115,7 @@ T.Button {
                     MyIcon {
                         id: disLikeId
                         visible: control.hovered && (model.like<=0)
-                        myIcon: (model.like == 0)? "qrc:/media/icon/disLike.svg": "qrc:/media/icon/disLikeFill.svg"
+                        myIcon: (model.like === 0)? "qrc:/media/icon/disLike.svg": "qrc:/media/icon/disLikeFill.svg"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{

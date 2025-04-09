@@ -6,11 +6,19 @@ import '../../../component_library/style' as Style
 Item {
     height: parent.height - headerId.height
     width: parent.width
-    ScrollView{
-        id: scrollViewSettingsId
+    Flickable {
         anchors.fill: parent
+        clip: true
+        contentHeight: columnId.implicitHeight
 
+        interactive: true
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
         Column{
+            id: columnId
             anchors.fill: parent
             spacing: 10
 
