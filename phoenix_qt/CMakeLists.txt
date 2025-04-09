@@ -161,6 +161,8 @@ qt_add_resources(app${PROJECT_NAME}
         media/image_company/BigCode.png
         media/image_company/Openai.svg
 
+        media/fonts/DMSans-Regular.ttf
+
         media/media.qrc
 )
 

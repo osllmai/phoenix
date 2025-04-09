@@ -82,5 +82,6 @@
         <file>icon/privacyFill.svg</file>
         <file>icon/terms_of_Use.svg</file>
         <file>icon/terms_of_UseFill.svg</file>
+        <file>fonts/DMSans-Regular.ttf</file>
     </qresource>
 </RCC>

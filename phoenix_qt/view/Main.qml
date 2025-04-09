@@ -20,7 +20,7 @@ ApplicationWindow {
             Style.Colors.theme = "Light"
     }
 
-    font.family: "Constantia"
+    font.family: "DM Sans"
 
     Settings {
         id: appSettings

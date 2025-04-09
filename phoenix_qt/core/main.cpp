@@ -39,6 +39,14 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/media/image_company/Phoenix.png"));
 #endif
 
+    int fontId = QFontDatabase::addApplicationFont(":/fonts/DMSans-Regular.ttf");
+    if (fontId == -1) {
+        qWarning() << "Failed to load font!";
+    } else {
+        QStringList loadedFonts = QFontDatabase::applicationFontFamilies(fontId);
+        qDebug() << "Loaded font families:" << loadedFonts;
+    }
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
 
