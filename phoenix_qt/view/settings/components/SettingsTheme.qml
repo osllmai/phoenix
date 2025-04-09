@@ -4,6 +4,7 @@ import "../../component_library/button"
 import '../../component_library/style' as Style
 
 Item {
+    id: control
     Column {
         anchors.fill: parent
         anchors.topMargin: 10
@@ -42,6 +43,7 @@ Item {
 
             Flow {
                 spacing: 15
+                width: control.width - 40
 
                 ThemeOption {
                     id: defaultModeId

@@ -1,8 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
 import './component_library/style' as Style
-import './component_library/button'
-import "./menu"
 
 Drawer{
     id: drawerId

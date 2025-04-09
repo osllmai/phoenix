@@ -1,11 +1,18 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../component_library/style' as Style
+import "./components"
 
 Item{
     id: titleBoxId
     height: 50
     width: parent.width
+
+    OpenMenuSettingsButton{
+        id: openMenuId
+        anchors.left:parent.left; anchors.leftMargin: 10
+        anchors.top: parent.top; anchors.topMargin: 10
+    }
 
     Item{
         id: closeBox
@@ -28,7 +35,7 @@ Item{
             MouseArea{
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{dialogId.close()}
+                onClicked:{settingsDialogId.close()}
             }
         }
     }

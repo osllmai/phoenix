@@ -4,9 +4,12 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
+    clip: true
     ScrollView {
         anchors.fill: parent
         anchors.rightMargin: 10
+        anchors.bottomMargin: 10
+        clip: true
         TextArea{
             id: textId
             text:"# Nerd Studio AI

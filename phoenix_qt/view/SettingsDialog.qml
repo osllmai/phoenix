@@ -5,17 +5,42 @@ import './component_library/style' as Style
 import './settings'
 
 Dialog {
-    id: dialogId
+    id: settingsDialogId
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
-    width: Math.min( 800 , parent.width-20)
-    height: Math.min( 600 , parent.height-20)
+    width: Math.min( 800 , parent.width-40)
+    height: Math.min( 600 , parent.height-40)
 
     signal buttonAction1()
     signal buttonAction2()
 
     property var textBotton1
     property var textBotton2
+
+    property bool isDesktopSize: width >= 630;
+    onIsDesktopSizeChanged: {
+        settingsMenuDerawerId.close()
+        if(settingsDialogId.isDesktopSize){
+            settingsDialogId.isOpenMenu = true
+        }
+    }
+
+    property bool isOpenMenu: true
+    onIsOpenMenuChanged: {
+        if(settingsDialogId.isOpenMenu){
+            if(settingsDialogId.isDesktopSize){
+                settingsMenuId.width = 200
+            }else{
+                settingsMenuDerawerId.open()
+            }
+        }else{
+            if(settingsDialogId.isDesktopSize){
+                settingsMenuId.width = 60
+            }else{
+                settingsMenuDerawerId.open()
+            }
+        }
+    }
 
     focus: true
     modal: true
@@ -38,10 +63,12 @@ Dialog {
             anchors.fill: parent
             SettingsMenu{
                 id: settingsMenuId
+                visible: settingsDialogId.isDesktopSize
+                clip: true
             }
 
             Column{
-                width: parent.width - settingsMenuId.width
+                width: parent.width - (settingsDialogId.isDesktopSize? settingsMenuId.width: 0)
                 height: parent.height
                 anchors.margins: 16
 
@@ -56,6 +83,9 @@ Dialog {
             }
         }
 
+        SettingsMenuDrawer{
+            id: settingsMenuDerawerId
+        }
 
         layer.enabled: true
         layer.effect: Glow {

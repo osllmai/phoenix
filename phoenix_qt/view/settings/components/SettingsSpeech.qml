@@ -9,7 +9,8 @@ Item {
 
     Column {
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.topMargin: 10
+        anchors.leftMargin: 20
         spacing: 10
 
         Row {

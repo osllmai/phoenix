@@ -19,7 +19,6 @@ Rectangle{
         height: 80
         ToolButton {
             id: phoenixIconId
-            // visible: root.width>80
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10

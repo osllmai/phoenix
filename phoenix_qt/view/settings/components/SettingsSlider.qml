@@ -27,7 +27,7 @@ Item {
 
         Item{
             id: settingsSliderBox
-            width: 200
+            width: 160
             height: 35
 
             MySlider{

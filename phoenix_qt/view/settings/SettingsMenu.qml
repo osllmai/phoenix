@@ -4,10 +4,11 @@ import '../component_library/style' as Style
 import '../component_library/button'
 import "./components"
 
-Item{
+Rectangle{
     id: root
     width: 200
     anchors.top: parent.top; anchors.bottom: parent.bottom
+    color: Style.Colors.background
 
     Item{
         id: appInfoId
@@ -78,8 +79,8 @@ Item{
             id: terms_of_UseItemMenu
             myText: "Terms of Use"
             myToolTipText: "Terms_of_Use"
-            myIcon: "qrc:/media/icon/model.svg"
-            myFillIcon: "qrc:/media/icon/modelFill.svg"
+            myIcon: "qrc:/media/icon/terms_of_Use.svg"
+            myFillIcon: "qrc:/media/icon/terms_of_UseFill.svg"
             autoExclusive: true
             numberPage:2
 

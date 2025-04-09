@@ -80,5 +80,7 @@
         <file>icon/colorPaletteFill.svg</file>
         <file>icon/privacy.svg</file>
         <file>icon/privacyFill.svg</file>
+        <file>icon/terms_of_Use.svg</file>
+        <file>icon/terms_of_UseFill.svg</file>
     </qresource>
 </RCC>
