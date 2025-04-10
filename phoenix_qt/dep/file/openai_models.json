@@ -201,7 +201,7 @@
     "number": "12",
     "modelName": null,
     "name": "GPT-4 Turbo Vision",
-    "type": "Text",
+    "type": "Text Generation",
     "inputPricePer1KTokens": 0.0,
     "outputPricePer1KTokens": 0.0,
     "description": "No description provided.",

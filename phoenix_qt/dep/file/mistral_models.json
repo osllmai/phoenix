@@ -93,7 +93,7 @@
     "number": "6",
     "modelName": "mistral-embed",
     "name": "Mistral Embed",
-    "type": "Embedding",
+    "type": "Embeddings",
     "inputPricePer1KTokens": 0.0001,
     "outputPricePer1KTokens": 0.0,
     "description": "Mistral Embed is an embedding model that transforms text into high-quality vector representations. Suitable for semantic search, clustering, and other NLP applications requiring text embeddings.",
