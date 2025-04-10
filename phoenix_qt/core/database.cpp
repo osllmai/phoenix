@@ -92,7 +92,7 @@ void Database::addModel(const QString &name, const QString &key){
             ramRequ = 32;
 
         emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, "", name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                             id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime());
 
     }
@@ -490,7 +490,7 @@ void Database::readModel(const QList<Company*> companys){
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
-                if(obj["type"].toString() != company->name()) continue;
+                if(obj["company"].toString() != company->name()) continue;
 
                 int id;
                 QString name = obj["name"].toString();
@@ -527,7 +527,7 @@ void Database::readModel(const QList<Company*> companys){
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
                                    id, "", name, key, addDate, isLike, company,
-                                   BackendType::OfflineModel,
+                                   obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime()/*, nullptr*/);
 
@@ -570,11 +570,11 @@ void Database::readModel(const QList<Company*> companys){
                     continue;
 
                 emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
-                                    isLike, company, BackendType::OnlineModel, company->icon(),
+                                    isLike, company, obj["type"].toString(), BackendType::OnlineModel, company->icon(),
                                     obj["description"].toString(), obj["promptTemplate"].toString(),
                                     obj["systemPrompt"].toString(), QDateTime::currentDateTime(), /*nullptr,*/
 
-                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
+                                     obj["inputPricePer1KTokens"].toDouble(),
                                      obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
                                      obj["recommended"].toBool(), obj["commercial"].toBool(),
                                      obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),installModel);
@@ -628,7 +628,7 @@ void Database::readModel(const QList<Company*> companys){
                         ramRequ = 32;
 
                     emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, "", name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                         id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime());
                 }
             }

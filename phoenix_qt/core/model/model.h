@@ -20,6 +20,7 @@ class Model : public QObject
     Q_PROPERTY(QString promptTemplate READ promptTemplate CONSTANT FINAL)
     Q_PROPERTY(QString systemPrompt READ systemPrompt CONSTANT FINAL)
     Q_PROPERTY(Company *company READ company CONSTANT FINAL)
+    Q_PROPERTY(QString type READ type CONSTANT FINAL)
     Q_PROPERTY(BackendType backend READ backend CONSTANT FINAL)
     Q_PROPERTY(QString key READ key WRITE setKey NOTIFY keyChanged FINAL)
     Q_PROPERTY(bool isLike READ isLike WRITE setIsLike NOTIFY isLikeChanged FINAL)
@@ -30,7 +31,8 @@ public:
     explicit Model(QObject* parent = nullptr) : QObject(parent) {}
 
     explicit Model(const int id, const QString& modelName, const QString& name, const QString& key,
-                   QDateTime addModelTime, const bool isLike, Company* company, const BackendType backend,
+                   QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
+                   const BackendType backend,
                    const QString& icon , const QString& information , const QString& promptTemplate ,
                    const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
     virtual ~Model();
@@ -50,6 +52,8 @@ public:
     const QString &systemPrompt() const;
 
     Company *company() const;
+
+    const QString &type() const;
 
     const BackendType backend() const;
 
@@ -78,6 +82,7 @@ private:
     QString m_promptTemplate;
     QString m_systemPrompt;
     Company* m_company;
+    QString m_type;
     BackendType m_backend;
     QString m_key;
     bool m_isLike;

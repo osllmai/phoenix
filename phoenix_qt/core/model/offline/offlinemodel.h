@@ -28,7 +28,7 @@ public:
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
                           const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                          const bool isLike, Company* company, const BackendType backend,
+                          const bool isLike, Company* company, const QString& type,const BackendType backend,
                           const QString& icon , const QString& information , const QString& promptTemplate ,
                           const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
 
