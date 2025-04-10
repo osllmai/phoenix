@@ -4,7 +4,7 @@ import '../style' as Style
 
 Rectangle{
     id: control
-    width: (textArea.visible? 240: control.height); height: 32
+    width: (textArea.visible? 200: control.height); height: 32
     color: Style.Colors.menuHoverBackground
     radius: 8
     clip: true

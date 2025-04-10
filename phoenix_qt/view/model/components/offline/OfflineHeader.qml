@@ -48,16 +48,20 @@ Item{
                     interactive: contentWidth > width
                     boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                    model: offlineCompanyList
+                    model: ListModel {
+                        ListElement {
+                            name: "Chat"
+                            type: "Text Generation"
+                        }
+                    }
                     delegate: MyButton {
                         id: delegateId
                         myText: model.name
-                        myIcon: "qrc:/media/image_company/" + model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.Image
+                        iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         onClicked:{
-                            offlineModelListFilter.companyId = model.id
+                            offlineModelListFilter.type = model.type
                         }
                     }
 
