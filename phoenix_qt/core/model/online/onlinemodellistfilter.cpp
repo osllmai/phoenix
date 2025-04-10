@@ -3,7 +3,7 @@
 
 
 OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject *parent)
-    :QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1)
+    :QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1), m_type("")
 {
     QSortFilterProxyModel::setSourceModel(model);
 
@@ -37,6 +37,8 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
         return matchesFilter;
     case FilterType::Company:
         return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
+    case FilterType::Type:
+        return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::InstallModel:
         return matchesFilter && installModel;
     case FilterType::Favorite:
@@ -51,6 +53,8 @@ void OnlineModelListFilter::filter(QString filter){
         setFilterType(FilterType::All);
     if(filter == "Company")
         setFilterType(FilterType::Company);
+    if(filter == "Type")
+        setFilterType(FilterType::Type);
     if(filter == "InstallModel")
         setFilterType(FilterType::InstallModel);
     if(filter == "Favorite")
@@ -61,6 +65,8 @@ int OnlineModelListFilter::count() const { return rowCount(); }
 
 int OnlineModelListFilter::companyId() const{return m_companyId;}
 void OnlineModelListFilter::setCompanyId(int companyId){
+    if((companyId == m_companyId) && (m_filterType == FilterType::Company))
+        return;
     m_companyId = companyId;
     setFilterType(FilterType::Company);
     emit companyIdChanged();
@@ -69,8 +75,20 @@ void OnlineModelListFilter::setCompanyId(int companyId){
 
 OnlineModelListFilter::FilterType OnlineModelListFilter::filterType() const{return m_filterType;}
 void OnlineModelListFilter::setFilterType(FilterType newFilterType){
+    if((newFilterType == m_filterType) && (m_filterType != FilterType::Company) && (m_filterType != FilterType::Type))
+        return;
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();
+    emit countChanged();
+}
+
+QString OnlineModelListFilter::type() const{return m_type;}
+void OnlineModelListFilter::setType(const QString &newType){
+    if ((m_type == newType) && (m_filterType == FilterType::Type))
+        return;
+    m_type = newType;
+    setFilterType(FilterType::Type);
+    emit typeChanged();
     emit countChanged();
 }
