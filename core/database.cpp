@@ -490,7 +490,6 @@ void Database::readModel(const QList<Company*> companys){
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
-                if(obj["company"].toString() != company->name()) continue;
 
                 int id;
                 QString name = obj["name"].toString();
