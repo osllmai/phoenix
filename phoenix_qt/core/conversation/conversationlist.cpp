@@ -87,29 +87,6 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     return roles;
 }
 
-bool ConversationList::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (!index.isValid() || index.row() < 0 || index.row() >= m_conversations.count())
-        return false;
-
-    Conversation* conversation = m_conversations[index.row()];
-    bool somethingChanged = false;
-
-    switch (role) {
-    case TitleRole:
-        if (conversation->title() != value.toString()) {
-            conversation->setTitle(value.toString());
-            somethingChanged = true;
-        }
-        break;
-    }
-
-    if (somethingChanged) {
-        emit dataChanged(index, index, QVector<int>() << role);
-        return true;
-    }
-    return false;
-}
-
 void ConversationList::addRequest(const QString &firstPrompt){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
@@ -123,10 +100,16 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
     QString title = selectedWords.join(" ");
 
+    QString _systemPrompt = "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n";
+    QString _propmtTemplate = "### Human:\n%1\n\n### Assistant:\n";
+
+    if(m_modelSystemPrompt != "")
+        _systemPrompt = m_modelSystemPrompt;
+    if(m_modelPromptTemplate != "")
+        _propmtTemplate = m_modelPromptTemplate;
+
     emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
-                    "### Human:\n%1\n\n### Assistant:\n",
-                    "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
-                    0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
+                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -164,11 +147,26 @@ void ConversationList::editTitleRequest(const int id, const QString &title){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {TitleRole});
 }
 
-void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon){
+void ConversationList::likeMessageRequest(const int conversationId, const int messageId, const int like){
+    emit requestUpdateLikeMessage(conversationId, messageId, like);
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    conversation->likeMessageRequest(messageId, like);
+}
+
+void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
     setModelId(id);
     setModelText(text);
     setModelIcon(icon);
+    setModelPromptTemplate(promptTemplate);
+    setModelSystemPrompt(systemPrompt);
     setModelSelect(true);
+    if(!m_isEmptyConversation){
+        if(m_modelPromptTemplate != "")
+            m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        if(m_modelSystemPrompt != "")
+            m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    }
 }
 
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
@@ -178,27 +176,19 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                        const int &contextLength, const int &numberOfGPULayers, const bool selectConversation) {
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
-    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned, this);
-
-    conversation->modelSettings()->setStream(stream);
-    conversation->modelSettings()->setPromptTemplate(promptTemplate);
-    conversation->modelSettings()->setSystemPrompt(systemPrompt);
-    conversation->modelSettings()->setTemperature(temperature);
-    conversation->modelSettings()->setTopK(topK);
-    conversation->modelSettings()->setTopP(topP);
-    conversation->modelSettings()->setMinP(minP);
-    conversation->modelSettings()->setRepeatPenalty(repeatPenalty);
-    conversation->modelSettings()->setPromptBatchSize(promptBatchSize);
-    conversation->modelSettings()->setMaxTokens(maxTokens);
-    conversation->modelSettings()->setRepeatPenaltyTokens(repeatPenaltyTokens);
-    conversation->modelSettings()->setContextLength(contextLength);
-    conversation->modelSettings()->setNumberOfGPULayers(numberOfGPULayers);
+    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned,
+                                                  stream, promptTemplate, systemPrompt,
+                                                  temperature, topK, topP, minP, repeatPenalty,
+                                                  promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                                  contextLength, numberOfGPULayers, this);
 
     m_conversations.append(conversation);
     connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
     connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
+    connect(conversation, &Conversation::requestUpdateDescriptionText, this, &ConversationList::updateDescriptionText, Qt::QueuedConnection);
     endInsertRows();
     emit countChanged();
 
@@ -210,15 +200,23 @@ void ConversationList::addConversation(const int id, const QString &title, const
     }
 }
 
-void ConversationList::addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt){
-    Conversation* conversation = findConversationById(idConversation);
+void ConversationList::addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
+    Conversation* conversation = findConversationById(conversationId);
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
-    conversation->addMessage(id, text, date, icon, isPrompt);
-    conversation->setDate(date);
+    conversation->addMessage(id, text, date, icon, isPrompt, like);
     conversation->setDescription(text);
+    conversation->setDate(date);
     conversation->setIcon(icon);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole, IconRole, DateRole});
+}
+
+void ConversationList::updateDescriptionText(const int conversationId, const QString &text){
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    conversation->setDescription(text);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole});
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){
@@ -227,14 +225,29 @@ void ConversationList::selectCurrentConversationRequest(const int id){
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();
     setIsEmptyConversation(false);
+    if(m_modelSelect){
+        if(m_modelPromptTemplate != "")
+            m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+        if(m_modelSystemPrompt != "")
+            m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    }
 }
 
-void ConversationList::readMessages(const int idConversation){
-    emit requestReadMessages(idConversation);
+void ConversationList::readMessages(const int conversationId){
+    emit requestReadMessages(conversationId);
 }
 
-void ConversationList::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
-    emit requestInsertMessage(idConversation, text, icon, isPrompt);
+void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like){
+    emit requestInsertMessage(conversationId, text, icon, isPrompt, like);
+}
+
+void ConversationList::updateTextMessage(const int conversationId, const int messageId, const QString &text){
+    emit requestUpdateTextMessage(conversationId, messageId, text);
+    Conversation* conversation = findConversationById(conversationId);
+    if(conversation == nullptr) return;
+    const int index = m_conversations.indexOf(conversation);
+    conversation->setDescription(text);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole});
 }
 
 void ConversationList::updateDateConversation(const int id, const QString &description, const QString &icon){
@@ -259,24 +272,29 @@ Conversation* ConversationList::findConversationById(const int id) {
     return (it != m_conversations.end()) ? *it : nullptr;
 }
 
-QVariant ConversationList::dateCalculation(const QDateTime date)const{
+QVariant ConversationList::dateCalculation(const QDateTime date) const {
     QDateTime now = QDateTime::currentDateTime();
-    if(date.daysTo(now) < 1 && date.toString("dd")==now.toString("dd"))
+    if (date.date() == now.date())
         return date.toString("hh:mm") + " Today";
-    if(date.daysTo(now) < 7)
+
+    int daysDiff = date.daysTo(now);
+
+    // qInfo()<<daysDiff<<"  "<<date<<"    "<<now;
+    if (daysDiff < 7 && date.date().year() == now.date().year())
         return date.toString("dddd");
-    if(date.toString("yyyy") == now.toString("yyyy"))
+
+    if (date.date().year() == now.date().year())
         return date.toString("MMMM dd");
-    else
-        return date.toString("MM/dd/yyyy");
+
+    return date.toString("MM/dd/yyyy");
 }
 
-bool ConversationList::modelSelect() const{return m_modelSelect;}
-void ConversationList::setModelSelect(bool newModelSelect){
-    if (m_modelSelect == newModelSelect)
+int ConversationList::modelId() const{return m_modelId;}
+void ConversationList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
         return;
-    m_modelSelect = newModelSelect;
-    emit modelSelectChanged();
+    m_modelId = newModelId;
+    emit modelIdChanged();
 }
 
 QString ConversationList::modelText() const{return m_modelText;}
@@ -295,12 +313,28 @@ void ConversationList::setModelIcon(const QString &newModelIcon){
     emit modelIconChanged();
 }
 
-int ConversationList::modelId() const{return m_modelId;}
-void ConversationList::setModelId(int newModelId){
-    if (m_modelId == newModelId)
+QString ConversationList::modelSystemPrompt() const{ return m_modelSystemPrompt; }
+void ConversationList::setModelSystemPrompt(const QString &newModelSystemPrompt){
+    if (m_modelSystemPrompt == newModelSystemPrompt)
         return;
-    m_modelId = newModelId;
-    emit modelIdChanged();
+    m_modelSystemPrompt = newModelSystemPrompt;
+    emit modelSystemPromptChanged();
+}
+
+QString ConversationList::modelPromptTemplate() const{ return m_modelPromptTemplate; }
+void ConversationList::setModelPromptTemplate(const QString &newModelPromptTemplate){
+    if (m_modelPromptTemplate == newModelPromptTemplate)
+        return;
+    m_modelPromptTemplate = newModelPromptTemplate;
+    emit modelPromptTemplateChanged();
+}
+
+bool ConversationList::modelSelect() const{return m_modelSelect;}
+void ConversationList::setModelSelect(bool newModelSelect){
+    if (m_modelSelect == newModelSelect)
+        return;
+    m_modelSelect = newModelSelect;
+    emit modelSelectChanged();
 }
 
 bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation;}

@@ -14,12 +14,9 @@
 
 // #include "../phoenix/llmodel.h"
 
-std::string answer = "";
-// LLModel::PromptContext prompt_context;
-// LLModel* model;
-std::string prompt_template;
 
-OfflineProvider::OfflineProvider(Provider *parent)
+
+OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
 {
     moveToThread(&chatLLMThread);
@@ -37,13 +34,13 @@ void OfflineProvider::stop(){
     _stopFlag = true;
 }
 
-void OfflineProvider::loadModel(const QString &modelPath)
+void OfflineProvider::loadModel(const QString &model, const QString &key)
 {
 
     qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 
-    QThread::msleep(5000);
-    //     std::string backend = "cuda";
+    // QThread::msleep(5000);
+        std::string backend = "cuda";
 
     //     prompt_context.n_ctx = 4096;
     //     prompt_context.n_predict = 4096;
@@ -77,18 +74,21 @@ void OfflineProvider::loadModel(const QString &modelPath)
     //         qDebug() << "\r" << "done loading!" ;
     //         emit loadModelResult(true);
     //     }
-    emit loadModelResult(true, "");
+    emit requestLoadModelResult(true, "");
     qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
 }
 
-void OfflineProvider::unloadModel(){
+void OfflineProvider::unLoadModel(){
 
         // delete model;
         // model = nullptr;
 
 }
 
-void OfflineProvider::prompt(const QString &input){
+void OfflineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                             const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                             const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                             const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){
 
     _stopFlag = false;
     qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
@@ -96,7 +96,7 @@ void OfflineProvider::prompt(const QString &input){
     QThread::msleep(5000);
     answer = "";
 
-    qDebug() << "This is C++ talking, input: " << input;
+    // qDebug() << "This is C++ talking, input: " << input;
 
     // auto prompt_callback = [](int32_t token_id) { return true;};
 
@@ -111,15 +111,15 @@ void OfflineProvider::prompt(const QString &input){
     // QString qStr = QString::fromStdString(answer);
     // qInfo() <<  qStr;
 
-    for (int i = 0; i < 40; i++) {
-        emit tokenResponse("Hi  :)  ");
-        // qInfo()<<"send";
-        QThread::msleep(50);
-        emit tokenResponse("Phoenix!, ");
-        QThread::msleep(50);
-    }
+    // for (int i = 0; i < 40; i++) {
+    //     emit requestTokenResponse("Hi  :)  ");
+    //     // qInfo()<<"send";
+    //     QThread::msleep(50);
+    //     emit requestTokenResponse("Phoenix!, ");
+    //     QThread::msleep(50);
+    // }
 
-    emit finishedResponnse("");
+    emit requestFinishedResponse("");
     qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
 }
 
@@ -129,11 +129,11 @@ bool OfflineProvider::handleResponse(int32_t token, const std::string &response)
 
     if (!(responsechars == nullptr || responsechars[0] == '\0')) {
 
-        std::cout << responsechars << std::flush;
-        qInfo()<<responsechars;
+        // std::cout << responsechars << std::flush;
+        // qInfo()<<responsechars;
 
-        answer += responsechars;
-        emit tokenResponse(QString::fromStdString(response));
+        // answer += responsechars;
+        emit requestTokenResponse(QString::fromStdString(response));
         // emit tokenResponse(QString::fromStdString(answer));
     }
     return !_stopFlag;

@@ -6,13 +6,28 @@ import '../../../component_library/button'
 
 Rectangle{
     id: controlId
-    height: 60; width: parent.width
+    height: 60; width: Math.min(670, parent.width - 48)
+    anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
 
     signal sendPrompt(var prompt)
+
+    function selectIcon(){
+        if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
+            if(iconId.hovered)
+                return "qrc:/media/icon/stopFill.svg"
+            else
+                return "qrc:/media/icon/stop.svg"
+        }else{
+            if(iconId.hovered)
+                return "qrc:/media/icon/sendFill.svg"
+            else
+                return "qrc:/media/icon/send.svg"
+        }
+    }
 
     Row{
         anchors.fill: parent
@@ -43,21 +58,37 @@ Rectangle{
                 cursorVisible: false
                 persistentSelection: true
                 placeholderTextColor: Style.Colors.textInformation
-                onHeightChanged: {
-                    if(inputTextBox.height >controlId.height - 20 && inputTextBox.text !== ""){
-                        controlId.height  = Math.min(inputTextBox.height + 20 , 180) ;
-                    }if(inputTextBox.text === ""){
-                        controlId.height = 60
+
+                onTextChanged: {
+                    controlId.layer.enabled = true
+                    adjustHeight()
+                }
+
+                onContentHeightChanged: {
+                    adjustHeight()
+                }
+
+                function adjustHeight() {
+                    const newHeight = Math.max(40, inputTextBox.contentHeight);
+                    if (inputTextBox.text === "") {
+                        controlId.height = 60;
+                    } else {
+                        controlId.height = Math.min(newHeight + 20, 180); // اضافه کردن padding
                     }
                 }
 
                 Keys.onReturnPressed: (event)=> {
-                  if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
-                    event.accepted = false;
-                  }else {
-                        sendPrompt(inputTextBox.text)
-                        inputTextBox.text = ""
-                  }
+                      if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
+                        event.accepted = false;
+                      }else {
+                          if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
+                              conversationList.currentConversation.stop()
+                        else{
+                          sendPrompt(inputTextBox.text)
+                          if(conversationList.modelSelect)
+                                inputTextBox.text = ""
+                        }
+                    }
                 }
 
                 onEditingFinished: {
@@ -66,19 +97,21 @@ Rectangle{
                 onPressed: {
                     controlId.layer.enabled= true
                 }
-                onTextChanged: {
-                    controlId.layer.enabled= true
-                }
             }
         }
         MyIcon {
             id: iconId
             anchors.bottom: parent.bottom
-            myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
+            myIcon: selectIcon()
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                sendPrompt(inputTextBox.text)
-                inputTextBox.text = ""
+                if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
+                    conversationList.currentConversation.stop()
+                }else{
+                    sendPrompt(inputTextBox.text)
+                    if(conversationList.modelSelect)
+                          inputTextBox.text = ""
+                }
             }
         }
     }

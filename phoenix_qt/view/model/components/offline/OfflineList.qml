@@ -44,7 +44,7 @@ Item {
 
            OfflineDelegate {
                id: indoxItem
-               anchors.fill: parent; anchors.margins: indoxItem.hovered? 18: 20
+               anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
         }

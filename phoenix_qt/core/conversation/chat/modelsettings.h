@@ -25,6 +25,10 @@ class ModelSettings : public QObject{
 public:
     explicit ModelSettings(QObject* parent = nullptr) : QObject(parent) {}
     explicit ModelSettings(const int &id, QObject *parent = nullptr);
+    explicit ModelSettings(const int &id, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                           const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                           const int &contextLength, const int &numberOfGPULayers, QObject *parent = nullptr);
     virtual ~ModelSettings();
 
     const int id() const;
@@ -82,6 +86,7 @@ signals:
     void repeatPenaltyTokensChanged();
     void contextLengthChanged();
     void numberOfGPULayersChanged();
+
 
 private:
     int m_id;

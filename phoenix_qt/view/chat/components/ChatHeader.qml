@@ -2,23 +2,27 @@ import QtQuick 2.15
 import '../../component_library/style' as Style
 import "../../component_library/button"
 import "./model"
+import "../../menu"
 
 Item{
     id:headerId
     width: parent.width; height: 80
     signal openModelSettingsDrawer()
     signal openHistoryDrawer()
-    clip: true
-
-    function openModelList(){
-        currentModelDialogId.open();
+    function openModelComboBox(){
+        currentModelComboBoxId.popup.open();
     }
 
+    clip: true
+
     Row{
-        spacing: 20
+        spacing: 10
         anchors.left: parent.left; anchors.leftMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter
+        MyOpenMenuButton{
+            id: openMenuId
+        }
         MyButton{
             id: newChatId
             visible: !conversationList.isEmptyConversation
@@ -32,19 +36,18 @@ Item{
                 }
             }
         }
-        ModelButton{
-            id: modelButtonId
+        ModelComboBox{
+            id: currentModelComboBoxId
         }
     }
 
     Row{
-        spacing: 20
+        spacing: 10
         anchors.right: parent.right; anchors.rightMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: openModelSettingsId
-            myText: "Model Settings"
             myIcon: "qrc:/media/icon/settings.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
@@ -56,7 +59,6 @@ Item{
         }
         MyButton{
             id: openHistoryId
-            myText: "History"
             myIcon: "qrc:/media/icon/history.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
@@ -65,14 +67,6 @@ Item{
                     headerId.openHistoryDrawer()
                 }
             }
-        }
-    }
-    ModelDialog{
-        id: currentModelDialogId
-        y: modelButtonId.y + modelButtonId.height + 20 + 24
-        x: modelButtonId.x + 20
-        onClosed: {
-            modelButtonId.isClose = true;
         }
     }
 }

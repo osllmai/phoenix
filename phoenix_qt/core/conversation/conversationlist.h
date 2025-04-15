@@ -20,6 +20,8 @@ class ConversationList: public QAbstractListModel
     Q_PROPERTY(int modelId READ modelId WRITE setModelId NOTIFY modelIdChanged FINAL)
     Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
     Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(QString modelPromptTemplate READ modelPromptTemplate NOTIFY modelPromptTemplateChanged FINAL)
+    Q_PROPERTY(QString modelSystemPrompt READ modelSystemPrompt NOTIFY modelSystemPromptChanged FINAL)
     Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
 
 public:
@@ -39,21 +41,22 @@ public:
         loadModelInProgressRole,
         ResponseInProgressRole,
         MessageListRole,
-        ConversationObjectRole
+        ConversationObjectRole,
+        CurrentResponseRole
     };
 
     int count() const;
     int rowCount(const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE void addRequest(const QString &firstPrompt);
     Q_INVOKABLE void selectCurrentConversationRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
     Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
-    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon);
+    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
+    Q_INVOKABLE void likeMessageRequest(const int conversationId, const int messageId, const int like);
 
     Conversation *currentConversation();
     void setCurrentConversation(Conversation *newCurrentConversation);
@@ -76,6 +79,12 @@ public:
     bool modelSelect() const;
     void setModelSelect(bool newModelSelect);
 
+    QString modelPromptTemplate() const;
+    void setModelPromptTemplate(const QString &newModelPromptTemplate);
+
+    QString modelSystemPrompt() const;
+    void setModelSystemPrompt(const QString &newModelSystemPrompt);
+
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
                   const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
@@ -83,9 +92,11 @@ public slots:
                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                   const int &contextLength, const int &numberOfGPULayersconst, bool selectConversation);
 
-    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
-    void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void readMessages(const int conversationId);
+    void insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void updateTextMessage(const int conversationId, const int messageId, const QString &text);
+    void updateDescriptionText(const int conversationId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
     void updateModelSettingsConversation(const int id, const bool &stream,
                                                 const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
@@ -102,6 +113,8 @@ signals:
     void modelIconChanged();
     void modelTextChanged();
     void modelSelectChanged();
+    void modelPromptTemplateChanged();
+    void modelSystemPromptChanged();
 
     void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
@@ -119,9 +132,11 @@ signals:
                         const int &contextLength, const int &numberOfGPULayers);
     void requestUpdateFilterList();
     void requestReadConversation();
+    void requestUpdateLikeMessage(const int conversationId, const int messageId, const int like);
 
-    void requestReadMessages(const int idConversation);
-    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void requestReadMessages(const int conversationId);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
 
 private:
     explicit ConversationList(QObject* parent = nullptr);
@@ -138,6 +153,8 @@ private:
     int m_modelId;
     QString m_modelIcon;
     QString m_modelText;
+    QString m_modelPromptTemplate;
+    QString m_modelSystemPrompt;
     bool m_modelSelect;
 };
 

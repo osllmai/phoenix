@@ -92,7 +92,7 @@ void Database::addModel(const QString &name, const QString &key){
             ramRequ = 32;
 
         emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                             id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime());
 
     }
@@ -226,8 +226,10 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
                                                     const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
-    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL))
+    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
+        qInfo()<<query.lastError().text();
         return;
+    }
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -242,11 +244,13 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     query.addBindValue(contextLength);
     query.addBindValue(numberOfGPULayers);
     query.addBindValue(id);
-    if (!query.exec())
+    if (!query.exec()){
+        qInfo()<<query.lastError().text();
         return;
+    }
 }
 
-void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt){
+void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){
     QDateTime date = QDateTime::currentDateTime();
 
     QSqlQuery query(m_db);
@@ -258,14 +262,53 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPrompt);
+    query.addBindValue(like);
     if (!query.exec())
         return;
 
     int id = query.lastInsertId().toInt();
 
-    emit addMessage(idConversation, id, text, date, icon, isPrompt);
+    emit addMessage(idConversation, id, text, date, icon, isPrompt, like);
 
     updateDateConversation(idConversation, text, icon);
+}
+
+void Database::updateLikeMessage(const int conversationId, const int messageId, const int like){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_LIKE_MESSAGE_SQL))
+        return;
+    query.addBindValue(like);
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+    if (!query.exec())
+        return;
+}
+
+void Database::updateTextMessage(const int conversationId, const int messageId, const QString &text){
+    QSqlQuery query(m_db);
+
+    if (!query.prepare(UPDATE_TEXT_MESSAGE_SQL))
+        return;
+
+    query.addBindValue(text);
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+    if (!query.exec())
+        return;
+
+    //Find icon for update Conversation in DB
+    if (!query.prepare(READ_ICON_MESSAGE_SQL))
+        return ;
+
+    query.addBindValue(conversationId);
+    query.addBindValue(messageId);
+
+    if (!query.exec())
+        return ;
+
+    if (query.next())
+        updateDateConversation(conversationId, text, query.value(0).toString());
 }
 
 const QString Database::MODEL_SQL = QLatin1String(R"(
@@ -384,25 +427,38 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
     CREATE TABLE message(
             conversation_id INTEGER NOT NULL,
             id INTEGER NOT NULL UNIQUE,
-            text TEXT NOT NULL,
+            text TEXT,
             date DATE NOT NULL,
             icon TEXT NOT NULL,
             isPrompt BOOL NOT NULL,
+            like INTEGER NOT NULL,
             PRIMARY KEY(id AUTOINCREMENT),
             foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
     )
 )");
 
 const QString Database::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, date, icon, isPrompt FROM message WHERE conversation_id=?
+    SELECT id, text, date, icon, isPrompt, like FROM message WHERE conversation_id=?
 )");
 
 const QString Database::INSERT_MESSAGE_SQL = QLatin1String(R"(
-    INSERT INTO message(conversation_id, text, date, icon, isPrompt) VALUES (?, ?, ?, ?, ?)
+    INSERT INTO message(conversation_id, text, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::DELETE_MESSAGE_SQL = QLatin1String(R"(
     DELETE FROM message WHERE conversation_id=?
+)");
+
+const QString Database::UPDATE_LIKE_MESSAGE_SQL = QLatin1String(R"(
+    UPDATE message SET like=? Where conversation_id=? AND id=?
+)");
+
+const QString Database::UPDATE_TEXT_MESSAGE_SQL = QLatin1String(R"(
+    UPDATE message SET text=? Where conversation_id=? AND id=?
+)");
+
+const QString Database::READ_ICON_MESSAGE_SQL = QLatin1String(R"(
+    SELECT icon FROM message WHERE conversation_id=? AND id=?
 )");
 
 void Database::readModel(const QList<Company*> companys){
@@ -434,7 +490,7 @@ void Database::readModel(const QList<Company*> companys){
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
-                if(obj["type"].toString() != company->name()) continue;
+                if(obj["company"].toString() != company->name()) continue;
 
                 int id;
                 QString name = obj["name"].toString();
@@ -470,8 +526,8 @@ void Database::readModel(const QList<Company*> companys){
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
-                                   id, name, key, addDate, isLike, company,
-                                   BackendType::OfflineModel,
+                                   id, "", name, key, addDate, isLike, company,
+                                   obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime()/*, nullptr*/);
 
@@ -513,12 +569,12 @@ void Database::readModel(const QList<Company*> companys){
                 if(id == -1)
                     continue;
 
-                emit addOnlineModel(id, name, key, addDate,
-                                    isLike, company, BackendType::OnlineModel, company->icon(),
+                emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
+                                    isLike, company, obj["type"].toString(), BackendType::OnlineModel, company->icon(),
                                     obj["description"].toString(), obj["promptTemplate"].toString(),
                                     obj["systemPrompt"].toString(), QDateTime::currentDateTime(), /*nullptr,*/
 
-                                     obj["type"].toString(), obj["inputPricePer1KTokens"].toDouble(),
+                                     obj["inputPricePer1KTokens"].toDouble(),
                                      obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
                                      obj["recommended"].toBool(), obj["commercial"].toBool(),
                                      obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),installModel);
@@ -572,7 +628,7 @@ void Database::readModel(const QList<Company*> companys){
                         ramRequ = 32;
 
                     emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, name, key, addDate, isLike, nullptr, BackendType::OfflineModel,
+                                         id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime());
                 }
             }
@@ -627,7 +683,8 @@ void Database::readMessages(const int idConversation){
                 query.value(1).toString(),
                 query.value(2).toDateTime(),
                 query.value(3).toString(),
-                query.value(4).toBool()
+                query.value(4).toBool(),
+                query.value(5).toInt()
                 );
          }
     }

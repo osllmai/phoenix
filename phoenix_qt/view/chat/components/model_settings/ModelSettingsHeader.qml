@@ -5,7 +5,7 @@ import "../../../component_library/button"
 
 Item{
     id: headerId
-    height: 90; width: parent.width
+    height: 40; width: parent.width
     clip:true
     signal closeDrawer()
     Column{
@@ -14,7 +14,7 @@ Item{
         Row{
             height: 35
             spacing: parent.width - titleId.width - closeBox.width
-            Text {
+            Label {
                 id: titleId
                 text: qsTr("Model Settings")
                 color: Style.Colors.textTitle
@@ -34,7 +34,7 @@ Item{
                     background: null
                     icon{
                         source: "qrc:/media/icon/close.svg"
-                        color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+                        color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
                         width: searchIcon.width; height: searchIcon.height
                     }
                     MouseArea{
@@ -43,14 +43,6 @@ Item{
                         onClicked:{headerId.closeDrawer()}
                     }
                 }
-            }
-        }
-        SearchButton{
-            id: searchBoxId
-            width: parent.width
-            Connections{
-                target: searchBoxId
-                function onSearch(myText){}
             }
         }
     }

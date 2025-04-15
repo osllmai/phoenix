@@ -230,8 +230,8 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                 const QString& parameters, const QString& quant, const double downloadPercent,
                                 const bool isDownloading, const bool downloadFinished,
 
-                                const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                                const bool isLike, Company* company, const BackendType backend,
+                                const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
+                                const bool isLike, Company* company, const QString& type, const BackendType backend,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
                                 const QString& systemPrompt, QDateTime expireModelTime)
 {
@@ -240,7 +240,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
     OfflineModel* model = new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
-                                           id, name, key, addModelTime, isLike, company,backend, icon, information,
+                                           id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, m_instance);
     m_models.append(model);
     endInsertRows();

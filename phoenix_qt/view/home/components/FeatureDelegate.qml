@@ -41,7 +41,7 @@ T.Button {
                     width:42; height:42
                 }
 
-                Text {
+                Label {
                     id: titleId
                     text: control.myText
                     color: Style.Colors.textTitle
@@ -50,20 +50,32 @@ T.Button {
                     font.styleName: "Bold"
                 }
             }
-            Item{
-                id: bodyId
+            Label{
+                id: informationId
                 height: parent.height - headerId.height - buttonList.height - 20
                 width: parent.width
-                Label{
-                    id:informationId
-                    text: control.about
-                    color: Style.Colors.textInformation
-                    clip: true
-                    anchors.left: parent.left; anchors.right: parent.right
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignJustify
-                    verticalAlignment: Text.AlignTop
-                    wrapMode: Text.Wrap
+                text: control.about
+                color: Style.Colors.textInformation
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                elide: Label.ElideRight
+                clip: true
+                MouseArea {
+                    id: infoMouseArea
+                    anchors.fill: informationId
+                    hoverEnabled: true
+
+                    onPositionChanged: {
+                        toolTip.x = mouseX
+                        toolTip.y = mouseY
+                    }
+
+                    MyToolTip{
+                        id: toolTip
+                        toolTipText: control.about
+                    }
                 }
             }
             Row{

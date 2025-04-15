@@ -2,7 +2,7 @@
 #include "offlinemodellist.h"
 
 OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObject *parent):
-    QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1)
+    QSortFilterProxyModel(parent), m_filterType(FilterType::All), m_companyId(-1), m_type("")
 {
     QSortFilterProxyModel::setSourceModel(models);
 
@@ -38,6 +38,8 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
         return matchesFilter;
     case FilterType::Company:
         return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
+    case FilterType::Type:
+        return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::DownloadFinished:
         return matchesFilter && downloadFinished;
     case FilterType::Favorite:
@@ -54,6 +56,8 @@ void OfflineModelListFilter::filter(QString filter){
         setFilterType(FilterType::All);
     if(filter == "Company")
         setFilterType(FilterType::Company);
+    if(filter == "Type")
+        setFilterType(FilterType::Type);
     if(filter == "DownloadFinished")
         setFilterType(FilterType::DownloadFinished);
     if(filter == "Favorite")
@@ -76,10 +80,20 @@ void OfflineModelListFilter::setCompanyId(int companyId){
 
 OfflineModelListFilter::FilterType OfflineModelListFilter::filterType() const{return m_filterType;}
 void OfflineModelListFilter::setFilterType(FilterType newFilterType){
-    if((newFilterType == m_filterType) && (m_filterType != FilterType::Company))
+    if((newFilterType == m_filterType) && (m_filterType != FilterType::Company) && (m_filterType != FilterType::Type))
         return;
     m_filterType = newFilterType;
     invalidateFilter();
     emit filterTypeChanged();
+    emit countChanged();
+}
+
+QString OfflineModelListFilter::type() const{return m_type;}
+void OfflineModelListFilter::setType(const QString &newType){
+    if ((m_type == newType) && (m_filterType == FilterType::Type))
+        return;
+    m_type = newType;
+    setFilterType(FilterType::Type);
+    emit typeChanged();
     emit countChanged();
 }

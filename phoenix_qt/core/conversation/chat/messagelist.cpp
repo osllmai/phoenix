@@ -29,6 +29,8 @@ QVariant MessageList::data(const QModelIndex &index, int role) const {
         return message->icon();
     case IsPromptRole:
         return message->isPrompt();
+    case LikeRole:
+        return message->like();
     default:
         return QVariant();
     }
@@ -41,6 +43,7 @@ QHash<int, QByteArray> MessageList::roleNames() const {
     roles[DateRole] = "date";
     roles[IconRole] = "icon";
     roles[IsPromptRole] = "isPrompt";
+    roles[LikeRole] = "like";
     return roles;
 }
 
@@ -58,6 +61,12 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
             somethingChanged = true;
         }
         break;
+    case LikeRole:
+        if (message->like() != value.toInt()) {
+            message->setLike(value.toInt());
+            somethingChanged = true;
+        }
+        break;
     }
 
     if (somethingChanged) {
@@ -67,13 +76,13 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
     return false;
 }
 
-void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt) {
+void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt, const int like) {
     beginInsertRows(QModelIndex(), m_messages.size(), m_messages.size());
-    Message* message = new Message(id, text, date, icon, isPrompt, this);
+    Message* message = new Message(id, text, date, icon, isPrompt, like, this);
     m_messages.append(message);
     endInsertRows();
     emit countChanged();
-    emit requestAddMessage(id, text, date, icon, isPrompt);
+    emit requestAddMessage(id, text, date, icon, isPrompt, like);
 }
 
 Message* MessageList::findMessageById(const int id) {
@@ -93,4 +102,44 @@ QVariant MessageList::dateCalculation(const QDateTime date)const{
         return date.toString("hh:mm") + " " + date.toString("MMMM dd");
     else
         return date.toString("hh:mm") + " " + date.toString("MM/dd/yyyy");
+}
+
+void MessageList::updateLastMessage(const QString &newText) {
+    if (m_messages.isEmpty()) {
+        return; // No messages to update
+    }
+
+    Message* lastMessage = m_messages.last(); // Get the last message
+    if (!lastMessage) {
+        return;
+    }
+
+    lastMessage->setText(lastMessage->text() + newText); // Update the text
+    QModelIndex lastIndex = index(m_messages.size() - 1);
+    emit dataChanged(lastIndex, lastIndex, {TextRole});
+}
+
+
+QVariantMap MessageList::lastMessageInfo() const {
+    QVariantMap result;
+    if (m_messages.isEmpty()) {
+        return result; // Return empty if there are no messages
+    }
+
+    Message* lastMessage = m_messages.last();
+    if (!lastMessage) {
+        return result;
+    }
+
+    result["id"] = lastMessage->id();
+    result["text"] = lastMessage->text();
+    return result;
+}
+
+void MessageList::likeMessageRequest(const int messageId, const int like){
+    Message* message = findMessageById(messageId);
+    if(message == nullptr) return;
+    const int index = m_messages.indexOf(message);
+    message->setLike(like);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {LikeRole});
 }

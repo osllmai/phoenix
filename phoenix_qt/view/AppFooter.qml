@@ -36,11 +36,10 @@ Item {
             Downloading{
                 id: downloadingPupup
                 x: downloading.x
-                y: downloading.y - downloadingPupup.height
+                y: downloading.y - downloadingPupup.height - 10
             }
         }
     }
-
     Row{
         anchors.right: parent.right; anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
@@ -60,13 +59,15 @@ Item {
             SystemMonitoring{
                 id: systemMonitorPupup
                 x: systemMonitoring.x - 124
-                y: systemMonitoring.y - systemMonitorPupup.height
+                y: systemMonitoring.y - systemMonitorPupup.height - 10
             }
         }
         MyIcon {
             id: githubIcon
             myIcon: "qrc:/media/icon/github.svg"
             myTextToolTip: "Github"
+            myWidthToolTip: 60
+            toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 Qt.openUrlExternally("https://github.com/osllmai")
@@ -76,6 +77,8 @@ Item {
             id: discordIcon
             myIcon: "qrc:/media/icon/discord.svg"
             myTextToolTip: "Discord"
+            myWidthToolTip: 65
+            toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
                 Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")

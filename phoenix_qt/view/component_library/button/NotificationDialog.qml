@@ -6,9 +6,9 @@ import '../style' as Style
 Popup{
     id: control
     x: parent.width - width - 10
-    y: parent.height - height - 40
-    width: 250
-    height: 100
+    y: parent.height - height - 10
+    width: 300
+    height: titleId.height + informationId.height + 55
 
     property var titleText
     property var about
@@ -25,38 +25,27 @@ Popup{
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
-
-        gradient: Gradient {
-            GradientStop {
-                position: 0
-                color: control.hovered ? Style.Colors.boxHoverGradient0 : Style.Colors.boxNormalGradient0
-            }
-            GradientStop {
-                position: 1
-                color: control.hovered ? Style.Colors.boxHoverGradient1 : Style.Colors.boxNormalGradient1
-            }
-            orientation: Gradient.Vertical
-        }
+        color: Style.Colors.background
 
         Column{
             anchors.fill: parent
-            spacing: 10
             anchors.margins: 20
-            Text {
+            spacing: 10
+            Label {
                 id: titleId
                 text: control.titleText
                 color: Style.Colors.textTitle
-                font.pixelSize: 16
+                font.pixelSize: 18
                 font.styleName: "Bold"
             }
 
-            Text {
+            Label {
                 id: informationId
                 text: control.about
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                font.pixelSize: 14
+                font.pixelSize: 12
                 wrapMode: Text.Wrap
             }
         }
@@ -73,26 +62,21 @@ Popup{
             contentItem: Item {
                 implicitHeight: 6
                 Rectangle {
-                    width: progressBarCPU.visualPosition * parent.width
-                    height: 6
                     radius: 2
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: Style.Colors.progressBarGradient0 }
-                        GradientStop { position: 1.0; color: Style.Colors.progressBarGradient1 }
-                    }
+                    width: progressBarCPU.visualPosition * parent.width; height: 6
+                    color: Style.Colors.boxBorder
                     Behavior on width { NumberAnimation { duration: 100 } }
                 }
             }
         }
 
-        layer.enabled: control.hovered ? true : false
+        layer.enabled: true
         layer.effect: Glow {
-            samples: 40
-            color: Style.Colors.boxBorder
-            spread: 0.1
-            transparentBorder: true
-        }
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 
     Timer {

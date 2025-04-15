@@ -45,7 +45,7 @@ T.Popup {
                     enabled: false
                     width: 40; height: 40
                 }
-                Text {
+                Label {
                     id: titleId
                     width: parent.width - logoModelId.width - likeIconId.width
                     text: model.name
@@ -56,7 +56,7 @@ T.Popup {
                 }
                 MyIcon{
                     id: likeIconId
-                    myIcon: model.isLike? "qrc:/media/icon/like.svg": "qrc:/media/icon/disLike.svg"
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
                     isNeedAnimation: true
@@ -71,16 +71,17 @@ T.Popup {
                 height: parent.height - headerId.height - informationAboutDownloadId.height - 20
                 width: parent.width
                 clip: true
-                Text{
+                Label {
                     id:informationId
                     text: model.information
                     color: Style.Colors.textInformation
-                    clip: true
                     anchors.left: parent.left; anchors.right: parent.right
                     font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
                     verticalAlignment: Text.AlignTop
                     wrapMode: Text.Wrap
+                    elide: Label.ElideRight
+                    clip: true
                 }
             }
             Rectangle{
@@ -97,7 +98,7 @@ T.Popup {
                         width: (parent.width/4)-8
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: fileSizeText
                             color: Style.Colors.textInformation
                             text: qsTr("File size")
@@ -105,7 +106,7 @@ T.Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: fileSizeValue
                             color: Style.Colors.textInformation
                             text: model.fileSize + " GB"
@@ -124,7 +125,7 @@ T.Popup {
                         width: (parent.width/4)+ 17
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: ramRequiredText
                             color: Style.Colors.textInformation
                             text: qsTr("RAM requierd")
@@ -132,7 +133,7 @@ T.Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: ramRequiredValue
                             color: Style.Colors.textInformation
                             text: model.ramRamrequired + " GB"
@@ -151,7 +152,7 @@ T.Popup {
                         width: (parent.width/4)
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: parameterersText
                             color: Style.Colors.textInformation
                             text: qsTr("Parameters")
@@ -159,7 +160,7 @@ T.Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: parameterersValue
                             color: Style.Colors.textInformation
                             text: model.parameters
@@ -178,7 +179,7 @@ T.Popup {
                         width: (parent.width/4)-20
                         anchors.verticalCenter: parent.verticalCenter
                         spacing: 5
-                        Text {
+                        Label {
                             id: quantText
                             color: Style.Colors.textInformation
                             text: qsTr("Quant")
@@ -186,7 +187,7 @@ T.Popup {
                             anchors.horizontalCenter: parent.horizontalCenter
                             font.pointSize: 8
                         }
-                        Text {
+                        Label {
                             id: quantValue
                             color: Style.Colors.textInformation
                             text: model.quant

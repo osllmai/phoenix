@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
@@ -13,7 +14,7 @@ Item{
         anchors.fill: parent
         anchors.leftMargin: 30
         spacing: 10
-        Text {
+        Label {
             id: phoenixId
             text: qsTr("Online Model")
             color: Style.Colors.textTitle
@@ -47,16 +48,28 @@ Item{
                     interactive: contentWidth > width
                     boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                    model: onlineCompanyList
+                    model: ListModel {
+                        ListElement {
+                            name: "Chat"
+                            type: "Text Generation"
+                        }
+                        ListElement {
+                            name: "Image"
+                            type: "Image"
+                        }
+                        ListElement {
+                            name: "Embeddings"
+                            type: "Embeddings"
+                        }
+                    }
                     delegate: MyButton {
                         id: delegateId
                         myText: model.name
-                        myIcon: "qrc:/media/image_company/" + model.icon
                         bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.Image
+                        iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         onClicked:{
-                            onlineModelListFilter.companyId = model.id
+                            onlineModelListFilter.type = model.type
                         }
                     }
 

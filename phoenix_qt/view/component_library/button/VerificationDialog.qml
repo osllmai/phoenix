@@ -8,7 +8,7 @@ Dialog {
     x: (parent.width - width) / 2
     y: (parent.height - height) / 2
     width: 300
-    height: 200
+    height: 180
 
     property var titleText
     property var about
@@ -31,7 +31,6 @@ Dialog {
     contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent
-
         radius: 10
         border.width: 1
         border.color: Style.Colors.boxBorder
@@ -40,11 +39,12 @@ Dialog {
         Column{
             anchors.fill: parent
             anchors.margins: 16
+            spacing: 10
             Row{
                 id: titleBoxId
                 height: 35
                 spacing: parent.width - titleId.width - closeBox.width
-                Text {
+                Label {
                     id: titleId
                     text: dialogId.titleText
                     color: Style.Colors.textTitle
@@ -65,7 +65,7 @@ Dialog {
                         background: null
                         icon{
                             source: "qrc:/media/icon/close.svg"
-                            color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+                            color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
                             width: searchIcon.width; height: searchIcon.height
                         }
                         MouseArea{
@@ -76,16 +76,16 @@ Dialog {
                     }
                 }
             }
-            Text {
+            Label {
                 id: informationId
                 text: dialogId.about
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width
-                // height: parent.height - buttonBoxId.height - titleBoxId.height
+                height: parent.height - buttonBoxId.height - titleBoxId.height - 20
                 font.pixelSize: 14
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                verticalAlignment: Text.AlignTop
                 wrapMode: Text.Wrap
             }
             Row{
@@ -111,5 +111,12 @@ Dialog {
                 }
             }
         }
+        layer.enabled: true
+        layer.effect: Glow {
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 }

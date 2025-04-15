@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import "./chat"
 import '../../component_library/style' as Style
 import '../../component_library/button'
@@ -6,14 +7,12 @@ import '../../component_library/button'
 Item {
     id: control
     width: parent.width
-
+    height: parent.height
     signal openModelList()
 
     Column{
         spacing: 10
-        width: Math.min(700, parent.width - 48)
-        anchors.horizontalCenter: parent.horizontalCenter
-        height: parent.height
+        anchors.fill: parent
         visible: !conversationList.isEmptyConversation
         MyMessageList{
             id: myMessageView
@@ -46,7 +45,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         visible: conversationList.isEmptyConversation
-        Text{
+        Label {
             id: phoenixId
             text: "Hello! I’m Phoenix."
             anchors.horizontalCenter: parent.horizontalCenter
@@ -54,12 +53,12 @@ Item {
             font.pixelSize: 24
             font.styleName: "Bold"
         }
-        Text{
+        Label {
             id: informationText
             width: parent.width
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
-            text: "Ask me anything! You can trust that our conversations are private, and your data is never shared for marketing."
+            text: "Ask me anything!"
             color: Style.Colors.textInformation
             font.pixelSize: 14
         }

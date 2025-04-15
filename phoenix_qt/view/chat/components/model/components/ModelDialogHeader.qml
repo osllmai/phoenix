@@ -5,20 +5,20 @@ import '../../../../component_library/button'
 
 Item{
     id:headerId
-    height: 80; width: parent.width
+    height: 40; width: parent.width
     clip:true
     signal search(var text)
-    signal closeDialog()
     signal currentPage(int numberPage)
 
     Row{
         height: 35
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
         MyMenu{
             id: assistantMenuId
             myText: "Offline Model"
-            myIcon: "qrc:/media/icon/offline.svg"
+            // myIcon: "qrc:/media/icon/offline.svg"
             checked: true
             autoExclusive: true
             Connections {
@@ -29,7 +29,7 @@ Item{
         MyMenu{
             id: modelMenuId
             myText: "Online Model"
-            myIcon: "qrc:/media/icon/online.svg"
+            // myIcon: "qrc:/media/icon/online.svg"
             checked: false
             autoExclusive: true
             Connections {
@@ -40,7 +40,8 @@ Item{
     }
     Item{
         id: closeBox
-        x: headerId.x +headerId.width - 30; y: headerId.y
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
         width: 25; height: 25
         ToolButton {
             id: searchIcon
@@ -52,13 +53,13 @@ Item{
             background: null
             icon{
                 source: "qrc:/media/icon/close.svg"
-                color: searchIcon.hovered? Style.Colors.iconHoverAndChecked: Style.Colors.iconNormal
+                color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
                 width: searchIcon.width; height: searchIcon.height
             }
             MouseArea{
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked:{headerId.closeDialog()}
+                onClicked:{comboBoxId.popup.close()}
             }
         }
     }

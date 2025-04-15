@@ -1,8 +1,12 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QFontDatabase>
+#include <QPalette>
 #include <QIcon>
 
 #include "database.h"
+// #include "speechtotext.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -18,7 +22,7 @@
 #include "./conversation/conversationlist.h"
 #include "./conversation/conversationlistfilter.h"
 
-#include "config.h"
+#include "../cmake/config.h.in"
 
 int main(int argc, char *argv[])
 {
@@ -35,8 +39,24 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/media/image_company/Phoenix.png"));
 #endif
 
+    int fontId = QFontDatabase::addApplicationFont(":/fonts/DMSans-Regular.ttf");
+    if (fontId == -1) {
+        qWarning() << "Failed to load font!";
+    } else {
+        QStringList loadedFonts = QFontDatabase::applicationFontFamilies(fontId);
+        qDebug() << "Loaded font families:" << loadedFonts;
+    }
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
+
+    QStringList fontFamilies = QFontDatabase::families();
+    engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
+
+    bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
+    engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
+
+    // qmlRegisterType<SpeechToText>("com.example.speech", 1, 0, "SpeechToText");
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
@@ -109,6 +129,8 @@ int main(int argc, char *argv[])
     QObject::connect(conversationList, &ConversationList::requestReadMessages, database, &Database::readMessages, Qt::QueuedConnection);
     QObject::connect(database, &Database::addMessage, conversationList, &ConversationList::addMessage, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestInsertMessage, database, &Database::insertMessage, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateLikeMessage, database, &Database::updateLikeMessage, Qt::QueuedConnection);
+    QObject::connect(conversationList, &ConversationList::requestUpdateTextMessage, database, &Database::updateTextMessage, Qt::QueuedConnection);
 
     const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
 

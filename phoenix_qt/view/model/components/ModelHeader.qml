@@ -1,15 +1,22 @@
 import QtQuick 2.15
 import "../../component_library/button"
+import "../../menu"
 
 Item{
     id:headerId
-    width: parent.width; height: 90
+    width: parent.width; height: 120
     clip:true
+
+    MyOpenMenuButton{
+        id: openMenuId
+        anchors.left:parent.left; anchors.leftMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 24
+    }
 
     Row{
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
+        anchors.top: parent.top; anchors.topMargin: 24
         MyMenu {
             id: offlineModel
             myText: "Offline Model"

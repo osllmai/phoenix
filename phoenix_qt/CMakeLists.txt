@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 0)
-set(APP_VERSION_PATCH 15)
+set(APP_VERSION_PATCH 16)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}-dev0")
 
@@ -14,7 +14,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core Concurrent Gui Qml Sql)
+
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
+
+# add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
+
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -40,6 +45,7 @@ qt_add_executable(app${PROJECT_NAME}
 
     core/database.h core/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
+    core/speechtotext.h core/speechtotext.cpp
 
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
@@ -91,8 +97,15 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/phoenix.svg
         media/icon/like.svg
         media/icon/disLike.svg
+        media/icon/favorite.svg
+        media/icon/disFavorite.svg
+        media/icon/likeFill.svg
+        media/icon/disLikeFill.svg
+        media/icon/speaker.svg
+        media/icon/speakerFill.svg
         media/icon/history.svg
         media/icon/settings.svg
+        media/icon/settingsFill.svg
         media/icon/send.svg
         media/icon/sendFill.svg
         media/icon/stop.svg
@@ -108,9 +121,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/ok.svg
         media/icon/okFill.svg
         media/icon/up.svg
-        media/icon/upFill.svg
         media/icon/down.svg
-        media/icon/downFill.svg
         media/icon/download.svg
         media/icon/downloadFill.svg
         media/icon/systemMonitor.svg
@@ -127,6 +138,16 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/image.svg
         media/icon/imageEditor.svg
         media/icon/rewrite.svg
+        media/icon/themeDark.png
+        media/icon/themeDefualt.png
+        media/icon/themeLight.png
+        media/icon/rewrite.svg
+        media/icon/colorPalette.svg
+        media/icon/colorPaletteFill.svg
+        media/icon/privacy.svg
+        media/icon/privacyFill.svg
+        media/icon/terms_of_Use.svg
+        media/icon/terms_of_UseFill.svg
         media/image_company/user.svg
 
         media/image_company/Phoenix.png
@@ -139,6 +160,8 @@ qt_add_resources(app${PROJECT_NAME}
         media/image_company/Replit.svg
         media/image_company/BigCode.png
         media/image_company/Openai.svg
+
+        media/fonts/DMSans-Regular.ttf
 
         media/media.qrc
 )
@@ -153,6 +176,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
+        view/component_library/button/MyComboBox.qml
         view/component_library/button/MyIcon.qml
         view/component_library/button/SearchButton.qml
         view/component_library/button/MySlider.qml
@@ -161,10 +185,10 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MyProgress.qml
         view/component_library/button/VerificationDialog.qml
         view/component_library/button/NotificationDialog.qml
+        view/component_library/button/MyToolTip.qml
 
-        view/AppMenuDesktop.qml
-        view/AppMenuAplication.qml
-        view/menu/MyMenuApp.qml
+        view/AppMenu.qml
+        view/menu/MyMenuButton.qml
 
         view/AppBody.qml
 
@@ -209,8 +233,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/model_settings/components/ModelSettingsSlider.qml
         view/chat/components/model_settings/components/ModelSettingsSwitch.qml
         view/chat/components/model_settings/components/ModelMenuSettings.qml
-        view/chat/components/model/ModelButton.qml
-        view/chat/components/model/ModelDialog.qml
+        view/chat/components/model/ModelComboBox.qml
         view/chat/components/model/components/ModelDialogHeader.qml
         view/chat/components/model/components/ModelDialogBody.qml
         view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
@@ -225,6 +248,15 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
         view/settings/SettingsBody.qml
+        view/settings/SettingsMenu.qml
+        view/settings/components/SettingsAbout.qml
+        view/settings/components/SettingsTheme.qml
+        view/settings/components/SettingsSpeech.qml
+        view/settings/components/SettingsTerms_of_Use.qml
+        view/settings/components/SettingsPrivacy.qml
+        view/settings/components/SettingsMenuButton.qml
+        view/settings/components/SettingsSlider.qml
+        view/settings/components/ThemeOption.qml
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
@@ -233,13 +265,17 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
+        QML_FILES view/AppMenuDrawer.qml
+        QML_FILES view/menu/MyOpenMenuButton.qml
+        QML_FILES view/settings/SettingsMenuDrawer.qml
+        QML_FILES view/settings/components/OpenMenuSettingsButton.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 set_target_properties(app${PROJECT_NAME} PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
+   MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -248,12 +284,15 @@ set_target_properties(app${PROJECT_NAME} PROPERTIES
 
 target_link_libraries(app${PROJECT_NAME}
     PRIVATE
-        Qt6::Quick
-        Qt6::Concurrent
-        Qt6::Sql
+        Qt${QT_VERSION_MAJOR}::Quick
+        Qt${QT_VERSION_MAJOR}::Concurrent
+        Qt${QT_VERSION_MAJOR}::Sql
+        Qt${QT_VERSION_MAJOR}::Network
+        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt::Qml
-        Qt6::Core
         Qt::Gui
+        # whisper
 )
 
 include(GNUInstallDirs)
@@ -263,14 +302,16 @@ install(TARGETS app${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/company.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/company.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/offline_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/offline_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/openai_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/openai_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/model/file/mistral_models.json
-                        ${CMAKE_CURRENT_BINARY_DIR}/bin/mistral_models.json COPYONLY)
+set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
-                        ${CMAKE_CURRENT_BINARY_DIR}/config.h COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/company.json ${BIN_DIR}/company.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
+
+if(WIN32)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
+else()
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
+endif()

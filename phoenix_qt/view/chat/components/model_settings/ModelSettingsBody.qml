@@ -1,79 +1,129 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "./components"
+import '../../../component_library/style' as Style
 
 Item {
     height: parent.height - headerId.height
     width: parent.width
-    ScrollView{
-        id: scrollViewSettingsId
+    Flickable {
         anchors.fill: parent
+        clip: true
+        contentHeight: columnId.implicitHeight
 
+        interactive: true
+        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        ScrollBar.vertical: ScrollBar {
+            policy: ScrollBar.AsNeeded
+        }
         Column{
+            id: columnId
             anchors.fill: parent
-            spacing: 5
+            spacing: 10
 
-            ModelMenuSettings{
-                id: modelInferencesMenu
-                myText: qsTr("Inference Settings")
-                isOpen: modelInferencesBody.visible
-                Connections {
-                    target: modelInferencesMenu
-                    function onOpen(){
-                        modelInferencesBody.visible = !modelInferencesBody.visible
-                        console.log("Inference Settings")
+            Rectangle{
+                width: parent.width ; height: modelInferencesMenu.height + (modelInferencesBody.visible?(modelInferencesBody.height+10):0) + 20
+                border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: modelInferencesMenu
+                        myText: qsTr("Inference Settings")
+                        isOpen: modelInferencesBody.visible
+                        Connections {
+                            target: modelInferencesMenu
+                            function onClicked(){
+                                modelInferencesBody.visible = !modelInferencesBody.visible
+                            }
+                        }
+                    }
+                    ModelInferencesSettings{
+                        id: modelInferencesBody
                     }
                 }
-            }
-            ModelInferencesSettings{
-                id: modelInferencesBody
-            }
-
-            ModelMenuSettings{
-                id: modelInformationMenu
-                myText: qsTr("Model Settings")
-                isOpen: modelInformationBody.visible
-                Connections {
-                    target: modelInformationMenu
-                    function onOpen(){
-                        modelInformationBody.visible = !modelInformationBody.visible
-                        console.log("Model Settings")
-                    }
-                }
-            }
-            ModelInformationSettings{
-                id: modelInformationBody
             }
 
-            ModelMenuSettings{
-                id: modelEnginMenu
-                myText: qsTr("Engine Settings")
-                isOpen: modelEnginBody.visible
-                Connections {
-                    target: modelEnginMenu
-                    function onOpen(){
-                        modelEnginBody.visible = !modelEnginBody.visible
-                        console.log("Engine Settings")
+            Rectangle{
+                width: parent.width ; height: modelInformationMenu.height + (modelInformationBody.visible?(modelInformationBody.height+10):0) + 20
+                border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: modelInformationMenu
+                        myText: qsTr("Model Settings")
+                        isOpen: modelInformationBody.visible
+                        Connections {
+                            target: modelInformationMenu
+                            function onClicked(){
+                                modelInformationBody.visible = !modelInformationBody.visible
+                            }
+                        }
+                    }
+                    ModelInformationSettings{
+                        id: modelInformationBody
                     }
                 }
             }
-            ModelEngineSettings{
-                id: modelEnginBody
-            }
-            ModelMenuSettings{
-                id: assistantMenu
-                myText: qsTr("Assistant Settings")
-                isOpen: assistantBody.visible
-                Connections {
-                    target: assistantMenu
-                    function onOpen(){
-                        assistantBody.visible = !assistantBody.visible
-                        console.log("Assistant Settings")
+
+            Rectangle{
+                width: parent.width ; height: modelEnginMenu.height + (modelEnginBody.visible?(modelEnginBody.height+10):0) +  20
+                border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: modelEnginMenu
+                        myText: qsTr("Engine Settings")
+                        isOpen: modelEnginBody.visible
+                        Connections {
+                            target: modelEnginMenu
+                            function onClicked(){
+                                modelEnginBody.visible = !modelEnginBody.visible
+                            }
+                        }
+                    }
+                    ModelEngineSettings{
+                        id: modelEnginBody
                     }
                 }
             }
-            ModelAssistantSettings{
-                id: assistantBody
+
+            Rectangle{
+                width: parent.width  ; height: assistantMenu.height + (assistantBody.visible?(assistantBody.height+10):0) + 20
+                border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: assistantMenu
+                        myText: qsTr("Assistant Settings")
+                        isOpen: assistantBody.visible
+                        Connections {
+                            target: assistantMenu
+                            function onClicked(){
+                                assistantBody.visible = !assistantBody.visible
+                            }
+                        }
+                    }
+                    ModelAssistantSettings{
+                        id: assistantBody
+                    }
+                }
             }
         }
     }

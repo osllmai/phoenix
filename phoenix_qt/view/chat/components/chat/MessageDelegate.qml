@@ -1,19 +1,21 @@
 import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
-import QtQuick.Controls 2.15
+import QtQuick.Controls 6.6
+import QtTextToSpeech
+
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 T.Button {
     id: control
     height: textId.height + dateAndIconId.height  + 2
-    width: parent.width
+    width: Math.min(670, parent.width - 48)
+    anchors.horizontalCenter: parent.horizontalCenter
 
     background: null
-     contentItem: Rectangle {
+     contentItem: Item {
          id: backgroundId
          anchors.fill: parent
-         color: "#00ffffff"
 
         Row {
             id: headerId
@@ -28,22 +30,27 @@ T.Button {
             Column {
                 spacing: 2
                 width: parent.width
-                TextArea{
+                TextArea {
                     id: textId
                     text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
-                    width:  parent.width - logoModelId.width
+                    width: parent.width - logoModelId.width
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
-                    wrapMode: Text.Wrap
+                    wrapMode: TextEdit.Wrap
+                    textFormat: TextEdit.MarkdownText
                     selectByMouse: true
                     background: null
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
+
+                    onLinkActivated: function(url) {
+                        Qt.openUrlExternally(url)
+                    }
                 }
 
                 Row {
@@ -53,7 +60,7 @@ T.Button {
                     anchors.left: parent.left
                     anchors.leftMargin: 10
                     property bool checkCopy: false
-                    Text {
+                    Label {
                         id: dateId
                         visible: control.hovered
                         text: model.date
@@ -68,7 +75,7 @@ T.Button {
                     MyIcon {
                         id: copyId
                         visible: control.hovered
-                        myIcon: selectIcon()
+                        myIcon: copyId.selectIcon()
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
@@ -89,14 +96,99 @@ T.Button {
                             }
                         }
                     }
-                    Timer {
-                        id: successTimer
-                        interval: 2000
-                        repeat: false
-                        onTriggered: dateAndIconId.checkCopy= false
+                    MyIcon {
+                        id: likeId
+                        visible: control.hovered && (model.like>=0)
+                        myIcon: (model.like === 0)? "qrc:/media/icon/like.svg": "qrc:/media/icon/likeFill.svg"
+                        iconType: Style.RoleEnum.IconType.Primary
+                        width: 26; height: 26
+                        Connections{
+                            target: likeId
+                            function onClicked(){
+                                if(model.like === 0)
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, +1)
+                                else
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, 0)
+                            }
+                        }
+                    }
+                    MyIcon {
+                        id: disLikeId
+                        visible: control.hovered && (model.like<=0)
+                        myIcon: (model.like === 0)? "qrc:/media/icon/disLike.svg": "qrc:/media/icon/disLikeFill.svg"
+                        iconType: Style.RoleEnum.IconType.Primary
+                        width: 26; height: 26
+                        Connections{
+                            target: disLikeId
+                            function onClicked(){
+                                if(model.like === 0)
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, -1)
+                                else
+                                    conversationList.likeMessageRequest(conversationList.currentConversation.id, model.id, 0)
+                            }
+                        }
+                    }
+                    MyIcon {
+                        id: speakerId
+                        visible: control.hovered
+                        myIcon: speakerId.selectIcon()
+                        iconType: Style.RoleEnum.IconType.Primary
+                        width: 26
+                        height: 26
+                        enabled: true
+
+                        Connections {
+                            target: speakerId
+                            function onClicked() {
+                                if (!textId.text || textId.text.length === 0)
+                                    return
+
+                                let voices = textToSpeechId.availableVoices()
+                                if (voices.length === 0)
+                                    return
+
+                                let indexOfVoice = voices.indexOf(textToSpeechId.voice)
+                                if (indexOfVoice === -1)
+                                    indexOfVoice = 0
+
+                                textToSpeechId.voice = voices[indexOfVoice]
+
+                                if (textToSpeechId.state !== TextToSpeech.Speaking) {
+
+                                    textToSpeechId.say(textId.text)
+                                    textToSpeechId.messageId = model.id
+                                } else if (textToSpeechId.messageId === model.id) {
+                                    textToSpeechId.pause()
+                                } else {
+                                    textToSpeechId.pause()
+                                    speakerTimer.start()
+                                }
+                            }
+                        }
+                        Timer {
+                            id: successTimer
+                            interval: 1000
+                            repeat: false
+                            onTriggered: dateAndIconId.checkCopy = false
+                        }
+
+                        Timer {
+                            id: speakerTimer
+                            interval: 1000
+                            repeat: false
+                            onTriggered: speakerId.clicked()
+                        }
+
+                        function selectIcon() {
+                            if ((textToSpeechId.state === TextToSpeech.Speaking) && (textToSpeechId.messageId === model.id)) {
+                                return speakerId.hovered ? "qrc:/media/icon/stopFill.svg" : "qrc:/media/icon/stop.svg"
+                            } else {
+                                return speakerId.hovered ? "qrc:/media/icon/speakerFill.svg" : "qrc:/media/icon/speaker.svg"
+                            }
+                        }
                     }
                 }
             }
         }
-     }
+    }
 }

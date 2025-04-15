@@ -22,7 +22,7 @@ Item {
         Connections{
             target: chatBodyId
             function onOpenModelList(){
-                headerId.openModelList();
+                headerId.openModelComboBox();
             }
         }
     }

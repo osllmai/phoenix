@@ -4,6 +4,9 @@ import '../../../component_library/style' as Style
 
 Item {
     id: control
+    width: parent.width
+    height: instructionsBox.height
+    visible: false
 
     property bool existConversation: !conversationList.isEmptyConversation
 
@@ -21,7 +24,7 @@ Item {
 
              TextArea {
                  id: instructionTextBox
-                 text: control.existConversation? conversationList.currentConversation.id: ""
+                 text: control.existConversation? conversationList.currentConversation.modelSettings.systemPrompt: ""
                  visible: true
                  color: Style.Colors.textInformation
                  wrapMode: Text.WordWrap
@@ -39,7 +42,12 @@ Item {
                          instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
                      }
                  }
+                 onTextChanged: {
+                     if(control.existConversation){
+                         conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text
+                     }
+                 }
              }
          }
      }
- }
+}

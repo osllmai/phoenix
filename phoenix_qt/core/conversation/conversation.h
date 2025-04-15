@@ -11,6 +11,7 @@
 #include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
+#include "./provider/provider.h"
 
 class Conversation : public QObject
 {
@@ -32,9 +33,15 @@ class Conversation : public QObject
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
-        m_responseList(new ResponseList(this))  {}
+        m_responseList(new ResponseList(this)), m_responseInProgress(false) {}
     explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+                          const QDateTime &date, const bool isPinned,
+                          const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                          const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                          const int &contextLength, const int &numberOfGPULayers, QObject *parent = nullptr);
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
@@ -43,7 +50,9 @@ public:
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
 
-    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+    void likeMessageRequest( const int messageId, const int like);
+
+    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
     const int id() const;
 
@@ -80,6 +89,12 @@ public:
 
     ResponseList *responseList() const;
 
+public slots:
+    void loadModelResult(const bool result, const QString &warning);
+    void tokenResponse(const QString &token);
+    void finishedResponse(const QString &warning);
+    void updateModelSettingsConversation();
+
 signals:
     void titleChanged();
     void descriptionChanged();
@@ -95,14 +110,19 @@ signals:
     void responseListChanged();
     void conversationChange();
 
-    void requestReadMessages(const int idConversation);
-    void requestInsertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void requestReadMessages(const int conversationId);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
+    void requestUpdateDescriptionText(const int conversationId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,
                                      const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                                      const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                      const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                      const int &contextLength, const int &numberOfGPULayers);
+    void requestLoadModel(const QString &model, const QString &key);
+    void requestUnLoadModel();
+    void requestStop();
 
 private:
     int m_id;
@@ -118,6 +138,7 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
+    Provider *m_provider;
 };
 
 #endif // CONVERSATION_H

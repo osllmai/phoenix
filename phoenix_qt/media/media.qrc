@@ -20,8 +20,15 @@
         <file>icon/phoenix.svg</file>
         <file>icon/like.svg</file>
         <file>icon/disLike.svg</file>
+        <file>icon/favorite.svg</file>
+        <file>icon/disFavorite.svg</file>
+        <file>icon/likeFill.svg</file>
+        <file>icon/disLikeFill.svg</file>
+        <file>icon/speaker.svg</file>
+        <file>icon/speakerFill.svg</file>
         <file>icon/history.svg</file>
         <file>icon/settings.svg</file>
+        <file>icon/settingsFill.svg</file>
         <file>icon/send.svg</file>
         <file>icon/sendFill.svg</file>
         <file>icon/stop.svg</file>
@@ -39,9 +46,7 @@
         <file>icon/ok.svg</file>
         <file>icon/okFill.svg</file>
         <file>icon/up.svg</file>
-        <file>icon/upFill.svg</file>
         <file>icon/down.svg</file>
-        <file>icon/downFill.svg</file>
         <file>icon/systemMonitor.svg</file>
         <file>icon/discord.svg</file>
         <file>icon/github.svg</file>
@@ -68,5 +73,15 @@
         <file>icon/copyFill.svg</file>
         <file>icon/copySuccess.svg</file>
         <file>icon/copySuccessFill.svg</file>
+        <file>icon/themeDark.png</file>
+        <file>icon/themeDefualt.png</file>
+        <file>icon/themeLight.png</file>
+        <file>icon/colorPalette.svg</file>
+        <file>icon/colorPaletteFill.svg</file>
+        <file>icon/privacy.svg</file>
+        <file>icon/privacyFill.svg</file>
+        <file>icon/terms_of_Use.svg</file>
+        <file>icon/terms_of_UseFill.svg</file>
+        <file>fonts/DMSans-Regular.ttf</file>
     </qresource>
 </RCC>

@@ -44,15 +44,18 @@ public slots:
                             const int &contextLength, const int &numberOfGPULayers);
 
     void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt);
+    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void updateTextMessage(const int idConversation, const int messageId, const QString &text);
+    void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
 signals:
-    void addOnlineModel(const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                        const bool isLike, Company* company, const BackendType backend,
+    void addOnlineModel(const int id, const QString& modelName, const QString& name, const QString& key,
+                        QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
+                        const BackendType backend,
                         const QString& icon , const QString& information , const QString& promptTemplate ,
                         const QString& systemPrompt, QDateTime expireModelTime,
 
-                        const QString& type, const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+                        const double inputPricePer1KTokens, const double outputPricePer1KTokens,
                         const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
                         const QString& output, const QString& comments, const bool installModel);
 
@@ -60,8 +63,8 @@ signals:
                          const QString& parameters, const QString& quant, const double downloadPercent,
                          const bool isDownloading, const bool downloadFinished,
 
-                         const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                         const bool isLike, Company* company, const BackendType backend,
+                         const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
+                         const bool isLike, Company* company, const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime);
 
@@ -71,7 +74,7 @@ signals:
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
-    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt);
+    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
 
 private:
@@ -106,6 +109,9 @@ private:
     static const QString INSERT_MESSAGE_SQL;
     static const QString READ_MESSAGE_ID_SQL;
     static const QString DELETE_MESSAGE_SQL;
+    static const QString UPDATE_LIKE_MESSAGE_SQL;
+    static const QString UPDATE_TEXT_MESSAGE_SQL;
+    static const QString READ_ICON_MESSAGE_SQL;
 
     int insertModel(const QString &name, const QString &key);
 };

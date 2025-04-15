@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
@@ -6,32 +7,28 @@ Item {
     id: root
     height: 30; width: parent.width
 
-    property alias myTextName: textId.text
+    property string myTextName
     property bool myValue
 
-    Item{
+    Row{
         id: settingsSliderBox
-        anchors.fill: parent
-        Text{
+        anchors.left: parent.left
+        anchors.leftMargin: 5
+        height: parent.height
+        width: parent.width - 5
+        Label {
             id:textId
-            text: "Temperature"
+            text: root.myTextName
             color: Style.Colors.textTitle
+            width: parent.width - switchId.width
             anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.leftMargin: 0
-            anchors.topMargin: 0
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
             font.pointSize: 10
         }
 
         MySwitch{
             id:switchId
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 5
             checked: root.myValue
+            onCheckedChanged: myValue = checked
         }
     }
 }

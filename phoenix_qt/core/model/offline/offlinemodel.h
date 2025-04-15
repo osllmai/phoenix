@@ -2,7 +2,6 @@
 #define OFFLINEMODEL_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include "../model.h"
 
@@ -28,8 +27,8 @@ public:
     explicit OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
-                          const int id, const QString& name, const QString& key, QDateTime addModelTime,
-                          const bool isLike, Company* company, const BackendType backend,
+                          const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
+                          const bool isLike, Company* company, const QString& type,const BackendType backend,
                           const QString& icon , const QString& information , const QString& promptTemplate ,
                           const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
 

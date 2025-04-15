@@ -1,6 +1,8 @@
 import QtQuick 2.15
 
 QtObject {
+    id: roleId
+
     enum Menu{
         PageMenu,
         ButtonMenu

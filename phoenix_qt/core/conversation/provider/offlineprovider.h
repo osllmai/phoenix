@@ -9,23 +9,24 @@ class OfflineProvider : public  Provider
 {
     Q_OBJECT
 public:
-    OfflineProvider(Provider *parent);
+    OfflineProvider(QObject* parent = nullptr);
     virtual ~OfflineProvider();
 
 public slots:
-    void prompt(const QString &input);
+    void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers) override;
     void stop() override;
-    void loadModel(const QString &key) override;
-    void unloadModel() override;
-
-signals:
-    void loadModelResult(const bool result, const QString warning);
-    void tokenResponse(const QString &token);
-    void finishedResponnse(const QString warning);
+    void loadModel(const QString &model, const QString &key) override;
+    void unLoadModel() override;
 
 private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
+
+    std::string answer = "";
+    QString m_model;
 
     bool handleResponse(int32_t token, const std::string &response);
 };
