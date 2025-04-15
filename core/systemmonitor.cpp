@@ -84,13 +84,11 @@ void SystemMonitor::getMemoryInfo(){
     memoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
     if (GlobalMemoryStatusEx(&memoryStatus)) {
         m_memoryInfo = (memoryStatus.ullAvailPhys*10000)/(memoryStatus.ullTotalPhys);
-        qDebug() << "Memory:" << m_memoryInfo<<"      "<<(memoryStatus.ullAvailPhys*100)/(memoryStatus.ullTotalPhys);
     }
 #elif defined(Q_OS_LINUX)
     struct sysinfo info;
     if (sysinfo(&info) == 0) {
         m_memoryInfo = static_cast<double>info.freeram/info.totalram;
-        qDebug() << "Memory:" << m_memoryInfo;
     }
 #endif
 }
@@ -110,7 +108,6 @@ void SystemMonitor::getSystemMonitor(){
     if (current.totalTime > 0) {
         // double cpuUsage = calculateCpuUsage(previous, current);
         m_cpuInfo = calculateCpuUsage(previous, current);;
-        qDebug() << "CPU Usage:" << m_cpuInfo << "%";
     } else {
         qWarning() << "Failed to retrieve CPU stats.";
     }

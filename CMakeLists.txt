@@ -152,7 +152,7 @@ qt_add_resources(app${PROJECT_NAME}
 
         media/image_company/Phoenix.png
         media/image_company/Bert.svg
-        media/image_company/MetaLlama.svg
+        media/image_company/Meta.svg
         media/image_company/Mistral.svg
         media/image_company/Databricks.svg
         media/image_company/Microsoft.svg
@@ -305,9 +305,26 @@ install(TARGETS app${PROJECT_NAME}
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/company.json ${BIN_DIR}/company.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
+
+set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/file/online_models)
+set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/online_models)
+
+file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
+
+foreach(json_file ${ONLINE_JSON_FILES})
+    get_filename_component(json_filename ${json_file} NAME)
+    configure_file(${json_file} ${ONLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
+endforeach()
+
+set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models)
+set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/offline_models)
+
+file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
+
+foreach(json_file ${OFFLINE_JSON_FILES})
+    get_filename_component(json_filename ${json_file} NAME)
+    configure_file(${json_file} ${OFFLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
+endforeach()
 
 if(WIN32)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)

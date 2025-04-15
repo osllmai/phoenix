@@ -50,16 +50,16 @@ Item{
 
                     model: ListModel {
                         ListElement {
-                            name: "Chat"
-                            type: "Text Generation"
+                            name: "Embeddings"
+                            type: "Embeddings"
                         }
                         ListElement {
                             name: "Image"
                             type: "Image"
                         }
                         ListElement {
-                            name: "Embeddings"
-                            type: "Embeddings"
+                            name: "Chat"
+                            type: "Text Generation"
                         }
                     }
                     delegate: MyButton {
