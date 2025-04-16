@@ -69,6 +69,12 @@
         <file>image_company/BigCode.png</file>
         <file>image_company/user.svg</file>
         <file>image_company/Openai.svg</file>
+        <file>image_company/Claude.svg</file>
+        <file>image_company/Cohere.svg</file>
+        <file>image_company/Deepseek.svg</file>
+        <file>image_company/Google.svg</file>
+        <file>image_company/Nvidia.svg</file>
+        <file>image_company/Whisper.svg</file>
         <file>icon/copy.svg</file>
         <file>icon/copyFill.svg</file>
         <file>icon/copySuccess.svg</file>

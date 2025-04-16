@@ -216,5 +216,12 @@
     "icon": "Qwen.svg",
     "file": "offline_models/qwen.json",
     "type": "OfflineModel"
+  },
+  {
+    "name": "Whisper",
+    "organizationName": "Whisper.",
+    "icon": "Whisper.svg",
+    "file": "offline_models/whisper.json",
+    "type": "OfflineModel"
   }
 ]

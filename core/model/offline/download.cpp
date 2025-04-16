@@ -6,14 +6,10 @@ Download::Download(const int id, const QString &url, const QString &modelPath, Q
     m_id =id;
     this->url = url;
     this->modelPath = modelPath;
-    moveToThread(&downloadThread);
-    downloadThread.start();
 }
 
 Download::~Download(){
     delete reply;
-    downloadThread.quit();
-    downloadThread.wait();
 }
 
 int Download::id() const{
@@ -21,19 +17,26 @@ int Download::id() const{
 }
 
 void Download::downloadModel(){
+
     QNetworkRequest request(url);
     reply = m_manager.get(request);
     // Save the file path for when the download is complete
     reply->setProperty("modelPath", modelPath);
     connect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
     connect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
+
+    connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){
+        Q_UNUSED(code);
+        emit downloadFailed(m_id, reply->errorString());
+    });
 }
 
 void Download::cancelDownload(){
     // Disconnect the signals
     disconnect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress);
     disconnect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished);
-    reply->deleteLater(); // Schedule the reply for deletion
+
+    reply->deleteLater();
 }
 
 void Download::removeModel(){
@@ -45,20 +48,28 @@ void Download::removeModel(){
 
 void Download::onDownloadFinished() {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    if (!reply) return;
+
     if (reply->error() == QNetworkReply::NoError) {
         QString modelPath = reply->property("modelPath").toString();
         QFile file(modelPath);
         if (file.open(QIODevice::WriteOnly)) {
-            file.write(reply->readAll());
+            qint64 written = file.write(reply->readAll());
             file.close();
-            emit downloadFinished(m_id);
+
+            if (written <= 0)
+                emit downloadFailed(m_id, "Failed to write data to file");
+            else
+                emit downloadFinished(m_id);
+
         } else {
-            // emit downloadFailed("Failed to save the file.");
+            emit downloadFailed(m_id, QStringLiteral("Cannot write to file: %1").arg(modelPath));
         }
     } else {
-        // emit downloadFailed(reply->errorString());
+        emit downloadFailed(m_id, reply->errorString());
     }
     reply->deleteLater();
+    this->reply = nullptr;
 }
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){

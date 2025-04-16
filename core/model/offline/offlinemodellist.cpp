@@ -129,6 +129,7 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     if(downloads.size()<3){
         connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
+        connect(download, &Download::downloadFailed, this, &OfflineModelList::handleDownloadFailed, Qt::QueuedConnection);
         download->downloadModel();
     }
     downloads.append(download);
@@ -163,10 +164,15 @@ void OfflineModelList::handleDownloadFinished(const int id){
     updateDownloadProgress();
     deleteDownloadModel(id);
 
-    requestUpdateKeyModel(model->id(), model->key());
+    emit requestUpdateKeyModel(model->id(), model->key());
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     // emit currentModelListChanged();
+}
+
+void OfflineModelList::handleDownloadFailed(const int id, const QString &error){
+    cancelRequest(id);
+    qInfo()<<error;
 }
 
 void OfflineModelList::cancelRequest(const int id){
@@ -203,7 +209,7 @@ void OfflineModelList::deleteRequest(const int id){
         endRemoveRows();
 
         //delete from database
-        requestDeleteModel(model->id());
+        emit requestDeleteModel(model->id());
         delete model;
 
     }else if(model->key() != ""){
@@ -211,7 +217,7 @@ void OfflineModelList::deleteRequest(const int id){
         if (file.exists()){
             file.remove();
         }
-        requestUpdateKeyModel(model->id(), "");
+        emit requestUpdateKeyModel(model->id(), "");
     }
 
     ConversationList::instance(this)->setModelSelect(false);

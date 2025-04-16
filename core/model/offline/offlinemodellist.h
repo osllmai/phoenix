@@ -2,12 +2,10 @@
 #define OFFLINEMODELLIST_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include <QAbstractListModel>
 
 #include <QFutureWatcher>
-#include <QtConcurrent>
 
 #include "offlinemodel.h"
 #include "../company.h"
@@ -69,6 +67,7 @@ public slots:
 
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);
+    void handleDownloadFailed(const int id, const QString &error);
 
 signals:
     void countChanged();

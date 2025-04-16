@@ -160,6 +160,12 @@ qt_add_resources(app${PROJECT_NAME}
         media/image_company/Replit.svg
         media/image_company/BigCode.png
         media/image_company/Openai.svg
+        media/image_company/Claude.svg
+        media/image_company/Cohere.svg
+        media/image_company/Deepseek.svg
+        media/image_company/Google.svg
+        media/image_company/Nvidia.svg
+        media/image_company/Whisper.svg
 
         media/fonts/DMSans-Regular.ttf
 

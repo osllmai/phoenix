@@ -30,10 +30,10 @@ private slots:
 signals:
     void downloadProgress(const int id, qint64 bytesReceived, qint64 bytesTotal);
     void downloadFinished(const int id);
+    void downloadFailed(const int id, const QString &error);
 
 private:
     int m_id;
-    QThread downloadThread;
     QNetworkAccessManager m_manager;
     QNetworkReply *reply;
     QString url;
