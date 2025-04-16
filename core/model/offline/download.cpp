@@ -17,7 +17,6 @@ int Download::id() const{
 }
 
 void Download::downloadModel(){
-
     QNetworkRequest request(url);
     reply = m_manager.get(request);
     // Save the file path for when the download is complete

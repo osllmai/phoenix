@@ -14,12 +14,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
-
-# add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
-
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -298,7 +297,6 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt::Qml
         Qt::Gui
-        # whisper
 )
 
 include(GNUInstallDirs)
@@ -310,10 +308,14 @@ install(TARGETS app${PROJECT_NAME}
 
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/company.json ${BIN_DIR}/company.json COPYONLY)
 
-set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/file/online_models)
-set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/online_models)
+#copy company.json
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/file/company.json ${BIN_DIR}/models/company.json COPYONLY)
+
+
+#copy online-models
+set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/file/online_models)
+set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/models/online_models)
 
 file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
 
@@ -322,8 +324,10 @@ foreach(json_file ${ONLINE_JSON_FILES})
     configure_file(${json_file} ${ONLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
-set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models)
-set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/offline_models)
+
+#copy offline-model
+set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/file/offline_models)
+set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/models/offline_models)
 
 file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
 
@@ -332,9 +336,15 @@ foreach(json_file ${OFFLINE_JSON_FILES})
     configure_file(${json_file} ${OFFLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
+
+#copy python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/dist/main_provider.exe ${BIN_DIR}/online_provider/main_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/main_provider.py ${BIN_DIR}/online_provider/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/provider.py ${BIN_DIR}/online_provider/provider.py COPYONLY)
 endif()
+
+
+#copy whisper
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR}/whisper)

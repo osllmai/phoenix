@@ -2,7 +2,6 @@
 #define DOWNLOAD_H
 
 #include <QObject>
-#include <QtQml>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
