@@ -147,8 +147,12 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/privacyFill.svg
         media/icon/terms_of_Use.svg
         media/icon/terms_of_UseFill.svg
-        media/image_company/user.svg
+        media/icon/microphoneOff.svg
+        media/icon/microphoneOffFill.svg
+        media/icon/microphoneOn.svg
+        media/icon/microphoneOnFill.svg
 
+        media/image_company/user.svg
         media/image_company/Phoenix.png
         media/image_company/Bert.svg
         media/image_company/Meta.svg
@@ -310,11 +314,11 @@ set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 
 #copy company.json
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/file/company.json ${BIN_DIR}/models/company.json COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)
 
 
 #copy online-models
-set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/file/online_models)
+set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/online_models)
 set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/models/online_models)
 
 file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
@@ -326,7 +330,7 @@ endforeach()
 
 
 #copy offline-model
-set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/file/offline_models)
+set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/offline_models)
 set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/models/offline_models)
 
 file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
@@ -339,12 +343,12 @@ endforeach()
 
 #copy python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/dist/main_provider.exe ${BIN_DIR}/online_provider/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/main_provider.exe ${BIN_DIR}/providers/online_provider/main_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/main_provider.py ${BIN_DIR}/online_provider/main_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/online_provider/provider.py ${BIN_DIR}/online_provider/provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/main_provider.py ${BIN_DIR}/providers/online_provider/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
 endif()
 
 
 #copy whisper
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR}/whisper)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR})

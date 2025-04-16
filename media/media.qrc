@@ -88,6 +88,10 @@
         <file>icon/privacyFill.svg</file>
         <file>icon/terms_of_Use.svg</file>
         <file>icon/terms_of_UseFill.svg</file>
+        <file>icon/microphoneOff.svg</file>
+        <file>icon/microphoneOffFill.svg</file>
+        <file>icon/microphoneOn.svg</file>
+        <file>icon/microphoneOnFill.svg</file>
         <file>fonts/DMSans-Regular.ttf</file>
     </qresource>
 </RCC>

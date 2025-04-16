@@ -40,7 +40,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
         process.setProcessChannelMode(QProcess::MergedChannels);
         process.setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "bin/main_provider.exe";
+        QString exePath = "providers/online_provider/main_provider.exe";
         QStringList arguments;
         arguments << m_model
                   << m_key

@@ -467,7 +467,7 @@ void Database::readModel(const QList<Company*> companys){
 
     for (Company* company : companys){
 
-        QFile file("./bin/" + company->filePath());
+        QFile file("./models/" + company->filePath());
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
             continue;

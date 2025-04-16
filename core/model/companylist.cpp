@@ -27,7 +27,7 @@ void CompanyList::readDB(){
         emit countChanged();
     });
 
-    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson,"./bin/company.json");
+    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson,"./models/company.json");
     futureWatcher.setFuture(future);
 }
 
