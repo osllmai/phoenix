@@ -93,7 +93,7 @@
     "number": "6",
     "modelName": "qwen-vl-plus",
     "name": "Qwen VL Plus",
-    "type": "Text and Vision",
+    "type": "Vision",
     "inputPricePer1KTokens": 0.001,
     "outputPricePer1KTokens": 0.003,
     "description": "Multimodal model capable of understanding both images and text, with strong visual reasoning capabilities.",

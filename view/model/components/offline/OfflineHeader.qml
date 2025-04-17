@@ -50,6 +50,10 @@ Item{
 
                     model: ListModel {
                         ListElement {
+                            name: "Speech"
+                            type: "Speech"
+                        }
+                        ListElement {
                             name: "Chat"
                             type: "Text Generation"
                         }
@@ -66,7 +70,7 @@ Item{
                     }
 
                     footer: Row {
-                        spacing: 10
+                        spacing: 2
                         MyButton {
                             id: allId
                             myText: "All"

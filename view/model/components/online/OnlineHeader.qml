@@ -54,6 +54,14 @@ Item{
                             type: "Embeddings"
                         }
                         ListElement {
+                            name: "Vision"
+                            type: "Vision"
+                        }
+                        ListElement {
+                            name: "Video"
+                            type: "Video"
+                        }
+                        ListElement {
                             name: "Image"
                             type: "Image"
                         }
@@ -74,7 +82,7 @@ Item{
                     }
 
                     footer: Row {
-                        spacing: 10
+                        spacing: 2
                         MyButton {
                             id: allId
                             myText: "All"

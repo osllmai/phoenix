@@ -68,7 +68,7 @@
     "maxTokens": 512,
     "inputPricePer1KTokens": 0.0001,
     "outputPricePer1KTokens": 0.0,
-    "capabilities": ["embeddings"]
+    "capabilities": ["Embeddings"]
   },
   {
     "modelName": "embed-multilingual-v3.0",
@@ -77,7 +77,7 @@
     "maxTokens": 512,
     "inputPricePer1KTokens": 0.0001,
     "outputPricePer1KTokens": 0.0,
-    "capabilities": ["embeddings"]
+    "capabilities": ["Embeddings"]
   },
   {
     "modelName": "rerank-english-v3.0",

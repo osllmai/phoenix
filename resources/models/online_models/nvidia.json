@@ -93,7 +93,7 @@
     "number": "6",
     "modelName": "nvidia-picasso-vision",
     "name": "Picasso Vision",
-    "type": "Text and Vision",
+    "type": "Vision",
     "inputPricePer1KTokens": 0.0025,
     "outputPricePer1KTokens": 0.0075,
     "description": "NVIDIA's multimodal model capable of understanding and reasoning about images and text together.",
