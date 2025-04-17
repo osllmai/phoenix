@@ -6,7 +6,7 @@
 #include <QIcon>
 
 #include "database.h"
-// #include "speechtotext.h"
+#include "speechtotext.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -57,6 +57,8 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
 
     // qmlRegisterType<SpeechToText>("com.example.speech", 1, 0, "SpeechToText");
+    SpeechToText* speechToText = SpeechToText::instance(&engine);
+    engine.rootContext()->setContextProperty("speechToText", speechToText);
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");

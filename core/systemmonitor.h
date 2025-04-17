@@ -2,14 +2,13 @@
 #define SYSTEMMONITOR_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
+#include <QTimer>
 
 struct CpuStats {
     quint64 idleTime;
     quint64 totalTime;
 };
-
 
 class SystemMonitor: public QObject
 {
@@ -24,7 +23,6 @@ public:
     Q_INVOKABLE void runSystemMonitor(const bool isRun);
 
     const int cpuInfo() const;
-
     const int memoryInfo() const;
 
 signals:

@@ -128,13 +128,7 @@ Rectangle{
                     myIcon: selectSpeechIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
-                            conversationList.currentConversation.stop()
-                        } else {
-                            sendPrompt(inputTextBox.text)
-                            if (conversationList.modelSelect)
-                                inputTextBox.text = ""
-                        }
+                        speechToText.startRecording()
                     }
                 }
 

@@ -1,47 +1,95 @@
-// #include "speechtotext.h"
-// #include "whisper.h"
-// #include <QFile>
-// #include <QDebug>
-// #include <vector>
+#include "speechtotext.h"
+#include <QDebug>
+#include <QProcess>
+#include <QThread>
 
-// std::vector<float> load_audio_data(const QString &filePath, int &n_samples) {
-//     std::vector<float> audio_data;
+SpeechToText* SpeechToText::m_instance = nullptr;
 
-//     n_samples = 1000;
-//     audio_data.resize(n_samples, 0.5f);
-//     return audio_data;
-// }
+SpeechToText* SpeechToText::instance(QObject* parent){
+    if (!m_instance) {
+        m_instance = new SpeechToText(parent);
+    }
+    return m_instance;
+}
 
-// SpeechToText::SpeechToText(QObject *parent) : QObject(parent) {}
+SpeechToText::SpeechToText(QObject *parent)
+    : QObject(parent), m_process(nullptr)
+{}
 
-// QString SpeechToText::transcribeAudio(const QString &filePath) {
-//     whisper_full_params wparams;
-//     // whisper_full_params_default(&wparams);
+SpeechToText::~SpeechToText(){
+    if (!m_process) {
+        qWarning() << "No recording process to stop.";
+        return;
+    }
 
-//     struct whisper_context *ctx = whisper_init_from_file("models/ggml-base.bin");
-//     if (!ctx) {
-//         return "error load model";
-//     }
+    m_stopFlag = true;
+}
 
-//     int n_samples = 0;
-//     std::vector<float> samples = load_audio_data(filePath, n_samples);
+void SpeechToText::startRecording() {
+    if (m_process) {
+        qWarning() << "Already recording!";
+        return;
+    }
 
-//     if (samples.empty()) {
-//         whisper_free(ctx);
-//         return "error loading audio file";
-//     }
+    m_stopFlag = false;
 
-//     int res = whisper_full(ctx, wparams, samples.data(), n_samples);
-//     if (res != 0) {
-//         whisper_free(ctx);
-//         return "error in processing";
-//     }
+    QThread::create([this]() {
+        m_process = new QProcess;
+        m_process->setProcessChannelMode(QProcess::MergedChannels);
+        m_process->setReadChannel(QProcess::StandardOutput);
 
-//     QString result;
-//     for (int i = 0; i < whisper_full_n_segments(ctx); ++i) {
-//         result += QString::fromStdString(whisper_full_get_segment_text(ctx, i)) + "\n";
-//     }
+        QString exePath = "./whisper/whisper-stream.exe";
+        QStringList arguments;
+        arguments << "-m" << "./whisper/ggml-base.en.bin"
+                  << "--step" << "0"
+                  << "--length" << "3000"
+                  << "--keep" << "1000";
 
-//     whisper_free(ctx);
-//     return result;
-// }
+        m_process->start(exePath, arguments);
+
+        if (!m_process->waitForStarted()) {
+            qCritical() << "Failed to start process: " << m_process->errorString();
+            delete m_process;
+            m_process = nullptr;
+            return;
+        }
+
+        while (m_process->state() == QProcess::Running && !m_stopFlag) {
+            if (m_process->waitForReadyRead(500)) {
+                QByteArray output = m_process->readAllStandardOutput();
+                QString outputString = QString::fromUtf8(output, output.size());
+                qInfo() << outputString;
+            }
+        }
+
+        if (m_process->state() != QProcess::NotRunning) {
+            m_process->terminate();
+            if (!m_process->waitForFinished(1000)) {
+                m_process->kill();
+                m_process->waitForFinished();
+            }
+        }
+
+        delete m_process;
+        m_process = nullptr;
+
+        qInfo() << "Recording process finished.";
+
+    })->start();
+}
+
+
+void SpeechToText::stopRecording() {
+    if (!m_process) {
+        qWarning() << "No recording process to stop.";
+        return;
+    }
+
+    m_stopFlag = true;
+}
+
+
+void SpeechToText::onReadyRead() {
+    QString output = m_process->readAllStandardOutput();
+    emit newText(output);
+}

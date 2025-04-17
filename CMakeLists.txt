@@ -197,7 +197,9 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MyToolTip.qml
 
         view/AppMenu.qml
+        view/AppMenuDrawer.qml
         view/menu/MyMenuButton.qml
+        view/menu/MyOpenMenuButton.qml
 
         view/AppBody.qml
 
@@ -258,6 +260,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/SettingsHeader.qml
         view/settings/SettingsBody.qml
         view/settings/SettingsMenu.qml
+        view/settings/SettingsMenuDrawer.qml
         view/settings/components/SettingsAbout.qml
         view/settings/components/SettingsTheme.qml
         view/settings/components/SettingsSpeech.qml
@@ -266,6 +269,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/components/SettingsMenuButton.qml
         view/settings/components/SettingsSlider.qml
         view/settings/components/ThemeOption.qml
+        view/settings/components/OpenMenuSettingsButton.qml
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
@@ -274,10 +278,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
-        QML_FILES view/AppMenuDrawer.qml
-        QML_FILES view/menu/MyOpenMenuButton.qml
-        QML_FILES view/settings/SettingsMenuDrawer.qml
-        QML_FILES view/settings/components/OpenMenuSettingsButton.qml
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
