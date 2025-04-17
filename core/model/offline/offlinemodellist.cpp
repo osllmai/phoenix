@@ -33,6 +33,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->id();
     case NameRole:
         return model->name();
+    case KeyRole:
+        return model->key();
     case InformationRole:
         return model->information();
     case IconRole:
@@ -70,6 +72,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconRole] = "icon";
     roles[CompanyRole] = "company";

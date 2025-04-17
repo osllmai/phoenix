@@ -13,6 +13,12 @@ Rectangle{
     border.color: Style.Colors.boxBorder
     radius: 8
 
+    property string textInput: speechToText.text
+    onTextInputChanged: {
+        if(textInput != "")
+            inputTextBox.text  = controlId.textInput
+    }
+
     signal sendPrompt(var prompt)
 
     function selectSendIcon(){
@@ -30,13 +36,13 @@ Rectangle{
     }
 
     function selectSpeechIcon(){
-        if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
+        if(speechToText .modelPath === ""){
             if(speechIconId.hovered)
                 return "qrc:/media/icon/microphoneOffFill.svg"
             else
                 return "qrc:/media/icon/microphoneOff.svg"
         }else{
-            if(speechIconId.hovered)
+            if(speechToText .responseInProgress)
                 return "qrc:/media/icon/microphoneOnFill.svg"
             else
                 return "qrc:/media/icon/microphoneOn.svg"
@@ -128,7 +134,12 @@ Rectangle{
                     myIcon: selectSpeechIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        speechToText.startRecording()
+                        if(speechToText .modelSelect){
+                            if(speechToText .responseInProgress)
+                                speechToText.stopRecording()
+                            else
+                                speechToText.startRecording()
+                        }
                     }
                 }
 

@@ -41,7 +41,7 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::DownloadFinished:
-        return matchesFilter && downloadFinished;
+        return matchesFilter && downloadFinished && model->type() == "Text Generation";
     case FilterType::Favorite:
         return matchesFilter && isLikeModel;
     case FilterType::IsDownloading:

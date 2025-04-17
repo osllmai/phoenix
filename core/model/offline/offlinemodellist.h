@@ -26,6 +26,7 @@ public:
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        KeyRole,
         InformationRole,
         IconRole,
         CompanyRole,

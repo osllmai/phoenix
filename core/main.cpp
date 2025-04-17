@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
     bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
     engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
 
-    // qmlRegisterType<SpeechToText>("com.example.speech", 1, 0, "SpeechToText");
     SpeechToText* speechToText = SpeechToText::instance(&engine);
     engine.rootContext()->setContextProperty("speechToText", speechToText);
 

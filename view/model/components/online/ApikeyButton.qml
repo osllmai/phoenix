@@ -5,7 +5,6 @@ import QtQuick.Dialogs
 import '../../../component_library/style' as Style
 import "../../../component_library/button"
 
-
 Item {
     id: control
     height: 35
@@ -41,9 +40,16 @@ Item {
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){
-                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
-                    conversationList.isEmptyConversation = true
+                    window.modeTextlId = model.id
+                    window.modelTextIcon = "qrc:/media/image_company/" + model.icon
+                    window.modelTextName = model.name
+                    window.modelPromptTemplate = model.promptTemplate
+                    window.modelSystemPrompt = model.systemPrompt
+                    window.modelTextSelect = true
                     appBodyId.currentIndex = 1
+                }else if(model.type === "Speech"){
+                    window.modelSpeechPath = model.key
+                    window.modelSpeechSelect = true
                 }else{
                     console.log(model.type)
                 }
@@ -64,6 +70,19 @@ Item {
             }
             function onButtonAction2() {
                 onlineModelList.deleteRequest(model.id)
+                if(model.type === "Text Generation"){
+                    if(window.modeTextlId === model.id){
+                        window.modeTextlId = -1
+                        window.modelTextIcon = ""
+                        window.modelTextName = ""
+                        window.modelPromptTemplate = ""
+                        window.modelSystemPrompt = ""
+                        window.modelTextSelect = false
+                    }else if(model.type === "Speech"){
+                        window.modelSpeechPath = ""
+                        window.modelSpeechSelect = false
+                    }
+                }
                 deleteApikeylVerificationId.close()
             }
         }
