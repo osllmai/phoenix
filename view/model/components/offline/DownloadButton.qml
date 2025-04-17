@@ -51,12 +51,8 @@ Item {
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){
-                    window.modeTextlId = model.id
-                    window.modelTextIcon = "qrc:/media/image_company/" + model.icon
-                    window.modelTextName = model.name
-                    window.modelPromptTemplate = model.promptTemplate
-                    window.modelSystemPrompt = model.systemPrompt
-                    window.modelTextSelect = true
+                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
+                    conversationList.isEmptyConversation = true
                     appBodyId.currentIndex = 1
                 }else if(model.type === "Speech"){
                     window.modelSpeechPath = model.key
@@ -80,20 +76,11 @@ Item {
                 deleteModelVerificationId.close()
             }
             function onButtonAction2() {
-                offlineModelList.deleteRequest(model.id)
-                if(model.type === "Text Generation"){
-                    if(window.modeTextlId === model.id){
-                        window.modeTextlId = -1
-                        window.modelTextIcon = ""
-                        window.modelTextName = ""
-                        window.modelPromptTemplate = ""
-                        window.modelSystemPrompt = ""
-                        window.modelTextSelect = false
-                    }else if(model.type === "Speech"){
-                        window.modelSpeechPath = ""
-                        window.modelSpeechSelect = false
-                    }
+                if((model.type === "Speech") && (window.modelSpeechPath === model.key)){
+                    window.modelSpeechPath = ""
+                    window.modelSpeechSelect = false
                 }
+                offlineModelList.deleteRequest(model.id)
                 deleteModelVerificationId.close()
             }
         }

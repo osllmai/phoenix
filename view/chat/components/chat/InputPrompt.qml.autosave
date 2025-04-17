@@ -135,7 +135,6 @@ Rectangle{
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
                         if(speechToText .modelSelect){
-
                             if(speechToText .responseInProgress)
                                 speechToText.stopRecording()
                             else

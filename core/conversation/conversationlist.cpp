@@ -279,7 +279,6 @@ QVariant ConversationList::dateCalculation(const QDateTime date) const {
 
     int daysDiff = date.daysTo(now);
 
-    // qInfo()<<daysDiff<<"  "<<date<<"    "<<now;
     if (daysDiff < 7 && date.date().year() == now.date().year())
         return date.toString("dddd");
 

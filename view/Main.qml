@@ -37,52 +37,9 @@ ApplicationWindow {
         property real speechPitch: value("speechPitch", 0.0)
         property real speechRate: value("speechRate", 0.0)
 
-        property int modeTextlId: window.modeTextlId
-        property alias modelTextIcon: window.modelTextIcon
-        property alias modelTextName: window.modelTextName
-        property alias modelPromptTemplate: window.modelPromptTemplate
-        property alias modelSystemPrompt: window.modelSystemPrompt
-        property bool modelTextSelect: window.modelTextSelect
-
         property alias modelSpeechPath: window.modelSpeechPath
         property bool modelSpeechSelect: window.modelSpeechSelect
     }
-
-
-    function setModelText(){
-        conversationList.setModelRequest(window.modeTextlId,
-                                                                window,modelTextName,
-                                                                window.modelTextIcon,
-                                                                window.modelPromptTemplate,
-                                                                window.modelSystemPrompt)
-        conversationList.isEmptyConversation = window.modelTextSelect
-    }
-
-    property int modeTextlId: -1
-    property string modelTextIcon: ""
-    property string modelTextName: ""
-    property string modelPromptTemplate: ""
-    property string modelSystemPrompt: ""
-    property bool modelTextSelect: false
-    onModeTextlIdChanged: {
-        window.setModelText()
-    }
-    onModelTextIconChanged: {
-        window.setModelText()
-    }
-    onModelTextNameChanged: {
-        window.setModelText()
-    }
-    onModelPromptTemplateChanged: {
-        window.setModelText()
-    }
-    onModelSystemPromptChanged: {
-        window.setModelText()
-    }
-    onModelTextSelectChanged: {
-        window.setModelText()
-    }
-
 
     function setModelSpeech(){
         speechToText.modelPath = window.modelSpeechPath
