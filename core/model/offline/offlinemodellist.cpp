@@ -57,6 +57,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->isDownloading();
     case DownloadPercentRole:
         return model->downloadPercent();
+    case TypeRole:
+        return model->type();
     case ModelObjectRole:
         return QVariant::fromValue(m_models[index.row()]);
     default:
@@ -80,6 +82,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[DownloadFinishedRole] = "downloadFinished";
     roles[IsDownloadingRole] = "isDownloading";
     roles[DownloadPercentRole] = "downloadPercent";
+    roles[TypeRole] = "type";
     roles[ModelObjectRole] = "modelObject";
     return roles;
 }

@@ -38,6 +38,7 @@ public:
         DownloadFinishedRole,
         IsDownloadingRole,
         DownloadPercentRole,
+        TypeRole,
         ModelObjectRole
     };
 

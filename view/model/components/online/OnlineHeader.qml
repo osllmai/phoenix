@@ -82,7 +82,6 @@ Item{
                     }
 
                     footer: Row {
-                        spacing: 2
                         MyButton {
                             id: allId
                             myText: "All"

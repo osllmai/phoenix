@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QtQml>
 #include <QAbstractListModel>
 
 #include "onlinemodel.h"

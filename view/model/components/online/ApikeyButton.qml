@@ -37,12 +37,16 @@ Item {
         MyButton{
             id: startChatButton
             width: control.width - deleteButton.width - 5
-            myText: "Start Chat"
+            myText: model.type === "Text Generation"? "Start Chat": "Set Model"
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
-                conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
-                conversationList.isEmptyConversation = true
-                appBodyId.currentIndex = 1
+                if(model.type === "Text Generation"){
+                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
+                    conversationList.isEmptyConversation = true
+                    appBodyId.currentIndex = 1
+                }else{
+                    console.log(model.type)
+                }
             }
         }
     }
