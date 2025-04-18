@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -22,6 +22,11 @@ add_subdirectory(./llama_cpp/ llmodel)
 
 add_executable(app${PROJECTNAME}
   main.cpp
+)
+
+target_include_directories(app${PROJECTNAME}
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/llama_cpp/include
 )
 
 target_link_libraries(app${PROJECTNAME}
