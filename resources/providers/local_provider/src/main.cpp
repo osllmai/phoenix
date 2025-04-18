@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "./llam.cpp/llmodel.h"
+#include "./llam_cpp/include/gpt4all-backend/llmodel.h"
 
 std::string answer = "";
 LLModel::PromptContext prompt_context;
@@ -58,41 +58,44 @@ void llm_print_usage(const llm_params& p, const char* progname) {
 bool llm_parse_args(int argc, char* argv[], llm_params& params) {
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
+
         if (arg == "--help") {
             llm_print_usage(params, argv[0]);
             exit(0);
         } else if (arg == "--model") {
             params.model = argv[++i];
-        } else if (arg == "--stream") {
+        } else if (arg == "--backend") {
             params.backend = argv[++i];
         } else if (arg == "--stream") {
-            params.stream = std::string(argv[++i]).toLower() == "true";
+            std::string val = argv[++i];
+            std::transform(val.begin(), val.end(), val.begin(), ::tolower);
+            params.stream = (val == "true");
         } else if (arg == "--prompt-template") {
             params.prompt_template = argv[++i];
         } else if (arg == "--system-prompt") {
             params.system_prompt = argv[++i];
         } else if (arg == "--temperature") {
-            params.temperature = std::string(argv[++i]).toDouble();
+            params.temperature = std::stod(argv[++i]);
         } else if (arg == "--top-k") {
-            params.top_k = std::string(argv[++i]).toInt();
+            params.top_k = std::stoi(argv[++i]);
         } else if (arg == "--top-p") {
-            params.top_p = std::string(argv[++i]).toDouble();
+            params.top_p = std::stod(argv[++i]);
         } else if (arg == "--min-p") {
-            params.min_p = std::string(argv[++i]).toDouble();
+            params.min_p = std::stod(argv[++i]);
         } else if (arg == "--repeat-penalty") {
-            params.repeat_penalty = std::string(argv[++i]).toDouble();
+            params.repeat_penalty = std::stod(argv[++i]);
         } else if (arg == "--prompt-batch-size") {
-            params.prompt_batch_size = std::string(argv[++i]).toInt();
+            params.prompt_batch_size = std::stoi(argv[++i]);
         } else if (arg == "--max-tokens") {
-            params.max_tokens = std::string(argv[++i]).toInt();
+            params.max_tokens = std::stoi(argv[++i]);
         } else if (arg == "--repeat-penalty-tokens") {
-            params.repeat_penalty_tokens = std::string(argv[++i]).toInt();
+            params.repeat_penalty_tokens = std::stoi(argv[++i]);
         } else if (arg == "--context-length") {
-            params.context_length = std::string(argv[++i]).toInt();
+            params.context_length = std::stoi(argv[++i]);
         } else if (arg == "--gpu-layers") {
-            params.number_of_gpu_layers = std::string(argv[++i]).toInt();
+            params.number_of_gpu_layers = std::stoi(argv[++i]);
         } else {
-            qWarning() << "Unknown argument:" << arg;
+            std::cerr << "Unknown argument: " << arg << std::endl;
             llm_print_usage(params, argv[0]);
             exit(0);
         }
