@@ -1,6 +1,7 @@
 #include "conversation.h"
 
 #include "./provider/onlineprovider.h"
+#include "./provider/offlineprovider.h"
 #include "./provider/provider.h"
 
 Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
@@ -176,6 +177,9 @@ void Conversation::prompt(const QString &input, const int idModel){
         loadModel(idModel);
         setIsLoadModel(true);
         if(m_model->backend() == BackendType::OfflineModel){
+            m_provider = new OfflineProvider(this);
+
+            m_provider->loadModel((m_model->company()->name() + "/" + m_model->modelName()), m_model->key());
 
         }else if(m_model->backend() == BackendType::OnlineModel){
             if(m_provider != nullptr){
@@ -211,21 +215,21 @@ void Conversation::prompt(const QString &input, const int idModel){
 
         }
     }
-    if(idModel != m_model->id()){
-        m_provider->loadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-        qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
-    }
+    // if(idModel != m_model->id()){
+    //     m_provider->loadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+    //     qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
+    // }
 
-    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
+    // emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
+    // emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
-    setResponseInProgress(true);
-    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
-                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
-                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
-                        m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
-                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
-                       m_modelSettings->numberOfGPULayers());
+    // setResponseInProgress(true);
+    // m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
+    //                     m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
+    //                     m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
+    //                     m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
+    //                    m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
+    //                    m_modelSettings->numberOfGPULayers());
 }
 
 void Conversation::stop(){

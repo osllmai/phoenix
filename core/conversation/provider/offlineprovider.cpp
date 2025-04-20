@@ -22,66 +22,73 @@ void OfflineProvider::stop(){
     _stopFlag = true;
 }
 
-void OfflineProvider::loadModel(const QString &model, const QString &key){
-    QThread::create([this]() {
+void OfflineProvider::loadModel(const QString &model, const QString &key) {
+    QThread::create([this, model, key]() {
         QProcess process;
         process.setProcessChannelMode(QProcess::MergedChannels);
         process.setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "providers/online_provider/main_provider.exe";
+        qInfo() << "11111";
+
+        QString exePath = "providers/local_provider/applocal_provider.exe";
         QStringList arguments;
-        arguments << m_model
-                  /*<< m_key
-                  << input
-                  << (stream ? "1" : "0")
-                  << promptTemplate
-                  << systemPrompt
-                  << QString::number(temperature, 'f', 6)
-                  << QString::number(topK)
-                  << QString::number(topP, 'f', 6)
-                  << QString::number(minP, 'f', 6)
-                  << QString::number(repeatPenalty, 'f', 6)
-                  << QString::number(promptBatchSize)
-                  << QString::number(maxTokens)
-                  << QString::number(repeatPenaltyTokens)
-                  << QString::number(contextLength)
-                  << QString::number(numberOfGPULayers)*/;
+        arguments << "--model" << key
+                  << "--backend" << "cpu";
+
+        qInfo() << "11111";
 
         process.start(exePath, arguments);
 
         if (!process.waitForStarted()) {
             qCritical() << "Failed to start process: " << process.errorString();
+            emit requestFinishedResponse("Failed to start process");
             return;
         }
 
+        qInfo() << "11111";
+
+        qInfo() << "Local provider started. Sending prompt...";
+
+        QString text = "__PROMPT__";
+        process.write(text.toUtf8());
+
+        qInfo() << "11111";
+
+        QString prompt = "Hello! Who are you?\n";
+        process.write(prompt.toUtf8());
+        process.waitForBytesWritten();
+
+        qInfo() << "11111";
+
+        QString fullResponse;
         while (process.state() == QProcess::Running) {
-            QString stopFlagStr = _stopFlag ? "t" : "f";
-            process.write(stopFlagStr.toUtf8());
-            process.waitForBytesWritten();
-
-            if (process.waitForReadyRead(500)) {
-                QByteArray output = process.readAllStandardOutput();
-                QString outputString = QString::fromUtf8(output, output.size());;
-
-                if (!outputString.isEmpty()) {
-                    emit requestTokenResponse(outputString);
-                }
-                qInfo()<<outputString;
-            }
-
             if (_stopFlag) {
-                process.write("t");
+                qInfo() << "Stop flag detected. Terminating...";
+                process.write("t\n");
                 process.waitForBytesWritten();
                 break;
             }
+
+            if (process.waitForReadyRead(100)) {
+                QByteArray output = process.readAllStandardOutput();
+                QString outputString = QString::fromUtf8(output);
+
+                if (!outputString.trimmed().isEmpty()) {
+                    fullResponse += outputString;
+                    emit requestTokenResponse(outputString);
+                    qInfo() << "Received:" << outputString.trimmed();
+                }
+            }
         }
 
+        process.waitForFinished(2000);
         _stopFlag = false;
 
         qInfo() << "Process finished.";
-        emit requestFinishedResponse("");
+        emit requestFinishedResponse(fullResponse);
     })->start();
 }
+
 
 void OfflineProvider::unLoadModel(){
         // delete model;

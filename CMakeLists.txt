@@ -354,6 +354,8 @@ endif()
 #copy whisper
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR})
 
+file(COPY ${CMAKE_SOURCE_DIR}/resources/providers/local_provider DESTINATION ${BIN_DIR}/providers)
+
 
 #copy exe provider for offline-model
-# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/local_provider/local_provider.exe ${BIN_DIR}/providers/local_provider/local_provider.exe COPYONLY)
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/local_provider/applocal_provider.exe ${BIN_DIR}/providers/local_provider/applocal_provider.exe COPYONLY)

@@ -3,104 +3,16 @@
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
+#include <limits>
+#include <chrono>
 
 #include <gpt4all-backend/llmodel.h>
-
-// --------- Struct for Parameters --------------
-struct llm_params {
-    std::string model = "models/model.gguf";
-    std::string backend = "cpu";
-    bool stream = true;
-    std::string prompt_template = "### Human:\n%1\n\n### Assistant:\n";
-    std::string system_prompt = "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n";
-    double temperature = 0.7;
-    int top_k = 40;
-    double top_p = 0.4;
-    double min_p = 0.0;
-    double repeat_penalty = 1.18;
-    int prompt_batch_size = 128;
-    int max_tokens = 4096;
-    int repeat_penalty_tokens = 64;
-    int context_length = 2048;
-    int number_of_gpu_layers = 80;
-};
+#include "llm_params.h"
 
 // --------- Global Variables -------------------
 std::string answer = "";
-// LLModel::PromptContext prompt_context;
 LLModel* model = nullptr;
 std::atomic<bool> _stopFlag = false;
-
-// --------- Print Help Message -----------------
-void llm_print_usage(const llm_params& p, const char* progname) {
-    std::cout <<
-        "Usage: " << progname << " [options]\n\n"
-                                 "Options:\n"
-                                 "  --model <path>                     Path to model file (default: models/model.gguf)\n"
-                                 "  --backend <cpu|cuda|auto>          Backend to use (default: cpu)\n"
-                                 "  --stream [true|false]              Enable streaming output (default: true)\n"
-                                 "  --prompt-template <string>         Prompt template with %1 as input slot\n"
-                                 "  --system-prompt <string>           System prompt text\n"
-                                 "  --temperature <float>              Temperature (default: 0.7)\n"
-                                 "  --top-k <int>                      Top-K sampling (default: 40)\n"
-                                 "  --top-p <float>                    Top-P sampling (default: 0.4)\n"
-                                 "  --min-p <float>                    Minimum probability (default: 0.0)\n"
-                                 "  --repeat-penalty <float>           Repeat penalty (default: 1.18)\n"
-                                 "  --prompt-batch-size <int>          Prompt batch size (default: 128)\n"
-                                 "  --max-tokens <int>                 Max tokens (default: 4096)\n"
-                                 "  --repeat-penalty-tokens <int>      Tokens for repetition penalty (default: 64)\n"
-                                 "  --context-length <int>             Context length (default: 2048)\n"
-                                 "  --gpu-layers <int>                 Number of GPU layers (default: 80)\n";
-}
-
-// --------- Argument Parser -------------------
-bool llm_parse_args(int argc, char* argv[], llm_params& params) {
-    for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
-
-        if (arg == "--help") {
-            llm_print_usage(params, argv[0]);
-            exit(0);
-        } else if (arg == "--model") {
-            params.model = argv[++i];
-        } else if (arg == "--backend") {
-            params.backend = argv[++i];
-        } else if (arg == "--stream") {
-            std::string val = argv[++i];
-            std::transform(val.begin(), val.end(), val.begin(), ::tolower);
-            params.stream = (val == "true");
-        } else if (arg == "--prompt-template") {
-            params.prompt_template = argv[++i];
-        } else if (arg == "--system-prompt") {
-            params.system_prompt = argv[++i];
-        } else if (arg == "--temperature") {
-            params.temperature = std::stod(argv[++i]);
-        } else if (arg == "--top-k") {
-            params.top_k = std::stoi(argv[++i]);
-        } else if (arg == "--top-p") {
-            params.top_p = std::stod(argv[++i]);
-        } else if (arg == "--min-p") {
-            params.min_p = std::stod(argv[++i]);
-        } else if (arg == "--repeat-penalty") {
-            params.repeat_penalty = std::stod(argv[++i]);
-        } else if (arg == "--prompt-batch-size") {
-            params.prompt_batch_size = std::stoi(argv[++i]);
-        } else if (arg == "--max-tokens") {
-            params.max_tokens = std::stoi(argv[++i]);
-        } else if (arg == "--repeat-penalty-tokens") {
-            params.repeat_penalty_tokens = std::stoi(argv[++i]);
-        } else if (arg == "--context-length") {
-            params.context_length = std::stoi(argv[++i]);
-        } else if (arg == "--gpu-layers") {
-            params.number_of_gpu_layers = std::stoi(argv[++i]);
-        } else {
-            std::cerr << "Unknown argument: " << arg << "\n";
-            llm_print_usage(params, argv[0]);
-            return false;
-        }
-    }
-    return true;
-}
 
 // --------- Response Handler ------------------
 bool handleResponse(int32_t token, std::string_view response) {
@@ -154,45 +66,127 @@ void processPrompt(const std::string& input, const llm_params& params) {
     std::cout << "\n__DONE__\n" << std::flush;
 }
 
+float approxDeviceMemGB(const LLModel::GPUDevice *dev) {
+    float memGB = dev->heapSize / float(1024 * 1024 * 1024);
+    return std::floor(memGB * 10.f) / 10.f;
+}
+
 // --------- Main Function ---------------------
 int main(int argc, char* argv[]) {
+    auto startTime = std::chrono::steady_clock::now();
+
     llm_params params;
-
-    if (!llm_parse_args(argc, argv, params))
-        return 1;
-
-    // prompt_context.n_predict = params.max_tokens;
-
-    model = LLModel::Implementation::construct(params.model, params.backend, params.context_length);
-    if (!model) {
-        std::cerr << "Failed to construct model.\n";
+    if (!llm_parse_args(argc, argv, params)) {
+        std::cerr << "Error: Argument parsing failed.\n";
         return 1;
     }
 
-#if defined(WIN32)
-    if (params.backend == "cuda") {
-        auto devices = LLModel::Implementation::availableGPUDevices();
-        if (!devices.empty()) {
-            size_t memoryRequired = devices[0].heapSize;
-            const std::string& name = devices[0].name;
-            auto filteredDevices = model->availableGPUDevices(memoryRequired);
-            for (const auto& device : filteredDevices) {
-                if (device.name == name && model->initializeGPUDevice(device.index)) {
+    std::string backend = "auto";
+#if defined(__APPLE__) && defined(__aarch64__)
+    if (params.device == "CPU") {
+        backend = "cpu";
+    } else if (params.force_metal) {
+        backend = "metal";
+    }
+#else
+    if (params.device.rfind("CUDA", 0) == 0) {
+        backend = "cuda";
+    }
+#endif
+
+    std::cout << "Using backend: " << backend << "\n";
+    try {
+        model = LLModel::Implementation::construct(params.model, backend, params.context_length);
+    } catch (const LLModel::MissingImplementationError &e) {
+        std::cerr << "Missing implementation: " << e.what() << "\n";
+        return 1;
+    } catch (const LLModel::UnsupportedModelError &e) {
+        std::cerr << "Unsupported model: " << e.what() << "\n";
+        return 1;
+    } catch (const LLModel::BadArchError &e) {
+        std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n";
+        return 1;
+    }
+
+    if (!model) {
+        std::cerr << "Model construction failed.\n";
+        return 1;
+    }
+
+    const size_t requiredMemory = model->requiredMem(params.model, params.context_length, params.number_of_gpu_layers);
+    auto availableDevices = model->availableGPUDevices(requiredMemory);
+
+    std::cout << "\n--- Available GPU Devices ---\n";
+    if (availableDevices.empty()) {
+        std::cout << "No GPU devices available.\n";
+    } else {
+        for (const auto& device : availableDevices) {
+            std::cout << "Index: " << device.index << "\n";
+            std::cout << "Name: " << device.name << "\n";
+            std::cout << "Backend: " << device.backendName() << "\n";
+            std::cout << "Selection Name: " << device.selectionName() << "\n";
+            std::cout << "Total Memory (approx. GB): " << approxDeviceMemGB(&device) << "\n";
+            std::cout << "--------------------------------\n";
+        }
+    }
+
+
+
+    const LLModel::GPUDevice* selectedDevice = nullptr;
+    bool usingCPU = true;
+
+#if defined(__APPLE__) && defined(__aarch64__)
+    if (model->implementation().buildVariant() == "metal") {
+        usingCPU = false;
+    }
+#else
+    if (params.device != "CPU") {
+
+        for (const auto& device : availableDevices) {
+
+            if (params.device == "Auto" || device.selectionName() == params.device) {
+                std::string reason;
+                if (model->initializeGPUDevice(device.index, &reason)) {
+                    selectedDevice = &device;
+                    usingCPU = false;
                     break;
+                } else {
+                    std::cerr << "GPU init failed: " << reason << "\n";
                 }
             }
         }
     }
 #endif
 
-    if (!model->loadModel(params.model, params.context_length, params.number_of_gpu_layers)) {
-        std::cerr << "Model loading unsuccessful!\n";
-        return 1;
-    } else {
-        std::cout << "Model loaded successfully!\n";
+    bool success = model->loadModel(params.model, params.context_length, params.number_of_gpu_layers);
+
+    if (!success && !usingCPU) {
+        std::cerr << "GPU loading failed, retrying on CPU...\n";
+        success = model->loadModel(params.model, params.context_length, 0);
+        if (!success) {
+            std::cerr << "Fallback to CPU also failed.\n";
+            return 1;
+        }
     }
 
+    if (!success) {
+        std::cerr << "Model load failed completely.\n";
+        return 1;
+    }
+
+    auto endTime = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsedSeconds = endTime - startTime;
+    std::cout << "Model loaded successfully on " << (usingCPU ? "CPU" : "GPU") << "\n";
+    if (selectedDevice) {
+        std::cout << "Device name: " << selectedDevice->name << "\n";
+        std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << "\n";
+        std::cout << "Backend: " << selectedDevice->backendName() << "\n";
+    }
+    std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n";
+
+    // Command loop
     while (true) {
+        std::cout << ">> ";
         std::string command;
         std::getline(std::cin, command);
 
@@ -201,18 +195,16 @@ int main(int argc, char* argv[]) {
             _stopFlag.store(true);
             continue;
         }
-
         if (command == "__PROMPT__") {
             std::string input;
             std::getline(std::cin, input);
-
             _stopFlag.store(false);
             answer.clear();
-
-            // Process and send the prompt to the model
+            std::cout << "Prompting: " << input << "\n";
             processPrompt(input, params);
         }
     }
 
+    std::cout << "Exiting.\n";
     return 0;
 }

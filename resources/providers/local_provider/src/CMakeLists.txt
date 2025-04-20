@@ -18,17 +18,28 @@ endif()
 set(PROJECTNAME local_provider)
 project(${PROJECTNAME} VERSION 0.1 LANGUAGES CXX)
 
+# Add llama_cpp library
 add_subdirectory(./llama_cpp/ llmodel)
 
-add_executable(app${PROJECTNAME}
+# Define source files
+set(SOURCES
   main.cpp
+  llm_params.h
 )
 
+# Create executable
+add_executable(app${PROJECTNAME}
+  ${SOURCES}
+)
+
+# Include directories
 target_include_directories(app${PROJECTNAME}
-    PRIVATE
+  PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/llama_cpp/include
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Link libraries
 target_link_libraries(app${PROJECTNAME}
-    PRIVATE llmodel
+  PRIVATE llmodel
 )
