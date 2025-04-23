@@ -13,6 +13,7 @@
 std::string answer = "";
 LLModel* model = nullptr;
 std::atomic<bool> _stopFlag = false;
+llm_params params;
 
 // --------- Response Handler ------------------
 bool handleResponse(int32_t token, std::string_view response) {
@@ -26,15 +27,14 @@ bool handleResponse(int32_t token, std::string_view response) {
         std::string command;
         std::getline(std::cin, command);
         if (command == "__STOP__") {
-            _stopFlag.store(true);
-            continue;
+            return false;
         }
     }
-    return !_stopFlag.load();
+    return true;
 }
 
 // --------- Generate Full Prompt and Process Request ----------------
-void processPrompt(const std::string& input, const llm_params& params) {
+void processPrompt(const std::string& input) {
     // Create full prompt by combining system prompt and user input
     std::string full_prompt = params.system_prompt;
     std::string user_prompt = params.prompt_template;
@@ -89,7 +89,6 @@ float approxDeviceMemGB(const LLModel::GPUDevice *dev) {
 int main(int argc, char* argv[]) {
     auto startTime = std::chrono::steady_clock::now();
 
-    llm_params params;
     if (!llm_parse_args(argc, argv, params)) {
         std::cerr << "Error: Argument parsing failed.\n";
         return 1;
@@ -215,18 +214,41 @@ int main(int argc, char* argv[]) {
                     std::string key = line.substr(0, pos);
                     std::string val = line.substr(pos + 1);
 
-                    if (key == "stream"){
+                    if (key == "stream") {
                         std::transform(val.begin(), val.end(), val.begin(), ::tolower);
                         params.stream = (val == "true" || val == "1");
                     }
-                    else if (key == "n_predict")       params.n_predict = std::stoi(val);
-                    else if (key == "top_k")      params.top_k = std::stoi(val);
-                    else if (key == "top_p")      params.top_p = std::stof(val);
-                    else if (key == "min_p")      params.min_p = std::stof(val);
-                    else if (key == "temp")       params.temp = std::stof(val);
-                    else if (key == "n_batch")    params.n_batch = std::stoi(val);
-                    else if (key == "repeat_penalty") params.repeat_penalty = std::stof(val);
-                    else if (key == "repeat_last_n")  params.repeat_last_n = std::stoi(val);
+                    else if (key == "prompt_template") {
+                        params.prompt_template = val;
+                    }
+                    else if (key == "system_prompt") {
+                        params.system_prompt = val;
+                    }
+                    else if (key == "n_predict") {
+                        params.max_tokens = std::stoi(val);
+                    }
+                    else if (key == "top_k") {
+                        params.top_k = std::stoi(val);
+                    }
+                    else if (key == "top_p") {
+                        params.top_p = std::stof(val);
+                    }
+                    else if (key == "min_p") {
+                        params.min_p = std::stof(val);
+                    }
+                    else if (key == "temp") {
+                        params.temperature = std::stof(val);
+                    }
+                    else if (key == "n_batch") {
+                        params.prompt_batch_size = std::stoi(val);
+                    }
+                    else if (key == "repeat_penalty") {
+                        params.repeat_penalty = std::stof(val);
+                    }
+                    else if (key == "repeat_last_n") {
+                        params.repeat_penalty_tokens = std::stoi(val);
+                    }
+
                 }
             }
             continue;
@@ -240,7 +262,7 @@ int main(int argc, char* argv[]) {
             _stopFlag.store(false);
             answer.clear();
             std::cout << "Prompting: " << input << std::flush;
-            processPrompt(input, params);
+            processPrompt(input);
         }
 
     }
