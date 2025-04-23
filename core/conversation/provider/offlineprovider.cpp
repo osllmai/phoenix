@@ -1,9 +1,5 @@
 #include "offlineprovider.h"
 
-#include <QDebug>
-#include <QProcess>
-#include <QThread>
-
 OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
 {
@@ -13,7 +9,10 @@ OfflineProvider::OfflineProvider(QObject* parent)
 }
 
 OfflineProvider::~OfflineProvider(){
-    qInfo() << "delete" << QThread::currentThread() ;
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
     chatLLMThread.quit();
     chatLLMThread.wait();
 }
@@ -24,67 +23,107 @@ void OfflineProvider::stop(){
 
 void OfflineProvider::loadModel(const QString &model, const QString &key) {
     QThread::create([this, model, key]() {
-        QProcess process;
-        process.setProcessChannelMode(QProcess::MergedChannels);
-        process.setReadChannel(QProcess::StandardOutput);
-
-        qInfo() << "11111";
+        m_process = new QProcess;
+        m_process->setProcessChannelMode(QProcess::MergedChannels);
+        m_process->setReadChannel(QProcess::StandardOutput);
 
         QString exePath = "providers/local_provider/applocal_provider.exe";
         QStringList arguments;
-        arguments << "--model" << key
-                  << "--backend" << "cpu";
+        arguments << "--model" << key;
 
-        qInfo() << "11111";
+        state = ProviderState::LoadingModel;
 
-        process.start(exePath, arguments);
+        connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText){
+            if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
+                QString paramBlock =
+                    "__PARAMS__\n"
+                    "n_predict=200\n"
+                    "top_k=40\n"
+                    "top_p=0.9\n"
+                    "min_p=0.0\n"
+                    "temp=0.9\n"
+                    "n_batch=9\n"
+                    "repeat_penalty=1.10\n"
+                    "repeat_last_n=64\n"
+                    "__END_PARAMS__\n";
 
-        if (!process.waitForStarted()) {
-            qCritical() << "Failed to start process: " << process.errorString();
+                m_process->write(paramBlock.toUtf8());
+                m_process->waitForBytesWritten();
+
+                QString text = "__PROMPT__\n";
+                m_process->write(text.toUtf8());
+                m_process->waitForBytesWritten();
+
+                QString formattedPrompt = promptText.trimmed() + "\n__END__\n";
+                m_process->write(formattedPrompt.toUtf8());
+                m_process->waitForBytesWritten();
+
+                state = ProviderState::ReadingResponse;
+            } else {
+                qWarning() << "Not ready for prompt. Current state:" << static_cast<int>(state);
+            }
+        });
+
+        m_process->start(exePath, arguments);
+
+        if (!m_process->waitForStarted()) {
+            qCritical() << "Failed to start process: " << m_process->errorString();
             emit requestFinishedResponse("Failed to start process");
             return;
         }
 
-        qInfo() << "11111";
-
         qInfo() << "Local provider started. Sending prompt...";
 
-        QString text = "__PROMPT__";
-        process.write(text.toUtf8());
-
-        qInfo() << "11111";
-
-        QString prompt = "Hello! Who are you?\n";
-        process.write(prompt.toUtf8());
-        process.waitForBytesWritten();
-
-        qInfo() << "11111";
-
         QString fullResponse;
-        while (process.state() == QProcess::Running) {
-            if (_stopFlag) {
-                qInfo() << "Stop flag detected. Terminating...";
-                process.write("t\n");
-                process.waitForBytesWritten();
-                break;
-            }
+        while (m_process->state() == QProcess::Running) {
 
-            if (process.waitForReadyRead(100)) {
-                QByteArray output = process.readAllStandardOutput();
+            if (m_process->waitForReadyRead(50)){
+
+                QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
 
-                if (!outputString.trimmed().isEmpty()) {
-                    fullResponse += outputString;
-                    emit requestTokenResponse(outputString);
-                    qInfo() << "Received:" << outputString.trimmed();
+                if (!outputString.trimmed().isEmpty()){
+                    switch (state) {
+                        case ProviderState::LoadingModel:{
+
+                            if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
+                                state = ProviderState::WaitingForPrompt;
+                            }
+                            break;
+                        }
+
+                        case ProviderState::SendingPrompt: {
+                            state = ProviderState::WaitingForPrompt;
+                            break;
+                        }
+
+                        case ProviderState::ReadingResponse: {
+                            QString text = "__NO_STOP__\n";
+                            if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
+                                state = ProviderState::SendingPrompt;
+                            }else if (_stopFlag) {
+                                text = "__STOP__\n";
+                                state = ProviderState::SendingPrompt;
+                            }
+                            qInfo()<<outputString.trimmed();
+                            m_process->write(text.toUtf8());
+                            m_process->waitForBytesWritten();
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+
                 }
             }
         }
 
-        process.waitForFinished(2000);
+        m_process->waitForFinished(50);
         _stopFlag = false;
 
         qInfo() << "Process finished.";
+        m_process->deleteLater();
         emit requestFinishedResponse(fullResponse);
     })->start();
 }

@@ -44,7 +44,7 @@ ehthumbs.db
 desktop.ini
 .qmlls.ini
 
-# === VSCode settings (if you're using it) ===
+# === VSCode settings ===
 .vscode/
 
 # === Qt Linguist translation binary files ===

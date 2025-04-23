@@ -17,8 +17,18 @@ std::atomic<bool> _stopFlag = false;
 // --------- Response Handler ------------------
 bool handleResponse(int32_t token, std::string_view response) {
     if (!response.empty()) {
-        std::cout << response << std::flush;
-        answer += std::string(response); // Convert string_view to string to append to answer
+        if(!params.stream){
+            std::cout << response << std::flush;
+        }
+
+        answer += std::string(response);
+
+        std::string command;
+        std::getline(std::cin, command);
+        if (command == "__STOP__") {
+            _stopFlag.store(true);
+            continue;
+        }
     }
     return !_stopFlag.load();
 }
@@ -35,7 +45,7 @@ void processPrompt(const std::string& input, const llm_params& params) {
         user_prompt.replace(pos, 2, input);
     }
 
-    full_prompt += user_prompt;  // Combine system and user prompt
+    full_prompt += user_prompt;
 
     // Callback for the prompt (this is a basic implementation)
     auto prompt_callback = [](std::span<const LLModel::Token> batch, bool cached) -> bool {
@@ -49,21 +59,25 @@ void processPrompt(const std::string& input, const llm_params& params) {
     };
 
     // Create and set prompt context
-    LLModel::PromptContext ctx;
-    ctx.n_predict = params.max_tokens;  // Adjust as needed
-    ctx.top_k = params.top_k;
-    ctx.top_p = params.top_p;
-    ctx.min_p = params.min_p;
-    ctx.temp = params.temperature;
-    ctx.n_batch = params.prompt_batch_size;
-    ctx.repeat_penalty = params.repeat_penalty;
-    ctx.repeat_last_n = params.repeat_penalty_tokens;
-    ctx.contextErase = 0.5f;  // Customize if needed
+    LLModel::PromptContext promptContext;
+    promptContext.n_predict = params.max_tokens;
+    promptContext.top_k = params.top_k;
+    promptContext.top_p = params.top_p;
+    promptContext.min_p = params.min_p;
+    promptContext.temp = params.temperature;
+    promptContext.n_batch = params.prompt_batch_size;
+    promptContext.repeat_penalty = params.repeat_penalty;
+    promptContext.repeat_last_n = params.repeat_penalty_tokens;
+    promptContext.contextErase = 0.5f;
 
     // Call the prompt method on the model
-    model->prompt(full_prompt, prompt_callback, response_callback, ctx);
+    model->prompt(full_prompt, prompt_callback, response_callback, promptContext);
 
-    std::cout << "\n__DONE__\n" << std::flush;
+    if(params.stream){
+        std::cout << answer << std::flush;
+    }
+
+    std::cout << "__DONE_PROMPTPROCESS__" << std::flush;
 }
 
 float approxDeviceMemGB(const LLModel::GPUDevice *dev) {
@@ -94,14 +108,14 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    std::cout << "Using backend: " << backend << "\n";
+    std::cout << "Using backend: " << backend << std::flush;
     try {
         model = LLModel::Implementation::construct(params.model, backend, params.context_length);
     } catch (const LLModel::MissingImplementationError &e) {
-        std::cerr << "Missing implementation: " << e.what() << "\n";
+        std::cerr << "Missing implementation: " << e.what() << std::flush;
         return 1;
     } catch (const LLModel::UnsupportedModelError &e) {
-        std::cerr << "Unsupported model: " << e.what() << "\n";
+        std::cerr << "Unsupported model: " << e.what() << std::flush;
         return 1;
     } catch (const LLModel::BadArchError &e) {
         std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n";
@@ -121,12 +135,11 @@ int main(int argc, char* argv[]) {
         std::cout << "No GPU devices available.\n";
     } else {
         for (const auto& device : availableDevices) {
-            std::cout << "Index: " << device.index << "\n";
-            std::cout << "Name: " << device.name << "\n";
-            std::cout << "Backend: " << device.backendName() << "\n";
-            std::cout << "Selection Name: " << device.selectionName() << "\n";
-            std::cout << "Total Memory (approx. GB): " << approxDeviceMemGB(&device) << "\n";
-            std::cout << "--------------------------------\n";
+            std::cout << "Index: " << device.index << std::flush;
+            std::cout << "Name: " << device.name << std::flush;
+            std::cout << "Backend: " << device.backendName() << std::flush;
+            std::cout << "Selection Name: " << device.selectionName() << std::flush;
+            std::cout << "Total Memory (approx. GB): " << approxDeviceMemGB(&device) << std::flush;
         }
     }
 
@@ -151,7 +164,7 @@ int main(int argc, char* argv[]) {
                     usingCPU = false;
                     break;
                 } else {
-                    std::cerr << "GPU init failed: " << reason << "\n";
+                    std::cerr << "GPU init failed: " << reason << std::flush;
                 }
             }
         }
@@ -176,33 +189,60 @@ int main(int argc, char* argv[]) {
 
     auto endTime = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsedSeconds = endTime - startTime;
-    std::cout << "Model loaded successfully on " << (usingCPU ? "CPU" : "GPU") << "\n";
+    std::cout << "Model loaded successfully on " << (usingCPU ? "CPU" : "GPU") << std::flush;
     if (selectedDevice) {
-        std::cout << "Device name: " << selectedDevice->name << "\n";
-        std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << "\n";
-        std::cout << "Backend: " << selectedDevice->backendName() << "\n";
+        std::cout << "Device name: " << selectedDevice->name << std::flush;
+        std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << std::flush;
+        std::cout << "Backend: " << selectedDevice->backendName() << std::flush;
     }
     std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n";
 
+    std::cout << "__LoadingModel__Finished__";
+
     // Command loop
     while (true) {
-        std::cout << ">> ";
         std::string command;
         std::getline(std::cin, command);
 
         if (command == "__EXIT__") break;
-        if (command == "__STOP__") {
-            _stopFlag.store(true);
+        if (command == "__PARAMS_SETTINGS__") {
+            std::string line;
+            while (std::getline(std::cin, line)) {
+                if (line == "__END_PARAMS_SETTINGS__") break;
+
+                auto pos = line.find('=');
+                if (pos != std::string::npos) {
+                    std::string key = line.substr(0, pos);
+                    std::string val = line.substr(pos + 1);
+
+                    if (key == "stream"){
+                        std::transform(val.begin(), val.end(), val.begin(), ::tolower);
+                        params.stream = (val == "true" || val == "1");
+                    }
+                    else if (key == "n_predict")       params.n_predict = std::stoi(val);
+                    else if (key == "top_k")      params.top_k = std::stoi(val);
+                    else if (key == "top_p")      params.top_p = std::stof(val);
+                    else if (key == "min_p")      params.min_p = std::stof(val);
+                    else if (key == "temp")       params.temp = std::stof(val);
+                    else if (key == "n_batch")    params.n_batch = std::stoi(val);
+                    else if (key == "repeat_penalty") params.repeat_penalty = std::stof(val);
+                    else if (key == "repeat_last_n")  params.repeat_last_n = std::stoi(val);
+                }
+            }
             continue;
         }
         if (command == "__PROMPT__") {
-            std::string input;
-            std::getline(std::cin, input);
+            std::string input, line;
+            while (std::getline(std::cin, line)) {
+                if (line == "__END__") break;
+                input += line + "\n";
+            }
             _stopFlag.store(false);
             answer.clear();
-            std::cout << "Prompting: " << input << "\n";
+            std::cout << "Prompting: " << input << std::flush;
             processPrompt(input, params);
         }
+
     }
 
     std::cout << "Exiting.\n";

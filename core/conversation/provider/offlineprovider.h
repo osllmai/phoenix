@@ -4,6 +4,7 @@
 #include "provider.h"
 #include <QThread>
 #include <QDebug>
+#include <QProcess>
 
 class OfflineProvider : public  Provider
 {
@@ -11,6 +12,15 @@ class OfflineProvider : public  Provider
 public:
     OfflineProvider(QObject* parent = nullptr);
     virtual ~OfflineProvider();
+
+    enum class ProviderState {
+        Idle,
+        LoadingModel,
+        WaitingForPrompt,
+        SendingPrompt,
+        ReadingResponse,
+        Finished
+    };
 
 public slots:
     void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
@@ -21,12 +31,18 @@ public slots:
     void loadModel(const QString &model, const QString &key) override;
     void unLoadModel() override;
 
+signals:
+    void sendPromptToProcess(const QString &promptText);
+
 private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
 
     std::string answer = "";
     QString m_model;
+
+    QProcess* m_process = nullptr;
+    ProviderState state = ProviderState::Idle;
 
     bool handleResponse(int32_t token, const std::string &response);
 };

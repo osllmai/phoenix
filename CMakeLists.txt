@@ -352,10 +352,22 @@ endif()
 
 
 #copy whisper
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR})
-
-file(COPY ${CMAKE_SOURCE_DIR}/resources/providers/local_provider DESTINATION ${BIN_DIR}/providers)
-
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper/cpu-device)
 
 #copy exe provider for offline-model
-# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/local_provider/applocal_provider.exe ${BIN_DIR}/providers/local_provider/applocal_provider.exe COPYONLY)
+if(WIN32)
+    # Gather EXE files
+    file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.exe")
+    foreach(exe_file ${exe_files})
+        get_filename_component(exe_filename ${exe_file} NAME)
+        configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
+    endforeach()
+
+    # Gather DLL files
+    file(GLOB dll_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.dll")
+    foreach(dll_file ${dll_files})
+        get_filename_component(dll_filename ${dll_file} NAME)
+        configure_file(${dll_file} ${BIN_DIR}/${dll_filename} COPYONLY)
+    endforeach()
+endif()
+

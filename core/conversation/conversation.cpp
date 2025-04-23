@@ -176,26 +176,29 @@ void Conversation::prompt(const QString &input, const int idModel){
     if(!m_isLoadModel){
         loadModel(idModel);
         setIsLoadModel(true);
+        if(m_provider != nullptr){
+            //disconnect load and unload model
+            disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
+            disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
+            disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+
+            //disconnect prompt
+            disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
+
+            //disconnect finished response
+            disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
+            disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
+            delete m_provider;
+        }
         if(m_model->backend() == BackendType::OfflineModel){
+
             m_provider = new OfflineProvider(this);
 
-            m_provider->loadModel((m_model->company()->name() + "/" + m_model->modelName()), m_model->key());
+            connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+
+            emit requestLoadModel( m_model->modelName(), m_model->key());
 
         }else if(m_model->backend() == BackendType::OnlineModel){
-            if(m_provider != nullptr){
-                //disconnect load and unload model
-                disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
-                disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
-                disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
-
-                //disconnect prompt
-                disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
-
-                //disconnect finished response
-                disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
-                disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
-                delete m_provider;
-            }
 
             m_provider = new OnlineProvider(this);
             m_provider->loadModel((m_model->company()->name() + "/" + m_model->modelName()), m_model->key());
