@@ -27,7 +27,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "providers/local_provider/applocal_provider.exe";
+        QString exePath = "applocal_provider.exe";
         QStringList arguments;
         arguments << "--model" << key;
 
@@ -59,6 +59,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 m_process->waitForBytesWritten();
 
                 state = ProviderState::ReadingResponse;
+                qInfo()<< "send prompt finished";
             } else {
                 qWarning() << "Not ready for prompt. Current state:" << static_cast<int>(state);
             }
@@ -72,8 +73,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
             return;
         }
 
-        qInfo() << "Local provider started. Sending prompt...";
-
         QString fullResponse;
         while (m_process->state() == QProcess::Running) {
 
@@ -81,40 +80,44 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
+                qInfo()<<outputString;
+
+                if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
+                    state = ProviderState::SendingPrompt;
+                }
 
                 if (!outputString.trimmed().isEmpty()){
                     switch (state) {
                         case ProviderState::LoadingModel:{
-
                             if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
                                 state = ProviderState::WaitingForPrompt;
+                                emit sendPromptToProcess("Tell me about iran \n");
                             }
                             break;
                         }
 
                         case ProviderState::SendingPrompt: {
                             state = ProviderState::WaitingForPrompt;
+                            emit sendPromptToProcess("Hello");
                             break;
                         }
 
                         case ProviderState::ReadingResponse: {
                             QString text = "__NO_STOP__\n";
-                            if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
-                                state = ProviderState::SendingPrompt;
-                            }else if (_stopFlag) {
+                            if (_stopFlag) {
                                 text = "__STOP__\n";
                                 state = ProviderState::SendingPrompt;
+                                qInfo()<<"_stopFlag";
+                                qInfo()<<outputString.trimmed();
+                                m_process->write(text.toUtf8());
+                                m_process->waitForBytesWritten();
                             }
-                            qInfo()<<outputString.trimmed();
-                            m_process->write(text.toUtf8());
-                            m_process->waitForBytesWritten();
                             break;
                         }
 
                         default:
                             break;
                     }
-
                 }
             }
         }

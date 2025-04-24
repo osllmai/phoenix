@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <limits>
 #include <chrono>
+#include <thread>
+#include <mutex>
 
 #include <gpt4all-backend/llmodel.h>
 #include "llm_params.h"
@@ -15,23 +17,23 @@ LLModel* model = nullptr;
 std::atomic<bool> _stopFlag = false;
 llm_params params;
 
+std::thread promptThread;
+std::mutex promptMutex;
+std::atomic<bool> promptRunning = false;
+
 // --------- Response Handler ------------------
 bool handleResponse(int32_t token, std::string_view response) {
+    if (_stopFlag.load()) return false;
+
     if (!response.empty()) {
-        if(!params.stream){
-            std::cout << response << std::flush;
+        if (params.stream) {
+            std::cout << response <<std::flush;
         }
-
         answer += std::string(response);
-
-        std::string command;
-        std::getline(std::cin, command);
-        if (command == "__STOP__") {
-            return false;
-        }
     }
     return true;
 }
+
 
 // --------- Generate Full Prompt and Process Request ----------------
 void processPrompt(const std::string& input) {
@@ -73,7 +75,7 @@ void processPrompt(const std::string& input) {
     // Call the prompt method on the model
     model->prompt(full_prompt, prompt_callback, response_callback, promptContext);
 
-    if(params.stream){
+    if(!params.stream){
         std::cout << answer << std::flush;
     }
 
@@ -117,21 +119,21 @@ int main(int argc, char* argv[]) {
         std::cerr << "Unsupported model: " << e.what() << std::flush;
         return 1;
     } catch (const LLModel::BadArchError &e) {
-        std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n";
+        std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n"<<std::flush;
         return 1;
     }
 
     if (!model) {
-        std::cerr << "Model construction failed.\n";
+        std::cerr << "Model construction failed.\n"<<std::flush;
         return 1;
     }
 
     const size_t requiredMemory = model->requiredMem(params.model, params.context_length, params.number_of_gpu_layers);
     auto availableDevices = model->availableGPUDevices(requiredMemory);
 
-    std::cout << "\n--- Available GPU Devices ---\n";
+    std::cout << "\n--- Available GPU Devices ---\n"<<std::flush;
     if (availableDevices.empty()) {
-        std::cout << "No GPU devices available.\n";
+        std::cout << "No GPU devices available.\n"<<std::flush;
     } else {
         for (const auto& device : availableDevices) {
             std::cout << "Index: " << device.index << std::flush;
@@ -194,9 +196,9 @@ int main(int argc, char* argv[]) {
         std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << std::flush;
         std::cout << "Backend: " << selectedDevice->backendName() << std::flush;
     }
-    std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n";
+    std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n"<<std::flush;;
 
-    std::cout << "__LoadingModel__Finished__";
+    std::cout << "__LoadingModel__Finished__"<<std::flush;;
 
     // Command loop
     while (true) {
@@ -204,6 +206,7 @@ int main(int argc, char* argv[]) {
         std::getline(std::cin, command);
 
         if (command == "__EXIT__") break;
+
         if (command == "__PARAMS_SETTINGS__") {
             std::string line;
             while (std::getline(std::cin, line)) {
@@ -253,20 +256,57 @@ int main(int argc, char* argv[]) {
             }
             continue;
         }
+
         if (command == "__PROMPT__") {
             std::string input, line;
             while (std::getline(std::cin, line)) {
                 if (line == "__END__") break;
                 input += line + "\n";
             }
+
             _stopFlag.store(false);
             answer.clear();
-            std::cout << "Prompting: " << input << std::flush;
-            processPrompt(input);
+
+            if (promptRunning) {
+                std::cout << "A prompt is already running. Please wait or stop it.\n"<<std::flush;
+                continue;
+            }
+
+            std::cout << "Request: " << input << std::flush;
+
+            if (promptThread.joinable()) {
+                promptThread.join();
+            }
+
+            promptRunning = true;
+            promptThread = std::thread([input]() {
+                std::lock_guard<std::mutex> lock(promptMutex);
+                std::cout << "Prompting: " << input << std::flush;
+                processPrompt(input);
+                promptRunning = false;
+            });
         }
+
+        if (command == "__STOP__") {
+            _stopFlag.store(true);
+
+            if (promptThread.joinable()) {
+                try {
+                    promptThread.join();
+                } catch (const std::system_error& e) {
+                    std::cerr << "Thread join error: " << e.what() << std::endl;
+                }
+            }
+
+            promptRunning = false;
+            std::cout << "Prompt stopped.\n" << std::flush;
+            continue;
+        }
+
+
 
     }
 
-    std::cout << "Exiting.\n";
+    std::cout << "Exiting.\n"<<std::flush;;
     return 0;
 }
