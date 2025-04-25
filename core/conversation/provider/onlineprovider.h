@@ -10,6 +10,7 @@ class OnlineProvider : public  Provider
     Q_OBJECT
 public:
     OnlineProvider(QObject* parent = nullptr);
+    OnlineProvider(QObject *parent, const QString &model, const QString &key);
     virtual ~OnlineProvider();
 
 public slots:

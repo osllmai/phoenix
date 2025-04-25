@@ -279,7 +279,6 @@ int main(int argc, char* argv[]) {
             promptRunning = true;
             promptThread = std::thread([input]() {
                 std::lock_guard<std::mutex> lock(promptMutex);
-                std::cout << "Prompting: " << input << std::flush;
                 processPrompt(input);
                 promptRunning = false;
             });

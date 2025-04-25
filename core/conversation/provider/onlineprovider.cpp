@@ -6,15 +6,13 @@
 
 OnlineProvider::OnlineProvider(QObject* parent)
     : Provider(parent), _stopFlag(false)
-{
-    moveToThread(&chatLLMThread);
-    chatLLMThread.start();
-}
+{}
 
-OnlineProvider::~OnlineProvider(){
-    chatLLMThread.quit();
-    chatLLMThread.wait();
-}
+OnlineProvider::OnlineProvider(QObject *parent, const QString &model, const QString &key)
+    :Provider(parent), _stopFlag(false), m_model(model), m_key(key)
+{}
+
+OnlineProvider::~OnlineProvider(){}
 
 void OnlineProvider::stop(){
     _stopFlag = true;

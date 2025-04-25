@@ -194,7 +194,7 @@ void Conversation::prompt(const QString &input, const int idModel){
         if(m_model->backend() == BackendType::OfflineModel){
             m_provider = new OfflineProvider(this);
         }else if(m_model->backend() == BackendType::OnlineModel){
-            m_provider = new OnlineProvider(this);
+            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
         }
         //load and unload model
         connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
@@ -210,16 +210,15 @@ void Conversation::prompt(const QString &input, const int idModel){
 
         if(m_model->backend() == BackendType::OfflineModel){
             emit requestLoadModel( m_model->modelName(), m_model->key());
-        }else if(m_model->backend() == BackendType::OnlineModel){
-            emit requestLoadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
         }
 
         qInfo()<<m_model->modelName()<<"  "<<m_model->key();
 
     }
     if(idModel != m_model->id()){
-        emit requestLoadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-        qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
+        setIsLoadModel(false);
+        prompt(input, idModel);
+        return;
     }
 
     emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);

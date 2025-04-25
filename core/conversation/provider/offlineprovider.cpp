@@ -2,19 +2,17 @@
 
 OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
-{
-    moveToThread(&chatLLMThread);
-    chatLLMThread.start();
-    qInfo() << "new" << QThread::currentThread();
-}
+{}
+
+OfflineProvider::OfflineProvider(QObject *parent, const QString &model, const QString &key)
+    :Provider(parent), _stopFlag(false), m_model(key)
+{}
 
 OfflineProvider::~OfflineProvider(){
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
     }
-    chatLLMThread.quit();
-    chatLLMThread.wait();
 }
 
 void OfflineProvider::stop(){
@@ -22,7 +20,7 @@ void OfflineProvider::stop(){
 }
 
 void OfflineProvider::loadModel(const QString &model, const QString &key) {
-    QThread::create([this, model, key]() {
+    QThread::create([this, key]() {
         m_process = new QProcess;
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);

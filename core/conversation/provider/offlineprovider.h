@@ -11,32 +11,8 @@ class OfflineProvider : public Provider
     Q_OBJECT
 public:
     OfflineProvider(QObject* parent = nullptr);
+    OfflineProvider(QObject *parent, const QString &model, const QString &key);
     virtual ~OfflineProvider();
-
-    enum class ProviderState {
-        LoadingModel,
-        WaitingForPrompt,
-        SendingPrompt,
-        ReadingResponse,
-        Finished
-    };
-
-    struct PromptRequest {
-        QString input;
-        bool stream;
-        QString promptTemplate;
-        QString systemPrompt;
-        double temperature;
-        int topK;
-        double topP;
-        double minP;
-        double repeatPenalty;
-        int promptBatchSize;
-        int maxTokens;
-        int repeatPenaltyTokens;
-        int contextLength;
-        int numberOfGPULayers;
-    };
 
 public slots:
     void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
@@ -55,7 +31,6 @@ private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
 
-    std::string answer = "";
     QString m_model;
 
     QProcess* m_process = nullptr;
