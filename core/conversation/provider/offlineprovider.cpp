@@ -41,7 +41,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                     "top_k=40\n"
                     "top_p=0.9\n"
                     "min_p=0.0\n"
-                    "temp=0.9\n"
+                    "temp=0.6\n"
                     "n_batch=9\n"
                     "repeat_penalty=1.10\n"
                     "repeat_last_n=64\n"
@@ -84,6 +84,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 
                 if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
                     state = ProviderState::SendingPrompt;
+                    emit requestFinishedResponse("");
                 }
 
                 if (!outputString.trimmed().isEmpty()){
@@ -91,26 +92,33 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                         case ProviderState::LoadingModel:{
                             if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
                                 state = ProviderState::WaitingForPrompt;
-                                emit sendPromptToProcess("Tell me about iran \n");
+                                if (m_hasPendingPrompt) {
+                                    emit sendPromptToProcess(m_pendingPrompt.input);
+                                    m_hasPendingPrompt = false;
+                                    qInfo() << "Sent pending prompt after model load.";
+                                }
                             }
                             break;
                         }
 
                         case ProviderState::SendingPrompt: {
                             state = ProviderState::WaitingForPrompt;
-                            emit sendPromptToProcess("Hello");
                             break;
                         }
 
                         case ProviderState::ReadingResponse: {
-                            QString text = "__NO_STOP__\n";
+                            QString text = "__STOP__\n";
                             if (_stopFlag) {
-                                text = "__STOP__\n";
                                 state = ProviderState::SendingPrompt;
                                 qInfo()<<"_stopFlag";
                                 qInfo()<<outputString.trimmed();
                                 m_process->write(text.toUtf8());
                                 m_process->waitForBytesWritten();
+                                _stopFlag = false;
+                            }
+
+                            if (!outputString.isEmpty()) {
+                                emit requestTokenResponse(outputString);
                             }
                             break;
                         }
@@ -131,7 +139,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
     })->start();
 }
 
-
 void OfflineProvider::unLoadModel(){
         // delete model;
         // model = nullptr;
@@ -142,4 +149,17 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
                              const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
                              const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){
 
+    PromptRequest request = {
+        input, stream, promptTemplate, systemPrompt, temperature, topK,
+        topP, minP, repeatPenalty, promptBatchSize, maxTokens,
+        repeatPenaltyTokens, contextLength, numberOfGPULayers
+    };
+
+    if (state == ProviderState::WaitingForPrompt) {
+        emit sendPromptToProcess(request.input);
+    } else {
+        m_pendingPrompt = request;
+        m_hasPendingPrompt = true;
+        qInfo() << "Prompt saved to be sent later";
+    }
 }

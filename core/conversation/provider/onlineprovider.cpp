@@ -95,6 +95,3 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
     })->start();
 }
 
-bool OnlineProvider::handleResponse(int32_t token, const std::string &response){
-    return true;
-}

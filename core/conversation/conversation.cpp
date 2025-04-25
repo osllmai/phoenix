@@ -190,49 +190,48 @@ void Conversation::prompt(const QString &input, const int idModel){
             disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
             delete m_provider;
         }
+
         if(m_model->backend() == BackendType::OfflineModel){
-
             m_provider = new OfflineProvider(this);
-
-            connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
-
-            emit requestLoadModel( m_model->modelName(), m_model->key());
-
         }else if(m_model->backend() == BackendType::OnlineModel){
-
             m_provider = new OnlineProvider(this);
-            m_provider->loadModel((m_model->company()->name() + "/" + m_model->modelName()), m_model->key());
-            qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
-
-            // //load and unload model
-            connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
-            connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
-            connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
-
-            //prompt
-            connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
-
-            //finished response
-            connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
-            connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
-
         }
+        //load and unload model
+        connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+        connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
+        connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+
+        //prompt
+        connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
+
+        //finished response
+        connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
+        connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            emit requestLoadModel( m_model->modelName(), m_model->key());
+        }else if(m_model->backend() == BackendType::OnlineModel){
+            emit requestLoadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+        }
+
+        qInfo()<<m_model->modelName()<<"  "<<m_model->key();
+
     }
-    // if(idModel != m_model->id()){
-    //     m_provider->loadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-    //     qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
-    // }
+    if(idModel != m_model->id()){
+        emit requestLoadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+        qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
+    }
 
-    // emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
-    // emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
+    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
+    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
-    // setResponseInProgress(true);
-    // m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
-    //                     m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
-    //                     m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
-    //                     m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
-    //                    m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
-    //                    m_modelSettings->numberOfGPULayers());
+    setResponseInProgress(true);
+    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
+                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
+                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
+                        m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
+                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
+                       m_modelSettings->numberOfGPULayers());
 }
 
 void Conversation::stop(){

@@ -27,8 +27,6 @@ private:
 
     QString m_model;
     QString m_key;
-
-    bool handleResponse(int32_t token, const std::string &response);
 };
 
 #endif // ONLINEPROVIDER_H

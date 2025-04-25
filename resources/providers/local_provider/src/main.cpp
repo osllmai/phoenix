@@ -272,8 +272,6 @@ int main(int argc, char* argv[]) {
                 continue;
             }
 
-            std::cout << "Request: " << input << std::flush;
-
             if (promptThread.joinable()) {
                 promptThread.join();
             }
@@ -302,9 +300,6 @@ int main(int argc, char* argv[]) {
             std::cout << "Prompt stopped.\n" << std::flush;
             continue;
         }
-
-
-
     }
 
     std::cout << "Exiting.\n"<<std::flush;;
