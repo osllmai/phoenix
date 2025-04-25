@@ -94,21 +94,21 @@ ComboBox {
             color: Style.Colors.background
             border.width: 1; border.color: Style.Colors.boxBorder
             radius: 10
-            SearchButton{
-                id: searchBoxId
-                width: parent.width
-                Connections{
-                    target: searchBoxId
-                    function onSearch(myText){
-                        comboBoxId.filterModel(myText)
-                    }
-                }
-            }
+            // SearchButton{
+            //     id: searchBoxId
+            //     width: parent.width
+            //     Connections{
+            //         target: searchBoxId
+            //         function onSearch(myText){
+            //             comboBoxId.filterModel(myText)
+            //         }
+            //     }
+            // }
             ListView {
                 id: myListView
                 width: parent.width
-                height: parent.height - searchBoxId.height
-                anchors.top: searchBoxId.bottom
+                height: parent.height
+                // anchors.top: searchBoxId.bottom
                 anchors.margins: 10
                 clip: true
                 cacheBuffer: Math.max(0, myListView.contentHeight)

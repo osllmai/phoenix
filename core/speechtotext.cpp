@@ -13,15 +13,17 @@ SpeechToText* SpeechToText::instance(QObject* parent){
 }
 
 SpeechToText::SpeechToText(QObject *parent)
-    : QObject(parent), m_process(nullptr), m_modelPath(""), m_text(""), m_speechInProcess(false)
-{}
+    : QObject(parent), m_process(nullptr), m_modelPath(""), m_text("")
+{
+    setModelSelect(false);
+    setSpeechInProcess(false);
+}
 
 SpeechToText::~SpeechToText(){
-    if (!m_process) {
-        qWarning() << "No recording process to stop.";
-        return;
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
     }
-    m_stopFlag = true;
 }
 
 void SpeechToText::startRecording() {
@@ -41,7 +43,7 @@ void SpeechToText::startRecording() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "./whisper/whisper-stream.exe";
+        QString exePath = "whisper/cpu-device/whisper-stream.exe";
         QStringList arguments;
         arguments << "-m" << m_modelPath
                   << "--step" << "0"
@@ -65,7 +67,7 @@ void SpeechToText::startRecording() {
                 qInfo() << outputString;
                 if((m_text == "") && (outputString == "Run") && (!run)){
                     run = true;
-                }else{
+                }else if(run){
                     setText(m_text + outputString);
                 }
             }
@@ -125,5 +127,6 @@ void SpeechToText::setSpeechInProcess(bool newSpeechInProcess){
     if (m_speechInProcess == newSpeechInProcess)
         return;
     m_speechInProcess = newSpeechInProcess;
+    qInfo()<<m_speechInProcess;
     emit speechInProcessChanged();
 }

@@ -4,6 +4,7 @@
 #include "provider.h"
 #include <QThread>
 #include <QDebug>
+#include <QProcess>
 
 class OnlineProvider : public  Provider
 {
@@ -25,6 +26,8 @@ public slots:
 private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
+
+    QProcess* m_process = nullptr;
 
     QString m_model;
     QString m_key;

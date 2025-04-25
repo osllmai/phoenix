@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
@@ -311,7 +311,8 @@ install(TARGETS app${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+# set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 
 #copy company.json
@@ -352,7 +353,7 @@ endif()
 
 
 #copy whisper
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper/cpu-device)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
 
 #copy exe provider for offline-model
 if(WIN32)

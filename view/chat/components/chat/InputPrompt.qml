@@ -36,8 +36,8 @@ Rectangle{
     }
 
     function selectSpeechIcon(){
-        if(speechToText .modelSelect){
-            if(speechToText .responseInProgress)
+        if(speechToText.modelSelect){
+            if(speechToText.speechInProcess)
                 return "qrc:/media/icon/microphoneOnFill.svg"
             else
                 return "qrc:/media/icon/microphoneOn.svg"
@@ -134,8 +134,10 @@ Rectangle{
                     myIcon: selectSpeechIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        if(speechToText .modelSelect){
-                            if(speechToText .responseInProgress)
+                        console.log(speechToText.modelSelect)
+                        console.log(speechToText.speechInProcess)
+                        if(speechToText.modelSelect){
+                            if(speechToText.speechInProcess)
                                 speechToText.stopRecording()
                             else
                                 speechToText.startRecording()
@@ -153,8 +155,12 @@ Rectangle{
                             conversationList.currentConversation.stop()
                         } else {
                             sendPrompt(inputTextBox.text)
+
                             if (conversationList.modelSelect)
                                 inputTextBox.text = ""
+
+                            if(speechToText.speechInProcess)
+                                speechToText.stopRecording()
                         }
                     }
                 }
