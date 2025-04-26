@@ -1,12 +1,14 @@
 #include "database.h"
 
+#include <QCoreApplication>
+
 Database::Database(QObject* parent): QObject{nullptr}{
     moveToThread(&m_dbThread);
     m_dbThread.setObjectName("database");
     m_dbThread.start();
 
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("./db_phoenix.db");
+    m_db.setDatabaseName(QCoreApplication::applicationDirPath() + "/db_phoenix.db");
     if(m_db.open()){
         QSqlQuery query(m_db);
         query.exec(FOREIGN_KEYS_SQL);
@@ -467,7 +469,7 @@ void Database::readModel(const QList<Company*> companys){
 
     for (Company* company : companys){
 
-        QFile file("models/" + company->filePath());
+        QFile file(QCoreApplication::applicationDirPath() + "/models/" + company->filePath());
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
             continue;

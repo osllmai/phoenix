@@ -1,5 +1,7 @@
 #include "onlineprovider.h"
 
+#include <QCoreApplication>
+
 OnlineProvider::OnlineProvider(QObject* parent)
     : Provider(parent), _stopFlag(false)
 {}
@@ -39,7 +41,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "providers/online_provider/main_provider.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/providers/online_provider/main_provider.exe";
         QStringList arguments;
         arguments << m_model
                   << m_key

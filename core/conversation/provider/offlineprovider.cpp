@@ -1,5 +1,7 @@
 #include "offlineprovider.h"
 
+#include <QCoreApplication>
+
 OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
 {}
@@ -25,7 +27,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "applocal_provider.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/applocal_provider.exe";
         QStringList arguments;
         arguments << "--model" << key;
 

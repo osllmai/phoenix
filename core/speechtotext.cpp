@@ -3,6 +3,8 @@
 #include <QProcess>
 #include <QThread>
 
+#include <QCoreApplication>
+
 SpeechToText* SpeechToText::m_instance = nullptr;
 
 SpeechToText* SpeechToText::instance(QObject* parent){
@@ -43,7 +45,7 @@ void SpeechToText::startRecording() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "whisper/cpu-device/whisper-stream.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "whisper/cpu-device/whisper-stream.exe";
         QStringList arguments;
         arguments << "-m" << m_modelPath
                   << "--step" << "0"

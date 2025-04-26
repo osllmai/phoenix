@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 0)
-set(APP_VERSION_PATCH 16)
+set(APP_VERSION_PATCH 18)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}-dev0")
 
-set(PROJECT_NAME phoenix_15)
+set(PROJECT_NAME phoenix)
 project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -173,6 +173,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/fonts/DMSans-Regular.ttf
 
         media/media.qrc
+        view/view.qrc
 )
 
 qt_policy(SET QTP0004 NEW)

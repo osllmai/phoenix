@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     QObject::connect(conversationList, &ConversationList::requestUpdateLikeMessage, database, &Database::updateLikeMessage, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateTextMessage, database, &Database::updateTextMessage, Qt::QueuedConnection);
 
-    const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
+    const QUrl url(u"qrc:/view/Main.qml"_qs);
 
     QObject::connect(
         &engine,
