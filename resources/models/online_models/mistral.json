@@ -1,7 +1,7 @@
 [
   {
     "number": "1",
-    "modelName": "mistral-large",
+    "modelName": "mistral-large-latest",
     "name": "Mistral Large",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0075,
@@ -109,7 +109,7 @@
   },
   {
     "number": "7",
-    "modelName": "mistral-large",
+    "modelName": "mistral-large-latest",
     "name": "Mistral Large (2402)",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.006,

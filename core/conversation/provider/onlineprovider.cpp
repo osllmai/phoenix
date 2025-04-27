@@ -72,7 +72,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
             m_process->write(stopFlagStr.toUtf8());
             m_process->waitForBytesWritten();
 
-            if (m_process->waitForReadyRead(500)) {
+            if (m_process->waitForReadyRead(400)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output, output.size());;
 

@@ -21,28 +21,28 @@ Item {
         }
         TextArea{
             id: textId
-            text:"# Nerd Studio AI
+            text:"# OS LLM AI
 
 **Established:** January 2024
 
-**Update:** 12/12/24
+**Update:** April 26, 2025
 
-[Nerd Studio AI](http://www.nerdstudio.ai/)  is a cutting-edge platform dedicated to harnessing the power of AI for creativity and productivity. Continuously evolving to meet user needs, it incorporates innovative features and updates designed to streamline workflows and enhance the user experience.
+[OS LLM AI](http://www.osllm.ai/)  is a cutting-edge platform dedicated to harnessing the power of AI for creativity and productivity. Continuously evolving to meet user needs, it incorporates innovative features and updates designed to streamline workflows and enhance the user experience.
 
 
 
 ---
 
-## About Nerd Studio AI:
+## About OS LLM AI:
 
-[Nerd Studio AI](http://www.nerdstudio.ai/)  provides a comprehensive suite of AI-powered tools for various applications, making advanced AI technology accessible to everyone. With a focus on user-friendly interfaces and powerful functionality, [Nerd Studio AI](http://www.nerdstudio.ai/)  empowers individuals and businesses to achieve more with less effort.
+[OS LLM AI](http://www.osllm.ai/)  provides a comprehensive suite of AI-powered tools for various applications, making advanced AI technology accessible to everyone. With a focus on user-friendly interfaces and powerful functionality, [OS LLM AI](http://www.osllm.ai/)  empowers individuals and businesses to achieve more with less effort.
 
 ---
 
 ## Key Features:
 
 ### AI Writing:
-Generate, refine, and improve content effortlessly. Whether you are drafting articles, emails, or social media posts, [Nerd Studio AI](http://www.nerdstudio.ai/)  ensures high-quality output tailored to your needs.
+Generate, refine, and improve content effortlessly. Whether you are drafting articles, emails, or social media posts, [OS LLM AI](http://www.osllm.ai/)  ensures high-quality output tailored to your needs.
 
 ### AI Translation:
 Break language barriers with accurate and seamless translation capabilities. Translate text, web pages, or documents effortlessly, ensuring smooth communication across languages.
@@ -62,13 +62,13 @@ Explore the **Agent Library**, a collection of pre-designed AI agents tailored f
 
 ## Accessibility and Ease of Use:
 
-[Nerd Studio AI](http://www.nerdstudio.ai/) is available across multiple platforms, including browser extensions, mobile apps, and desktop applications. Its intuitive design ensures that users of all skill levels can get started quickly and efficiently.
+[OS LLM AI](http://www.osllm.ai/) is available across multiple platforms, including browser extensions, mobile apps, and desktop applications. Its intuitive design ensures that users of all skill levels can get started quickly and efficiently.
 
 ---
 
 ## Empowering Creativity and Productivity:
 
-By combining cutting-edge AI models with innovative tools, [Nerd Studio AI](http://www.nerdstudio.ai/)  redefines the boundaries of what’s possible. Whether you are creating, translating, or automating tasks, [Nerd Studio AI](http://www.nerdstudio.ai/)  is your ultimate partner in achieving success.
+By combining cutting-edge AI models with innovative tools, [OS LLM AI](http://www.osllm.ai/)  redefines the boundaries of what’s possible. Whether you are creating, translating, or automating tasks, [OS LLM AI](http://www.osllm.ai/)  is your ultimate partner in achieving success.
 
 ---
 
@@ -76,7 +76,8 @@ By combining cutting-edge AI models with innovative tools, [Nerd Studio AI](http
 
 Feel free to reach out if you need any help or have any questions:
 
-**Email:** Support@nerdstudio.ai
+**Email:** Support@osllm.ai
+
 "
             color: Style.Colors.textInformation
             anchors.fill: parent

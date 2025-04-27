@@ -43,9 +43,9 @@ Rectangle{
                 return "qrc:/media/icon/microphoneOn.svg"
         }else{
             if(speechIconId.hovered)
-                return "qrc:/media/icon/microphoneOffFill.svg"
+                return "qrc:/media/icon/microphoneOn.svg"
             else
-                return "qrc:/media/icon/microphoneOff.svg"
+                return "qrc:/media/icon/microphoneOn.svg"
         }
     }
 
@@ -141,6 +141,8 @@ Rectangle{
                                 speechToText.stopRecording()
                             else
                                 speechToText.startRecording()
+                        }else{
+                            selectSpeechModelVerificationId.open()
                         }
                     }
                 }
@@ -175,4 +177,25 @@ Rectangle{
          spread: 0.1
          transparentBorder: true
      }
+
+    VerificationDialog {
+        id: selectSpeechModelVerificationId
+        titleText: "Select Speech Model"
+        about: "Are you sure you want to leave this page and select a new speech model?"
+        textBotton1: "Cancel"
+        textBotton2: "Select Model"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        Connections{
+            target:selectSpeechModelVerificationId
+            function onButtonAction1(){
+                selectSpeechModelVerificationId.close()
+            }
+            function onButtonAction2() {
+                offlineModelListFilter.type = "Speech"
+                selectSpeechModelVerificationId.close()
+                appBodyId.currentIndex = 2
+            }
+        }
+    }
 }

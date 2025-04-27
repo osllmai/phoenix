@@ -76,7 +76,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         QString fullResponse;
         while (m_process->state() == QProcess::Running) {
 
-            if (m_process->waitForReadyRead(50)){
+            if (m_process->waitForReadyRead(400)){
 
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);

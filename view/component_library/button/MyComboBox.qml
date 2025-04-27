@@ -108,6 +108,7 @@ ComboBox {
                 id: myListView
                 width: parent.width
                 height: parent.height
+                anchors.fill: parent
                 // anchors.top: searchBoxId.bottom
                 anchors.margins: 10
                 clip: true
