@@ -3,8 +3,10 @@ import os
 import sys
 from typing import Dict, List, Optional, Union, Generator, Any, AsyncGenerator
 import asyncio
-from openai import OpenAI, AsyncOpenAI
-from mistralai import Mistral
+
+from openai_provider import OpenAIProvider
+from mistral_provider import MistralProvider
+from deepseek_provider import DeepseekProvider
 
 
 class Provider:
@@ -18,8 +20,7 @@ class Provider:
         provider (str): The name of the current provider (e.g., "openai", "mistral")
         model_name (str): The name of the loaded model
         api_key (str): The API key for the current provider
-        client: The synchronous client instance for the provider
-        async_client: The asynchronous client instance for the provider
+        provider_instance: The specific provider instance (OpenAI or Mistral)
         stop_generation (bool): Flag to control stopping of generation
         providers_config (dict): Configuration settings for supported providers
     """
@@ -29,20 +30,21 @@ class Provider:
         self.provider = None
         self.model_name = None
         self.api_key = None
-        self.client = None
-        self.async_client = None
+        self.provider_instance = None
         self.stop_generation = False
         self._load_providers_config()
-        
+
     def get_runtime_path(self, filename):
         """
         Returns the correct absolute path for a given file based on execution context.
-        
+
         :param filename: Name of the file (e.g., "company.json")
         :return: Absolute path to the file
         """
-        if getattr(sys, 'frozen', False):  # If running as a PyInstaller executable
-            base_path = sys._MEIPASS  # Temporary folder where PyInstaller extracts files
+        if getattr(sys, "frozen", False):  # If running as a PyInstaller executable
+            base_path = (
+                sys._MEIPASS
+            )  # Temporary folder where PyInstaller extracts files
         else:  # If running as a normal Python script
             base_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -58,12 +60,6 @@ class Provider:
             FileNotFoundError: If company.json is not found
             json.JSONDecodeError: If company.json is not valid JSON
         """
-        # config_path = os.path.join(
-        #     os.path.dirname(
-        #         os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        #     ),
-        #     "company.json",
-        # )
         config_path = self.get_runtime_path("company.json")
 
         with open(config_path, "r") as f:
@@ -93,12 +89,6 @@ class Provider:
             raise ValueError(f"Provider {provider} is not an online model provider")
 
         # Load the models file for this provider
-        # models_file_path = os.path.join(
-        #     os.path.dirname(
-        #         os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        #     ),
-        #     provider_config["file"],
-        # )
         models_file_path = self.get_runtime_path(provider_config["file"])
 
         try:
@@ -137,62 +127,27 @@ class Provider:
         self._validate_model(self.provider, self.model_name)
 
         if self.provider == "Openai":
-            self.client = OpenAI(api_key=self.api_key)
-            self.async_client = AsyncOpenAI(api_key=self.api_key)
+            self.provider_instance = OpenAIProvider(
+                api_key=self.api_key, model_name=self.model_name
+            )
         elif self.provider == "Mistral":
-            self.client = Mistral(api_key=self.api_key)
+            self.provider_instance = MistralProvider(
+                api_key=self.api_key, model_name=self.model_name
+            )
+        elif self.provider == "Deepseek":
+            self.provider_instance = DeepseekProvider(
+                api_key=self.api_key, model_name=self.model_name
+            )
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
 
         return self
 
     def stop(self):
-        """Stop the ongoing generation process.
-
-        This method sets the stop_generation flag to True, which will cause any
-        ongoing streaming generation to stop at the next iteration.
-        """
+        """Stop the ongoing generation process."""
         self.stop_generation = True
-
-    def _format_messages_openai(
-        self, user_prompt: str, system_prompt: str = ""
-    ) -> List[Dict]:
-        """Format messages for the OpenAI API format.
-
-        Args:
-            user_prompt (str): The user's input message
-            system_prompt (str, optional): System instructions. Defaults to empty string.
-
-        Returns:
-            List[Dict]: A list of message dictionaries in OpenAI's format
-        """
-        messages = []
-
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-
-        messages.append({"role": "user", "content": user_prompt})
-        return messages
-
-    def _format_messages_mistral(
-        self, user_prompt: str, system_prompt: str = ""
-    ) -> List[Dict]:
-        """Format messages for the Mistral API format.
-
-        Args:
-            user_prompt (str): The user's input message
-            system_prompt (str, optional): System instructions. Defaults to empty string.
-
-        Returns:
-            List[Dict]: A list of message dictionaries in Mistral's format
-        """
-        messages = []
-
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-
-        messages.append({"role": "user", "content": user_prompt})
-        return messages
+        if self.provider_instance:
+            self.provider_instance.stop()
 
     def _filter_parameters(self, kwargs: Dict) -> Dict:
         """Filter kwargs to only include supported parameters for the current provider.
@@ -239,31 +194,19 @@ class Provider:
         Raises:
             ValueError: If no model has been loaded or the provider is not supported
         """
-        if not self.client:
+        if not self.provider_instance:
             raise ValueError("No model loaded. Call load_model() first.")
 
         self.stop_generation = False
         filtered_kwargs = self._filter_parameters(kwargs)
 
-        if self.provider == "Openai":
-            messages = self._format_messages_openai(user_prompt, system_prompt)
+        # Format messages using the provider-specific formatter
+        messages = self.provider_instance.format_messages(user_prompt, system_prompt)
 
-            if stream:
-                return self._stream_openai(messages, **filtered_kwargs)
-            else:
-                return self._complete_openai(messages, **filtered_kwargs)
-
-        elif self.provider == "Mistral":
-            # Convert messages to Mistral format
-            mistral_messages = self._format_messages_mistral(user_prompt, system_prompt)
-
-            if stream:
-                return self._stream_mistral(mistral_messages, **filtered_kwargs)
-            else:
-                return self._complete_mistral(mistral_messages, **filtered_kwargs)
-
+        if stream:
+            return self.provider_instance.stream(messages, **filtered_kwargs)
         else:
-            raise ValueError(f"Unsupported provider: {self.provider}")
+            return self.provider_instance.complete(messages, **filtered_kwargs)
 
     async def prompt_async(
         self,
@@ -272,9 +215,9 @@ class Provider:
         stream: bool = False,
         **kwargs,
     ) -> Union[str, AsyncGenerator[str, None]]:
-        """Generate a response asynchronously using the selected model.
+        """Generate a response using the selected model asynchronously.
 
-        This is the asynchronous version of the prompt method.
+        This method handles both streaming and non-streaming generation modes.
 
         Args:
             user_prompt (str): The user's input message
@@ -289,179 +232,18 @@ class Provider:
         Raises:
             ValueError: If no model has been loaded or the provider is not supported
         """
-        if not self.async_client:
+        if not self.provider_instance:
             raise ValueError("No model loaded. Call load_model() first.")
 
         self.stop_generation = False
         filtered_kwargs = self._filter_parameters(kwargs)
 
-        if self.provider == "Openai":
-            messages = self._format_messages_openai(user_prompt, system_prompt)
+        # Format messages using the provider-specific formatter
+        messages = self.provider_instance.format_messages(user_prompt, system_prompt)
 
-            if stream:
-                return await self._stream_openai_async(messages, **filtered_kwargs)
-            else:
-                return await self._complete_openai_async(messages, **filtered_kwargs)
-
-        elif self.provider == "Mistral":
-            # Convert messages to Mistral format
-            mistral_messages = self._format_messages_mistral(user_prompt, system_prompt)
-
-            if stream:
-                return await self._stream_mistral_async(
-                    mistral_messages, **filtered_kwargs
-                )
-            else:
-                return await self._complete_mistral_async(
-                    mistral_messages, **filtered_kwargs
-                )
-
+        if stream:
+            return self.provider_instance.stream_async(messages, **filtered_kwargs)
         else:
-            raise ValueError(f"Unsupported provider: {self.provider}")
-
-    def _complete_openai(self, messages: List[Dict], **kwargs) -> str:
-        """Generate a complete response using OpenAI's API.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Returns:
-            str: The generated response text
-        """
-        response = self.client.chat.completions.create(
-            model=self.model_name, messages=messages, **kwargs
-        )
-        return response.choices[0].message.content
-
-    async def _complete_openai_async(self, messages: List[Dict], **kwargs) -> str:
-        """Generate a complete response using OpenAI's API asynchronously.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Returns:
-            str: The generated response text
-        """
-        response = await self.async_client.chat.completions.create(
-            model=self.model_name, messages=messages, **kwargs
-        )
-        return response.choices[0].message.content
-
-    def _stream_openai(
-        self, messages: List[Dict], **kwargs
-    ) -> Generator[str, None, None]:
-        """Stream a response using OpenAI's API."""
-        response = self.client.chat.completions.create(
-            model=self.model_name, messages=messages, stream=True, **kwargs
-        )
-        try:
-            for chunk in response:
-                if self.stop_generation:
-                    response.close()
-                    break
-                if chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
-        finally:
-            # Ensure cleanup happens even if an exception occurs
-            try:
-                if hasattr(response, "close"):
-                    response.close()
-            except:
-                pass
-
-    async def _stream_openai_async(
-        self, messages: List[Dict], **kwargs
-    ) -> AsyncGenerator[str, None]:
-        """Stream a response using OpenAI's API asynchronously."""
-        response = await self.async_client.chat.completions.create(
-            model=self.model_name, messages=messages, stream=True, **kwargs
-        )
-        try:
-            async for chunk in response:
-                if self.stop_generation:
-                    await response.aclose()
-                    break
-                if chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
-        finally:
-            # Ensure cleanup happens even if an exception occurs
-            try:
-                if hasattr(response, "aclose"):
-                    await response.aclose()
-            except:
-                pass
-
-    def _complete_mistral(self, messages: List[Dict], **kwargs) -> str:
-        """Generate a complete response using Mistral's API.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Returns:
-            str: The generated response text
-        """
-        response = self.client.chat.complete(
-            model=self.model_name, messages=messages, **kwargs
-        )
-        return response.choices[0].message.content
-
-    async def _complete_mistral_async(self, messages: List[Dict], **kwargs) -> str:
-        """Generate a complete response using Mistral's API asynchronously.
-
-        Args:
-            messages (List[Dict]): List of formatted message dictionaries
-            **kwargs: Additional parameters for the API call
-
-        Returns:
-            str: The generated response text
-        """
-        response = await self.client.chat.complete_async(  # Updated method name
-            model=self.model_name, messages=messages, **kwargs
-        )
-        return response.choices[0].message.content
-
-    async def _stream_mistral_async(
-        self, messages: List[Dict], **kwargs
-    ) -> AsyncGenerator[str, None]:
-        """Stream a response using Mistral's API asynchronously."""
-        try:
-            async for chunk in self.client.chat.stream_async(
-                model=self.model_name, messages=messages, **kwargs
-            ):
-                if self.stop_generation:
-                    break
-                if chunk.data.choices[0].delta.content:
-                    yield chunk.data.choices[0].delta.content
-        finally:
-            try:
-                if (
-                    hasattr(self.client.chat, "_current_response")
-                    and self.client.chat._current_response
-                ):
-                    await self.client.chat._current_response.aclose()
-            except:
-                pass
-
-    def _stream_mistral(
-        self, messages: List[Dict], **kwargs
-    ) -> Generator[str, None, None]:
-        """Stream a response using Mistral's API."""
-        response = self.client.chat.stream(
-            model=self.model_name, messages=messages, **kwargs
-        )
-        try:
-            for chunk in response:
-                if self.stop_generation:
-                    break
-                if chunk.data.choices[0].delta.content:
-                    yield chunk.data.choices[0].delta.content
-        finally:
-            # Ensure cleanup happens even if an exception occurs
-            try:
-                if hasattr(response, "close"):
-                    response.close()
-            except:
-                pass
+            return await self.provider_instance.complete_async(
+                messages, **filtered_kwargs
+            )

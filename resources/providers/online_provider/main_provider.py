@@ -4,13 +4,16 @@ import time
 import msvcrt  #  Windows-only library
 from provider import Provider
 
+
 def str_to_bool(value):
     """Convert string to boolean."""
     return value.lower() in ["true", "1"]
 
+
 def stdin_has_data():
     """Check if there is input in stdin on Windows."""
     return msvcrt.kbhit()  #  Works only on Windows
+
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
