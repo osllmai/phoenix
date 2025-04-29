@@ -62,14 +62,6 @@ Item{
                             type: "Embeddings"
                         }
                         ListElement {
-                            name: "Vision"
-                            type: "Vision"
-                        }
-                        ListElement {
-                            name: "Video"
-                            type: "Video"
-                        }
-                        ListElement {
                             name: "Image"
                             type: "Image"
                         }

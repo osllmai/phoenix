@@ -26,9 +26,7 @@ void OnlineProvider::loadModel(const QString &model, const QString &key){
     m_key = key;
 }
 
-void OnlineProvider::unLoadModel(){
-
-}
+void OnlineProvider::unLoadModel(){}
 
 void OnlineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
                             const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,

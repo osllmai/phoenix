@@ -106,59 +106,10 @@
     }
   },
   {
-    "name": "Claude",
-    "organizationName": "Claude",
-    "icon": "Claude.svg",
-    "file": "online_models/claude.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Cohere",
-    "organizationName": "Cohere",
-    "icon": "Cohere.svg",
-    "file": "online_models/cohere.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Databricks",
-    "organizationName": "Databricks",
-    "icon": "Databricks.svg",
-    "file": "online_models/databricks.json",
-    "type": "OnlineModel"
-  },
-  {
     "name": "Deepseek",
     "organizationName": "Deepseek",
     "icon": "Deepseek.svg",
     "file": "online_models/deepseek.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Google",
-    "organizationName": "Google",
-    "icon": "Google.svg",
-    "file": "online_models/google.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Meta",
-    "organizationName": "Meta",
-    "icon": "Meta.svg",
-    "file": "online_models/meta.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Nvidia",
-    "organizationName": "Nvidia",
-    "icon": "Nvidia.svg",
-    "file": "online_models/nvidia.json",
-    "type": "OnlineModel"
-  },
-  {
-    "name": "Qwen",
-    "organizationName": "Qwen",
-    "icon": "Qwen.svg",
-    "file": "online_models/qwen.json",
     "type": "OnlineModel"
   },
   {

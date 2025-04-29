@@ -10,6 +10,8 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
+    // flags: Qt.FramelessWindowHint
+
     property string theme: "Defualt"
     onThemeChanged: {
         if ((window.theme === "Dark") || (window.theme === "Light"))
@@ -37,23 +39,23 @@ ApplicationWindow {
         property real speechPitch: value("speechPitch", 0.0)
         property real speechRate: value("speechRate", 0.0)
 
-        property alias modelSpeechPath: window.modelSpeechPath
-        property bool modelSpeechSelect: window.modelSpeechSelect
+        // property alias modelSpeechPath: window.modelSpeechPath
+        // property bool modelSpeechSelect: window.modelSpeechSelect
     }
 
-    function setModelSpeech(){
-        speechToText.modelPath = window.modelSpeechPath
-        speechToText.modelSelect = window.modelSpeechSelect
-    }
+    // function setModelSpeech(){
+    //     speechToText.modelPath = window.modelSpeechPath
+    //     speechToText.modelSelect = window.modelSpeechSelect
+    // }
 
-    property string modelSpeechPath: ""
-    property bool modelSpeechSelect: false
-    onModelSpeechPathChanged: {
-        window.setModelSpeech()
-    }
-    onModelSpeechSelectChanged: {
-        window.setModelSpeech()
-    }
+    // property string modelSpeechPath: ""
+    // property bool modelSpeechSelect: false
+    // onModelSpeechPathChanged: {
+    //     window.setModelSpeech()
+    // }
+    // onModelSpeechSelectChanged: {
+    //     window.setModelSpeech()
+    // }
 
     TextToSpeech {
         id: textToSpeechId
@@ -105,10 +107,14 @@ ApplicationWindow {
             anchors.fill: parent
             anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
 
+            // AppHeader{
+            //     id: appHeader
+            // }
+
             AppBody {
                 id: appBodyId
                 width: parent.width
-                height: parent.height - appFooter.height
+                height: parent.height - appFooter.height /*- appHeader.height*/
                 clip: true
             }
 

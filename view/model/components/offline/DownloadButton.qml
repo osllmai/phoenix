@@ -47,16 +47,27 @@ Item {
         MyButton{
             id: startChatButton
             width: control.width - deleteButton.width - 5
-            myText: model.type === "Text Generation"? "Start Chat": "Set Model"
-            bottonType: Style.RoleEnum.BottonType.Primary
+            myText: model.type === "Text Generation"? (model.id === conversationList.modelId? "Reject": "Start Chat"): (model.key === speechToText.modelPath? "Reject":"Set Model")
+            bottonType: myText === "Reject"? Style.RoleEnum.BottonType.Secondary: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){
-                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
-                    conversationList.isEmptyConversation = true
-                    appBodyId.currentIndex = 1
+                    if(myText === "Reject"){
+                        conversationList.setModelRequest(-1, "", "", "", "")
+                    }else{
+                        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
+                        conversationList.isEmptyConversation = true
+                        appBodyId.currentIndex = 1
+                    }
+
                 }else if(model.type === "Speech"){
-                    window.modelSpeechPath = model.key
-                    window.modelSpeechSelect = true
+                    if(myText === "Reject"){
+                        speechToText.modelPath = ""
+                        speechToText.modelSelect = false
+                    }else{
+                        speechToText.modelPath = model.key
+                        speechToText.modelSelect = true
+                    }
+
                 }else{
                     console.log(model.type)
                 }
@@ -76,9 +87,9 @@ Item {
                 deleteModelVerificationId.close()
             }
             function onButtonAction2() {
-                if((model.type === "Speech") && (window.modelSpeechPath === model.key)){
-                    window.modelSpeechPath = ""
-                    window.modelSpeechSelect = false
+                if((model.type === "Speech") && (speechToText.modelPath === model.key)){
+                    speechToText.modelPath = ""
+                    speechToText.modelSelect = false
                 }
                 offlineModelList.deleteRequest(model.id)
                 deleteModelVerificationId.close()

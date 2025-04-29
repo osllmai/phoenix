@@ -276,6 +276,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_footer/SystemMonitoring.qml
         view/component_footer/Downloading.qml
 
+        view/AppHeader.qml
+
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /

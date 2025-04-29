@@ -160,7 +160,11 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    setModelSelect(true);
+    if(id == -1)
+        setModelSelect(false);
+    else
+        setModelSelect(true);
+
     if(!m_isEmptyConversation){
         if(m_modelPromptTemplate != "")
             m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
@@ -193,7 +197,9 @@ void ConversationList::addConversation(const int id, const QString &title, const
     emit countChanged();
 
     if(selectConversation){
-        setPreviousConversation(m_currentConversation);
+        if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+            setPreviousConversation(m_currentConversation);
+
         setCurrentConversation(conversation);
         m_currentConversation->prompt(description, m_modelId);
         setIsEmptyConversation(false);
@@ -220,7 +226,9 @@ void ConversationList::updateDescriptionText(const int conversationId, const QSt
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){
-    setPreviousConversation(m_currentConversation);
+    if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+        setPreviousConversation(m_currentConversation);
+
     setCurrentConversation(findConversationById(id));
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();

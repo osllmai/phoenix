@@ -4,6 +4,8 @@
 #include "./provider/offlineprovider.h"
 #include "./provider/provider.h"
 
+#include "./conversationlist.h"
+
 Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
                            const QDateTime &date, const bool isPinned, QObject *parent)
     : QObject(parent), m_id(id), m_title(title), m_description(description),
@@ -239,6 +241,13 @@ void Conversation::stop(){
 }
 
 void Conversation::loadModel(const int id){
+    if(ConversationList::instance(nullptr)->previousConversation() != nullptr){
+        ConversationList::instance(nullptr)->previousConversation()->unloadModel();
+        qInfo()<<"HIHIHIHIHIH";
+    }
+
+    qInfo()<<"243 conversatuin";
+
     OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
     if(offlineModel != nullptr){
         setModel(offlineModel);
@@ -250,7 +259,9 @@ void Conversation::loadModel(const int id){
 }
 
 void Conversation::unloadModel(){
-
+    setIsLoadModel(false);
+    m_provider->unLoadModel();
+    qInfo()<<"UNLOda";
 }
 
 void Conversation::loadModelResult(const bool result, const QString &warning){

@@ -2,29 +2,51 @@
 
 #include <QCoreApplication>
 
-Database::Database(QObject* parent): QObject{nullptr}{
+Database::Database(QObject* parent)
+    : QObject{nullptr}
+{
     moveToThread(&m_dbThread);
     m_dbThread.setObjectName("database");
     m_dbThread.start();
 
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir().mkpath(appDataPath);
+
+    QString sourceDb = QCoreApplication::applicationDirPath() + "/db_phoenix.db";
+    QString targetDb = appDataPath + "/db_phoenix.db";
+
+    if (!QFile::exists(targetDb)) {
+        QFile::copy(sourceDb, targetDb);
+    }
+
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(QCoreApplication::applicationDirPath() + "/db_phoenix.db");
-    if(m_db.open()){
+    m_db.setDatabaseName(targetDb);
+
+    if (m_db.open()) {
         QSqlQuery query(m_db);
+
+        if (!query.exec("PRAGMA key = 'Phoenix1234';")) {
+            qDebug() << "Failed to set encryption key:" << query.lastError().text();
+        }
+
+
         query.exec(FOREIGN_KEYS_SQL);
 
         QStringList tables = m_db.tables();
-        if (!tables.contains("model", Qt::CaseInsensitive)){
+        if (!tables.contains("model", Qt::CaseInsensitive)) {
             query.exec(MODEL_SQL);
         }
-        if (!tables.contains("conversation", Qt::CaseInsensitive)){
+        if (!tables.contains("conversation", Qt::CaseInsensitive)) {
             query.exec(CONVERSATION_SQL);
         }
-        if (!tables.contains("message", Qt::CaseInsensitive)){
+        if (!tables.contains("message", Qt::CaseInsensitive)) {
             query.exec(MESSAGE_SQL);
         }
+    } else {
+        qDebug() << "Failed to open database:" << m_db.lastError().text();
     }
 }
+
 
 Database::~Database(){
     m_db.close();

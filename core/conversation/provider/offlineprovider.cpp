@@ -140,8 +140,11 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 }
 
 void OfflineProvider::unLoadModel(){
-        // delete model;
-        // model = nullptr;
+        _stopFlag = true;
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
 }
 
 void OfflineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
