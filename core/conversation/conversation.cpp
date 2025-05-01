@@ -3,6 +3,7 @@
 #include "./provider/onlineprovider.h"
 #include "./provider/offlineprovider.h"
 #include "./provider/provider.h"
+#include "./chat/message.h"
 
 #include "./conversationlist.h"
 
@@ -227,8 +228,13 @@ void Conversation::prompt(const QString &input, const int idModel){
     emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
     emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
+    //add history from massage
+    QString finalPrompt = m_modelSettings->promptTemplate();
+    finalPrompt.replace("{{history}}", m_messageList->history());
+    finalPrompt.replace("{{input}}", input);
+
     setResponseInProgress(true);
-    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
+    m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
                         m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                         m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
                         m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
@@ -244,10 +250,7 @@ void Conversation::stop(){
 void Conversation::loadModel(const int id){
     if(ConversationList::instance(nullptr)->previousConversation() != nullptr){
         ConversationList::instance(nullptr)->previousConversation()->unloadModel();
-        qInfo()<<"HIHIHIHIHIH";
     }
-
-    qInfo()<<"243 conversatuin";
 
     OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
     if(offlineModel != nullptr){
