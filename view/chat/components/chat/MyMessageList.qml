@@ -11,7 +11,7 @@ Item {
     ListView {
         id: listView
         anchors.fill: parent
-        cacheBuffer: Math.max(0, control.height)
+        cacheBuffer: Math.max(0, listView.contentHeight)
 
         interactive: contentHeight > height
         boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds

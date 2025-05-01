@@ -45,7 +45,7 @@ void SpeechToText::startRecording() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "whisper/cpu-device/whisper-stream.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-stream.exe";
         QStringList arguments;
         arguments << "-m" << m_modelPath
                   << "--step" << "0"
@@ -53,6 +53,8 @@ void SpeechToText::startRecording() {
                   << "--keep" << "1000";
 
         m_process->start(exePath, arguments);
+
+        qInfo()<<m_modelPath;
 
         if (!m_process->waitForStarted()) {
             qCritical() << "Failed to start process: " << m_process->errorString();

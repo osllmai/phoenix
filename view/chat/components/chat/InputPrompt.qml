@@ -106,6 +106,11 @@ Rectangle{
                           sendPrompt(inputTextBox.text)
                           if(conversationList.modelSelect)
                                 inputTextBox.text = ""
+
+                          if(speechToText.speechInProcess){
+                              speechToText.stopRecording()
+                              speechToText.text = ""
+                          }
                         }
                     }
                 }
@@ -161,8 +166,10 @@ Rectangle{
                             if (conversationList.modelSelect)
                                 inputTextBox.text = ""
 
-                            if(speechToText.speechInProcess)
+                            if(speechToText.speechInProcess){
                                 speechToText.stopRecording()
+                                speechToText.text = ""
+                            }
                         }
                     }
                 }
