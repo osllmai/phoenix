@@ -25,7 +25,7 @@ public slots:
     void unLoadModel() override;
 
 signals:
-    void sendPromptToProcess(const QString &promptText);
+    void sendPromptToProcess(const QString &promptText, const QString &paramBlock);
 
 private:
     QThread chatLLMThread;

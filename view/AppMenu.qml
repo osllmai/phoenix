@@ -137,6 +137,38 @@ Rectangle{
             font.pixelSize: 10
             font.styleName: "Bold"
             clip: true
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    aboutVersion.open()
+                }
+            }
+        }
+    }
+
+    VerificationDialog {
+        id: aboutVersion
+        height: 220
+        width: 320
+        titleText: "Phoenix"
+        about: "Version: 0.1.0 (user setup)
+Commit:
+Date: 2025.04.29
+OS: Windows x64
+"
+        textBotton1: "Copy"
+        textBotton2: "OK"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        locationText: Text.AlignLeft
+        Connections{
+            target:aboutVersion
+            function onButtonAction1(){
+                ClipboardHelper.copyText(aboutVersion.about)
+            }
+            function onButtonAction2() {
+                aboutVersion.close()
+            }
         }
     }
 

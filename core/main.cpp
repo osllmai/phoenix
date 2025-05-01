@@ -24,6 +24,8 @@
 
 #include "../cmake/config.h.in"
 
+#include "clipboardhelper.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -132,6 +134,9 @@ int main(int argc, char *argv[])
     QObject::connect(conversationList, &ConversationList::requestInsertMessage, database, &Database::insertMessage, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateLikeMessage, database, &Database::updateLikeMessage, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateTextMessage, database, &Database::updateTextMessage, Qt::QueuedConnection);
+
+    ClipboardHelper clipboardHelper;
+    engine.rootContext()->setContextProperty("ClipboardHelper", &clipboardHelper);
 
     const QUrl url(u"qrc:/view/Main.qml"_qs);
 

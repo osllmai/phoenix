@@ -39,7 +39,7 @@ Item {
                     text: control.existConversation? conversationList.currentConversation.modelSettings.promptTemplate: ""
                     visible: true
                     color: Style.Colors.textInformation
-                    wrapMode: Text.WordWrap
+                    wrapMode: Text.NoWrap
                     placeholderText: qsTr("Eg. You are a helpful assistant")
                     clip: true
                     font.pointSize: 10
@@ -49,6 +49,7 @@ Item {
                     persistentSelection: true
                     placeholderTextColor: Style.Colors.textInformation
                     background: null
+                    textFormat: TextEdit.PlainText
                     onHeightChanged: {
                         if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
                             promptTemplateBox.height += 10;
@@ -56,7 +57,8 @@ Item {
                     }
                     onTextChanged: {
                         if(control.existConversation){
-                            conversationList.currentConversation.modelSettings.promptTemplate = promptTemplateTextBox.text
+                            conversationList.currentConversation.modelSettings.promptTemplate =
+                                            promptTemplateTextBox.text.replace(/\\n/g, "\n");
                         }
                     }
                 }

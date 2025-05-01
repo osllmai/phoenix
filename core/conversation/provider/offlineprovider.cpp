@@ -33,20 +33,8 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 
         state = ProviderState::LoadingModel;
 
-        connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText){
+        connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText, const QString &paramBlock){
             if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
-                QString paramBlock =
-                    "__PARAMS__\n"
-                    "n_predict=200\n"
-                    "top_k=40\n"
-                    "top_p=0.9\n"
-                    "min_p=0.0\n"
-                    "temp=0.6\n"
-                    "n_batch=9\n"
-                    "repeat_penalty=1.10\n"
-                    "repeat_last_n=64\n"
-                    "__END_PARAMS__\n";
-
                 m_process->write(paramBlock.toUtf8());
                 m_process->waitForBytesWritten();
 
@@ -64,6 +52,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 qWarning() << "Not ready for prompt. Current state:" << static_cast<int>(state);
             }
         });
+
 
         m_process->start(exePath, arguments);
 
@@ -83,6 +72,10 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 qInfo()<<outputString;
 
                 if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
+                    QString cleanedOutput = outputString.trimmed();
+                    QString beforeDone = cleanedOutput.left(cleanedOutput.lastIndexOf("__DONE_PROMPTPROCESS__"));
+                    emit requestTokenResponse(beforeDone);
+
                     state = ProviderState::SendingPrompt;
                     emit requestFinishedResponse("");
                 }
@@ -93,7 +86,23 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                             if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
                                 state = ProviderState::WaitingForPrompt;
                                 if (m_hasPendingPrompt) {
-                                    emit sendPromptToProcess(m_pendingPrompt.input);
+                                    QString paramBlock =
+                                        "__PARAMS_SETTINGS__\n" +
+                                        QString("stream=%1\n").arg(m_pendingPrompt.stream ? "true" : "false") +
+                                        QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
+                                        QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
+                                        QString("n_predict=%1\n").arg(m_pendingPrompt.maxTokens) +
+                                        QString("top_k=%1\n").arg(m_pendingPrompt.topK) +
+                                        QString("top_p=%1\n").arg(m_pendingPrompt.topP) +
+                                        QString("min_p=%1\n").arg(m_pendingPrompt.minP) +
+                                        QString("temp=%1\n").arg(m_pendingPrompt.temperature) +
+                                        QString("n_batch=%1\n").arg(m_pendingPrompt.promptBatchSize) +
+                                        QString("repeat_penalty=%1\n").arg(m_pendingPrompt.repeatPenalty) +
+                                        QString("repeat_last_n=%1\n").arg(m_pendingPrompt.repeatPenaltyTokens) +
+                                        QString("ctx_size=%1\n").arg(m_pendingPrompt.contextLength) +
+                                        QString("n_gpu_layers=%1\n").arg(m_pendingPrompt.numberOfGPULayers) +
+                                        "__END_PARAMS_SETTINGS__\n";
+                                    emit sendPromptToProcess(m_pendingPrompt.input, paramBlock);
                                     m_hasPendingPrompt = false;
                                     qInfo() << "Sent pending prompt after model load.";
                                 }
@@ -158,8 +167,25 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
         repeatPenaltyTokens, contextLength, numberOfGPULayers
     };
 
+    QString paramBlock =
+        "__PARAMS_SETTINGS__\n" +
+        QString("stream=%1\n").arg(request.stream ? "true" : "false") +
+        QString("prompt_template=%1\n").arg(request.promptTemplate) +
+        QString("system_prompt=%1\n").arg(request.systemPrompt) +
+        QString("n_predict=%1\n").arg(request.maxTokens) +
+        QString("top_k=%1\n").arg(request.topK) +
+        QString("top_p=%1\n").arg(request.topP) +
+        QString("min_p=%1\n").arg(request.minP) +
+        QString("temp=%1\n").arg(request.temperature) +
+        QString("n_batch=%1\n").arg(request.promptBatchSize) +
+        QString("repeat_penalty=%1\n").arg(request.repeatPenalty) +
+        QString("repeat_last_n=%1\n").arg(request.repeatPenaltyTokens) +
+        QString("ctx_size=%1\n").arg(request.contextLength) +
+        QString("n_gpu_layers=%1\n").arg(request.numberOfGPULayers) +
+        "__END_PARAMS_SETTINGS__\n";
+
     if (state == ProviderState::WaitingForPrompt) {
-        emit sendPromptToProcess(request.input);
+        emit sendPromptToProcess(request.input, paramBlock);
     } else {
         m_pendingPrompt = request;
         m_hasPendingPrompt = true;
