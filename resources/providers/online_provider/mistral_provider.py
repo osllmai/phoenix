@@ -54,7 +54,10 @@ class MistralProvider(BaseProvider):
         Returns:
             str: The generated response text
         """
-        response = self.client.chat(model=self.model_name, messages=messages, **kwargs)
+        # Use client.chat.complete as per the official documentation
+        response = self.client.chat.complete(
+            model=self.model_name, messages=messages, **kwargs
+        )
         return response.choices[0].message.content
 
     async def complete_async(self, messages: List[Dict], **kwargs) -> str:
@@ -83,15 +86,19 @@ class MistralProvider(BaseProvider):
         Yields:
             str: Chunks of the generated response text
         """
-        stream = self.client.chat_stream(
+        # Use client.chat.stream as per the official documentation
+        stream = self.client.chat.stream(
             model=self.model_name, messages=messages, **kwargs
         )
-
-        for chunk in stream:
+        try:
+            for chunk in stream:
+                if self.stop_generation:
+                    break
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+        finally:
             if self.stop_generation:
-                break
-            if chunk.choices[0].delta.content:
-                yield chunk.choices[0].delta.content
+                stream.close()
 
     async def stream_async(
         self, messages: List[Dict], **kwargs
@@ -105,12 +112,15 @@ class MistralProvider(BaseProvider):
         Yields:
             str: Chunks of the generated response text
         """
-        # Create a synchronous iterator and wrap it in an async generator
-        iterator = self.stream(messages, **kwargs)
-        for chunk in iterator:
+        # Use client.chat.stream_async as per the official documentation
+        stream = await self.client.chat.stream_async(
+            model=self.model_name, messages=messages, **kwargs
+        )
+        async for chunk in stream:
             if self.stop_generation:
                 break
-            yield chunk
+            if chunk.data.choices[0].delta.content:
+                yield chunk.data.choices[0].delta.content
 
     def stop(self):
         """Stop the ongoing generation process."""
