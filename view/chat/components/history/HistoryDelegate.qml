@@ -51,7 +51,7 @@ T.Button {
                     id: titleId
                     text: model.title
                     clip: true
-                    width: parent.width
+                    width: parent.width - 30
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 15

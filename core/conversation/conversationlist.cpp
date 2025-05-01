@@ -114,8 +114,23 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
 void ConversationList::deleteRequest(const int id){
     Conversation* conversation = findConversationById(id);
+    if(conversation->responseInProgress()){
+        conversation->stop();
+    }
+    if(conversation->isLoadModel()){
+        conversation->unloadModel();
+    }
+
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
+
+
+    if(m_currentConversation != nullptr && id == m_currentConversation->id()){
+        setIsEmptyConversation(true);
+    }
+    if(m_previousConversation != nullptr && id == m_previousConversation->id()){
+        setPreviousConversation(nullptr);
+    }
 
     beginRemoveRows(QModelIndex(), index, index);
     m_conversations.removeAll(conversation);
@@ -348,7 +363,14 @@ bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation
 void ConversationList::setIsEmptyConversation(bool newIsEmptyConversation){
     if (m_isEmptyConversation == newIsEmptyConversation)
         return;
+
     m_isEmptyConversation = newIsEmptyConversation;
+    if(m_isEmptyConversation){
+        if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+            setPreviousConversation(m_currentConversation);
+        setCurrentConversation(nullptr);
+    }
+
     emit isEmptyConversationChanged();
 }
 

@@ -11,6 +11,7 @@ OfflineProvider::OfflineProvider(QObject *parent, const QString &model, const QS
 {}
 
 OfflineProvider::~OfflineProvider(){
+    qInfo()<<"delete offline provider";
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
@@ -89,8 +90,8 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                                     QString paramBlock =
                                         "__PARAMS_SETTINGS__\n" +
                                         QString("stream=%1\n").arg(m_pendingPrompt.stream ? "true" : "false") +
-                                        QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
-                                        QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
+                                        // QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
+                                        // QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
                                         QString("n_predict=%1\n").arg(m_pendingPrompt.maxTokens) +
                                         QString("top_k=%1\n").arg(m_pendingPrompt.topK) +
                                         QString("top_p=%1\n").arg(m_pendingPrompt.topP) +
@@ -149,7 +150,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 }
 
 void OfflineProvider::unLoadModel(){
-        _stopFlag = true;
+     _stopFlag = true;
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
@@ -170,8 +171,8 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
     QString paramBlock =
         "__PARAMS_SETTINGS__\n" +
         QString("stream=%1\n").arg(request.stream ? "true" : "false") +
-        QString("prompt_template=%1\n").arg(request.promptTemplate) +
-        QString("system_prompt=%1\n").arg(request.systemPrompt) +
+        // QString("prompt_template=%1\n").arg(request.promptTemplate) +
+        // QString("system_prompt=%1\n").arg(request.systemPrompt) +
         QString("n_predict=%1\n").arg(request.maxTokens) +
         QString("top_k=%1\n").arg(request.topK) +
         QString("top_p=%1\n").arg(request.topP) +

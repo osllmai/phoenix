@@ -83,6 +83,7 @@ Conversation::~Conversation() {
     disconnect(m_modelSettings, &ModelSettings::repeatPenaltyTokensChanged, this, &Conversation::updateModelSettingsConversation);
     disconnect(m_modelSettings, &ModelSettings::contextLengthChanged, this, &Conversation::updateModelSettingsConversation);
     disconnect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation);
+    qInfo()<<"delete conversation";
 }
 
 const int Conversation::id() const {return m_id;}
