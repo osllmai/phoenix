@@ -34,21 +34,20 @@ class Provider:
         self.stop_generation = False
         self._load_providers_config()
 
-    def get_runtime_path(self, filename):
+    def get_runtime_path(self, *path_parts):
         """
         Returns the correct absolute path for a given file based on execution context.
 
-        :param filename: Name of the file (e.g., "company.json")
+        :param path_parts: One or more path components (e.g., "models", "online_models", "mistral.json")
         :return: Absolute path to the file
         """
-        if getattr(sys, "frozen", False):  # If running as a PyInstaller executable
-            base_path = (
-                sys._MEIPASS
-            )  # Temporary folder where PyInstaller extracts files
-        else:  # If running as a normal Python script
+        if getattr(sys, "frozen", False):  # PyInstaller executable
+            base_path = sys._MEIPASS
+        else:  # Normal Python script
             base_path = os.path.dirname(os.path.abspath(__file__))
 
-        return os.path.join(base_path, filename)
+        return os.path.join(base_path, *path_parts)
+
 
     def _load_providers_config(self):
         """Load provider configurations from the company.json file.
@@ -60,7 +59,7 @@ class Provider:
             FileNotFoundError: If company.json is not found
             json.JSONDecodeError: If company.json is not valid JSON
         """
-        config_path = self.get_runtime_path("company.json")
+        config_path = self.get_runtime_path("models", "company.json")
 
         with open(config_path, "r") as f:
             self.companies_config = json.load(f)
@@ -89,7 +88,7 @@ class Provider:
             raise ValueError(f"Provider {provider} is not an online model provider")
 
         # Load the models file for this provider
-        models_file_path = self.get_runtime_path(provider_config["file"])
+        models_file_path = self.get_runtime_path("models", provider_config["file"])
 
         try:
             with open(models_file_path, "r") as f:

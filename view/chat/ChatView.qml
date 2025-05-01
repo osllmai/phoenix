@@ -4,7 +4,6 @@ import "./components"
 Item {
     ChatHeader{
         id: headerId
-        width: parent.width; height: 60
         Connections{
             target: headerId
             function onOpenModelSettingsDrawer(){

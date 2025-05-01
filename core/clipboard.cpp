@@ -1,10 +1,10 @@
-#include "clipboardhelper.h"
+#include "clipboard.h"
 #include <QGuiApplication>
 #include <QClipboard>
 
-ClipboardHelper::ClipboardHelper(QObject *parent) : QObject(parent) {}
+Clipboard::Clipboard(QObject *parent) : QObject(parent) {}
 
-void ClipboardHelper::copyText(const QString &text)
+void Clipboard::copyText(const QString &text)
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     if (clipboard)

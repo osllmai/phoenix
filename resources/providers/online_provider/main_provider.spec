@@ -5,7 +5,7 @@ a = Analysis(
     ['main_provider.py'],
     pathex=[],
     binaries=[],
-    datas=[('provider.py', '.'), ('main_provider.py', '.'), ('../file/company.json', '.'), ('../file/mistral_models.json', '.'), ('../file/openai_models.json', '.')],
+    datas=[('..\\..\\models\\online_models\\mistral.json', 'models/online_models'), ('..\\..\\models\\online_models\\deepseek.json', 'models/online_models'), ('..\\..\\models\\online_models\\openai.json', 'models/online_models'), ('..\\..\\models\\company.json', 'models')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

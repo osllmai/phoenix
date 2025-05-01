@@ -164,7 +164,7 @@ OS: Windows x64
         Connections{
             target:aboutVersion
             function onButtonAction1(){
-                ClipboardHelper.copyText(aboutVersion.about)
+                Clipboard.copyText(aboutVersion.about)
             }
             function onButtonAction2() {
                 aboutVersion.close()
