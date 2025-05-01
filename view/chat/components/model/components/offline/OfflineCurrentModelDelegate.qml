@@ -37,13 +37,24 @@ T.Button {
             Label {
                 id: modelNameId
                 text: model.name
+                width: backgroundId.width - logoModelId.width - rejectChatButton.width - 5
                 clip: true
+                elide: Label.ElideRight
                 color: Style.Colors.textTitle
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
+            }
+            MyButton{
+                id: rejectChatButton
+                visible: model.id === conversationList.modelId
+                myText: "Reject"
+                bottonType: Style.RoleEnum.BottonType.Secondary
+                onClicked:{
+                    conversationList.setModelRequest(-1, "", "", "", "")
+                }
             }
         }
     }

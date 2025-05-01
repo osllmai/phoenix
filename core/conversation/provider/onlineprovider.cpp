@@ -1,19 +1,21 @@
 #include "onlineprovider.h"
 
-#include <QDebug>
-#include <QProcess>
-#include <QThread>
+#include <QCoreApplication>
 
 OnlineProvider::OnlineProvider(QObject* parent)
     : Provider(parent), _stopFlag(false)
-{
-    moveToThread(&chatLLMThread);
-    chatLLMThread.start();
-}
+{}
+
+OnlineProvider::OnlineProvider(QObject *parent, const QString &model, const QString &key)
+    :Provider(parent), _stopFlag(false), m_model(model), m_key(key)
+{}
 
 OnlineProvider::~OnlineProvider(){
-    chatLLMThread.quit();
-    chatLLMThread.wait();
+    qInfo()<<"delete online provider";
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
 }
 
 void OnlineProvider::stop(){
@@ -26,7 +28,11 @@ void OnlineProvider::loadModel(const QString &model, const QString &key){
 }
 
 void OnlineProvider::unLoadModel(){
-
+    _stopFlag = true;
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
 }
 
 void OnlineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
@@ -36,11 +42,11 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
 
     QThread::create([this, input, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
                      repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers]() {
-        QProcess process;
-        process.setProcessChannelMode(QProcess::MergedChannels);
-        process.setReadChannel(QProcess::StandardOutput);
+        m_process = new QProcess;
+        m_process->setProcessChannelMode(QProcess::MergedChannels);
+        m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = "bin/main_provider.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/providers/online_provider/main_provider.exe";
         QStringList arguments;
         arguments << m_model
                   << m_key
@@ -59,20 +65,20 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                   << QString::number(contextLength)
                   << QString::number(numberOfGPULayers);
 
-        process.start(exePath, arguments);
+        m_process->start(exePath, arguments);
 
-        if (!process.waitForStarted()) {
-            qCritical() << "Failed to start process: " << process.errorString();
+        if (!m_process->waitForStarted()) {
+            qCritical() << "Failed to start process: " << m_process->errorString();
             return;
         }
 
-        while (process.state() == QProcess::Running) {
+        while (m_process->state() == QProcess::Running) {
             QString stopFlagStr = _stopFlag ? "t" : "f";
-            process.write(stopFlagStr.toUtf8());
-            process.waitForBytesWritten();
+            m_process->write(stopFlagStr.toUtf8());
+            m_process->waitForBytesWritten();
 
-            if (process.waitForReadyRead(500)) {
-                QByteArray output = process.readAllStandardOutput();
+            if (m_process->waitForReadyRead(400)) {
+                QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output, output.size());;
 
                 if (!outputString.isEmpty()) {
@@ -82,8 +88,8 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
             }
 
             if (_stopFlag) {
-                process.write("t");
-                process.waitForBytesWritten();
+                m_process->write("t");
+                m_process->waitForBytesWritten();
                 break;
             }
         }
@@ -95,6 +101,3 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
     })->start();
 }
 
-bool OnlineProvider::handleResponse(int32_t token, const std::string &response){
-    return true;
-}

@@ -4,12 +4,14 @@
 #include "provider.h"
 #include <QThread>
 #include <QDebug>
+#include <QProcess>
 
-class OfflineProvider : public  Provider
+class OfflineProvider : public Provider
 {
     Q_OBJECT
 public:
     OfflineProvider(QObject* parent = nullptr);
+    OfflineProvider(QObject *parent, const QString &model, const QString &key);
     virtual ~OfflineProvider();
 
 public slots:
@@ -17,18 +19,25 @@ public slots:
                 const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
                 const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
                 const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers) override;
+
     void stop() override;
     void loadModel(const QString &model, const QString &key) override;
     void unLoadModel() override;
+
+signals:
+    void sendPromptToProcess(const QString &promptText, const QString &paramBlock);
 
 private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
 
-    std::string answer = "";
     QString m_model;
 
-    bool handleResponse(int32_t token, const std::string &response);
+    QProcess* m_process = nullptr;
+    ProviderState state = ProviderState::LoadingModel;
+
+    PromptRequest m_pendingPrompt;
+    bool m_hasPendingPrompt = false;
 };
 
 #endif // OFFLINEPROVIDER_H

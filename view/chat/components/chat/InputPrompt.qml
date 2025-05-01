@@ -6,37 +6,56 @@ import '../../../component_library/button'
 
 Rectangle{
     id: controlId
-    height: 60; width: Math.min(670, parent.width - 48)
+    height: 90; width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
 
+    property string textInput: speechToText.text
+    onTextInputChanged: {
+        if(textInput != "")
+            inputTextBox.text  = controlId.textInput
+    }
+
     signal sendPrompt(var prompt)
 
-    function selectIcon(){
+    function selectSendIcon(){
         if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
-            if(iconId.hovered)
+            if(sendIconId.hovered)
                 return "qrc:/media/icon/stopFill.svg"
             else
                 return "qrc:/media/icon/stop.svg"
         }else{
-            if(iconId.hovered)
+            if(sendIconId.hovered)
                 return "qrc:/media/icon/sendFill.svg"
             else
                 return "qrc:/media/icon/send.svg"
         }
     }
 
-    Row{
+    function selectSpeechIcon(){
+        if(speechToText.modelSelect){
+            if(speechToText.speechInProcess)
+                return "qrc:/media/icon/microphoneOnFill.svg"
+            else
+                return "qrc:/media/icon/microphoneOn.svg"
+        }else{
+            if(speechIconId.hovered)
+                return "qrc:/media/icon/microphoneOn.svg"
+            else
+                return "qrc:/media/icon/microphoneOn.svg"
+        }
+    }
+
+    Column{
         anchors.fill: parent
         anchors.margins: 10
-        spacing: 10
         ScrollView {
             id: scrollInput
-            width: parent.width - iconId.width -10
-            height: parent.height
+            width: parent.width
+            height: parent.height - iconList.height
 
             TextArea {
                 id: inputTextBox
@@ -71,9 +90,9 @@ Rectangle{
                 function adjustHeight() {
                     const newHeight = Math.max(40, inputTextBox.contentHeight);
                     if (inputTextBox.text === "") {
-                        controlId.height = 60;
+                        controlId.height = 90;
                     } else {
-                        controlId.height = Math.min(newHeight + 20, 180); // اضافه کردن padding
+                        controlId.height = Math.min(newHeight + 27, 180) + iconList.height ;
                     }
                 }
 
@@ -87,6 +106,11 @@ Rectangle{
                           sendPrompt(inputTextBox.text)
                           if(conversationList.modelSelect)
                                 inputTextBox.text = ""
+
+                          if(speechToText.speechInProcess){
+                              speechToText.stopRecording()
+                              speechToText.text = ""
+                          }
                         }
                     }
                 }
@@ -99,18 +123,55 @@ Rectangle{
                 }
             }
         }
-        MyIcon {
-            id: iconId
-            anchors.bottom: parent.bottom
-            myIcon: selectIcon()
-            iconType: Style.RoleEnum.IconType.Primary
-            onClicked: {
-                if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
-                    conversationList.currentConversation.stop()
-                }else{
-                    sendPrompt(inputTextBox.text)
-                    if(conversationList.modelSelect)
-                          inputTextBox.text = ""
+
+        Item {
+            id:iconList
+            width: parent.width
+            height: 30
+
+            Row {
+                anchors.right: parent.right
+                spacing: 10
+
+                MyIcon {
+                    id: speechIconId
+                    width: 30; height: 30
+                    myIcon: selectSpeechIcon()
+                    iconType: Style.RoleEnum.IconType.Primary
+                    onClicked: {
+                        console.log(speechToText.modelSelect)
+                        console.log(speechToText.speechInProcess)
+                        if(speechToText.modelSelect){
+                            if(speechToText.speechInProcess)
+                                speechToText.stopRecording()
+                            else
+                                speechToText.startRecording()
+                        }else{
+                            selectSpeechModelVerificationId.open()
+                        }
+                    }
+                }
+
+                MyIcon {
+                    id: sendIconId
+                    width: 30; height: 30
+                    myIcon: selectSendIcon()
+                    iconType: Style.RoleEnum.IconType.Primary
+                    onClicked: {
+                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
+                            conversationList.currentConversation.stop()
+                        } else {
+                            sendPrompt(inputTextBox.text)
+
+                            if (conversationList.modelSelect)
+                                inputTextBox.text = ""
+
+                            if(speechToText.speechInProcess){
+                                speechToText.stopRecording()
+                                speechToText.text = ""
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -123,4 +184,25 @@ Rectangle{
          spread: 0.1
          transparentBorder: true
      }
+
+    VerificationDialog {
+        id: selectSpeechModelVerificationId
+        titleText: "Select Speech Model"
+        about: "Are you sure you want to leave this page and select a new speech model?"
+        textBotton1: "Cancel"
+        textBotton2: "Select Model"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        Connections{
+            target:selectSpeechModelVerificationId
+            function onButtonAction1(){
+                selectSpeechModelVerificationId.close()
+            }
+            function onButtonAction2() {
+                offlineModelListFilter.type = "Speech"
+                selectSpeechModelVerificationId.close()
+                appBodyId.currentIndex = 2
+            }
+        }
+    }
 }

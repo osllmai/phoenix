@@ -5,6 +5,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include <QCoreApplication>
+
 #include "./offline/offlinemodellist.h"
 
 CompanyList* CompanyList::m_instance = nullptr;
@@ -27,7 +29,7 @@ void CompanyList::readDB(){
         emit countChanged();
     });
 
-    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson,"./bin/company.json");
+    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson, QCoreApplication::applicationDirPath() + "/models/company.json");
     futureWatcher.setFuture(future);
 }
 

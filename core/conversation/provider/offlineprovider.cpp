@@ -1,88 +1,160 @@
 #include "offlineprovider.h"
 
-#include <QDebug>
-#include <cassert>
-#include <string>
-#include <cstring>
-#include <cstdio>
-#include <cassert>
-#include <string>
-#include <vector>
-#include <cstring>
-#include <iostream>
-#include <cstring>
-
-// #include "../phoenix/llmodel.h"
-
-
+#include <QCoreApplication>
 
 OfflineProvider::OfflineProvider(QObject* parent)
     :Provider(parent), _stopFlag(false)
-{
-    moveToThread(&chatLLMThread);
-    chatLLMThread.start();
-    qInfo() << "new" << QThread::currentThread();
-}
+{}
+
+OfflineProvider::OfflineProvider(QObject *parent, const QString &model, const QString &key)
+    :Provider(parent), _stopFlag(false), m_model(key)
+{}
 
 OfflineProvider::~OfflineProvider(){
-    qInfo() << "delete" << QThread::currentThread() ;
-    chatLLMThread.quit();
-    chatLLMThread.wait();
+    qInfo()<<"delete offline provider";
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
 }
 
 void OfflineProvider::stop(){
     _stopFlag = true;
 }
 
-void OfflineProvider::loadModel(const QString &model, const QString &key)
-{
+void OfflineProvider::loadModel(const QString &model, const QString &key) {
+    QThread::create([this, key]() {
+        m_process = new QProcess;
+        m_process->setProcessChannelMode(QProcess::MergedChannels);
+        m_process->setReadChannel(QProcess::StandardOutput);
 
-    qInfo() << "Running" << QThread::currentThread() << " in the loadModel chatllm.cpp";
+        QString exePath = QCoreApplication::applicationDirPath() + "/applocal_provider.exe";
+        QStringList arguments;
+        arguments << "--model" << key;
 
-    // QThread::msleep(5000);
-        std::string backend = "cuda";
+        state = ProviderState::LoadingModel;
 
-    //     prompt_context.n_ctx = 4096;
-    //     prompt_context.n_predict = 4096;
-    //     int ngl = 100;
-    //     model = LLModel::Implementation::construct(modelPath.toStdString(), backend, prompt_context.n_ctx);
-    //     prompt_template = "<|start_header_id|>user<|end_header_id|>\n\n%1<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n%2<|eot_id|>";
+        connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText, const QString &paramBlock){
+            if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
+                m_process->write(paramBlock.toUtf8());
+                m_process->waitForBytesWritten();
 
-    // #if(WIN32)
-    //     if (backend == "cuda") {
-    //         auto devices = LLModel::Implementation::availableGPUDevices();
-    //         if (!devices.empty()) {
-    //             // Example: Initialize the first available device
-    //             size_t memoryRequired = devices[0].heapSize;
-    //             const std::string& name = devices[0].name;
-    //             const size_t requiredMemory = model->requiredMem(modelPath.toStdString(), prompt_context.n_ctx, ngl);
-    //             auto devices = model->availableGPUDevices(memoryRequired);
-    //             for (const auto& device : devices) {
-    //                 if (device.name == name && model->initializeGPUDevice(device.index)) {
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // #endif
-    //     auto check_model = model->loadModel(modelPath.toStdString(), prompt_context.n_ctx , ngl);
-    //     if (check_model == false) {
-    //         qDebug()<<"load Unsuccessful";
-    //         emit loadModelResult(false);
-    //     }
-    //     else {
-    //         qDebug() << "\r" << "done loading!" ;
-    //         emit loadModelResult(true);
-    //     }
-    emit requestLoadModelResult(true, "");
-    qInfo() << "Finished" << QThread::currentThread() << " in the loadModel chatllm.cpp";
+                QString text = "__PROMPT__\n";
+                m_process->write(text.toUtf8());
+                m_process->waitForBytesWritten();
+
+                QString formattedPrompt = promptText.trimmed() + "\n__END__\n";
+                m_process->write(formattedPrompt.toUtf8());
+                m_process->waitForBytesWritten();
+
+                state = ProviderState::ReadingResponse;
+                qInfo()<< "send prompt finished";
+            } else {
+                qWarning() << "Not ready for prompt. Current state:" << static_cast<int>(state);
+            }
+        });
+
+
+        m_process->start(exePath, arguments);
+
+        if (!m_process->waitForStarted()) {
+            qCritical() << "Failed to start process: " << m_process->errorString();
+            emit requestFinishedResponse("Failed to start process");
+            return;
+        }
+
+        QString fullResponse;
+        while (m_process->state() == QProcess::Running) {
+
+            if (m_process->waitForReadyRead(400)){
+
+                QByteArray output = m_process->readAllStandardOutput();
+                QString outputString = QString::fromUtf8(output);
+                qInfo()<<outputString;
+
+                if(outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")){
+                    QString cleanedOutput = outputString.trimmed();
+                    QString beforeDone = cleanedOutput.left(cleanedOutput.lastIndexOf("__DONE_PROMPTPROCESS__"));
+                    emit requestTokenResponse(beforeDone);
+
+                    state = ProviderState::SendingPrompt;
+                    emit requestFinishedResponse("");
+                }
+
+                if (!outputString.trimmed().isEmpty()){
+                    switch (state) {
+                        case ProviderState::LoadingModel:{
+                            if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
+                                state = ProviderState::WaitingForPrompt;
+                                if (m_hasPendingPrompt) {
+                                    QString paramBlock =
+                                        "__PARAMS_SETTINGS__\n" +
+                                        QString("stream=%1\n").arg(m_pendingPrompt.stream ? "true" : "false") +
+                                        // QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
+                                        // QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
+                                        QString("n_predict=%1\n").arg(m_pendingPrompt.maxTokens) +
+                                        QString("top_k=%1\n").arg(m_pendingPrompt.topK) +
+                                        QString("top_p=%1\n").arg(m_pendingPrompt.topP) +
+                                        QString("min_p=%1\n").arg(m_pendingPrompt.minP) +
+                                        QString("temp=%1\n").arg(m_pendingPrompt.temperature) +
+                                        QString("n_batch=%1\n").arg(m_pendingPrompt.promptBatchSize) +
+                                        QString("repeat_penalty=%1\n").arg(m_pendingPrompt.repeatPenalty) +
+                                        QString("repeat_last_n=%1\n").arg(m_pendingPrompt.repeatPenaltyTokens) +
+                                        QString("ctx_size=%1\n").arg(m_pendingPrompt.contextLength) +
+                                        QString("n_gpu_layers=%1\n").arg(m_pendingPrompt.numberOfGPULayers) +
+                                        "__END_PARAMS_SETTINGS__\n";
+                                    emit sendPromptToProcess(m_pendingPrompt.input, paramBlock);
+                                    m_hasPendingPrompt = false;
+                                    qInfo() << "Sent pending prompt after model load.";
+                                }
+                            }
+                            break;
+                        }
+
+                        case ProviderState::SendingPrompt: {
+                            state = ProviderState::WaitingForPrompt;
+                            break;
+                        }
+
+                        case ProviderState::ReadingResponse: {
+                            QString text = "__STOP__\n";
+                            if (_stopFlag) {
+                                state = ProviderState::SendingPrompt;
+                                qInfo()<<"_stopFlag";
+                                qInfo()<<outputString.trimmed();
+                                m_process->write(text.toUtf8());
+                                m_process->waitForBytesWritten();
+                                _stopFlag = false;
+                            }
+
+                            if (!outputString.isEmpty()) {
+                                emit requestTokenResponse(outputString);
+                            }
+                            break;
+                        }
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        m_process->waitForFinished(50);
+        _stopFlag = false;
+
+        qInfo() << "Process finished.";
+        m_process->deleteLater();
+        emit requestFinishedResponse(fullResponse);
+    })->start();
 }
 
 void OfflineProvider::unLoadModel(){
-
-        // delete model;
-        // model = nullptr;
-
+     _stopFlag = true;
+    if (m_process) {
+        m_process->kill();
+        m_process->deleteLater();
+    }
 }
 
 void OfflineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
@@ -90,51 +162,34 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
                              const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
                              const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){
 
-    _stopFlag = false;
-    qInfo() << "Running" << QThread::currentThread()<< " in the prompt chatllm.cpp";
+    PromptRequest request = {
+        input, stream, promptTemplate, systemPrompt, temperature, topK,
+        topP, minP, repeatPenalty, promptBatchSize, maxTokens,
+        repeatPenaltyTokens, contextLength, numberOfGPULayers
+    };
 
-    QThread::msleep(5000);
-    answer = "";
+    QString paramBlock =
+        "__PARAMS_SETTINGS__\n" +
+        QString("stream=%1\n").arg(request.stream ? "true" : "false") +
+        // QString("prompt_template=%1\n").arg(request.promptTemplate) +
+        // QString("system_prompt=%1\n").arg(request.systemPrompt) +
+        QString("n_predict=%1\n").arg(request.maxTokens) +
+        QString("top_k=%1\n").arg(request.topK) +
+        QString("top_p=%1\n").arg(request.topP) +
+        QString("min_p=%1\n").arg(request.minP) +
+        QString("temp=%1\n").arg(request.temperature) +
+        QString("n_batch=%1\n").arg(request.promptBatchSize) +
+        QString("repeat_penalty=%1\n").arg(request.repeatPenalty) +
+        QString("repeat_last_n=%1\n").arg(request.repeatPenaltyTokens) +
+        QString("ctx_size=%1\n").arg(request.contextLength) +
+        QString("n_gpu_layers=%1\n").arg(request.numberOfGPULayers) +
+        "__END_PARAMS_SETTINGS__\n";
 
-    // qDebug() << "This is C++ talking, input: " << input;
-
-    // auto prompt_callback = [](int32_t token_id) { return true;};
-
-    // auto response_callback = std::bind(&OfflineProvider::handleResponse, this, std::placeholders::_1, std::placeholders::_2);
-
-    // auto recalculate_callback = [](bool is_recalculating) {return is_recalculating;};
-
-    // std::string stdStr = input.toStdString();
-
-    // model->prompt( stdStr , prompt_template, prompt_callback, response_callback, recalculate_callback,prompt_context , false, nullptr);
-
-    // QString qStr = QString::fromStdString(answer);
-    // qInfo() <<  qStr;
-
-    // for (int i = 0; i < 40; i++) {
-    //     emit requestTokenResponse("Hi  :)  ");
-    //     // qInfo()<<"send";
-    //     QThread::msleep(50);
-    //     emit requestTokenResponse("Phoenix!, ");
-    //     QThread::msleep(50);
-    // }
-
-    emit requestFinishedResponse("");
-    qInfo() << "Finished" << QThread::currentThread() <<" in the prompt chatllm.cpp";
-}
-
-bool OfflineProvider::handleResponse(int32_t token, const std::string &response){
-    const char* responsechars = response.c_str();
-
-
-    if (!(responsechars == nullptr || responsechars[0] == '\0')) {
-
-        // std::cout << responsechars << std::flush;
-        // qInfo()<<responsechars;
-
-        // answer += responsechars;
-        emit requestTokenResponse(QString::fromStdString(response));
-        // emit tokenResponse(QString::fromStdString(answer));
+    if (state == ProviderState::WaitingForPrompt) {
+        emit sendPromptToProcess(request.input, paramBlock);
+    } else {
+        m_pendingPrompt = request;
+        m_hasPendingPrompt = true;
+        qInfo() << "Prompt saved to be sent later";
     }
-    return !_stopFlag;
 }

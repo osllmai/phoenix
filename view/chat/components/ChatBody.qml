@@ -22,8 +22,11 @@ Item {
             Connections{
                 target: inputBoxId
                 function onSendPrompt(prompt){
+
                     if((conversationList.modelSelect) && (prompt !== "")){
+
                         conversationList.currentConversation.prompt(prompt, conversationList.modelId)
+
                     }else if((prompt !== "")){
                         notificationDialogId.open()
                         control.openModelList()

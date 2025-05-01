@@ -58,7 +58,7 @@ Item {
                             icon:"qrc:/media/icon/inDox.svg" ;
                             about:"Indox is an advanced search and retrieval technique that efficiently extracts data from diverse document types, including PDFs and HTML, using online or offline large language models such as Openai, Hugging Face , etc." ;
                             gitHubLink:"https://github.com/osllmai/inDox" ;
-                            notebookLink:"https://colab.research.google.com/github/osllmai/inDox/blob/master/Demo/openai_unstructured.ipynb";
+                            notebookLink:"https://github.com/osllmai/inDox/blob/master/cookbook/indoxArcg/openai_unstructured.ipynb";
                             goPage:-1
             }
             ListElement {title: "IndoxJudge" ;

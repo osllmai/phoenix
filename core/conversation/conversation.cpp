@@ -1,7 +1,11 @@
 #include "conversation.h"
 
 #include "./provider/onlineprovider.h"
+#include "./provider/offlineprovider.h"
 #include "./provider/provider.h"
+#include "./chat/message.h"
+
+#include "./conversationlist.h"
 
 Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
                            const QDateTime &date, const bool isPinned, QObject *parent)
@@ -80,6 +84,7 @@ Conversation::~Conversation() {
     disconnect(m_modelSettings, &ModelSettings::repeatPenaltyTokensChanged, this, &Conversation::updateModelSettingsConversation);
     disconnect(m_modelSettings, &ModelSettings::contextLengthChanged, this, &Conversation::updateModelSettingsConversation);
     disconnect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation);
+    qInfo()<<"delete conversation";
 }
 
 const int Conversation::id() const {return m_id;}
@@ -175,52 +180,61 @@ void Conversation::prompt(const QString &input, const int idModel){
     if(!m_isLoadModel){
         loadModel(idModel);
         setIsLoadModel(true);
-        if(m_model->backend() == BackendType::OfflineModel){
+        if(m_provider != nullptr){
+            //disconnect load and unload model
+            disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
+            disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
+            disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
 
-        }else if(m_model->backend() == BackendType::OnlineModel){
-            if(m_provider != nullptr){
-                //disconnect load and unload model
-                disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
-                disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
-                disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+            //disconnect prompt
+            disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
 
-                //disconnect prompt
-                disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
-
-                //disconnect finished response
-                disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
-                disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
-                delete m_provider;
-            }
-
-            m_provider = new OnlineProvider(this);
-            m_provider->loadModel((m_model->company()->name() + "/" + m_model->modelName()), m_model->key());
-            qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
-
-            // //load and unload model
-            connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
-            connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
-            connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
-
-            //prompt
-            connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
-
-            //finished response
-            connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
-            connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
-
+            //disconnect finished response
+            disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
+            disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
+            delete m_provider;
         }
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            m_provider = new OfflineProvider(this);
+        }else if(m_model->backend() == BackendType::OnlineModel){
+            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+        }
+        //load and unload model
+        connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+        connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
+        connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+
+        //prompt
+        connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
+
+        //finished response
+        connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
+        connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            emit requestLoadModel( m_model->modelName(), m_model->key());
+        }
+
+        qInfo()<<m_model->modelName()<<"  "<<m_model->key();
+
     }
     if(idModel != m_model->id()){
-        m_provider->loadModel(m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-        qInfo()<<(m_model->company()->name() + "/" + m_model->modelName())<<"  "<<m_model->key();
+        setIsLoadModel(false);
+        prompt(input, idModel);
+        return;
     }
 
     emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
     emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
+    //add history from massage
+    QString finalPrompt = m_modelSettings->promptTemplate();
+    finalPrompt.replace("{{history}}", m_messageList->history());
+    finalPrompt.replace("{{input}}", input);
+
     setResponseInProgress(true);
-    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
+    m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
                         m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                         m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
                         m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
@@ -234,6 +248,10 @@ void Conversation::stop(){
 }
 
 void Conversation::loadModel(const int id){
+    if(ConversationList::instance(nullptr)->previousConversation() != nullptr){
+        ConversationList::instance(nullptr)->previousConversation()->unloadModel();
+    }
+
     OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
     if(offlineModel != nullptr){
         setModel(offlineModel);
@@ -245,7 +263,9 @@ void Conversation::loadModel(const int id){
 }
 
 void Conversation::unloadModel(){
-
+    setIsLoadModel(false);
+    m_provider->unLoadModel();
+    qInfo()<<"UNLOda";
 }
 
 void Conversation::loadModelResult(const bool result, const QString &warning){

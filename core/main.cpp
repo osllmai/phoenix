@@ -6,7 +6,7 @@
 #include <QIcon>
 
 #include "database.h"
-// #include "speechtotext.h"
+#include "speechtotext.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -23,6 +23,8 @@
 #include "./conversation/conversationlistfilter.h"
 
 #include "../cmake/config.h.in"
+
+#include "clipboard.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +58,8 @@ int main(int argc, char *argv[])
     bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
     engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
 
-    // qmlRegisterType<SpeechToText>("com.example.speech", 1, 0, "SpeechToText");
+    SpeechToText* speechToText = SpeechToText::instance(&engine);
+    engine.rootContext()->setContextProperty("speechToText", speechToText);
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
@@ -132,7 +135,10 @@ int main(int argc, char *argv[])
     QObject::connect(conversationList, &ConversationList::requestUpdateLikeMessage, database, &Database::updateLikeMessage, Qt::QueuedConnection);
     QObject::connect(conversationList, &ConversationList::requestUpdateTextMessage, database, &Database::updateTextMessage, Qt::QueuedConnection);
 
-    const QUrl url(u"qrc:/phoenix_15/view/Main.qml"_qs);
+    Clipboard clipboard;
+    engine.rootContext()->setContextProperty("Clipboard", &clipboard);
+
+    const QUrl url(u"qrc:/view/Main.qml"_qs);
 
     QObject::connect(
         &engine,

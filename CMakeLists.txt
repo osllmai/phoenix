@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 0)
-set(APP_VERSION_PATCH 16)
+set(APP_VERSION_PATCH 18)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}-dev0")
 
-set(PROJECT_NAME phoenix_15)
+set(PROJECT_NAME phoenix)
 project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -14,12 +14,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
-
-# add_subdirectory(${CMAKE_SOURCE_DIR}/dep/whisper.cpp)
-
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -148,11 +147,15 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/privacyFill.svg
         media/icon/terms_of_Use.svg
         media/icon/terms_of_UseFill.svg
-        media/image_company/user.svg
+        media/icon/microphoneOff.svg
+        media/icon/microphoneOffFill.svg
+        media/icon/microphoneOn.svg
+        media/icon/microphoneOnFill.svg
 
+        media/image_company/user.svg
         media/image_company/Phoenix.png
         media/image_company/Bert.svg
-        media/image_company/MetaLlama.svg
+        media/image_company/Meta.svg
         media/image_company/Mistral.svg
         media/image_company/Databricks.svg
         media/image_company/Microsoft.svg
@@ -160,10 +163,17 @@ qt_add_resources(app${PROJECT_NAME}
         media/image_company/Replit.svg
         media/image_company/BigCode.png
         media/image_company/Openai.svg
+        media/image_company/Claude.svg
+        media/image_company/Cohere.svg
+        media/image_company/Deepseek.svg
+        media/image_company/Google.svg
+        media/image_company/Nvidia.svg
+        media/image_company/Whisper.svg
 
         media/fonts/DMSans-Regular.ttf
 
         media/media.qrc
+        view/view.qrc
 )
 
 qt_policy(SET QTP0004 NEW)
@@ -188,7 +198,9 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/MyToolTip.qml
 
         view/AppMenu.qml
+        view/AppMenuDrawer.qml
         view/menu/MyMenuButton.qml
+        view/menu/MyOpenMenuButton.qml
 
         view/AppBody.qml
 
@@ -249,6 +261,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/SettingsHeader.qml
         view/settings/SettingsBody.qml
         view/settings/SettingsMenu.qml
+        view/settings/SettingsMenuDrawer.qml
         view/settings/components/SettingsAbout.qml
         view/settings/components/SettingsTheme.qml
         view/settings/components/SettingsSpeech.qml
@@ -257,18 +270,18 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/components/SettingsMenuButton.qml
         view/settings/components/SettingsSlider.qml
         view/settings/components/ThemeOption.qml
+        view/settings/components/OpenMenuSettingsButton.qml
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
         view/component_footer/Downloading.qml
 
+        view/AppHeader.qml
+
         RESOURCES
             view/component_library/style/qmldir
         RESOURCE_PREFIX /
-        QML_FILES view/AppMenuDrawer.qml
-        QML_FILES view/menu/MyOpenMenuButton.qml
-        QML_FILES view/settings/SettingsMenuDrawer.qml
-        QML_FILES view/settings/components/OpenMenuSettingsButton.qml
+
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -292,7 +305,6 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt::Qml
         Qt::Gui
-        # whisper
 )
 
 include(GNUInstallDirs)
@@ -302,16 +314,64 @@ install(TARGETS app${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+# set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/company.json ${BIN_DIR}/company.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/offline_models.json ${BIN_DIR}/offline_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/openai_models.json ${BIN_DIR}/openai_models.json COPYONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/file/mistral_models.json ${BIN_DIR}/mistral_models.json COPYONLY)
 
+#copy company.json
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)
+
+
+#copy online-models
+set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/online_models)
+set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/models/online_models)
+
+file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
+
+foreach(json_file ${ONLINE_JSON_FILES})
+    get_filename_component(json_filename ${json_file} NAME)
+    configure_file(${json_file} ${ONLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
+endforeach()
+
+
+#copy offline-model
+set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/offline_models)
+set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/models/offline_models)
+
+file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
+
+foreach(json_file ${OFFLINE_JSON_FILES})
+    get_filename_component(json_filename ${json_file} NAME)
+    configure_file(${json_file} ${OFFLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
+endforeach()
+
+
+#copy python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/dist/main_provider.exe ${BIN_DIR}/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/main_provider.exe ${BIN_DIR}/providers/online_provider/main_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/main_provider.py ${BIN_DIR}/main_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dep/onlineProvider/provider.py ${BIN_DIR}/provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/main_provider.py ${BIN_DIR}/providers/online_provider/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
 endif()
+
+
+#copy whisper
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
+
+#copy exe provider for offline-model
+if(WIN32)
+    # Gather EXE files
+    file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.exe")
+    foreach(exe_file ${exe_files})
+        get_filename_component(exe_filename ${exe_file} NAME)
+        configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
+    endforeach()
+
+    # Gather DLL files
+    file(GLOB dll_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.dll")
+    foreach(dll_file ${dll_files})
+        get_filename_component(dll_filename ${dll_file} NAME)
+        configure_file(${dll_file} ${BIN_DIR}/${dll_filename} COPYONLY)
+    endforeach()
+endif()
+

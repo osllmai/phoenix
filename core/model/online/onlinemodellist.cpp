@@ -114,7 +114,7 @@ void OnlineModelList::saveAPIKey(const int id, QString key){
     const int index = m_models.indexOf(model);
     model->setKey(key);
     model->setInstallModel(true);
-    requestUpdateKeyModel(model->id(), model->key());
+    emit requestUpdateKeyModel(model->id(), model->key());
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole });
 }
 
@@ -126,7 +126,7 @@ void OnlineModelList::deleteRequest(const int id){
 
     model->setKey("");
     model->setInstallModel(false);
-    requestUpdateKeyModel(model->id(), "");
+    emit requestUpdateKeyModel(model->id(), "");
 
     ConversationList::instance(this)->setModelSelect(false);
 

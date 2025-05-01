@@ -143,3 +143,16 @@ void MessageList::likeMessageRequest(const int messageId, const int like){
     message->setLike(like);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {LikeRole});
 }
+
+QString MessageList::history(int count) const{
+    QStringList historyList;
+    int massage_size = m_messages.size();
+    int startIndex = qMax(0, massage_size - count);
+
+    for (int i = startIndex; i < massage_size; ++i) {
+        Message* message = m_messages[i];
+        QString role = message->isPrompt() ? "User" : "Assistant";
+        historyList << QString("%1: %2").arg(role, message->text());
+    }
+    return historyList.join("\n");
+}

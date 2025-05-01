@@ -33,6 +33,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->id();
     case NameRole:
         return model->name();
+    case KeyRole:
+        return model->key();
     case InformationRole:
         return model->information();
     case IconRole:
@@ -57,6 +59,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->isDownloading();
     case DownloadPercentRole:
         return model->downloadPercent();
+    case TypeRole:
+        return model->type();
     case ModelObjectRole:
         return QVariant::fromValue(m_models[index.row()]);
     default:
@@ -68,6 +72,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconRole] = "icon";
     roles[CompanyRole] = "company";
@@ -80,6 +85,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     roles[DownloadFinishedRole] = "downloadFinished";
     roles[IsDownloadingRole] = "isDownloading";
     roles[DownloadPercentRole] = "downloadPercent";
+    roles[TypeRole] = "type";
     roles[ModelObjectRole] = "modelObject";
     return roles;
 }
@@ -129,6 +135,7 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     if(downloads.size()<3){
         connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
+        connect(download, &Download::downloadFailed, this, &OfflineModelList::handleDownloadFailed, Qt::QueuedConnection);
         download->downloadModel();
     }
     downloads.append(download);
@@ -163,10 +170,15 @@ void OfflineModelList::handleDownloadFinished(const int id){
     updateDownloadProgress();
     deleteDownloadModel(id);
 
-    requestUpdateKeyModel(model->id(), model->key());
+    emit requestUpdateKeyModel(model->id(), model->key());
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole, DownloadFinishedRole, DownloadPercentRole});
     // emit currentModelListChanged();
+}
+
+void OfflineModelList::handleDownloadFailed(const int id, const QString &error){
+    cancelRequest(id);
+    qInfo()<<error;
 }
 
 void OfflineModelList::cancelRequest(const int id){
@@ -203,7 +215,7 @@ void OfflineModelList::deleteRequest(const int id){
         endRemoveRows();
 
         //delete from database
-        requestDeleteModel(model->id());
+        emit requestDeleteModel(model->id());
         delete model;
 
     }else if(model->key() != ""){
@@ -211,7 +223,7 @@ void OfflineModelList::deleteRequest(const int id){
         if (file.exists()){
             file.remove();
         }
-        requestUpdateKeyModel(model->id(), "");
+        emit requestUpdateKeyModel(model->id(), "");
     }
 
     ConversationList::instance(this)->setModelSelect(false);

@@ -1,2 +1,60 @@
-build
+# === Build directories ===
+build/
+cmake-build*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.autosave
+
+# === Qt Creator and CMake user files ===
 *.user
+*.user.*
+*.qmake.stash
+*.pro.user
+*.pro.user.*
+
+# === CMake generated files ===
+CMakeLists.txt.user
+
+# === Installer folder ===
+Installer/
+
+# === Compiled object files ===
+*.o
+*.obj
+*.so
+*.a
+*.lib
+*.dll   # Ignore DLL files in root
+**/*.dll  # Ignore DLL files in all subdirectories
+*.db
+*.out
+
+# === Debug and temporary files ===
+*.log
+*.tmp
+*.cache
+*.bak
+*~
+
+# === OS generated files ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.qmlls.ini
+
+# === VSCode settings ===
+.vscode/
+
+# === Qt Linguist translation binary files ===
+*.qm
+
+# === Whisper models ===
+*.bin
+ggml-*
+
+# === Local models ===
+*.ggml
+ggml-*
+

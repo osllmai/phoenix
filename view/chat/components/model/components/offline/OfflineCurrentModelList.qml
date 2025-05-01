@@ -19,7 +19,7 @@ ListView {
 
     model:offlineModelListFinishedDownloadFilter
     delegate: Item{
-        width: listView.width; height: 40
+        width: listView.width; height: 50
 
         OfflineCurrentModelDelegate {
             id: indoxItem

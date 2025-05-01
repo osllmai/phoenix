@@ -114,8 +114,23 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
 void ConversationList::deleteRequest(const int id){
     Conversation* conversation = findConversationById(id);
+    if(conversation->responseInProgress()){
+        conversation->stop();
+    }
+    if(conversation->isLoadModel()){
+        conversation->unloadModel();
+    }
+
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
+
+
+    if(m_currentConversation != nullptr && id == m_currentConversation->id()){
+        setIsEmptyConversation(true);
+    }
+    if(m_previousConversation != nullptr && id == m_previousConversation->id()){
+        setPreviousConversation(nullptr);
+    }
 
     beginRemoveRows(QModelIndex(), index, index);
     m_conversations.removeAll(conversation);
@@ -160,7 +175,11 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    setModelSelect(true);
+    if(id == -1)
+        setModelSelect(false);
+    else
+        setModelSelect(true);
+
     if(!m_isEmptyConversation){
         if(m_modelPromptTemplate != "")
             m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
@@ -193,7 +212,9 @@ void ConversationList::addConversation(const int id, const QString &title, const
     emit countChanged();
 
     if(selectConversation){
-        setPreviousConversation(m_currentConversation);
+        if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+            setPreviousConversation(m_currentConversation);
+
         setCurrentConversation(conversation);
         m_currentConversation->prompt(description, m_modelId);
         setIsEmptyConversation(false);
@@ -220,7 +241,9 @@ void ConversationList::updateDescriptionText(const int conversationId, const QSt
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){
-    setPreviousConversation(m_currentConversation);
+    if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+        setPreviousConversation(m_currentConversation);
+
     setCurrentConversation(findConversationById(id));
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();
@@ -279,7 +302,6 @@ QVariant ConversationList::dateCalculation(const QDateTime date) const {
 
     int daysDiff = date.daysTo(now);
 
-    // qInfo()<<daysDiff<<"  "<<date<<"    "<<now;
     if (daysDiff < 7 && date.date().year() == now.date().year())
         return date.toString("dddd");
 
@@ -341,7 +363,14 @@ bool ConversationList::isEmptyConversation() const{ return m_isEmptyConversation
 void ConversationList::setIsEmptyConversation(bool newIsEmptyConversation){
     if (m_isEmptyConversation == newIsEmptyConversation)
         return;
+
     m_isEmptyConversation = newIsEmptyConversation;
+    if(m_isEmptyConversation){
+        if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
+            setPreviousConversation(m_currentConversation);
+        setCurrentConversation(nullptr);
+    }
+
     emit isEmptyConversationChanged();
 }
 

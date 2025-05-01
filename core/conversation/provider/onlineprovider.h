@@ -4,12 +4,14 @@
 #include "provider.h"
 #include <QThread>
 #include <QDebug>
+#include <QProcess>
 
 class OnlineProvider : public  Provider
 {
     Q_OBJECT
 public:
     OnlineProvider(QObject* parent = nullptr);
+    OnlineProvider(QObject *parent, const QString &model, const QString &key);
     virtual ~OnlineProvider();
 
 public slots:
@@ -25,10 +27,10 @@ private:
     QThread chatLLMThread;
     std::atomic<bool> _stopFlag;
 
+    QProcess* m_process = nullptr;
+
     QString m_model;
     QString m_key;
-
-    bool handleResponse(int32_t token, const std::string &response);
 };
 
 #endif // ONLINEPROVIDER_H

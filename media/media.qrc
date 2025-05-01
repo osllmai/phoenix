@@ -60,7 +60,7 @@
         <file>image_company/Phoenix.png</file>
         <file>image_company/Phoenix.ico</file>
         <file>image_company/Bert.svg</file>
-        <file>image_company/MetaLlama.svg</file>
+        <file>image_company/Meta.svg</file>
         <file>image_company/Mistral.svg</file>
         <file>image_company/Databricks.svg</file>
         <file>image_company/Microsoft.svg</file>
@@ -69,6 +69,12 @@
         <file>image_company/BigCode.png</file>
         <file>image_company/user.svg</file>
         <file>image_company/Openai.svg</file>
+        <file>image_company/Claude.svg</file>
+        <file>image_company/Cohere.svg</file>
+        <file>image_company/Deepseek.svg</file>
+        <file>image_company/Google.svg</file>
+        <file>image_company/Nvidia.svg</file>
+        <file>image_company/Whisper.svg</file>
         <file>icon/copy.svg</file>
         <file>icon/copyFill.svg</file>
         <file>icon/copySuccess.svg</file>
@@ -82,6 +88,10 @@
         <file>icon/privacyFill.svg</file>
         <file>icon/terms_of_Use.svg</file>
         <file>icon/terms_of_UseFill.svg</file>
+        <file>icon/microphoneOff.svg</file>
+        <file>icon/microphoneOffFill.svg</file>
+        <file>icon/microphoneOn.svg</file>
+        <file>icon/microphoneOnFill.svg</file>
         <file>fonts/DMSans-Regular.ttf</file>
     </qresource>
 </RCC>

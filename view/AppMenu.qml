@@ -106,17 +106,70 @@ Rectangle{
         }
     }
 
-    MyIcon{
-        id: settingsIcon
-        width: 36; height: 36
-        myIcon: settingsIcon.hovered? "qrc:/media/icon/settingsFill.svg": "qrc:/media/icon/settings.svg"
-        myTextToolTip: "Settings"
-        myWidthToolTip: 60
-        toolTipInCenter: true
-        iconType: Style.RoleEnum.IconType.Primary
+    Item{
+        id: asettingsAndNameId
         anchors.left: parent.left; anchors.leftMargin: 10
-        anchors.bottom: parent.bottom; anchors.bottomMargin: 10
-        onClicked: { settingsDialogId.open(); }
+        anchors.right: parent.right; anchors.rightMargin: 10
+        anchors.bottom: parent.bottom;
+
+        height: 80
+        MyIcon {
+            id: settingsIcon
+            width: 36; height: 36
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            myIcon: settingsIcon.hovered? "qrc:/media/icon/settingsFill.svg": "qrc:/media/icon/settings.svg"
+            myTextToolTip: "Settings"
+            myWidthToolTip: 60
+            toolTipInCenter: true
+            iconType: Style.RoleEnum.IconType.Primary
+            onClicked: { settingsDialogId.open(); }
+        }
+        Label {
+            id: versionName
+            visible: root.width>100
+            color: Style.Colors.textTitle
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: settingsIcon.right
+            anchors.leftMargin: 2
+            text: "v0.1.0-2025.04.29"
+            font.weight: 400
+            font.pixelSize: 10
+            font.styleName: "Bold"
+            clip: true
+            MouseArea{
+                anchors.fill: parent
+                onClicked: {
+                    aboutVersion.open()
+                }
+            }
+        }
+    }
+
+    VerificationDialog {
+        id: aboutVersion
+        height: 220
+        width: 320
+        titleText: "Phoenix"
+        about: "Version: 0.1.0 (user setup)
+Commit:
+Date: 2025.04.29
+OS: Windows x64
+"
+        textBotton1: "Copy"
+        textBotton2: "OK"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        locationText: Text.AlignLeft
+        Connections{
+            target:aboutVersion
+            function onButtonAction1(){
+                Clipboard.copyText(aboutVersion.about)
+            }
+            function onButtonAction2() {
+                aboutVersion.close()
+            }
+        }
     }
 
     SettingsDialog{

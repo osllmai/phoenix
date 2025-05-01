@@ -12,6 +12,33 @@ public:
     Provider();
     explicit Provider(QObject *parent = nullptr);
 
+    explicit Provider(QObject *parent, const QString &model, const QString &key);
+
+    enum class ProviderState {
+        LoadingModel,
+        WaitingForPrompt,
+        SendingPrompt,
+        ReadingResponse,
+        Finished
+    };
+
+    struct PromptRequest {
+        QString input;
+        bool stream;
+        QString promptTemplate;
+        QString systemPrompt;
+        double temperature;
+        int topK;
+        double topP;
+        double minP;
+        double repeatPenalty;
+        int promptBatchSize;
+        int maxTokens;
+        int repeatPenaltyTokens;
+        int contextLength;
+        int numberOfGPULayers;
+    };
+
 public slots:
     virtual void prompt(const QString &input, const bool &stream, const QString &promptTemplate,
                         const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,

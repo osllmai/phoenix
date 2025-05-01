@@ -25,6 +25,7 @@ Item{
         Row{
             id: fillterBox
             width: parent.width
+            spacing: 10
             SearchButton{
                 id: searchBoxId
                 Connections{
@@ -36,11 +37,13 @@ Item{
             }
             Item{
                 width: parent.width - searchBoxId.width - 30
-                height: parent.height
+                height: searchBoxId.height + 20
 
                 ListView{
                     id: companyList
                     anchors.fill: parent
+                    cacheBuffer: Math.max(0, companyList.contentWidth)
+
                     layoutDirection: Qt.RightToLeft
                     orientation: Qt.Horizontal
                     snapMode: ListView.SnapToItem
@@ -48,18 +51,23 @@ Item{
                     interactive: contentWidth > width
                     boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
+                    ScrollBar.horizontal: ScrollBar {
+                        policy: ScrollBar.AsNeeded
+                    }
+                    clip: true
+
                     model: ListModel {
                         ListElement {
-                            name: "Chat"
-                            type: "Text Generation"
+                            name: "Embeddings"
+                            type: "Embeddings"
                         }
                         ListElement {
                             name: "Image"
                             type: "Image"
                         }
                         ListElement {
-                            name: "Embeddings"
-                            type: "Embeddings"
+                            name: "Chat"
+                            type: "Text Generation"
                         }
                     }
                     delegate: MyButton {
@@ -74,7 +82,6 @@ Item{
                     }
 
                     footer: Row {
-                        spacing: 10
                         MyButton {
                             id: allId
                             myText: "All"

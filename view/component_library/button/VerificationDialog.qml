@@ -19,6 +19,11 @@ Dialog {
     property var textBotton1
     property var textBotton2
 
+    property int typeBotton1: Style.RoleEnum.BottonType.Secondary
+    property int typeBotton2: Style.RoleEnum.BottonType.Danger
+
+    property int locationText: Text.AlignHCenter
+
     focus: true
     modal: true
 
@@ -84,7 +89,7 @@ Dialog {
                 width: parent.width
                 height: parent.height - buttonBoxId.height - titleBoxId.height - 20
                 font.pixelSize: 14
-                horizontalAlignment: Text.AlignHCenter
+                horizontalAlignment: dialogId.locationText
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.Wrap
             }
@@ -96,7 +101,7 @@ Dialog {
                 MyButton{
                     id: botton1
                     myText: dialogId.textBotton1
-                    bottonType: Style.RoleEnum.BottonType.Secondary
+                    bottonType: dialogId.typeBotton1
                     onClicked:{
                        buttonAction1()
                     }
@@ -104,7 +109,7 @@ Dialog {
                 MyButton{
                     id: botton2
                     myText: dialogId.textBotton2
-                    bottonType: Style.RoleEnum.BottonType.Danger
+                    bottonType: dialogId.typeBotton2
                     onClicked:{
                         buttonAction2()
                     }

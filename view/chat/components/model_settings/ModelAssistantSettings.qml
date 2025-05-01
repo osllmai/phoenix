@@ -27,7 +27,7 @@ Item {
                  text: control.existConversation? conversationList.currentConversation.modelSettings.systemPrompt: ""
                  visible: true
                  color: Style.Colors.textInformation
-                 wrapMode: Text.WordWrap
+                 wrapMode: Text.NoWrap
                  placeholderText: qsTr("Eg. You are a helpful assistant")
                  clip: true
                  font.pointSize: 10
@@ -37,6 +37,7 @@ Item {
                  persistentSelection: true
                  placeholderTextColor: Style.Colors.textInformation
                  background: null
+                 textFormat: TextEdit.PlainText
                  onHeightChanged: {
                      if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
                          instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
@@ -44,7 +45,7 @@ Item {
                  }
                  onTextChanged: {
                      if(control.existConversation){
-                         conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text
+                         conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text.replace(/\\n/g, "\n");
                      }
                  }
              }
