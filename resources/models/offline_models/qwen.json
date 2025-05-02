@@ -8,6 +8,7 @@
     "requires": "3.0",
     "ramrequired": 4,
     "parameters": "1.5 billion",
+    "recommended": true,
     "quant": "q4_0",
     "type": "Text Generation",
     "description": "<ul><li>Very fast responses</li><li>Instruction based model</li><li>Usage of LocalDocs (RAG): Highly recommended</li><li>Supports context length of up to 32768</li><li>Trained and finetuned by Qwen (Alibaba Cloud)</li><li>License: <a href=\"https://www.apache.org/licenses/LICENSE-2.0.html\">Apache 2.0</a></li></ul>",

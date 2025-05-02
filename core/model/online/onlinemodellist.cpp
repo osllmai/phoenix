@@ -136,19 +136,19 @@ void OnlineModelList::deleteRequest(const int id){
 void OnlineModelList::addModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
               const bool isLike, Company* company, const QString& type, const BackendType backend,
               const QString& icon , const QString& information , const QString& promptTemplate ,
-              const QString& systemPrompt, QDateTime expireModelTime,
+              const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
 
               const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-              const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+              const QString& contextWindows, const bool commercial, const bool pricey,
               const QString& output, const QString& comments, const bool installModel)
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
     OnlineModel* model = new OnlineModel(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon,
-                                  information, promptTemplate, systemPrompt, expireModelTime, m_instance,
+                                  information, promptTemplate, systemPrompt, expireModelTime, recommended, m_instance,
 
                                   inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
-                                  recommended, commercial, pricey, output, comments, installModel);
+                                  commercial, pricey, output, comments, installModel);
     m_models.append(model);
     connect(model, &OnlineModel::modelChanged, this, [=]() {
         int row = m_models.indexOf(model);

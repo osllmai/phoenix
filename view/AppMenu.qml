@@ -148,11 +148,11 @@ Rectangle{
 
     VerificationDialog {
         id: aboutVersion
-        height: 220
-        width: 320
+        height: 230
+        width: 365
         titleText: "Phoenix"
         about: "Version: 0.1.0 (user setup)
-Commit:
+Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
 Date: 2025.04.29
 OS: Windows x64
 "

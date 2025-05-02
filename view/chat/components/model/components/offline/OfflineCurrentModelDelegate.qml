@@ -49,9 +49,11 @@ T.Button {
             }
             MyButton{
                 id: rejectChatButton
+                height: 30
                 visible: model.id === conversationList.modelId
                 myText: "Reject"
                 bottonType: Style.RoleEnum.BottonType.Secondary
+                anchors.verticalCenter: logoModelId.verticalCenter
                 onClicked:{
                     conversationList.setModelRequest(-1, "", "", "", "")
                 }

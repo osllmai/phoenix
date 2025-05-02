@@ -19,7 +19,7 @@ ListView {
 
     model:onlineModelInstallFilter
     delegate: Item{
-        width: listView.width; height: 50
+        width: listView.width; height: 45
 
         OnlineCurrentModelDelegate {
             id: indoxItem

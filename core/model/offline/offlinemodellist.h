@@ -65,7 +65,7 @@ public slots:
                   const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                   const bool isLike, Company* company, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime);
+                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
 
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);

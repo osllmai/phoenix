@@ -9,6 +9,7 @@
     "requires": "2.6.0",
     "ramrequired": 4,
     "parameters": "3 billion",
+    "recommended": true,
     "quant": "q4_0",
     "type": "Text Generation",
     "systemPrompt": "",

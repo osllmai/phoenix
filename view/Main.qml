@@ -66,7 +66,7 @@ ApplicationWindow {
     }
 
     visible: true
-    title: qsTr("Phoenix")
+    title: qsTr("Phoenix v0.1.0")
 
     property bool isDesktopSize: width >= 630;
     onIsDesktopSizeChanged: {

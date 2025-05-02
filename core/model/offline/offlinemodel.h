@@ -30,7 +30,7 @@ public:
                           const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                           const bool isLike, Company* company, const QString& type,const BackendType backend,
                           const QString& icon , const QString& information , const QString& promptTemplate ,
-                          const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
+                          const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent);
 
     virtual ~OfflineModel();
 

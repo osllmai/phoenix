@@ -245,7 +245,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                 const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                                 const bool isLike, Company* company, const QString& type, const BackendType backend,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
-                                const QString& systemPrompt, QDateTime expireModelTime)
+                                const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
@@ -253,7 +253,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
                                            id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
-                                           promptTemplate, systemPrompt, expireModelTime, m_instance);
+                                           promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
     m_models.append(model);
     endInsertRows();
     emit countChanged();

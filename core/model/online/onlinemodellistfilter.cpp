@@ -40,7 +40,7 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::InstallModel:
-        return matchesFilter && installModel  && model->type() == "Text Generation";
+        return matchesFilter && model->type() == "Text Generation"&& (installModel || model->recommended() == true) ;
     case FilterType::Favorite:
         return matchesFilter && isLikeModel;
     default:
