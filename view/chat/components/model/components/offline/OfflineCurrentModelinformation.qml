@@ -53,6 +53,8 @@ T.Popup {
                     anchors.verticalCenter: logoModelId.verticalCenter
                     font.pixelSize: 14
                     font.styleName: "Bold"
+                    clip: true
+                    elide: Label.ElideRight
                 }
                 MyIcon{
                     id: likeIconId

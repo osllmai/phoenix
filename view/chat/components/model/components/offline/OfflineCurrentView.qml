@@ -6,6 +6,6 @@ Item {
     clip:true
 
     OfflineCurrentModelList{
-        id: offlineModelList
+        id: offlineCurrentModelList
     }
 }
