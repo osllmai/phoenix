@@ -88,5 +88,6 @@
         <file>component_footer/Downloading.qml</file>
         <file>component_library/style/qmldir</file>
         <file>AppHeader.qml</file>
+        <file>chat/components/model/components/online/InputApikeyDialog.qml</file>
     </qresource>
 </RCC>
