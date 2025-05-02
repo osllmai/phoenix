@@ -8,7 +8,11 @@ Item{
     width: parent.width
     height: phoenixId.height + fillterBox.height  + 18
     clip:true
+
     signal search(var text)
+
+     property string filtter: "All"
+
     Column{
         id: columnId
         anchors.fill: parent
@@ -74,7 +78,10 @@ Item{
                         isNeedAnimation: true
                         onClicked:{
                             offlineModelListFilter.type = model.type
+                            headerId.filtter= model.type
                         }
+                        checkable: true
+                        checked: headerId.filtter === model.type
                     }
 
                     footer: Row {
@@ -86,7 +93,10 @@ Item{
                             isNeedAnimation: true
                             onClicked: {
                                 offlineModelListFilter.filter("All")
+                                headerId.filtter= "All"
                             }
+                            checkable: true
+                            checked: headerId.filtter === "All"
                         }
 
                         MyButton {
@@ -97,7 +107,10 @@ Item{
                             isNeedAnimation: true
                             onClicked: {
                                 offlineModelListFilter.filter("Favorite")
+                                headerId.filtter = "Favorite"
                             }
+                            checkable: true
+                            checked: headerId.filtter === "Favorite"
                         }
                     }
                 }

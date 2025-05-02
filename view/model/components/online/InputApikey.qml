@@ -18,7 +18,7 @@ Rectangle{
         TextArea {
             id: textArea
             text: model.key
-            width: parent.width - iconId.width
+            width: parent.width - iconId.width - 5
             anchors.verticalCenter: iconId.verticalCenter
             hoverEnabled: true
             selectionColor: Style.Colors.boxNormalGradient1
