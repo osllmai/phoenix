@@ -15,6 +15,14 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
 
 OfflineModelList::OfflineModelList(QObject* parent): QAbstractListModel(parent) {}
 
+bool OfflineModelList::downloading() const{return m_downloading;}
+void OfflineModelList::setDownloading(bool newDownloading){
+    if (m_downloading == newDownloading)
+        return;
+    m_downloading = newDownloading;
+    emit downloadingChanged();
+}
+
 int OfflineModelList::count() const{return m_models.count();}
 
 int OfflineModelList::rowCount(const QModelIndex &parent) const {
@@ -139,6 +147,9 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
         download->downloadModel();
     }
     downloads.append(download);
+    if(!downloading()){
+        setDownloading(true);
+    }
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole});
 }
@@ -296,6 +307,9 @@ void OfflineModelList::deleteDownloadModel(const int id){
             downloads.removeAt(searchIndex);
             delete download;
         }
+    }
+    if(downloads.size() == 0){
+        setDownloading(false);
     }
 }
 

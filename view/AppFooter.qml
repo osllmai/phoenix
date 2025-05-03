@@ -19,11 +19,11 @@ Item {
 
         MyProgress{
             id: downloading
-            visible: offlineModelList.downloadProgress>0.0001
+            visible: offlineModelList.downloading && offlineModelList.downloadProgress>0.0001
             myText: "Downloading"
             myValue: offlineModelList.downloadProgress
             myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
-            textLenght: 70
+            textLenght: 75
             enabled: true
             onHoveredChanged: function(){
                 if(downloading.hovered){

@@ -529,9 +529,9 @@ T.Button {
             }
     }
 
-    property bool isNormal: !control.hovered && !control.pressed && control.enabled
-    property bool isHover: control.hovered && !control.pressed && control.enabled
-    property bool isPressed: control.pressed && control.enabled
+    property bool isNormal: ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
+    property bool isHover: ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
+    property bool isPressed: ((!control.checked && control.checkable) || !control.checkable) && control.pressed && control.enabled
     property bool isDisabled: !control.enabled
     property bool isSelected: control.checked && control.checkable && control.enabled
 

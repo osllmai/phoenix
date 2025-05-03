@@ -24,7 +24,7 @@ Rectangle{
             selectionColor: Style.Colors.boxNormalGradient1
             cursorVisible: false
             persistentSelection: true
-            placeholderText: qsTr("Enter Api Key")
+            placeholderText: qsTr("Enter API Key")
             placeholderTextColor: Style.Colors.menuNormalIcon
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10

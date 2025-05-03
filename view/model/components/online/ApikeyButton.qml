@@ -34,27 +34,43 @@ Item {
             }
         }
         MyButton{
-            id: startChatButton
-            width: control.width - deleteButton.width - 5
-            myText: model.type === "Text Generation"? (model.id === conversationList.modelId? "Reject": "Start Chat"): (model.key === speechToText.modelPath? "Reject":"Set Model")
-            bottonType: myText === "Reject"? Style.RoleEnum.BottonType.Secondary: Style.RoleEnum.BottonType.Primary
+            id: rejectButton
+            visible: model.id === conversationList.modelId? true: false
+            width: 60
+            myText: "Reject"
+            bottonType: Style.RoleEnum.BottonType.Secondary
             onClicked:{
                 if(model.type === "Text Generation"){
-                    if(myText === "Reject"){
-                        conversationList.setModelRequest(-1, "", "", "", "")
-                    }else{
+
+                    conversationList.setModelRequest(-1, "", "", "", "")
+
+                }else if(model.type === "Speech"){
+
+                    speechToText.modelPath = ""
+                    speechToText.modelSelect = false
+
+                }else{
+                    console.log(model.type)
+                }
+            }
+        }
+        MyButton{
+            id: startChatButton
+            width: control.width - deleteButton.width - (rejectButton.visible? (rejectButton.width +5): 0) - 5
+            myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
+            bottonType: Style.RoleEnum.BottonType.Primary
+            onClicked:{
+                if(model.type === "Text Generation"){
+
                         conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
                         conversationList.isEmptyConversation = true
                         appBodyId.currentIndex = 1
-                    }
+
                 }else if(model.type === "Speech"){
-                    if(myText === "Reject"){
-                        speechToText.modelPath = ""
-                        speechToText.modelSelect = false
-                    }else{
+
                         speechToText.modelPath = model.key
                         speechToText.modelSelect = true
-                    }
+
                 }else{
                     console.log(model.type)
                 }
