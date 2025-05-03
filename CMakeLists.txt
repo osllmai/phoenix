@@ -45,6 +45,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/database.h core/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
     core/speechtotext.h core/speechtotext.cpp
+    core/clipboard.h core/clipboard.cpp
 
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
@@ -181,6 +182,7 @@ qt_policy(SET QTP0004 NEW)
 qt_add_qml_module(app${PROJECT_NAME}
     URI ${PROJECT_NAME}
     VERSION 1.0
+
     QML_FILES
         view/Main.qml
         view/component_library/style/Colors.qml
@@ -248,6 +250,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/model/ModelComboBox.qml
         view/chat/components/model/components/ModelDialogHeader.qml
         view/chat/components/model/components/ModelDialogBody.qml
+        view/chat/components/model/components/online/InputApikeyDialog.qml
         view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
         view/chat/components/model/components/online/OnlineCurrentModelList.qml
         view/chat/components/model/components/online/OnlineCurrentModelinformation.qml
@@ -278,10 +281,9 @@ qt_add_qml_module(app${PROJECT_NAME}
 
         view/AppHeader.qml
 
-        RESOURCES
-            view/component_library/style/qmldir
-        RESOURCE_PREFIX /
-
+    RESOURCES
+        view/component_library/style/qmldir
+    RESOURCE_PREFIX /
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

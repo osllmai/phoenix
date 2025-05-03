@@ -4,10 +4,12 @@ Model::Model(const int id, const QString& modelName, const QString& name, const 
              QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
              const BackendType backend,
              const QString& icon , const QString& information , const QString& promptTemplate ,
-             const QString& systemPrompt, QDateTime expireModelTime, QObject* parent)
+             const QString& systemPrompt, QDateTime expireModelTime,
+             const bool recommended, QObject* parent)
     : m_id(id), m_name(name), m_modelName(modelName), m_key(key), m_addModelTime(addModelTime), m_isLike(isLike),
     m_company(company), m_type(type), m_backend(backend), m_icon(icon), m_information(information),
-    m_promptTemplate(promptTemplate), m_systemPrompt(systemPrompt), m_expireModelTime(expireModelTime),
+    m_promptTemplate(promptTemplate), m_systemPrompt(systemPrompt),
+    m_expireModelTime(expireModelTime), m_recommended(recommended),
     QObject(parent)
 {}
 
@@ -58,3 +60,5 @@ void Model::setAddModelTime(QDateTime newAddModelTime){
 }
 
 QDateTime Model::expireModelTime() const{return m_expireModelTime;}
+
+const bool Model::recommended() const{return m_recommended;}

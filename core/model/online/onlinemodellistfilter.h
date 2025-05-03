@@ -25,6 +25,7 @@ public:
 
     enum class FilterType {
         InstallModel,
+        Recommended,
         Company,
         Type,
         Favorite,

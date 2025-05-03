@@ -12,7 +12,9 @@ T.Button {
     signal editChatName(var chatName)
 
     onClicked: {
-        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+        if(model.installModel){
+            conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+        }
     }
 
     background: null
@@ -37,7 +39,10 @@ T.Button {
             Label {
                 id: modelNameId
                 text: model.name
-                width: backgroundId.width - logoModelId.width - rejectChatButton.width - 5
+                width: backgroundId.width -
+                       logoModelId.width -
+                       (installButton.visible? installButton.width: 0) -
+                       (rejectChatButton.visible? rejectChatButton.width: 0) - 5
                 clip: true
                 elide: Label.ElideRight
                 color: Style.Colors.textTitle
@@ -49,13 +54,29 @@ T.Button {
             }
             MyButton{
                 id: rejectChatButton
-                visible: model.id === conversationList.modelId
-                myText: "Reject"
+                visible: model.id === conversationList.modelId && model.installModel
+                height: 30
+                myText: "Eject"
                 bottonType: Style.RoleEnum.BottonType.Secondary
+                anchors.verticalCenter: logoModelId.verticalCenter
                 onClicked:{
                     conversationList.setModelRequest(-1, "", "", "", "")
                 }
             }
+            MyButton{
+                id: installButton
+                height: 30
+                visible: !model.installModel
+                myText: "Install"
+                anchors.verticalCenter: logoModelId.verticalCenter
+                bottonType: Style.RoleEnum.BottonType.Primary
+                onClicked:{
+                    inputApikeyDialogId.open()
+                }
+            }
         }
+    }
+    InputApikeyDialog{
+        id: inputApikeyDialogId
     }
 }

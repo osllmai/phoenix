@@ -45,6 +45,9 @@ T.Button {
     property int bottonType: Style.RoleEnum.BottonType.Primary
     property int iconType: Style.RoleEnum.IconType.Primary
 
+    checkable: false
+    checked: false
+
     HoverHandler {
         id: hoverHandler
         acceptedDevices: PointerDevice.Mouse
@@ -526,10 +529,11 @@ T.Button {
             }
     }
 
-    property bool isNormal: !control.hovered && !control.pressed && control.enabled
-    property bool isHover: control.hovered && !control.pressed && control.enabled
-    property bool isPressed: control.pressed && control.enabled
+    property bool isNormal: ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
+    property bool isHover: ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
+    property bool isPressed: ((!control.checked && control.checkable) || !control.checkable) && control.pressed && control.enabled
     property bool isDisabled: !control.enabled
+    property bool isSelected: control.checked && control.checkable && control.enabled
 
     states: [
         State {
@@ -602,6 +606,30 @@ T.Button {
                 gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Pressed)
                 gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Pressed)
                 background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
+            }
+        },
+        State {
+            name: "selected"
+            when: control.isSelected
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, /*Style.RoleEnum.State.Selected*/ "red")
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
+            }
+            PropertyChanges {
+                target: textId
+                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarTextId
+                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+            }
+            PropertyChanges {
+                target: progressBarId
+                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Selected)
+                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Selected)
+                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
             }
         },
         State {

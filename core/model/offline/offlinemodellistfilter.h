@@ -28,6 +28,7 @@ public:
     enum class FilterType {
         IsDownloading,
         DownloadFinished,
+        Recommended,
         Company,
         Type,
         Favorite,

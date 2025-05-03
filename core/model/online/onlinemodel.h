@@ -13,7 +13,6 @@ class OnlineModel : public Model
     Q_PROPERTY(double inputPricePer1KTokens READ inputPricePer1KTokens CONSTANT FINAL)
     Q_PROPERTY(double outputPricePer1KTokens READ outputPricePer1KTokens CONSTANT FINAL)
     Q_PROPERTY(QString contextWindows READ contextWindows CONSTANT FINAL)
-    Q_PROPERTY(bool recommended READ recommended CONSTANT FINAL)
     Q_PROPERTY(bool commercial READ commercial CONSTANT FINAL)
     Q_PROPERTY(bool pricey READ pricey CONSTANT FINAL)
     Q_PROPERTY(QString output READ output CONSTANT FINAL)
@@ -26,10 +25,10 @@ public:
     explicit OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                          const bool isLike, Company* company, const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
-                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent,
+                         const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent,
 
                          const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-                         const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                         const QString& contextWindows, const bool commercial, const bool pricey,
                          const QString& output, const QString& comments, const bool installModel
                          );
 
@@ -40,8 +39,6 @@ public:
     const double outputPricePer1KTokens() const;
 
     const QString &contextWindows() const;
-
-    const bool recommended() const;
 
     const bool commercial() const;
 
@@ -62,7 +59,6 @@ private:
     double m_inputPricePer1KTokens;
     double m_outputPricePer1KTokens;
     QString m_contextWindows;
-    bool m_recommended;
     bool m_commercial;
     bool m_pricey;
     QString m_output;

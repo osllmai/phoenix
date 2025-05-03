@@ -89,7 +89,7 @@ T.Button {
                             }
                         }
                         function selectIcon(){
-                            if(dateAndIconId.checkCopy == false){
+                            if(dateAndIconId.checkCopy === false){
                                 return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
                             }else{
                                 return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"

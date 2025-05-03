@@ -13,7 +13,9 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
     return m_instance;
 }
 
-OfflineModelList::OfflineModelList(QObject* parent): QAbstractListModel(parent) {}
+OfflineModelList::OfflineModelList(QObject* parent):
+    m_downloadProgress(0), QAbstractListModel(parent)
+{}
 
 int OfflineModelList::count() const{return m_models.count();}
 
@@ -131,7 +133,7 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     model->setKey(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
 
-    Download *download = new Download(id, model->url(), model->key());
+    Download *download = new Download(id, model->url(), model->key(), this);
     if(downloads.size()<3){
         connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
@@ -245,7 +247,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                 const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                                 const bool isLike, Company* company, const QString& type, const BackendType backend,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
-                                const QString& systemPrompt, QDateTime expireModelTime)
+                                const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
 {
     const int index = m_models.size();
     beginInsertRows(QModelIndex(), index, index);
@@ -253,7 +255,7 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
                                            id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
-                                           promptTemplate, systemPrompt, expireModelTime, m_instance);
+                                           promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
     m_models.append(model);
     endInsertRows();
     emit countChanged();

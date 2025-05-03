@@ -103,10 +103,17 @@ int main(int argc, char *argv[])
     offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
     engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
 
+    OfflineModelListFilter* offlineModelListRecommendedFilter = new OfflineModelListFilter(offlineModelList, &engine);
+    offlineModelListRecommendedFilter->setFilterType(OfflineModelListFilter::FilterType::Recommended);
+    engine.rootContext()->setContextProperty("offlineModelListRecommendedFilter", offlineModelListRecommendedFilter);
+
     OnlineModelListFilter* onlineModelInstallFilter = new OnlineModelListFilter(onlineModelList, &engine);
     onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
     engine.rootContext()->setContextProperty("onlineModelInstallFilter", onlineModelInstallFilter);
 
+    OnlineModelListFilter* onlineModelListRecommendedFilter = new OnlineModelListFilter(onlineModelList, &engine);
+    onlineModelListRecommendedFilter->setFilterType(OnlineModelListFilter::FilterType::Recommended);
+    engine.rootContext()->setContextProperty("onlineModelListRecommendedFilter", onlineModelListRecommendedFilter);
 
     SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
     engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);

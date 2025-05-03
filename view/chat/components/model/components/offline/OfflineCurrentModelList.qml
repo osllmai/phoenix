@@ -3,23 +3,13 @@ import QtQuick.Controls 2.15
 
 ListView {
     id: listView
-    anchors.fill: parent
-    cacheBuffer: Math.max(0, listView.contentHeight)
+    height: listView.contentHeight
+    width: parent.width
 
-    interactive: contentHeight > height
-    boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
-    flickDeceleration: 500
-    maximumFlickVelocity: 6000
-
-    ScrollBar.vertical: ScrollBar {
-        policy: ScrollBar.AsNeeded
-    }
     clip: true
 
-    model:offlineModelListFinishedDownloadFilter
     delegate: Item{
-        width: listView.width; height: 50
+        width: listView.width; height: 45
 
         OfflineCurrentModelDelegate {
             id: indoxItem

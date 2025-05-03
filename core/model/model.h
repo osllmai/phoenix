@@ -26,6 +26,7 @@ class Model : public QObject
     Q_PROPERTY(bool isLike READ isLike WRITE setIsLike NOTIFY isLikeChanged FINAL)
     Q_PROPERTY(QDateTime addModelTime READ addModelTime WRITE setAddModelTime NOTIFY addModelTimeChanged FINAL)
     Q_PROPERTY(QDateTime expireModelTime READ expireModelTime CONSTANT FINAL)
+    Q_PROPERTY(bool recommended READ recommended CONSTANT FINAL)
 
 public:
     explicit Model(QObject* parent = nullptr) : QObject(parent) {}
@@ -34,7 +35,7 @@ public:
                    QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
                    const BackendType backend,
                    const QString& icon , const QString& information , const QString& promptTemplate ,
-                   const QString& systemPrompt, QDateTime expireModelTime, QObject* parent);
+                   const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent);
     virtual ~Model();
 
     const int id() const;
@@ -68,6 +69,8 @@ public:
 
     QDateTime expireModelTime() const;
 
+    const bool recommended() const;
+
 signals:
     void keyChanged();
     void isLikeChanged();
@@ -83,6 +86,7 @@ private:
     QString m_systemPrompt;
     Company* m_company;
     QString m_type;
+    bool m_recommended;
     BackendType m_backend;
     QString m_key;
     bool m_isLike;

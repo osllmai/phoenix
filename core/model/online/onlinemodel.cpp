@@ -1,21 +1,20 @@
 #include "onlinemodel.h"
 
-OnlineModel::OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key,
-                         QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
-                         const BackendType backend,
+OnlineModel::OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
+                         const bool isLike, Company* company, const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
-                         const QString& systemPrompt, QDateTime expireModelTime, QObject* parent,
+                         const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent,
 
                          const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-                         const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                         const QString& contextWindows, const bool commercial, const bool pricey,
                          const QString& output, const QString& comments, const bool installModel
                          )
                          :Model(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
-                                    promptTemplate, systemPrompt, expireModelTime, parent),
+                                    promptTemplate, systemPrompt, expireModelTime, recommended, parent),
 
                                     m_inputPricePer1KTokens(inputPricePer1KTokens),
                                     m_outputPricePer1KTokens(outputPricePer1KTokens), m_contextWindows(contextWindows),
-                                    m_recommended(recommended), m_commercial(commercial), m_pricey(pricey),
+                                    m_commercial(commercial), m_pricey(pricey),
                                     m_output(output), m_comments(comments), m_installModel(installModel)
 {}
 
@@ -26,8 +25,6 @@ const double OnlineModel::inputPricePer1KTokens() const{return m_inputPricePer1K
 const double OnlineModel::outputPricePer1KTokens() const{return m_outputPricePer1KTokens;}
 
 const QString &OnlineModel::contextWindows() const{return m_contextWindows;}
-
-const bool OnlineModel::recommended() const{return m_recommended;}
 
 const bool OnlineModel::commercial() const{return m_commercial;}
 

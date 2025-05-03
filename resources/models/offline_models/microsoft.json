@@ -8,6 +8,7 @@
     "requires": "2.7.1",
     "ramrequired": 4,
     "parameters": "4 billion",
+    "recommended": true,
     "quant": "q4_0",
     "type": "Text Generation",
     "description": "<ul><li>Very fast responses</li><li>Chat based model</li><li>Accepts system prompts in Phi-3 format</li><li>Trained by Microsoft</li><li>License: <a href=\"https://opensource.org/license/mit\">MIT</a></li><li>No restrictions on commercial use</li></ul>",

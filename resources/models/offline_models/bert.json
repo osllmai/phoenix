@@ -15,7 +15,8 @@
     "embeddingModel": true,
     "systemPrompt": "",
     "description": "<strong>LocalDocs text embeddings model</strong><br><ul><li>For use with LocalDocs feature</li><li>Used for retrieval augmented generation (RAG)</li></ul>",
-    "url": "https://gpt4all.io/models/gguf/all-MiniLM-L6-v2-f16.gguf"
+    "url": "https://gpt4all.io/models/gguf/all-MiniLM-L6-v2-f16.gguf",
+    "recommended": false
   },
   {
     "order": "u",
@@ -31,6 +32,7 @@
     "type": "Text Generation",
     "embeddingModel": true,
     "description": "<strong>LocalDocs text embeddings model</strong><br><ul><li>For use with LocalDocs feature</li><li>Used for retrieval augmented generation (RAG)</li></ul>",
-    "url": "https://gpt4all.io/models/gguf/all-MiniLM-L6-v2.gguf2.f16.gguf"
+    "url": "https://gpt4all.io/models/gguf/all-MiniLM-L6-v2.gguf2.f16.gguf",
+    "recommended": false
   }
 ]

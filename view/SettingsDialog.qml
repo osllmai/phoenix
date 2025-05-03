@@ -11,12 +11,6 @@ Dialog {
     width: Math.min( 800 , parent.width-40)
     height: Math.min( 600 , parent.height-40)
 
-    signal buttonAction1()
-    signal buttonAction2()
-
-    property var textBotton1
-    property var textBotton2
-
     property bool isDesktopSize: width >= 630;
     onIsDesktopSizeChanged: {
         settingsMenuDerawerId.close()

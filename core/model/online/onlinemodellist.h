@@ -48,10 +48,10 @@ public slots:
     void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
                   QDateTime addModelTime, const bool isLike, Company* company, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime,
+                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
 
                   const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-                  const QString& contextWindows, const bool recommended, const bool commercial, const bool pricey,
+                  const QString& contextWindows, const bool commercial, const bool pricey,
                   const QString& output, const QString& comments, const bool installModel);
 
 signals:

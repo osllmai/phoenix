@@ -16,7 +16,7 @@ class OfflineModelList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
-    Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged)
+    Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged FINAL)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -65,7 +65,7 @@ public slots:
                   const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                   const bool isLike, Company* company, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime);
+                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
 
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);
@@ -74,6 +74,7 @@ public slots:
 signals:
     void countChanged();
     void downloadProgressChanged();
+    void downloadingChanged();
     void requestAddModel(const QString &name, const QString &key);
     void requestDeleteModel(const int id);
     void requestUpdateKeyModel(const int id, const QString &key);
