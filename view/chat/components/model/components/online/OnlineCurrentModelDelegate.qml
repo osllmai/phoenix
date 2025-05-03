@@ -56,7 +56,7 @@ T.Button {
                 id: rejectChatButton
                 visible: model.id === conversationList.modelId && model.installModel
                 height: 30
-                myText: "Reject"
+                myText: "Eject"
                 bottonType: Style.RoleEnum.BottonType.Secondary
                 anchors.verticalCenter: logoModelId.verticalCenter
                 onClicked:{

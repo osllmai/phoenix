@@ -37,7 +37,7 @@ Item {
             id: rejectButton
             visible: model.id === conversationList.modelId? true: false
             width: 60
-            myText: "Reject"
+            myText: "Eject"
             bottonType: Style.RoleEnum.BottonType.Secondary
             onClicked:{
                 if(model.type === "Text Generation"){

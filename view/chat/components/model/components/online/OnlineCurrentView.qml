@@ -30,6 +30,17 @@ Item {
             width: flickable.width
             spacing: 10
 
+            Label {
+                id: availablemodelsId
+                visible: onlineCurrentModelList.height>30
+                text: "Available Models"
+                color: Style.Colors.textTitle
+                verticalAlignment: Text.AlignBottom
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
+                clip: true
+            }
+
             OnlineCurrentModelList{
                 id: onlineCurrentModelList
                 model:onlineModelInstallFilter
@@ -54,7 +65,7 @@ Item {
             MyButton{
                 id: installButton
                 width: parent.width
-                myText: "More models"
+                myText: "More Models"
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked:{
                     appBodyId.currentIndex = 2
