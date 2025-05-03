@@ -183,6 +183,104 @@ qt_add_qml_module(app${PROJECT_NAME}
     URI ${PROJECT_NAME}
     VERSION 1.0
 
+    QML_FILES
+        view/Main.qml
+        view/component_library/style/Colors.qml
+        view/component_library/style/RoleEnum.qml
+        view/component_library/button/MyButton.qml
+        view/component_library/button/MyComboBox.qml
+        view/component_library/button/MyIcon.qml
+        view/component_library/button/SearchButton.qml
+        view/component_library/button/MySlider.qml
+        view/component_library/button/MySwitch.qml
+        view/component_library/button/MyMenu.qml
+        view/component_library/button/MyProgress.qml
+        view/component_library/button/VerificationDialog.qml
+        view/component_library/button/NotificationDialog.qml
+        view/component_library/button/MyToolTip.qml
+
+        view/AppMenu.qml
+        view/AppMenuDrawer.qml
+        view/menu/MyMenuButton.qml
+        view/menu/MyOpenMenuButton.qml
+
+        view/AppBody.qml
+
+        view/home/HomeView.qml
+        view/home/components/HomeHeader.qml
+        view/home/components/FeatureList.qml
+        view/home/components/FeatureDelegate.qml
+
+        view/model/ModelsView.qml
+        view/model/components/ModelHeader.qml
+        view/model/components/ModelBody.qml
+        view/model/components/offline/OfflineModelView.qml
+        view/model/components/offline/OfflineHeader.qml
+        view/model/components/offline/OfflineList.qml
+        view/model/components/offline/OfflineDelegate.qml
+        view/model/components/offline/DownloadButton.qml
+        view/model/components/online/OnlineModelView.qml
+        view/model/components/online/OnlineHeader.qml
+        view/model/components/online/OnlineList.qml
+        view/model/components/online/OnlineDelegate.qml
+        view/model/components/online/InputApikey.qml
+        view/model/components/online/ApikeyButton.qml
+
+        view/chat/ChatView.qml
+        view/chat/components/ChatHeader.qml
+        view/chat/components/HistoryDrawer.qml
+        view/chat/components/ModelSettingsDrawer.qml
+        view/chat/components/ChatBody.qml
+        view/chat/components/chat/InputPrompt.qml
+        view/chat/components/chat/MessageDelegate.qml
+        view/chat/components/chat/MyMessageList.qml
+        view/chat/components/history/HistoryHeader.qml
+        view/chat/components/history/HistoryBody.qml
+        view/chat/components/history/HistoryList.qml
+        view/chat/components/history/HistoryDelegate.qml
+        view/chat/components/model_settings/ModelSettingsHeader.qml
+        view/chat/components/model_settings/ModelSettingsBody.qml
+        view/chat/components/model_settings/ModelAssistantSettings.qml
+        view/chat/components/model_settings/ModelInferencesSettings.qml
+        view/chat/components/model_settings/ModelInformationSettings.qml
+        view/chat/components/model_settings/ModelEngineSettings.qml
+        view/chat/components/model_settings/components/ModelSettingsSlider.qml
+        view/chat/components/model_settings/components/ModelSettingsSwitch.qml
+        view/chat/components/model_settings/components/ModelMenuSettings.qml
+        view/chat/components/model/ModelComboBox.qml
+        view/chat/components/model/components/ModelDialogHeader.qml
+        view/chat/components/model/components/ModelDialogBody.qml
+        view/chat/components/model/components/online/InputApikeyDialog.qml
+        view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
+        view/chat/components/model/components/online/OnlineCurrentModelList.qml
+        view/chat/components/model/components/online/OnlineCurrentModelinformation.qml
+        view/chat/components/model/components/online/OnlineCurrentView.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelList.qml
+        view/chat/components/model/components/offline/OfflineCurrentModelinformation.qml
+        view/chat/components/model/components/offline/OfflineCurrentView.qml
+
+        view/SettingsDialog.qml
+        view/settings/SettingsHeader.qml
+        view/settings/SettingsBody.qml
+        view/settings/SettingsMenu.qml
+        view/settings/SettingsMenuDrawer.qml
+        view/settings/components/SettingsAbout.qml
+        view/settings/components/SettingsTheme.qml
+        view/settings/components/SettingsSpeech.qml
+        view/settings/components/SettingsTerms_of_Use.qml
+        view/settings/components/SettingsPrivacy.qml
+        view/settings/components/SettingsMenuButton.qml
+        view/settings/components/SettingsSlider.qml
+        view/settings/components/ThemeOption.qml
+        view/settings/components/OpenMenuSettingsButton.qml
+
+        view/AppFooter.qml
+        view/component_footer/SystemMonitoring.qml
+        view/component_footer/Downloading.qml
+
+        view/AppHeader.qml
+
     RESOURCES
         view/component_library/style/qmldir
     RESOURCE_PREFIX /

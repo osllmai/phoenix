@@ -19,7 +19,8 @@ Item {
 
         MyProgress{
             id: downloading
-            visible: offlineModelList.downloading && offlineModelList.downloadProgress>0.0001
+            visible: offlineModelList.downloadProgress>0.0001
+
             myText: "Downloading"
             myValue: offlineModelList.downloadProgress
             myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"

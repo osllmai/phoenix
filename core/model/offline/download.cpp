@@ -9,6 +9,11 @@ Download::Download(const int id, const QString &url, const QString &modelPath, Q
 }
 
 Download::~Download(){
+    qInfo()<< "HIFDIH";
+    disconnect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress);
+    disconnect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished);
+
+    reply->deleteLater();
     delete reply;
 }
 

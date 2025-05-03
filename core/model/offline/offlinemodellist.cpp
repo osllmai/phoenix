@@ -13,15 +13,9 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
     return m_instance;
 }
 
-OfflineModelList::OfflineModelList(QObject* parent): QAbstractListModel(parent) {}
-
-bool OfflineModelList::downloading() const{return m_downloading;}
-void OfflineModelList::setDownloading(bool newDownloading){
-    if (m_downloading == newDownloading)
-        return;
-    m_downloading = newDownloading;
-    emit downloadingChanged();
-}
+OfflineModelList::OfflineModelList(QObject* parent):
+    m_downloadProgress(0), QAbstractListModel(parent)
+{}
 
 int OfflineModelList::count() const{return m_models.count();}
 
@@ -139,7 +133,7 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     model->setKey(directoryPath+ "/" + model->fileName());
     model->setIsDownloading(true);
 
-    Download *download = new Download(id, model->url(), model->key());
+    Download *download = new Download(id, model->url(), model->key(), this);
     if(downloads.size()<3){
         connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
@@ -147,9 +141,6 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
         download->downloadModel();
     }
     downloads.append(download);
-    if(!downloading()){
-        setDownloading(true);
-    }
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole});
 }
@@ -307,9 +298,6 @@ void OfflineModelList::deleteDownloadModel(const int id){
             downloads.removeAt(searchIndex);
             delete download;
         }
-    }
-    if(downloads.size() == 0){
-        setDownloading(false);
     }
 }
 
