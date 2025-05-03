@@ -12,7 +12,23 @@ Rectangle{
     border.color: Style.Colors.boxBorder
     radius: 8
 
+    function selectIcon(){
+        if(control.check === false){
+            return iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
+        }else{
+            return iconId.hovered? "qrc:/media/icon/okFill.svg": "qrc:/media/icon/okFill.svg"
+        }
+    }
+
+    function sendAPIKey(){
+        control.check = true
+        successTimer.start()
+    }
+
     signal saveAPIKey(var text)
+
+    property bool check: false
+
     Row{
         anchors.fill: parent
         TextArea {
@@ -32,22 +48,30 @@ Rectangle{
             background: null
             Keys.onReturnPressed: (event)=> {
               if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
-                event.accepted = false;
+                    event.accepted = false;
               }else {
-                    control.saveAPIKey(textArea.text)
-                    // textArea.text = ""
+                    control.sendAPIKey()
               }
             }
         }
+
         MyIcon {
             id: iconId
             anchors.verticalCenter: parent.verticalCenter
-            myIcon: iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
-            iconType: Style.RoleEnum.IconType.Primary
+            myIcon: control.selectIcon()
             width: 28; height: 28
             onClicked: {
-                control.saveAPIKey(textArea.text)
+                control.sendAPIKey()
             }
+        }
+    }
+
+    Timer {
+        id: successTimer
+        interval: 500
+        repeat: false
+        onTriggered: {
+            control.saveAPIKey(textArea.text)
         }
     }
 
