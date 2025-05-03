@@ -68,7 +68,7 @@ Rectangle{
 
     Timer {
         id: successTimer
-        interval: 500
+        interval: 1000
         repeat: false
         onTriggered: {
             control.saveAPIKey(textArea.text)

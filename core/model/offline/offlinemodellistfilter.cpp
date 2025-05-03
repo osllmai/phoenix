@@ -41,7 +41,9 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::DownloadFinished:
-        return matchesFilter && model->type() == "Text Generation" && (downloadFinished || model->recommended() == true);
+        return matchesFilter && model->type() == "Text Generation" && (downloadFinished);
+    case FilterType::Recommended:
+        return matchesFilter && model->type() == "Text Generation" && (!downloadFinished && model->recommended());
     case FilterType::Favorite:
         return matchesFilter && isLikeModel;
     case FilterType::IsDownloading:
@@ -60,6 +62,8 @@ void OfflineModelListFilter::filter(QString filter){
         setFilterType(FilterType::Type);
     if(filter == "DownloadFinished")
         setFilterType(FilterType::DownloadFinished);
+    if(filter == "Recommended")
+        setFilterType(FilterType::Recommended);
     if(filter == "Favorite")
         setFilterType(FilterType::Favorite);
     if(filter == "IsDownloading")

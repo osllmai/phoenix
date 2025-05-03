@@ -40,7 +40,9 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::InstallModel:
-        return matchesFilter && model->type() == "Text Generation"&& (installModel || model->recommended() == true) ;
+        return matchesFilter && model->type() == "Text Generation"&& (installModel) ;
+    case FilterType::Recommended:
+        return matchesFilter && model->type() == "Text Generation" && (!installModel && model->recommended() );
     case FilterType::Favorite:
         return matchesFilter && isLikeModel;
     default:
@@ -57,6 +59,8 @@ void OnlineModelListFilter::filter(QString filter){
         setFilterType(FilterType::Type);
     if(filter == "InstallModel")
         setFilterType(FilterType::InstallModel);
+    if(filter == "Recommended")
+        setFilterType(FilterType::Recommended);
     if(filter == "Favorite")
         setFilterType(FilterType::Favorite);
 }
