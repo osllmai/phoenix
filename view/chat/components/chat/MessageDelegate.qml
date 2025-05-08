@@ -18,9 +18,27 @@ T.Button {
          id: backgroundId
          anchors.fill: parent
 
-         MessageTextProcessor {
+         ChatViewTextProcessor {
              id: textProcessor
          }
+
+         function resetChatViewTextProcessor() {
+             textProcessor.fontPixelSize = myTextArea.font.pixelSize
+
+             textProcessor.codeColors.defaultColor      = "#2e3440" // Dark gray (main text)
+             textProcessor.codeColors.keywordColor      = "#5e81ac" // Blue (for keywords like `if`, `while`, etc.)
+             textProcessor.codeColors.functionColor     = "#b48ead" // Purple (function definitions)
+             textProcessor.codeColors.functionCallColor = "#88c0d0" // Cyan (function calls)
+             textProcessor.codeColors.commentColor      = "#a0a0a0" // Light gray (comments)
+             textProcessor.codeColors.stringColor       = "#a3be8c" // Green (strings)
+             textProcessor.codeColors.numberColor       = "#d08770" // Orange (numbers)
+             textProcessor.codeColors.headerColor       = "#bf616a" // Red (headers or special annotations)
+             textProcessor.codeColors.backgroundColor   = "#eceff4" // Very light gray (background)
+
+             textProcessor.textDocument = textDocument
+             textProcessor.setValue(value)
+         }
+
 
          Connections {
              target: model

@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
 
-    qmlRegisterType<MessageTextProcessor>("MyMessageTextProcessor", 1, 0, "MessageTextProcessor");
+    qmlRegisterType<ChatViewTextProcessor>("MyMessageTextProcessor", 1, 0, "ChatViewTextProcessor");
 
 
     Database* database = Database::instance(&engine);
