@@ -22,10 +22,22 @@ T.Button {
             width: parent.width
             MyIcon {
                 id: logoModelId
+                visible: model.icon !== "qrc:/media/image_company/user.svg"
                 myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 35; height: 35
+            }
+            ToolButton {
+                id: phoenixIconId
+                visible: model.icon === "qrc:/media/image_company/user.svg"
+                width: 35; height: 35
+                background: null
+                icon{
+                    source: model.icon
+                    color: Style.Colors.menuHoverAndCheckedIcon
+                    width:24; height:24
+                }
             }
             Column {
                 spacing: 2

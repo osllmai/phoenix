@@ -45,6 +45,7 @@ Item{
                 ListView{
                     id: companyList
                     anchors.fill: parent
+                    spacing: 5
                     cacheBuffer: Math.max(0, companyList.contentWidth)
 
                     layoutDirection: Qt.RightToLeft
@@ -76,6 +77,14 @@ Item{
                             name: "Chat"
                             type: "Text Generation"
                         }
+                        ListElement {
+                            name: "Favorite"
+                            type: "Favorite"
+                        }
+                        ListElement {
+                            name: "All"
+                            type: "All"
+                        }
                     }
                     delegate: MyButton {
                         id: delegateId
@@ -84,40 +93,12 @@ Item{
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         onClicked:{
-                            onlineModelListFilter.type = model.type
+                            if(model.type ==="All" || model.type ==="Favorite"){
+                                onlineModelListFilter.filter(model.type)
+                            }else{
+                                onlineModelListFilter.type = model.type
+                            }
                             headerId.filtter= model.type
-                        }
-                        checkable: true
-                        checked: headerId.filtter === model.type
-                    }
-
-                    footer: Row {
-                        MyButton {
-                            id: allId
-                            myText: "All"
-                            bottonType: Style.RoleEnum.BottonType.Feature
-                            iconType: Style.RoleEnum.IconType.FeatureBlue
-                            isNeedAnimation: true
-                            onClicked: {
-                                onlineModelListFilter.filter("All")
-                                headerId.filtter= "All"
-                            }
-                            checkable: true
-                            checked: headerId.filtter === "All"
-                        }
-
-                        MyButton {
-                            id: favoriteId
-                            myText: "Favorite"
-                            bottonType: Style.RoleEnum.BottonType.Feature
-                            iconType: Style.RoleEnum.IconType.FeatureBlue
-                            isNeedAnimation: true
-                            onClicked: {
-                                onlineModelListFilter.filter("Favorite")
-                                headerId.filtter = "Favorite"
-                            }
-                            checkable: true
-                            checked: headerId.filtter === "Favorite"
                         }
                     }
                 }

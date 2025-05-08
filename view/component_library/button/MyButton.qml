@@ -47,6 +47,7 @@ T.Button {
 
     checkable: false
     checked: false
+    property bool selected:  false
 
     HoverHandler {
         id: hoverHandler
@@ -529,11 +530,11 @@ T.Button {
             }
     }
 
-    property bool isNormal: ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
-    property bool isHover: ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
-    property bool isPressed: ((!control.checked && control.checkable) || !control.checkable) && control.pressed && control.enabled
+    property bool isNormal: !selected && ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
+    property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
+    property bool isPressed: control.pressed && control.enabled
     property bool isDisabled: !control.enabled
-    property bool isSelected: control.checked && control.checkable && control.enabled
+    property bool isSelected: (selected || (control.checked && control.checkable)) && control.enabled
 
     states: [
         State {

@@ -29,10 +29,22 @@ T.Button {
                 width: parent.width
                 MyIcon {
                     id: logoModelId
+                    visible: model.icon !== "user.svg"
                     myIcon: "qrc:/media/image_company/" + model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 40; height: 40
+                }
+                ToolButton {
+                    id: phoenixIconId
+                    visible: model.icon === "user.svg"
+                    width: 40; height: 40
+                    background: null
+                    icon{
+                        source: "qrc:/media/image_company/" + model.icon
+                        color: Style.Colors.menuHoverAndCheckedIcon
+                        width:24; height:24
+                    }
                 }
                 Label {
                     id: titleId

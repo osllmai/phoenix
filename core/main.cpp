@@ -5,6 +5,9 @@
 #include <QPalette>
 #include <QIcon>
 
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+
 #include "database.h"
 #include "speechtotext.h"
 #include "systemmonitor.h"
