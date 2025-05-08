@@ -29,6 +29,7 @@ include_directories(${CMAKE_SOURCE_DIR}/core/model/online)
 include_directories(${CMAKE_SOURCE_DIR}/core/conversation)
 include_directories(${CMAKE_SOURCE_DIR}/core/conversation/chat)
 include_directories(${CMAKE_SOURCE_DIR}/core/conversation/provider)
+include_directories(${CMAKE_SOURCE_DIR}/core/library/textprocessor)
 
 
 # Include the binary directory for the generated header file
@@ -284,6 +285,7 @@ qt_add_qml_module(app${PROJECT_NAME}
     RESOURCES
         view/component_library/style/qmldir
     RESOURCE_PREFIX /
+    SOURCES core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

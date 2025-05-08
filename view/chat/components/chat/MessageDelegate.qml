@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
 import QtQuick.Controls 6.6
 import QtTextToSpeech
+import MyMessageTextProcessor 1.0
 
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
@@ -16,6 +17,18 @@ T.Button {
      contentItem: Item {
          id: backgroundId
          anchors.fill: parent
+
+         MessageTextProcessor {
+             id: textProcessor
+         }
+
+         Connections {
+             target: model
+             function onTextChanged() {
+                 textProcessor.setValue(model.text)
+             }
+         }
+
 
         Row {
             id: headerId
@@ -42,9 +55,9 @@ T.Button {
             Column {
                 spacing: 2
                 width: parent.width
+
                 TextArea {
                     id: textId
-                    text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
@@ -52,16 +65,26 @@ T.Button {
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
-                    wrapMode: TextEdit.Wrap
-                    textFormat: TextEdit.MarkdownText
+                    wrapMode: TextEdit.WordWrap
+                    textFormat: TextEdit.PlainText
+
+                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ? conversationList.currentConversation.responseInProgress: false
+                    cursorPosition: text.length
+
                     selectByMouse: true
                     background: null
+
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
 
                     onLinkActivated: function(url) {
                         Qt.openUrlExternally(url)
+                    }
+
+                    Component.onCompleted: {
+                        textProcessor.textDocument = textId.textDocument
+                        textProcessor.setValue(model.text)
                     }
                 }
 

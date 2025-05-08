@@ -5,9 +5,6 @@
 #include <QPalette>
 #include <QIcon>
 
-#include <QCommandLineParser>
-#include <QCommandLineOption>
-
 #include "database.h"
 #include "speechtotext.h"
 #include "systemmonitor.h"
@@ -28,6 +25,8 @@
 #include "../cmake/config.h.in"
 
 #include "clipboard.h"
+
+#include "./library/textprocessor/messagetextprocessor.h"
 
 int main(int argc, char *argv[])
 {
@@ -66,6 +65,9 @@ int main(int argc, char *argv[])
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
+
+    qmlRegisterType<MessageTextProcessor>("MyMessageTextProcessor", 1, 0, "MessageTextProcessor");
+
 
     Database* database = Database::instance(&engine);
 

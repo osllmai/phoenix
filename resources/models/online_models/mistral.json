@@ -1,7 +1,7 @@
 [
   {
     "number": "1",
-    "modelName": "mistral-large-latest",
+    "modelName": "mistral-large",
     "name": "Mistral Large",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.002,
@@ -19,7 +19,7 @@
   },
   {
     "number": "2",
-    "modelName": "pixtral-large-latest",
+    "modelName": "pixtral-large",
     "name": "Pixtral Large",
     "type": "Vision",
     "inputPricePer1KTokens": 0.002,
@@ -37,7 +37,7 @@
   },
   {
     "number": "3",
-    "modelName": "mistral-small-latest",
+    "modelName": "mistral-small",
     "name": "Mistral Small",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0002,
@@ -55,7 +55,7 @@
   },
   {
     "number": "4",
-    "modelName": "mistral-medium-2407",
+    "modelName": "mistral-medium",
     "name": "Mistral Medium",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0027,
@@ -91,7 +91,7 @@
   },
   {
     "number": "6",
-    "modelName": "codestral-latest",
+    "modelName": "codestral",
     "name": "Codestral",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0003,
@@ -109,7 +109,7 @@
   },
   {
     "number": "7",
-    "modelName": "ministral-8b-latest",
+    "modelName": "ministral-8b",
     "name": "Ministral 8B",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0001,
@@ -127,7 +127,7 @@
   },
   {
     "number": "8",
-    "modelName": "ministral-3b-latest",
+    "modelName": "ministral-3b",
     "name": "Ministral 3B",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.00004,
@@ -163,7 +163,7 @@
   },
   {
     "number": "10",
-    "modelName": "mistral-ocr-latest",
+    "modelName": "mistral-ocr",
     "name": "Mistral OCR",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0002,
@@ -181,7 +181,7 @@
   },
   {
     "number": "11",
-    "modelName": "mistral-moderation-latest",
+    "modelName": "mistral-moderation",
     "name": "Mistral Moderation",
     "type": "Text Generation",
     "inputPricePer1KTokens": 0.0002,
