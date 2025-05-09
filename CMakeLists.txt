@@ -292,6 +292,42 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/library/textprocessor/highlight/highlightingrule.h
     SOURCES core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
