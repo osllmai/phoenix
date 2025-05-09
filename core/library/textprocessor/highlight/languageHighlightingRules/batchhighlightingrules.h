@@ -1,10 +1,9 @@
 #ifndef BATCHHIGHLIGHTINGRULES_H
 #define BATCHHIGHLIGHTINGRULES_H
 
-class batchhighlightingrules
-{
-public:
-    batchhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> batchHighlightingRules();
 
 #endif // BATCHHIGHLIGHTINGRULES_H

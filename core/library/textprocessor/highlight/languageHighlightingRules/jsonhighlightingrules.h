@@ -1,10 +1,9 @@
 #ifndef JSONHIGHLIGHTINGRULES_H
 #define JSONHIGHLIGHTINGRULES_H
 
-class jsonhighlightingrules
-{
-public:
-    jsonhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> jsonHighlightingRules();
 
 #endif // JSONHIGHLIGHTINGRULES_H

@@ -1,10 +1,9 @@
 #ifndef TOMLHIGHLIGHTINGRULES_H
 #define TOMLHIGHLIGHTINGRULES_H
 
-class tomlhighlightingrules
-{
-public:
-    tomlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> tomlHighlightingRules();
 
 #endif // TOMLHIGHLIGHTINGRULES_H

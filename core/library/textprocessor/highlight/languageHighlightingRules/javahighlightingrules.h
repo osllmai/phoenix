@@ -1,10 +1,9 @@
 #ifndef JAVAHIGHLIGHTINGRULES_H
 #define JAVAHIGHLIGHTINGRULES_H
 
-class javahighlightingrules
-{
-public:
-    javahighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> javaHighlightingRules();
 
 #endif // JAVAHIGHLIGHTINGRULES_H

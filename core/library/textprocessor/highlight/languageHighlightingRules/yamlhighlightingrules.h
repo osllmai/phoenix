@@ -1,10 +1,9 @@
 #ifndef YAMLHIGHLIGHTINGRULES_H
 #define YAMLHIGHLIGHTINGRULES_H
 
-class yamlhighlightingrules
-{
-public:
-    yamlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> yamlHighlightingRules();
 
 #endif // YAMLHIGHLIGHTINGRULES_H

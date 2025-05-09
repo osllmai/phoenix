@@ -1,10 +1,9 @@
 #ifndef QMLLIGHTINGRULES_H
 #define QMLLIGHTINGRULES_H
 
-class qmllightingrules
-{
-public:
-    qmllightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> qmlHighlightingRules();
 
 #endif // QMLLIGHTINGRULES_H

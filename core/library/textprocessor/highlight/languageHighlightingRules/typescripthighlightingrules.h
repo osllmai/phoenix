@@ -1,10 +1,9 @@
 #ifndef TYPESCRIPTHIGHLIGHTINGRULES_H
 #define TYPESCRIPTHIGHLIGHTINGRULES_H
 
-class typescripthighlightingrules
-{
-public:
-    typescripthighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> typescriptHighlightingRules();
 
 #endif // TYPESCRIPTHIGHLIGHTINGRULES_H

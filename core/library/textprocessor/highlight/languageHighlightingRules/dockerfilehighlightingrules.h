@@ -1,10 +1,9 @@
 #ifndef DOCKERFILEHIGHLIGHTINGRULES_H
 #define DOCKERFILEHIGHLIGHTINGRULES_H
 
-class dockerfilehighlightingrules
-{
-public:
-    dockerfilehighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> dockerfileHighlightingRules();
 
 #endif // DOCKERFILEHIGHLIGHTINGRULES_H

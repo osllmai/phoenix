@@ -1,10 +1,9 @@
 #ifndef SQLHIGHLIGHTINGRULES_H
 #define SQLHIGHLIGHTINGRULES_H
 
-class sqlhighlightingrules
-{
-public:
-    sqlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> sqlHighlightingRules();
 
 #endif // SQLHIGHLIGHTINGRULES_H

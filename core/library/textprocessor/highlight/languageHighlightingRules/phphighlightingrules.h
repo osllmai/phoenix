@@ -1,10 +1,9 @@
 #ifndef PHPHIGHLIGHTINGRULES_H
 #define PHPHIGHLIGHTINGRULES_H
 
-class phphighlightingrules
-{
-public:
-    phphighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> phpHighlightingRules();
 
 #endif // PHPHIGHLIGHTINGRULES_H

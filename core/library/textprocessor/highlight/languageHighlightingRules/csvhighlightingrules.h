@@ -1,10 +1,9 @@
 #ifndef CSVHIGHLIGHTINGRULES_H
 #define CSVHIGHLIGHTINGRULES_H
 
-class csvhighlightingrules
-{
-public:
-    csvhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> csvHighlightingRules();
 
 #endif // CSVHIGHLIGHTINGRULES_H

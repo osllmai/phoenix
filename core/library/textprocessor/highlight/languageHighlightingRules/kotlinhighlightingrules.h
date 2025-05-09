@@ -1,10 +1,9 @@
 #ifndef KOTLINHIGHLIGHTINGRULES_H
 #define KOTLINHIGHLIGHTINGRULES_H
 
-class kotlinhighlightingrules
-{
-public:
-    kotlinhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> kotlinHighlightingRules();
 
 #endif // KOTLINHIGHLIGHTINGRULES_H

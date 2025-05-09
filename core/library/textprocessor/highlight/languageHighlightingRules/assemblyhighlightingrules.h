@@ -1,10 +1,10 @@
 #ifndef ASSEMBLYHIGHLIGHTINGRULES_H
 #define ASSEMBLYHIGHLIGHTINGRULES_H
 
-class assemblyhighlightingrules
-{
-public:
-    assemblyhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> assemblyHighlightingRules();
+
 
 #endif // ASSEMBLYHIGHLIGHTINGRULES_H

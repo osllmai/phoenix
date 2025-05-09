@@ -1,10 +1,9 @@
 #ifndef HTMLHIGHLIGHTINGRULES_H
 #define HTMLHIGHLIGHTINGRULES_H
 
-class htmlhighlightingrules
-{
-public:
-    htmlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> htmlHighlightingRules();
 
 #endif // HTMLHIGHLIGHTINGRULES_H

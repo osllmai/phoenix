@@ -1,10 +1,9 @@
 #ifndef INIHIGHLIGHTINGRULES_H
 #define INIHIGHLIGHTINGRULES_H
 
-class inihighlightingrules
-{
-public:
-    inihighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> iniHighlightingRules();
 
 #endif // INIHIGHLIGHTINGRULES_H

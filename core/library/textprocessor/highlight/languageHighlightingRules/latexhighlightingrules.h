@@ -1,10 +1,9 @@
 #ifndef LATEXHIGHLIGHTINGRULES_H
 #define LATEXHIGHLIGHTINGRULES_H
 
-class latexhighlightingrules
-{
-public:
-    latexhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> latexHighlightingRules();
 
 #endif // LATEXHIGHLIGHTINGRULES_H

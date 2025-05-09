@@ -1,10 +1,9 @@
 #ifndef SWIFTHIGHLIGHTINGRULES_H
 #define SWIFTHIGHLIGHTINGRULES_H
 
-class swifthighlightingrules
-{
-public:
-    swifthighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> swiftHighlightingRules();
 
 #endif // SWIFTHIGHLIGHTINGRULES_H

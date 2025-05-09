@@ -1,10 +1,9 @@
 #ifndef XMLHIGHLIGHTINGRULES_H
 #define XMLHIGHLIGHTINGRULES_H
 
-class xmlhighlightingrules
-{
-public:
-    xmlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> xmlHighlightingRules();
 
 #endif // XMLHIGHLIGHTINGRULES_H

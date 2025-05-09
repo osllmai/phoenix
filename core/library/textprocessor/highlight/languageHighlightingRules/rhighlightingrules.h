@@ -1,10 +1,9 @@
 #ifndef RHIGHLIGHTINGRULES_H
 #define RHIGHLIGHTINGRULES_H
 
-class rhighlightingrules
-{
-public:
-    rhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> rHighlightingRules();
 
 #endif // RHIGHLIGHTINGRULES_H

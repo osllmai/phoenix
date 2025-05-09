@@ -1,10 +1,9 @@
 #ifndef BASHHIGHLIGHTINGRULES_H
 #define BASHHIGHLIGHTINGRULES_H
 
-class bashhighlightingrules
-{
-public:
-    bashhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> bashHighlightingRules();
 
 #endif // BASHHIGHLIGHTINGRULES_H

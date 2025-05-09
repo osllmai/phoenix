@@ -1,10 +1,9 @@
 #ifndef RUSTHIGHLIGHTINGRULES_H
 #define RUSTHIGHLIGHTINGRULES_H
 
-class rusthighlightingrules
-{
-public:
-    rusthighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> rustHighlightingRules();
 
 #endif // RUSTHIGHLIGHTINGRULES_H

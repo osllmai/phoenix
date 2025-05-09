@@ -1,10 +1,9 @@
 #ifndef POWERSHELLHIGHLIGHTINGRULES_H
 #define POWERSHELLHIGHLIGHTINGRULES_H
 
-class powershellhighlightingrules
-{
-public:
-    powershellhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> powershellHighlightingRules();
 
 #endif // POWERSHELLHIGHLIGHTINGRULES_H
