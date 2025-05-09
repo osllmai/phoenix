@@ -27,7 +27,6 @@ enum Language {
     Haskell,
     Lua,
     Assembly,
-
     CMake,
     Makefile,
     Qml,
@@ -37,7 +36,6 @@ enum Language {
     Batch,
     PowerShell,
     ShellScript,
-
     Xml,
     Css,
     Csv,

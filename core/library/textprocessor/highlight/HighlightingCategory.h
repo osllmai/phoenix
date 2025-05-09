@@ -1,6 +1,9 @@
 #ifndef HIGHLIGHTINGCATEGORY_H
 #define HIGHLIGHTINGCATEGORY_H
 
+#include <QRegularExpression>
+#include <QTextCharFormat>
+
 enum HighlightingCategory {
     Default,
     FunctionCall,
@@ -48,5 +51,7 @@ enum HighlightingCategory {
     Null,
     ListItem
 };
+
+QTextCharFormat highlightingCategory_To_QTextCharFormat(const HighlightingCategory highlightingCategory);
 
 #endif // HIGHLIGHTINGCATEGORY_H

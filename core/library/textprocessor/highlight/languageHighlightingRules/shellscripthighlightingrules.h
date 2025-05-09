@@ -4,6 +4,6 @@
 #include "../highlightingrule.h"
 #include <QVector>
 
-QVector<HighlightingRule> shellscripthighlightingRules();
+QVector<HighlightingRule> shellScriptHighlightingRules();
 
 #endif // SHELLSCRIPTHIGHLIGHTINGRULES_H

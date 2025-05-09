@@ -168,7 +168,7 @@ QVector<HighlightingRule> Highlighting::powershell() {
 }
 
 QVector<HighlightingRule> Highlighting::shellscript() {
-    return shellscripthighlightingRules();
+    return shellScriptHighlightingRules();
 }
 
 QVector<HighlightingRule> Highlighting::xml() {
@@ -185,9 +185,4 @@ QVector<HighlightingRule> Highlighting::csv() {
 
 QVector<HighlightingRule> Highlighting::toml() {
     return tomlHighlightingRules();
-}
-
-QTextCharFormat Highlighting::highlightingCategory_To_QTextCharFormat(const HighlightingCategory highlightingCategory) {
-    QTextCharFormat format;
-    return format;
 }
