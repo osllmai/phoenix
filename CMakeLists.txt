@@ -286,6 +286,12 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/style/qmldir
     RESOURCE_PREFIX /
     SOURCES core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
+    SOURCES core/library/textprocessor/highlight/syntaxhighlighter.h core/library/textprocessor/highlight/syntaxhighlighter.cpp
+    SOURCES core/library/textprocessor/highlight/highlightingcategory.h
+    SOURCES core/library/textprocessor/highlight/language.h
+    SOURCES core/library/textprocessor/highlight/highlightingrule.h
+    SOURCES core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
+    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

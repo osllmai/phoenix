@@ -728,7 +728,6 @@ static QVector<HighlightingRule> phpHighlightingRules()
     return highlightingRules;
 }
 
-
 static QVector<HighlightingRule> jsonHighlightingRules()
 {
     static QVector<HighlightingRule> highlightingRules;
