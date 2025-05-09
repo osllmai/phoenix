@@ -1,10 +1,9 @@
 #ifndef JAVASCRIPTHIGHLIGHTINGRULES_H
 #define JAVASCRIPTHIGHLIGHTINGRULES_H
 
-class javascripthighlightingrules
-{
-public:
-    javascripthighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> javascriptHighlightingRules();
 
 #endif // JAVASCRIPTHIGHLIGHTINGRULES_H

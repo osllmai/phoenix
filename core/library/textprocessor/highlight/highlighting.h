@@ -1,5 +1,6 @@
 #ifndef HIGHLIGHTING_H
 #define HIGHLIGHTING_H
+
 #include <QRegularExpression>
 #include <QTextCharFormat>
 #include <QVector>

@@ -6,5 +6,4 @@
 
 QVector<HighlightingRule> assemblyHighlightingRules();
 
-
 #endif // ASSEMBLYHIGHLIGHTINGRULES_H

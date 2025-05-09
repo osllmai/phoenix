@@ -1,10 +1,9 @@
 #ifndef PERLHIGHLIGHTINGRULES_H
 #define PERLHIGHLIGHTINGRULES_H
 
-class perlhighlightingrules
-{
-public:
-    perlhighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> perlHighlightingRules();
 
 #endif // PERLHIGHLIGHTINGRULES_H

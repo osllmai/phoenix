@@ -1,10 +1,9 @@
 #ifndef GOHIGHLIGHTINGRULES_H
 #define GOHIGHLIGHTINGRULES_H
 
-class gohighlightingrules
-{
-public:
-    gohighlightingrules();
-};
+#include "../highlightingrule.h"
+#include <QVector>
+
+QVector<HighlightingRule> goHighlightingRules();
 
 #endif // GOHIGHLIGHTINGRULES_H
