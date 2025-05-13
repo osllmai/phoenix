@@ -22,7 +22,7 @@ Drawer{
         Column{
             anchors.fill: parent
             anchors.margins: 16
-            ModelSettingsHeader{
+            ModelSettingsHeaderDeveloper{
                 id: headerId
                 Connections{
                     target: headerId
@@ -31,7 +31,7 @@ Drawer{
                     }
                 }
             }
-            ModelSettingsBody{
+            ModelSettingsBodyDeveloper{
                 id: historyBadyId
             }
         }

@@ -31,7 +31,7 @@ Item {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 10
-                    ModelMenuSettings{
+                    ModelMenuSettingsDeveloper{
                         id: modelInferencesMenu
                         myText: qsTr("Inference Settings")
                         isOpen: modelInferencesBody.visible
@@ -42,7 +42,7 @@ Item {
                             }
                         }
                     }
-                    ModelInferencesSettings{
+                    ModelInferencesSettingsDeveloper{
                         id: modelInferencesBody
                     }
                 }
@@ -57,7 +57,7 @@ Item {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 10
-                    ModelMenuSettings{
+                    ModelMenuSettingsDeveloper{
                         id: modelInformationMenu
                         myText: qsTr("Model Settings")
                         isOpen: modelInformationBody.visible
@@ -68,7 +68,7 @@ Item {
                             }
                         }
                     }
-                    ModelInformationSettings{
+                    ModelInformationSettingsDeveloper{
                         id: modelInformationBody
                     }
                 }
@@ -83,7 +83,7 @@ Item {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 10
-                    ModelMenuSettings{
+                    ModelMenuSettingsDeveloper{
                         id: modelEnginMenu
                         myText: qsTr("Engine Settings")
                         isOpen: modelEnginBody.visible
@@ -94,7 +94,7 @@ Item {
                             }
                         }
                     }
-                    ModelEngineSettings{
+                    ModelEngineSettingsDeveloper{
                         id: modelEnginBody
                     }
                 }
@@ -109,7 +109,7 @@ Item {
                     anchors.fill: parent
                     anchors.margins: 10
                     spacing: 10
-                    ModelMenuSettings{
+                    ModelMenuSettingsDeveloper{
                         id: assistantMenu
                         myText: qsTr("Assistant Settings")
                         isOpen: assistantBody.visible
@@ -120,7 +120,7 @@ Item {
                             }
                         }
                     }
-                    ModelAssistantSettings{
+                    ModelAssistantSettingsDeveloper{
                         id: assistantBody
                     }
                 }

@@ -23,7 +23,7 @@ Item {
         anchors.right: parent.right; anchors.rightMargin: 16
         spacing: 5
 
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:contextLengthId
             myTextName: "Context Length"
             myTextToolTip: "Refers to the number of tokens the model considers from the input when generating a response."
@@ -36,7 +36,7 @@ Item {
                     conversationList.currentConversation.modelSettings.contextLength = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:numberOfGPUId
             myTextName: "Number of GPU layers (ngl)"
             myTextToolTip: "Refers to the number of layers processed using a GPU, affecting performance."

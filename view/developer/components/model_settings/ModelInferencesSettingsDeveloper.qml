@@ -40,7 +40,7 @@ Item {
         anchors.right: parent.right; anchors.rightMargin: 16
         spacing: 5
 
-        ModelSettingsSwitch{
+        ModelSettingsSwitchDeveloper{
             id:streamId
             myTextName: "Stream"
             myValue: control.stream
@@ -49,7 +49,7 @@ Item {
                     conversationList.currentConversation.modelSettings.stream = myValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:temperatureId
             myTextName: "Temperature"
             myTextToolTip: "Controls response randomness, lower values make responses more predictable, higher values make them more creative."
@@ -63,7 +63,7 @@ Item {
                     conversationList.currentConversation.modelSettings.temperature = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:topPId
             myTextName: "Top-P"
             myTextToolTip:"Limits word selection to a subset with a cumulative probability above p, affecting response diversity."
@@ -77,7 +77,7 @@ Item {
                     conversationList.currentConversation.modelSettings.topP = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:maxTokensId
             myTextName: "Max Tokens"
             myTextToolTip: "Defines the maximum number of tokens the model can process in one input or output."
@@ -90,7 +90,7 @@ Item {
                     conversationList.currentConversation.modelSettings.maxTokens = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:promptBatchSizeId
             myTextName: "Prompt Batch Size"
             myTextToolTip:"Refers to the number of prompts processed in a single batch, affecting processing efficiency."
@@ -103,7 +103,7 @@ Item {
                     conversationList.currentConversation.modelSettings.promptBatchSize = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:minPId
             myTextName: "Min-P"
             myTextToolTip:"Sets the minimum cumulative probability threshold for word selection."
@@ -117,7 +117,7 @@ Item {
                     conversationList.currentConversation.modelSettings.minP = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:topKId
             myTextName: "Top-K"
             myTextToolTip: "Limits word selection to the top K most probable words, controlling output diversity."
@@ -130,7 +130,7 @@ Item {
                     conversationList.currentConversation.modelSettings.topK = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:repeatPenaltyTokensId
             myTextName: "Repeat Penalty Tokens"
             myTextToolTip: "Increases the penalty for repeating specific tokens during generation."
@@ -144,7 +144,7 @@ Item {
                     conversationList.currentConversation.modelSettings.repeatPenaltyTokens = sliderValue;
             }
         }
-        ModelSettingsSlider{
+        ModelSettingsSliderDeveloper{
             id:repeatPenaltyId
             myTextName: "Repeat Penalty"
             myTextToolTip: "Discourages repeating words or phrases by applying a penalty to repeated tokens."

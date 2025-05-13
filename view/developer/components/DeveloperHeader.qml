@@ -62,35 +62,6 @@ Item{
         anchors.right: parent.right; anchors.rightMargin: 24
         anchors.top: parent.top; anchors.topMargin: 24
         anchors.verticalCenter: parent.verticalCenter
-        Rectangle{
-            height: parent.height
-            width: 200
-            color: switchId.checked? Style.Colors.boxSuccessColor: "#00ffffff"
-            border.color: Style.Colors.boxBorder
-            radius: 8
-
-            // Row{
-            //     id: settingsSliderBox
-            //     anchors.fill: parent
-            //     anchors.leftMargin: 10
-
-            //     Label {
-            //         id:textId
-            //         text: "Status: " + (switchId.checked?"Running": "Stopped")
-            //         color: Style.Colors.textInformation
-            //         width: parent.width - switchId.width
-            //         anchors.verticalCenter: parent.verticalCenter
-            //         font.pointSize: 10
-            //     }
-
-            //     MySwitch{
-            //         id: switchId
-            //         checked: false
-            //         anchors.verticalCenter: parent.verticalCenter
-            //         // onCheckedChanged:
-            //     }
-            // }
-        }
         MyButton{
             id: openModelSettingsId
             myIcon: "qrc:/media/icon/settings.svg"

@@ -106,5 +106,6 @@
         <file>developer/components/model_settings/components/ModelSettingsSliderDeveloper.qml</file>
         <file>developer/components/model_settings/components/ModelSettingsSwitchDeveloper.qml</file>
         <file>developer/components/model_settings/components/ModelMenuSettingsDeveloper.qml</file>
+        <file>developer/components/curl/CurlDeveloper.qml</file>
     </qresource>
 </RCC>

@@ -16,13 +16,17 @@ Item {
         }
     }
     DeveloperBody{
-        id: chatBodyId
+        id: developerBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
+        width: parent.width
         Connections{
-            target: chatBodyId
+            target: developerBodyId
             function onOpenModelList(){
                 headerId.openModelComboBox();
             }
         }
+    }
+    ModelSettingsDrawerDeveloper{
+        id: modelSettingsId
     }
 }
