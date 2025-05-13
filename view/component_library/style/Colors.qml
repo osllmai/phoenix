@@ -266,6 +266,7 @@ Item{
     readonly property color boxBorder: currentBackgroundColor[3]
     readonly property color boxChecked: currentPrimaryColor[0]
     readonly property color boxHover: currentBackgroundColor[1]
+    readonly property color boxSuccessColor: currentSuccessColor[0]
 
     //like color
     readonly property color like: currentErrorColor[1]

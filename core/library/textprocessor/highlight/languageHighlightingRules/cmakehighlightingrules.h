@@ -1,9 +1,6 @@
-#ifndef CMAKEHIGHLIGHTINGRULES_H
-#define CMAKEHIGHLIGHTINGRULES_H
+#pragma once
 
 #include "../highlightingrule.h"
 #include <QVector>
 
 QVector<HighlightingRule> cmakeHighlightingRules();
-
-#endif // CMAKEHIGHLIGHTINGRULES_H

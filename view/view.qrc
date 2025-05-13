@@ -89,5 +89,14 @@
         <file>component_library/style/qmldir</file>
         <file>AppHeader.qml</file>
         <file>chat/components/model/components/online/InputApikeyDialog.qml</file>
+        <file>developer/DeveloperView.qml</file>
+        <file>developer/components/DeveloperHeader.qml</file>
+        <file>developer/components/DeveloperBody.qml</file>
+        <file>developer/components/model/ModelDeveloper.qml</file>
+        <file>developer/components/command_line/CommandLineInterface.qml</file>
+        <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>developer/components/ModelSettingsDeveloper.qml</file>
     </qresource>
 </RCC>

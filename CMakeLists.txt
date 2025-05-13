@@ -261,6 +261,13 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/model/components/offline/OfflineCurrentModelinformation.qml
         view/chat/components/model/components/offline/OfflineCurrentView.qml
 
+        view/developer/DeveloperView.qml
+        view/developer/components/DeveloperHeader.qml
+        view/developer/components/DeveloperBody.qml
+        view/developer/components/model/ModelDeveloper.qml
+        view/developer/components/command_line/CommandLineInterface.qml
+        view/developer/components/command_line/CommandLineInterfaceApp.qml
+
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
         view/settings/SettingsBody.qml
@@ -328,6 +335,7 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
+    SOURCES core/library/textprocessor/highlight/highlightingcategory.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

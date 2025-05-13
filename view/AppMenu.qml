@@ -24,7 +24,7 @@ Rectangle{
             anchors.leftMargin: 10
             background: null
             icon{
-                source: "qrc:/media/icon/phoenix.svg"
+                source: "qrc:/media/icon/Phoenix.svg"
                 color: Style.Colors.menuHoverAndCheckedIcon;
                 width:24; height:24
             }
@@ -101,6 +101,22 @@ Rectangle{
                 target: modelsItemMenu
                 function onClicked(){
                     appBodyId.currentIndex = 2
+                }
+            }
+        }
+        MyMenuButton {
+            id: devloperItemMenu
+            myText: "Devloper"
+            myToolTipText: "Devloper"
+            myIcon: "qrc:/media/icon/model.svg"
+            myFillIcon: "qrc:/media/icon/modelFill.svg"
+            autoExclusive: true
+            numberPage:3
+
+            Connections {
+                target: devloperItemMenu
+                function onClicked(){
+                    appBodyId.currentIndex = 3
                 }
             }
         }
@@ -183,6 +199,8 @@ OS: Windows x64
             return chatItemMenu.y + appInfoId.height
         if(appBodyId.currentIndex === 2)
             return modelsItemMenu.y + appInfoId.height
+        if(appBodyId.currentIndex === 3)
+            return devloperItemMenu.y + appInfoId.height
         return homeItemMenu.y + appInfoId.height
     }
 
