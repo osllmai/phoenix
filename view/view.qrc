@@ -92,11 +92,19 @@
         <file>developer/DeveloperView.qml</file>
         <file>developer/components/DeveloperHeader.qml</file>
         <file>developer/components/DeveloperBody.qml</file>
+        <file>developer/components/ModelSettingsDrawer.qml</file>
+        <file>developer/components/ModelSettingsDrawerDeveloper.qml</file>
         <file>developer/components/model/ModelDeveloper.qml</file>
         <file>developer/components/command_line/CommandLineInterface.qml</file>
         <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
-    </qresource>
-    <qresource prefix="/">
-        <file>developer/components/ModelSettingsDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelSettingsHeaderDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelSettingsBodyDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelAssistantSettingsDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelInferencesSettingsDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelInformationSettingsDeveloper.qml</file>
+        <file>developer/components/model_settings/ModelEngineSettingsDeveloper.qml</file>
+        <file>developer/components/model_settings/components/ModelSettingsSliderDeveloper.qml</file>
+        <file>developer/components/model_settings/components/ModelSettingsSwitchDeveloper.qml</file>
+        <file>developer/components/model_settings/components/ModelMenuSettingsDeveloper.qml</file>
     </qresource>
 </RCC>
