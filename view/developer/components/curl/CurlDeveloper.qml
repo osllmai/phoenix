@@ -1,66 +1,70 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Item {
-
     Rectangle {
         id: instructionsBox
         anchors.fill: parent
         anchors.margins: 10
-        color: Style.Colors.boxHover
         radius: 12
+        color: Style.Colors.boxHover
+        border.color: "#444"
+        border.width: 1
+
         ScrollView {
             id: scrollInstruction
-            anchors.fill:parent; anchors.margins: 10
+            anchors.fill: parent
+            anchors.margins: 10
+            clip: true
+
             ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
+                policy: ScrollBar.AlwaysOn
+                width: 6
+                contentItem: Rectangle {
+                    implicitWidth: 6
+                    radius: 3
+                    color: "#888"
+                }
+                background: Rectangle {
+                    color: "#2e2e2e"
+                }
             }
 
             TextArea {
                 id: instructionTextBox
-                text: " # Create a model
-    curl -X POST http://localhost:8080/api/models \
-      -H \"Content-Type: application/json\" \
-      -d '{\"name\":\"Whisper\", \"version\":\"1.5\"}'
-
-    # List all models
-    curl http://localhost:8080/api/models
-
-    # Get model by ID
-    curl http://localhost:8080/api/models/1
-
-    # Update model
-    curl -X PUT http://localhost:8080/api/models/1 \
-      -H \"Content-Type: application/json\" \
-      -d '{\"name\":\"Whisper\", \"version\":\"2.0\"}'
-
-    # Delete model
-    curl -X DELETE http://localhost:8080/api/models/1
+                text: "curl http://localhost:1234/v1/chat/completions \
+  -H \"Content-Type: application/json\" \
+  -d '{
+    \"model\": \"deepseek-r1-distill-qwen-7b\",
+    \"messages\": [
+      { \"role\": \"system\", \"content\": \"Always answer in rhymes. Today is Thursday\" },
+      { \"role\": \"user\", \"content\": \"What day is it today?\" }
+    ],
+    \"temperature\": 0.7,
+    \"max_tokens\": -1,
+    \"stream\": false
+}'
     "
-                visible: true
-                color: Style.Colors.textInformation
-                wrapMode: Text.Wrap
-                placeholderText: qsTr("Eg. You are a helpful assistant")
-                clip: true
+                readOnly: true
+                wrapMode: Text.WrapAnywhere
+                color: "#e0e0e0"
+                font.family: "Courier New"
                 font.pointSize: 10
-                hoverEnabled: true
-                tabStopDistance: 80
-                selectionColor: "white"
-                persistentSelection: true
-                placeholderTextColor: Style.Colors.textInformation
-                background: null
-                textFormat: TextEdit.PlainText
-                onHeightChanged: {
-                    if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
-                        instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
-                    }
+                background: Rectangle {
+                    color: "#1e1e1e"
+                    radius: 8
+                    border.color: "#444"
                 }
+                padding: 10
+                cursorVisible: false
+                persistentSelection: false
+
                 onTextChanged: {
-                    if(control.existConversation){
-                        conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text.replace(/\\n/g, "\n");
-                    }
+                    // Scroll to bottom when new log appears
+                    instructionTextBox.cursorPosition = instructionTextBox.length
                 }
             }
         }
