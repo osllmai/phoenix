@@ -3,9 +3,15 @@ import '../../component_library/style' as Style
 import "./model_settings"
 
 Item {
-    anchors.fill: parent
-    anchors.margins: 20
-    ModelSettingsBodyDeveloper{
-        id: historyBadyId
+    Rectangle {
+        id: instructionsBox
+        anchors.fill: parent
+        anchors.margins: 10
+        color: Style.Colors.boxHover
+        radius: 12
+        ModelSettingsBodyDeveloper{
+            id: historyBadyId
+            anchors.fill:parent; anchors.margins: 10
+        }
     }
 }

@@ -11,7 +11,7 @@ Row{
         Row{
             width: parent.width
             height: parent.height  - commandLineInterfaceId.height
-            ModelDeveloper{
+            ModelDeveloperView{
                 id: modelDeveloperId
                 width: parent.width - curlDeveloperId.width
                 height: parent.height
@@ -29,16 +29,10 @@ Row{
         }
     }
 
-    Rectangle {
+    ModelSettingsDeveloper{
         id: modelSettingSpaceId
         width: 320
         height: parent.height
-        color: "#00ffffff"
-        border.color: Style.Colors.boxBorder
-        border.width: 1
-        ModelSettingsDeveloper{
-            id: modelSettingsDeveloper
-        }
     }
 }
 

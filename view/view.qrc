@@ -94,7 +94,10 @@
         <file>developer/components/DeveloperBody.qml</file>
         <file>developer/components/ModelSettingsDeveloper.qml</file>
         <file>developer/components/ModelSettingsDrawerDeveloper.qml</file>
-        <file>developer/components/model/ModelDeveloper.qml</file>
+        <file>developer/components/model/ModelDeveloperDelegate.qml</file>
+        <file>developer/components/model/ModelDeveloperlinformation.qml</file>
+        <file>developer/components/model/ModelDeveloperList.qml</file>
+        <file>developer/components/model/ModelDeveloperView.qml</file>
         <file>developer/components/command_line/CommandLineInterface.qml</file>
         <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
         <file>developer/components/model_settings/ModelSettingsHeaderDeveloper.qml</file>

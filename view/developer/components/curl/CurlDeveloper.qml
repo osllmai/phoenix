@@ -4,90 +4,62 @@ import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Item {
-    Column {
-        spacing: 2
-        width: parent.width
 
-        TextArea {
-            id: textId
-            text: " # Create a model
-curl -X POST http://localhost:8080/api/models \
-  -H \"Content-Type: application/json\" \
-  -d '{\"name\":\"Whisper\", \"version\":\"1.5\"}'
-
-# List all models
-curl http://localhost:8080/api/models
-
-# Get model by ID
-curl http://localhost:8080/api/models/1
-
-# Update model
-curl -X PUT http://localhost:8080/api/models/1 \
-  -H \"Content-Type: application/json\" \
-  -d '{\"name\":\"Whisper\", \"version\":\"2.0\"}'
-
-# Delete model
-curl -X DELETE http://localhost:8080/api/models/1
-"
-            color: Style.Colors.textTitle
-            selectionColor: "blue"
-            selectedTextColor: "white"
-            // width: parent.width - logoModelId.width
-            font.pixelSize: 14
-            focus: false
-            readOnly: true
-            wrapMode: TextEdit.WordWrap
-            textFormat: TextEdit.PlainText
-
-            cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ? conversationList.currentConversation.responseInProgress: false
-            cursorPosition: text.length
-
-            selectByMouse: true
-            background: null
-
-            Accessible.role: Accessible.Button
-            Accessible.name: text
-            Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
-
-            onLinkActivated: function(url) {
-                Qt.openUrlExternally(url)
+    Rectangle {
+        id: instructionsBox
+        anchors.fill: parent
+        anchors.margins: 10
+        color: Style.Colors.boxHover
+        radius: 12
+        ScrollView {
+            id: scrollInstruction
+            anchors.fill:parent; anchors.margins: 10
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
             }
 
-            Component.onCompleted: {
-                // textProcessor.textDocument = textId.textDocument
-                // textProcessor.setValue(model.text)
-            }
-        }
+            TextArea {
+                id: instructionTextBox
+                text: " # Create a model
+    curl -X POST http://localhost:8080/api/models \
+      -H \"Content-Type: application/json\" \
+      -d '{\"name\":\"Whisper\", \"version\":\"1.5\"}'
 
-        Row {
-            id: dateAndIconId
-            width: dateId.width + copyId.width
-            height: Math.max(dateId.height, copyId.height)
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            property bool checkCopy: false
+    # List all models
+    curl http://localhost:8080/api/models
 
-            MyIcon {
-                id: copyId
-                // visible: control.hovered
-                myIcon: copyId.selectIcon()
-                iconType: Style.RoleEnum.IconType.Primary
-                width: 26; height: 26
-                Connections{
-                    target: copyId
-                    function onClicked(){
-                        textId.selectAll()
-                        textId.copy()
-                        textId.deselect()
-                        dateAndIconId.checkCopy= true
-                        successTimer.start();
+    # Get model by ID
+    curl http://localhost:8080/api/models/1
+
+    # Update model
+    curl -X PUT http://localhost:8080/api/models/1 \
+      -H \"Content-Type: application/json\" \
+      -d '{\"name\":\"Whisper\", \"version\":\"2.0\"}'
+
+    # Delete model
+    curl -X DELETE http://localhost:8080/api/models/1
+    "
+                visible: true
+                color: Style.Colors.textInformation
+                wrapMode: Text.Wrap
+                placeholderText: qsTr("Eg. You are a helpful assistant")
+                clip: true
+                font.pointSize: 10
+                hoverEnabled: true
+                tabStopDistance: 80
+                selectionColor: "white"
+                persistentSelection: true
+                placeholderTextColor: Style.Colors.textInformation
+                background: null
+                textFormat: TextEdit.PlainText
+                onHeightChanged: {
+                    if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
+                        instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
                     }
                 }
-                function selectIcon(){
-                    if(dateAndIconId.checkCopy === false){
-                        return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
-                    }else{
-                        return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"
+                onTextChanged: {
+                    if(control.existConversation){
+                        conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text.replace(/\\n/g, "\n");
                     }
                 }
             }
