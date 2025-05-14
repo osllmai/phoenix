@@ -5,8 +5,6 @@ import "../../../component_library/button"
 
 Item {
     id: control
-    width: 400
-    height: 600
     clip: true
 
     Flickable {

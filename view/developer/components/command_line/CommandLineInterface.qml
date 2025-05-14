@@ -16,13 +16,13 @@ Item {
         border.color: "#444"
         border.width: 1
 
-        ColumnLayout {
+        Column {
             anchors.fill: parent
             anchors.margins: 10
             spacing: 8
 
-            // Filter Buttons Row
             RowLayout {
+                id: rowMethodId
                 spacing: 6
 
                 Repeater {
@@ -51,11 +51,10 @@ Item {
                 }
             }
 
-            // Scrollable Logs
             ScrollView {
                 id: scrollInstruction
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                width: parent.width
+                height:  parent.height - rowMethodId.height - 8
                 clip: true
 
                 ScrollBar.vertical: ScrollBar {
