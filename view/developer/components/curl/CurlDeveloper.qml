@@ -22,6 +22,8 @@ Item {
             spacing: 8
 
             RowLayout {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 10
                 spacing: 6
 
                 Repeater {
@@ -58,31 +60,31 @@ Item {
                     anchors.fill:parent; anchors.margins: 10
                     clip: true
 
-                    // ScrollBar.vertical: ScrollBar {
-                    //     policy: ScrollBar.AlwaysOn
-                    //     width: 6
-                    //     contentItem: Rectangle {
-                    //         implicitWidth: 6
-                    //         radius: 3
-                    //         color: "#888"
-                    //     }
-                    //     background: Rectangle {
-                    //         color: "#2e2e2e"
-                    //     }
-                    // }
+                    ScrollBar.vertical: ScrollBar {
+                        policy: ScrollBar.AlwaysOn
+                        width: 6
+                        contentItem: Rectangle {
+                            implicitWidth: 6
+                            radius: 3
+                            color: "#888"
+                        }
+                        background: Rectangle {
+                            color: "#2e2e2e"
+                        }
+                    }
 
-                    // ScrollBar.horizontal: ScrollBar {
-                    //     policy: ScrollBar.AlwaysOn
-                    //     height: 6
-                    //     contentItem: Rectangle {
-                    //         implicitHeight: 6
-                    //         radius: 3
-                    //         color: "#888"
-                    //     }
-                    //     background: Rectangle {
-                    //         color: "#2e2e2e"
-                    //     }
-                    // }
+                    ScrollBar.horizontal: ScrollBar {
+                        policy: ScrollBar.AlwaysOn
+                        height: 6
+                        contentItem: Rectangle {
+                            implicitHeight: 6
+                            radius: 3
+                            color: "#888"
+                        }
+                        background: Rectangle {
+                            color: "#2e2e2e"
+                        }
+                    }
 
                     TextArea {
                         id: instructionTextBox

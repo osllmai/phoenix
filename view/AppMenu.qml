@@ -16,7 +16,7 @@ Rectangle{
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: 80
+        height: 60
         ToolButton {
             id: phoenixIconId
             anchors.verticalCenter: parent.verticalCenter
@@ -24,7 +24,7 @@ Rectangle{
             anchors.leftMargin: 10
             background: null
             icon{
-                source: "qrc:/media/icon/Phoenix.svg"
+                source: "qrc:/media/icon/phoenix.svg"
                 color: Style.Colors.menuHoverAndCheckedIcon;
                 width:24; height:24
             }

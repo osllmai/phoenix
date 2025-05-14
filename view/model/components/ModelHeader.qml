@@ -10,13 +10,13 @@ Item{
     MyOpenMenuButton{
         id: openMenuId
         anchors.left:parent.left; anchors.leftMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
     }
 
     Row{
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         MyMenu {
             id: offlineModel
             myText: "Offline Model"

@@ -8,17 +8,15 @@ import "../../menu"
 
 Item{
     id:headerId
-    width: parent.width; height: 80
     signal openModelSettingsDrawer()
     signal openHistoryDrawer()
-
 
     clip: true
 
     Row{
         spacing: 10
         anchors.left: parent.left; anchors.leftMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyOpenMenuButton{
             id: openMenuId
@@ -60,7 +58,7 @@ Item{
     Row{
         spacing: 10
         anchors.right: parent.right; anchors.rightMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: openModelSettingsId
