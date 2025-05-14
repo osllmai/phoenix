@@ -73,9 +73,9 @@ Item {
                 TextArea {
                     id: instructionTextBox
                     readOnly: true
-                    wrapMode: Text.WrapAnywhere
+                    wrapMode: Text.Wrap
                     textFormat: TextEdit.RichText
-                    color: "#e0e0e0" // متن اصلی سفید
+                    color: "#e0e0e0"
                     font.family: "Courier New"
                     font.pointSize: 10
                     background: Rectangle {
@@ -98,12 +98,12 @@ Item {
                         return line
                             .replace(/^([\d-]+\s[\d:]+)/, function(match) {
                                 if (line.indexOf("[INFO]") !== -1)
-                                    return "<font color='#98c379'>" + match + "</font>"; // تاریخ سبز
+                                    return "<font color='#98c379'>" + match + "</font>";
                                 else if (line.indexOf("[DEBUG]") !== -1)
-                                    return "<font color='#61afef'>" + match + "</font>"; // تاریخ آبی
+                                    return "<font color='#61afef'>" + match + "</font>";
                                 else if (line.indexOf("[ERROR]") !== -1)
-                                    return "<font color='#ff5555'>" + match + "</font>"; // تاریخ قرمز
-                                return match; // برای باقی تاریخ‌ها
+                                    return "<font color='#ff5555'>" + match + "</font>";
+                                return match;
                             })
                             .replace(
                                 /\[(INFO|DEBUG|ERROR)\]/,

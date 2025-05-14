@@ -19,7 +19,7 @@ Row{
             CurlDeveloper{
                 id: curlDeveloperId
                 height: parent.height
-                width: parent.width/2
+                width: (2*parent.width)/3
             }
         }
         CommandLineInterface{
