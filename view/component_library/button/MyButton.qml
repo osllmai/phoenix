@@ -614,17 +614,17 @@ T.Button {
             when: control.isSelected
             PropertyChanges {
                 target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, /*Style.RoleEnum.State.Selected*/ "red")
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
                 width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
             }
             PropertyChanges {
                 target: progressBarId
