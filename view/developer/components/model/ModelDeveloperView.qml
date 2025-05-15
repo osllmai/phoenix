@@ -12,8 +12,8 @@ Item {
         anchors.fill: parent
         anchors.margins: 10
         radius: 12
-        color: Style.Colors.boxHover
-        border.color: "#444"
+        color: "#00ffffff"
+        border.color: Style.Colors.boxBorder
         border.width: 1
 
         Column{

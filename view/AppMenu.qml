@@ -108,8 +108,8 @@ Rectangle{
             id: devloperItemMenu
             myText: "Devloper"
             myToolTipText: "Devloper"
-            myIcon: "qrc:/media/icon/model.svg"
-            myFillIcon: "qrc:/media/icon/modelFill.svg"
+            myIcon: "qrc:/media/icon/developer.svg"
+            myFillIcon: "qrc:/media/icon/developerFill.svg"
             autoExclusive: true
             numberPage:3
 
