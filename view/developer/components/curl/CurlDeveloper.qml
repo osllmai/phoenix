@@ -13,8 +13,8 @@ Item {
         anchors.fill: parent
         anchors.margins: 10
         radius: 12
-        color: Style.Colors.boxHover
-        border.color: "#444"
+        color: "#00ffffff"
+        border.color: Style.Colors.boxBorder
         border.width: 1
 
         Column {
@@ -49,29 +49,29 @@ Item {
                 clip: true
 
                 ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
-                    width: 6
-                    contentItem: Rectangle {
-                        implicitWidth: 6
-                        radius: 3
-                        color: "#888"
-                    }
-                    background: Rectangle {
-                        color: "#2e2e2e"
-                    }
+                    policy: ScrollBar.AsNeeded
+                    // width: 6
+                    // contentItem: Rectangle {
+                    //     implicitWidth: 6
+                    //     radius: 3
+                    //     color: "#888"
+                    // }
+                    // background: Rectangle {
+                    //     color: "#2e2e2e"
+                    // }
                 }
 
                 ScrollBar.horizontal: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
-                    height: 6
-                    contentItem: Rectangle {
-                        implicitHeight: 6
-                        radius: 3
-                        color: "#888"
-                    }
-                    background: Rectangle {
-                        color: "#2e2e2e"
-                    }
+                    policy: ScrollBar.AsNeeded
+                    // height: 6
+                    // contentItem: Rectangle {
+                    //     implicitHeight: 6
+                    //     radius: 3
+                    //     color: "#888"
+                    // }
+                    // background: Rectangle {
+                    //     color: "#2e2e2e"
+                    // }
                 }
 
                 TextArea {
@@ -80,14 +80,13 @@ Item {
                     height: implicitHeight
                     readOnly: true
                     wrapMode: Text.NoWrap
-                    color: "#e0e0e0"
+                    color: Style.Colors.textInformation
                     font.family: "Courier New"
                     font.pointSize: 10
                     background: Rectangle {
-                        color: "#1e1e1e"
                         radius: 8
-                        border.color: "#444"
-                        clip: true
+                        color: Style.Colors.boxNormalGradient0
+                        border.color: Style.Colors.boxBorder
                     }
                     padding: 10
                     cursorVisible: false

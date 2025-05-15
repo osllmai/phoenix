@@ -13,8 +13,8 @@ Item {
         anchors.fill: parent
         anchors.margins: 10
         radius: 12
-        color: Style.Colors.boxHover
-        border.color: "#444"
+        color: "#00ffffff"
+        border.color: Style.Colors.boxBorder
         border.width: 1
 
         Column {
@@ -36,8 +36,8 @@ Item {
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         checkable: true
-                        checked: control.selectedMethod === modelData
-                        onClicked: control.selectedMethod = modelData
+                        checked: control.selectedFilter === modelData
+                        onClicked: control.selectedFilter = modelData
                     }
                 }
             }
@@ -49,29 +49,29 @@ Item {
                 clip: true
 
                 ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AlwaysOn
-                    width: 6
-                    contentItem: Rectangle {
-                        implicitWidth: 6
-                        radius: 3
-                        color: "#888"
-                    }
-                    background: Rectangle {
-                        color: "#2e2e2e"
-                    }
+                    policy: ScrollBar.AsNeeded
+                    // width: 6
+                    // contentItem: Rectangle {
+                    //     implicitWidth: 6
+                    //     radius: 3
+                    //     color: "#888"
+                    // }
+                    // background: Rectangle {
+                    //     color: "#2e2e2e"
+                    // }
                 }
                 TextArea {
                     id: instructionTextBox
                     readOnly: true
                     wrapMode: Text.Wrap
                     textFormat: TextEdit.RichText
-                    color: "#e0e0e0"
+                    color: Style.Colors.textInformation
                     font.family: "Courier New"
                     font.pointSize: 10
                     background: Rectangle {
-                        color: "#1e1e1e"
                         radius: 8
-                        border.color: "#444"
+                        color: Style.Colors.boxNormalGradient0
+                        border.color: Style.Colors.boxBorder
                     }
                     padding: 10
                     cursorVisible: false
@@ -84,29 +84,26 @@ Item {
                         "2025-05-14 10:05:06 [ERROR] Connection failed\n" +
                         "2025-05-14 10:05:07 [DEBUG] Retrying connection...\n"
 
-                    function colorizeLine(line) {
+                    function colorizeLine(line, colors) {
                         return line
                             .replace(/^([\d-]+\s[\d:]+)/, function(match) {
                                 if (line.indexOf("[INFO]") !== -1)
-                                    return "<font color='#98c379'>" + match + "</font>";
+                                    return "<b><font color='" + Style.Colors.textTagInfo + "'>" + match + "</font></b>";
                                 else if (line.indexOf("[DEBUG]") !== -1)
-                                    return "<font color='#61afef'>" + match + "</font>";
+                                    return "<b><font color='" + Style.Colors.textTagDebug + "'>" + match + "</font></b>";
                                 else if (line.indexOf("[ERROR]") !== -1)
-                                    return "<font color='#ff5555'>" + match + "</font>";
+                                    return "<b><font color='" + Style.Colors.textTagError + "'>" + match + "</font></b>";
                                 return match;
                             })
-                            .replace(
-                                /\[(INFO|DEBUG|ERROR)\]/,
-                                function(match) {
-                                    if (match === "[INFO]")
-                                        return "<font color='#98c379'>" + match + "</font>";
-                                    else if (match === "[DEBUG]")
-                                        return "<font color='#61afef'>" + match + "</font>";
-                                    else if (match === "[ERROR]")
-                                        return "<font color='#ff5555'>" + match + "</font>";
-                                    return match;
-                                }
-                            );
+                            .replace(/\[(INFO|DEBUG|ERROR)\]/, function(match) {
+                                if (match === "[INFO]")
+                                    return "<b><font color='" + Style.Colors.textTagInfo + "'>" + match + "</font></b>";
+                                else if (match === "[DEBUG]")
+                                    return "<b><font color='" + Style.Colors.textTagDebug + "'>" + match + "</font></b>";
+                                else if (match === "[ERROR]")
+                                    return "<b><font color='" + Style.Colors.textTagError + "'>" + match + "</font></b>";
+                                return match;
+                            });
                     }
 
                     function getFilteredLogs(type) {

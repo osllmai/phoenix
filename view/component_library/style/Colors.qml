@@ -133,6 +133,9 @@ Item{
     //text color
     readonly property color textTitle: currentTextColor[6]
     readonly property color textInformation: currentTextColor[5]
+    readonly property color textTagInfo: currentSuccessColor[2]
+    readonly property color textTagDebug: currentInfoColor[2]
+    readonly property color textTagError: currentErrorColor[2]
 
     //icon color
     readonly property color iconPrimaryNormal: currentBackgroundColor[4]
