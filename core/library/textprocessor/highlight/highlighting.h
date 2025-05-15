@@ -32,7 +32,6 @@ namespace Highlighting {
     QVector<HighlightingRule> haskell();
     QVector<HighlightingRule> lua();
     QVector<HighlightingRule> assembly();
-
     QVector<HighlightingRule> cmake();
     QVector<HighlightingRule> makefile();
     QVector<HighlightingRule> qml();
@@ -42,11 +41,11 @@ namespace Highlighting {
     QVector<HighlightingRule> batch();
     QVector<HighlightingRule> powershell();
     QVector<HighlightingRule> shellscript();
-
     QVector<HighlightingRule> xml();
     QVector<HighlightingRule> css();
     QVector<HighlightingRule> csv();
     QVector<HighlightingRule> toml();
+
 }
 
 #endif // HIGHLIGHTING_H
