@@ -85,6 +85,8 @@ Item{
                         bottonType: Style.RoleEnum.BottonType.Feature
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
+                        checkable: true
+                        checked: headerId.filtter === model.type
                         onClicked:{
                             if(model.type ==="All" || model.type ==="Favorite"){
                                 offlineModelListFilter.filter(model.type)
@@ -93,7 +95,6 @@ Item{
                             }
                             headerId.filtter= model.type
                         }
-                        selected: headerId.filtter === model.type
                     }
                 }
             }

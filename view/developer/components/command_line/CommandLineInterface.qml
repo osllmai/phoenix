@@ -5,6 +5,7 @@ import "../../../component_library/style" as Style
 import "../../../component_library/button"
 
 Item {
+    id: control
     property string selectedFilter: "All"
 
     Rectangle {
@@ -27,26 +28,16 @@ Item {
 
                 Repeater {
                     model: ["All", "Info", "Debug", "Error"]
-                    delegate: Button {
-                        text: modelData
+
+                    delegate: MyButton {
+                        id: delegateId
+                        myText: modelData
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureBlue
+                        isNeedAnimation: true
                         checkable: true
-                        checked: selectedFilter === modelData
-                        onClicked: selectedFilter = modelData
-                        font.bold: true
-                        background: Rectangle {
-                            radius: 6
-                            color: checked ? "#007acc" : "#2e2e2e"
-                            border.color: checked ? "#00bfff" : "#555"
-                            border.width: 1
-                        }
-                        contentItem: Text {
-                            text: modelData
-                            color: checked ? "white" : "#ccc"
-                            font.bold: true
-                            anchors.centerIn: parent
-                        }
-                        implicitWidth: 80
-                        implicitHeight: 30
+                        checked: control.selectedMethod === modelData
+                        onClicked: control.selectedMethod = modelData
                     }
                 }
             }
