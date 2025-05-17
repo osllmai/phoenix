@@ -87,7 +87,6 @@ signals:
     void contextLengthChanged();
     void numberOfGPULayersChanged();
 
-
 private:
     int m_id;
     bool m_stream = true;
