@@ -1,7 +1,5 @@
 #include "offlinemodellist.h"
 
-#include <algorithm>
-
 #include "../../conversation/conversationlist.h"
 
 OfflineModelList* OfflineModelList::m_instance = nullptr;

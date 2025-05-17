@@ -2,7 +2,6 @@
 #define COMPANY_H
 
 #include <QObject>
-#include <QtQml>
 #include <QQmlEngine>
 #include "BackendType.h"
 

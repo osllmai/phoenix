@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractListModel>
+#include <algorithm>
+#include <QFileInfo>
 
 #include <QFutureWatcher>
 

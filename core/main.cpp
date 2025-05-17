@@ -28,6 +28,8 @@
 
 #include "./library/textprocessor/messagetextprocessor.h"
 
+#include "./developer/codedeveloperlist.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -62,6 +64,9 @@ int main(int argc, char *argv[])
 
     SpeechToText* speechToText = SpeechToText::instance(&engine);
     engine.rootContext()->setContextProperty("speechToText", speechToText);
+
+    CodeDeveloperList* codeDeveloperList = CodeDeveloperList::instance(&engine);
+    engine.rootContext()->setContextProperty("codeDeveloperList", codeDeveloperList);
 
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");

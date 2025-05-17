@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractListModel>
+#include <QRegularExpression>
 
 #include "conversation.h"
 #include "model/model.h"

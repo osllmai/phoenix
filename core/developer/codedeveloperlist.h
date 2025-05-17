@@ -33,7 +33,7 @@ private:
     explicit CodeDeveloperList(QObject* parent);
     static CodeDeveloperList* m_instance;
 
-    QList<ProgramLanguage*> m_companys;
+    QList<ProgramLanguage*> m_programLanguags;
 };
 
 #endif // CODEDEVELOPERLIST_H
