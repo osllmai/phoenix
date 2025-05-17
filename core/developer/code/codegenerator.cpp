@@ -14,7 +14,8 @@ CodeGenerator::CodeGenerator(QObject* parent)
     m_maxTokens(4096),
     m_repeatPenaltyTokens(64),
     m_contextLength(2048),
-    m_numberOfGPULayers(80)
+    m_numberOfGPULayers(80),
+    m_text("")
 {}
 
 CodeGenerator::CodeGenerator(const bool &stream,
@@ -44,20 +45,14 @@ CodeGenerator::CodeGenerator(const bool &stream,
     m_maxTokens(maxTokens),
     m_repeatPenaltyTokens(repeatPenaltyTokens),
     m_contextLength(contextLength),
-    m_numberOfGPULayers(numberOfGPULayers)
+    m_numberOfGPULayers(numberOfGPULayers),
+    m_text("")
 {}
 
 CodeGenerator::~CodeGenerator() {}
 
-QString CodeGenerator::text() const{
-    return m_text;
-}
-
-void CodeGenerator::setText(const QString &newText){
-    if (m_text != newText) {
-        m_text = newText;
-        emit textChanged();
-    }
+QString CodeGenerator::text(){
+    return postChat();
 }
 
 void CodeGenerator::setStream(const bool stream) {
@@ -111,9 +106,9 @@ void CodeGenerator::setNumberOfGPULayers(const int numberOfGPULayers) {
 }
 
 QString CodeGenerator::getModels(){
-    return QString("GET /v1/models\n");
+    return "GET /v1/models\n";
 }
 
 QString CodeGenerator::postChat(){
-    return QString("POST /v1/chat/completions\n");
+    return "POST /v1/chat/completions\n";
 }

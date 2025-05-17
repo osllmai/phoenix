@@ -7,7 +7,7 @@
 class CodeGenerator : public QObject {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged FINAL)
+    Q_PROPERTY(QString text READ text NOTIFY textChanged FINAL)
 
 public:
     explicit CodeGenerator(QObject* parent = nullptr);
@@ -31,8 +31,7 @@ public:
     virtual QString getModels();
     virtual QString postChat();
 
-    QString text() const;
-    void setText(const QString &newText);
+    QString text();
 
     void setStream(const bool stream);
     void setPromptTemplate(const QString promptTemplate);

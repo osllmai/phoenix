@@ -29,10 +29,56 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     for (const auto& lang : languages) {
         m_programLanguags.append(new ProgramLanguage(lang.first, lang.second, this));
     }
+    m_currentProgramLanguage = m_programLanguags.first();
+    m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
+}
+
+void CodeDeveloperList::setCurrentLanguage(int newId){
+    for(int number=0; number< m_programLanguags.size(); number++){
+        ProgramLanguage* programLanguage = m_programLanguags[number];
+        if(programLanguage->id() == newId){
+            setCurrentProgramLanguage(programLanguage);
+        }
+    }
+}
+
+ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const{return m_currentProgramLanguage;}
+void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentProgramLanguage){
+    if (m_currentProgramLanguage == newCurrentProgramLanguage)
+        return;
+
+    if(m_currentProgramLanguage != nullptr)
+        m_currentProgramLanguage->setCodeGenerator(nullptr);
+
+    if (newCurrentProgramLanguage) {
+        CodeGenerator* generator = nullptr;
+
+        switch (newCurrentProgramLanguage->id()) {
+        case 0:
+            generator = new CurlCodeGenerator();
+            break;
+        case 1:
+            generator = new PythonRequestsCodeGenerator();
+            break;
+        case 2:
+            generator = new NodeJsAxiosCodeGenerator();
+            break;
+        case 3:
+            generator = new JavascriptFetchCodeGenerator();
+            break;
+        default:
+            qWarning() << "Unsupported language ID:" << newCurrentProgramLanguage->id();
+            break;
+        }
+
+        newCurrentProgramLanguage->setCodeGenerator(generator);
+    }
+
+    m_currentProgramLanguage = newCurrentProgramLanguage;
+    emit currentProgramLanguageChanged();
 }
 
 int CodeDeveloperList::count() const{return m_programLanguags.count();}
-
 int CodeDeveloperList::rowCount(const QModelIndex &parent) const{
     Q_UNUSED(parent);
     return m_programLanguags.count();
