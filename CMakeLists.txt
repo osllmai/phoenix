@@ -18,7 +18,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech HttpServer)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -30,7 +30,9 @@ include_directories(${CMAKE_SOURCE_DIR}/core/conversation)
 include_directories(${CMAKE_SOURCE_DIR}/core/conversation/chat)
 include_directories(${CMAKE_SOURCE_DIR}/core/conversation/provider)
 include_directories(${CMAKE_SOURCE_DIR}/core/library/textprocessor)
-
+include_directories(${CMAKE_SOURCE_DIR}/core/developer/)
+include_directories(${CMAKE_SOURCE_DIR}/core/developer/code)
+include_directories(${CMAKE_SOURCE_DIR}/core/developer/code/code_generator)
 
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
@@ -358,6 +360,11 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/developer/model_settings/modelsettingslist.h core/developer/model_settings/modelsettingslist.cpp
     SOURCES core/developer/codedeveloperlist.h core/developer/codedeveloperlist.cpp
     SOURCES core/developer/code/programlanguage.h core/developer/code/programlanguage.cpp
+    SOURCES core/developer/code/codegenerator.h core/developer/code/codegenerator.cpp
+    SOURCES core/developer/code/code_generator/curlcodegenerator.h core/developer/code/code_generator/curlcodegenerator.cpp
+    SOURCES core/developer/code/code_generator/pythonrequestscodegenerator.h core/developer/code/code_generator/pythonrequestscodegenerator.cpp
+    SOURCES core/developer/code/code_generator/nodejsaxioscodegenerator.h core/developer/code/code_generator/nodejsaxioscodegenerator.cpp
+    SOURCES core/developer/code/code_generator/javascriptfetchcodegenerator.h core/developer/code/code_generator/javascriptfetchcodegenerator.cpp
 
 )
 
@@ -380,6 +387,7 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Network
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::TextToSpeech
+        Qt${QT_VERSION_MAJOR}::HttpServer
         Qt::Qml
         Qt::Gui
 )
