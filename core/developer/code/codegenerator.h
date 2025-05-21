@@ -33,22 +33,60 @@ public:
 
     QString text();
 
-    void setStream(const bool stream);
-    void setPromptTemplate(const QString promptTemplate);
-    void setSystemPrompt(const QString systemPrompt);
-    void setTemperature(const double temperature);
-    void setTopK(const int topK);
-    void setTopP(const double topP);
-    void setMinP(const double minP);
-    void setRepeatPenalty(const double repeatPenalty);
-    void setPromptBatchSize(const int promptBatchSize);
-    void setMaxTokens(const int maxTokens);
-    void setRepeatPenaltyTokens(const int repeatPenaltyTokens);
-    void setContextLength(const int contextLength);
-    void setNumberOfGPULayers(const int numberOfGPULayers);
+    bool stream() const;
+    void setStream(bool newStream);
+
+    QString promptTemplate() const;
+    void setPromptTemplate(const QString &newPromptTemplate);
+
+    QString systemPrompt() const;
+    void setSystemPrompt(const QString &newSystemPrompt);
+
+    double temperature() const;
+    void setTemperature(double newTemperature);
+
+    int topK() const;
+    void setTopK(int newTopK);
+
+    double topP() const;
+    void setTopP(double newTopP);
+
+    double minP() const;
+    void setMinP(double newMinP);
+
+    double repeatPenalty() const;
+    void setRepeatPenalty(double newRepeatPenalty);
+
+    int promptBatchSize() const;
+    void setPromptBatchSize(int newPromptBatchSize);
+
+    int maxTokens() const;
+    void setMaxTokens(int newMaxTokens);
+
+    int repeatPenaltyTokens() const;
+    void setRepeatPenaltyTokens(int newRepeatPenaltyTokens);
+
+    int contextLength() const;
+    void setContextLength(int newContextLength);
+
+    int numberOfGPULayers() const;
+    void setNumberOfGPULayers(int newNumberOfGPULayers);
 
 signals:
     void textChanged();
+    void streamChanged();
+    void promptTemplateChanged();
+    void systemPromptChanged();
+    void temperatureChanged();
+    void topKChanged();
+    void topPChanged();
+    void minPChanged();
+    void repeatPenaltyChanged();
+    void promptBatchSizeChanged();
+    void maxTokensChanged();
+    void repeatPenaltyTokensChanged();
+    void contextLengthChanged();
+    void numberOfGPULayersChanged();
 
 protected:
     QString m_text;
@@ -66,6 +104,20 @@ protected:
     int m_repeatPenaltyTokens;
     int m_contextLength;
     int m_numberOfGPULayers;
+private:
+    Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
+    Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
+    Q_PROPERTY(QString systemPrompt READ systemPrompt WRITE setSystemPrompt NOTIFY systemPromptChanged FINAL)
+    Q_PROPERTY(double temperature READ temperature WRITE setTemperature NOTIFY temperatureChanged FINAL)
+    Q_PROPERTY(int topK READ topK WRITE setTopK NOTIFY topKChanged FINAL)
+    Q_PROPERTY(double topP READ topP WRITE setTopP NOTIFY topPChanged FINAL)
+    Q_PROPERTY(double minP READ minP WRITE setMinP NOTIFY minPChanged FINAL)
+    Q_PROPERTY(double repeatPenalty READ repeatPenalty WRITE setRepeatPenalty NOTIFY repeatPenaltyChanged FINAL)
+    Q_PROPERTY(int promptBatchSize READ promptBatchSize WRITE setPromptBatchSize NOTIFY promptBatchSizeChanged FINAL)
+    Q_PROPERTY(int maxTokens READ maxTokens WRITE setMaxTokens NOTIFY maxTokensChanged FINAL)
+    Q_PROPERTY(int repeatPenaltyTokens READ repeatPenaltyTokens WRITE setRepeatPenaltyTokens NOTIFY repeatPenaltyTokensChanged FINAL)
+    Q_PROPERTY(int contextLength READ contextLength WRITE setContextLength NOTIFY contextLengthChanged FINAL)
+    Q_PROPERTY(int numberOfGPULayers READ numberOfGPULayers WRITE setNumberOfGPULayers NOTIFY numberOfGPULayersChanged FINAL)
 };
 
 #endif // CODEGENERATOR_H

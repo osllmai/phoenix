@@ -55,54 +55,108 @@ QString CodeGenerator::text(){
     return postChat();
 }
 
-void CodeGenerator::setStream(const bool stream) {
-    m_stream = stream;
+bool CodeGenerator::stream() const{return m_stream;}
+void CodeGenerator::setStream(bool newStream){
+    if (m_stream == newStream)
+        return;
+    m_stream = newStream;
+    emit streamChanged();
 }
 
-void CodeGenerator::setPromptTemplate(const QString promptTemplate) {
-    m_promptTemplate = promptTemplate;
+QString CodeGenerator::promptTemplate() const{return m_promptTemplate;}
+void CodeGenerator::setPromptTemplate(const QString &newPromptTemplate){
+    if (m_promptTemplate == newPromptTemplate)
+        return;
+    m_promptTemplate = newPromptTemplate;
+    emit promptTemplateChanged();
 }
 
-void CodeGenerator::setSystemPrompt(const QString systemPrompt) {
-    m_systemPrompt = systemPrompt;
+QString CodeGenerator::systemPrompt() const{return m_systemPrompt;}
+void CodeGenerator::setSystemPrompt(const QString &newSystemPrompt){
+    if (m_systemPrompt == newSystemPrompt)
+        return;
+    m_systemPrompt = newSystemPrompt;
+    emit systemPromptChanged();
 }
 
-void CodeGenerator::setTemperature(const double temperature) {
-    m_temperature = temperature;
+double CodeGenerator::temperature() const{return m_temperature;}
+void CodeGenerator::setTemperature(double newTemperature){
+    if (qFuzzyCompare(m_temperature, newTemperature))
+        return;
+    m_temperature = newTemperature;
+    emit temperatureChanged();
 }
 
-void CodeGenerator::setTopK(const int topK) { m_topK = topK; }
-
-void CodeGenerator::setTopP(const double topP) {
-    m_topP = topP;
+int CodeGenerator::topK() const{return m_topK;}
+void CodeGenerator::setTopK(int newTopK){
+    if (m_topK == newTopK)
+        return;
+    m_topK = newTopK;
+    emit topKChanged();
 }
 
-void CodeGenerator::setMinP(const double minP) {
-    m_minP = minP;
+double CodeGenerator::topP() const{return m_topP;}
+void CodeGenerator::setTopP(double newTopP){
+    if (qFuzzyCompare(m_topP, newTopP))
+        return;
+    m_topP = newTopP;
+    emit topPChanged();
 }
 
-void CodeGenerator::setRepeatPenalty(const double repeatPenalty) {
-    m_repeatPenalty = repeatPenalty;
+double CodeGenerator::minP() const{return m_minP;}
+void CodeGenerator::setMinP(double newMinP){
+    if (qFuzzyCompare(m_minP, newMinP))
+        return;
+    m_minP = newMinP;
+    emit minPChanged();
 }
 
-void CodeGenerator::setPromptBatchSize(const int promptBatchSize) {
-    m_promptBatchSize = promptBatchSize;
+double CodeGenerator::repeatPenalty() const{return m_repeatPenalty;}
+void CodeGenerator::setRepeatPenalty(double newRepeatPenalty){
+    if (qFuzzyCompare(m_repeatPenalty, newRepeatPenalty))
+        return;
+    m_repeatPenalty = newRepeatPenalty;
+    emit repeatPenaltyChanged();
 }
 
-void CodeGenerator::setMaxTokens(const int maxTokens) {
-    m_maxTokens = maxTokens;
+int CodeGenerator::promptBatchSize() const{return m_promptBatchSize;}
+void CodeGenerator::setPromptBatchSize(int newPromptBatchSize){
+    if (m_promptBatchSize == newPromptBatchSize)
+        return;
+    m_promptBatchSize = newPromptBatchSize;
+    emit promptBatchSizeChanged();
 }
 
-void CodeGenerator::setRepeatPenaltyTokens(const int repeatPenaltyTokens) {
-    m_repeatPenaltyTokens = repeatPenaltyTokens;
+int CodeGenerator::maxTokens() const{return m_maxTokens;}
+void CodeGenerator::setMaxTokens(int newMaxTokens){
+    if (m_maxTokens == newMaxTokens)
+        return;
+    m_maxTokens = newMaxTokens;
+    emit maxTokensChanged();
 }
 
-void CodeGenerator::setContextLength(const int contextLength) {
-    m_contextLength = contextLength;
+int CodeGenerator::repeatPenaltyTokens() const{return m_repeatPenaltyTokens;}
+void CodeGenerator::setRepeatPenaltyTokens(int newRepeatPenaltyTokens){
+    if (m_repeatPenaltyTokens == newRepeatPenaltyTokens)
+        return;
+    m_repeatPenaltyTokens = newRepeatPenaltyTokens;
+    emit repeatPenaltyTokensChanged();
 }
 
-void CodeGenerator::setNumberOfGPULayers(const int numberOfGPULayers) {
-    m_numberOfGPULayers = numberOfGPULayers;
+int CodeGenerator::contextLength() const{return m_contextLength;}
+void CodeGenerator::setContextLength(int newContextLength){
+    if (m_contextLength == newContextLength)
+        return;
+    m_contextLength = newContextLength;
+    emit contextLengthChanged();
+}
+
+int CodeGenerator::numberOfGPULayers() const{return m_numberOfGPULayers;}
+void CodeGenerator::setNumberOfGPULayers(int newNumberOfGPULayers){
+    if (m_numberOfGPULayers == newNumberOfGPULayers)
+        return;
+    m_numberOfGPULayers = newNumberOfGPULayers;
+    emit numberOfGPULayersChanged();
 }
 
 QString CodeGenerator::getModels(){

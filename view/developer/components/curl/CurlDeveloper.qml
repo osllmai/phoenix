@@ -6,7 +6,6 @@ import '../../../component_library/button'
 
 Item {
     id: control
-    property string selectedMethod: "curl"
 
     Rectangle {
         id: instructionsBox
@@ -27,17 +26,17 @@ Item {
                 spacing: 6
 
                 Repeater {
-                    model: ["curl", "python", "node", "httpie", "powershell", "go", "java", "csharp", "rust"]
+                    model: codeDeveloperList
 
                     delegate: MyButton {
                         id: delegateId
-                        myText: modelData
+                        myText: model.name
                         bottonType: Style.RoleEnum.BottonType.Feature
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         checkable: true
-                        checked: control.selectedMethod === modelData
-                        onClicked: control.selectedMethod = modelData
+                        checked: codeDeveloperList.currentProgramLanguage.name === model.name
+                        onClicked: codeDeveloperList.setCurrentLanguage(model.id)
                     }
                 }
             }
@@ -93,167 +92,7 @@ Item {
                     persistentSelection: false
                     clip: true
 
-                    text: {
-                        switch (selectedMethod) {
-                        case "curl":
-                            return `curl http://localhost:1234/v1/chat/completions \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "model": "deepseek-r1-distill-qwen-7b",
-    "messages": [
-      { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-      { "role": "user", "content": "What day is it today?" }
-    ],
-    "temperature": 0.7,
-    "stream": false
-                            -H "Content-Type: application/json" \\
-                            -d '{
-                              "model": "deepseek-r1-distill-qwen-7b",
-                              "messages": [
-                                { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-                                { "role": "user", "content": "What day is it today?" }
-                              ],
-                              "temperature": 0.7,
-                              "stream": false
-}'`;
-
-                        case "python":
-                            return `import openai
-
-response = openai.ChatCompletion.create(
-    model="deepseek-r1-distill-qwen-7b",
-    messages=[
-        {"role": "system", "content": "Always answer in rhymes. Today is Thursday"},
-        {"role": "user", "content": "What day is it today?"}
-    ],
-    temperature=0.7
-)
-
-print(response["choices"][0]["message"]["content"])`;
-
-                        case "node":
-                            return `const openai = require('openai');
-
-const response = await openai.chat.completions.create({
-    model: "deepseek-r1-distill-qwen-7b",
-    messages: [
-        { role: "system", content: "Always answer in rhymes. Today is Thursday" },
-        { role: "user", content: "What day is it today?" }
-    ],
-    temperature: 0.7
-});
-
-console.log(response.choices[0].message.content);`;
-
-                        case "httpie":
-                            return `http POST http://localhost:1234/v1/chat/completions \\
-  Content-Type:application/json \\
-  model="deepseek-r1-distill-qwen-7b" \\
-  messages:='[
-    {"role": "system", "content": "Always answer in rhymes. Today is Thursday"},
-    {"role": "user", "content": "What day is it today?"}
-  ]' \\
-  temperature:=0.7`;
-
-                        case "powershell":
-                            return `Invoke-RestMethod -Uri "http://localhost:1234/v1/chat/completions" -Method Post -Headers @{
-    "Content-Type" = "application/json"
-} -Body '{
-    "model": "deepseek-r1-distill-qwen-7b",
-    "messages": [
-        { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-        { "role": "user", "content": "What day is it today?" }
-    ],
-    "temperature": 0.7
-}'`;
-
-                        case "go":
-                            return `package main
-
-import (
-    "bytes"
-    "fmt"
-    "net/http"
-)
-
-func main() {
-    jsonData := []byte(\`{
-        "model": "deepseek-r1-distill-qwen-7b",
-        "messages": [
-            { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-            { "role": "user", "content": "What day is it today?" }
-        ],
-        "temperature": 0.7
-    }\`)
-
-    resp, err := http.Post("http://localhost:1234/v1/chat/completions", "application/json", bytes.NewBuffer(jsonData))
-    if err != nil {
-        panic(err)
-    }
-    defer resp.Body.Close()
-    // handle response
-}`;
-
-                        case "java":
-                            return `HttpClient client = HttpClient.newHttpClient();
-HttpRequest request = HttpRequest.newBuilder()
-    .uri(URI.create("http://localhost:1234/v1/chat/completions"))
-    .header("Content-Type", "application/json")
-    .POST(HttpRequest.BodyPublishers.ofString("""
-        {
-            "model": "deepseek-r1-distill-qwen-7b",
-            "messages": [
-                { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-                { "role": "user", "content": "What day is it today?" }
-            ],
-            "temperature": 0.7
-        }
-    """))
-    .build();
-
-HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-System.out.println(response.body());`;
-
-                        case "csharp":
-                            return `using var client = new HttpClient();
-var content = new StringContent(@"{
-    ""model"": ""deepseek-r1-distill-qwen-7b"",
-    ""messages"": [
-        { ""role"": ""system"", ""content"": ""Always answer in rhymes. Today is Thursday"" },
-        { ""role"": ""user"", ""content"": ""What day is it today?"" }
-    ],
-    ""temperature"": 0.7
-}", Encoding.UTF8, "application/json");
-
-var response = await client.PostAsync("http://localhost:1234/v1/chat/completions", content);
-var responseString = await response.Content.ReadAsStringAsync();
-Console.WriteLine(responseString);`;
-
-                        case "rust":
-                            return `use reqwest::blocking::Client;
-use serde_json::json;
-
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::new();
-    let res = client.post("http://localhost:1234/v1/chat/completions")
-        .json(&json!({
-            "model": "deepseek-r1-distill-qwen-7b",
-            "messages": [
-                { "role": "system", "content": "Always answer in rhymes. Today is Thursday" },
-                { "role": "user", "content": "What day is it today?" }
-            ],
-            "temperature": 0.7
-        }))
-        .send()?;
-
-    println!("{}", res.text()?);
-    Ok(())
-}`;
-
-                        default:
-                            return "";
-                        }
-                    }
+                    text: !codeDeveloperList.currentProgramLanguage.codeGenerator? "": codeDeveloperList.currentProgramLanguage.codeGenerator.text
 
                     onTextChanged: {
                         instructionTextBox.cursorPosition = instructionTextBox.length

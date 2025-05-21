@@ -46,7 +46,9 @@ Item{
                     id: switchId
                     checked: false
                     anchors.verticalCenter: parent.verticalCenter
-                    // onCheckedChanged:
+                    onCheckedChanged:{
+                        codeDeveloperList.start()
+                    }
                 }
             }
         }
@@ -60,6 +62,30 @@ Item{
         anchors.right: parent.right; anchors.rightMargin: 24
         anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
+
+        Rectangle{
+            height: parent.height
+            width: 300
+            color: "#00ffffff"
+            border.color: Style.Colors.boxBorder
+            radius: 8
+
+            Row{
+                id: reacheblePort
+                anchors.fill: parent
+                anchors.leftMargin: 10
+
+                Label {
+                    id: textId2
+                    text: "Reachable at: https://127.0.0.1:"+ codeDeveloperList.port
+                    color: Style.Colors.textInformation
+                    width: parent.width - switchId2.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 10
+                }
+            }
+        }
+
         MyButton{
             id: openModelSettingsId
             myIcon: "qrc:/media/icon/settings.svg"
