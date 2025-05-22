@@ -30,6 +30,9 @@
 
 #include "./developer/codedeveloperlist.h"
 
+#include "./log/logger.h"
+#include "./log/logcategories.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -55,6 +58,11 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
+
+    Logger::instance().setMinLogLevel(QtDebugMsg);
+    Logger::instance().installMessageHandler();
+
+    qDebug(logCore) << "Program start";
 
     QStringList fontFamilies = QFontDatabase::families();
     engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
