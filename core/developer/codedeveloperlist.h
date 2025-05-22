@@ -97,6 +97,8 @@ private:
     Provider *m_provider;
     Model *m_model;
 
+    QString logger;
+
     QList<ProgramLanguage*> m_programLanguags;
 };
 

@@ -1,22 +1,32 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include <QObject>
 #include <QFile>
 #include <QHash>
 #include <QMutex>
 #include <QString>
+#include <QStringList>
 #include <QLoggingCategory>
 #include <QDateTime>
 #include <QDir>
 #include <QStandardPaths>
 
-class Logger
+class Logger : public QObject
 {
+    Q_OBJECT
+    Q_PROPERTY(QString developerLogs READ developerLogs NOTIFY developerLogsChanged)
+
 public:
     static Logger& instance();
 
     void installMessageHandler();
     void setMinLogLevel(QtMsgType level);
+
+    QString developerLogs() const;
+
+signals:
+    void developerLogsChanged();
 
 private:
     Logger();
@@ -33,6 +43,9 @@ private:
     QString m_logDir;
     QtMsgType m_minLogLevel = QtDebugMsg;
     const qint64 MAX_LOG_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+    QString m_developerLogs;
+    mutable QMutex m_mutex_developerList;
 
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;

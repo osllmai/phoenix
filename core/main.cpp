@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
 
     Logger::instance().setMinLogLevel(QtDebugMsg);
     Logger::instance().installMessageHandler();
+    engine.rootContext()->setContextProperty("Logger", &Logger::instance());
 
     qDebug(logCore) << "Program start";
 

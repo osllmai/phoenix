@@ -40,7 +40,50 @@ void Logger::messageHandler(QtMsgType type, const QMessageLogContext &context, c
 
     QString category = QString::fromUtf8(context.category);
     logger.writeLog(category, type, msg, context);
+
+    QString levelStr;
+    switch (type) {
+        case QtDebugMsg:
+            levelStr = "DEBUG";
+            break;
+        case QtInfoMsg:
+            levelStr = "INFO";
+            break;
+        case QtWarningMsg:
+            levelStr = "WARNING";
+            break;
+        case QtCriticalMsg:
+            levelStr = "CRITICAL";
+            break;
+        case QtFatalMsg:
+            levelStr = "FATAL";
+            break;
+        default:
+            levelStr = "UNKNOWN";
+            break;
+    }
+
+    QString timestamp = QDateTime::currentDateTime().toString(Qt::ISODate);
+    QString contextInfo = QString("[%1:%2 %3]").arg(
+        QString::fromUtf8(context.file),
+        QString::number(context.line),
+        QString::fromUtf8(context.function)
+        );
+    QString logLine = QString("[%1] [%2] %3 %4").arg(timestamp, levelStr, contextInfo, msg);
+
+    if (type == QtFatalMsg) {
+        QTextStream ts(stderr);
+        ts << logLine << Qt::endl;
+    } else {
+        QTextStream ts(stdout);
+        ts << logLine << Qt::endl;
+    }
+
+    if (type == QtFatalMsg)
+        abort();
 }
+
+
 
 QFile* Logger::getLogFile(const QString& category) {
     QMutexLocker locker(&m_mutex);
@@ -87,24 +130,43 @@ void Logger::writeSessionHeader(QFile* file) {
 }
 
 void Logger::writeLog(const QString& category, QtMsgType type, const QString& message, const QMessageLogContext& context) {
-    rotateLogIfNeeded(category);
-    QFile* file = getLogFile(category);
-    if (!file)
-        return;
 
     QString levelStr;
     switch (type) {
-    case QtDebugMsg: levelStr = "DEBUG"; break;
-    case QtInfoMsg: levelStr = "INFO"; break;
-    case QtWarningMsg: levelStr = "WARNING"; break;
-    case QtCriticalMsg: levelStr = "CRITICAL"; break;
-    case QtFatalMsg: levelStr = "FATAL"; break;
-    default: levelStr = "UNKNOWN"; break;
+    case QtDebugMsg:
+        levelStr = "DEBUG";
+        break;
+    case QtInfoMsg:
+        levelStr = "INFO";
+        break;
+    case QtWarningMsg:
+        levelStr = "WARNING";
+        break;
+    case QtCriticalMsg:
+        levelStr = "CRITICAL";
+        break;
+    case QtFatalMsg:
+        levelStr = "FATAL";
+        break;
+    default:
+        levelStr = "UNKNOWN";
+        break;
     }
 
     QString timestamp = QDateTime::currentDateTime().toString(Qt::ISODate);
     QString contextInfo = QString("[%1:%2 %3]").arg(QString::fromUtf8(context.file), QString::number(context.line), QString::fromUtf8(context.function));
     QString logLine = QString("[%1] [%2] %3 %4\n").arg(timestamp, levelStr, contextInfo, message);
+
+    if (QString(context.category) == "phoenix.developer") {
+        QMutexLocker locker(&m_mutex_developerList);
+        m_developerLogs = m_developerLogs + logLine + "\n";
+        emit developerLogsChanged();
+    }
+
+    rotateLogIfNeeded(category);
+    QFile* file = getLogFile(category);
+    if (!file)
+        return;
 
     QMutexLocker locker(&m_mutex);
     QTextStream out(file);
@@ -113,4 +175,9 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
 
     if (type == QtFatalMsg)
         abort();
+}
+
+QString Logger::developerLogs() const {
+    QMutexLocker locker(&m_mutex_developerList);
+    return m_developerLogs;
 }

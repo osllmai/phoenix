@@ -77,12 +77,7 @@ Item {
                     cursorVisible: false
                     persistentSelection: false
 
-                    property string fullLogs:
-                        "2025-05-14 10:05:03 [INFO] App started\n" +
-                        "2025-05-14 10:05:04 [DEBUG] Initializing model...\n" +
-                        "2025-05-14 10:05:05 [INFO] Model ready\n" +
-                        "2025-05-14 10:05:06 [ERROR] Connection failed\n" +
-                        "2025-05-14 10:05:07 [DEBUG] Retrying connection...\n"
+                    property string fullLogs: Logger.developerLogs
 
                     function colorizeLine(line, colors) {
                         return line
