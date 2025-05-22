@@ -11,7 +11,7 @@
 #include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
-#include "./provider/provider.h"
+#include "../provider/provider.h"
 
 class Conversation : public QObject
 {

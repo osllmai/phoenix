@@ -30,6 +30,10 @@
 #include "./code/code_generator/nodejsaxioscodegenerator.h"
 #include "./code/code_generator/pythonrequestscodegenerator.h"
 
+#include "../model/offline/offlinemodellist.h"
+#include "../model/online/onlinemodellist.h"
+#include "../provider/provider.h"
+
 class CodeDeveloperList: public QAbstractListModel
 {
     Q_OBJECT
@@ -38,6 +42,8 @@ class CodeDeveloperList: public QAbstractListModel
     Q_PROPERTY(int port READ port NOTIFY portChanged FINAL)
     Q_PROPERTY(bool isRuning READ isRuning NOTIFY isRuningChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
+    Q_PROPERTY(Provider *provider READ provider WRITE setProvider NOTIFY providerChanged FINAL)
+    Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged FINAL)
 
 public:
     static CodeDeveloperList* instance(QObject* parent);
@@ -64,11 +70,19 @@ public:
     bool isRuning() const;
     void setIsRuning(bool newIsRuning);
 
+    Provider *provider() const;
+    void setProvider(Provider *newProvider);
+
+    Model *model() const;
+    void setModel(Model *newModel);
+
 signals:
     void countChanged();
     void currentProgramLanguageChanged();
     void portChanged();
     void isRuningChanged();
+    void providerChanged();
+    void modelChanged();
 
 private:
     explicit CodeDeveloperList(QObject* parent);
@@ -79,6 +93,9 @@ private:
     int m_port;
     bool m_isRuning;
     QHttpServer* m_httpServer = nullptr;
+
+    Provider *m_provider;
+    Model *m_model;
 
     QList<ProgramLanguage*> m_programLanguags;
 };

@@ -33,6 +33,22 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
 }
 
+Model *CodeDeveloperList::model() const{return m_model;}
+void CodeDeveloperList::setModel(Model *newModel){
+    if (m_model == newModel)
+        return;
+    m_model = newModel;
+    emit modelChanged();
+}
+
+Provider *CodeDeveloperList::provider() const{return m_provider;}
+void CodeDeveloperList::setProvider(Provider *newProvider){
+    if (m_provider == newProvider)
+        return;
+    m_provider = newProvider;
+    emit providerChanged();
+}
+
 bool CodeDeveloperList::isRuning() const{return m_isRuning;}
 void CodeDeveloperList::setIsRuning(bool newIsRuning){
     if (m_isRuning == newIsRuning)
