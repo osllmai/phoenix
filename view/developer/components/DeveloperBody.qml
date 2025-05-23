@@ -18,13 +18,13 @@ RowLayout {
 
             ModelDeveloperView {
                 id: modelDeveloperId
-                Layout.fillWidth: true
+                Layout.preferredWidth: parent.width / 3
                 Layout.fillHeight: true
             }
 
             CurlDeveloper {
                 id: curlDeveloperId
-                Layout.preferredWidth: 2 * parent.width / 3
+                Layout.fillWidth: true
                 Layout.fillHeight: true
             }
         }

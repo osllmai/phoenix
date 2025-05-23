@@ -51,9 +51,9 @@ Item{
                 }
             }
         }
-        // ModelComboBox{
-        //     id: currentModelComboBoxId
-        // }
+        ModelDeveloperComboBox{
+            id: currentModelComboBoxId
+        }
     }
 
     Row{

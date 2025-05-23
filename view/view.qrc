@@ -70,6 +70,7 @@
         <file>component_library/model_settings/components/button/ModelMenuSettings.qml</file>
 
         <file>component_library/model/ModelSelectView.qml</file>
+        <file>component_library/model/ModelSelectComboBox.qml</file>
         <file>component_library/model/components/ModelSelectHeader.qml</file>
         <file>component_library/model/components/ModelSelectBody.qml</file>
         <file>component_library/model/components/online/InputApikeyDialog.qml</file>
@@ -87,9 +88,7 @@
         <file>developer/components/DeveloperBody.qml</file>
         <file>developer/components/ModelSettingsDeveloper.qml</file>
         <file>developer/components/ModelSettingsDrawerDeveloper.qml</file>
-        <file>developer/components/model/ModelDeveloperDelegate.qml</file>
-        <file>developer/components/model/ModelDeveloperlinformation.qml</file>
-        <file>developer/components/model/ModelDeveloperList.qml</file>
+        <file>developer/components/model/ModelDeveloperComboBox.qml</file>
         <file>developer/components/model/ModelDeveloperView.qml</file>
         <file>developer/components/command_line/CommandLineInterface.qml</file>
         <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
