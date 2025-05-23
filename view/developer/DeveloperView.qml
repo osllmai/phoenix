@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import "./components"
+import "./components/model_settings"
 
 RowLayout {
 
@@ -35,11 +36,11 @@ RowLayout {
                 }
             }
         }
-        ModelSettingsDrawerDeveloper{
+        ModelSettingsDeveloperDrawer{
             id: modelSettingsId
         }
     }
-    ModelSettingsDeveloper {
+    ModelSettingsDeveloperView{
         id: modelSettingSpaceId
         Layout.preferredWidth: 320
         Layout.fillHeight: true

@@ -273,23 +273,12 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/developer/DeveloperView.qml
         view/developer/components/DeveloperHeader.qml
         view/developer/components/DeveloperBody.qml
-        view/developer/components/ModelSettingsDeveloper.qml
-        view/developer/components/ModelSettingsDrawerDeveloper.qml
-        view/developer/components/model/ModelDeveloperDelegate.qml
-        view/developer/components/model/ModelDeveloperlinformation.qml
-        view/developer/components/model/ModelDeveloperList.qml
+        view/developer/components/model/ModelDeveloperComboBox.qml
         view/developer/components/model/ModelDeveloperView.qml
         view/developer/components/command_line/CommandLineInterface.qml
         view/developer/components/command_line/CommandLineInterfaceApp.qml
-        view/developer/components/model_settings/ModelSettingsHeaderDeveloper.qml
-        view/developer/components/model_settings/ModelSettingsBodyDeveloper.qml
-        view/developer/components/model_settings/ModelAssistantSettingsDeveloper.qml
-        view/developer/components/model_settings/ModelInferencesSettingsDeveloper.qml
-        view/developer/components/model_settings/ModelInformationSettingsDeveloper.qml
-        view/developer/components/model_settings/ModelEngineSettingsDeveloper.qml
-        view/developer/components/model_settings/components/ModelSettingsSliderDeveloper.qml
-        view/developer/components/model_settings/components/ModelSettingsSwitchDeveloper.qml
-        view/developer/components/model_settings/components/ModelMenuSettingsDeveloper.qml
+        view/developer/components/model_settings/ModelSettingsDeveloperView.qml
+        view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml
         view/developer/components/curl/CurlDeveloper.qml
 
         view/SettingsDialog.qml
@@ -372,9 +361,10 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/developer/code/code_generator/javascriptfetchcodegenerator.h core/developer/code/code_generator/javascriptfetchcodegenerator.cpp
     SOURCES core/log/logger.h core/log/logger.cpp
     SOURCES core/log/logcategories.h core/log/logcategories.cpp
-
+    QML_FILES view/component_library/model/ModelSelectComboBox.qml
 )
 
+#for show logger-contect (file name, message line, ...)
 add_definitions(-DQT_MESSAGELOGCONTEXT)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
