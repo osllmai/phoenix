@@ -9,9 +9,12 @@ ComboBox {
     height: 35
     width: 160
     font.pixelSize: 12
-    property int modelId: conversationList.modelSelect? conversationList.modelId: -1
-    property string modelName: conversationList.modelSelect? conversationList.modelText:"Phoenix"
-    property string modelIcon: conversationList.modelSelect? conversationList.modelIcon:"qrc:/media/image_company/Phoenix.png"
+
+    property bool modelSelect: false
+    property int modelId: -1
+    property string modelName: "Phoenix"
+    property string modelIcon: "qrc:/media/image_company/Phoenix.png"
+    signal setModelRequest(int id, string name, string icon, string promptTemplate, string systemPrompt)
 
     Accessible.role: Accessible.ComboBox
     contentItem: Row {
@@ -61,6 +64,16 @@ ComboBox {
         background: null
         contentItem: ModelSelectView{
             id: modelSelectId
+            modelSelect: comboBoxId.modelSelect
+            modelId: comboBoxId.modelId
+            modelName: comboBoxId.modelName
+            modelIcon: comboBoxId.modelIcon
+            Connections{
+                target: modelSelectId
+                function onSetModelRequest(id, name, icon, promptTemplate, systemPrompt) {
+                    comboBoxId.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+                }
+            }
         }
     }
     indicator: Image {}

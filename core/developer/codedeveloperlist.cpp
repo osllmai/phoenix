@@ -38,18 +38,74 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     qCInfo(logDeveloper) << "Default language set to Curl";
 }
 
-Model *CodeDeveloperList::model() const { return m_model; }
-
-void CodeDeveloperList::setModel(Model *newModel) {
-    if (m_model == newModel)
+bool CodeDeveloperList::modelSelect() const{return m_modelSelect;}
+void CodeDeveloperList::setModelSelect(bool newModelSelect){
+    if (m_modelSelect == newModelSelect)
         return;
-    m_model = newModel;
-    emit modelChanged();
-    qCInfo(logDeveloper) << "Model changed.";
+    m_modelSelect = newModelSelect;
+    emit modelSelectChanged();
+}
+
+void CodeDeveloperList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
+    setModelId(id);
+    setModelText(text);
+    setModelIcon(icon);
+    setModelPromptTemplate(promptTemplate);
+    setModelSystemPrompt(systemPrompt);
+    if(id == -1)
+        setModelSelect(false);
+    else
+        setModelSelect(true);
+
+    // if(!m_isEmptyConversation){
+    //     if(m_modelPromptTemplate != "")
+    //         m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+    //     if(m_modelSystemPrompt != "")
+    //         m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    // }
+}
+
+QString CodeDeveloperList::modelSystemPrompt() const{return m_modelSystemPrompt;}
+void CodeDeveloperList::setModelSystemPrompt(const QString &newModelSystemPrompt){
+    if (m_modelSystemPrompt == newModelSystemPrompt)
+        return;
+    m_modelSystemPrompt = newModelSystemPrompt;
+    emit modelSystemPromptChanged();
+}
+
+QString CodeDeveloperList::modelPromptTemplate() const{return m_modelPromptTemplate;}
+void CodeDeveloperList::setModelPromptTemplate(const QString &newModelPromptTemplate){
+    if (m_modelPromptTemplate == newModelPromptTemplate)
+        return;
+    m_modelPromptTemplate = newModelPromptTemplate;
+    emit modelPromptTemplateChanged();
+}
+
+QString CodeDeveloperList::modelText() const{return m_modelText;}
+void CodeDeveloperList::setModelText(const QString &newModelText){
+    if (m_modelText == newModelText)
+        return;
+    m_modelText = newModelText;
+    emit modelTextChanged();
+}
+
+QString CodeDeveloperList::modelIcon() const{return m_modelIcon;}
+void CodeDeveloperList::setModelIcon(const QString &newModelIcon){
+    if (m_modelIcon == newModelIcon)
+        return;
+    m_modelIcon = newModelIcon;
+    emit modelIconChanged();
+}
+
+int CodeDeveloperList::modelId() const{return m_modelId;}
+void CodeDeveloperList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
+        return;
+    m_modelId = newModelId;
+    emit modelIdChanged();
 }
 
 Provider *CodeDeveloperList::provider() const { return m_provider; }
-
 void CodeDeveloperList::setProvider(Provider *newProvider) {
     if (m_provider == newProvider)
         return;
@@ -59,7 +115,6 @@ void CodeDeveloperList::setProvider(Provider *newProvider) {
 }
 
 bool CodeDeveloperList::isRuning() const { return m_isRuning; }
-
 void CodeDeveloperList::setIsRuning(bool newIsRuning) {
     if (m_isRuning == newIsRuning)
         return;
@@ -69,7 +124,6 @@ void CodeDeveloperList::setIsRuning(bool newIsRuning) {
 }
 
 int CodeDeveloperList::port() const { return m_port; }
-
 void CodeDeveloperList::setPort(int newPort) {
     if (m_port == newPort)
         return;

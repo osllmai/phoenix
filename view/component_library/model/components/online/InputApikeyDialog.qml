@@ -29,7 +29,7 @@ Dialog {
                 onlineModelList.saveAPIKey(model.id, apiKey)
                 inputApikeyDialogId.close()
                 if(model.installModel){
-                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+                    modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
                 }
             }
         }

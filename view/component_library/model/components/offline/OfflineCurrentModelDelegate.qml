@@ -7,14 +7,10 @@ import QtQuick.Dialogs
 
 T.Button {
     id: control
-    property var modelName
-    property var modelIcon
-    signal deleteChat()
-    signal editChatName(var chatName)
 
     onClicked: {
         if(model.downloadFinished){
-            conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+            modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
         }
     }
 
@@ -25,7 +21,7 @@ T.Button {
         radius: 8
         border.width: 1
         border.color: Style.Colors.boxBorder
-        color: (control.hovered || (conversationList.modelSelect &&(conversationList.modelId === model.id) ))? Style.Colors.boxHover: "#00ffffff"
+        color: (control.hovered || (modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id) ))? Style.Colors.boxHover: "#00ffffff"
 
         Row {
             id: headerId
@@ -57,12 +53,12 @@ T.Button {
             MyButton{
                 id: rejectChatButton
                 height: 30
-                visible: model.id === conversationList.modelId && model.downloadFinished
+                visible: model.id === modelSelectViewId.modelId && model.downloadFinished
                 myText: "Eject"
                 bottonType: Style.RoleEnum.BottonType.Secondary
                 anchors.verticalCenter: logoModelId.verticalCenter
                 onClicked:{
-                    conversationList.setModelRequest(-1, "", "", "", "")
+                    modelSelectViewId.setModelRequest(-1, "", "", "", "")
                 }
             }
             MyButton{

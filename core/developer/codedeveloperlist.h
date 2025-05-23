@@ -43,7 +43,13 @@ class CodeDeveloperList: public QAbstractListModel
     Q_PROPERTY(bool isRuning READ isRuning NOTIFY isRuningChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
     Q_PROPERTY(Provider *provider READ provider WRITE setProvider NOTIFY providerChanged FINAL)
-    Q_PROPERTY(Model *model READ model WRITE setModel NOTIFY modelChanged FINAL)
+
+    Q_PROPERTY(int modelId READ modelId NOTIFY modelIdChanged FINAL)
+    Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
+    Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(QString modelPromptTemplate READ modelPromptTemplate NOTIFY modelPromptTemplateChanged FINAL)
+    Q_PROPERTY(QString modelSystemPrompt READ modelSystemPrompt NOTIFY modelSystemPromptChanged FINAL)
+    Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
 
 public:
     static CodeDeveloperList* instance(QObject* parent);
@@ -53,6 +59,7 @@ public:
         NameRole
     };
 
+    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
     Q_INVOKABLE void setCurrentLanguage(int id);
     Q_INVOKABLE void start();
 
@@ -73,8 +80,24 @@ public:
     Provider *provider() const;
     void setProvider(Provider *newProvider);
 
-    Model *model() const;
-    void setModel(Model *newModel);
+
+    int modelId() const;
+    void setModelId(int newModelId);
+
+    QString modelIcon() const;
+    void setModelIcon(const QString &newModelIcon);
+
+    QString modelText() const;
+    void setModelText(const QString &newModelText);
+
+    QString modelPromptTemplate() const;
+    void setModelPromptTemplate(const QString &newModelPromptTemplate);
+
+    QString modelSystemPrompt() const;
+    void setModelSystemPrompt(const QString &newModelSystemPrompt);
+
+    bool modelSelect() const;
+    void setModelSelect(bool newModelSelect);
 
 signals:
     void countChanged();
@@ -82,7 +105,12 @@ signals:
     void portChanged();
     void isRuningChanged();
     void providerChanged();
-    void modelChanged();
+    void modelIdChanged();
+    void modelIconChanged();
+    void modelTextChanged();
+    void modelPromptTemplateChanged();
+    void modelSystemPromptChanged();
+    void modelSelectChanged();
 
 private:
     explicit CodeDeveloperList(QObject* parent);
@@ -95,11 +123,17 @@ private:
     QHttpServer* m_httpServer = nullptr;
 
     Provider *m_provider;
-    Model *m_model;
 
     QString logger;
 
     QList<ProgramLanguage*> m_programLanguags;
+
+    int m_modelId;
+    QString m_modelIcon;
+    QString m_modelText;
+    QString m_modelPromptTemplate;
+    QString m_modelSystemPrompt;
+    bool m_modelSelect;
 };
 
 #endif // CODEDEVELOPERLIST_H
