@@ -6,15 +6,14 @@
 #include <QJsonObject>
 #include <QCoreApplication>
 #include <QLoggingCategory>
-
-Q_LOGGING_CATEGORY(developerLog, "app.developer")
+#include "../log/logcategories.h"
 
 CodeDeveloperList* CodeDeveloperList::m_instance = nullptr;
 
 CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
     if (!m_instance) {
         m_instance = new CodeDeveloperList(parent);
-        qCInfo(developerLog) << "CodeDeveloperList instance created.";
+        qCInfo(logDeveloper) << "CodeDeveloperList instance created.";
     }
     return m_instance;
 }
@@ -31,12 +30,12 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
 
     for (const auto& lang : languages) {
         m_programLanguags.append(new ProgramLanguage(lang.first, lang.second, this));
-        qCDebug(developerLog) << "Loaded language:" << lang.second;
+        qCDebug(logDeveloper) << "Loaded language:" << lang.second;
     }
 
     m_currentProgramLanguage = m_programLanguags.first();
     m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
-    qCInfo(developerLog) << "Default language set to Curl";
+    qCInfo(logDeveloper) << "Default language set to Curl";
 }
 
 Model *CodeDeveloperList::model() const { return m_model; }
@@ -46,7 +45,7 @@ void CodeDeveloperList::setModel(Model *newModel) {
         return;
     m_model = newModel;
     emit modelChanged();
-    qCInfo(developerLog) << "Model changed.";
+    qCInfo(logDeveloper) << "Model changed.";
 }
 
 Provider *CodeDeveloperList::provider() const { return m_provider; }
@@ -56,7 +55,7 @@ void CodeDeveloperList::setProvider(Provider *newProvider) {
         return;
     m_provider = newProvider;
     emit providerChanged();
-    qCInfo(developerLog) << "Provider changed.";
+    qCInfo(logDeveloper) << "Provider changed.";
 }
 
 bool CodeDeveloperList::isRuning() const { return m_isRuning; }
@@ -66,7 +65,7 @@ void CodeDeveloperList::setIsRuning(bool newIsRuning) {
         return;
     m_isRuning = newIsRuning;
     emit isRuningChanged();
-    qCInfo(developerLog) << "isRuning set to" << newIsRuning;
+    qCInfo(logDeveloper) << "isRuning set to" << newIsRuning;
 }
 
 int CodeDeveloperList::port() const { return m_port; }
@@ -76,7 +75,7 @@ void CodeDeveloperList::setPort(int newPort) {
         return;
     m_port = newPort;
     emit portChanged();
-    qCInfo(developerLog) << "Port changed to" << m_port;
+    qCInfo(logDeveloper) << "Port changed to" << m_port;
 }
 
 void CodeDeveloperList::setCurrentLanguage(int newId) {
@@ -91,7 +90,7 @@ void CodeDeveloperList::setCurrentLanguage(int newId) {
 
 void CodeDeveloperList::start() {
     if (m_isRuning) {
-        qCWarning(developerLog) << "Server already running.";
+        qCWarning(logDeveloper) << "Server already running.";
         return;
     }
 
@@ -110,12 +109,12 @@ void CodeDeveloperList::start() {
             obj["name"] = lang->name();
             modelsArray.append(obj);
         }
-        qCDebug(developerLog) << "GET /models/ called.";
+        qCDebug(logDeveloper) << "GET /models/ called.";
         return createResponse(QJsonObject{{"models", modelsArray}});
     });
 
     m_httpServer->route("/models/", QHttpServerRequest::Method::Post, [createResponse]() {
-        qCWarning(developerLog) << "POST /models/ not allowed.";
+        qCWarning(logDeveloper) << "POST /models/ not allowed.";
         return createResponse(QJsonObject{
             {"error", QJsonObject{
                           {"message", "POST not allowed on /models/. Use GET."},
@@ -128,7 +127,7 @@ void CodeDeveloperList::start() {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(request.body(), &parseError);
         if (parseError.error != QJsonParseError::NoError || !jsonDoc.isObject()) {
-            qCWarning(developerLog) << "Invalid JSON in /chat/ request:" << parseError.errorString();
+            qCWarning(logDeveloper) << "Invalid JSON in /chat/ request:" << parseError.errorString();
             return createResponse(QJsonObject{{"error", "Invalid JSON format."}});
         }
 
@@ -140,7 +139,7 @@ void CodeDeveloperList::start() {
         int maxTokens = jsonObj.value("max_tokens").toInt(-1);
         bool stream = jsonObj.value("stream").toBool(false);
 
-        qCDebug(developerLog) << "POST /chat/ model:" << model
+        qCDebug(logDeveloper) << "POST /chat/ model:" << model
                               << "temperature:" << temperature
                               << "stream:" << stream
                               << "max_tokens:" << maxTokens;
@@ -159,7 +158,7 @@ void CodeDeveloperList::start() {
     });
 
     m_httpServer->route("/chat/", QHttpServerRequest::Method::Get, [createResponse]() {
-        qCWarning(developerLog) << "GET on /chat/ is not allowed.";
+        qCWarning(logDeveloper) << "GET on /chat/ is not allowed.";
         return createResponse(QJsonObject{
             {"error", QJsonObject{
                           {"message", "Only POST requests are accepted on /chat/"},
@@ -172,7 +171,7 @@ void CodeDeveloperList::start() {
     m_httpServer->route("/chat/", [createResponse](const QHttpServerRequest &request) {
         if (request.method() != QHttpServerRequest::Method::Post &&
             request.method() != QHttpServerRequest::Method::Get) {
-            qCWarning(developerLog) << "Unsupported HTTP method on /chat/: " << request.method();
+            qCWarning(logDeveloper) << "Unsupported HTTP method on /chat/: " << request.method();
             return createResponse(QJsonObject{
                 {"error", QJsonObject{
                               {"message", "HTTP method not allowed."},
@@ -185,12 +184,12 @@ void CodeDeveloperList::start() {
 
     auto tcpServer = new QTcpServer(this);
     if (!tcpServer->listen(QHostAddress::Any, m_port) || !m_httpServer->bind(tcpServer)) {
-        qCWarning(developerLog) << "Failed to bind HTTP server to port" << m_port;
+        qCWarning(logDeveloper) << "Failed to bind HTTP server to port" << m_port;
         return;
     }
 
     setIsRuning(true);
-    qCInfo(developerLog) << "HTTP server started on port" << m_port;
+    qCInfo(logDeveloper) << "HTTP server started on port" << m_port;
 }
 
 ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
@@ -219,17 +218,17 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
             generator = new JavascriptFetchCodeGenerator();
             break;
         default:
-            qCWarning(developerLog) << "Unsupported language ID:" << newCurrentProgramLanguage->id();
+            qCWarning(logDeveloper) << "Unsupported language ID:" << newCurrentProgramLanguage->id();
             break;
         }
 
         newCurrentProgramLanguage->setCodeGenerator(generator);
-        qCInfo(developerLog) << "Code generator set for language:" << newCurrentProgramLanguage->name();
+        qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
     }
 
     m_currentProgramLanguage = newCurrentProgramLanguage;
     emit currentProgramLanguageChanged();
-    qCInfo(developerLog) << "Current language changed to:" << newCurrentProgramLanguage->name();
+    qCInfo(logDeveloper) << "Current language changed to:" << newCurrentProgramLanguage->name();
 }
 
 int CodeDeveloperList::count() const { return m_programLanguags.count(); }

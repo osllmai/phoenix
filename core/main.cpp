@@ -56,11 +56,12 @@ int main(int argc, char *argv[])
         qDebug() << "Loaded font families:" << loadedFonts;
     }
 
+    Logger::instance().setMinLogLevel(QtDebugMsg);
+    Logger::instance().installMessageHandler();
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
 
-    Logger::instance().setMinLogLevel(QtDebugMsg);
-    Logger::instance().installMessageHandler();
     engine.rootContext()->setContextProperty("Logger", &Logger::instance());
 
     qDebug(logCore) << "Program start";

@@ -136,6 +136,9 @@ Item{
     readonly property color textTagInfo: currentSuccessColor[2]
     readonly property color textTagDebug: currentInfoColor[2]
     readonly property color textTagError: currentErrorColor[2]
+    readonly property color textTagWarning: currentAvatarBGDynamicColor[8]
+    readonly property color textTagCritical: currentErrorColor[2]
+    readonly property color textTagFatal: currentErrorColor[2]
 
     //icon color
     readonly property color iconPrimaryNormal: currentBackgroundColor[4]

@@ -27,7 +27,7 @@ Item {
                 spacing: 6
 
                 Repeater {
-                    model: ["All", "Info", "Debug", "Error"]
+                    model: ["All", "Info", "Debug", "Error", "Warning", "Critical", "Fatal"]
 
                     delegate: MyButton {
                         id: delegateId
@@ -81,25 +81,38 @@ Item {
 
                     function colorizeLine(line, colors) {
                         return line
-                            .replace(/^([\d-]+\s[\d:]+)/, function(match) {
+                            .replace(/^([\d-]+\s[\d:.]+)/, function(match) {
                                 if (line.indexOf("[INFO]") !== -1)
                                     return "<b><font color='" + Style.Colors.textTagInfo + "'>" + match + "</font></b>";
                                 else if (line.indexOf("[DEBUG]") !== -1)
                                     return "<b><font color='" + Style.Colors.textTagDebug + "'>" + match + "</font></b>";
                                 else if (line.indexOf("[ERROR]") !== -1)
                                     return "<b><font color='" + Style.Colors.textTagError + "'>" + match + "</font></b>";
+                                else if (line.indexOf("[WARNING]") !== -1)
+                                    return "<b><font color='" + Style.Colors.textTagWarning + "'>" + match + "</font></b>";
+                                else if (line.indexOf("[CRITICAL]") !== -1)
+                                    return "<b><font color='" + Style.Colors.textTagCritical + "'>" + match + "</font></b>";
+                                else if (line.indexOf("[FATAL]") !== -1)
+                                    return "<b><font color='" + Style.Colors.textTagFatal + "'>" + match + "</font></b>";
                                 return match;
                             })
-                            .replace(/\[(INFO|DEBUG|ERROR)\]/, function(match) {
+                            .replace(/\[(INFO|DEBUG|ERROR|WARNING|CRITICAL|FATAL)\]/, function(match) {
                                 if (match === "[INFO]")
                                     return "<b><font color='" + Style.Colors.textTagInfo + "'>" + match + "</font></b>";
                                 else if (match === "[DEBUG]")
                                     return "<b><font color='" + Style.Colors.textTagDebug + "'>" + match + "</font></b>";
                                 else if (match === "[ERROR]")
                                     return "<b><font color='" + Style.Colors.textTagError + "'>" + match + "</font></b>";
+                                else if (match === "[WARNING]")
+                                    return "<b><font color='" + Style.Colors.textTagWarning + "'>" + match + "</font></b>";
+                                else if (match === "[CRITICAL]")
+                                    return "<b><font color='" + Style.Colors.textTagCritical + "'>" + match + "</font></b>";
+                                else if (match === "[FATAL]")
+                                    return "<b><font color='" + Style.Colors.textTagFatal + "'>" + match + "</font></b>";
                                 return match;
                             });
                     }
+
 
                     function getFilteredLogs(type) {
                         let lines = fullLogs.split("\n");

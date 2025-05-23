@@ -1,13 +1,14 @@
 #include "Logger.h"
 #include <QTextStream>
 #include <QDebug>
+#include <QRegularExpression>
 
 Logger& Logger::instance() {
     static Logger logger;
     return logger;
 }
 
-Logger::Logger() {
+Logger::Logger() :m_developerLogs(""){
     m_logDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/logs";
     QDir().mkpath(m_logDir);
     qDebug() << "Log directory is:" << m_logDir;
@@ -24,6 +25,38 @@ Logger::~Logger() {
     m_logFiles.clear();
 }
 
+static QString shortenFilePath(const QString& fullPath) {
+    const QString marker = "phoenix_0017";
+    int idx = fullPath.indexOf(marker);
+    if (idx >= 0) {
+        // idx + length(marker) + 1 to skip the folder itself and the backslash after it
+        int start = idx + marker.length() + 1;
+        if (start < fullPath.length())
+            return fullPath.mid(start);
+        else
+            return "";
+    }
+
+    const QString qrcMarker = "qrc:/";
+    if (fullPath.startsWith(qrcMarker)) {
+        return fullPath.mid(qrcMarker.length());
+    }
+
+    return fullPath;
+}
+
+
+static QString shortenFunctionName(const QString& funcName) {
+    int parenIndex = funcName.indexOf('(');
+    QString nameOnly = (parenIndex > 0) ? funcName.left(parenIndex) : funcName;
+
+    static QRegularExpression re("\\b(__cdecl|__stdcall|__fastcall)\\b");
+    nameOnly.remove(re);
+
+    return nameOnly.trimmed();
+}
+
+
 void Logger::installMessageHandler() {
     qInstallMessageHandler(Logger::messageHandler);
 }
@@ -38,8 +71,12 @@ void Logger::messageHandler(QtMsgType type, const QMessageLogContext &context, c
     if (type < logger.m_minLogLevel)
         return;
 
-    QString category = QString::fromUtf8(context.category);
+    QString category = context.category && strlen(context.category) > 0
+                           ? QString::fromUtf8(context.category)
+                           : QStringLiteral("default");
+
     logger.writeLog(category, type, msg, context);
+
 
     QString levelStr;
     switch (type) {
@@ -63,12 +100,12 @@ void Logger::messageHandler(QtMsgType type, const QMessageLogContext &context, c
             break;
     }
 
-    QString timestamp = QDateTime::currentDateTime().toString(Qt::ISODate);
-    QString contextInfo = QString("[%1:%2 %3]").arg(
-        QString::fromUtf8(context.file),
-        QString::number(context.line),
-        QString::fromUtf8(context.function)
-        );
+    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+
+    QString shortFile = shortenFilePath(QString::fromUtf8(context.file));
+    QString shortFunc = shortenFunctionName(QString::fromUtf8(context.function));
+    QString contextInfo = QString("[%1:%2 %3]").arg(shortFile, QString::number(context.line), shortFunc);
+
     QString logLine = QString("[%1] [%2] %3 %4").arg(timestamp, levelStr, contextInfo, msg);
 
     if (type == QtFatalMsg) {
@@ -153,13 +190,17 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
         break;
     }
 
-    QString timestamp = QDateTime::currentDateTime().toString(Qt::ISODate);
-    QString contextInfo = QString("[%1:%2 %3]").arg(QString::fromUtf8(context.file), QString::number(context.line), QString::fromUtf8(context.function));
-    QString logLine = QString("[%1] [%2] %3 %4\n").arg(timestamp, levelStr, contextInfo, message);
+    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+
+    QString shortFile = shortenFilePath(QString::fromUtf8(context.file));
+    QString shortFunc = shortenFunctionName(QString::fromUtf8(context.function));
+    QString contextInfo = QString("[%1:%2 %3]").arg(shortFile, QString::number(context.line), shortFunc);
+
+    QString logLine = QString("[%1] [%2] [%3] %4 %5").arg(timestamp, levelStr, category, contextInfo, message);
 
     if (QString(context.category) == "phoenix.developer") {
         QMutexLocker locker(&m_mutex_developerList);
-        m_developerLogs = m_developerLogs + logLine + "\n";
+        m_developerLogs = m_developerLogs + QString("%1 [%2] %3\n").arg(timestamp, levelStr, message) ;
         emit developerLogsChanged();
     }
 
@@ -178,6 +219,5 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
 }
 
 QString Logger::developerLogs() const {
-    QMutexLocker locker(&m_mutex_developerList);
     return m_developerLogs;
 }
