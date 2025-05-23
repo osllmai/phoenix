@@ -106,7 +106,7 @@ void Logger::messageHandler(QtMsgType type, const QMessageLogContext &context, c
     QString shortFunc = shortenFunctionName(QString::fromUtf8(context.function));
     QString contextInfo = QString("[%1:%2 %3]").arg(shortFile, QString::number(context.line), shortFunc);
 
-    QString logLine = QString("[%1] [%2] %3 %4").arg(timestamp, levelStr, contextInfo, msg);
+    QString logLine = QString("[%1] [%2] %3 %4\n").arg(timestamp, levelStr, contextInfo, msg);
 
     if (type == QtFatalMsg) {
         QTextStream ts(stderr);
@@ -162,7 +162,7 @@ void Logger::writeSessionHeader(QFile* file) {
     QString timeStamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
     out << "\n\n\n---------------- SESSION START ----------------\n";
     out << "Time: " << timeStamp << "\n";
-    out << "----------------------------------------------\n";
+    out << "------------------------------------------------------\n";
     out.flush();
 }
 
@@ -196,7 +196,7 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
     QString shortFunc = shortenFunctionName(QString::fromUtf8(context.function));
     QString contextInfo = QString("[%1:%2 %3]").arg(shortFile, QString::number(context.line), shortFunc);
 
-    QString logLine = QString("[%1] [%2] [%3] %4 %5").arg(timestamp, levelStr, category, contextInfo, message);
+    QString logLine = QString("[%1] [%2] %3 %4\n").arg(timestamp, levelStr, contextInfo, message);
 
     if (QString(context.category) == "phoenix.developer") {
         QMutexLocker locker(&m_mutex_developerList);

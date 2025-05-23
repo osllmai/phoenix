@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
-import '../../../../../component_library/style' as Style
-import '../../../../../model/components/online'
+import '../../../style' as Style
+import '../../../../model/components/online'
 
 Dialog {
     id: settingsDialogId

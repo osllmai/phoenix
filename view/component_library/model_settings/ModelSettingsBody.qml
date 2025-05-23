@@ -1,7 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "./components"
-import '../../../component_library/style' as Style
+import "./components/button"
+import '../style' as Style
 
 Item {
     height: parent.height - headerId.height

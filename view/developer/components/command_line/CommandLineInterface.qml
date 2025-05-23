@@ -113,7 +113,6 @@ Item {
                             });
                     }
 
-
                     function getFilteredLogs(type) {
                         let lines = fullLogs.split("\n");
                         if (type !== "All") {

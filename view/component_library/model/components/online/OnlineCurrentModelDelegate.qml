@@ -1,9 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Templates 2.1 as T
-import '../../../../../component_library/style' as Style
-import '../../../../../component_library/button'
-import QtQuick.Dialogs
+import '../../../style' as Style
+import '../../../button'
 
 T.Button {
     id: control
@@ -13,7 +12,7 @@ T.Button {
     signal editChatName(var chatName)
 
     onClicked: {
-        if(model.downloadFinished){
+        if(model.installModel){
             conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
         }
     }
@@ -41,10 +40,9 @@ T.Button {
                 id: modelNameId
                 text: model.name
                 width: backgroundId.width -
-                            (logoModelId.width) -
-                            (rejectChatButton.visible? rejectChatButton.width: 0) -
-                            (downloadPercentButton.visible? downloadPercentButton.width: 0) -
-                            (dounloadButton.visible? dounloadButton.width: 0) - 5
+                       logoModelId.width -
+                       (installButton.visible? installButton.width: 0) -
+                       (rejectChatButton.visible? rejectChatButton.width: 0) - 5
                 clip: true
                 elide: Label.ElideRight
                 color: Style.Colors.textTitle
@@ -56,8 +54,8 @@ T.Button {
             }
             MyButton{
                 id: rejectChatButton
+                visible: model.id === conversationList.modelId && model.installModel
                 height: 30
-                visible: model.id === conversationList.modelId && model.downloadFinished
                 myText: "Eject"
                 bottonType: Style.RoleEnum.BottonType.Secondary
                 anchors.verticalCenter: logoModelId.verticalCenter
@@ -66,41 +64,19 @@ T.Button {
                 }
             }
             MyButton{
-                id: dounloadButton
+                id: installButton
                 height: 30
-                visible: !model.downloadFinished && !model.isDownloading
-                myText: "Download"
+                visible: !model.installModel
+                myText: "Install"
                 anchors.verticalCenter: logoModelId.verticalCenter
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked:{
-                    folderDialogId.open()
-                }
-            }
-
-            MyButton{
-                id: downloadPercentButton
-                visible: model.isDownloading
-                height: 30
-                width: 87
-                progressBarValue: model.downloadPercent
-                anchors.verticalCenter: logoModelId.verticalCenter
-                bottonType: Style.RoleEnum.BottonType.Progress
-                onClicked:{
-                    offlineModelList.cancelRequest(model.id)
+                    inputApikeyDialogId.open()
                 }
             }
         }
     }
-    FolderDialog {
-        id: folderDialogId
-        title: "Choose Folder"
-
-        onAccepted: {
-            offlineModelList.downloadRequest(model.id, currentFolder)
-            console.log(currentFolder)
-        }
-        onRejected: {
-            console.log("Rejected");
-        }
+    InputApikeyDialog{
+        id: inputApikeyDialogId
     }
 }

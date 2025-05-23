@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
-import "./components"
-import '../../../component_library/style' as Style
-import '../../../component_library/button'
+import './../../component_library/style' as Style
+import './../../component_library/button'
+import './../../component_library/model'
 
 ComboBox {
     id: comboBoxId
@@ -61,39 +61,8 @@ ComboBox {
         // implicitHeight: Math.min(contentItem.implicitHeight + 20, 260)
 
         background: null
-        contentItem: Rectangle {
-            color: Style.Colors.background
-            anchors.fill: parent
-            border.width: 1
-            border.color: Style.Colors.boxBorder
-            radius: 8
-            Column{
-                 anchors.fill: parent
-                 anchors.margins: 12
-                 spacing: 10
-                 ModelDialogHeader{
-                     id: headerId
-                     Connections{
-                         target: headerId
-                         function onSearch(myText){}
-                         function onCurrentPage(numberPage){
-                             badyId.currentIndex = numberPage;
-                         }
-                     }
-                 }
-                 ModelDialogBody{
-                     id: badyId
-                     height: parent.height - headerId.height - 10
-                     width: parent.width
-                 }
-            }
-            layer.enabled: true
-            layer.effect: Glow {
-              samples: 40
-              color:  Style.Colors.boxBorder
-              spread: 0.1
-              transparentBorder: true
-            }
+        contentItem: ModelSelectView{
+            id: modelSelect
         }
     }
     indicator: Image {}

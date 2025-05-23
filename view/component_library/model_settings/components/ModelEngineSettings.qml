@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import "./components"
+import "./button"
 
 Item {
     id: control

@@ -72,9 +72,10 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/chat/message.h core/conversation/chat/message.cpp
     core/conversation/chat/modelsettings.h core/conversation/chat/modelsettings.cpp
     core/conversation/chat/responselist.h core/conversation/chat/responselist.cpp
-    core/conversation/provider/onlineprovider.h core/conversation/provider/onlineprovider.cpp
-    core/conversation/provider/offlineprovider.h core/conversation/provider/offlineprovider.cpp
-    core/conversation/provider/provider.h core/conversation/provider/provider.cpp
+
+    core/provider/onlineprovider.h core/provider/onlineprovider.cpp
+    core/provider/offlineprovider.h core/provider/offlineprovider.cpp
+    core/provider/provider.h core/provider/provider.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -233,9 +234,10 @@ qt_add_qml_module(app${PROJECT_NAME}
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
-        view/chat/components/HistoryDrawer.qml
-        view/chat/components/ModelSettingsDrawer.qml
         view/chat/components/ChatBody.qml
+        view/chat/components/HistoryDrawer.qml
+        view/chat/components/ModelSettingsChatDrawer.qml
+        view/chat/components/ModelChatComboBox.qml
         view/chat/components/chat/InputPrompt.qml
         view/chat/components/chat/MessageDelegate.qml
         view/chat/components/chat/MyMessageList.qml
@@ -243,27 +245,30 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/history/HistoryBody.qml
         view/chat/components/history/HistoryList.qml
         view/chat/components/history/HistoryDelegate.qml
-        view/chat/components/model_settings/ModelSettingsHeader.qml
-        view/chat/components/model_settings/ModelSettingsBody.qml
-        view/chat/components/model_settings/ModelAssistantSettings.qml
-        view/chat/components/model_settings/ModelInferencesSettings.qml
-        view/chat/components/model_settings/ModelInformationSettings.qml
-        view/chat/components/model_settings/ModelEngineSettings.qml
-        view/chat/components/model_settings/components/ModelSettingsSlider.qml
-        view/chat/components/model_settings/components/ModelSettingsSwitch.qml
-        view/chat/components/model_settings/components/ModelMenuSettings.qml
-        view/chat/components/model/ModelComboBox.qml
-        view/chat/components/model/components/ModelDialogHeader.qml
-        view/chat/components/model/components/ModelDialogBody.qml
-        view/chat/components/model/components/online/InputApikeyDialog.qml
-        view/chat/components/model/components/online/OnlineCurrentModelDelegate.qml
-        view/chat/components/model/components/online/OnlineCurrentModelList.qml
-        view/chat/components/model/components/online/OnlineCurrentModelinformation.qml
-        view/chat/components/model/components/online/OnlineCurrentView.qml
-        view/chat/components/model/components/offline/OfflineCurrentModelDelegate.qml
-        view/chat/components/model/components/offline/OfflineCurrentModelList.qml
-        view/chat/components/model/components/offline/OfflineCurrentModelinformation.qml
-        view/chat/components/model/components/offline/OfflineCurrentView.qml
+
+        view/component_library/model_settings/ModelSettingsView.qml
+        view/component_library/model_settings/ModelSettingsHeader.qml
+        view/component_library/model_settings/ModelSettingsBody.qml
+        view/component_library/model_settings/components/ModelAssistantSettings.qml
+        view/component_library/model_settings/components/ModelInferencesSettings.qml
+        view/component_library/model_settings/components/ModelInformationSettings.qml
+        view/component_library/model_settings/components/ModelEngineSettings.qml
+        view/component_library/model_settings/components/button/ModelSettingsSlider.qml
+        view/component_library/model_settings/components/button/ModelSettingsSwitch.qml
+        view/component_library/model_settings/components/button/ModelMenuSettings.qml
+
+        view/component_library/model/ModelSelectView.qml
+        view/component_library/model/components/ModelSelectHeader.qml
+        view/component_library/model/components/ModelSelectBody.qml
+        view/component_library/model/components/online/InputApikeyDialog.qml
+        view/component_library/model/components/online/OnlineCurrentModelDelegate.qml
+        view/component_library/model/components/online/OnlineCurrentModelList.qml
+        view/component_library/model/components/online/OnlineCurrentModelinformation.qml
+        view/component_library/model/components/online/OnlineCurrentView.qml
+        view/component_library/model/components/offline/OfflineCurrentModelDelegate.qml
+        view/component_library/model/components/offline/OfflineCurrentModelList.qml
+        view/component_library/model/components/offline/OfflineCurrentModelinformation.qml
+        view/component_library/model/components/offline/OfflineCurrentView.qml
 
         view/developer/DeveloperView.qml
         view/developer/components/DeveloperHeader.qml
@@ -365,8 +370,12 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/developer/code/code_generator/pythonrequestscodegenerator.h core/developer/code/code_generator/pythonrequestscodegenerator.cpp
     SOURCES core/developer/code/code_generator/nodejsaxioscodegenerator.h core/developer/code/code_generator/nodejsaxioscodegenerator.cpp
     SOURCES core/developer/code/code_generator/javascriptfetchcodegenerator.h core/developer/code/code_generator/javascriptfetchcodegenerator.cpp
+    SOURCES core/log/logger.h core/log/logger.cpp
+    SOURCES core/log/logcategories.h core/log/logcategories.cpp
 
 )
+
+add_definitions(-DQT_MESSAGELOGCONTEXT)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

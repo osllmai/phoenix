@@ -3,8 +3,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Controls.Basic
 import QtQuick.Templates 2.1 as T
 
-import '../../../../component_library/style' as Style
-import '../../../../component_library/button'
+import '../../../style' as Style
+import '../../../button'
 
  T.Button{
     id:control

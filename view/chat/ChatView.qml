@@ -28,7 +28,7 @@ Item {
     HistoryDrawer{
         id: historyId
     }
-    ModelSettingsDrawer{
+    ModelSettingsChatDrawer{
         id: modelSettingsId
     }
 }

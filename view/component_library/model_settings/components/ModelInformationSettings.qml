@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import '../../../component_library/style' as Style
+import '../../style' as Style
 
 Item {
     id: control

@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../component_library/style' as Style
 import "../../component_library/button"
-import "../../chat/components/model"
 import "./model"
 import "../../menu"
 
@@ -52,9 +51,9 @@ Item{
                 }
             }
         }
-        ModelComboBox{
-            id: currentModelComboBoxId
-        }
+        // ModelComboBox{
+        //     id: currentModelComboBoxId
+        // }
     }
 
     Row{

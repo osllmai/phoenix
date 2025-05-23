@@ -2,8 +2,8 @@ import QtQuick 2.15
 import Qt5Compat.GraphicalEffects
 import QtQuick.Templates 2.1 as T
 import QtQuick.Controls 2.15
-import '../../../../../component_library/style' as Style
-import "../../../../../component_library/button"
+import '../../../style' as Style
+import "../../../button"
 
 T.Popup {
     id: control
