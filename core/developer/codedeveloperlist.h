@@ -32,7 +32,11 @@
 
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
+#include "../model/modelsettings.h"
+#include "../model/model.h"
 #include "../provider/provider.h"
+#include "../provider/offlineprovider.h"
+#include "../provider/onlineprovider.h"
 
 class CodeDeveloperList: public QAbstractListModel
 {
@@ -42,7 +46,11 @@ class CodeDeveloperList: public QAbstractListModel
     Q_PROPERTY(int port READ port NOTIFY portChanged FINAL)
     Q_PROPERTY(bool isRuning READ isRuning NOTIFY isRuningChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
-    Q_PROPERTY(Provider *provider READ provider WRITE setProvider NOTIFY providerChanged FINAL)
+    Q_PROPERTY(Model *model READ model NOTIFY modelChanged FINAL)
+    Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged FINAL)
+    Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged FINAL)
+    Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged FINAL)
+    Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged FINAL)
 
     Q_PROPERTY(int modelId READ modelId NOTIFY modelIdChanged FINAL)
     Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
@@ -99,6 +107,26 @@ public:
     bool modelSelect() const;
     void setModelSelect(bool newModelSelect);
 
+    Model *model() const;
+    void setModel(Model *newModel);
+
+    ModelSettings *modelSettings() const;
+
+    bool isLoadModel() const;
+    void setIsLoadModel(bool newIsLoadModel);
+
+    bool loadModelInProgress() const;
+    void setLoadModelInProgress(bool newLoadModelInProgress);
+
+    bool responseInProgress() const;
+    void setResponseInProgress(bool newResponseInProgress);
+
+public slots:
+    void loadModelResult(const bool result, const QString &warning);
+    void tokenResponse(const QString &token);
+    void finishedResponse(const QString &warning);
+    void updateModelSettingsDeveloper();
+
 signals:
     void countChanged();
     void currentProgramLanguageChanged();
@@ -111,10 +139,27 @@ signals:
     void modelPromptTemplateChanged();
     void modelSystemPromptChanged();
     void modelSelectChanged();
+    void modelChanged();
+    void modelSettingsChanged();
+    void isLoadModelChanged();
+    void loadModelInProgressChanged();
+    void responseInProgressChanged();
+    void requestUpdateModelSettingsDeveloper(const int id, const bool &stream,
+                                                const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                const int &contextLength, const int &numberOfGPULayers);
+    void requestLoadModel(const QString &model, const QString &key);
+    void requestUnLoadModel();
+    void requestStop();
 
 private:
     explicit CodeDeveloperList(QObject* parent);
     static CodeDeveloperList* m_instance;
+
+    void prompt(const QString &input, const int idModel);
+    void loadModel(const int id);
+    void unloadModel();
 
     ProgramLanguage *m_currentProgramLanguage;
 
@@ -123,6 +168,12 @@ private:
     QHttpServer* m_httpServer = nullptr;
 
     Provider *m_provider;
+    Model *m_model;
+    ModelSettings *m_modelSettings;
+
+    bool m_isLoadModel;
+    bool m_loadModelInProgress;
+    bool m_responseInProgress;
 
     QString logger;
 

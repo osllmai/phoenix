@@ -19,7 +19,18 @@ CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
 }
 
 CodeDeveloperList::CodeDeveloperList(QObject *parent)
-    : QAbstractListModel(parent), m_port(8080), m_isRuning(false)
+    : QAbstractListModel(parent),
+    m_port(8080),
+    m_isRuning(false),
+    m_modelSelect(false),
+    m_isLoadModel(false),
+    m_loadModelInProgress(false),
+    m_responseInProgress(false),
+    m_model(new Model(this)),
+    m_modelSettings(new ModelSettings(1, true, "### Human:\n%1\n\n### Assistant:\n",
+                                    "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
+                                     0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, this)),
+    m_provider(nullptr)
 {
     QList<QPair<int, QString>> languages = {
         {0, "Curl"},
@@ -57,13 +68,143 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
     else
         setModelSelect(true);
 
-    // if(!m_isEmptyConversation){
+    // if(!m_isEmptyCodeDeveloperList){
     //     if(m_modelPromptTemplate != "")
-    //         m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
+    //         m_currentCodeDeveloperList->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
     //     if(m_modelSystemPrompt != "")
-    //         m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+    //         m_currentCodeDeveloperList->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
     // }
 }
+
+void CodeDeveloperList::prompt(const QString &input, const int idModel){
+    if(!m_isLoadModel){
+        loadModel(idModel);
+        setIsLoadModel(true);
+        if(m_provider != nullptr){
+            //disconnect load and unload model
+            disconnect(this, &CodeDeveloperList::requestLoadModel, m_provider, &Provider::loadModel);
+            disconnect(m_provider, &Provider::requestLoadModelResult, this, &CodeDeveloperList::loadModelResult);
+            disconnect(this, &CodeDeveloperList::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+
+            //disconnect prompt
+            disconnect(m_provider, &Provider::requestTokenResponse, this, &CodeDeveloperList::tokenResponse);
+
+            //disconnect finished response
+            disconnect(m_provider, &Provider::requestFinishedResponse, this, &CodeDeveloperList::finishedResponse);
+            disconnect(this, &CodeDeveloperList::requestStop, m_provider, &Provider::stop);
+            delete m_provider;
+        }
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            m_provider = new OfflineProvider(this);
+        }else if(m_model->backend() == BackendType::OnlineModel){
+            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+        }
+        //load and unload model
+        connect(this, &CodeDeveloperList::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+        connect(m_provider, &Provider::requestLoadModelResult, this, &CodeDeveloperList::loadModelResult, Qt::QueuedConnection);
+        connect(this, &CodeDeveloperList::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+
+        //prompt
+        connect(m_provider, &Provider::requestTokenResponse, this, &CodeDeveloperList::tokenResponse, Qt::QueuedConnection);
+
+        //finished response
+        connect(m_provider, &Provider::requestFinishedResponse, this, &CodeDeveloperList::finishedResponse, Qt::QueuedConnection);
+        connect(this, &CodeDeveloperList::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            emit requestLoadModel( m_model->modelName(), m_model->key());
+        }
+
+    }
+    if(idModel != m_model->id()){
+        setIsLoadModel(false);
+        prompt(input, idModel);
+        return;
+    }
+
+    setResponseInProgress(true);
+    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
+                       m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
+                       m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
+                       m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
+                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
+                       m_modelSettings->numberOfGPULayers());
+}
+
+bool CodeDeveloperList::responseInProgress() const{return m_responseInProgress;}
+void CodeDeveloperList::setResponseInProgress(bool newResponseInProgress){
+    if (m_responseInProgress == newResponseInProgress)
+        return;
+    m_responseInProgress = newResponseInProgress;
+    emit responseInProgressChanged();
+}
+
+bool CodeDeveloperList::loadModelInProgress() const{return m_loadModelInProgress;}
+void CodeDeveloperList::setLoadModelInProgress(bool newLoadModelInProgress){
+    if (m_loadModelInProgress == newLoadModelInProgress)
+        return;
+    m_loadModelInProgress = newLoadModelInProgress;
+    emit loadModelInProgressChanged();
+}
+
+bool CodeDeveloperList::isLoadModel() const{return m_isLoadModel;}
+void CodeDeveloperList::setIsLoadModel(bool newIsLoadModel){
+    if (m_isLoadModel == newIsLoadModel)
+        return;
+    m_isLoadModel = newIsLoadModel;
+    emit isLoadModelChanged();
+}
+
+ModelSettings *CodeDeveloperList::modelSettings() const{return m_modelSettings;}
+
+Model *CodeDeveloperList::model() const{return m_model;}
+void CodeDeveloperList::setModel(Model *newModel){
+    if (m_model == newModel)
+        return;
+    m_model = newModel;
+    emit modelChanged();
+}
+
+void CodeDeveloperList::loadModel(const int id){
+
+    OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
+    if(offlineModel != nullptr){
+        setModel(offlineModel);
+    }
+    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+    if(onlineModel != nullptr){
+        setModel(onlineModel);
+    }
+}
+
+void CodeDeveloperList::unloadModel(){
+    setIsLoadModel(false);
+    m_provider->unLoadModel();
+}
+
+void CodeDeveloperList::loadModelResult(const bool result, const QString &warning){
+
+}
+
+void CodeDeveloperList::tokenResponse(const QString &token){
+
+}
+
+void CodeDeveloperList::finishedResponse(const QString &warning){
+
+}
+
+void CodeDeveloperList::updateModelSettingsDeveloper(){
+    emit requestUpdateModelSettingsDeveloper(m_modelSettings->id(), m_modelSettings->stream(),
+                                                m_modelSettings->promptTemplate(), m_modelSettings->systemPrompt(),
+                                                m_modelSettings->temperature(), m_modelSettings->topK(),
+                                                m_modelSettings->topP(), m_modelSettings->minP(),
+                                                m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
+                                                m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
+                                                m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}
+
 
 QString CodeDeveloperList::modelSystemPrompt() const{return m_modelSystemPrompt;}
 void CodeDeveloperList::setModelSystemPrompt(const QString &newModelSystemPrompt){

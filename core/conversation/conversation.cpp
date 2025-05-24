@@ -216,8 +216,6 @@ void Conversation::prompt(const QString &input, const int idModel){
             emit requestLoadModel( m_model->modelName(), m_model->key());
         }
 
-        qInfo()<<m_model->modelName()<<"  "<<m_model->key();
-
     }
     if(idModel != m_model->id()){
         setIsLoadModel(false);
@@ -265,7 +263,6 @@ void Conversation::loadModel(const int id){
 void Conversation::unloadModel(){
     setIsLoadModel(false);
     m_provider->unLoadModel();
-    qInfo()<<"UNLOda";
 }
 
 void Conversation::loadModelResult(const bool result, const QString &warning){

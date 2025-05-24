@@ -5,7 +5,7 @@
 #include <QQmlEngine>
 #include <QDateTime>
 
-#include "./chat/modelsettings.h"
+#include "../model/modelsettings.h"
 #include "./chat/messagelist.h"
 #include "../model/model.h"
 #include "./chat/responselist.h"
