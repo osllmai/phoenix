@@ -38,13 +38,36 @@
 #include "../provider/offlineprovider.h"
 #include "../provider/onlineprovider.h"
 
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QCoreApplication>
+#include <QLoggingCategory>
+#include "../log/logcategories.h"
+
+#include <QHttpServer>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+
+#include "server/apiserver.h"
+#include "server/type.h"
+#include "server/utils.h"
+#include <QtCore/QCoreApplication>
+#include <QtHttpServer/QHttpServer>
+
+#define SCHEME "http"
+#define HOST "127.0.0.1"
+#define PORT 49425
+
 class CodeDeveloperList: public QAbstractListModel
 {
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(int port READ port NOTIFY portChanged FINAL)
-    Q_PROPERTY(bool isRuning READ isRuning NOTIFY isRuningChanged FINAL)
+    Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged FINAL)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged FINAL)
@@ -82,8 +105,8 @@ public:
     int port() const;
     void setPort(int newPort);
 
-    bool isRuning() const;
-    void setIsRuning(bool newIsRuning);
+    bool isRunning() const;
+    void setIsRunning(bool newIsRunning);
 
     Provider *provider() const;
     void setProvider(Provider *newProvider);
@@ -131,7 +154,7 @@ signals:
     void countChanged();
     void currentProgramLanguageChanged();
     void portChanged();
-    void isRuningChanged();
+    void isRunningChanged();
     void providerChanged();
     void modelIdChanged();
     void modelIconChanged();
@@ -161,15 +184,24 @@ private:
     void loadModel(const int id);
     void unloadModel();
 
+    template<typename T>
+    void addCrudRoutes(const QString &apiPath, std::optional<CrudApi<T>> &apiOpt);
+
     ProgramLanguage *m_currentProgramLanguage;
 
     int m_port;
-    bool m_isRuning;
-    QHttpServer* m_httpServer = nullptr;
+    bool m_isRunning;
 
     Provider *m_provider;
     Model *m_model;
     ModelSettings *m_modelSettings;
+
+    QCommandLineParser m_parser;
+    QCoreApplication *app;
+    QHttpServer* m_httpServer = nullptr;
+    std::unique_ptr<QTcpServer> m_tcpServer;
+    std::optional<CrudApi<Color>> m_colorsApi;
+    std::optional<CrudApi<User>> m_usersApi;
 
     bool m_isLoadModel;
     bool m_loadModelInProgress;

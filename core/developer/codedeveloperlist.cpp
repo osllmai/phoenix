@@ -1,13 +1,5 @@
 #include "codedeveloperlist.h"
 
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QCoreApplication>
-#include <QLoggingCategory>
-#include "../log/logcategories.h"
-
 CodeDeveloperList* CodeDeveloperList::m_instance = nullptr;
 
 CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
@@ -21,7 +13,7 @@ CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
 CodeDeveloperList::CodeDeveloperList(QObject *parent)
     : QAbstractListModel(parent),
     m_port(8080),
-    m_isRuning(false),
+    m_isRunning(false),
     m_modelSelect(false),
     m_isLoadModel(false),
     m_loadModelInProgress(false),
@@ -205,186 +197,93 @@ void CodeDeveloperList::updateModelSettingsDeveloper(){
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
-
-QString CodeDeveloperList::modelSystemPrompt() const{return m_modelSystemPrompt;}
-void CodeDeveloperList::setModelSystemPrompt(const QString &newModelSystemPrompt){
-    if (m_modelSystemPrompt == newModelSystemPrompt)
+template<typename T>
+void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<CrudApi<T>> &apiOpt)
+{
+    if (!m_httpServer || !apiOpt.has_value())
         return;
-    m_modelSystemPrompt = newModelSystemPrompt;
-    emit modelSystemPromptChanged();
+
+    auto &api = apiOpt.value();
+
+    m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
+                        [&api](const QHttpServerRequest &request) {
+                            return api.getFullList();
+                        });
+
+    m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Get,
+                        [&api](qint64 itemId) {
+                            return api.getItem(itemId);
+                        });
+
+    m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Post,
+                         [&api](const QHttpServerRequest &request) {
+                             return api.postItem(request);
+                         });
+
+    m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Put,
+                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                            return api.updateItem(itemId, request);
+                        });
+
+    m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Patch,
+                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                            return api.updateItemFields(itemId, request);
+                        });
+
+    m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Delete,
+                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                            return api.deleteItem(itemId);
+                        });
 }
 
-QString CodeDeveloperList::modelPromptTemplate() const{return m_modelPromptTemplate;}
-void CodeDeveloperList::setModelPromptTemplate(const QString &newModelPromptTemplate){
-    if (m_modelPromptTemplate == newModelPromptTemplate)
-        return;
-    m_modelPromptTemplate = newModelPromptTemplate;
-    emit modelPromptTemplateChanged();
-}
-
-QString CodeDeveloperList::modelText() const{return m_modelText;}
-void CodeDeveloperList::setModelText(const QString &newModelText){
-    if (m_modelText == newModelText)
-        return;
-    m_modelText = newModelText;
-    emit modelTextChanged();
-}
-
-QString CodeDeveloperList::modelIcon() const{return m_modelIcon;}
-void CodeDeveloperList::setModelIcon(const QString &newModelIcon){
-    if (m_modelIcon == newModelIcon)
-        return;
-    m_modelIcon = newModelIcon;
-    emit modelIconChanged();
-}
-
-int CodeDeveloperList::modelId() const{return m_modelId;}
-void CodeDeveloperList::setModelId(int newModelId){
-    if (m_modelId == newModelId)
-        return;
-    m_modelId = newModelId;
-    emit modelIdChanged();
-}
-
-Provider *CodeDeveloperList::provider() const { return m_provider; }
-void CodeDeveloperList::setProvider(Provider *newProvider) {
-    if (m_provider == newProvider)
-        return;
-    m_provider = newProvider;
-    emit providerChanged();
-    qCInfo(logDeveloper) << "Provider changed.";
-}
-
-bool CodeDeveloperList::isRuning() const { return m_isRuning; }
-void CodeDeveloperList::setIsRuning(bool newIsRuning) {
-    if (m_isRuning == newIsRuning)
-        return;
-    m_isRuning = newIsRuning;
-    emit isRuningChanged();
-    qCInfo(logDeveloper) << "isRuning set to" << newIsRuning;
-}
-
-int CodeDeveloperList::port() const { return m_port; }
-void CodeDeveloperList::setPort(int newPort) {
-    if (m_port == newPort)
-        return;
-    m_port = newPort;
-    emit portChanged();
-    qCInfo(logDeveloper) << "Port changed to" << m_port;
-}
-
-void CodeDeveloperList::setCurrentLanguage(int newId) {
-    for (int number = 0; number < m_programLanguags.size(); number++) {
-        ProgramLanguage* programLanguage = m_programLanguags[number];
-        if (programLanguage->id() == newId) {
-            setCurrentProgramLanguage(programLanguage);
-            break;
-        }
-    }
-}
-
-void CodeDeveloperList::start() {
-    if (m_isRuning) {
-        qCWarning(logDeveloper) << "Server already running.";
+void CodeDeveloperList::start()
+{
+    app = QCoreApplication::instance();
+    if (!app) {
+        qWarning() << "QCoreApplication instance is null!";
         return;
     }
+
+    m_parser.setApplicationDescription("Qt Developer Server");
+    m_parser.addHelpOption();
+    m_parser.addOptions({
+        { "port", QCoreApplication::translate("main", "The port the server listens on."), "port" }
+    });
+
+    m_parser.process(*app);
 
     m_httpServer = new QHttpServer(this);
 
-    auto createResponse = [](const QJsonObject &jsonObj) {
-        QByteArray body = QJsonDocument(jsonObj).toJson();
-        return QHttpServerResponse(body, "application/json", QHttpServerResponse::StatusCode::Ok);
-    };
+    quint16 portArg = PORT;
+    if (!m_parser.value("port").isEmpty())
+        portArg = m_parser.value("port").toUShort();
 
-    m_httpServer->route("/models/", QHttpServerRequest::Method::Get, [this, createResponse]() {
-        QJsonArray modelsArray;
-        for (const auto& lang : m_programLanguags) {
-            QJsonObject obj;
-            obj["id"] = lang->id();
-            obj["name"] = lang->name();
-            modelsArray.append(obj);
-        }
-        qCDebug(logDeveloper) << "GET /models/ called.";
-        return createResponse(QJsonObject{{"models", modelsArray}});
+    auto colorFactory = std::make_unique<ColorFactory>();
+    auto colors = tryLoadFromFile<Color>(*colorFactory, ":/assets/colors.json");
+    m_colorsApi.emplace(std::move(colors), std::move(colorFactory));
+
+    auto userFactory = std::make_unique<UserFactory>(SCHEME, HOST, portArg);
+    auto users = tryLoadFromFile<User>(*userFactory, ":/assets/users.json");
+    m_usersApi.emplace(std::move(users), std::move(userFactory));
+
+    m_httpServer->route("/", []() {
+        return "Qt Colorpalette example server. Please see documentation for API description";
     });
 
-    m_httpServer->route("/models/", QHttpServerRequest::Method::Post, [createResponse]() {
-        qCWarning(logDeveloper) << "POST /models/ not allowed.";
-        return createResponse(QJsonObject{
-            {"error", QJsonObject{
-                          {"message", "POST not allowed on /models/. Use GET."},
-                          {"type", "invalid_request_error"}
-                      }}
-        });
-    });
+    addCrudRoutes("/api/unknown", m_colorsApi);
+    addCrudRoutes("/api/users", m_usersApi);
 
-    m_httpServer->route("/chat/", QHttpServerRequest::Method::Post, [this, createResponse](const QHttpServerRequest &request) {
-        QJsonParseError parseError;
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(request.body(), &parseError);
-        if (parseError.error != QJsonParseError::NoError || !jsonDoc.isObject()) {
-            qCWarning(logDeveloper) << "Invalid JSON in /chat/ request:" << parseError.errorString();
-            return createResponse(QJsonObject{{"error", "Invalid JSON format."}});
-        }
-
-        QJsonObject jsonObj = jsonDoc.object();
-
-        QString model = jsonObj.value("model").toString();
-        QJsonArray messages = jsonObj.value("messages").toArray();
-        double temperature = jsonObj.value("temperature").toDouble(0.7);
-        int maxTokens = jsonObj.value("max_tokens").toInt(-1);
-        bool stream = jsonObj.value("stream").toBool(false);
-
-        qCDebug(logDeveloper) << "POST /chat/ model:" << model
-                              << "temperature:" << temperature
-                              << "stream:" << stream
-                              << "max_tokens:" << maxTokens;
-
-        QString finalReply = "Today is Thursday, the sky is blue,\nI answer in rhymes, just for you!";
-
-        QJsonObject responseObj{
-            {"model", model},
-            {"temperature", temperature},
-            {"stream", stream},
-            {"max_tokens", maxTokens},
-            {"reply", finalReply}
-        };
-
-        return createResponse(responseObj);
-    });
-
-    m_httpServer->route("/chat/", QHttpServerRequest::Method::Get, [createResponse]() {
-        qCWarning(logDeveloper) << "GET on /chat/ is not allowed.";
-        return createResponse(QJsonObject{
-            {"error", QJsonObject{
-                          {"message", "Only POST requests are accepted on /chat/"},
-                          {"type", "invalid_request_error"},
-                          {"code", "method_not_supported"}
-                      }}
-        });
-    });
-
-    m_httpServer->route("/chat/", [createResponse](const QHttpServerRequest &request) {
-        if (request.method() != QHttpServerRequest::Method::Post &&
-            request.method() != QHttpServerRequest::Method::Get) {
-            qCWarning(logDeveloper) << "Unsupported HTTP method on /chat/: " << request.method();
-            return createResponse(QJsonObject{
-                {"error", QJsonObject{
-                              {"message", "HTTP method not allowed."},
-                              {"type", "invalid_request_error"}
-                          }}
-            });
-        }
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::MethodNotAllowed);
-    });
-
-    auto tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen(QHostAddress::Any, m_port) || !m_httpServer->bind(tcpServer)) {
-        qCWarning(logDeveloper) << "Failed to bind HTTP server to port" << m_port;
+    m_tcpServer = std::make_unique<QTcpServer>();
+    if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {
+        qWarning() << "Server failed to listen on port" << portArg;
         return;
     }
 
-    setIsRuning(true);
-    qCInfo(logDeveloper) << "HTTP server started on port" << m_port;
+    quint16 port = m_tcpServer->serverPort();
+    qDebug() << QString("Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(port);
+
+    emit portChanged();
+    emit isRunningChanged();
 }
 
 ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
@@ -454,4 +353,82 @@ QHash<int, QByteArray> CodeDeveloperList::roleNames() const {
     roles[IDRole] = "id";
     roles[NameRole] = "name";
     return roles;
+}
+
+
+QString CodeDeveloperList::modelSystemPrompt() const{return m_modelSystemPrompt;}
+void CodeDeveloperList::setModelSystemPrompt(const QString &newModelSystemPrompt){
+    if (m_modelSystemPrompt == newModelSystemPrompt)
+        return;
+    m_modelSystemPrompt = newModelSystemPrompt;
+    emit modelSystemPromptChanged();
+}
+
+QString CodeDeveloperList::modelPromptTemplate() const{return m_modelPromptTemplate;}
+void CodeDeveloperList::setModelPromptTemplate(const QString &newModelPromptTemplate){
+    if (m_modelPromptTemplate == newModelPromptTemplate)
+        return;
+    m_modelPromptTemplate = newModelPromptTemplate;
+    emit modelPromptTemplateChanged();
+}
+
+QString CodeDeveloperList::modelText() const{return m_modelText;}
+void CodeDeveloperList::setModelText(const QString &newModelText){
+    if (m_modelText == newModelText)
+        return;
+    m_modelText = newModelText;
+    emit modelTextChanged();
+}
+
+QString CodeDeveloperList::modelIcon() const{return m_modelIcon;}
+void CodeDeveloperList::setModelIcon(const QString &newModelIcon){
+    if (m_modelIcon == newModelIcon)
+        return;
+    m_modelIcon = newModelIcon;
+    emit modelIconChanged();
+}
+
+int CodeDeveloperList::modelId() const{return m_modelId;}
+void CodeDeveloperList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
+        return;
+    m_modelId = newModelId;
+    emit modelIdChanged();
+}
+
+Provider *CodeDeveloperList::provider() const { return m_provider; }
+void CodeDeveloperList::setProvider(Provider *newProvider) {
+    if (m_provider == newProvider)
+        return;
+    m_provider = newProvider;
+    emit providerChanged();
+    qCInfo(logDeveloper) << "Provider changed.";
+}
+
+bool CodeDeveloperList::isRunning() const { return m_isRunning; }
+void CodeDeveloperList::setIsRunning(bool newIsRunning) {
+    if (m_isRunning == newIsRunning)
+        return;
+    m_isRunning = newIsRunning;
+    emit isRunningChanged();
+    qCInfo(logDeveloper) << "isRunning set to" << newIsRunning;
+}
+
+int CodeDeveloperList::port() const { return m_port; }
+void CodeDeveloperList::setPort(int newPort) {
+    if (m_port == newPort)
+        return;
+    m_port = newPort;
+    emit portChanged();
+    qCInfo(logDeveloper) << "Port changed to" << m_port;
+}
+
+void CodeDeveloperList::setCurrentLanguage(int newId) {
+    for (int number = 0; number < m_programLanguags.size(); number++) {
+        ProgramLanguage* programLanguage = m_programLanguags[number];
+        if (programLanguage->id() == newId) {
+            setCurrentProgramLanguage(programLanguage);
+            break;
+        }
+    }
 }
