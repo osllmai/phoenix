@@ -9,3 +9,11 @@ QString CrudAPI::getScheme() const{return scheme;}
 QString CrudAPI::getHostName() const{return hostName;}
 
 int CrudAPI::getPort() const{return port;}
+
+std::optional<QJsonObject> CrudAPI::byteArrayToJsonObject(const QByteArray &arr){
+    QJsonParseError err;
+    const auto json = QJsonDocument::fromJson(arr, &err);
+    if (err.error || !json.isObject())
+        return std::nullopt;
+    return json.object();
+}

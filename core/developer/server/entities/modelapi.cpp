@@ -36,7 +36,7 @@ QHttpServerResponse ModelAPI::getItem(qint64 itemId) const{
 QHttpServerResponse ModelAPI::postItem(const QHttpServerRequest &request){
     // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
     // if (!json)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
+        // return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
 
     // const std::optional<T> item = factory->fromJson(*json);
     // if (!item)

@@ -1,6 +1,3 @@
-#ifndef PROVIDER_H
-#define PROVIDER_H
-
 #pragma once
 
 #include <QObject>
@@ -54,4 +51,3 @@ signals:
     void requestFinishedResponse(const QString &warning);
 };
 
-#endif // PROVIDER_H

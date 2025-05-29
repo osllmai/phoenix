@@ -33,6 +33,10 @@ include_directories(${CMAKE_SOURCE_DIR}/core/library/textprocessor)
 include_directories(${CMAKE_SOURCE_DIR}/core/developer/)
 include_directories(${CMAKE_SOURCE_DIR}/core/developer/code)
 include_directories(${CMAKE_SOURCE_DIR}/core/developer/code/code_generator)
+include_directories(${CMAKE_SOURCE_DIR}/core/developer/server)
+include_directories(${CMAKE_SOURCE_DIR}/core/developer/server/entities)
+include_directories(${CMAKE_SOURCE_DIR}/core/provider)
+include_directories(${CMAKE_SOURCE_DIR}/core/log)
 
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")

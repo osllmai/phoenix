@@ -1,15 +1,22 @@
 #ifndef CRUDAPI_H
 #define CRUDAPI_H
 
-#include "type.h"
 #include "utils.h"
 
 #include <QtHttpServer/QHttpServer>
 #include <QtConcurrent/qtconcurrentrun.h>
+#include <QtCore/QFile>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+#include <QtCore/QList>
+#include <QtCore/QPair>
+#include <QJsonParseError>
+
+#include <QObject>
 
 #include <optional>
 
-class CrudAPI
+class CrudAPI: public QObject
 {
 public:
     explicit CrudAPI(const QString &scheme, const QString &hostName, int port);
@@ -27,6 +34,8 @@ public:
     virtual QHttpServerResponse updateItemFields(qint64 itemId, const QHttpServerRequest &request) = 0;
 
     virtual QHttpServerResponse deleteItem(qint64 itemId) = 0;
+
+    std::optional<QJsonObject> byteArrayToJsonObject(const QByteArray &arr);
 
     QString getScheme() const;
 
