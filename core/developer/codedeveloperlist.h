@@ -51,7 +51,11 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-#include "server/apiserver.h"
+#include "server/crudapi.h"
+#include "server/entities/chatapi.h"
+#include "server/entities/modelapi.h"
+#include "server/entities/chatapi.h"
+#include "server/entities/modelapi.h"
 #include "server/type.h"
 #include "server/utils.h"
 #include <QtCore/QCoreApplication>
@@ -184,8 +188,7 @@ private:
     void loadModel(const int id);
     void unloadModel();
 
-    template<typename T>
-    void addCrudRoutes(const QString &apiPath, std::optional<CrudApi<T>> &apiOpt);
+    void addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt);
 
     ProgramLanguage *m_currentProgramLanguage;
 
@@ -200,8 +203,8 @@ private:
     QCoreApplication *app;
     QHttpServer* m_httpServer = nullptr;
     std::unique_ptr<QTcpServer> m_tcpServer;
-    std::optional<CrudApi<Color>> m_colorsApi;
-    std::optional<CrudApi<User>> m_usersApi;
+    std::optional<std::unique_ptr<CrudAPI>> m_colorsApi;
+    std::optional<std::unique_ptr<CrudAPI>> m_usersApi;
 
     bool m_isLoadModel;
     bool m_loadModelInProgress;

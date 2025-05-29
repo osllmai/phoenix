@@ -44,6 +44,7 @@ public:
     Q_INVOKABLE void saveAPIKey(const int id, QString key);
     Q_INVOKABLE void deleteRequest(const int id);
 
+
 public slots:
     void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
                   QDateTime addModelTime, const bool isLike, Company* company, const QString& type, const BackendType backend,

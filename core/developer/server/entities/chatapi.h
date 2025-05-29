@@ -8,40 +8,37 @@
 #include <QtCore/QJsonParseError>
 #include <QtCore/QString>
 #include <QtCore/qtypes.h>
+#include <QList>
 
 #include <algorithm>
 #include <optional>
-#include "../apiserver.h"
+#include "../crudapi.h"
 
-struct ChatAPI : public Jsonable, public Updatable
+#include "onlinemodel.h"
+#include "offlinemodel.h"
+#include "onlinemodellist.h"
+#include "offlinemodellist.h"
+#include "offlinemodellistfilter.h"
+#include "onlinemodellistfilter.h"
+
+struct ChatAPI : public CrudAPI
 {
-    qint64 id;
-    QString email;
-    QString firstName;
-    QString lastName;
-    QUrl avatarUrl;
-    QDateTime createdAt;
-    QDateTime updatedAt;
+    ChatAPI(const QString &scheme, const QString &hostName, int port);
 
-    explicit ChatAPI(const QString &email, const QString &firstName, const QString &lastName,
-                      const QUrl &avatarUrl,
-                      const QDateTime &createdAt = QDateTime::currentDateTimeUtc(),
-                      const QDateTime &updatedAt = QDateTime::currentDateTimeUtc());
+    QHttpServerResponse getFullList() const override;
 
-    bool update(const QJsonObject &json) override;
+    QHttpServerResponse getItem(qint64 itemId) const override;
 
-    void updateFields(const QJsonObject &json) override;
+    QHttpServerResponse postItem(const QHttpServerRequest &request) override ;
 
-    QJsonObject toJson() const override;
+    QHttpServerResponse updateItem(qint64 itemId, const QHttpServerRequest &request) override;
+
+    QHttpServerResponse updateItemFields(qint64 itemId, const QHttpServerRequest &request) override;
+
+    QHttpServerResponse deleteItem(qint64 itemId) override;
 
 private:
-    void updateTimestamp();
-
-    static qint64 nextId()
-    {
-        static qint64 lastId = 1;
-        return lastId++;
-    }
+    QJsonArray extractModelsAsJsonArray(QSortFilterProxyModel* proxyModel) const;
 };
 
 #endif // CHATAPI_H

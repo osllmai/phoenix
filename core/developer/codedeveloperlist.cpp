@@ -197,8 +197,7 @@ void CodeDeveloperList::updateModelSettingsDeveloper(){
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
-template<typename T>
-void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<CrudApi<T>> &apiOpt)
+void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt)
 {
     if (!m_httpServer || !apiOpt.has_value())
         return;
@@ -207,32 +206,32 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<Crud
 
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
                         [&api](const QHttpServerRequest &request) {
-                            return api.getFullList();
+                            return api->getFullList();
                         });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Get,
                         [&api](qint64 itemId) {
-                            return api.getItem(itemId);
+                            return api->getItem(itemId);
                         });
 
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Post,
                          [&api](const QHttpServerRequest &request) {
-                             return api.postItem(request);
+                             return api->postItem(request);
                          });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Put,
                         [&api](qint64 itemId, const QHttpServerRequest &request) {
-                            return api.updateItem(itemId, request);
+                            return api->updateItem(itemId, request);
                         });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Patch,
                         [&api](qint64 itemId, const QHttpServerRequest &request) {
-                            return api.updateItemFields(itemId, request);
+                            return api->updateItemFields(itemId, request);
                         });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Delete,
                         [&api](qint64 itemId, const QHttpServerRequest &request) {
-                            return api.deleteItem(itemId);
+                            return api->deleteItem(itemId);
                         });
 }
 
@@ -258,20 +257,18 @@ void CodeDeveloperList::start()
     if (!m_parser.value("port").isEmpty())
         portArg = m_parser.value("port").toUShort();
 
-    auto colorFactory = std::make_unique<ColorFactory>();
-    auto colors = tryLoadFromFile<Color>(*colorFactory, ":/assets/colors.json");
-    m_colorsApi.emplace(std::move(colors), std::move(colorFactory));
-
-    auto userFactory = std::make_unique<UserFactory>(SCHEME, HOST, portArg);
-    auto users = tryLoadFromFile<User>(*userFactory, ":/assets/users.json");
-    m_usersApi.emplace(std::move(users), std::move(userFactory));
-
     m_httpServer->route("/", []() {
         return "Qt Colorpalette example server. Please see documentation for API description";
     });
 
-    addCrudRoutes("/api/unknown", m_colorsApi);
-    addCrudRoutes("/api/users", m_usersApi);
+    auto colorFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portArg);
+    auto userFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
+
+    m_colorsApi = std::move(colorFactory);
+    m_usersApi = std::move(userFactory);
+
+    addCrudRoutes("/api/models", m_colorsApi);
+    addCrudRoutes("/api/chat", m_usersApi);
 
     m_tcpServer = std::make_unique<QTcpServer>();
     if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {

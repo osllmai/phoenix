@@ -52,6 +52,7 @@ qt_add_executable(app${PROJECT_NAME}
 
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
+    core/model/modelsettings.h core/model/modelsettings.cpp
     core/model/company.h core/model/company.cpp
     core/model/companylist.h core/model/companylist.cpp
     core/model/companylistfilter.h core/model/companylistfilter.cpp
@@ -70,7 +71,6 @@ qt_add_executable(app${PROJECT_NAME}
     core/conversation/conversationlistfilter.h core/conversation/conversationlistfilter.cpp
     core/conversation/chat/messagelist.h core/conversation/chat/messagelist.cpp
     core/conversation/chat/message.h core/conversation/chat/message.cpp
-    core/conversation/chat/modelsettings.h core/conversation/chat/modelsettings.cpp
     core/conversation/chat/responselist.h core/conversation/chat/responselist.cpp
 
     core/provider/onlineprovider.h core/provider/onlineprovider.cpp
@@ -181,6 +181,23 @@ qt_add_resources(app${PROJECT_NAME}
 
         media/media.qrc
         view/view.qrc
+
+        media/assets/colors.json
+        media/assets/users.json
+        media/assets/sessions.json
+        media/assets/img/1-image.jpg
+        media/assets/img/2-image.jpg
+        media/assets/img/3-image.jpg
+        media/assets/img/4-image.jpg
+        media/assets/img/5-image.jpg
+        media/assets/img/6-image.jpg
+        media/assets/img/7-image.jpg
+        media/assets/img/8-image.jpg
+        media/assets/img/9-image.jpg
+        media/assets/img/10-image.jpg
+        media/assets/img/11-image.jpg
+        media/assets/img/12-image.jpg
+
 )
 
 qt_policy(SET QTP0004 NEW)
@@ -350,8 +367,6 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
     SOURCES core/library/textprocessor/highlight/highlightingcategory.cpp
 
-    SOURCES core/developer/model_settings/modelsettingsitem.h core/developer/model_settings/modelsettingsitem.cpp
-    SOURCES core/developer/model_settings/modelsettingslist.h core/developer/model_settings/modelsettingslist.cpp
     SOURCES core/developer/codedeveloperlist.h core/developer/codedeveloperlist.cpp
     SOURCES core/developer/code/programlanguage.h core/developer/code/programlanguage.cpp
     SOURCES core/developer/code/codegenerator.h core/developer/code/codegenerator.cpp
@@ -362,6 +377,10 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/log/logger.h core/log/logger.cpp
     SOURCES core/log/logcategories.h core/log/logcategories.cpp
     QML_FILES view/component_library/model/ModelSelectComboBox.qml
+    SOURCES core/developer/server/utils.h
+    SOURCES core/developer/server/crudapi.h core/developer/server/crudapi.cpp
+    SOURCES core/developer/server/entities/modelapi.h core/developer/server/entities/modelapi.cpp
+    SOURCES core/developer/server/entities/chatapi.h core/developer/server/entities/chatapi.cpp
 )
 
 #for show logger-contect (file name, message line, ...)

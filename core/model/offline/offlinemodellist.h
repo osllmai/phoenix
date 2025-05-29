@@ -59,6 +59,7 @@ public:
 
     double downloadProgress() const;
 
+
 public slots:
     void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
