@@ -52,9 +52,19 @@
 #include <QtCore/QCoreApplication>
 #include <QtHttpServer/QHttpServer>
 
+#include <chrono>
+#include <thread>
+#include <memory>
+
 #define SCHEME "http"
 #define HOST "127.0.0.1"
 #define PORT 49425
+
+#include "chatserver.h"
+#include <QtCore/QCommandLineParser>
+#include <QtCore/QCommandLineOption>
+
+#include <QTimer>
 
 class CodeDeveloperList: public QAbstractListModel
 {
@@ -109,8 +119,8 @@ private:
 
     ProgramLanguage *m_currentProgramLanguage;
 
-    QCommandLineParser m_parser;
-    QCoreApplication *app;
+    QCommandLineParser m_parserModel;
+    QCoreApplication *appModel;
     QHttpServer* m_httpServer = nullptr;
     std::unique_ptr<QTcpServer> m_tcpServer;
     std::optional<std::unique_ptr<CrudAPI>> m_modelsApi;
@@ -119,6 +129,11 @@ private:
     QString logger;
 
     QList<ProgramLanguage*> m_programLanguags;
+
+    ChatServer *m_chatServer = nullptr;
+    QCommandLineParser m_parserChat;
+    QCoreApplication *appChat;
+
 };
 
 #endif // CODEDEVELOPERLIST_H

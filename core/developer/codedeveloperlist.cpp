@@ -39,10 +39,102 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
 
     auto &api = apiOpt.value();
 
+
+    // m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
+    //                     [&api](const QHttpServerRequest &request, QHttpServerResponder &response) {
+
+    //     // QHttpHeaders headers;
+    //     // headers.append("Content-Type", "text/event-stream;charset=utf-8");
+    //     // headers.append("Cache-Control", "no-cache");
+    //     // headers.append("Connection", "keep-alive");
+    //     // headers.append("Access-Control-Allow-Origin", "*");
+
+    //     // response.setHeaders(std::move(headers));
+
+    //                         response.writeBeginChunked("text/event-stream");
+
+    //                         auto sendEvent = [&response](const QJsonArray &array) {
+    //                             QJsonDocument doc(array);
+    //                             QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+    //                             QByteArray sseData = "data: " + jsonData + "\n\n";
+    //                             response.writeChunk(sseData);
+    //                         };
+
+    //                         QJsonArray dummyList;
+    //                         QJsonObject obj1;
+    //                         obj1["id"] = 1;
+    //                         obj1["name"] = "C++";
+    //                         obj1["type"] = "compiled";
+
+    //                         QJsonObject obj2;
+    //                         obj2["id"] = 2;
+    //                         obj2["name"] = "Python";
+    //                         obj2["type"] = "interpreted";
+
+    //                         dummyList.append(obj1);
+    //                         dummyList.append(obj2);
+
+    //                         sendEvent(dummyList);
+
+    //                         QTimer *timer = new QTimer(nullptr);
+    //                         QObject::connect(timer, &QTimer::timeout, [sendEvent]() {
+    //                             QJsonArray dummyList;
+
+    //                             QJsonObject obj1;
+    //                             obj1["id"] = 1;
+    //                             obj1["name"] = "C++";
+    //                             obj1["type"] = "compiled";
+
+    //                             QJsonObject obj2;
+    //                             obj2["id"] = 2;
+    //                             obj2["name"] = "Python";
+    //                             obj2["type"] = "interpreted";
+
+    //                             dummyList.append(obj1);
+    //                             dummyList.append(obj2);
+
+    //                             sendEvent(dummyList);
+    //                         });
+    //                         timer->start(1000);
+    //                     });
+
+
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
-                        [&api](const QHttpServerRequest &request) {
-                            return api->getFullList();
+                        [](const QHttpServerRequest &request, QHttpServerResponder &response) {
+                            response.writeBeginChunked("text/event-stream");
+
+                            auto sendEvent = [&response](const QJsonArray &array) {
+                                QJsonDocument doc(array);
+                                QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+                                QByteArray sseData = "data: " + jsonData + "\n\n";
+                                response.writeChunk(sseData);
+                            };
+
+                            for (int i = 0; i < 150; ++i) {
+                                QJsonArray dummyList;
+
+                                QJsonObject obj1;
+                                obj1["id"] = i;
+                                obj1["name"] = "C++";
+                                obj1["type"] = "compiled";
+
+                                QJsonObject obj2;
+                                obj2["id"] = i*100;
+                                obj2["name"] = "Python";
+                                obj2["type"] = "interpreted";
+
+                                dummyList.append(obj1);
+                                dummyList.append(obj2);
+
+                                sendEvent(dummyList);
+
+
+                            }
+
+                            response.writeEndChunked("bay");
+                            // response.end();
                         });
+
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Get,
                         [&api](qint64 itemId) {
@@ -50,9 +142,9 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                         });
 
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Post,
-                         [&api](const QHttpServerRequest &request) {
-                             return api->postItem(request);
-                         });
+                        [&api](const QHttpServerRequest &request) {
+                            return api->postItem(request);
+                        });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Put,
                         [&api](qint64 itemId, const QHttpServerRequest &request) {
@@ -70,40 +162,41 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                         });
 }
 
+
 void CodeDeveloperList::start()
 {
-    app = QCoreApplication::instance();
-    if (!app) {
+    appModel = QCoreApplication::instance();
+    if (!appModel) {
         qWarning() << "QCoreApplication instance is null!";
         return;
     }
 
-    m_parser.setApplicationDescription("Qt Developer Server");
-    m_parser.addHelpOption();
-    m_parser.addOptions({
+    m_parserModel.setApplicationDescription("Qt Developer Server");
+    m_parserModel.addHelpOption();
+    m_parserModel.addOptions({
         { "port", QCoreApplication::translate("main", "The port the server listens on."), "port" }
     });
 
-    m_parser.process(*app);
+    m_parserModel.process(*appModel);
 
     m_httpServer = new QHttpServer(this);
 
     quint16 portArg = PORT;
-    if (!m_parser.value("port").isEmpty())
-        portArg = m_parser.value("port").toUShort();
+    if (!m_parserModel.value("port").isEmpty())
+        portArg = m_parserModel.value("port").toUShort();
 
     m_httpServer->route("/", []() {
         return "Qt Colorpalette example server. Please see documentation for API description";
     });
 
-    auto colorFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portArg);
-    auto userFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
+    auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portArg);
+    // auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
 
-    m_modelsApi = std::move(colorFactory);
-    m_chatApi = std::move(userFactory);
+    m_modelsApi = std::move(modelFactory);
+    // m_chatApi = std::move(chatFactory);
 
     addCrudRoutes("/api/models", m_modelsApi);
-    addCrudRoutes("/api/chat", m_chatApi);
+    // addCrudRoutes("/api/chat", m_chatApi);
 
     m_tcpServer = std::make_unique<QTcpServer>();
     if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {
@@ -111,8 +204,30 @@ void CodeDeveloperList::start()
         return;
     }
 
-    quint16 port = m_tcpServer->serverPort();
-    qDebug() << QString("Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(port);
+    quint16 portModel = m_tcpServer->serverPort();
+    qDebug() << QString("Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(portModel);
+
+
+    appChat = QCoreApplication::instance();
+
+    m_parserChat.setApplicationDescription("QtWebSockets example: ChatServer");
+    m_parserChat.addHelpOption();
+
+    QCommandLineOption dbgOption(QStringList() << "d" << "debug",
+                                 QCoreApplication::translate("main", "Debug output [default: off]."));
+    m_parserChat.addOption(dbgOption);
+
+    QCommandLineOption portOption(QStringList() << "p" << "port",
+                                  QCoreApplication::translate("main", "Port for ChatServer [default: 5555]."),
+                                  QCoreApplication::translate("main", "port"), QLatin1String("8080"));
+    m_parserChat.addOption(portOption);
+    m_parserChat.process(*appChat);
+    bool debug = m_parserChat.isSet(dbgOption);
+    int portChat = m_parserChat.value(portOption).toInt();
+
+    m_chatServer = new ChatServer(portChat, debug);
+    QObject::connect(m_chatServer, &ChatServer::closed, appChat, &QCoreApplication::quit);
+
 
     emit portChanged();
     emit isRunningChanged();

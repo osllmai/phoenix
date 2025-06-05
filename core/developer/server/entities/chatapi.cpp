@@ -47,66 +47,18 @@ QHttpServerResponse ChatAPI::postItem(const QHttpServerRequest &request){
 }
 
 QHttpServerResponse ChatAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
-    // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    // if (!json)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // auto item = data.find(itemId);
-    // if (item == data.end())
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // if (!item->update(*json))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // return QHttpServerResponse(item->toJson());
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::updateItemFields(qint64 itemId, const QHttpServerRequest &request){
-    // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    // if (!json)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // auto item = data.find(itemId);
-    // if (item == data.end())
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // item->updateFields(*json);
-
-    // return QHttpServerResponse(item->toJson());
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::deleteItem(qint64 itemId){
-    // if (!data.remove(itemId))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
-// std::optional<User> fromJson(const QJsonObject &json) const override
-// {
-//     if (!json.contains("email") || !json.contains("first_name") || !json.contains("last_name")
-//         || !json.contains("avatar")) {
-//         return std::nullopt;
-//     }
 
-//     if (json.contains("createdAt") && json.contains("updatedAt")) {
-//         return User(
-//             json.value("email").toString(), json.value("first_name").toString(),
-//             json.value("last_name").toString(), json.value("avatar").toString(),
-//             QDateTime::fromString(json.value("createdAt").toString(), Qt::ISODateWithMs),
-//             QDateTime::fromString(json.value("updatedAt").toString(), Qt::ISODateWithMs));
-//     }
-//     QUrl avatarUrl(json.value("avatar").toString());
-//     if (!avatarUrl.isValid()) {
-//         avatarUrl.setPath(json.value("avatar").toString());
-//     }
-//     avatarUrl.setScheme(scheme);
-//     avatarUrl.setHost(hostName);
-//     avatarUrl.setPort(port);
-
-//     return User(json.value("email").toString(), json.value("first_name").toString(),
-//                 json.value("last_name").toString(), avatarUrl);
-// }
 
 
 
