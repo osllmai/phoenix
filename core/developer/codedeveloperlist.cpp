@@ -40,99 +40,9 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
     auto &api = apiOpt.value();
 
 
-    // m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
-    //                     [&api](const QHttpServerRequest &request, QHttpServerResponder &response) {
-
-    //     // QHttpHeaders headers;
-    //     // headers.append("Content-Type", "text/event-stream;charset=utf-8");
-    //     // headers.append("Cache-Control", "no-cache");
-    //     // headers.append("Connection", "keep-alive");
-    //     // headers.append("Access-Control-Allow-Origin", "*");
-
-    //     // response.setHeaders(std::move(headers));
-
-    //                         response.writeBeginChunked("text/event-stream");
-
-    //                         auto sendEvent = [&response](const QJsonArray &array) {
-    //                             QJsonDocument doc(array);
-    //                             QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
-    //                             QByteArray sseData = "data: " + jsonData + "\n\n";
-    //                             response.writeChunk(sseData);
-    //                         };
-
-    //                         QJsonArray dummyList;
-    //                         QJsonObject obj1;
-    //                         obj1["id"] = 1;
-    //                         obj1["name"] = "C++";
-    //                         obj1["type"] = "compiled";
-
-    //                         QJsonObject obj2;
-    //                         obj2["id"] = 2;
-    //                         obj2["name"] = "Python";
-    //                         obj2["type"] = "interpreted";
-
-    //                         dummyList.append(obj1);
-    //                         dummyList.append(obj2);
-
-    //                         sendEvent(dummyList);
-
-    //                         QTimer *timer = new QTimer(nullptr);
-    //                         QObject::connect(timer, &QTimer::timeout, [sendEvent]() {
-    //                             QJsonArray dummyList;
-
-    //                             QJsonObject obj1;
-    //                             obj1["id"] = 1;
-    //                             obj1["name"] = "C++";
-    //                             obj1["type"] = "compiled";
-
-    //                             QJsonObject obj2;
-    //                             obj2["id"] = 2;
-    //                             obj2["name"] = "Python";
-    //                             obj2["type"] = "interpreted";
-
-    //                             dummyList.append(obj1);
-    //                             dummyList.append(obj2);
-
-    //                             sendEvent(dummyList);
-    //                         });
-    //                         timer->start(1000);
-    //                     });
-
-
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
-                        [](const QHttpServerRequest &request, QHttpServerResponder &response) {
-                            response.writeBeginChunked("text/event-stream");
-
-                            auto sendEvent = [&response](const QJsonArray &array) {
-                                QJsonDocument doc(array);
-                                QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
-                                QByteArray sseData = "data: " + jsonData + "\n\n";
-                                response.writeChunk(sseData);
-                            };
-
-                            for (int i = 0; i < 150; ++i) {
-                                QJsonArray dummyList;
-
-                                QJsonObject obj1;
-                                obj1["id"] = i;
-                                obj1["name"] = "C++";
-                                obj1["type"] = "compiled";
-
-                                QJsonObject obj2;
-                                obj2["id"] = i*100;
-                                obj2["name"] = "Python";
-                                obj2["type"] = "interpreted";
-
-                                dummyList.append(obj1);
-                                dummyList.append(obj2);
-
-                                sendEvent(dummyList);
-
-
-                            }
-
-                            response.writeEndChunked("bay");
-                            // response.end();
+                        [&api]() {
+                            return api->getFullList();
                         });
 
 
@@ -142,8 +52,9 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                         });
 
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Post,
-                        [&api](const QHttpServerRequest &request) {
-                            return api->postItem(request);
+                        [&api](const QHttpServerRequest &request, QHttpServerResponder &responder) {
+                            QSharedPointer<QHttpServerResponder> responderPtr = QSharedPointer<QHttpServerResponder>::create(std::move(responder));
+                            api->postItem(request, responderPtr);
                         });
 
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Put,
@@ -190,13 +101,13 @@ void CodeDeveloperList::start()
     });
 
     auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portArg);
-    // auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
+    auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
 
     m_modelsApi = std::move(modelFactory);
-    // m_chatApi = std::move(chatFactory);
+    m_chatApi = std::move(chatFactory);
 
     addCrudRoutes("/api/models", m_modelsApi);
-    // addCrudRoutes("/api/chat", m_chatApi);
+    addCrudRoutes("/api/chat", m_chatApi);
 
     m_tcpServer = std::make_unique<QTcpServer>();
     if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {

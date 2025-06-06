@@ -33,7 +33,36 @@ QHttpServerResponse ModelAPI::getItem(qint64 itemId) const{
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
-QHttpServerResponse ModelAPI::postItem(const QHttpServerRequest &request){
+void ModelAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder){
+    // responder.writeBeginChunked("text/event-stream");
+
+    // auto sendEvent = [&responder](const QJsonArray &array) {
+    //     QJsonDocument doc(array);
+    //     QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+    //     QByteArray sseData = "data: " + jsonData + "\n\n";
+    //     responder.writeChunk(sseData);
+    // };
+
+    // for (int i = 0; i < 150; ++i) {
+    //     QJsonArray dummyList;
+
+    //     QJsonObject obj1;
+    //     obj1["id"] = i;
+    //     obj1["name"] = "C++";
+    //     obj1["type"] = "compiled";
+
+    //     QJsonObject obj2;
+    //     obj2["id"] = i*100;
+    //     obj2["name"] = "Python";
+    //     obj2["type"] = "interpreted";
+
+    //     dummyList.append(obj1);
+    //     dummyList.append(obj2);
+
+    //     sendEvent(dummyList);
+    // }
+
+    // responder.writeEndChunked("bay");
     // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
     // if (!json)
         // return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
@@ -46,7 +75,7 @@ QHttpServerResponse ModelAPI::postItem(const QHttpServerRequest &request){
 
     // const auto entry = data.insert(item->getId(), *item);
     // return QHttpServerResponse(entry->toJson(), QHttpServerResponder::StatusCode::Created);
-    return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
+    // return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ModelAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){

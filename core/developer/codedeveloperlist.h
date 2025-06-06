@@ -12,12 +12,6 @@
 #include <QHttpServer>
 #include <QHttpServerResponder>
 
-#if QT_CONFIG(ssl)
-#  include <QSslCertificate>
-#  include <QSslKey>
-#  include <QSslServer>
-#endif
-
 #include <QFile>
 #include <QJsonObject>
 #include <QString>
@@ -51,6 +45,7 @@
 #include "utils.h"
 #include <QtCore/QCoreApplication>
 #include <QtHttpServer/QHttpServer>
+#include <QSharedPointer>
 
 #include <chrono>
 #include <thread>

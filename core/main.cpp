@@ -33,13 +33,6 @@
 #include "./log/logger.h"
 #include "./log/logcategories.h"
 
-#undef slots
-#undef signals
-#include "crow_wrapper.h"
-
-
-
-
 
 
 int main(int argc, char *argv[])
@@ -72,22 +65,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
 
     engine.rootContext()->setContextProperty("Logger", &Logger::instance());
-
-
-
-
-
-    crow_wrapper* restServer = new crow_wrapper();
-    restServer->run(18080);
-
-    QObject::connect(&app, &QCoreApplication::aboutToQuit, [restServer]() {
-        restServer->stop();
-        delete restServer;
-    });
-
-
-
-
 
     qDebug(logCore) << "Program start";
 

@@ -44,10 +44,8 @@ void ChatServer::onNewConnection()
 
 //! [processTextMessage]
 void ChatServer::processTextMessage(QString message){
-    qInfo()<<"HI dear 47";
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     if (!pClient) return;
-    qInfo()<<"HI dear 50";
 
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8(), &parseError);
@@ -55,23 +53,18 @@ void ChatServer::processTextMessage(QString message){
         qWarning() << "Invalid JSON received:" << message;
         return;
     }
-qInfo()<<"HI dear 58";
     QJsonObject obj = doc.object();
     if (!obj.contains("modelId") || !obj.contains("prompt")) {
         qWarning() << "JSON missing required fields.";
         return;
     }
-qInfo()<<"HI dear 64";
     int modelId = obj["modelId"].toInt();
     QString promptText = obj["prompt"].toString();
-qInfo()<<"HI dear 67";
     m_socketToModelId[pClient] = modelId;
     m_socketToPrompt[pClient] = promptText;
     m_socketToGeneratedText[pClient] = "";
     m_currentClient = pClient;
-qInfo()<<"HI dear 72";
     prompt(promptText, modelId);
-qInfo()<<"HI dear 74";
 }
 //! [processTextMessage]
 
@@ -102,7 +95,6 @@ void ChatServer::socketDisconnected()
 
 
 void ChatServer::prompt(const QString &input, const int idModel){
-    qInfo()<<"HI dear 105 "<<input<<"   "<<idModel;
     if(!m_isLoadModel){
         loadModel(idModel);
         setIsLoadModel(true);
@@ -144,7 +136,6 @@ void ChatServer::prompt(const QString &input, const int idModel){
 
     }
 
-    qInfo()<<"HI dear 147";
     if(idModel != m_model->id()){
         setIsLoadModel(false);
         prompt(input, idModel);
@@ -152,14 +143,12 @@ void ChatServer::prompt(const QString &input, const int idModel){
     }
 
     setResponseInProgress(true);
-    qInfo()<<"HI dear 155"<<m_provider<<"    "<<m_model;
     m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
                        m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
                        m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
                        m_modelSettings->numberOfGPULayers());
-    qInfo()<<"HI dear 162";
 }
 
 void ChatServer::loadModel(const int id){

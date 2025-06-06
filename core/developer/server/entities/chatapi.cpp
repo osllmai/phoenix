@@ -24,26 +24,45 @@ QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
-QHttpServerResponse ChatAPI::postItem(const QHttpServerRequest &request){
+void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder)
+{
+    responder->writeBeginChunked("text/event-stream");
+
     const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    if (!json)
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
+    if (!json) {
+        QJsonObject errorObj;
+        errorObj["error"] = "Invalid JSON";
+        QJsonDocument doc(errorObj);
+        responder->writeChunk(doc.toJson(QJsonDocument::Compact));
+        responder->writeEndChunked("{}");
+        return;
+    }
 
-    if (!json->contains("prompt") || !(*json)["prompt"].isString())
-        return QHttpServerResponse("Missing or invalid 'prompt' field", QHttpServerResponder::StatusCode::BadRequest);
+    if (!json->contains("prompt") || !(*json)["prompt"].isString()) {
+        QJsonObject errorObj;
+        errorObj["error"] = "Missing or invalid 'prompt' field";
+        QJsonDocument doc(errorObj);
+        responder->writeChunk(doc.toJson(QJsonDocument::Compact));
+        responder->writeEndChunked("{}");
+        return;
+    }
 
-    QString prompt = (*json)["prompt"].toString();
-    qDebug() << "Received prompt:" << prompt;
+    if (!json->contains("modelId") || !(*json)["modelId"].isDouble()) {
+        QJsonObject errorObj;
+        errorObj["error"] = "Missing or invalid 'modelId' field";
+        QJsonDocument doc(errorObj);
+        responder->writeChunk(doc.toJson(QJsonDocument::Compact));
+        responder->writeEndChunked("{}");
+        return;
+    }
 
-    // const std::optional<T> item = factory->fromJson(*json);
-    // if (!item)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-    // if (data.contains(item->getId()))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::AlreadyReported);
+    int modelId = (*json)["modelId"].toInt();
+    QString promptText = (*json)["prompt"].toString();
 
-    // const auto entry = data.insert(item->getId(), *item);
-    return QHttpServerResponse("Hi dear how are you?", QHttpServerResponder::StatusCode::Created);
-    // return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
+    m_responder = responder;
+
+    setModelId(modelId);
+    prompt(promptText, modelId);
 }
 
 QHttpServerResponse ChatAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
@@ -139,13 +158,25 @@ void ChatAPI::loadModelResult(const bool result, const QString &warning){
 
 }
 
-void ChatAPI::tokenResponse(const QString &token){
-
+void ChatAPI::tokenResponse(const QString &token) {
+    QJsonObject obj;
+    obj["token"] = token;
+    QJsonDocument doc(obj);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+    QByteArray sseData = "data: " + jsonData + "\n\n";
+    m_responder->writeChunk(sseData);
 }
 
-void ChatAPI::finishedResponse(const QString &warning){
-
+void ChatAPI::finishedResponse(const QString &warning) {
+    QJsonObject obj;
+    obj["status"] = "end";
+    obj["warning"] = warning;
+    QJsonDocument doc(obj);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+    QByteArray sseData = "data: " + jsonData + "\n\n";
+    m_responder->writeEndChunked(sseData);
 }
+
 
 void ChatAPI::updateModelSettingsDeveloper(){
     emit requestUpdateModelSettingsDeveloper(m_modelSettings->id(), m_modelSettings->stream(),

@@ -10,6 +10,9 @@
 #include <QtCore/qtypes.h>
 #include <QList>
 
+#include <QSharedPointer>
+#include <QHttpServerResponder>
+
 #include <algorithm>
 #include <optional>
 #include "../crudapi.h"
@@ -57,7 +60,7 @@ public:
 
     QHttpServerResponse getItem(qint64 itemId) const override;
 
-    QHttpServerResponse postItem(const QHttpServerRequest &request) override ;
+    void postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder) override ;
 
     QHttpServerResponse updateItem(qint64 itemId, const QHttpServerRequest &request) override;
 
@@ -151,6 +154,9 @@ private:
     QString m_modelPromptTemplate;
     QString m_modelSystemPrompt;
     bool m_modelSelect;
+
+    QSharedPointer<QHttpServerResponder> m_responder;
+
 };
 
 #endif // CHATAPI_H

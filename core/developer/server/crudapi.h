@@ -12,6 +12,9 @@
 #include <QtCore/QPair>
 #include <QJsonParseError>
 
+
+#include <QSharedPointer>
+#include <QHttpServerResponder>
 #include <QObject>
 
 #include <optional>
@@ -27,7 +30,7 @@ public:
 
     virtual QHttpServerResponse getItem(qint64 itemId) const = 0;
 
-    virtual QHttpServerResponse postItem(const QHttpServerRequest &request) = 0;
+    virtual void postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder) = 0;
 
     virtual QHttpServerResponse updateItem(qint64 itemId, const QHttpServerRequest &request) = 0;
 
