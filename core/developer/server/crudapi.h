@@ -19,6 +19,9 @@
 
 #include <optional>
 
+#include <QLoggingCategory>
+#include "logcategories.h"
+
 class CrudAPI: public QObject
 {
 public:

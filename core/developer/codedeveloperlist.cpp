@@ -34,11 +34,14 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
 
 void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt)
 {
-    if (!m_httpServer || !apiOpt.has_value())
+    if (!m_httpServer || !apiOpt.has_value()) {
+        qCWarning(logDeveloper) << "Failed to add routes for" << apiPath << ": Server or API not available.";
         return;
+    }
+
+    qCInfo(logDeveloper) << "Adding CRUD routes for path:" << apiPath;
 
     auto &api = apiOpt.value();
-
 
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
                         [&api]() {
@@ -71,6 +74,8 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                         [&api](qint64 itemId, const QHttpServerRequest &request) {
                             return api->deleteItem(itemId);
                         });
+
+    qCDebug(logDeveloper) << "CRUD routes added for" << apiPath;
 }
 
 
@@ -78,7 +83,7 @@ void CodeDeveloperList::start()
 {
     appModel = QCoreApplication::instance();
     if (!appModel) {
-        qWarning() << "QCoreApplication instance is null!";
+        qCWarning(logDeveloper) << "QCoreApplication instance is null!";
         return;
     }
 
@@ -96,6 +101,8 @@ void CodeDeveloperList::start()
     if (!m_parserModel.value("port").isEmpty())
         portArg = m_parserModel.value("port").toUShort();
 
+    qCInfo(logDeveloper) << "Developer server starting on port:" << portArg;
+
     m_httpServer->route("/", []() {
         return "Qt Colorpalette example server. Please see documentation for API description";
     });
@@ -111,12 +118,12 @@ void CodeDeveloperList::start()
 
     m_tcpServer = std::make_unique<QTcpServer>();
     if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {
-        qWarning() << "Server failed to listen on port" << portArg;
+        qCWarning(logDeveloper) << "Server failed to bind to port:" << portArg;
         return;
     }
 
     quint16 portModel = m_tcpServer->serverPort();
-    qDebug() << QString("Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(portModel);
+    qCInfo(logDeveloper) << "HTTP Server running at port:" << portModel;
 
 
     appChat = QCoreApplication::instance();
@@ -129,7 +136,7 @@ void CodeDeveloperList::start()
     m_parserChat.addOption(dbgOption);
 
     QCommandLineOption portOption(QStringList() << "p" << "port",
-                                  QCoreApplication::translate("main", "Port for ChatServer [default: 5555]."),
+                                  QCoreApplication::translate("main", "Port for ChatServer [default: 8080]."),
                                   QCoreApplication::translate("main", "port"), QLatin1String("8080"));
     m_parserChat.addOption(portOption);
     m_parserChat.process(*appChat);
@@ -139,9 +146,12 @@ void CodeDeveloperList::start()
     m_chatServer = new ChatServer(portChat, debug);
     QObject::connect(m_chatServer, &ChatServer::closed, appChat, &QCoreApplication::quit);
 
+    qCInfo(logDeveloper) << "WebSocket Server running at port:" << portChat;
 
     emit portChanged();
     emit isRunningChanged();
+
+    qCInfo(logDeveloper) << "Developer server started successfully.";
 }
 
 ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
@@ -231,11 +241,14 @@ void CodeDeveloperList::setPort(int newPort) {
 }
 
 void CodeDeveloperList::setCurrentLanguage(int newId) {
+    qCDebug(logDeveloper) << "setCurrentLanguage called with ID:" << newId;
     for (int number = 0; number < m_programLanguags.size(); number++) {
         ProgramLanguage* programLanguage = m_programLanguags[number];
         if (programLanguage->id() == newId) {
+            qCInfo(logDeveloper) << "Matching language found:" << programLanguage->name();
             setCurrentProgramLanguage(programLanguage);
-            break;
+            return;
         }
     }
+    qCWarning(logDeveloper) << "Language ID not found:" << newId;
 }

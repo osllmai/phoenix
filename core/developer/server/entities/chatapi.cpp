@@ -11,22 +11,29 @@ ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
                                       "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
                                       0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, this)),
     m_provider(nullptr)
-{}
+{
+    qCInfo(logDeveloper) << "ChatAPI constructed with scheme:" << scheme << "host:" << hostName << "port:" << port;
+}
 
 QHttpServerResponse ChatAPI::getFullList() const {
+    qCInfo(logDeveloper) << "GET Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
+    qCInfo(logDeveloper) << "GET-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder)
 {
+     qCInfo(logDeveloper) << "POST Request" ;
+
     responder->writeBeginChunked("text/event-stream");
 
     const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
     if (!json) {
+        qCWarning(logDeveloper) << "postItem received invalid JSON";
         QJsonObject errorObj;
         errorObj["error"] = "Invalid JSON";
         QJsonDocument doc(errorObj);
@@ -36,6 +43,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
     }
 
     if (!json->contains("prompt") || !(*json)["prompt"].isString()) {
+        qCWarning(logDeveloper) << "postItem missing or invalid 'prompt' field";
         QJsonObject errorObj;
         errorObj["error"] = "Missing or invalid 'prompt' field";
         QJsonDocument doc(errorObj);
@@ -45,6 +53,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
     }
 
     if (!json->contains("modelId") || !(*json)["modelId"].isDouble()) {
+        qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
         QJsonObject errorObj;
         errorObj["error"] = "Missing or invalid 'modelId' field";
         QJsonDocument doc(errorObj);
@@ -53,76 +62,87 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
+    qCInfo(logDeveloper) << "postItem valid JSON received, prompt:" << (*json)["prompt"].toString().left(50) << "modelId:" << (*json)["modelId"].toInt();
+
     m_responder = responder;
 
     prompt(json);
 }
 
 QHttpServerResponse ChatAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
+    qCInfo(logDeveloper) << "UPDATE-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::updateItemFields(qint64 itemId, const QHttpServerRequest &request){
+    qCInfo(logDeveloper) << "UPDATE-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::deleteItem(qint64 itemId){
+    qCInfo(logDeveloper) << "DELETE-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 void ChatAPI::prompt(const std::optional<QJsonObject> json){
+    qCInfo(logDeveloper) << "prompt called";
 
     int idModel = (*json)["modelId"].toInt();
     QString input = (*json)["prompt"].toString();
+    qCInfo(logDeveloper) << "prompt with modelId:" << idModel << "and input preview:" << input.left(50);
+
     setModelId(idModel);
 
     if(!m_isLoadModel){
+        qCInfo(logDeveloper) << "Model is not loaded, loading model with id:" << idModel;
         loadModel(idModel);
         setIsLoadModel(true);
+
         if(m_provider != nullptr){
-            //disconnect load and unload model
+            qCInfo(logDeveloper) << "Disconnecting existing provider signals";
             disconnect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel);
             disconnect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult);
             disconnect(this, &ChatAPI::requestUnLoadModel, m_provider, &Provider::unLoadModel);
-
-            //disconnect prompt
             disconnect(m_provider, &Provider::requestTokenResponse, this, &ChatAPI::tokenResponse);
-
-            //disconnect finished response
             disconnect(m_provider, &Provider::requestFinishedResponse, this, &ChatAPI::finishedResponse);
             disconnect(this, &ChatAPI::requestStop, m_provider, &Provider::stop);
             delete m_provider;
+            m_provider = nullptr;
+            qCInfo(logDeveloper) << "Old provider deleted";
         }
 
         if(m_model->backend() == BackendType::OfflineModel){
             m_provider = new OfflineProvider(this);
+            qCInfo(logDeveloper) << "Created OfflineProvider";
         }else if(m_model->backend() == BackendType::OnlineModel){
             m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+            qCInfo(logDeveloper) << "Created OnlineProvider for company/model:" << m_model->company()->name() + "/" + m_model->modelName();
         }
-        //load and unload model
+        //load and unload model connections
         connect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
         connect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult, Qt::QueuedConnection);
         connect(this, &ChatAPI::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
-
-        //prompt
+        //prompt connections
         connect(m_provider, &Provider::requestTokenResponse, this, &ChatAPI::tokenResponse, Qt::QueuedConnection);
-
-        //finished response
+        //finished response connections
         connect(m_provider, &Provider::requestFinishedResponse, this, &ChatAPI::finishedResponse, Qt::QueuedConnection);
         connect(this, &ChatAPI::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
 
         if(m_model->backend() == BackendType::OfflineModel){
+            qCInfo(logDeveloper) << "Emitting requestLoadModel for model name:" << m_model->modelName();
             emit requestLoadModel( m_model->modelName(), m_model->key());
         }
-
     }
+
     if(idModel != m_model->id()){
+        qCInfo(logDeveloper) << "Model ID mismatch, reloading model. Old ID:" << m_model->id() << "New ID:" << idModel;
         setIsLoadModel(false);
         prompt(json);
         return;
     }
 
     setResponseInProgress(true);
+    qCInfo(logDeveloper) << "Response in progress set to true";
 
     const bool stream = json->contains("stream") ? (*json)["stream"].toBool() : m_modelSettings->stream();
     const QString promptTemplate = json->contains("promptTemplate") ? (*json)["promptTemplate"].toString() : m_modelSettings->promptTemplate();
@@ -138,42 +158,60 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
     const int contextLength = json->contains("contextLength") ? (*json)["contextLength"].toInt() : m_modelSettings->contextLength();
     const int numberOfGPULayers = json->contains("numberOfGPULayers") ? (*json)["numberOfGPULayers"].toInt() : m_modelSettings->numberOfGPULayers();
 
+    qCInfo(logDeveloper) << "Calling provider->prompt with parameters:"
+                         << "stream=" << stream
+                         << "temperature=" << temperature
+                         << "topK=" << topK
+                         << "topP=" << topP
+                         << "minP=" << minP
+                         << "repeatPenalty=" << repeatPenalty
+                         << "promptBatchSize=" << promptBatchSize
+                         << "maxTokens=" << maxTokens
+                         << "repeatPenaltyTokens=" << repeatPenaltyTokens
+                         << "contextLength=" << contextLength
+                         << "numberOfGPULayers=" << numberOfGPULayers;
+
     m_provider->prompt(input, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP, repeatPenalty,
                        promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
-
 }
-
 void ChatAPI::loadModel(const int id){
+    qCInfo(logDeveloper) << "loadModel called with id:" << id;
 
     OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
     if(offlineModel != nullptr){
+        qCInfo(logDeveloper) << "Offline model found for id:" << id;
         setModel(offlineModel);
     }
     OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
     if(onlineModel != nullptr){
+        qCInfo(logDeveloper) << "Online model found for id:" << id;
         setModel(onlineModel);
     }
 }
 
 void ChatAPI::unloadModel(){
+    qCInfo(logDeveloper) << "unloadModel called";
     setIsLoadModel(false);
     m_provider->unLoadModel();
 }
 
 void ChatAPI::loadModelResult(const bool result, const QString &warning){
-
+    qCInfo(logDeveloper) << "loadModelResult called with result:" << result << "warning:" << warning;
 }
 
 void ChatAPI::tokenResponse(const QString &token) {
+    qCInfo(logDeveloper) << "tokenResponse called with token:" << token;
     QJsonObject obj;
-    obj["token"] = token;
+    obj["response"] = token;
     QJsonDocument doc(obj);
     QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
     QByteArray sseData = "data: " + jsonData + "\n\n";
+
     m_responder->writeChunk(sseData);
 }
 
 void ChatAPI::finishedResponse(const QString &warning) {
+    qCInfo(logDeveloper) << "finishedResponse called with warning:" << warning;
     QJsonObject obj;
     obj["status"] = "end";
     obj["warning"] = warning;
@@ -183,8 +221,8 @@ void ChatAPI::finishedResponse(const QString &warning) {
     m_responder->writeEndChunked(sseData);
 }
 
-
 void ChatAPI::updateModelSettingsDeveloper(){
+    qCInfo(logDeveloper) << "updateModelSettingsDeveloper called";
     emit requestUpdateModelSettingsDeveloper(m_modelSettings->id(), m_modelSettings->stream(),
                                              m_modelSettings->promptTemplate(), m_modelSettings->systemPrompt(),
                                              m_modelSettings->temperature(), m_modelSettings->topK(),
@@ -195,15 +233,21 @@ void ChatAPI::updateModelSettingsDeveloper(){
 }
 
 void ChatAPI::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
+    qCInfo(logDeveloper) << "setModelRequest called with id:" << id << ", text:" << text;
     setModelId(id);
     setModelText(text);
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    if(id == -1)
+    if(id == -1){
+        qCInfo(logDeveloper) << "Model deselected";
         setModelSelect(false);
-    else
+    }
+    else{
+        qCInfo(logDeveloper) << "Model selected";
         setModelSelect(true);
+    }
+
 
     // if(!m_isEmptyChatAPI){
     //     if(m_modelPromptTemplate != "")
@@ -213,13 +257,13 @@ void ChatAPI::setModelRequest(const int id, const QString &text,  const QString 
     // }
 }
 
-
 QString ChatAPI::modelSystemPrompt() const{return m_modelSystemPrompt;}
 void ChatAPI::setModelSystemPrompt(const QString &newModelSystemPrompt){
     if (m_modelSystemPrompt == newModelSystemPrompt)
         return;
     m_modelSystemPrompt = newModelSystemPrompt;
     emit modelSystemPromptChanged();
+    qCInfo(logDeveloper) << "Model system prompt changed to:" << newModelSystemPrompt;
 }
 
 QString ChatAPI::modelPromptTemplate() const{return m_modelPromptTemplate;}
@@ -228,6 +272,7 @@ void ChatAPI::setModelPromptTemplate(const QString &newModelPromptTemplate){
         return;
     m_modelPromptTemplate = newModelPromptTemplate;
     emit modelPromptTemplateChanged();
+    qCInfo(logDeveloper) << "Model prompt template changed to:" << newModelPromptTemplate;
 }
 
 QString ChatAPI::modelText() const{return m_modelText;}
@@ -236,6 +281,7 @@ void ChatAPI::setModelText(const QString &newModelText){
         return;
     m_modelText = newModelText;
     emit modelTextChanged();
+    qCInfo(logDeveloper) << "Model text changed to:" << newModelText;
 }
 
 QString ChatAPI::modelIcon() const{return m_modelIcon;}
@@ -244,6 +290,7 @@ void ChatAPI::setModelIcon(const QString &newModelIcon){
         return;
     m_modelIcon = newModelIcon;
     emit modelIconChanged();
+    qCInfo(logDeveloper) << "Model icon changed to:" << newModelIcon;
 }
 
 int ChatAPI::modelId() const{return m_modelId;}
@@ -252,6 +299,7 @@ void ChatAPI::setModelId(int newModelId){
         return;
     m_modelId = newModelId;
     emit modelIdChanged();
+    qCInfo(logDeveloper) << "Model id changed to:" << newModelId;
 }
 
 Provider *ChatAPI::provider() const { return m_provider; }
@@ -269,6 +317,7 @@ void ChatAPI::setModelSelect(bool newModelSelect){
         return;
     m_modelSelect = newModelSelect;
     emit modelSelectChanged();
+    qCInfo(logDeveloper) << "Model select changed to:" << newModelSelect;
 }
 
 bool ChatAPI::responseInProgress() const{return m_responseInProgress;}
@@ -277,6 +326,7 @@ void ChatAPI::setResponseInProgress(bool newResponseInProgress){
         return;
     m_responseInProgress = newResponseInProgress;
     emit responseInProgressChanged();
+    qCInfo(logDeveloper) << "Response in progress changed to:" << newResponseInProgress;
 }
 
 bool ChatAPI::loadModelInProgress() const{return m_loadModelInProgress;}
@@ -285,6 +335,7 @@ void ChatAPI::setLoadModelInProgress(bool newLoadModelInProgress){
         return;
     m_loadModelInProgress = newLoadModelInProgress;
     emit loadModelInProgressChanged();
+    qCInfo(logDeveloper) << "Load model in progress changed to:" << newLoadModelInProgress;
 }
 
 bool ChatAPI::isLoadModel() const{return m_isLoadModel;}
@@ -293,6 +344,7 @@ void ChatAPI::setIsLoadModel(bool newIsLoadModel){
         return;
     m_isLoadModel = newIsLoadModel;
     emit isLoadModelChanged();
+    qCInfo(logDeveloper) << "Is load model changed to:" << newIsLoadModel;
 }
 
 ModelSettings *ChatAPI::modelSettings() const{return m_modelSettings;}
@@ -303,4 +355,5 @@ void ChatAPI::setModel(Model *newModel){
         return;
     m_model = newModel;
     emit modelChanged();
+    qCInfo(logDeveloper) << "Model pointer changed.";
 }

@@ -24,6 +24,9 @@
 #include "offlinemodellistfilter.h"
 #include "onlinemodellistfilter.h"
 
+#include <QLoggingCategory>
+#include "logcategories.h"
+
 struct ModelAPI : public CrudAPI
 {
     ModelAPI(const QString &scheme, const QString &hostName, int port);
