@@ -27,90 +27,21 @@ QHttpServerResponse ModelAPI::getFullList() const {
 }
 
 QHttpServerResponse ModelAPI::getItem(qint64 itemId) const{
-    // const auto item = data.find(itemId);
-    // return item != data.end() ? QHttpServerResponse(item->toJson())
-    //                           : QHttpServerResponse(QHttpServerResponder::StatusCode::NotFound);
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 void ModelAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder){
-    // responder.writeBeginChunked("text/event-stream");
-
-    // auto sendEvent = [&responder](const QJsonArray &array) {
-    //     QJsonDocument doc(array);
-    //     QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
-    //     QByteArray sseData = "data: " + jsonData + "\n\n";
-    //     responder.writeChunk(sseData);
-    // };
-
-    // for (int i = 0; i < 150; ++i) {
-    //     QJsonArray dummyList;
-
-    //     QJsonObject obj1;
-    //     obj1["id"] = i;
-    //     obj1["name"] = "C++";
-    //     obj1["type"] = "compiled";
-
-    //     QJsonObject obj2;
-    //     obj2["id"] = i*100;
-    //     obj2["name"] = "Python";
-    //     obj2["type"] = "interpreted";
-
-    //     dummyList.append(obj1);
-    //     dummyList.append(obj2);
-
-    //     sendEvent(dummyList);
-    // }
-
-    // responder.writeEndChunked("bay");
-    // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    // if (!json)
-        // return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // const std::optional<T> item = factory->fromJson(*json);
-    // if (!item)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-    // if (data.contains(item->getId()))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::AlreadyReported);
-
-    // const auto entry = data.insert(item->getId(), *item);
-    // return QHttpServerResponse(entry->toJson(), QHttpServerResponder::StatusCode::Created);
-    // return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ModelAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
-    // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    // if (!json)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // auto item = data.find(itemId);
-    // if (item == data.end())
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // if (!item->update(*json))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // return QHttpServerResponse(item->toJson());
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ModelAPI::updateItemFields(qint64 itemId, const QHttpServerRequest &request){
-    // const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
-    // if (!json)
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
-
-    // auto item = data.find(itemId);
-    // if (item == data.end())
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // item->updateFields(*json);
-
-    // return QHttpServerResponse(item->toJson());
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ModelAPI::deleteItem(qint64 itemId){
-    // if (!data.remove(itemId))
-    //     return QHttpServerResponse(QHttpServerResponder::StatusCode::NoContent);
-    // return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 

@@ -135,7 +135,7 @@ signals:
 
 
 private:
-    void prompt(const QString &input, const int idModel);
+    void prompt();
     void loadModel(const int id);
     void unloadModel();
 
@@ -159,6 +159,8 @@ private:
     QMap<QWebSocket *, int> m_socketToModelId;
     QMap<QWebSocket *, QString> m_socketToPrompt;
     QMap<QWebSocket *, QString> m_socketToGeneratedText;
+    QMap<QWebSocket*, ModelSettings*> m_socketToModelSettings;
+
     QWebSocket *m_currentClient = nullptr;
 
     bool m_debug;

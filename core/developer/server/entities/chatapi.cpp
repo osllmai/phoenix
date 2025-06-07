@@ -18,9 +18,6 @@ QHttpServerResponse ChatAPI::getFullList() const {
 }
 
 QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
-    // const auto item = data.find(itemId);
-    // return item != data.end() ? QHttpServerResponse(item->toJson())
-    //                           : QHttpServerResponse(QHttpServerResponder::StatusCode::NotFound);
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
@@ -56,13 +53,9 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    int modelId = (*json)["modelId"].toInt();
-    QString promptText = (*json)["prompt"].toString();
-
     m_responder = responder;
 
-    setModelId(modelId);
-    prompt(promptText, modelId);
+    prompt(json);
 }
 
 QHttpServerResponse ChatAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
@@ -77,11 +70,12 @@ QHttpServerResponse ChatAPI::deleteItem(qint64 itemId){
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
+void ChatAPI::prompt(const std::optional<QJsonObject> json){
 
+    int idModel = (*json)["modelId"].toInt();
+    QString input = (*json)["prompt"].toString();
+    setModelId(idModel);
 
-
-
-void ChatAPI::prompt(const QString &input, const int idModel){
     if(!m_isLoadModel){
         loadModel(idModel);
         setIsLoadModel(true);
@@ -124,17 +118,29 @@ void ChatAPI::prompt(const QString &input, const int idModel){
     }
     if(idModel != m_model->id()){
         setIsLoadModel(false);
-        prompt(input, idModel);
+        prompt(json);
         return;
     }
 
     setResponseInProgress(true);
-    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
-                       m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
-                       m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
-                       m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
-                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
-                       m_modelSettings->numberOfGPULayers());
+
+    const bool stream = json->contains("stream") ? (*json)["stream"].toBool() : m_modelSettings->stream();
+    const QString promptTemplate = json->contains("promptTemplate") ? (*json)["promptTemplate"].toString() : m_modelSettings->promptTemplate();
+    const QString systemPrompt = json->contains("systemPrompt") ? (*json)["systemPrompt"].toString() : m_modelSettings->systemPrompt();
+    const double temperature = json->contains("temperature") ? (*json)["temperature"].toDouble() : m_modelSettings->temperature();
+    const int topK = json->contains("topK") ? (*json)["topK"].toInt() : m_modelSettings->topK();
+    const double topP = json->contains("topP") ? (*json)["topP"].toDouble() : m_modelSettings->topP();
+    const double minP = json->contains("minP") ? (*json)["minP"].toDouble() : m_modelSettings->minP();
+    const double repeatPenalty = json->contains("repeatPenalty") ? (*json)["repeatPenalty"].toDouble() : m_modelSettings->repeatPenalty();
+    const int promptBatchSize = json->contains("promptBatchSize") ? (*json)["promptBatchSize"].toInt() : m_modelSettings->promptBatchSize();
+    const int maxTokens = json->contains("maxTokens") ? (*json)["maxTokens"].toInt() : m_modelSettings->maxTokens();
+    const int repeatPenaltyTokens = json->contains("repeatPenaltyTokens") ? (*json)["repeatPenaltyTokens"].toInt() : m_modelSettings->repeatPenaltyTokens();
+    const int contextLength = json->contains("contextLength") ? (*json)["contextLength"].toInt() : m_modelSettings->contextLength();
+    const int numberOfGPULayers = json->contains("numberOfGPULayers") ? (*json)["numberOfGPULayers"].toInt() : m_modelSettings->numberOfGPULayers();
+
+    m_provider->prompt(input, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP, repeatPenalty,
+                       promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
+
 }
 
 void ChatAPI::loadModel(const int id){

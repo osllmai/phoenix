@@ -58,13 +58,41 @@ void ChatServer::processTextMessage(QString message){
         qWarning() << "JSON missing required fields.";
         return;
     }
-    int modelId = obj["modelId"].toInt();
-    QString promptText = obj["prompt"].toString();
-    m_socketToModelId[pClient] = modelId;
-    m_socketToPrompt[pClient] = promptText;
+
+    m_socketToModelId[pClient] = obj["modelId"].toInt();
+    m_socketToPrompt[pClient] = obj["prompt"].toString();
     m_socketToGeneratedText[pClient] = "";
+
+    //create or update model-settings
+    auto *settings = m_socketToModelSettings.value(pClient, nullptr);
+    if (!settings) {
+        settings = new ModelSettings(this);
+        m_socketToModelSettings[pClient] = settings;
+    }
+
+    //set settings
+    settings->setStream(obj.contains("stream") ? obj["stream"].toBool() : m_modelSettings->stream());
+    settings->setPromptTemplate(obj.contains("promptTemplate") ? obj["promptTemplate"].toString() : m_modelSettings->promptTemplate());
+    settings->setSystemPrompt(obj.contains("systemPrompt") ? obj["systemPrompt"].toString() : m_modelSettings->systemPrompt());
+    settings->setTemperature(obj.contains("temperature") ? obj["temperature"].toDouble() : m_modelSettings->temperature());
+    settings->setTopK(obj.contains("topK") ? obj["topK"].toInt() : m_modelSettings->topK());
+    settings->setTopP(obj.contains("topP") ? obj["topP"].toDouble() : m_modelSettings->topP());
+    settings->setMinP(obj.contains("minP") ? obj["minP"].toDouble() : m_modelSettings->minP());
+    settings->setRepeatPenalty(obj.contains("repeatPenalty") ? obj["repeatPenalty"].toDouble() : m_modelSettings->repeatPenalty());
+    settings->setPromptBatchSize(obj.contains("promptBatchSize") ? obj["promptBatchSize"].toInt() : m_modelSettings->promptBatchSize());
+    settings->setMaxTokens(obj.contains("maxTokens") ? obj["maxTokens"].toInt() : m_modelSettings->maxTokens());
+    settings->setRepeatPenaltyTokens(obj.contains("repeatPenaltyTokens") ? obj["repeatPenaltyTokens"].toInt() : m_modelSettings->repeatPenaltyTokens());
+    settings->setContextLength(obj.contains("contextLength") ? obj["contextLength"].toInt() : m_modelSettings->contextLength());
+    settings->setNumberOfGPULayers(obj.contains("numberOfGPULayers") ? obj["numberOfGPULayers"].toInt() : m_modelSettings->numberOfGPULayers());
+
+
+    if(responseInProgress()){
+        m_socketToGeneratedText[pClient] = "The server is responding to other clients, please wait.";
+    }
+
     m_currentClient = pClient;
-    prompt(promptText, modelId);
+
+    prompt();
 }
 //! [processTextMessage]
 
@@ -94,7 +122,22 @@ void ChatServer::socketDisconnected()
 //! [socketDisconnected]
 
 
-void ChatServer::prompt(const QString &input, const int idModel){
+void ChatServer::prompt(){
+
+    if (!m_currentClient) {
+        qWarning() << "No current client set.";
+        return;
+    }
+
+    if (!m_socketToModelId.contains(m_currentClient)) {
+        qWarning() << "No model ID assigned for this client.";
+        return;
+    }
+
+    int idModel = m_socketToModelId[m_currentClient];
+    QString input = m_socketToPrompt.value(m_currentClient);
+
+
     if(!m_isLoadModel){
         loadModel(idModel);
         setIsLoadModel(true);
@@ -138,17 +181,29 @@ void ChatServer::prompt(const QString &input, const int idModel){
 
     if(idModel != m_model->id()){
         setIsLoadModel(false);
-        prompt(input, idModel);
+        prompt();
         return;
     }
 
+    ModelSettings *settings = m_socketToModelSettings.value(m_currentClient, m_modelSettings);
+
     setResponseInProgress(true);
-    m_provider->prompt(input, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
-                       m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
-                       m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
-                       m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
-                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
-                       m_modelSettings->numberOfGPULayers());
+    m_provider->prompt(
+        input,
+        settings->stream(),
+        settings->promptTemplate(),
+        settings->systemPrompt(),
+        settings->temperature(),
+        settings->topK(),
+        settings->topP(),
+        settings->minP(),
+        settings->repeatPenalty(),
+        settings->promptBatchSize(),
+        settings->maxTokens(),
+        settings->repeatPenaltyTokens(),
+        settings->contextLength(),
+        settings->numberOfGPULayers()
+        );
 }
 
 void ChatServer::loadModel(const int id){
@@ -179,14 +234,26 @@ void ChatServer::tokenResponse(const QString &token)
     m_socketToGeneratedText[m_currentClient] += token;
 
     QJsonObject response;
-    response["type"] = "token";
-    response["token"] = token;
+    response["text"] = token;
     m_currentClient->sendTextMessage(QJsonDocument(response).toJson(QJsonDocument::Compact));
 }
 
 
-void ChatServer::finishedResponse(const QString &warning){
+void ChatServer::finishedResponse(const QString &warning) {
+    setResponseInProgress(false);
 
+    if (!m_currentClient) return;
+
+    m_socketToPrompt.remove(m_currentClient);
+    m_socketToGeneratedText.remove(m_currentClient);
+    m_socketToModelId.remove(m_currentClient);
+
+    if (m_socketToModelSettings.contains(m_currentClient)) {
+        delete m_socketToModelSettings[m_currentClient];
+        m_socketToModelSettings.remove(m_currentClient);
+    }
+
+    m_currentClient = nullptr;
 }
 
 void ChatServer::updateModelSettingsDeveloper(){
@@ -217,7 +284,6 @@ void ChatServer::updateModelSettingsDeveloper(){
 //     //         m_currentChatServer->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
 //     // }
 // }
-
 
 QString ChatServer::modelSystemPrompt() const{return m_modelSystemPrompt;}
 void ChatServer::setModelSystemPrompt(const QString &newModelSystemPrompt){

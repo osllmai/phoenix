@@ -136,7 +136,7 @@ signals:
 
 
 private:
-    void prompt(const QString &input, const int idModel);
+    void prompt(const std::optional<QJsonObject> json);
     void loadModel(const int id);
     void unloadModel();
 
