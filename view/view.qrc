@@ -4,7 +4,6 @@
         <file>component_library/style/Colors.qml</file>
         <file>component_library/style/RoleEnum.qml</file>
         <file>component_library/style/qmldir</file>
-
         <file>component_library/button/MyButton.qml</file>
         <file>component_library/button/MyComboBox.qml</file>
         <file>component_library/button/MyIcon.qml</file>
@@ -16,19 +15,15 @@
         <file>component_library/button/VerificationDialog.qml</file>
         <file>component_library/button/NotificationDialog.qml</file>
         <file>component_library/button/MyToolTip.qml</file>
-
         <file>AppMenu.qml</file>
         <file>AppMenuDrawer.qml</file>
         <file>menu/MyMenuButton.qml</file>
         <file>menu/MyOpenMenuButton.qml</file>
-
         <file>AppBody.qml</file>
-
         <file>home/HomeView.qml</file>
         <file>home/components/HomeHeader.qml</file>
         <file>home/components/FeatureList.qml</file>
         <file>home/components/FeatureDelegate.qml</file>
-
         <file>model/ModelsView.qml</file>
         <file>model/components/ModelHeader.qml</file>
         <file>model/components/ModelBody.qml</file>
@@ -43,7 +38,6 @@
         <file>model/components/online/OnlineDelegate.qml</file>
         <file>model/components/online/InputApikey.qml</file>
         <file>model/components/online/ApikeyButton.qml</file>
-
         <file>chat/ChatView.qml</file>
         <file>chat/components/ChatHeader.qml</file>
         <file>chat/components/ChatBody.qml</file>
@@ -57,7 +51,6 @@
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
         <file>chat/components/history/HistoryDelegate.qml</file>
-
         <file>component_library/model_settings/ModelSettingsView.qml</file>
         <file>component_library/model_settings/ModelSettingsHeader.qml</file>
         <file>component_library/model_settings/ModelSettingsBody.qml</file>
@@ -65,10 +58,10 @@
         <file>component_library/model_settings/components/ModelInferencesSettings.qml</file>
         <file>component_library/model_settings/components/ModelInformationSettings.qml</file>
         <file>component_library/model_settings/components/ModelEngineSettings.qml</file>
+        <file>component_library/model_settings/components/APISettings.qml</file>
         <file>component_library/model_settings/components/button/ModelSettingsSlider.qml</file>
         <file>component_library/model_settings/components/button/ModelSettingsSwitch.qml</file>
         <file>component_library/model_settings/components/button/ModelMenuSettings.qml</file>
-
         <file>component_library/model/ModelSelectView.qml</file>
         <file>component_library/model/ModelSelectComboBox.qml</file>
         <file>component_library/model/components/ModelSelectHeader.qml</file>
@@ -82,7 +75,6 @@
         <file>component_library/model/components/offline/OfflineCurrentModelList.qml</file>
         <file>component_library/model/components/offline/OfflineCurrentModelinformation.qml</file>
         <file>component_library/model/components/offline/OfflineCurrentView.qml</file>
-
         <file>developer/DeveloperView.qml</file>
         <file>developer/components/DeveloperHeader.qml</file>
         <file>developer/components/DeveloperBody.qml</file>
@@ -92,8 +84,8 @@
         <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
         <file>developer/components/model_settings/ModelSettingsDeveloperView.qml</file>
         <file>developer/components/model_settings/ModelSettingsDeveloperDrawer.qml</file>
-        <file>developer/components/curl/CurlDeveloper.qml</file>
-
+        <file>developer/components/code/CodeDeveloper.qml</file>
+        <file>developer/components/code/EditCodeDeveloper.qml</file>
         <file>SettingsDialog.qml</file>
         <file>settings/SettingsHeader.qml</file>
         <file>settings/SettingsBody.qml</file>
@@ -108,11 +100,9 @@
         <file>settings/components/SettingsSlider.qml</file>
         <file>settings/components/ThemeOption.qml</file>
         <file>settings/components/OpenMenuSettingsButton.qml</file>
-
         <file>AppFooter.qml</file>
         <file>component_footer/SystemMonitoring.qml</file>
         <file>component_footer/Downloading.qml</file>
-
         <file>AppHeader.qml</file>
     </qresource>
 </RCC>

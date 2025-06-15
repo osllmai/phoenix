@@ -141,6 +141,14 @@ T.Button {
                                 successTimer.start();
                             }
                         }
+
+                        Timer {
+                            id: successTimer
+                            interval: 1000
+                            repeat: false
+                            onTriggered: dateAndIconId.checkCopy = false
+                        }
+
                         function selectIcon(){
                             if(dateAndIconId.checkCopy === false){
                                 return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
@@ -217,12 +225,6 @@ T.Button {
                                     speakerTimer.start()
                                 }
                             }
-                        }
-                        Timer {
-                            id: successTimer
-                            interval: 1000
-                            repeat: false
-                            onTriggered: dateAndIconId.checkCopy = false
                         }
 
                         Timer {

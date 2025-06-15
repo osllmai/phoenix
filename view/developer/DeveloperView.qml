@@ -44,5 +44,6 @@ RowLayout {
         id: modelSettingSpaceId
         Layout.preferredWidth: 320
         Layout.fillHeight: true
+        visible: window.width>1500
     }
 }

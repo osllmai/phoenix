@@ -174,6 +174,7 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
     m_provider->prompt(input, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP, repeatPenalty,
                        promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers);
 }
+
 void ChatAPI::loadModel(const int id){
     qCInfo(logDeveloper) << "loadModel called with id:" << id;
 

@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import '../../component_library/style' as Style
 import "./command_line"
 import "./model"
-import "curl"
+import "code"
 
 RowLayout {
 
@@ -20,9 +20,10 @@ RowLayout {
                 id: modelDeveloperId
                 Layout.preferredWidth: parent.width / 3
                 Layout.fillHeight: true
+                visible: window.width>1150
             }
 
-            CurlDeveloper {
+            CodeDeveloper {
                 id: curlDeveloperId
                 Layout.fillWidth: true
                 Layout.fillHeight: true

@@ -159,32 +159,83 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
     if (m_currentProgramLanguage == newCurrentProgramLanguage)
         return;
 
+    CodeGenerator* previousGenerator = nullptr;
     if (m_currentProgramLanguage != nullptr)
-        m_currentProgramLanguage->setCodeGenerator(nullptr);
+        previousGenerator = m_currentProgramLanguage->getCodeGenerator();
 
     if (newCurrentProgramLanguage) {
-        CodeGenerator* generator = nullptr;
+        CodeGenerator* newGenerator = nullptr;
+
+        bool stream = previousGenerator ? previousGenerator->stream() : true;
+        QString promptTemplate = previousGenerator ? previousGenerator->promptTemplate() : "";
+        QString systemPrompt = previousGenerator ? previousGenerator->systemPrompt() : "";
+        double temperature = previousGenerator ? previousGenerator->temperature() : 0.7;
+        int topK = previousGenerator ? previousGenerator->topK() : 40;
+        double topP = previousGenerator ? previousGenerator->topP() : 0.95;
+        double minP = previousGenerator ? previousGenerator->minP() : 0.05;
+        double repeatPenalty = previousGenerator ? previousGenerator->repeatPenalty() : 1.1;
+        int promptBatchSize = previousGenerator ? previousGenerator->promptBatchSize() : 1;
+        int maxTokens = previousGenerator ? previousGenerator->maxTokens() : 512;
+        int repeatPenaltyTokens = previousGenerator ? previousGenerator->repeatPenaltyTokens() : 64;
+        int contextLength = previousGenerator ? previousGenerator->contextLength() : 2048;
+        int numberOfGPULayers = previousGenerator ? previousGenerator->numberOfGPULayers() : 20;
+        bool topKVisible = previousGenerator ? previousGenerator->topKVisible() : false;
+        bool topPVisible = previousGenerator ? previousGenerator->topPVisible() : false;
+        bool minPVisible = previousGenerator ? previousGenerator->minPVisible() : false;
+        bool repeatPenaltyVisible = previousGenerator ? previousGenerator->repeatPenaltyVisible() : false;
+        bool promptBatchSizeVisible = previousGenerator ? previousGenerator->promptBatchSizeVisible() : false;
+        bool maxTokensVisible = previousGenerator ? previousGenerator->maxTokensVisible() : false;
+        bool repeatPenaltyTokensVisible = previousGenerator ? previousGenerator->repeatPenaltyTokensVisible() : false;
+        bool contextLengthVisible = previousGenerator ? previousGenerator->contextLengthVisible() : false;
+        bool numberOfGPULayersVisible = previousGenerator ? previousGenerator->numberOfGPULayersVisible() : false;
 
         switch (newCurrentProgramLanguage->id()) {
         case 0:
-            generator = new CurlCodeGenerator();
+            newGenerator = new CurlCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+                                                 topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                 maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 1:
-            generator = new PythonRequestsCodeGenerator();
+            newGenerator = new PythonRequestsCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+                                                           topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                           maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                           topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                           promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                           contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 2:
-            generator = new NodeJsAxiosCodeGenerator();
+            newGenerator = new NodeJsAxiosCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+                                                        topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                        maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                        topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                        promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                        contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 3:
-            generator = new JavascriptFetchCodeGenerator();
+            newGenerator = new JavascriptFetchCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+                                                            topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                            maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                            topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                            promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                            contextLengthVisible, numberOfGPULayersVisible);
             break;
         default:
             qCWarning(logDeveloper) << "Unsupported language ID:" << newCurrentProgramLanguage->id();
             break;
         }
 
-        newCurrentProgramLanguage->setCodeGenerator(generator);
-        qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
+        if (newGenerator != nullptr) {
+            newCurrentProgramLanguage->setCodeGenerator(newGenerator);
+
+            if (previousGenerator != nullptr) {
+                delete previousGenerator;
+            }
+
+            qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
+        }
     }
 
     m_currentProgramLanguage = newCurrentProgramLanguage;

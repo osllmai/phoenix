@@ -20,39 +20,28 @@ Item{
         MyOpenMenuButton{
             id: openMenuId
         }
-        Rectangle{
-            height: parent.height
-            width: 200
-            color: switchId.checked? Style.Colors.boxSuccessColor: "#00ffffff"
-            border.color: Style.Colors.boxBorder
-            radius: 8
 
-            Row{
-                id: settingsSliderBox
-                anchors.fill: parent
-                anchors.leftMargin: 10
-
-                Label {
-                    id:textId
-                    text: "Status: " + (switchId.checked?"Running": "Stopped")
-                    color: Style.Colors.textInformation
-                    width: parent.width - switchId.width
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: 10
-                }
-
-                MySwitch{
-                    id: switchId
-                    checked: false
-                    anchors.verticalCenter: parent.verticalCenter
-                    onCheckedChanged:{
-                        codeDeveloperList.start()
-                    }
-                }
+        MySwitch{
+            id: switchId
+            checked: switchId.checked
+            anchors.verticalCenter: openMenuId.verticalCenter
+            onCheckedChanged:{
+                codeDeveloperList.start()
             }
         }
+
+        MySwitch{
+            id: switchId2
+            checked: switchId.checked
+            anchors.verticalCenter: openMenuId.verticalCenter
+            onCheckedChanged:{
+                codeDeveloperList.start()
+            }
+        }
+
         ModelDeveloperComboBox{
             id: currentModelComboBoxId
+            visible: window.width<=1150
         }
     }
 
@@ -64,7 +53,7 @@ Item{
 
         Rectangle{
             height: parent.height
-            width: 300
+            width: 150
             color: "#00ffffff"
             border.color: Style.Colors.boxBorder
             radius: 8
@@ -76,7 +65,29 @@ Item{
 
                 Label {
                     id: textId2
-                    text: "Reachable at: https://127.0.0.1:"+ codeDeveloperList.port
+                    text: "https://127.0.0.1:"+ codeDeveloperList.port
+                    color: Style.Colors.textInformation
+                    width: parent.width - switchId2.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.pointSize: 10
+                }
+            }
+        }
+        Rectangle{
+            height: parent.height
+            width: 150
+            color: "#00ffffff"
+            border.color: Style.Colors.boxBorder
+            radius: 8
+
+            Row{
+                id: reacheblePort2
+                anchors.fill: parent
+                anchors.leftMargin: 10
+
+                Label {
+                    id: textId3
+                    text: "https://127.0.0.1:"+ codeDeveloperList.port
                     color: Style.Colors.textInformation
                     width: parent.width - switchId2.width
                     anchors.verticalCenter: parent.verticalCenter
@@ -89,6 +100,7 @@ Item{
             id: openModelSettingsId
             myIcon: "qrc:/media/icon/settings.svg"
             bottonType: Style.RoleEnum.BottonType.Secondary
+           visible: window.width<=1500
             Connections {
                 target: openModelSettingsId
                 function onClicked(){

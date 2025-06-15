@@ -8,8 +8,6 @@ Item {
     height: instructionsBox.height
     visible: false
 
-    property bool existConversation: !conversationList.isEmptyConversation
-
      Rectangle {
          id: instructionsBox
          height: 80; width: parent.width
@@ -24,10 +22,10 @@ Item {
 
              TextArea {
                  id: instructionTextBox
-                 text: control.existConversation? conversationList.currentConversation.modelSettings.systemPrompt: ""
+                 text: modelSettingsId.systemPrompt
                  visible: true
                  color: Style.Colors.textInformation
-                 wrapMode: Text.NoWrap
+                 wrapMode: Text.Wrap
                  placeholderText: qsTr("Eg. You are a helpful assistant")
                  clip: true
                  font.pointSize: 10
@@ -37,16 +35,14 @@ Item {
                  persistentSelection: true
                  placeholderTextColor: Style.Colors.textInformation
                  background: null
-                 textFormat: TextEdit.PlainText
+                 textFormat: TextEdit.RichText
                  onHeightChanged: {
-                     if(instructionTextBox.height + 10>80 && instructionTextBox.text !== ""){
-                         instructionsBox.height  = Math.min(instructionTextBox.height + 10,control.height - 10) ;
+                     if(instructionTextBox.height < 70 && instructionTextBox.text !== ""){
+                         instructionsBox.height += 10;
                      }
                  }
                  onTextChanged: {
-                     if(control.existConversation){
-                         conversationList.currentConversation.modelSettings.systemPrompt = instructionTextBox.text.replace(/\\n/g, "\n");
-                     }
+                     modelSettingsId.updateSystemPrompt(instructionTextBox.text.replace(/\\n/g, "\n"))
                  }
              }
          }

@@ -8,8 +8,6 @@ Item {
     height: promptTemplateTextId.height + promptTemplateBox.height
     visible: false
 
-    property bool existConversation: !conversationList.isEmptyConversation
-
     Column{
         id: modelSettingsInformationId
         anchors.left: parent.left
@@ -36,10 +34,10 @@ Item {
                 }
                 TextArea {
                     id: promptTemplateTextBox
-                    text: control.existConversation? conversationList.currentConversation.modelSettings.promptTemplate: ""
+                    text: modelSettingsId.promptTemplate
                     visible: true
                     color: Style.Colors.textInformation
-                    wrapMode: Text.NoWrap
+                    wrapMode: Text.Wrap
                     placeholderText: qsTr("Eg. You are a helpful assistant")
                     clip: true
                     font.pointSize: 10
@@ -49,17 +47,14 @@ Item {
                     persistentSelection: true
                     placeholderTextColor: Style.Colors.textInformation
                     background: null
-                    textFormat: TextEdit.PlainText
+                    textFormat: TextEdit.RichText
                     onHeightChanged: {
                         if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
                             promptTemplateBox.height += 10;
                         }
                     }
                     onTextChanged: {
-                        if(control.existConversation){
-                            conversationList.currentConversation.modelSettings.promptTemplate =
-                                            promptTemplateTextBox.text.replace(/\\n/g, "\n");
-                        }
+                        modelSettingsId.updatePromptTemplate(promptTemplateTextBox.text.replace(/\\n/g, "\n"))
                     }
                 }
             }

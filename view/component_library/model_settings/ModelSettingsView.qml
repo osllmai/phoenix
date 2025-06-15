@@ -3,6 +3,38 @@ import QtQuick.Controls
 import '../style' as Style
 
 Rectangle {
+    id: modelSettingsId
+
+    property bool stream
+    property double temperature
+    property double topP
+    property double maxTokens
+    property double promptBatchSize
+    property double minP
+    property double topK
+    property double repeatPenaltyTokens
+    property double repeatPenalty
+
+    property string systemPrompt
+    property string promptTemplate
+
+    property int contextLength
+    property int numberOfGPULayers
+
+    signal updateSystemPrompt(string systemPrompt)
+    signal updatePromptTemplate(string promptTemplate)
+    signal updateStream(bool stream)
+    signal updateTemperature(double temperature)
+    signal updateTopP(double topP)
+    signal updateMaxTokens(double maxTokens)
+    signal updatePromptBatchSize(double promptBatchSize)
+    signal updateMinP(double minP)
+    signal updateTopK(double topK)
+    signal updateRepeatPenaltyTokens(double repeatPenaltyTokens)
+    signal updateRepeatPenalty(double repeatPenalty)
+    signal updateContextLength(int contextLength)
+    signal updateNumberOfGPULayers(int numberOfGPULayers)
+
     color: Style.Colors.background
     anchors.fill: parent
     border.width: 0

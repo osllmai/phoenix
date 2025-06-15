@@ -24,6 +24,33 @@ Item {
             spacing: 10
 
             Rectangle{
+                width: parent.width ; height: apiSettingsMenu.height + (apiSettingsBody.visible?(apiSettingsBody.height+10):0) + 20
+                border.width: 1; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: apiSettingsMenu
+                        myText: qsTr("API Settings")
+                        isOpen: apiSettingsBody.visible
+                        Connections {
+                            target: apiSettingsMenu
+                            function onClicked(){
+                                apiSettingsBody.visible = !apiSettingsBody.visible
+                            }
+                        }
+                    }
+                    ModelInferencesSettings{
+                        id: apiSettingsBody
+                        visible: true
+                    }
+                }
+            }
+
+            Rectangle{
                 width: parent.width ; height: modelInferencesMenu.height + (modelInferencesBody.visible?(modelInferencesBody.height+10):0) + 20
                 border.width: 1; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
