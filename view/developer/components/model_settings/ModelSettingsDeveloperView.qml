@@ -9,6 +9,8 @@ Item {
     ModelSettingsView {
         id: modelSettingsId
 
+        needCloseButton: false
+
         stream: codeDeveloperList.currentProgramLanguage.codeGenerator.stream
         temperature: codeDeveloperList.currentProgramLanguage.codeGenerator.temperature
         topP: codeDeveloperList.currentProgramLanguage.codeGenerator.topP
@@ -22,6 +24,18 @@ Item {
         promptTemplate: codeDeveloperList.currentProgramLanguage.codeGenerator.promptTemplate
         contextLength: codeDeveloperList.currentProgramLanguage.codeGenerator.contextLength
         numberOfGPULayers: codeDeveloperList.currentProgramLanguage.codeGenerator.numberOfGPULayers
+
+        apiPage: true
+        isRunningAPI:codeDeveloperList.isRunningAPI
+        api: "http://127.0.0.1:"+ codeDeveloperList.portAPI
+        portAPI: codeDeveloperList.portAPI
+        chatAPI: "http://127.0.0.1:"+ codeDeveloperList.portAPI + "/api/chat"
+        modelsAPI: "http://127.0.0.1:"+ codeDeveloperList.portAPI + "api/models"
+
+        socketPage: true
+        isRunningSocket: codeDeveloperList.isRunningSocket
+        socket: "ws://127.0.0.1:"+ codeDeveloperList.portSocket
+        portSocket: codeDeveloperList.portSocket
 
         Connections {
             target: modelSettingsId
@@ -63,6 +77,18 @@ Item {
             }
             function onUpdateNumberOfGPULayers(numberOfGPULayers) {
                     codeDeveloperList.currentProgramLanguage.codeGenerator.numberOfGPULayers = numberOfGPULayers;
+            }
+            function onUpdateIsRunningAPI(isRunningAPI){
+                codeDeveloperList.isRunningAPI = isRunningAPI
+            }
+            function onUpdatePortAPI(portAPI){
+                codeDeveloperList.portAPI = portAPI
+            }
+            function onUpdateIsRunningSocket(isRunningSocket){
+                codeDeveloperList.isRunningSocket = isRunningSocket
+            }
+            function onUpdatePortSocket(portSocket){
+                codeDeveloperList.portSocket = portSocket
             }
         }
     }

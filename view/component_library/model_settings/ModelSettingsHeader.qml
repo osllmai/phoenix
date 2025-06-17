@@ -23,6 +23,7 @@ Item{
             }
             Item{
                 id: closeBox
+                visible: modelSettingsId.needCloseButton
                 width: 35; height: 35
                 ToolButton {
                     id: searchIcon

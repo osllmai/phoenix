@@ -58,12 +58,15 @@ ComboBox {
     popup: Popup {
         id: popupId
         y: comboBoxId.height + 10
-        width: 300
-        height: 300
+        width: 280
+        height: 360
 
         background: null
         contentItem: ModelSelectView{
             id: modelSelectId
+            anchors.fill: parent
+            // anchors.margins: 10
+
             modelSelect: comboBoxId.modelSelect
             modelId: comboBoxId.modelId
             modelName: comboBoxId.modelName

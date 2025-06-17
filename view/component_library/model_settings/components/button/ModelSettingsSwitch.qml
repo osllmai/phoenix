@@ -13,7 +13,7 @@ Item {
     Row{
         id: settingsSliderBox
         anchors.left: parent.left
-        anchors.leftMargin: 5
+        anchors.leftMargin: 10
         height: parent.height
         width: parent.width - 5
         Label {

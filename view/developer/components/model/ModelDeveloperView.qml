@@ -10,6 +10,8 @@ Item {
         anchors.fill: parent
         anchors.margins: 10
 
+        needCloseButton: false
+
         modelSelect: codeDeveloperList.modelSelect
         modelId: codeDeveloperList.modelSelect? codeDeveloperList.modelId: -1
         modelName: codeDeveloperList.modelSelect? codeDeveloperList.modelText:"Phoenix"

@@ -19,7 +19,7 @@ T.Button {
         anchors.fill: parent
         radius: 8
         border.width: 1
-        border.color: Style.Colors.boxBorder
+        border.color: (modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id) )? Style.Colors.buttonFeatureBorderSelected: Style.Colors.buttonFeatureBorderNormal
         color: (control.hovered || (modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id) ))? Style.Colors.boxHover: "#00ffffff"
 
         Row {

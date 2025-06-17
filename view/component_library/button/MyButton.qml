@@ -6,7 +6,7 @@ import '../style' as Style
 
 T.Button {
     id: control
-    width: calculateWidthBotton()+3; height: 35
+    width: calculateWidthBotton()+6; height: 35
 
     function calculateWidthBotton(){
         if(bottonType == Style.RoleEnum.BottonType.Progress){
@@ -14,11 +14,11 @@ T.Button {
         }
         switch(iconType){
         case Style.RoleEnum.IconType.Primary:
-            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
         case Style.RoleEnum.IconType.Image:
-            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
         default:
-            return (textBoxId.visible? (textId.width + iconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?iconId.width: 0) + 16): control.height);
         }
     }
     function calculateHeightText(){
@@ -139,6 +139,7 @@ T.Button {
                 width: textId.width + ((control.myIcon != "")? 10: 0)
                 height: textId.height
                 visible: (control.myText != "") && (control.textIsVisible)
+
                 Label {
                     id: textId
                     height: control.calculateHeightText()

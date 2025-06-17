@@ -1,10 +1,13 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import './../../style' as Style
 import "./button"
 
 Item {
     id: control
     width: parent.width
-    height: runId.height + portChange.height + chatAPIId.height + modelAPIId.height +20
+    height: runId.height + portChange.height +10
     visible: false
 
     Column{
@@ -16,32 +19,27 @@ Item {
         ModelSettingsSwitch{
             id:runId
             myTextName: "Run"
-            myValue: modelSettingsId.isRunningAPI
+            myValue: modelSettingsId.isRunningSocket
             onMyValueChanged: {
-                modelSettingsId.updateIsRunningAPI(runId.myValue)
+                modelSettingsId.updateIsRunningSocket(runId.myValue)
             }
         }
 
         ModelTextEdit{
             id: portChange
-            myText: modelSettingsId.api
-            myValue: modelSettingsId.portAPI
+            myText: modelSettingsId.socket
+            myValue: modelSettingsId.portSocket
             Connections{
                 target: portChange
                 function onSendValue(value){
-                    modelSettingsId.updatePortAPI(value)
+                    modelSettingsId.updatePortSocket(value)
                 }
             }
         }
 
-        ModelTextCopyBox{
-            id: chatAPIId
-            myText: modelSettingsId.chatAPI
-        }
-
-        ModelTextCopyBox{
-            id: modelAPIId
-            myText: modelSettingsId.modelsAPI
-        }
+        // ModelTextCopyBox{
+        //     id: chatSocketId
+        //     myText: "ws://127.0.0.1:"+ codeDeveloperList.portSocket
+        // }
     }
 }

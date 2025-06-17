@@ -25,6 +25,7 @@ Item{
         MyButton{
             id: newChatId
             visible: !conversationList.isEmptyConversation
+            anchors.verticalCenter: openMenuId.verticalCenter
             myText: (headerId.width<500)? "": "New Chat"
             myIcon: "qrc:/media/icon/add.svg"
             bottonType: Style.RoleEnum.BottonType.Primary

@@ -8,6 +8,8 @@ import '../button'
 Rectangle {
     id: modelSelectViewId
 
+    property bool needCloseButton: true
+
     property bool modelSelect: false
     property int modelId: -1
     property string modelName: "Phoenix"
@@ -25,6 +27,7 @@ Rectangle {
          spacing: 10
          ModelSelectHeader{
              id: headerId
+             needCloseButton: modelSelectViewId.needCloseButton
              Connections{
                  target: headerId
                  function onSearch(myText){}

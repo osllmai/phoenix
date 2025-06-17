@@ -24,8 +24,9 @@ Item {
             spacing: 10
 
             Rectangle{
+                visible: modelSettingsId.apiPage
                 width: parent.width ; height: apiSettingsMenu.height + (apiSettingsBody.visible?(apiSettingsBody.height+10):0) + 20
-                border.width: 1; border.color: Style.Colors.boxBorder
+                border.width: apiSettingsBody.visible? 1: 0; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
                 radius: 8
                 Column{
@@ -43,7 +44,7 @@ Item {
                             }
                         }
                     }
-                    ModelInferencesSettings{
+                    APISettings{
                         id: apiSettingsBody
                         visible: true
                     }
@@ -51,8 +52,36 @@ Item {
             }
 
             Rectangle{
+                visible: modelSettingsId.socketPage
+                width: parent.width ; height: socketSettingsMenu.height + (socketSettingsBody.visible?(socketSettingsBody.height+10):0) + 20
+                border.width: socketSettingsBody.visible? 1: 0; border.color: Style.Colors.boxBorder
+                color: Style.Colors.background
+                radius: 8
+                Column{
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+                    ModelMenuSettings{
+                        id: socketSettingsMenu
+                        myText: qsTr("Socket Settings")
+                        isOpen: socketSettingsBody.visible
+                        Connections {
+                            target: socketSettingsMenu
+                            function onClicked(){
+                                socketSettingsBody.visible = !socketSettingsBody.visible
+                            }
+                        }
+                    }
+                    SocketSettings{
+                        id: socketSettingsBody
+                        visible: true
+                    }
+                }
+            }
+
+            Rectangle{
                 width: parent.width ; height: modelInferencesMenu.height + (modelInferencesBody.visible?(modelInferencesBody.height+10):0) + 20
-                border.width: 1; border.color: Style.Colors.boxBorder
+                border.width: modelInferencesBody.visible? 1: 0; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
                 radius: 8
                 Column{
@@ -78,7 +107,7 @@ Item {
 
             Rectangle{
                 width: parent.width ; height: modelInformationMenu.height + (modelInformationBody.visible?(modelInformationBody.height+10):0) + 20
-                border.width: 1; border.color: Style.Colors.boxBorder
+                border.width: modelInformationBody.visible? 1: 0; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
                 radius: 8
                 Column{
@@ -104,7 +133,7 @@ Item {
 
             Rectangle{
                 width: parent.width ; height: modelEnginMenu.height + (modelEnginBody.visible?(modelEnginBody.height+10):0) +  20
-                border.width: 1; border.color: Style.Colors.boxBorder
+                border.width: modelEnginBody.visible? 1: 0; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
                 radius: 8
                 Column{
@@ -130,7 +159,7 @@ Item {
 
             Rectangle{
                 width: parent.width  ; height: assistantMenu.height + (assistantBody.visible?(assistantBody.height+10):0) + 20
-                border.width: 1; border.color: Style.Colors.boxBorder
+                border.width: assistantBody.visible? 1: 0; border.color: Style.Colors.boxBorder
                 color: Style.Colors.background
                 radius: 8
                 Column{

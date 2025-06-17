@@ -59,9 +59,11 @@
         <file>component_library/model_settings/components/ModelInformationSettings.qml</file>
         <file>component_library/model_settings/components/ModelEngineSettings.qml</file>
         <file>component_library/model_settings/components/APISettings.qml</file>
+        <file>component_library/model_settings/components/SocketSettings.qml</file>
         <file>component_library/model_settings/components/button/ModelSettingsSlider.qml</file>
         <file>component_library/model_settings/components/button/ModelSettingsSwitch.qml</file>
         <file>component_library/model_settings/components/button/ModelMenuSettings.qml</file>
+        <file>component_library/model_settings/components/button/ModelTextEdit.qml</file>
         <file>component_library/model/ModelSelectView.qml</file>
         <file>component_library/model/ModelSelectComboBox.qml</file>
         <file>component_library/model/components/ModelSelectHeader.qml</file>
@@ -103,6 +105,7 @@
         <file>AppFooter.qml</file>
         <file>component_footer/SystemMonitoring.qml</file>
         <file>component_footer/Downloading.qml</file>
+        <file>component_library/model_settings/components/button/ModelTextCopyBox.qml</file>
         <file>AppHeader.qml</file>
     </qresource>
 </RCC>
