@@ -12,8 +12,10 @@ CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
 
 CodeDeveloperList::CodeDeveloperList(QObject *parent)
     : QAbstractListModel(parent),
-    m_port(8080),
-    m_isRunning(false)
+    m_portSocket(49425),
+    m_isRunningSocket(false),
+    m_portAPI(8080),
+    m_isRunningAPI(false)
 {
     QList<QPair<int, QString>> languages = {
         {0, "Curl"},
@@ -30,6 +32,19 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     m_currentProgramLanguage = m_programLanguags.first();
     m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
     qCInfo(logDeveloper) << "Default language set to Curl";
+
+    setIsRunningAPI(true);
+
+    //create API
+    appAPI = QCoreApplication::instance();
+    if (!appAPI) {
+        qCWarning(logDeveloper) << "QCoreApplication instance is null!";
+        return;
+    }
+
+    //create socket
+   appSocket = QCoreApplication::instance();
+
 }
 
 void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt)
@@ -76,82 +91,6 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                         });
 
     qCDebug(logDeveloper) << "CRUD routes added for" << apiPath;
-}
-
-
-void CodeDeveloperList::start()
-{
-    appModel = QCoreApplication::instance();
-    if (!appModel) {
-        qCWarning(logDeveloper) << "QCoreApplication instance is null!";
-        return;
-    }
-
-    m_parserModel.setApplicationDescription("Qt Developer Server");
-    m_parserModel.addHelpOption();
-    m_parserModel.addOptions({
-        { "port", QCoreApplication::translate("main", "The port the server listens on."), "port" }
-    });
-
-    m_parserModel.process(*appModel);
-
-    m_httpServer = new QHttpServer(this);
-
-    quint16 portArg = PORT;
-    if (!m_parserModel.value("port").isEmpty())
-        portArg = m_parserModel.value("port").toUShort();
-
-    qCInfo(logDeveloper) << "Developer server starting on port:" << portArg;
-
-    m_httpServer->route("/", []() {
-        return "Qt Colorpalette example server. Please see documentation for API description";
-    });
-
-    auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portArg);
-    auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portArg);
-
-    m_modelsApi = std::move(modelFactory);
-    m_chatApi = std::move(chatFactory);
-
-    addCrudRoutes("/api/models", m_modelsApi);
-    addCrudRoutes("/api/chat", m_chatApi);
-
-    m_tcpServer = std::make_unique<QTcpServer>();
-    if (!m_tcpServer->listen(QHostAddress::Any, portArg) || !m_httpServer->bind(m_tcpServer.get())) {
-        qCWarning(logDeveloper) << "Server failed to bind to port:" << portArg;
-        return;
-    }
-
-    quint16 portModel = m_tcpServer->serverPort();
-    qCInfo(logDeveloper) << "HTTP Server running at port:" << portModel;
-
-
-    appChat = QCoreApplication::instance();
-
-    m_parserChat.setApplicationDescription("QtWebSockets example: ChatServer");
-    m_parserChat.addHelpOption();
-
-    QCommandLineOption dbgOption(QStringList() << "d" << "debug",
-                                 QCoreApplication::translate("main", "Debug output [default: off]."));
-    m_parserChat.addOption(dbgOption);
-
-    QCommandLineOption portOption(QStringList() << "p" << "port",
-                                  QCoreApplication::translate("main", "Port for ChatServer [default: 8080]."),
-                                  QCoreApplication::translate("main", "port"), QLatin1String("8080"));
-    m_parserChat.addOption(portOption);
-    m_parserChat.process(*appChat);
-    bool debug = m_parserChat.isSet(dbgOption);
-    int portChat = m_parserChat.value(portOption).toInt();
-
-    m_chatServer = new ChatServer(portChat, debug);
-    QObject::connect(m_chatServer, &ChatServer::closed, appChat, &QCoreApplication::quit);
-
-    qCInfo(logDeveloper) << "WebSocket Server running at port:" << portChat;
-
-    emit portChanged();
-    emit isRunningChanged();
-
-    qCInfo(logDeveloper) << "Developer server started successfully.";
 }
 
 ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
@@ -223,7 +162,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                             contextLengthVisible, numberOfGPULayersVisible);
             break;
         default:
-            qCWarning(logDeveloper) << "Unsupported language ID:" << newCurrentProgramLanguage->id();
+            qCWarning(logDeveloper) << "UnsupportSocketed language ID:" << newCurrentProgramLanguage->id();
             break;
         }
 
@@ -273,22 +212,107 @@ QHash<int, QByteArray> CodeDeveloperList::roleNames() const {
     return roles;
 }
 
-bool CodeDeveloperList::isRunning() const { return m_isRunning; }
-void CodeDeveloperList::setIsRunning(bool newIsRunning) {
-    if (m_isRunning == newIsRunning)
+bool CodeDeveloperList::isRunningAPI() const{return m_isRunningAPI;}
+void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
+    if (m_isRunningAPI == newIsRunningAPI)
         return;
-    m_isRunning = newIsRunning;
-    emit isRunningChanged();
-    qCInfo(logDeveloper) << "isRunning set to" << newIsRunning;
+    m_isRunningAPI = newIsRunningAPI;
+    if(m_isRunningAPI){
+
+        m_parserModel.setApplicationDescription("Qt Developer Server");
+        m_parserModel.addHelpOption();
+        m_parserModel.addOptions({
+            { "portAPI", QCoreApplication::translate("main", "The portAPIt the server listens on."), "portAPI" }
+        });
+
+        m_parserModel.process(*appAPI);
+
+        Q_ASSERT(!m_tcpServer);
+        m_httpServer = new QHttpServer(this);
+
+        quint16 portAPIArg = portAPI();
+        if (!m_parserModel.value("portAPI").isEmpty())
+            portAPIArg = m_parserModel.value("portAPI").toUShort();
+
+        qCInfo(logDeveloper) << "Developer server starting on portAPIt:" << portAPIArg;
+
+        auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
+        auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
+
+        m_modelsApi = std::move(modelFactory);
+        m_chatApi = std::move(chatFactory);
+
+        addCrudRoutes("/api/models", m_modelsApi);
+        addCrudRoutes("/api/chat", m_chatApi);
+
+        m_tcpServer = std::make_unique<QTcpServer>();
+        if (!m_tcpServer->listen(QHostAddress::Any, portAPIArg) || !m_httpServer->bind(m_tcpServer.get())) {
+            qCWarning(logDeveloper) << "Server failed to bind to portAPI:" << portAPIArg;
+            return;
+        }
+
+        quint16 portAPIModel = m_tcpServer->serverPort();
+        qCInfo(logDeveloper) << "HTTP Server running at portAPIt:" << portAPIModel;
+
+    }else{
+        m_tcpServer->close();
+        qCInfo(logDeveloper) << "stop HTTP Server at portAPIt";
+    }
+    emit isRunningAPIChanged();
 }
 
-int CodeDeveloperList::port() const { return m_port; }
-void CodeDeveloperList::setPort(int newPort) {
-    if (m_port == newPort)
+quint16 CodeDeveloperList::portAPI() const{return m_portAPI;}
+void CodeDeveloperList::setPortAPI(quint16 newPortAPI){
+    if (m_portAPI == newPortAPI)
         return;
-    m_port = newPort;
-    emit portChanged();
-    qCInfo(logDeveloper) << "Port changed to" << m_port;
+    m_portAPI = newPortAPI;
+    emit portAPIChanged();
+}
+
+bool CodeDeveloperList::isRunningSocket() const { return m_isRunningSocket; }
+void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
+    if (m_isRunningSocket == newIsRunningSocket)
+        return;
+    m_isRunningSocket = newIsRunningSocket;
+    if(m_isRunningSocket){
+
+        m_parserChat.setApplicationDescription("Chat with Phoenix");
+        m_parserChat.addHelpOption();
+
+        QCommandLineOption dbgOption(QStringList() << "d" << "debug",
+                                     QCoreApplication::translate("main", "Debug output [default: off]."));
+        m_parserChat.addOption(dbgOption);
+
+
+        QCommandLineOption portSocketOption(QStringList() << "p" << "portSocket",
+                                            QCoreApplication::translate("main", "portSocket for ChatServer [default: 8080]."),
+                                            QCoreApplication::translate("main", "portSocket"), QLatin1String(QString::number(static_cast<int>(portSocket())).toLatin1()));
+        m_parserChat.addOption(portSocketOption);
+        m_parserChat.process(*appSocket);
+        bool debug = m_parserChat.isSet(dbgOption);
+        quint16 portSocketChat = m_parserChat.value(portSocketOption).toInt();
+
+        m_chatServer = new ChatServer(portSocketChat, debug);
+
+        qCInfo(logDeveloper) << "WebSocket Server running at portSocket:" << portSocketChat;
+
+        emit isRunningSocketChanged();
+
+        qCInfo(logDeveloper) << "Developer server started successfully.";
+    }else{
+        m_chatServer->closed();
+    }
+    emit isRunningSocketChanged();
+    qCInfo(logDeveloper) << "Socket isRunning set to" << newIsRunningSocket;
+}
+
+quint16 CodeDeveloperList::portSocket() const { return m_portSocket; }
+void CodeDeveloperList::setPortSocket(quint16 newportSocket) {
+    if (m_portSocket == newportSocket)
+        return;
+    m_portSocket = newportSocket;
+    emit portSocketChanged();
+    qCInfo(logDeveloper) << "portSocket changed to" << m_portSocket;
 }
 
 void CodeDeveloperList::setCurrentLanguage(int newId) {

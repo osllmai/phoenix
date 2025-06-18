@@ -13,7 +13,7 @@ RowLayout {
         DeveloperHeader{
             id: headerId
             Layout.fillWidth: true
-            Layout.preferredHeight: 60
+            Layout.preferredHeight: 50
             Connections{
                 target: headerId
                 function onOpenModelSettingsDrawer(){

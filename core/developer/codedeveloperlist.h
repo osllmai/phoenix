@@ -47,13 +47,14 @@
 #include <QtHttpServer/QHttpServer>
 #include <QSharedPointer>
 
+#include <QVariant>
+
 #include <chrono>
 #include <thread>
 #include <memory>
 
 #define SCHEME "http"
 #define HOST "127.0.0.1"
-#define PORT 49425
 
 #include "chatserver.h"
 #include <QtCore/QCommandLineParser>
@@ -66,8 +67,11 @@ class CodeDeveloperList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
 
-    Q_PROPERTY(int port READ port NOTIFY portChanged FINAL)
-    Q_PROPERTY(bool isRunning READ isRunning NOTIFY isRunningChanged FINAL)
+    Q_PROPERTY(quint16 portSocket READ portSocket WRITE setPortSocket NOTIFY portSocketChanged FINAL)
+    Q_PROPERTY(bool isRunningSocket READ isRunningSocket WRITE setIsRunningSocket NOTIFY isRunningSocketChanged FINAL)
+
+    Q_PROPERTY(quint16 portAPI READ portAPI WRITE setPortAPI NOTIFY portAPIChanged FINAL)
+    Q_PROPERTY(bool isRunningAPI READ isRunningAPI WRITE setIsRunningAPI NOTIFY isRunningAPIChanged FINAL)
 
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
@@ -85,23 +89,30 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void start();
     Q_INVOKABLE void setCurrentLanguage(int id);
 
     ProgramLanguage *getCurrentProgramLanguage() const;
     void setCurrentProgramLanguage(ProgramLanguage *newCurrentProgramLanguage);
 
-    int port() const;
-    void setPort(int newPort);
+    quint16 portSocket() const;
+    void setPortSocket(quint16 newPortSocket);
 
-    bool isRunning() const;
-    void setIsRunning(bool newIsRunning);
+    bool isRunningSocket() const;
+    void setIsRunningSocket(bool newIsRunningSocket);
+
+    quint16 portAPI() const;
+    void setPortAPI(quint16 newPortAPI);
+
+    bool isRunningAPI() const;
+    void setIsRunningAPI(bool newIsRunningAPI);
 
 signals:
     void countChanged();
-    void portChanged();
-    void isRunningChanged();
+    void portSocketChanged();
+    void isRunningSocketChanged();
     void currentProgramLanguageChanged();
+    void portAPIChanged();
+    void isRunningAPIChanged();
 
 private:
     explicit CodeDeveloperList(QObject* parent);
@@ -109,13 +120,15 @@ private:
 
     void addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt);
 
-    int m_port;
-    bool m_isRunning;
+    quint16 m_portSocket;
+    bool m_isRunningSocket;
+    quint16 m_portAPI;
+    bool m_isRunningAPI;
 
     ProgramLanguage *m_currentProgramLanguage;
 
     QCommandLineParser m_parserModel;
-    QCoreApplication *appModel;
+    QCoreApplication *appAPI;
     QHttpServer* m_httpServer = nullptr;
     std::unique_ptr<QTcpServer> m_tcpServer;
     std::optional<std::unique_ptr<CrudAPI>> m_modelsApi;
@@ -127,8 +140,7 @@ private:
 
     ChatServer *m_chatServer = nullptr;
     QCommandLineParser m_parserChat;
-    QCoreApplication *appChat;
-
+    QCoreApplication *appSocket;
 };
 
 #endif // CODEDEVELOPERLIST_H

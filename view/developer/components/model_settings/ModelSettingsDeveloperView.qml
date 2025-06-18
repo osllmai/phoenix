@@ -30,7 +30,7 @@ Item {
         api: "http://127.0.0.1:"+ codeDeveloperList.portAPI
         portAPI: codeDeveloperList.portAPI
         chatAPI: "http://127.0.0.1:"+ codeDeveloperList.portAPI + "/api/chat"
-        modelsAPI: "http://127.0.0.1:"+ codeDeveloperList.portAPI + "api/models"
+        modelsAPI: "http://127.0.0.1:"+ codeDeveloperList.portAPI + "/api/models"
 
         socketPage: true
         isRunningSocket: codeDeveloperList.isRunningSocket
@@ -91,5 +91,12 @@ Item {
                 codeDeveloperList.portSocket = portSocket
             }
         }
+    }
+
+    Rectangle{
+        id: lineId
+        width: 1
+        height: parent.height
+        color: Style.Colors.boxBorder
     }
 }

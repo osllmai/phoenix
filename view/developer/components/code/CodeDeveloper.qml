@@ -10,7 +10,9 @@ Item {
     Rectangle {
         id: instructionsBox
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        anchors.bottomMargin: 10
         radius: 12
         color: "#00ffffff"
         border.color: Style.Colors.boxBorder
