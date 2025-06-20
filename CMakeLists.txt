@@ -16,30 +16,33 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech HttpServer)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-include_directories(${CMAKE_SOURCE_DIR}/core)
-include_directories(${CMAKE_SOURCE_DIR}/core/model/)
-include_directories(${CMAKE_SOURCE_DIR}/core/model/offline)
-include_directories(${CMAKE_SOURCE_DIR}/core/model/online)
-include_directories(${CMAKE_SOURCE_DIR}/core/conversation)
-include_directories(${CMAKE_SOURCE_DIR}/core/conversation/chat)
-include_directories(${CMAKE_SOURCE_DIR}/core/conversation/provider)
-include_directories(${CMAKE_SOURCE_DIR}/core/library/textprocessor)
-include_directories(${CMAKE_SOURCE_DIR}/core/developer/)
-include_directories(${CMAKE_SOURCE_DIR}/core/developer/code)
-include_directories(${CMAKE_SOURCE_DIR}/core/developer/code/code_generator)
-include_directories(${CMAKE_SOURCE_DIR}/core/developer/server)
-include_directories(${CMAKE_SOURCE_DIR}/core/developer/server/entities)
-include_directories(${CMAKE_SOURCE_DIR}/core/provider)
-include_directories(${CMAKE_SOURCE_DIR}/core/log)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/core
+    ${CMAKE_SOURCE_DIR}/core/model/
+    ${CMAKE_SOURCE_DIR}/core/model/offline
+    ${CMAKE_SOURCE_DIR}/core/model/online
+    ${CMAKE_SOURCE_DIR}/core/conversation
+    ${CMAKE_SOURCE_DIR}/core/conversation/chat
+    ${CMAKE_SOURCE_DIR}/core/conversation/provider
+    ${CMAKE_SOURCE_DIR}/core/library/textprocessor
+    ${CMAKE_SOURCE_DIR}/core/developer/
+    ${CMAKE_SOURCE_DIR}/core/developer/code
+    ${CMAKE_SOURCE_DIR}/core/developer/code/code_generator
+    ${CMAKE_SOURCE_DIR}/core/developer/server
+    ${CMAKE_SOURCE_DIR}/core/developer/server/entities
+    ${CMAKE_SOURCE_DIR}/core/provider
+    ${CMAKE_SOURCE_DIR}/core/log
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -164,6 +167,7 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/developerFill.svg
 
         media/image_company/user.svg
+        media/image_company/Phoenix.svg
         media/image_company/Phoenix.png
         media/image_company/Bert.svg
         media/image_company/Meta.svg
@@ -185,23 +189,6 @@ qt_add_resources(app${PROJECT_NAME}
 
         media/media.qrc
         view/view.qrc
-
-        media/assets/colors.json
-        media/assets/users.json
-        media/assets/sessions.json
-        media/assets/img/1-image.jpg
-        media/assets/img/2-image.jpg
-        media/assets/img/3-image.jpg
-        media/assets/img/4-image.jpg
-        media/assets/img/5-image.jpg
-        media/assets/img/6-image.jpg
-        media/assets/img/7-image.jpg
-        media/assets/img/8-image.jpg
-        media/assets/img/9-image.jpg
-        media/assets/img/10-image.jpg
-        media/assets/img/11-image.jpg
-        media/assets/img/12-image.jpg
-
 )
 
 qt_policy(SET QTP0004 NEW)
@@ -225,6 +212,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/VerificationDialog.qml
         view/component_library/button/NotificationDialog.qml
         view/component_library/button/MyToolTip.qml
+
+        view/component_library/model_settings/components/APISettings.qml
 
         view/AppMenu.qml
         view/AppMenuDrawer.qml
@@ -300,7 +289,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/developer/components/command_line/CommandLineInterfaceApp.qml
         view/developer/components/model_settings/ModelSettingsDeveloperView.qml
         view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml
-        view/developer/components/curl/CurlDeveloper.qml
+        view/developer/components/code/CodeDeveloper.qml
 
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
@@ -385,6 +374,12 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/developer/server/crudapi.h core/developer/server/crudapi.cpp
     SOURCES core/developer/server/entities/modelapi.h core/developer/server/entities/modelapi.cpp
     SOURCES core/developer/server/entities/chatapi.h core/developer/server/entities/chatapi.cpp
+    SOURCES core/developer/server/chatserver.h core/developer/server/chatserver.cpp
+    QML_FILES view/developer/components/code/EditCodeDeveloper.qml
+    QML_FILES view/component_library/model_settings/components/SocketSettings.qml
+    QML_FILES view/component_library/model_settings/components/button/ModelTextEdit.qml
+    QML_FILES view/component_library/model_settings/components/button/ModelTextCopyBox.qml
+
 )
 
 #for show logger-contect (file name, message line, ...)
