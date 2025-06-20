@@ -550,10 +550,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -574,10 +576,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -598,10 +602,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -622,10 +628,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                font.bold: true
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                font.bold: true
             }
             PropertyChanges {
                 target: progressBarId
@@ -646,10 +654,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId

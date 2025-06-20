@@ -48,6 +48,7 @@ T.Button {
                 text: "toolTop text"
                 anchors.centerIn: parent
                 color: Style.Colors.toolTipText
+                font.bold: (settingsBodyId.currentIndex === numberPage)? true: false
             }
             layer.enabled: true
             layer.effect: Glow {
@@ -94,6 +95,7 @@ T.Button {
             text: "Default"
             font.weight: 400
             font.pixelSize: 12
+            font.bold: (settingsBodyId.currentIndex === numberPage)? true: false
             visible: control.width>60
             clip: true
         }

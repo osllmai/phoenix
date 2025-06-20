@@ -9,6 +9,7 @@ Item {
 
     ListView {
         id: listView
+        visible: listView.count !== 0
         anchors.fill: parent
         cacheBuffer: Math.max(0, listView.contentHeight)
 
@@ -37,6 +38,20 @@ Item {
                anchors.fill: parent; anchors.margins: indoxItem.hovered? 8: 12
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
+        }
+    }
+    Item{
+        id:emptyHistory
+        visible: listView.count === 0
+        anchors.fill: parent
+        Label {
+            id: textId
+            text: "History is empty."
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Style.Colors.textInformation
+            font.pixelSize: 14
+            clip: true
         }
     }
 }

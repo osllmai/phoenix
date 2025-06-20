@@ -99,10 +99,10 @@ Rectangle{
                 Keys.onReturnPressed: (event)=> {
                       if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                         event.accepted = false;
-                      }else {
-                          if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
-                              conversationList.currentConversation.stop()
-                        else{
+                      }else if((!conversationList.isEmptyConversation &&
+                                                !conversationList.currentConversation.responseInProgress &&
+                                                !conversationList.currentConversation.loadModelInProgress) ||
+                                                conversationList.isEmptyConversation){
                           sendPrompt(inputTextBox.text)
                           if(conversationList.modelSelect)
                                 inputTextBox.text = ""
@@ -111,7 +111,6 @@ Rectangle{
                               speechToText.stopRecording()
                               speechToText.text = ""
                           }
-                        }
                     }
                 }
 
@@ -158,9 +157,14 @@ Rectangle{
                     myIcon: selectSendIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
+                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
+                            modelIsloadedDialogId.open()
+                        }else if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
                             conversationList.currentConversation.stop()
-                        } else {
+                        } else if((!conversationList.isEmptyConversation &&
+                                   !conversationList.currentConversation.responseInProgress &&
+                                   !conversationList.currentConversation.loadModelInProgress) ||
+                                   conversationList.isEmptyConversation){
                             sendPrompt(inputTextBox.text)
 
                             if (conversationList.modelSelect)
@@ -204,5 +208,10 @@ Rectangle{
                 appBodyId.currentIndex = 2
             }
         }
+    }
+    NotificationDialog{
+        id: modelIsloadedDialogId
+        titleText: "Model is Loded"
+        about:"Sorry! Please wait for finishe load model.."
     }
 }

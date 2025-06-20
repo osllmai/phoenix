@@ -100,6 +100,10 @@ Item {
                 inputMethodHints: Qt.ImhFormattedNumbersOnly
                 background: null
 
+                onTextChanged:{
+                    sliderId.value = valueSlider1Id.text
+                }
+
                 validator: DoubleValidator {
                     bottom: root.sliderFrom
                     top: root.sliderTo
@@ -117,6 +121,10 @@ Item {
                 font.pointSize: 10
                 inputMethodHints: Qt.ImhDigitsOnly
                 background: null
+
+                onTextChanged:{
+                    sliderId.value = valueSlider2Id.text
+                }
 
                 validator: IntValidator{
                     bottom: root.sliderFrom

@@ -14,14 +14,16 @@ T.Button {
         }
     }
 
+    property bool checkselectItem: modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id)
+
     background: null
     contentItem: Rectangle {
         id: backgroundId
         anchors.fill: parent
         radius: 8
         border.width: 1
-        border.color: (modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id) )? Style.Colors.buttonFeatureBorderSelected: Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered || (modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id) ))? Style.Colors.boxHover: "#00ffffff"
+        border.color: control.checkselectItem? Style.Colors.buttonFeatureBorderSelected: Style.Colors.buttonFeatureBorderNormal
+        color: (control.hovered || control.checkselectItem)? Style.Colors.boxHover: "#00ffffff"
 
         Row {
             id: headerId
@@ -45,6 +47,7 @@ T.Button {
                 elide: Label.ElideRight
                 color: Style.Colors.textTitle
                 font.pixelSize: 12
+                font.bold: control.checkselectItem? true: false
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap

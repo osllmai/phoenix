@@ -22,30 +22,52 @@ Item {
             anchors.margins: 10
             spacing: 8
 
-            RowLayout {
-                id: rowMethodId
-                spacing: 6
+            ListView {
+                id: companyList
+                height: 40
+                width: parent.width
+                spacing: 5
+                cacheBuffer: Math.max(0, companyList.contentWidth)
 
-                Repeater {
-                    model: ["All", "Info", "Debug", "Error", "Warning", "Critical", "Fatal"]
+                layoutDirection: Qt.LeftToRight
+                orientation: Qt.Horizontal
+                snapMode: ListView.SnapToItem
 
-                    delegate: MyButton {
-                        id: delegateId
-                        myText: modelData
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
-                        isNeedAnimation: true
-                        checkable: true
-                        checked: control.selectedFilter === modelData
-                        onClicked: control.selectedFilter = modelData
-                    }
+                interactive: contentWidth > width
+                boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                ScrollBar.horizontal: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
+                clip: true
+
+                model: ["All", "Info", "Debug", "Error", "Warning", "Critical", "Fatal"]
+
+                delegate: MyButton {
+                    id: delegateId
+                    myText: modelData
+                    bottonType: Style.RoleEnum.BottonType.Feature
+                    iconType: Style.RoleEnum.IconType.FeatureBlue
+                    isNeedAnimation: true
+                    checkable: true
+                    checked: control.selectedFilter === modelData
+                    onClicked: control.selectedFilter = modelData
+                }
+                footer: MyButton {
+                    id: footerItem
+                    myText: "..."
+                    bottonType: Style.RoleEnum.BottonType.Feature
+                    iconType: Style.RoleEnum.IconType.FeatureBlue
+                    isNeedAnimation: true
+                    checkable: true
+                    clip: true
                 }
             }
 
             ScrollView {
                 id: scrollInstruction
                 width: parent.width
-                height:  parent.height - rowMethodId.height - 8
+                height:  parent.height - companyList.height - 8
                 clip: true
 
                 ScrollBar.vertical: ScrollBar {

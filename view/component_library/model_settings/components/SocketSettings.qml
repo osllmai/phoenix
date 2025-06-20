@@ -36,10 +36,5 @@ Item {
                 }
             }
         }
-
-        // ModelTextCopyBox{
-        //     id: chatSocketId
-        //     myText: "ws://127.0.0.1:"+ codeDeveloperList.portSocket
-        // }
     }
 }

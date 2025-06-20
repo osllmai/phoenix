@@ -13,7 +13,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_icon(icon), m_date(date), m_isPinned(isPinned),  m_isLoadModel(false),
     m_loadModelInProgress(false), m_responseInProgress(false),
     m_model(new Model(this)), m_modelSettings(new ModelSettings(id,this)),m_messageList(new MessageList(this)),
-    m_responseList(new ResponseList(this)), m_provider(nullptr)
+    m_responseList(new ResponseList(this)), m_provider(nullptr), m_stopRequest(false)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -53,7 +53,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
                                       contextLength, numberOfGPULayers, this)),
     m_messageList(new MessageList(this)),
     m_responseList(new ResponseList(this)),
-    m_provider(nullptr)
+    m_provider(nullptr), m_stopRequest(false)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -160,7 +160,6 @@ void Conversation::setModel(Model *model) {
     if (m_model != model) {
         m_model = model;
         emit modelChanged();
-        setLoadModelInProgress(true);
     }
 }
 
@@ -177,9 +176,12 @@ void Conversation::readMessages(){
 }
 
 void Conversation::prompt(const QString &input, const int idModel){
+
+    setLoadModelInProgress(true);
+    setResponseInProgress(false);
+
     if(!m_isLoadModel){
         loadModel(idModel);
-        setIsLoadModel(true);
         if(m_provider != nullptr){
             //disconnect load and unload model
             disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
@@ -231,7 +233,6 @@ void Conversation::prompt(const QString &input, const int idModel){
     finalPrompt.replace("{{history}}", m_messageList->history());
     finalPrompt.replace("{{input}}", input);
 
-    setResponseInProgress(true);
     m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
                         m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                         m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
@@ -241,11 +242,15 @@ void Conversation::prompt(const QString &input, const int idModel){
 }
 
 void Conversation::stop(){
+    if(m_stopRequest)
+        return;
+    m_stopRequest = true;
     qInfo()<<"Stop";
     m_provider->stop();
 }
 
 void Conversation::loadModel(const int id){
+
     if(ConversationList::instance(nullptr)->previousConversation() != nullptr){
         ConversationList::instance(nullptr)->previousConversation()->unloadModel();
     }
@@ -262,6 +267,7 @@ void Conversation::loadModel(const int id){
 
 void Conversation::unloadModel(){
     setIsLoadModel(false);
+    setLoadModelInProgress(false);
     m_provider->unLoadModel();
 }
 
@@ -270,14 +276,16 @@ void Conversation::loadModelResult(const bool result, const QString &warning){
 }
 
 void Conversation::tokenResponse(const QString &token){
-    if(m_isLoadModel && m_responseInProgress){
-        QVariantMap lastMessage = messageList()->lastMessageInfo();
-        if (!lastMessage.isEmpty()) {
-            QString lastText = lastMessage["text"].toString();
-            emit requestUpdateDescriptionText(m_id, lastText);
-        }
-        messageList()->updateLastMessage(token);
+    setIsLoadModel(true);
+    setResponseInProgress(true);
+    setLoadModelInProgress(false);
+
+    QVariantMap lastMessage = messageList()->lastMessageInfo();
+    if (!lastMessage.isEmpty()) {
+        QString lastText = lastMessage["text"].toString();
+        emit requestUpdateDescriptionText(m_id, lastText);
     }
+    messageList()->updateLastMessage(token);
 }
 
 void Conversation::finishedResponse(const QString &warning){
@@ -289,6 +297,8 @@ void Conversation::finishedResponse(const QString &warning){
         emit requestUpdateTextMessage(m_id, lastId, lastText);
     }
     setResponseInProgress(false);
+    setLoadModelInProgress(false);
+    m_stopRequest = false;
 }
 
 void Conversation::updateModelSettingsConversation(){

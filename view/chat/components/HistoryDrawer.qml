@@ -24,12 +24,6 @@ Drawer{
             anchors.margins: 16
             HistoryHeader{
                 id: headerId
-                Connections{
-                    target: headerId
-                    function onCloseDrawer(){
-                        drawerId.close()
-                    }
-                }
             }
             HistoryBody{
                 id: historyBadyId

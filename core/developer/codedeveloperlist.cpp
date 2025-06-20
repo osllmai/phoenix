@@ -300,7 +300,7 @@ void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
 
         qCInfo(logDeveloper) << "Developer server started successfully.";
     }else{
-        m_chatServer->closed();
+        // m_chatServer->closed();
     }
     emit isRunningSocketChanged();
     qCInfo(logDeveloper) << "Socket isRunning set to" << newIsRunningSocket;

@@ -139,6 +139,8 @@ private:
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
     Provider *m_provider;
+
+    bool m_stopRequest;
 };
 
 #endif // CONVERSATION_H

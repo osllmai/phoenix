@@ -8,32 +8,66 @@ import "code"
 
 RowLayout {
 
-    ColumnLayout {
+    SplitView {
+        id: mainSplitView
         Layout.fillWidth: true
         Layout.fillHeight: true
+        orientation: Qt.Vertical
 
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        handle: Rectangle {
+             id: mainHandleDelegate
+             implicitWidth: 0
+             implicitHeight: 0
+             color: Style.Colors.boxBorder
+
+             containmentMask: Item {
+                 y: (mainHandleDelegate.height - height) / 2
+                 height: 20
+                 width: mainSplitView.width
+             }
+         }
+
+        SplitView {
+            id: splitView
+            SplitView.fillWidth: true
+            SplitView.fillHeight: true
+            SplitView.minimumHeight: 200
+            orientation: Qt.Horizontal
+
+            handle: Rectangle {
+                 id: handleDelegate
+                 implicitWidth: 0
+                 implicitHeight: 0
+                 color: Style.Colors.boxBorder
+
+                 containmentMask: Item {
+                     x: (handleDelegate.width - width) / 2
+                     width: 20
+                     height: splitView.height
+                 }
+             }
 
             ModelDeveloperView {
                 id: modelDeveloperId
-                Layout.preferredWidth: parent.width / 3
-                Layout.fillHeight: true
+                SplitView.preferredWidth: parent.width / 3
+                SplitView.minimumWidth: 300
+                SplitView.fillHeight: true
                 visible: window.width>1150
             }
 
             CodeDeveloper {
                 id: curlDeveloperId
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                SplitView.fillWidth: true
+                SplitView.fillHeight: true
+                SplitView.minimumWidth: 400
             }
         }
 
         CommandLineInterface {
             id: commandLineInterfaceId
-            Layout.fillWidth: true
-            Layout.preferredHeight: parent.height / 3
+            SplitView.preferredHeight: parent.height / 3
+            SplitView.minimumHeight: 200
+            SplitView.fillWidth: true
         }
     }
 }

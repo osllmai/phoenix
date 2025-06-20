@@ -23,29 +23,51 @@ Item {
             anchors.margins: 10
             spacing: 8
 
-            RowLayout {
-                id: rowMethodId
-                spacing: 6
 
-                Repeater {
-                    model: codeDeveloperList
+            ListView {
+                id: companyList
+                height: 40
+                width: parent.width
+                spacing: 5
+                cacheBuffer: Math.max(0, companyList.contentWidth)
 
-                    delegate: MyButton {
-                        id: delegateId
-                        myText: model.name
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
-                        isNeedAnimation: true
-                        checkable: true
-                        checked: codeDeveloperList.currentProgramLanguage.name === model.name
-                        onClicked: codeDeveloperList.setCurrentLanguage(model.id)
-                    }
+                layoutDirection: Qt.LeftToRight
+                orientation: Qt.Horizontal
+                snapMode: ListView.SnapToItem
+
+                interactive: contentWidth > width
+                boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                ScrollBar.horizontal: ScrollBar {
+                    policy: ScrollBar.AsNeeded
+                }
+                clip: true
+                model: codeDeveloperList
+
+                delegate: MyButton {
+                    id: delegateId
+                    myText: model.name
+                    bottonType: Style.RoleEnum.BottonType.Feature
+                    iconType: Style.RoleEnum.IconType.FeatureBlue
+                    isNeedAnimation: true
+                    checkable: true
+                    checked: codeDeveloperList.currentProgramLanguage.name === model.name
+                    onClicked: codeDeveloperList.setCurrentLanguage(model.id)
+                }
+                footer: MyButton {
+                    id: footerItem
+                    myText: "..."
+                    bottonType: Style.RoleEnum.BottonType.Feature
+                    iconType: Style.RoleEnum.IconType.FeatureBlue
+                    isNeedAnimation: true
+                    checkable: true
+                    clip: true
                 }
             }
 
             Item{
                 width: parent.width
-                height:  parent.height - rowMethodId.height - 8
+                height:  parent.height - companyList.height - 8
                 ScrollView {
                     id: scrollInstruction
                     anchors.fill: parent

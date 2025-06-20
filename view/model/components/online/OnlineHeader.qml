@@ -46,21 +46,14 @@ Item{
                     id: companyList
                     anchors.fill: parent
                     spacing: 5
-                    cacheBuffer: Math.max(0, companyList.contentWidth)
 
                     layoutDirection: Qt.RightToLeft
+
                     orientation: Qt.Horizontal
-                    snapMode: ListView.SnapToItem
-
-                    interactive: contentWidth > width
-                    boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
-                    ScrollBar.horizontal: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
                     clip: true
 
                     model: ListModel {
+
                         ListElement {
                             name: "Embeddings"
                             type: "Embeddings"
@@ -93,6 +86,7 @@ Item{
                         iconType: Style.RoleEnum.IconType.FeatureBlue
                         isNeedAnimation: true
                         checkable: true
+                        clip: true
                         checked: headerId.filtter === model.type
                         onClicked:{
                             if(model.type ==="All" || model.type ==="Favorite"){
@@ -102,6 +96,15 @@ Item{
                             }
                             headerId.filtter= model.type
                         }
+                    }
+                    header: MyButton {
+                        id: footerItem
+                        myText: "..."
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureBlue
+                        isNeedAnimation: true
+                        checkable: true
+                        clip: true
                     }
                 }
             }

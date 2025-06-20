@@ -633,7 +633,7 @@ void Database::readModel(const QList<Company*> companys){
                     deleteModel(id);
                 }else{
                     QFileInfo fileInfo(key);
-                    QString icon = "user.svg";
+                    QString icon = "Phoenix.svg";
                     QString information = "This model has been successfully added to the application by you.";
                     double fileSize = (fileInfo.size()/10000000)*0.01;
                     int ramRequ;

@@ -175,9 +175,15 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    if(id == -1)
+    if(id == -1){
         setModelSelect(false);
-    else
+        if(m_currentConversation != nullptr && m_currentConversation->isLoadModel()){
+            m_currentConversation->unloadModel();
+        }
+        if(m_previousConversation != nullptr && m_previousConversation->isLoadModel()){
+            m_previousConversation->unloadModel();
+        }
+    }else
         setModelSelect(true);
 
     if(!m_isEmptyConversation){

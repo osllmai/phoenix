@@ -53,7 +53,7 @@ T.Button {
                 id: iconId
                 visible: control.myIcon !== ""
                 myIcon: control.myIcon
-                iconType: Style.RoleEnum.IconType.FeatureBlue
+                iconType: Style.RoleEnum.IconType.Primary
                 anchors.horizontalCenter: parent.horizontalCenter
                 enabled: false
             }
@@ -88,25 +88,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: Style.Colors.buttonFeatureTextNormal
+                font.bold: false
             }
         },
         State {
             name: "hover"
             when: control.isHover
-            PropertyChanges {
-                target: backgroundId
-                color: Style.Colors.buttonFeatureNormal
-                border.color: Style.Colors.buttonFeatureBorderHover
-                width: control.width; height: control.height
-            }
-            PropertyChanges {
-                target: textId
-                color: Style.Colors.buttonFeatureTextHover
-            }
-        },
-        State {
-            name: "pressed"
-            when: control.isPressed
             PropertyChanges {
                 target: backgroundId
                 color: Style.Colors.buttonFeatureHover
@@ -116,6 +103,22 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: Style.Colors.buttonFeatureTextHover
+                font.bold: false
+            }
+        },
+        State {
+            name: "pressed"
+            when: control.isPressed
+            PropertyChanges {
+                target: backgroundId
+                color: Style.Colors.buttonFeatureHover
+                border.color: Style.Colors.buttonFeatureBorderPressed
+                width: control.width; height: control.height
+            }
+            PropertyChanges {
+                target: textId
+                color: Style.Colors.buttonFeatureTextHover
+                font.bold: false
             }
         },
         State {
@@ -123,13 +126,14 @@ T.Button {
             when: control.isChecked
             PropertyChanges {
                 target: backgroundId
-                color: control.pressed? Style.Colors.buttonFeatureHover: Style.Colors.buttonFeatureSelected
-                border.color: Style.Colors.buttonFeatureBorderHover
+                color: control.pressed? Style.Colors.buttonFeatureBorderPressed: Style.Colors.buttonFeatureSelected
+                border.color: Style.Colors.buttonFeatureBorderSelected
                 width: control.hovered? control.width: control.width-3; height: control.hovered? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
                 color: Style.Colors.buttonFeatureTextHover
+                font.bold: true
             }
         }
     ]

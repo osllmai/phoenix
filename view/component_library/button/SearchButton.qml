@@ -6,6 +6,8 @@ Rectangle{
     id: control
     width: (textArea.visible? 200: control.height); height: 32
     color: Style.Colors.menuHoverBackground
+    border.color: Style.Colors.buttonFeatureBorderPressed
+    border.width: 0
     radius: 8
     clip: true
     property bool isTextAreaVisible: true

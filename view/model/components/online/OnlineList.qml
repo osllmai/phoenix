@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import '../../../component_library/style' as Style
 
 Item {
     id: control
@@ -20,6 +21,7 @@ Item {
 
     GridView {
         id: gridView
+        visible: gridView.count !== 0
         anchors.fill: parent
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
@@ -48,6 +50,20 @@ Item {
                anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
                Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
            }
+        }
+    }
+    Item{
+        id:emptyHistory
+        visible: gridView.count === 0
+        anchors.fill: parent
+        Label {
+            id: textId
+            text: "OnlineModel List is empty."
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: Style.Colors.textInformation
+            font.pixelSize: 14
+            clip: true
         }
     }
 }

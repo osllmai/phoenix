@@ -7,7 +7,6 @@ Item{
     id:headerId
     height: 90; width: parent.width
     clip:true
-    signal closeDrawer()
     Column{
         spacing: 8
         anchors.fill: parent
@@ -40,7 +39,7 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
-                        onClicked:{headerId.closeDrawer()}
+                        onClicked:{drawerId.close()}
                     }
                 }
             }
