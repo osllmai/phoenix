@@ -8,27 +8,27 @@ QVector<HighlightingRule> makefileHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Makefile variables (e.g., $(VAR))
         rule.pattern = QRegularExpression("\\$\\([a-zA-Z0-9_]+\\)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Makefile targets (e.g., target: dependencies)
         rule.pattern = QRegularExpression("^([a-zA-Z0-9_\\-]+):");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Target);
+        rule.format = (HighlightingCategory::Target);
         highlightingRules.append(rule);
 
         // Makefile rules (e.g., <tab> command)
         rule.pattern = QRegularExpression("^\\t.*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Rule);
+        rule.format = (HighlightingCategory::Rule);
         highlightingRules.append(rule);
 
         // Makefile comments (e.g., # comment)
         rule.pattern = QRegularExpression("^#.*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Makefile built-in functions (e.g., all, clean, install)
@@ -37,7 +37,7 @@ QVector<HighlightingRule> makefileHighlightingRules() {
         };
         for (const QString &pattern : builtInFunctions) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+            rule.format = (HighlightingCategory::FunctionCall);
             highlightingRules.append(rule);
         }
 
@@ -47,7 +47,7 @@ QVector<HighlightingRule> makefileHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

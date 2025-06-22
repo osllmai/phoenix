@@ -8,7 +8,7 @@ QVector<HighlightingRule> swiftHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Swift keywords (e.g., func, class, struct, let, var, etc.)
@@ -21,27 +21,27 @@ QVector<HighlightingRule> swiftHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // String literals (e.g., "This is a string")
         rule.pattern = QRegularExpression("\"[^\"]*\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Number literals (e.g., 123, 45.67)
         rule.pattern = QRegularExpression("\\b[0-9]+(?:\\.[0-9]+)?\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Comments (single-line comments starting with // and multi-line comments using /* */)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Operators (e.g., =, ==, !=, +, -, *, /, etc.)
@@ -50,23 +50,23 @@ QVector<HighlightingRule> swiftHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Function names (e.g., func myFunction())
         rule.pattern = QRegularExpression("\\bfunc\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Type annotations (e.g., let x: Int)
         rule.pattern = QRegularExpression(":\\s*\\w+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::TypeAnnotation);
+        rule.format = (HighlightingCategory::TypeAnnotation);
         highlightingRules.append(rule);
 
         // Struct and Class names (e.g., struct MyStruct, class MyClass)
         rule.pattern = QRegularExpression("\\b(class|struct)\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Constants (e.g., true, false, nil)
@@ -75,7 +75,7 @@ QVector<HighlightingRule> swiftHighlightingRules() {
         };
         for (const QString &pattern : constants) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
     }

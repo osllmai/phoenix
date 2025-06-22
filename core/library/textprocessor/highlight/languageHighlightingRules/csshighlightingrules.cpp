@@ -8,7 +8,7 @@ QVector<HighlightingRule> cssHighlightingRules() {
 
         // Default
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // CSS Properties (e.g., color, margin)
@@ -20,7 +20,7 @@ QVector<HighlightingRule> cssHighlightingRules() {
         };
         for (const QString &prop : properties) {
             rule.pattern = QRegularExpression(QString("\\b%1\\b").arg(prop));
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
@@ -31,47 +31,47 @@ QVector<HighlightingRule> cssHighlightingRules() {
         };
         for (const QString &val : values) {
             rule.pattern = QRegularExpression(QString("\\b%1\\b").arg(val));
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
         // Numeric values with units (e.g., 10px, 2em)
         rule.pattern = QRegularExpression(R"(\b\d+(px|em|rem|vh|vw|%)\b)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Hex colors (e.g., #fff or #aabbcc)
         rule.pattern = QRegularExpression(R"(#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}))");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Class selectors (.className)
         rule.pattern = QRegularExpression(R"(\.[a-zA-Z_][\w\-]*)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // ID selectors (#idName)
         rule.pattern = QRegularExpression(R"(#[a-zA-Z_][\w\-]*)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // At-rules (@media, @import)
         rule.pattern = QRegularExpression(R"(@[a-zA-Z\-]+)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+        rule.format = (HighlightingCategory::Annotation);
         highlightingRules.append(rule);
 
         // Comments (/* ... */)
         rule.pattern = QRegularExpression(R"(/\*[\s\S]*?\*/)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Strings
         rule.pattern = QRegularExpression(R"(".*?")");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression(R"('.*?')");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
     }
 

@@ -9,22 +9,22 @@ QVector<HighlightingRule> pythonHighlightingRules(){
 
         // Default rule for any unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Function calls (e.g., my_function())
         rule.pattern = QRegularExpression("\\b(\\w+)\\s*(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Function definitions (e.g., def my_function)
         rule.pattern = QRegularExpression("\\bdef\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Class names (e.g., class MyClass)
         rule.pattern = QRegularExpression("\\bclass\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Built-in functions (e.g., print(), len())
@@ -34,7 +34,7 @@ QVector<HighlightingRule> pythonHighlightingRules(){
         };
         for (const QString &pattern : builtinFunctions) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::BuiltinFunction);
+            rule.format = (HighlightingCategory::BuiltinFunction);
             highlightingRules.append(rule);
         }
 
@@ -44,13 +44,13 @@ QVector<HighlightingRule> pythonHighlightingRules(){
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Numeric literals
         rule.pattern = QRegularExpression("\\b[0-9]*\\.?[0-9]+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Python keywords
@@ -63,7 +63,7 @@ QVector<HighlightingRule> pythonHighlightingRules(){
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
@@ -71,37 +71,37 @@ QVector<HighlightingRule> pythonHighlightingRules(){
         QStringList builtinConstants = { "\\bTrue\\b", "\\bFalse\\b", "\\bNone\\b" };
         for (const QString &pattern : builtinConstants) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
         // Decorators (e.g., @staticmethod)
         rule.pattern = QRegularExpression("@\\w+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+        rule.format = (HighlightingCategory::Annotation);
         highlightingRules.append(rule);
 
         // Single-line double-quoted strings
         rule.pattern = QRegularExpression("\".*?\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Single-line single-quoted strings
         rule.pattern = QRegularExpression("'.*?'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Multi-line triple-quoted strings (both """ and ''')
         rule.pattern = QRegularExpression("\"\"\"[\\s\\S]*?\"\"\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression("'''[\\s\\S]*?'''");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (starting with #)
         rule.pattern = QRegularExpression("#[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
     }
     return highlightingRules;

@@ -8,7 +8,7 @@ QVector<HighlightingRule> dockerfileHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Dockerfile commands (e.g., FROM, RUN, COPY, ADD, etc.)
@@ -19,28 +19,28 @@ QVector<HighlightingRule> dockerfileHighlightingRules() {
         };
         for (const QString &command : commands) {
             rule.pattern = QRegularExpression(command);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Variables (e.g., $MY_VAR)
         rule.pattern = QRegularExpression("\\$[A-Za-z0-9_]+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Strings (values after commands or in COPY paths)
         rule.pattern = QRegularExpression("\"[^\"]*\"|'[^']*'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (starting with #)
         rule.pattern = QRegularExpression("#[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Numbers (e.g., port numbers in EXPOSE)
         rule.pattern = QRegularExpression("\\b\\d+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
     }
     return highlightingRules;

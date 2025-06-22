@@ -8,7 +8,7 @@ QVector<HighlightingRule> qmlHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // QML keywords (e.g., import, import, property, etc.)
@@ -19,38 +19,38 @@ QVector<HighlightingRule> qmlHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // QML element names (e.g., Rectangle, Text, ListView)
         rule.pattern = QRegularExpression("\\b[A-Z][a-zA-Z0-9]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ElementName);
+        rule.format = (HighlightingCategory::ElementName);
         highlightingRules.append(rule);
 
         // Property names (e.g., width, height, color)
         rule.pattern = QRegularExpression("\\b[A-Za-z][A-Za-z0-9_]*\\b(?=\\s*:)"); // Match only properties before ":"
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Property);
+        rule.format = (HighlightingCategory::Property);
         highlightingRules.append(rule);
 
         // String literals (e.g., "Hello World")
         rule.pattern = QRegularExpression("\".*?\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line comments starting with //)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Multi-line comments (/* comment */)
         rule.pattern = QRegularExpression("/\\*.*?\\*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Numbers (e.g., 10, 3.14)
         rule.pattern = QRegularExpression("\\b[0-9]+(?:\\.[0-9]+)?\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Operators (e.g., +, -, *, /, ==)
@@ -59,7 +59,7 @@ QVector<HighlightingRule> qmlHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
@@ -69,13 +69,13 @@ QVector<HighlightingRule> qmlHighlightingRules() {
         };
         for (const QString &pattern : booleanLiterals) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
         // Function names (e.g., onClicked, mouseAreaClicked)
         rule.pattern = QRegularExpression("\\bon[A-Za-z0-9_]+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
     }
     return highlightingRules;

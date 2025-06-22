@@ -8,7 +8,7 @@ QVector<HighlightingRule> batchHighlightingRules() {
 
         // Default rule
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Keywords
@@ -19,33 +19,33 @@ QVector<HighlightingRule> batchHighlightingRules() {
         };
         for (const QString &pattern : keywords) {
             rule.pattern = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Variables like %VAR% or !VAR!
         rule.pattern = QRegularExpression("%\\w+%|!\\w+!");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Labels (e.g., :label)
         rule.pattern = QRegularExpression("^:\\w+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+        rule.format = (HighlightingCategory::Annotation);
         highlightingRules.append(rule);
 
         // Strings
         rule.pattern = QRegularExpression("\"[^\"]*\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments starting with REM or ::
         rule.pattern = QRegularExpression("(^|\\s)(REM\\s.*|::.*)", QRegularExpression::CaseInsensitiveOption);
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Numbers
         rule.pattern = QRegularExpression("\\b\\d+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Operators
@@ -54,7 +54,7 @@ QVector<HighlightingRule> batchHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

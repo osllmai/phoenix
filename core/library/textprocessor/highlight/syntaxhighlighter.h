@@ -12,6 +12,11 @@
 #include <QTextObjectInterface>
 #include <QVector>
 
+#include "highlightingrule.h"
+#include "highlighting.h"
+#include "highlightingcategory.h"
+#include "language.h"
+
 class QPainter;
 class QTextDocument;
 class QTextFormat;
@@ -67,6 +72,8 @@ public:
 
 private:
     CodeColors m_codeColors;
+
+    static QColor formatToColor(HighlightingCategory highlightingCategory, const CodeColors &colors);
 };
 
 struct ContextLink {

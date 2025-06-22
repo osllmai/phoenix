@@ -8,7 +8,7 @@ QVector<HighlightingRule> perlHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Perl keywords (e.g., if, else, sub, etc.)
@@ -19,38 +19,38 @@ QVector<HighlightingRule> perlHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Perl variables (e.g., $variable, @array, %hash)
         rule.pattern = QRegularExpression("\\$\\w+|@\\w+|%\\w+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Perl subroutines (e.g., sub my_subroutine)
         rule.pattern = QRegularExpression("\\bsub\\s+\\w+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Comments (starting with #)
         rule.pattern = QRegularExpression("#[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Double-quoted strings (e.g., "string")
         rule.pattern = QRegularExpression("\".*?\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Single-quoted strings (e.g., 'string')
         rule.pattern = QRegularExpression("'.*?'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Numeric literals
         rule.pattern = QRegularExpression("\\b[0-9]+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Operators (e.g., +, -, *, /, ==)
@@ -59,7 +59,7 @@ QVector<HighlightingRule> perlHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

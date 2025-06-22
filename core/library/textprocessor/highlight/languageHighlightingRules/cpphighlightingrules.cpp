@@ -8,7 +8,7 @@ QVector<HighlightingRule> cppHighlightingRules() {
 
         // Default
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Keywords
@@ -25,7 +25,7 @@ QVector<HighlightingRule> cppHighlightingRules() {
         };
         for (const QString &keyword : keywords) {
             rule.pattern = QRegularExpression(QString("\\b%1\\b").arg(keyword));
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
@@ -33,41 +33,41 @@ QVector<HighlightingRule> cppHighlightingRules() {
         QStringList types = { "std::string", "std::vector", "std::map", "std::set" };
         for (const QString &type : types) {
             rule.pattern = QRegularExpression(QString("\\b%1\\b").arg(QRegularExpression::escape(type)));
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+            rule.format = (HighlightingCategory::ClassName);
             highlightingRules.append(rule);
         }
 
         // Functions
         rule.pattern = QRegularExpression(R"(\b(\w+)(?=\())");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Strings (single and double quoted)
         rule.pattern = QRegularExpression(R"(".*?")");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression(R"('.*?')");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line and multi-line)
         rule.pattern = QRegularExpression(R"(//[^\n]*)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression(R"(/\*[\s\S]*?\*/)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Preprocessor directives
         rule.pattern = QRegularExpression(R"(#\s*\w+)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+        rule.format = (HighlightingCategory::Annotation);
         highlightingRules.append(rule);
 
         // Numbers
         rule.pattern = QRegularExpression(R"(\b\d+(\.\d+)?\b)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Operators
@@ -76,7 +76,7 @@ QVector<HighlightingRule> cppHighlightingRules() {
         };
         for (const QString &op : operators) {
             rule.pattern = QRegularExpression(op);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

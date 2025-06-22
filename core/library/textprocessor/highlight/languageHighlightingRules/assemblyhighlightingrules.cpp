@@ -8,7 +8,7 @@ QVector<HighlightingRule> assemblyHighlightingRules() {
 
         // Default rule for any unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = HighlightingCategory::Default;
         highlightingRules.append(rule);
 
         // Instructions (assembly keywords)
@@ -22,7 +22,7 @@ QVector<HighlightingRule> assemblyHighlightingRules() {
         };
         for (const QString &pattern : instructions) {
             rule.pattern = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = HighlightingCategory::Keyword;
             highlightingRules.append(rule);
         }
 
@@ -35,33 +35,33 @@ QVector<HighlightingRule> assemblyHighlightingRules() {
         };
         for (const QString &pattern : registers) {
             rule.pattern = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
         // Labels (e.g., label:)
         rule.pattern = QRegularExpression("^\\s*(\\w+):");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Comments (; comment)
         rule.pattern = QRegularExpression(";[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Hexadecimal numbers
         rule.pattern = QRegularExpression("\\b0x[0-9A-Fa-f]+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Decimal numbers
         rule.pattern = QRegularExpression("\\b\\d+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Strings
         rule.pattern = QRegularExpression("\".*?\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Directives (e.g., .data, segment)
@@ -70,7 +70,7 @@ QVector<HighlightingRule> assemblyHighlightingRules() {
         };
         for (const QString &pattern : directives) {
             rule.pattern = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+            rule.format = (HighlightingCategory::Annotation);
             highlightingRules.append(rule);
         }
 
@@ -80,7 +80,7 @@ QVector<HighlightingRule> assemblyHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

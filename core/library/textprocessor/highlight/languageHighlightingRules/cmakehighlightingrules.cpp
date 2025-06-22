@@ -8,7 +8,7 @@ QVector<HighlightingRule> cmakeHighlightingRules() {
 
         // Default rule
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // CMake commands (e.g., add_executable, find_package)
@@ -20,28 +20,28 @@ QVector<HighlightingRule> cmakeHighlightingRules() {
         };
         for (const QString &cmd : commands) {
             rule.pattern = QRegularExpression(QString("\\b%1\\b").arg(cmd), QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Variables: ${VAR_NAME}
         rule.pattern = QRegularExpression(R"(\$\{\w+\})");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Strings
         rule.pattern = QRegularExpression(R"(".*?")");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments: starting with #
         rule.pattern = QRegularExpression(R"(#.*)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Numbers
         rule.pattern = QRegularExpression("\\b\\d+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Operators (e.g., EQUAL, AND, OR, NOT, STREQUAL, MATCHES)
@@ -51,7 +51,7 @@ QVector<HighlightingRule> cmakeHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

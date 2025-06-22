@@ -8,7 +8,7 @@ QVector<HighlightingRule> luaHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Lua keywords (e.g., if, then, end, for, etc.)
@@ -20,18 +20,18 @@ QVector<HighlightingRule> luaHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Lua functions (e.g., print(), table.insert())
         rule.pattern = QRegularExpression("\\b\\w+\\s*(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Lua variable names (e.g., x, myVariable)
         rule.pattern = QRegularExpression("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Lua operators (e.g., +, -, *, /, ==, ~=)
@@ -40,23 +40,23 @@ QVector<HighlightingRule> luaHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Numeric literals (e.g., 123, 3.14)
         rule.pattern = QRegularExpression("\\b[0-9]+\\.?[0-9]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Strings (single-quoted and double-quoted)
         rule.pattern = QRegularExpression("'[^']*'|\"[^\"]*\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line with --)
         rule.pattern = QRegularExpression("--[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
     }
     return highlightingRules;

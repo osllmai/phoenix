@@ -45,7 +45,6 @@ namespace Highlighting {
     QVector<HighlightingRule> css();
     QVector<HighlightingRule> csv();
     QVector<HighlightingRule> toml();
-
 }
 
 #endif // HIGHLIGHTING_H

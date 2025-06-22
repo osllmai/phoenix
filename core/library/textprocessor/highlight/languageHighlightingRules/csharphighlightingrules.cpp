@@ -9,7 +9,7 @@ QVector<HighlightingRule> csharpHighlightingRules() {
 
         // Default rule (optional, usually handled separately)
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Keywords
@@ -32,61 +32,61 @@ QVector<HighlightingRule> csharpHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Class name after 'class'
         rule.pattern = QRegularExpression("\\bclass\\s+(\\w+)");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Function definitions (returnType name(...))
         rule.pattern = QRegularExpression("\\b(\\w+)\\s+(\\w+)\\s*\\(");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Function calls (identifier followed by parentheses)
         rule.pattern = QRegularExpression("\\b(\\w+)\\s*(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Built-in constants
         QStringList constants = { "\\btrue\\b", "\\bfalse\\b", "\\bnull\\b" };
         for (const QString &pattern : constants) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
         // Numbers
         rule.pattern = QRegularExpression("\\b\\d+(\\.\\d+)?\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Strings (single-line)
         rule.pattern = QRegularExpression("\".*?\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Character literals
         rule.pattern = QRegularExpression("'.'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Comments (multi-line)
         rule.pattern = QRegularExpression("/\\*[\\s\\S]*?\\*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Attributes / annotations (e.g., [Serializable])
         rule.pattern = QRegularExpression("\\[\\w+\\]");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Annotation);
+        rule.format = (HighlightingCategory::Annotation);
         highlightingRules.append(rule);
 
         // Operators
@@ -95,7 +95,7 @@ QVector<HighlightingRule> csharpHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
     }

@@ -52,6 +52,4 @@ enum HighlightingCategory {
     ListItem
 };
 
-QTextCharFormat highlightingCategory_To_QTextCharFormat(const HighlightingCategory highlightingCategory);
-
 #endif // HIGHLIGHTINGCATEGORY_H

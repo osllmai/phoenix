@@ -8,22 +8,22 @@ QVector<HighlightingRule> kotlinHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Function calls (e.g., myFunction())
         rule.pattern = QRegularExpression("\\b(\\w+)\\s*(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Function definitions (e.g., fun myFunction)
         rule.pattern = QRegularExpression("\\bfun\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Class names (e.g., class MyClass)
         rule.pattern = QRegularExpression("\\bclass\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Kotlin keywords
@@ -35,7 +35,7 @@ QVector<HighlightingRule> kotlinHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
@@ -46,28 +46,28 @@ QVector<HighlightingRule> kotlinHighlightingRules() {
         };
         for (const QString &pattern : dataTypes) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Type);
+            rule.format = (HighlightingCategory::Type);
             highlightingRules.append(rule);
         }
 
         // Numeric literals
         rule.pattern = QRegularExpression("\\b\\d+\\.?\\d*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // String literals (e.g., "Hello, World!")
         rule.pattern = QRegularExpression("\"([^\"]*)\"");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line, starting with //)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Multi-line comments (starting with /* and ending with */)
         rule.pattern = QRegularExpression("/\\*[\\s\\S]*?\\*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
     }
     return highlightingRules;

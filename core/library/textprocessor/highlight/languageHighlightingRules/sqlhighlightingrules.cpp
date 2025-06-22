@@ -8,7 +8,7 @@ QVector<HighlightingRule> sqlHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // SQL keywords (e.g., SELECT, INSERT, UPDATE, DELETE, WHERE, etc.)
@@ -21,27 +21,27 @@ QVector<HighlightingRule> sqlHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // String literals (e.g., 'This is a string')
         rule.pattern = QRegularExpression("'[^']*'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Number literals (e.g., 123, 45.67)
         rule.pattern = QRegularExpression("\\b[0-9]+(?:\\.[0-9]+)?\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // Comments (single-line comments starting with -- and multi-line comments using /* */)
         rule.pattern = QRegularExpression("--[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         rule.pattern = QRegularExpression("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Operators (e.g., =, <, >, !=, AND, OR, LIKE, IN, etc.)
@@ -51,13 +51,13 @@ QVector<HighlightingRule> sqlHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Table and column names (e.g., table_name, column_name)
         rule.pattern = QRegularExpression("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::TableColumn);
+        rule.format = (HighlightingCategory::TableColumn);
         highlightingRules.append(rule);
     }
     return highlightingRules;

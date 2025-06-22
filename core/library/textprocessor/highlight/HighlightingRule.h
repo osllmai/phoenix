@@ -3,10 +3,11 @@
 
 #include <QRegularExpression>
 #include <QTextCharFormat>
+#include "highlightingcategory.h"
 
 struct HighlightingRule {
     QRegularExpression pattern;
-    QTextCharFormat format;
+    HighlightingCategory format;
 };
 
 #endif // HIGHLIGHTINGRULE_H

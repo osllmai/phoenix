@@ -8,27 +8,27 @@ QVector<HighlightingRule> typescriptHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Function calls (e.g., myFunction())
         rule.pattern = QRegularExpression("\\b(\\w+)\\s*(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::FunctionCall);
+        rule.format = (HighlightingCategory::FunctionCall);
         highlightingRules.append(rule);
 
         // Function definitions (e.g., function myFunction)
         rule.pattern = QRegularExpression("\\bfunction\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Class names (e.g., class MyClass)
         rule.pattern = QRegularExpression("\\bclass\\s+(\\w+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Type annotations (e.g., myVar: string)
         rule.pattern = QRegularExpression("\\b(\\w+)\\s*:");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::TypeAnnotation);
+        rule.format = (HighlightingCategory::TypeAnnotation);
         highlightingRules.append(rule);
 
         // TypeScript keywords
@@ -41,7 +41,7 @@ QVector<HighlightingRule> typescriptHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
@@ -49,7 +49,7 @@ QVector<HighlightingRule> typescriptHighlightingRules() {
         QStringList builtinConstants = { "\\btrue\\b", "\\bfalse\\b", "\\bnull\\b" };
         for (const QString &pattern : builtinConstants) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+            rule.format = (HighlightingCategory::Constant);
             highlightingRules.append(rule);
         }
 
@@ -59,28 +59,28 @@ QVector<HighlightingRule> typescriptHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Numeric literals
         rule.pattern = QRegularExpression("\\b[0-9]*\\.?[0-9]+\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // String literals (single and double quotes)
         rule.pattern = QRegularExpression("\"[^\"]*\"|'[^']*'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Multi-line comments
         rule.pattern = QRegularExpression("/\\*[^*]*\\*+(?:[^/*][^*]*\\*+)*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
     }
     return highlightingRules;

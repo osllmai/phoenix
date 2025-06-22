@@ -8,7 +8,7 @@ QVector<HighlightingRule> rustHighlightingRules() {
 
         // Default rule for unmatched text
         rule.pattern = QRegularExpression(".*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Default);
+        rule.format = (HighlightingCategory::Default);
         highlightingRules.append(rule);
 
         // Rust keywords (e.g., fn, let, struct, enum, if, else, etc.)
@@ -20,43 +20,43 @@ QVector<HighlightingRule> rustHighlightingRules() {
         };
         for (const QString &pattern : keywordPatterns) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+            rule.format = (HighlightingCategory::Keyword);
             highlightingRules.append(rule);
         }
 
         // Function names (e.g., my_function())
         rule.pattern = QRegularExpression("\\b[a-z_][a-zA-Z0-9_]*\\b(?=\\()");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Function);
+        rule.format = (HighlightingCategory::Function);
         highlightingRules.append(rule);
 
         // Struct and Enum names (e.g., MyStruct, MyEnum)
         rule.pattern = QRegularExpression("\\b[A-Z][a-zA-Z0-9_]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::ClassName);
+        rule.format = (HighlightingCategory::ClassName);
         highlightingRules.append(rule);
 
         // Variable names (e.g., x, my_var)
         rule.pattern = QRegularExpression("\\b(?:[a-z_][a-zA-Z0-9_]*|\\$[a-zA-Z0-9_]+)\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Variable);
+        rule.format = (HighlightingCategory::Variable);
         highlightingRules.append(rule);
 
         // Numeric literals (e.g., 10, 3.14, 0b1010)
         rule.pattern = QRegularExpression("\\b[0-9]+(?:\\.[0-9]+)?\\b|0b[01]+");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Number);
+        rule.format = (HighlightingCategory::Number);
         highlightingRules.append(rule);
 
         // String literals (e.g., "Hello World", 'Rust')
         rule.pattern = QRegularExpression("\"[^\"]*\"|'[^']*'");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::String);
+        rule.format = (HighlightingCategory::String);
         highlightingRules.append(rule);
 
         // Comments (single-line comments starting with //)
         rule.pattern = QRegularExpression("//[^\n]*");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Block comments (multi-line comments starting with /* and ending with */)
         rule.pattern = QRegularExpression("/\\*[\\s\\S]*?\\*/");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Comment);
+        rule.format = (HighlightingCategory::Comment);
         highlightingRules.append(rule);
 
         // Operators (e.g., +, -, *, /, ==, !=, &&, ||)
@@ -65,23 +65,23 @@ QVector<HighlightingRule> rustHighlightingRules() {
         };
         for (const QString &pattern : operators) {
             rule.pattern = QRegularExpression(pattern);
-            rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Operator);
+            rule.format = (HighlightingCategory::Operator);
             highlightingRules.append(rule);
         }
 
         // Boolean literals (true, false)
         rule.pattern = QRegularExpression("\\btrue\\b|\\bfalse\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+        rule.format = (HighlightingCategory::Constant);
         highlightingRules.append(rule);
 
         // Constants (e.g., PI, MAX)
         rule.pattern = QRegularExpression("\\b[A-Z][A-Z0-9_]*\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Constant);
+        rule.format = (HighlightingCategory::Constant);
         highlightingRules.append(rule);
 
         // Keywords for async/await (async, await, etc.)
         rule.pattern = QRegularExpression("\\basync\\b|\\bawait\\b");
-        rule.format = highlightingCategory_To_QTextCharFormat(HighlightingCategory::Keyword);
+        rule.format = (HighlightingCategory::Keyword);
         highlightingRules.append(rule);
     }
     return highlightingRules;
