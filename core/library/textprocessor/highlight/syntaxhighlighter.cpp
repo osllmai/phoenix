@@ -58,7 +58,7 @@ void SyntaxHighlighter::highlightBlock(const QString &text){
     }
 }
 
-static QColor SyntaxHighlighter::formatToColor(HighlightingCategory highlightingCategory, const CodeColors &colors)
+QColor SyntaxHighlighter::formatToColor(HighlightingCategory highlightingCategory, const CodeColors &colors)
 {
     switch (highlightingCategory) {
     case Default:           return QColor("#2e3440"); // Main text

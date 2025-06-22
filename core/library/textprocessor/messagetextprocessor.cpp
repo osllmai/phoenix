@@ -44,107 +44,8 @@
 
 #include <algorithm>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "syntaxhighlighter.h"
 #include "language.h"
-
-
-
-enum Code {
-    Default,
-    Keyword,
-    Function,
-    FunctionCall,
-    Comment,
-    String,
-    Number,
-    Header,
-    Preprocessor,
-    Type,
-    Arrow,
-    Command,
-    Variable,
-    Key,
-    Value,
-    Parameter,
-    AttributeName,
-    AttributeValue,
-    SpecialCharacter,
-    DocType
-};
-
-struct HighlightingRule {
-    QRegularExpression pattern;
-    Code format;
-};
-
-// static QColor formatToColor(Code c, const CodeColors &colors)
-// {
-//     switch (c) {
-//     case Default: return colors.defaultColor;
-//     case Keyword: return colors.keywordColor;
-//     case Function: return colors.functionColor;
-//     case FunctionCall: return colors.functionCallColor;
-//     case Comment: return colors.commentColor;
-//     case String: return colors.stringColor;
-//     case Number: return colors.numberColor;
-//     case Header: return colors.headerColor;
-//     case Preprocessor: return colors.preprocessorColor;
-//     case Type: return colors.typeColor;
-//     case Arrow: return colors.arrowColor;
-//     case Command: return colors.commandColor;
-//     case Variable: return colors.variableColor;
-//     case Key: return colors.keyColor;
-//     case Value: return colors.valueColor;
-//     case Parameter: return colors.parameterColor;
-//     case AttributeName: return colors.attributeNameColor;
-//     case AttributeValue: return colors.attributeValueColor;
-//     case SpecialCharacter: return colors.specialCharacterColor;
-//     case DocType: return colors.doctypeColor;
-//     default: Q_UNREACHABLE();
-//     }
-//     return QColor();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // TODO (Adam) This class replaces characters in the text in order to provide markup and syntax highlighting
 // which destroys the original text in favor of the replaced text. This is a problem when we select
@@ -445,6 +346,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
 
     m_copies = newCopies;
 }
+
 
 void replaceAndInsertMarkdown(int startIndex, int endIndex, QTextDocument *doc)
 {
