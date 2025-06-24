@@ -33,7 +33,7 @@
 #include "./log/logger.h"
 #include "./log/logcategories.h"
 
-
+#include "./library/textprocessor/codecolors.h"
 
 int main(int argc, char *argv[])
 {
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
 
-    qmlRegisterType<ChatViewTextProcessor>("MyMessageTextProcessor", 1, 0, "ChatViewTextProcessor");
+    qmlRegisterType<MessageTextProcessor>("MyMessageTextProcessor", 1, 0, "MessageTextProcessor");
 
 
     Database* database = Database::instance(&engine);
@@ -166,6 +166,9 @@ int main(int argc, char *argv[])
 
     Clipboard clipboard;
     engine.rootContext()->setContextProperty("Clipboard", &clipboard);
+
+    CodeColors* codeColors= CodeColors::instance(&engine);
+    engine.rootContext()->setContextProperty("codeColors", codeColors);
 
     const QUrl url(u"qrc:/view/Main.qml"_qs);
 

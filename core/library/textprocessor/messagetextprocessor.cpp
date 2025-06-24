@@ -1,87 +1,25 @@
 #include "messagetextprocessor.h"
-// #include <QTextCharFormat>
-// #include <QBrush>
-// #include <QColor>
 
-// MessageTextProcessor::MessageTextProcessor(QObject *parent)
-//     : QObject(parent)
-// {}
-
-// void MessageTextProcessor::setTextDocument(QQuickTextDocument* doc) {
-//     if (m_doc == doc) return;
-//     m_doc = doc;
-//     emit textDocumentChanged();
-// }
-
-// void MessageTextProcessor::setValue(const QString &value) {
-//     if (m_doc && m_doc->textDocument()) {
-//         m_doc->textDocument()->setPlainText(value);
-//     }
-// }
-
-#include <QBrush>
-#include <QChar>
-#include <QClipboard>
-#include <QFont>
-#include <QFontMetricsF>
-#include <QGuiApplication>
-#include <QList>
-#include <QPainter>
-#include <QQuickTextDocument>
-#include <QRegularExpression>
-#include <QStringList>
-#include <QTextBlock>
-#include <QTextCharFormat>
-#include <QTextCursor>
-#include <QTextDocument>
-#include <QTextDocumentFragment>
-#include <QTextFrame>
-#include <QTextFrameFormat>
-#include <QTextTableCell>
-#include <QVariant>
-#include <Qt>
-#include <QtGlobal>
-
-#include <algorithm>
-
-#include "syntaxhighlighter.h"
-#include "language.h"
-
-// TODO (Adam) This class replaces characters in the text in order to provide markup and syntax highlighting
-// which destroys the original text in favor of the replaced text. This is a problem when we select
-// text and then the user tries to 'copy' the text: the original text should be placed in the clipboard
-// not the replaced text. A possible solution is to have this class keep a mapping of the original
-// indices and the replacement indices and then use the original text that is stored in memory in the
-// chat class to populate the clipboard.
-ChatViewTextProcessor::ChatViewTextProcessor(QObject *parent)
+MessageTextProcessor::MessageTextProcessor(QObject *parent)
     : QObject{parent}
     , m_quickTextDocument(nullptr)
     , m_syntaxHighlighter(new SyntaxHighlighter(this))
     , m_shouldProcessText(true)
     , m_fontPixelSize(QGuiApplication::font().pointSizeF())
-{
-}
+{}
 
-QQuickTextDocument* ChatViewTextProcessor::textDocument() const
-{
-    return m_quickTextDocument;
-}
-
-void ChatViewTextProcessor::setTextDocument(QQuickTextDocument* quickTextDocument)
-{
+QQuickTextDocument* MessageTextProcessor::textDocument() const{return m_quickTextDocument;}
+void MessageTextProcessor::setTextDocument(QQuickTextDocument* quickTextDocument){
     m_quickTextDocument = quickTextDocument;
     m_syntaxHighlighter->setDocument(m_quickTextDocument->textDocument());
     handleTextChanged();
 }
 
-void ChatViewTextProcessor::setValue(const QString &value)
-{
+void MessageTextProcessor::setValue(const QString &value){
     m_quickTextDocument->textDocument()->setPlainText(value);
     handleTextChanged();
 }
-
-bool ChatViewTextProcessor::tryCopyAtPosition(int position) const
-{
+bool MessageTextProcessor::tryCopyAtPosition(int position) const{
     for (const auto &copy : m_copies) {
         if (position >= copy.startPos && position <= copy.endPos) {
             QClipboard *clipboard = QGuiApplication::clipboard();
@@ -92,13 +30,8 @@ bool ChatViewTextProcessor::tryCopyAtPosition(int position) const
     return false;
 }
 
-bool ChatViewTextProcessor::shouldProcessText() const
-{
-    return m_shouldProcessText;
-}
-
-void ChatViewTextProcessor::setShouldProcessText(bool b)
-{
+bool MessageTextProcessor::shouldProcessText() const{return m_shouldProcessText;}
+void MessageTextProcessor::setShouldProcessText(bool b){
     if (m_shouldProcessText == b)
         return;
     m_shouldProcessText = b;
@@ -106,13 +39,8 @@ void ChatViewTextProcessor::setShouldProcessText(bool b)
     handleTextChanged();
 }
 
-qreal ChatViewTextProcessor::fontPixelSize() const
-{
-    return m_fontPixelSize;
-}
-
-void ChatViewTextProcessor::setFontPixelSize(qreal sz)
-{
+qreal MessageTextProcessor::fontPixelSize() const{return m_fontPixelSize;}
+void MessageTextProcessor::setFontPixelSize(qreal sz){
     if (m_fontPixelSize == sz)
         return;
     m_fontPixelSize = sz;
@@ -120,19 +48,7 @@ void ChatViewTextProcessor::setFontPixelSize(qreal sz)
     handleTextChanged();
 }
 
-CodeColors ChatViewTextProcessor::codeColors() const
-{
-    return m_syntaxHighlighter->codeColors();
-}
-
-void ChatViewTextProcessor::setCodeColors(const CodeColors &colors)
-{
-    m_syntaxHighlighter->setCodeColors(colors);
-    emit codeColorsChanged();
-}
-
-void traverseDocument(QTextDocument *doc, QTextFrame *frame)
-{
+void traverseDocument(QTextDocument *doc, QTextFrame *frame){
     QTextFrame *rootFrame = frame ? frame : doc->rootFrame();
     QTextFrame::iterator rootIt;
 
@@ -164,8 +80,7 @@ void traverseDocument(QTextDocument *doc, QTextFrame *frame)
         qDebug() << "End traverse";
 }
 
-void ChatViewTextProcessor::handleTextChanged()
-{
+void MessageTextProcessor::handleTextChanged(){
     if (!m_quickTextDocument || !m_shouldProcessText)
         return;
 
@@ -184,8 +99,7 @@ void ChatViewTextProcessor::handleTextChanged()
     cursor.insertText(invisibleCharacter, QTextCharFormat());
 }
 
-void ChatViewTextProcessor::handleCodeBlocks()
-{
+void MessageTextProcessor::handleCodeBlocks(){
     QTextDocument* doc = m_quickTextDocument->textDocument();
     QTextCursor cursor(doc);
 
@@ -194,7 +108,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
     textFormat.setForeground(QColor("white"));
 
     QTextFrameFormat frameFormatBase;
-    frameFormatBase.setBackground(codeColors().backgroundColor );
+    frameFormatBase.setBackground(CodeColors::instance(this)->getBackgroundColor());
 
     QTextTableFormat tableFormat;
     tableFormat.setMargin(0);
@@ -206,7 +120,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
     tableFormat.setColumnWidthConstraints(constraints);
 
     QTextTableFormat headerTableFormat;
-    headerTableFormat.setBackground(codeColors().headerColor);
+    headerTableFormat.setBackground(CodeColors::instance(this)->getHeaderColor());
     headerTableFormat.setPadding(0);
     headerTableFormat.setBorder(0);
     headerTableFormat.setBorderCollapse(true);
@@ -220,7 +134,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
     headerTableFormat.setColumnWidthConstraints(headerConstraints);
 
     QTextTableFormat codeBlockTableFormat;
-    codeBlockTableFormat.setBackground(codeColors().backgroundColor);
+    codeBlockTableFormat.setBackground(CodeColors::instance(this)->getBackgroundColor());
     codeBlockTableFormat.setPadding(0);
     codeBlockTableFormat.setBorder(0);
     codeBlockTableFormat.setBorderCollapse(true);
@@ -233,7 +147,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
     QTextImageFormat copyImageFormat;
     copyImageFormat.setWidth(24);
     copyImageFormat.setHeight(24);
-    copyImageFormat.setName("qrc:/gpt4all/icons/copy.svg");
+    copyImageFormat.setName("qrc:/media/icon/copyFill.svg");
 
     // Regex for code blocks
     static const QRegularExpression reCode("```(.*?)(```|$)", QRegularExpression::DotMatchesEverythingOption);
@@ -325,7 +239,7 @@ void ChatViewTextProcessor::handleCodeBlocks()
         QTextTableCell code = codeTable->cellAt(0, 0);
 
         QTextCharFormat codeBlockCharFormat;
-        codeBlockCharFormat.setForeground(codeColors().defaultColor);
+        codeBlockCharFormat.setForeground(CodeColors::instance(this)->getDefaultColor());
 
         QFont monospaceFont("Courier");
         monospaceFont.setPointSize(m_fontPixelSize);
@@ -347,7 +261,6 @@ void ChatViewTextProcessor::handleCodeBlocks()
     m_copies = newCopies;
 }
 
-
 void replaceAndInsertMarkdown(int startIndex, int endIndex, QTextDocument *doc)
 {
     QTextCursor cursor(doc);
@@ -362,7 +275,7 @@ void replaceAndInsertMarkdown(int startIndex, int endIndex, QTextDocument *doc)
     cursor.block().setUserState(Markdown);
 }
 
-void ChatViewTextProcessor::handleMarkdown()
+void MessageTextProcessor::handleMarkdown()
 {
     QTextDocument* doc = m_quickTextDocument->textDocument();
     QTextCursor cursor(doc);
@@ -408,15 +321,4 @@ void ChatViewTextProcessor::handleMarkdown()
             replaceAndInsertMarkdown(0, lastIndex, doc);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 

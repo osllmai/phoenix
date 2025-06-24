@@ -13,30 +13,39 @@ T.Button {
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
+    property color theme: Style.Colors.textInformation
+
+    onThemeChanged: {
+        // backgroundId.resetChatViewTextProcessor()
+
+        console.log("Theme Changed to: " + theme)
+    }
+
     background: null
      contentItem: Item {
          id: backgroundId
          anchors.fill: parent
 
-         ChatViewTextProcessor {
+         MessageTextProcessor {
              id: textProcessor
          }
 
          function resetChatViewTextProcessor() {
              textProcessor.fontPixelSize = myTextArea.font.pixelSize
 
-             textProcessor.codeColors.defaultColor      = "#2e3440" // Dark gray (main text)
-             textProcessor.codeColors.keywordColor      = "#5e81ac" // Blue (for keywords like `if`, `while`, etc.)
-             textProcessor.codeColors.functionColor     = "#b48ead" // Purple (function definitions)
-             textProcessor.codeColors.functionCallColor = "#88c0d0" // Cyan (function calls)
-             textProcessor.codeColors.commentColor      = "#a0a0a0" // Light gray (comments)
-             textProcessor.codeColors.stringColor       = "#a3be8c" // Green (strings)
-             textProcessor.codeColors.numberColor       = "#d08770" // Orange (numbers)
-             textProcessor.codeColors.headerColor       = "#bf616a" // Red (headers or special annotations)
-             textProcessor.codeColors.backgroundColor   = "#eceff4" // Very light gray (background)
+             textProcessor.updateColor("defaultColor", Style.Colors.textInformation)
+             textProcessor.updateColor("keywordColor", Style.Colors.textTagInfo)
+             textProcessor.updateColor("functionColor", Style.Colors.textTagWarning)
+             textProcessor.updateColor("functionCallColor", Style.Colors.textTagError)
+             textProcessor.updateColor("commentColor", Style.Colors.textTitle)
+             textProcessor.updateColor("stringColor", Style.Colors.textTagInfo)
+             textProcessor.updateColor("numberColor", Style.Colors.textTitle)
+             textProcessor.updateColor("headerColor", Style.Colors.boxNormalGradient0)
+             textProcessor.updateColor("backgroundColor", Style.Colors.boxNormalGradient0)
 
              textProcessor.textDocument = textDocument
              textProcessor.setValue(value)
+             console.log("HI****************************************HI")
          }
 
 
@@ -77,6 +86,13 @@ T.Button {
                 TextArea {
                     id: textId
                     color: Style.Colors.textTitle
+
+                    onColorChanged: {
+                        // backgroundId.resetChatViewTextProcessor()
+
+                        console.log("Theme Changed to: " + theme)
+                    }
+
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width: parent.width - logoModelId.width

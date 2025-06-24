@@ -1,33 +1,6 @@
 #ifndef MESSAGETEXTPROCESSOR_H
 #define MESSAGETEXTPROCESSOR_H
 
-// #include <QObject>
-// #include <QQuickTextDocument>
-// #include <QSyntaxHighlighter>
-// #include <QTextCharFormat>
-// #include <QTextDocument>
-
-// class MessageTextProcessor : public QObject {
-//     Q_OBJECT
-//     QML_ELEMENT
-//     Q_PROPERTY(QQuickTextDocument* textDocument READ textDocument WRITE setTextDocument NOTIFY textDocumentChanged)
-
-// public:
-//     explicit MessageTextProcessor(QObject *parent = nullptr);
-
-//     QQuickTextDocument* textDocument() const { return m_doc; }
-
-//     void setTextDocument(QQuickTextDocument* doc);
-
-//     Q_INVOKABLE void setValue(const QString &value);
-
-// signals:
-//     void textDocumentChanged();
-
-// private:
-//     QQuickTextDocument *m_doc = nullptr;
-// };
-
 #include <QColor>
 #include <QObject>
 #include <QQmlEngine>
@@ -38,23 +11,48 @@
 #include <QSyntaxHighlighter>
 #include <QTextObjectInterface>
 #include <QVector>
+#include <QBrush>
+#include <QChar>
+#include <QClipboard>
+#include <QFont>
+#include <QFontMetricsF>
+#include <QGuiApplication>
+#include <QList>
+#include <QPainter>
+#include <QRegularExpression>
+#include <QStringList>
+#include <QTextBlock>
+#include <QTextCharFormat>
+#include <QTextCursor>
+#include <QTextDocument>
+#include <QTextDocumentFragment>
+#include <QTextFrame>
+#include <QTextFrameFormat>
+#include <QTextTableCell>
+#include <QVariant>
+#include <Qt>
+#include <QtGlobal>
+
+#include <algorithm>
+
+#include "language.h"
 #include "syntaxhighlighter.h"
+#include "codecolors.h"
 
 class QPainter;
 class QTextDocument;
 class QTextFormat;
 
-
-class ChatViewTextProcessor : public QObject
+class MessageTextProcessor : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
     Q_PROPERTY(QQuickTextDocument* textDocument READ textDocument WRITE setTextDocument NOTIFY textDocumentChanged())
     Q_PROPERTY(bool shouldProcessText READ shouldProcessText WRITE setShouldProcessText NOTIFY shouldProcessTextChanged())
     Q_PROPERTY(qreal fontPixelSize READ fontPixelSize WRITE setFontPixelSize NOTIFY fontPixelSizeChanged())
-    Q_PROPERTY(CodeColors codeColors READ codeColors WRITE setCodeColors NOTIFY codeColorsChanged())
-    QML_ELEMENT
+
 public:
-    explicit ChatViewTextProcessor(QObject *parent = nullptr);
+    explicit MessageTextProcessor(QObject *parent = nullptr);
 
     QQuickTextDocument* textDocument() const;
     void setTextDocument(QQuickTextDocument* textDocument);
@@ -68,14 +66,10 @@ public:
     qreal fontPixelSize() const;
     void setFontPixelSize(qreal b);
 
-    CodeColors codeColors() const;
-    void setCodeColors(const CodeColors &colors);
-
 Q_SIGNALS:
     void textDocumentChanged();
     void shouldProcessTextChanged();
     void fontPixelSizeChanged();
-    void codeColorsChanged();
 
 private Q_SLOTS:
     void handleTextChanged();

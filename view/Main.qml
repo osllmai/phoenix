@@ -20,6 +20,31 @@ ApplicationWindow {
             Style.Colors.theme = "Dark"
         else
             Style.Colors.theme = "Light"
+
+        codeColors.defaultColor = Style.Colors.textInformation
+        codeColors.keywordColor = Style.Colors.textTagInfo
+        codeColors.functionColor = Style.Colors.textTagWarning
+        codeColors.functionCallColor = Style.Colors.textTagError
+        codeColors.commentColor = Style.Colors.textTitle
+        codeColors.stringColor = Style.Colors.textTagInfo
+        codeColors.numberColor = Style.Colors.textTitle
+        codeColors.headerColor = Style.Colors.boxNormalGradient0
+        codeColors.backgroundColor = Style.Colors.boxNormalGradient0
+
+        console.log("HISDHIDS------------------------------------MASODE")
+
+    }
+
+    Component.onCompleted: {
+        codeColors.defaultColor = Style.Colors.textInformation
+        codeColors.keywordColor = Style.Colors.textTagInfo
+        codeColors.functionColor = Style.Colors.textTagWarning
+        codeColors.functionCallColor = Style.Colors.textTagError
+        codeColors.commentColor = Style.Colors.textTitle
+        codeColors.stringColor = Style.Colors.textTagInfo
+        codeColors.numberColor = Style.Colors.textTitle
+        codeColors.headerColor = Style.Colors.boxNormalGradient0
+        codeColors.backgroundColor = Style.Colors.boxNormalGradient0
     }
 
     font.family: "DM Sans"

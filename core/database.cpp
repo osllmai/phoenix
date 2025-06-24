@@ -47,7 +47,6 @@ Database::Database(QObject* parent)
     }
 }
 
-
 Database::~Database(){
     m_db.close();
     m_dbThread.quit();
