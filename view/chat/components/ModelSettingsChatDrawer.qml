@@ -27,7 +27,7 @@ Drawer{
             modelSettingsId.stream = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.stream : true
             modelSettingsId.temperature = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.temperature : 0.8
             modelSettingsId.topP = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.topP : 1.5
-            modelSettingsId.maxTokens = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.maxTokens : 560
+            modelSettingsId.maxTokens = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.maxTokens : 4096
             modelSettingsId.promptBatchSize = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.promptBatchSize : 100
             modelSettingsId.minP = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.minP : 1.5
             modelSettingsId.topK = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.topK : 650
@@ -35,23 +35,23 @@ Drawer{
             modelSettingsId.repeatPenalty = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.repeatPenalty : 1.5
             modelSettingsId.systemPrompt = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.systemPrompt : ""
             modelSettingsId.promptTemplate = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.promptTemplate : ""
-            modelSettingsId.contextLength = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.contextLength : 120
-            modelSettingsId.numberOfGPULayers = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.numberOfGPULayers : 10
+            modelSettingsId.contextLength = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.contextLength : 4096
+            modelSettingsId.numberOfGPULayers = modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.numberOfGPULayers : 80
         }
 
         stream: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.stream : true
         temperature: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.temperature : 0.8
         topP: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.topP : 1.5
-        maxTokens: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.maxTokens : 560
+        maxTokens: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.maxTokens : 4096
         promptBatchSize: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.promptBatchSize : 100
         minP: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.minP : 1.5
         topK: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.topK : 650
-        repeatPenaltyTokens: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.repeatPenaltyTokens : 1.5
+        repeatPenaltyTokens: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.repeatPenaltyTokens : 0.8
         repeatPenalty: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.repeatPenalty : 1.5
         systemPrompt: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.systemPrompt : ""
         promptTemplate: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.promptTemplate : ""
-        contextLength: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.contextLength : 120
-        numberOfGPULayers: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.numberOfGPULayers : 10
+        contextLength: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.contextLength : 4096
+        numberOfGPULayers: modelSettingsId.existConversation ? conversationList.currentConversation.modelSettings.numberOfGPULayers : 80
 
         Connections {
             target: modelSettingsId

@@ -100,7 +100,7 @@ private:
     int m_promptBatchSize = 128;
     int m_maxTokens = 4096;
     int m_repeatPenaltyTokens = 64;
-    int m_contextLength = 2048;
+    int m_contextLength = 4096;
     int m_numberOfGPULayers = 80;
 };
 

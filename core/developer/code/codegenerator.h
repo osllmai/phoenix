@@ -9,6 +9,30 @@ class CodeGenerator : public QObject {
     QML_ELEMENT
     Q_PROPERTY(QString text READ text NOTIFY textChanged FINAL)
 
+    Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
+    Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
+    Q_PROPERTY(QString systemPrompt READ systemPrompt WRITE setSystemPrompt NOTIFY systemPromptChanged FINAL)
+    Q_PROPERTY(double temperature READ temperature WRITE setTemperature NOTIFY temperatureChanged FINAL)
+    Q_PROPERTY(int topK READ topK WRITE setTopK NOTIFY topKChanged FINAL)
+    Q_PROPERTY(double topP READ topP WRITE setTopP NOTIFY topPChanged FINAL)
+    Q_PROPERTY(double minP READ minP WRITE setMinP NOTIFY minPChanged FINAL)
+    Q_PROPERTY(double repeatPenalty READ repeatPenalty WRITE setRepeatPenalty NOTIFY repeatPenaltyChanged FINAL)
+    Q_PROPERTY(int promptBatchSize READ promptBatchSize WRITE setPromptBatchSize NOTIFY promptBatchSizeChanged FINAL)
+    Q_PROPERTY(int maxTokens READ maxTokens WRITE setMaxTokens NOTIFY maxTokensChanged FINAL)
+    Q_PROPERTY(double repeatPenaltyTokens READ repeatPenaltyTokens WRITE setRepeatPenaltyTokens NOTIFY repeatPenaltyTokensChanged FINAL)
+    Q_PROPERTY(int contextLength READ contextLength WRITE setContextLength NOTIFY contextLengthChanged FINAL)
+    Q_PROPERTY(int numberOfGPULayers READ numberOfGPULayers WRITE setNumberOfGPULayers NOTIFY numberOfGPULayersChanged FINAL)
+
+    Q_PROPERTY(bool topKVisible READ topKVisible NOTIFY topKVisibleChanged FINAL)
+    Q_PROPERTY(bool topPVisible READ topPVisible NOTIFY topPVisibleChanged FINAL)
+    Q_PROPERTY(bool minPVisible READ minPVisible NOTIFY minPVisibleChanged FINAL)
+    Q_PROPERTY(bool repeatPenaltyVisible READ repeatPenaltyVisible NOTIFY repeatPenaltyVisibleChanged FINAL)
+    Q_PROPERTY(bool promptBatchSizeVisible READ promptBatchSizeVisible NOTIFY promptBatchSizeVisibleChanged FINAL)
+    Q_PROPERTY(bool maxTokensVisible READ maxTokensVisible NOTIFY maxTokensVisibleChanged FINAL)
+    Q_PROPERTY(bool repeatPenaltyTokensVisible READ repeatPenaltyTokensVisible NOTIFY repeatPenaltyTokensVisibleChanged FINAL)
+    Q_PROPERTY(bool contextLengthVisible READ contextLengthVisible NOTIFY contextLengthVisibleChanged FINAL)
+    Q_PROPERTY(bool numberOfGPULayersVisible READ numberOfGPULayersVisible NOTIFY numberOfGPULayersVisibleChanged FINAL)
+
 public:
     explicit CodeGenerator(QObject* parent = nullptr);
     explicit CodeGenerator(const bool &stream,
@@ -133,7 +157,7 @@ signals:
     void contextLengthVisibleChanged();
     void numberOfGPULayersVisibleChanged();
 
-protected:
+private:
     QString m_text;
 
     bool m_stream;
@@ -159,31 +183,6 @@ protected:
     bool m_repeatPenaltyTokensVisible;
     bool m_contextLengthVisible;
     bool m_numberOfGPULayersVisible;
-
-private:
-    Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
-    Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
-    Q_PROPERTY(QString systemPrompt READ systemPrompt WRITE setSystemPrompt NOTIFY systemPromptChanged FINAL)
-    Q_PROPERTY(double temperature READ temperature WRITE setTemperature NOTIFY temperatureChanged FINAL)
-    Q_PROPERTY(int topK READ topK WRITE setTopK NOTIFY topKChanged FINAL)
-    Q_PROPERTY(double topP READ topP WRITE setTopP NOTIFY topPChanged FINAL)
-    Q_PROPERTY(double minP READ minP WRITE setMinP NOTIFY minPChanged FINAL)
-    Q_PROPERTY(double repeatPenalty READ repeatPenalty WRITE setRepeatPenalty NOTIFY repeatPenaltyChanged FINAL)
-    Q_PROPERTY(int promptBatchSize READ promptBatchSize WRITE setPromptBatchSize NOTIFY promptBatchSizeChanged FINAL)
-    Q_PROPERTY(int maxTokens READ maxTokens WRITE setMaxTokens NOTIFY maxTokensChanged FINAL)
-    Q_PROPERTY(double repeatPenaltyTokens READ repeatPenaltyTokens WRITE setRepeatPenaltyTokens NOTIFY repeatPenaltyTokensChanged FINAL)
-    Q_PROPERTY(int contextLength READ contextLength WRITE setContextLength NOTIFY contextLengthChanged FINAL)
-    Q_PROPERTY(int numberOfGPULayers READ numberOfGPULayers WRITE setNumberOfGPULayers NOTIFY numberOfGPULayersChanged FINAL)
-
-    Q_PROPERTY(bool topKVisible READ topKVisible NOTIFY topKVisibleChanged FINAL)
-    Q_PROPERTY(bool topPVisible READ topPVisible NOTIFY topPVisibleChanged FINAL)
-    Q_PROPERTY(bool minPVisible READ minPVisible NOTIFY minPVisibleChanged FINAL)
-    Q_PROPERTY(bool repeatPenaltyVisible READ repeatPenaltyVisible NOTIFY repeatPenaltyVisibleChanged FINAL)
-    Q_PROPERTY(bool promptBatchSizeVisible READ promptBatchSizeVisible NOTIFY promptBatchSizeVisibleChanged FINAL)
-    Q_PROPERTY(bool maxTokensVisible READ maxTokensVisible NOTIFY maxTokensVisibleChanged FINAL)
-    Q_PROPERTY(bool repeatPenaltyTokensVisible READ repeatPenaltyTokensVisible NOTIFY repeatPenaltyTokensVisibleChanged FINAL)
-    Q_PROPERTY(bool contextLengthVisible READ contextLengthVisible NOTIFY contextLengthVisibleChanged FINAL)
-    Q_PROPERTY(bool numberOfGPULayersVisible READ numberOfGPULayersVisible NOTIFY numberOfGPULayersVisibleChanged FINAL)
 };
 
 #endif // CODEGENERATOR_H

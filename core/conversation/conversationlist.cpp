@@ -109,7 +109,7 @@ void ConversationList::addRequest(const QString &firstPrompt){
         _propmtTemplate = m_modelPromptTemplate;
 
     emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
-                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
+                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){

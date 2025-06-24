@@ -17,10 +17,10 @@ QString JavascriptFetchCodeGenerator::postChat() {
   "temperature": %2,
   "max_tokens": %3,
   "stream": %4
-})").arg(m_systemPrompt)
-                       .arg(m_temperature)
-                       .arg(m_maxTokens)
-                       .arg(m_stream ? "true" : "false");
+})").arg(systemPrompt())
+                       .arg(temperature())
+                       .arg(maxTokens())
+                       .arg(stream() ? "true" : "false");
 
     return QString("fetch('http://localhost:1234/v1/chat/completions', {\n"
                    "  method: 'POST',\n"

@@ -30,9 +30,6 @@ ApplicationWindow {
         codeColors.numberColor = Style.Colors.textTitle
         codeColors.headerColor = Style.Colors.boxNormalGradient0
         codeColors.backgroundColor = Style.Colors.boxNormalGradient0
-
-        console.log("HISDHIDS------------------------------------MASODE")
-
     }
 
     Component.onCompleted: {

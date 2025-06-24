@@ -11,29 +11,29 @@ QString CurlCodeGenerator::postChat() {
     params << QString("\"messages\": ["
                       "{ \"role\": \"system\", \"content\": \"%1\" },"
                       "{ \"role\": \"user\", \"content\": \"What day is it today?\" }"
-                      "]").arg(m_systemPrompt);
-    params << QString("\"temperature\": %1").arg(m_temperature);
-    params << QString("\"max_tokens\": %1").arg(m_maxTokens);
-    params << QString("\"stream\": %1").arg(m_stream ? "true" : "false");
+                      "]").arg(systemPrompt());
+    params << QString("\"temperature\": %1").arg(temperature());
+    params << QString("\"max_tokens\": %1").arg(maxTokens());
+    params << QString("\"stream\": %1").arg(stream() ? "true" : "false");
 
-    qInfo()<<"***************m_repeatPenaltyTokensVisible"<<m_repeatPenaltyTokensVisible;
+    qInfo()<<"***************m_repeatPenaltyTokensVisible"<<repeatPenaltyTokensVisible();
 
-    if (m_topKVisible)
-        params << QString("\"top_k\": %1").arg(m_topK);
-    if (m_topPVisible)
-        params << QString("\"top_p\": %1").arg(m_topP);
-    if (m_minPVisible)
-        params << QString("\"min_p\": %1").arg(m_minP);
-    if (m_repeatPenaltyVisible)
-        params << QString("\"repeat_penalty\": %1").arg(m_repeatPenalty);
-    if (m_promptBatchSizeVisible)
-        params << QString("\"prompt_batch_size\": %1").arg(m_promptBatchSize);
-    if (m_repeatPenaltyTokensVisible)
-        params << QString("\"repeat_penalty_tokens\": %1").arg(m_repeatPenaltyTokens);
-    if (m_contextLengthVisible)
-        params << QString("\"context_length\": %1").arg(m_contextLength);
-    if (m_numberOfGPULayersVisible)
-        params << QString("\"n_gpu_layers\": %1").arg(m_numberOfGPULayers);
+    if (topKVisible())
+        params << QString("\"top_k\": %1").arg(topK());
+    if (topPVisible())
+        params << QString("\"top_p\": %1").arg(topP());
+    if (minPVisible())
+        params << QString("\"min_p\": %1").arg(minP());
+    if (repeatPenaltyVisible())
+        params << QString("\"repeat_penalty\": %1").arg(repeatPenalty());
+    if (promptBatchSizeVisible())
+        params << QString("\"prompt_batch_size\": %1").arg(promptBatchSize());
+    if (repeatPenaltyTokensVisible())
+        params << QString("\"repeat_penalty_tokens\": %1").arg(repeatPenaltyTokens());
+    if (contextLengthVisible())
+        params << QString("\"context_length\": %1").arg(contextLength());
+    if (numberOfGPULayersVisible())
+        params << QString("\"n_gpu_layers\": %1").arg(numberOfGPULayers());
 
     QString json = QString("{\n  %1\n}").arg(params.join(",\n  "));
 
