@@ -54,15 +54,15 @@ Item {
                     checked: codeDeveloperList.currentProgramLanguage.name === model.name
                     onClicked: codeDeveloperList.setCurrentLanguage(model.id)
                 }
-                footer: MyButton {
-                    id: footerItem
-                    myText: "..."
-                    bottonType: Style.RoleEnum.BottonType.Feature
-                    iconType: Style.RoleEnum.IconType.FeatureBlue
-                    isNeedAnimation: true
-                    checkable: true
-                    clip: true
-                }
+                // footer: MyButton {
+                //     id: footerItem
+                //     myText: "..."
+                //     bottonType: Style.RoleEnum.BottonType.Feature
+                //     iconType: Style.RoleEnum.IconType.FeatureBlue
+                //     isNeedAnimation: true
+                //     checkable: true
+                //     clip: true
+                // }
             }
 
             Item{

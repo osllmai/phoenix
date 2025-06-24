@@ -5,7 +5,7 @@ MessageTextProcessor::MessageTextProcessor(QObject *parent)
     , m_quickTextDocument(nullptr)
     , m_syntaxHighlighter(new SyntaxHighlighter(this))
     , m_shouldProcessText(true)
-    , m_fontPixelSize(QGuiApplication::font().pointSizeF())
+    , m_fontPixelSize(11)
 {}
 
 QQuickTextDocument* MessageTextProcessor::textDocument() const{return m_quickTextDocument;}
@@ -19,6 +19,7 @@ void MessageTextProcessor::setValue(const QString &value){
     m_quickTextDocument->textDocument()->setPlainText(value);
     handleTextChanged();
 }
+
 bool MessageTextProcessor::tryCopyAtPosition(int position) const{
     for (const auto &copy : m_copies) {
         if (position >= copy.startPos && position <= copy.endPos) {

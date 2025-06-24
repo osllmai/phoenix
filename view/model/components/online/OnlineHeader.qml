@@ -97,15 +97,15 @@ Item{
                             headerId.filtter= model.type
                         }
                     }
-                    header: MyButton {
-                        id: footerItem
-                        myText: "..."
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
-                        isNeedAnimation: true
-                        checkable: true
-                        clip: true
-                    }
+                    // header: MyButton {
+                    //     id: footerItem
+                    //     myText: "..."
+                    //     bottonType: Style.RoleEnum.BottonType.Feature
+                    //     iconType: Style.RoleEnum.IconType.FeatureBlue
+                    //     isNeedAnimation: true
+                    //     checkable: true
+                    //     clip: true
+                    // }
                 }
             }
         }

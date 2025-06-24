@@ -28,8 +28,12 @@ ApplicationWindow {
         codeColors.commentColor = Style.Colors.textTitle
         codeColors.stringColor = Style.Colors.textTagInfo
         codeColors.numberColor = Style.Colors.textTitle
-        codeColors.headerColor = Style.Colors.boxNormalGradient0
+        codeColors.headerColor = Style.Colors.boxNormalGradient1
         codeColors.backgroundColor = Style.Colors.boxNormalGradient0
+
+        if(!conversationList.isEmptyConversation){
+            conversationList.currentConversation.messageList.updateAllTextMessage()
+        }
     }
 
     Component.onCompleted: {
@@ -40,7 +44,7 @@ ApplicationWindow {
         codeColors.commentColor = Style.Colors.textTitle
         codeColors.stringColor = Style.Colors.textTagInfo
         codeColors.numberColor = Style.Colors.textTitle
-        codeColors.headerColor = Style.Colors.boxNormalGradient0
+        codeColors.headerColor = Style.Colors.boxNormalGradient1
         codeColors.backgroundColor = Style.Colors.boxNormalGradient0
     }
 

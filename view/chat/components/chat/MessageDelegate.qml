@@ -13,14 +13,6 @@ T.Button {
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
-    property color theme: Style.Colors.textInformation
-
-    onThemeChanged: {
-        // backgroundId.resetChatViewTextProcessor()
-
-        console.log("Theme Changed to: " + theme)
-    }
-
     background: null
      contentItem: Item {
          id: backgroundId
@@ -29,25 +21,6 @@ T.Button {
          MessageTextProcessor {
              id: textProcessor
          }
-
-         function resetChatViewTextProcessor() {
-             textProcessor.fontPixelSize = myTextArea.font.pixelSize
-
-             textProcessor.updateColor("defaultColor", Style.Colors.textInformation)
-             textProcessor.updateColor("keywordColor", Style.Colors.textTagInfo)
-             textProcessor.updateColor("functionColor", Style.Colors.textTagWarning)
-             textProcessor.updateColor("functionCallColor", Style.Colors.textTagError)
-             textProcessor.updateColor("commentColor", Style.Colors.textTitle)
-             textProcessor.updateColor("stringColor", Style.Colors.textTagInfo)
-             textProcessor.updateColor("numberColor", Style.Colors.textTitle)
-             textProcessor.updateColor("headerColor", Style.Colors.boxNormalGradient0)
-             textProcessor.updateColor("backgroundColor", Style.Colors.boxNormalGradient0)
-
-             textProcessor.textDocument = textDocument
-             textProcessor.setValue(value)
-             console.log("HI****************************************HI")
-         }
-
 
          Connections {
              target: model

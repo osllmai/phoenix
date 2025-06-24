@@ -53,15 +53,15 @@ Item {
                     checked: control.selectedFilter === modelData
                     onClicked: control.selectedFilter = modelData
                 }
-                footer: MyButton {
-                    id: footerItem
-                    myText: "..."
-                    bottonType: Style.RoleEnum.BottonType.Feature
-                    iconType: Style.RoleEnum.IconType.FeatureBlue
-                    isNeedAnimation: true
-                    checkable: true
-                    clip: true
-                }
+                // footer: MyButton {
+                //     id: footerItem
+                //     myText: "..."
+                //     bottonType: Style.RoleEnum.BottonType.Feature
+                //     iconType: Style.RoleEnum.IconType.FeatureBlue
+                //     isNeedAnimation: true
+                //     checkable: true
+                //     clip: true
+                // }
             }
 
             ScrollView {
