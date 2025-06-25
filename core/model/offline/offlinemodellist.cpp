@@ -270,6 +270,15 @@ OfflineModel* OfflineModelList::findModelById(int id) {
     return (it != m_models.end()) ? *it : nullptr;
 }
 
+OfflineModel* OfflineModelList::findModelByModelName(const QString modelName){
+    for (OfflineModel* model : m_models) {
+        if (model->modelName() == modelName) {
+            return model;
+        }
+    }
+    return nullptr;
+}
+
 void OfflineModelList::updateDownloadProgress(){
     qint64 totalBytesDownload =0;
     qint64 receivedBytesDownload =0;

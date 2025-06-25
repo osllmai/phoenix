@@ -174,3 +174,14 @@ OnlineModel* OnlineModelList::findModelById(int id) {
 
     return (it != m_models.end()) ? *it : nullptr;
 }
+
+OnlineModel* OnlineModelList::findModelByModelName(const QString modelName) {
+    for (OnlineModel* model : m_models) {
+        QString fullModelName =  model->company()->name() + "/" + model->modelName();
+        if (fullModelName == modelName ) {
+            return model;
+        }
+    }
+    return nullptr;
+}
+

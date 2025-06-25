@@ -258,7 +258,7 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
         if (!m_parserModel.value("portAPI").isEmpty())
             portAPIArg = m_parserModel.value("portAPI").toUShort();
 
-        qCInfo(logDeveloper) << "Developer server starting on portAPIt:" << portAPIArg;
+        qCInfo(logDeveloper) << "Developer server starting on portAPI:" << portAPIArg;
 
         auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
         auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
@@ -276,11 +276,11 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
         }
 
         quint16 portAPIModel = m_tcpServer->serverPort();
-        qCInfo(logDeveloper) << "HTTP Server running at portAPIt:" << portAPIModel;
+        qCInfo(logDeveloper) << "HTTP Server running at portAPI:" << portAPIModel;
 
     }else{
         m_tcpServer->close();
-        qCInfo(logDeveloper) << "stop HTTP Server at portAPIt";
+        qCInfo(logDeveloper) << "stop HTTP Server at portAPI";
     }
     emit isRunningAPIChanged();
 }

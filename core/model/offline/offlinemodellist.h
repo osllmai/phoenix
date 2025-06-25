@@ -23,6 +23,7 @@ class OfflineModelList: public QAbstractListModel
 public:
     static OfflineModelList* instance(QObject* parent );
     OfflineModel* findModelById(const int id);
+    OfflineModel* findModelByModelName(const QString modelName);
     void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {

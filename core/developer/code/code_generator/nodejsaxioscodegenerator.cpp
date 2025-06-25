@@ -1,30 +1,64 @@
 #include "nodejsaxioscodegenerator.h"
 
 QString NodeJsAxiosCodeGenerator::getModels() {
-    return QString("const axios = require('axios');\n"
-                   "axios.get('http://localhost:1234/v1/models')\n"
-                   "  .then(res => console.log(res.data))\n"
-                   "  .catch(err => console.error(err));");
+    return QString(R"(const axios = require("axios");
+
+axios.get("http://localhost:%1/api/models")
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });)").arg(port());
 }
 
 QString NodeJsAxiosCodeGenerator::postChat() {
-    QString json = QString(R"({
-  model: "deepseek-r1-distill-qwen-7b",
-  messages: [
-    { role: "system", content: "%1" },
-    { role: "user", content: "What day is it today?" }
-  ],
-  temperature: %2,
-  max_tokens: %3,
-  stream: %4
-})").arg(systemPrompt())
-                       .arg(temperature())
-                       .arg(maxTokens())
-                       .arg(stream() ? "true" : "false");
+    QStringList params;
 
-    return QString("const axios = require('axios');\n"
-                   "axios.post('http://localhost:1234/v1/chat/completions', %1, {\n"
-                   "  headers: { 'Content-Type': 'application/json' }\n"
-                   "}).then(res => console.log(res.data))\n"
-                   ".catch(err => console.error(err));").arg(json);
+    params << QString("\"model\": \"%1\"").arg(modelName());
+    params << QString("\"messages\": \"Hi dear!\"");
+    params << QString("\"promptTemplate\": \"%1\"").arg(escapeForJson(promptTemplate()));
+    params << QString("\"systemPrompt\": \"%1\"").arg(escapeForJson(systemPrompt()));
+    params << QString("\"stream\": %1").arg(stream() ? "true" : "false");
+    params << QString("\"temperature\": %1").arg(temperature());
+
+    if (maxTokensVisible())
+        params << QString("\"maxTokens\": %1").arg(maxTokens());
+    if (topKVisible())
+        params << QString("\"top_k\": %1").arg(topK());
+    if (topPVisible())
+        params << QString("\"top_p\": %1").arg(topP());
+    if (minPVisible())
+        params << QString("\"min_p\": %1").arg(minP());
+    if (repeatPenaltyVisible())
+        params << QString("\"repeat_penalty\": %1").arg(repeatPenalty());
+    if (promptBatchSizeVisible())
+        params << QString("\"prompt_batch_size\": %1").arg(promptBatchSize());
+    if (repeatPenaltyTokensVisible())
+        params << QString("\"repeat_penalty_tokens\": %1").arg(repeatPenaltyTokens());
+    if (contextLengthVisible())
+        params << QString("\"context_length\": %1").arg(contextLength());
+    if (numberOfGPULayersVisible())
+        params << QString("\"n_gpu_layers\": %1").arg(numberOfGPULayers());
+
+    QString json = QString("{\n  %1\n}").arg(params.join(",\n  "));
+
+    return QString(R"(const axios = require("axios");
+
+const data = %1;
+
+axios.post("http://localhost:%2/api/chat", data, {
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
+.then(response => {
+  console.log(response.data);
+})
+.catch(error => {
+  console.error("Error:", error);
+});)")
+        .arg(json)
+        .arg(port());
 }
+

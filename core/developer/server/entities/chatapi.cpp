@@ -2,11 +2,11 @@
 
 ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
     : CrudAPI(scheme, hostName, port),
-    m_modelSelect(false),
     m_isLoadModel(false),
     m_loadModelInProgress(false),
     m_responseInProgress(false),
     m_model(new Model(this)),
+    m_modelId(-1),
     m_modelSettings(new ModelSettings(1, true, "### Human:\n%1\n\n### Assistant:\n",
                                       "### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n",
                                       0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, this)),
@@ -42,7 +42,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    if (!json->contains("prompt") || !(*json)["prompt"].isString()) {
+    if (!json->contains("messages") || !(*json)["messages"].isString()) {
         qCWarning(logDeveloper) << "postItem missing or invalid 'prompt' field";
         QJsonObject errorObj;
         errorObj["error"] = "Missing or invalid 'prompt' field";
@@ -52,7 +52,40 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    if (!json->contains("modelId") || !(*json)["modelId"].isDouble()) {
+    if(json->contains("model") && (*json)["model"].isString()){
+        QString modelName = (*json)["model"].toString();
+        if (modelName.startsWith("localModel/")){
+            modelName.remove(0, QString("localModel/").length());
+            OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
+
+            if(offlineModel != nullptr && offlineModel->isDownloading()){
+                setModelId(offlineModel->id());
+            }else{
+                qCWarning(logDeveloper) << "models is not evailable";
+                QJsonObject errorObj;
+                errorObj["error"] = "models is not evailable";
+                QJsonDocument doc(errorObj);
+                responder->writeChunk(doc.toJson(QJsonDocument::Compact));
+                responder->writeEndChunked("{}");
+                return;
+            }
+        }else{
+            OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
+            if(onlineModel != nullptr &&onlineModel->installModel() ){
+                setModelId(onlineModel->id());
+            }else{
+                qCWarning(logDeveloper) << "models is not evailable";
+                QJsonObject errorObj;
+                errorObj["error"] = "models is not evailable";
+                QJsonDocument doc(errorObj);
+                responder->writeChunk(doc.toJson(QJsonDocument::Compact));
+                responder->writeEndChunked("{}");
+                return;
+            }
+        }
+    }else if(CodeDeveloperList::instance(nullptr)->modelId() == -1){
+        setModelId(CodeDeveloperList::instance(nullptr)->modelId());
+    }else{
         qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
         QJsonObject errorObj;
         errorObj["error"] = "Missing or invalid 'modelId' field";
@@ -62,7 +95,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    qCInfo(logDeveloper) << "postItem valid JSON received, prompt:" << (*json)["prompt"].toString().left(50) << "modelId:" << (*json)["modelId"].toInt();
+    qCInfo(logDeveloper) << "postItem valid JSON received, prompt:" << (*json)["messages"].toString().left(50) << "model:" << (*json)["model"].toString();
 
     m_responder = responder;
 
@@ -87,15 +120,12 @@ QHttpServerResponse ChatAPI::deleteItem(qint64 itemId){
 void ChatAPI::prompt(const std::optional<QJsonObject> json){
     qCInfo(logDeveloper) << "prompt called";
 
-    int idModel = (*json)["modelId"].toInt();
-    QString input = (*json)["prompt"].toString();
-    qCInfo(logDeveloper) << "prompt with modelId:" << idModel << "and input preview:" << input.left(50);
-
-    setModelId(idModel);
+    QString input = (*json)["message"].toString();
+    qCInfo(logDeveloper) << "prompt with modelId:" << m_modelId << "and input preview:" << input.left(50);
 
     if(!m_isLoadModel){
-        qCInfo(logDeveloper) << "Model is not loaded, loading model with id:" << idModel;
-        loadModel(idModel);
+        qCInfo(logDeveloper) << "Model is not loaded, loading model with id:" << m_modelId;
+        loadModel(m_modelId);
         setIsLoadModel(true);
 
         if(m_provider != nullptr){
@@ -134,8 +164,8 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
         }
     }
 
-    if(idModel != m_model->id()){
-        qCInfo(logDeveloper) << "Model ID mismatch, reloading model. Old ID:" << m_model->id() << "New ID:" << idModel;
+    if(m_modelId != m_model->id()){
+        qCInfo(logDeveloper) << "Model ID mismatch, reloading model. Old ID:" << m_model->id() << "New ID:" << m_modelId;
         setIsLoadModel(false);
         prompt(json);
         return;
@@ -233,67 +263,6 @@ void ChatAPI::updateModelSettingsDeveloper(){
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
-void ChatAPI::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
-    qCInfo(logDeveloper) << "setModelRequest called with id:" << id << ", text:" << text;
-    setModelId(id);
-    setModelText(text);
-    setModelIcon(icon);
-    setModelPromptTemplate(promptTemplate);
-    setModelSystemPrompt(systemPrompt);
-    if(id == -1){
-        qCInfo(logDeveloper) << "Model deselected";
-        setModelSelect(false);
-    }
-    else{
-        qCInfo(logDeveloper) << "Model selected";
-        setModelSelect(true);
-    }
-
-
-    // if(!m_isEmptyChatAPI){
-    //     if(m_modelPromptTemplate != "")
-    //         m_currentChatAPI->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
-    //     if(m_modelSystemPrompt != "")
-    //         m_currentChatAPI->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
-    // }
-}
-
-QString ChatAPI::modelSystemPrompt() const{return m_modelSystemPrompt;}
-void ChatAPI::setModelSystemPrompt(const QString &newModelSystemPrompt){
-    if (m_modelSystemPrompt == newModelSystemPrompt)
-        return;
-    m_modelSystemPrompt = newModelSystemPrompt;
-    emit modelSystemPromptChanged();
-    qCInfo(logDeveloper) << "Model system prompt changed to:" << newModelSystemPrompt;
-}
-
-QString ChatAPI::modelPromptTemplate() const{return m_modelPromptTemplate;}
-void ChatAPI::setModelPromptTemplate(const QString &newModelPromptTemplate){
-    if (m_modelPromptTemplate == newModelPromptTemplate)
-        return;
-    m_modelPromptTemplate = newModelPromptTemplate;
-    emit modelPromptTemplateChanged();
-    qCInfo(logDeveloper) << "Model prompt template changed to:" << newModelPromptTemplate;
-}
-
-QString ChatAPI::modelText() const{return m_modelText;}
-void ChatAPI::setModelText(const QString &newModelText){
-    if (m_modelText == newModelText)
-        return;
-    m_modelText = newModelText;
-    emit modelTextChanged();
-    qCInfo(logDeveloper) << "Model text changed to:" << newModelText;
-}
-
-QString ChatAPI::modelIcon() const{return m_modelIcon;}
-void ChatAPI::setModelIcon(const QString &newModelIcon){
-    if (m_modelIcon == newModelIcon)
-        return;
-    m_modelIcon = newModelIcon;
-    emit modelIconChanged();
-    qCInfo(logDeveloper) << "Model icon changed to:" << newModelIcon;
-}
-
 int ChatAPI::modelId() const{return m_modelId;}
 void ChatAPI::setModelId(int newModelId){
     if (m_modelId == newModelId)
@@ -310,15 +279,6 @@ void ChatAPI::setProvider(Provider *newProvider) {
     m_provider = newProvider;
     emit providerChanged();
     qCInfo(logDeveloper) << "Provider changed.";
-}
-
-bool ChatAPI::modelSelect() const{return m_modelSelect;}
-void ChatAPI::setModelSelect(bool newModelSelect){
-    if (m_modelSelect == newModelSelect)
-        return;
-    m_modelSelect = newModelSelect;
-    emit modelSelectChanged();
-    qCInfo(logDeveloper) << "Model select changed to:" << newModelSelect;
 }
 
 bool ChatAPI::responseInProgress() const{return m_responseInProgress;}
