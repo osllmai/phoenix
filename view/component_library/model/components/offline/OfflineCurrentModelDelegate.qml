@@ -40,6 +40,7 @@ T.Button {
                 text: model.name
                 width: backgroundId.width -
                             (logoModelId.width) -
+                            (copyId.width) -
                             (rejectChatButton.visible? rejectChatButton.width: 0) -
                             (downloadPercentButton.visible? downloadPercentButton.width: 0) -
                             (dounloadButton.visible? dounloadButton.width: 0) - 5
@@ -52,6 +53,10 @@ T.Button {
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
+            }
+            MyCopyButton{
+                id: copyId
+                myText: TextArea{text: "localModel/"+model.modelName;}
             }
             MyButton{
                 id: rejectChatButton

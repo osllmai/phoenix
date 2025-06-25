@@ -39,6 +39,7 @@ T.Button {
                 text: model.name
                 width: backgroundId.width -
                        logoModelId.width -
+                       copyId.width -
                        (installButton.visible? installButton.width: 0) -
                        (rejectChatButton.visible? rejectChatButton.width: 0) - 5
                 clip: true
@@ -50,6 +51,10 @@ T.Button {
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
+            }
+            MyCopyButton{
+                id: copyId
+                myText: TextArea{text: model.company.name + "/" + model.modelName;}
             }
             MyButton{
                 id: rejectChatButton

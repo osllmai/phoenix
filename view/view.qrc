@@ -107,5 +107,6 @@
         <file>component_footer/Downloading.qml</file>
         <file>component_library/model_settings/components/button/ModelTextCopyBox.qml</file>
         <file>AppHeader.qml</file>
+        <file>component_library/button/MyCopyButton.qml</file>
     </qresource>
 </RCC>

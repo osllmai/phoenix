@@ -43,11 +43,19 @@ Item {
     }
 
     Column{
-        spacing: 16
+        spacing: 8
         width: Math.min(700, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         visible: conversationList.isEmptyConversation
+        MyIcon {
+            id: phoenixIconId
+            myIcon: "qrc:/media/image_company/Phoenix.svg"
+            iconType: Style.RoleEnum.IconType.Image
+            anchors.horizontalCenter: parent.horizontalCenter
+            enabled: false
+            width: 100; height: 100
+        }
         Label {
             id: phoenixId
             text: "Hello! I’m Phoenix."
@@ -55,15 +63,6 @@ Item {
             color: Style.Colors.textTitle
             font.pixelSize: 24
             font.styleName: "Bold"
-        }
-        Label {
-            id: informationText
-            width: parent.width
-            wrapMode: Text.Wrap
-            horizontalAlignment: Text.AlignHCenter
-            text: "Ask me anything!"
-            color: Style.Colors.textInformation
-            font.pixelSize: 14
         }
         InputPrompt{
             id:inputBoxId2

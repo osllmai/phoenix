@@ -34,12 +34,16 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->id();
     case NameRole:
         return model->name();
+    case ModeNameRole:
+        return model->modelName();
     case KeyRole:
         return model->key();
     case InformationRole:
         return model->information();
     case IconModelRole:
         return model->icon();
+    case CompanyRole:
+        return QVariant::fromValue(m_models[index.row()]->company());
     case IsLikeRole:
         return model->isLike();
     case AddModelTimeRole:
@@ -65,9 +69,11 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[ModeNameRole] = "modelName";
     roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconModelRole] = "icon";
+    roles[CompanyRole] = "company";
     roles[IsLikeRole] = "isLike";
     roles[AddModelTimeRole] = "addModelTime";
     roles[TypeRole] = "type";

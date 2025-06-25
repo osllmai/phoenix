@@ -96,12 +96,11 @@ T.Button {
                 }
 
                 Row {
-                    id: dateAndIconId
                     width: dateId.width + copyId.width
                     height: Math.max(dateId.height, copyId.height)
                     anchors.left: parent.left
                     anchors.leftMargin: 10
-                    property bool checkCopy: false
+
                     Label {
                         id: dateId
                         visible: control.hovered
@@ -114,37 +113,10 @@ T.Button {
                         verticalAlignment: Text.AlignTop
                         wrapMode: Text.NoWrap
                     }
-                    MyIcon {
+                    MyCopyButton{
                         id: copyId
                         visible: control.hovered
-                        myIcon: copyId.selectIcon()
-                        iconType: Style.RoleEnum.IconType.Primary
-                        width: 26; height: 26
-                        Connections{
-                            target: copyId
-                            function onClicked(){
-                                textId.selectAll()
-                                textId.copy()
-                                textId.deselect()
-                                dateAndIconId.checkCopy= true
-                                successTimer.start();
-                            }
-                        }
-
-                        Timer {
-                            id: successTimer
-                            interval: 1000
-                            repeat: false
-                            onTriggered: dateAndIconId.checkCopy = false
-                        }
-
-                        function selectIcon(){
-                            if(dateAndIconId.checkCopy === false){
-                                return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
-                            }else{
-                                return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"
-                            }
-                        }
+                        myText: textId
                     }
                     MyIcon {
                         id: likeId

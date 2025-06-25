@@ -104,37 +104,9 @@ Dialog {
                 anchors.topMargin: 10
                 property bool checkCopy: false
 
-                MyIcon {
+                MyCopyButton{
                     id: copyId
-                    visible: control.hovered
-                    myIcon: copyId.selectIcon()
-                    iconType: Style.RoleEnum.IconType.Primary
-                    width: 26; height: 26
-                    Connections{
-                        target: copyId
-                        function onClicked(){
-                            textId.selectAll()
-                            textId.copy()
-                            textId.deselect()
-                            dateAndIconId.checkCopy= true
-                            successTimer.start();
-                        }
-                    }
-
-                    Timer {
-                        id: successTimer
-                        interval: 2000
-                        repeat: false
-                        onTriggered: dateAndIconId.checkCopy = false
-                    }
-
-                    function selectIcon(){
-                        if(dateAndIconId.checkCopy === false){
-                            return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
-                        }else{
-                            return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"
-                        }
-                    }
+                    myText: textId
                 }
             }
         }

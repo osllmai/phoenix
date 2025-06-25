@@ -17,17 +17,16 @@ Rectangle{
         anchors.right: parent.right
         anchors.top: parent.top
         height: 60
-        ToolButton {
+
+        MyIcon {
             id: phoenixIconId
+            myIcon: "qrc:/media/image_company/Phoenix.svg"
+            iconType: Style.RoleEnum.IconType.Image
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            background: null
-            icon{
-                source: "qrc:/media/icon/phoenix.svg"
-                color: Style.Colors.menuHoverAndCheckedIcon;
-                width:24; height:24
-            }
+            enabled: false
+            width: 40; height: 40
         }
         Label {
             id: textId

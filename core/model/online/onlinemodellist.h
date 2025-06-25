@@ -20,9 +20,11 @@ public:
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        ModeNameRole,
         KeyRole,
         InformationRole,
         IconModelRole,
+        CompanyRole,
         IsLikeRole,
         AddModelTimeRole,
         TypeRole,

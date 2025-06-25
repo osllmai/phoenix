@@ -26,6 +26,7 @@ T.Button {
             Row{
                 id: headerId
                 width: parent.width
+
                 MyIcon {
                     id: logoModelId
                     myIcon: "qrc:/media/image_company/" + model.icon
@@ -33,17 +34,27 @@ T.Button {
                     enabled: false
                     width: 40; height: 40
                 }
-                Label {
-                    id: titleId
+
+                Row{
                     width: parent.width - logoModelId.width - likeIconId.width
-                    text: model.name
-                    color: Style.Colors.textTitle
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    font.pixelSize: 14
-                    font.styleName: "Bold"
-                    clip: true
-                    elide: Label.ElideRight
+                    Label {
+                        id: titleId
+                        text: model.name
+                        color: Style.Colors.textTitle
+                        anchors.verticalCenter: logoModelId.verticalCenter
+                        font.pixelSize: 14
+                        font.styleName: "Bold"
+                        clip: true
+                        elide: Label.ElideRight
+                    }
+                    MyCopyButton{
+                        id: copyId
+                        myText: TextArea{text: model.company.name + "/" + model.modelName;}
+                        anchors.verticalCenter: titleId.verticalCenter
+                    }
                 }
+
                 MyIcon{
                     id: likeIconId
                     myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
