@@ -1,16 +1,16 @@
 #include "curlcodegenerator.h"
 
 QString CurlCodeGenerator::getModels() {
-    return QString("curl http://localhost:1234/v1/models");
+    return QString("curl http://localhost:%1/api/models").arg(port());
 }
 
 QString CurlCodeGenerator::postChat() {
     QStringList params;
 
-    params << QString("\"model\": \"deepseek-r1-distill-qwen-7b\"");
+    params << QString("\"model\": \"%1\"").arg(modelName());
     params << QString("\"messages\": \"Hi dear!\"");
-    params << QString("\"promptTemplate\": \"%1\"").arg(promptTemplate());
-    params << QString("\"systemPrompt\": \"%1\"").arg(systemPrompt());
+    params << QString("\"promptTemplate\": \"%1\"").arg(escapeForJson(promptTemplate()));
+    params << QString("\"systemPrompt\": \"%1\"").arg(escapeForJson(systemPrompt()));
     params << QString("\"stream\": %1").arg(stream() ? "true" : "false");
     params << QString("\"temperature\": %1").arg(temperature());
 
@@ -35,7 +35,7 @@ QString CurlCodeGenerator::postChat() {
 
     QString json = QString("{\n  %1\n}").arg(params.join(",\n  "));
 
-    return QString("curl http://localhost:1234/v1/chat/completions \\\n"
+    return QString("curl http://localhost:%1/api/chat \\\n"
                    "  -H \"Content-Type: application/json\" \\\n"
-                   "  -d '%1'").arg(json);
+                   "  -d '%2'").arg(QString::number(port()), json);
 }

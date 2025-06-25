@@ -42,7 +42,6 @@ T.Button {
                         id: titleId
                         text: model.name
                         color: Style.Colors.textTitle
-                        anchors.verticalCenter: logoModelId.verticalCenter
                         font.pixelSize: 14
                         font.styleName: "Bold"
                         clip: true

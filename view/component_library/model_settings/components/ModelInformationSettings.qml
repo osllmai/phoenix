@@ -47,7 +47,6 @@ Item {
                     persistentSelection: true
                     placeholderTextColor: Style.Colors.textInformation
                     background: null
-                    textFormat: TextEdit.RichText
                     onHeightChanged: {
                         if(promptTemplateBox.height < 70 && promptTemplateTextBox.text !== ""){
                             promptTemplateBox.height += 10;

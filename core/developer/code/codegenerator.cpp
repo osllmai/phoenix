@@ -3,9 +3,10 @@
 CodeGenerator::CodeGenerator(QObject* parent)
     : QObject(parent),
     m_modelName("Openai/gpt-4o"),
+    m_port(8080),
     m_stream(true),
-    m_promptTemplate("### Human:\n%1\n\n### Assistant:\n"),
-    m_systemPrompt("### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n"),
+    m_promptTemplate(QStringLiteral("### Human:\n%1\n\n### Assistant:\n")),
+    m_systemPrompt(QStringLiteral("### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n")),
     m_temperature(0.8),
     m_topK(650),
     m_topP(1.5),
@@ -29,6 +30,7 @@ CodeGenerator::CodeGenerator(QObject* parent)
 {}
 
 CodeGenerator::CodeGenerator(const QString &modelName,
+                             const quint16 newPort,
                              const bool &stream,
                              const QString &promptTemplate,
                              const QString &systemPrompt,
@@ -54,6 +56,7 @@ CodeGenerator::CodeGenerator(const QString &modelName,
                              QObject *parent)
     : QObject(parent),
     m_modelName(modelName),
+    m_port(newPort),
     m_stream(stream),
     m_promptTemplate(promptTemplate),
     m_systemPrompt(systemPrompt),
@@ -94,6 +97,15 @@ void CodeGenerator::setModelName(const QString &newModelName){
     emit modelNameChanged();
 }
 
+quint16 CodeGenerator::port() const{return m_port;}
+void CodeGenerator::setPort(quint16 newPort){
+    if (m_port == newPort)
+        return;
+    m_port = newPort;
+    emit textChanged();
+    emit portChanged();
+}
+
 bool CodeGenerator::stream() const{return m_stream;}
 void CodeGenerator::setStream(bool newStream){
     if (m_stream == newStream)
@@ -103,7 +115,7 @@ void CodeGenerator::setStream(bool newStream){
     emit textChanged();
 }
 
-QString CodeGenerator::promptTemplate() const{return m_promptTemplate;}
+QString CodeGenerator::promptTemplate() {return escapeForJson(m_promptTemplate);}
 void CodeGenerator::setPromptTemplate(const QString &newPromptTemplate){
     if (m_promptTemplate == newPromptTemplate)
         return;
@@ -112,7 +124,7 @@ void CodeGenerator::setPromptTemplate(const QString &newPromptTemplate){
     emit textChanged();
 }
 
-QString CodeGenerator::systemPrompt() const{return m_systemPrompt;}
+QString CodeGenerator::systemPrompt() {return escapeForJson(m_systemPrompt);}
 void CodeGenerator::setSystemPrompt(const QString &newSystemPrompt){
     if (m_systemPrompt == newSystemPrompt)
         return;
@@ -299,3 +311,13 @@ QString CodeGenerator::getModels(){
 QString CodeGenerator::postChat(){
     return "POST /v1/chat/completions\n";
 }
+
+QString CodeGenerator::escapeForJson(const QString& input) {
+    QString escaped = input;
+    escaped.replace("\\", "\\\\");
+    escaped.replace("\"", "\\\"");
+    escaped.replace("\n", "\\n");
+    escaped.replace("\r", "\\r");
+    return escaped;
+}
+

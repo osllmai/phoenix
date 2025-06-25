@@ -3,12 +3,14 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QStringLiteral>
 
 class CodeGenerator : public QObject {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString text READ text NOTIFY textChanged FINAL)
     Q_PROPERTY(QString modelName READ modelName WRITE setModelName NOTIFY modelNameChanged FINAL)
+    Q_PROPERTY(quint16 port READ port WRITE setPort NOTIFY portChanged FINAL)
 
     Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
@@ -37,6 +39,7 @@ class CodeGenerator : public QObject {
 public:
     explicit CodeGenerator(QObject* parent = nullptr);
     explicit CodeGenerator(const QString &modelName,
+                           const quint16 newPort,
                            const bool &stream,
                            const QString &promptTemplate,
                            const QString &systemPrompt,
@@ -66,15 +69,17 @@ public:
     virtual QString getModels();
     virtual QString postChat();
 
+    QString escapeForJson(const QString& input);
+
     QString text();
 
     bool stream() const;
     void setStream(bool newStream);
 
-    QString promptTemplate() const;
+    QString promptTemplate();
     void setPromptTemplate(const QString &newPromptTemplate);
 
-    QString systemPrompt() const;
+    QString systemPrompt();
     void setSystemPrompt(const QString &newSystemPrompt);
 
     double temperature() const;
@@ -137,6 +142,9 @@ public:
     QString modelName() const;
     void setModelName(const QString &newModelName);
 
+    quint16 port() const;
+    void setPort(quint16 newPort);
+
 signals:
     void textChanged();
     void streamChanged();
@@ -162,10 +170,12 @@ signals:
     void contextLengthVisibleChanged();
     void numberOfGPULayersVisibleChanged();
     void modelNameChanged();
+    void portChanged();
 
 private:
     QString m_text;
     QString m_modelName;
+    quint16 m_port;
 
     bool m_stream;
     QString m_promptTemplate;

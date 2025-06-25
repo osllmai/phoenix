@@ -59,11 +59,11 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
 
         OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
         if(offlineModel != nullptr){
-            getCurrentProgramLanguage()->getCodeGenerator()->setModelName("localModel/"+offlineModel.modelName);
+            getCurrentProgramLanguage()->getCodeGenerator()->setModelName("localModel/"+offlineModel->modelName());
         }
         OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
         if(onlineModel != nullptr){
-            getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel.company.name + "/" + onlineModel.modelName);
+            getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel->company()->name() + "/" + onlineModel->modelName());
         }
     }
 }
@@ -126,7 +126,9 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
     if (newCurrentProgramLanguage) {
         CodeGenerator* newGenerator = nullptr;
 
-        bool modelName = previousGenerator ? previousGenerator->modelName() : "Openai/gpt-4o";
+        QString modelName = previousGenerator ? previousGenerator->modelName() : "Openai/gpt-4o";
+        quint16 port = previousGenerator ? previousGenerator->port() : 8080;
+
         bool stream = previousGenerator ? previousGenerator->stream() : true;
         QString promptTemplate = previousGenerator ? previousGenerator->promptTemplate() : "";
         QString systemPrompt = previousGenerator ? previousGenerator->systemPrompt() : "";
@@ -152,7 +154,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
 
         switch (newCurrentProgramLanguage->id()) {
         case 0:
-            newGenerator = new CurlCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new CurlCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
                                                  topK, topP, minP, repeatPenalty, promptBatchSize,
                                                  maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                 topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -160,7 +162,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                 contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 1:
-            newGenerator = new PythonRequestsCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new PythonRequestsCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
                                                            topK, topP, minP, repeatPenalty, promptBatchSize,
                                                            maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                            topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -168,7 +170,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                            contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 2:
-            newGenerator = new NodeJsAxiosCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new NodeJsAxiosCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
                                                         topK, topP, minP, repeatPenalty, promptBatchSize,
                                                         maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                         topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -176,7 +178,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                         contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 3:
-            newGenerator = new JavascriptFetchCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new JavascriptFetchCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
                                                             topK, topP, minP, repeatPenalty, promptBatchSize,
                                                             maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                             topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -288,6 +290,7 @@ void CodeDeveloperList::setPortAPI(quint16 newPortAPI){
     if (m_portAPI == newPortAPI)
         return;
     m_portAPI = newPortAPI;
+    getCurrentProgramLanguage()->getCodeGenerator()->setPort(m_portAPI);
     emit portAPIChanged();
 }
 

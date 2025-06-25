@@ -31,15 +31,17 @@ public:
                            const int &contextLength, const int &numberOfGPULayers, QObject *parent = nullptr);
     virtual ~ModelSettings();
 
+    QString escapeForJson(const QString& input);
+
     const int id() const;
 
     const bool stream() const;
     void setStream(const bool stream);
 
-    const QString promptTemplate() const;
+    const QString promptTemplate();
     void setPromptTemplate(const QString promptTemplate);
 
-    const QString systemPrompt() const;
+    const QString systemPrompt();
     void setSystemPrompt(const QString systemPrompt);
 
     const double temperature() const;

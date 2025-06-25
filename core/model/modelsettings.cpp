@@ -34,7 +34,7 @@ void ModelSettings::setStream(const bool stream){
     emit streamChanged();
 }
 
-const QString ModelSettings::promptTemplate() const{return m_promptTemplate;}
+const QString ModelSettings::promptTemplate() {return escapeForJson(m_promptTemplate);}
 void ModelSettings::setPromptTemplate(const QString promptTemplate){
     if(m_promptTemplate == promptTemplate)
         return;
@@ -42,7 +42,7 @@ void ModelSettings::setPromptTemplate(const QString promptTemplate){
     emit promptTemplateChanged();
 }
 
-const QString ModelSettings::systemPrompt() const{return m_systemPrompt;}
+const QString ModelSettings::systemPrompt() {return escapeForJson(m_systemPrompt);}
 void ModelSettings::setSystemPrompt(const QString systemPrompt){
     if(m_systemPrompt == systemPrompt)
         return;
@@ -128,4 +128,13 @@ void ModelSettings::setNumberOfGPULayers(const int numberOfGPULayers){
         return;
     m_numberOfGPULayers = numberOfGPULayers;
     emit numberOfGPULayersChanged();
+}
+
+QString ModelSettings::escapeForJson(const QString& input) {
+    QString escaped = input;
+    escaped.replace("\\", "\\\\");
+    escaped.replace("\"", "\\\"");
+    escaped.replace("\n", "\\n");
+    escaped.replace("\r", "\\r");
+    return escaped;
 }

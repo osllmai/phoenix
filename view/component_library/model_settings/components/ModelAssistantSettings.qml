@@ -35,7 +35,6 @@ Item {
                  persistentSelection: true
                  placeholderTextColor: Style.Colors.textInformation
                  background: null
-                 textFormat: TextEdit.RichText
                  onHeightChanged: {
                      if(instructionTextBox.height < 70 && instructionTextBox.text !== ""){
                          instructionsBox.height += 10;
