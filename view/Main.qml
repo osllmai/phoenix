@@ -10,7 +10,7 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
-    // flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint
 
     property string theme: "Defualt"
     onThemeChanged: {
@@ -133,14 +133,14 @@ ApplicationWindow {
             anchors.fill: parent
             anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
 
-            // AppHeader{
-            //     id: appHeader
-            // }
+            AppHeader{
+                id: appHeader
+            }
 
             AppBody {
                 id: appBodyId
                 width: parent.width
-                height: parent.height - appFooter.height /*- appHeader.height*/
+                height: parent.height - appFooter.height - appHeader.height
                 clip: true
             }
 

@@ -50,8 +50,3 @@ QString JavascriptFetchCodeGenerator::postChat() {
 .catch(error => console.error("Error:", error));)")
         .arg(QString::number(port()), json);
 }
-
-
-QString JavascriptFetchCodeGenerator::postChat() {
-
-}

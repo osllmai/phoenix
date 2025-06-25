@@ -132,9 +132,13 @@ void ModelSettings::setNumberOfGPULayers(const int numberOfGPULayers){
 
 QString ModelSettings::escapeForJson(const QString& input) {
     QString escaped = input;
-    escaped.replace("\\", "\\\\");
-    escaped.replace("\"", "\\\"");
+    escaped.replace("\\n", "__TEMP_NEWLINE__");
+    escaped.replace("\\r", "__TEMP_RETURN__");
+
     escaped.replace("\n", "\\n");
     escaped.replace("\r", "\\r");
+
+    escaped.replace("__TEMP_NEWLINE__", "\\n");
+    escaped.replace("__TEMP_RETURN__", "\\r");
     return escaped;
 }

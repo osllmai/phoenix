@@ -59,13 +59,6 @@ T.Button {
                 TextArea {
                     id: textId
                     color: Style.Colors.textTitle
-
-                    onColorChanged: {
-                        // backgroundId.resetChatViewTextProcessor()
-
-                        console.log("Theme Changed to: " + theme)
-                    }
-
                     selectionColor: "blue"
                     selectedTextColor: "white"
                     width: parent.width - logoModelId.width
@@ -96,6 +89,7 @@ T.Button {
                 }
 
                 Row {
+                    id: dateAndIconId
                     width: dateId.width + copyId.width
                     height: Math.max(dateId.height, copyId.height)
                     anchors.left: parent.left
