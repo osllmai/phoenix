@@ -2,6 +2,7 @@
   {
     "order": "m",
     "md5sum": "15dcb4d7ea6de322756449c11a0b7545",
+    "modelName": "mpt-7b-chat-newbpe-q4_0",
     "name": "MPT Chat new",
     "filename": "mpt-7b-chat-newbpe-q4_0.gguf",
     "filesize": 3.91,
@@ -20,6 +21,7 @@
   {
     "order": "n",
     "md5sum": "ab5d8e8a2f79365ea803c1f1d0aa749d",
+    "modelName": "mpt-7b-chat.gguf4.Q4_0",
     "name": "MPT Chat",
     "filename": "mpt-7b-chat.gguf4.Q4_0.gguf",
     "filesize": 3.79,

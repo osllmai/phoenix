@@ -2,6 +2,7 @@
   {
     "order": "a",
     "md5sum": "c87ad09e1e4c8f9c35a5fcef52b6f1c9",
+    "modelName": "Meta-Llama-3-8B-Instruct.Q4_0",
     "name": "Llama 3 8B Instruct",
     "filename": "Meta-Llama-3-8B-Instruct.Q4_0.gguf",
     "filesize": 4.66,
@@ -19,6 +20,7 @@
   {
     "order": "d",
     "md5sum": "8a9c75bcd8a66b7693f158ec96924eeb",
+    "modelName": "Meta-Llama-3.1-8B-Instruct-128k-Q4_0",
     "name": "Llama 3.1 8B Instruct 128k",
     "filename": "Meta-Llama-3.1-8B-Instruct-128k-Q4_0.gguf",
     "filesize": 4.66,
@@ -36,6 +38,7 @@
   {
     "order": "g",
     "md5sum": "00c8593ba57f5240f59662367b3ed4a5",
+    "modelName": "orca-2-7b.Q4_0",
     "name": "Orca 2 (Medium)",
     "filename": "orca-2-7b.Q4_0.gguf",
     "filesize": 3.82,
@@ -52,6 +55,7 @@
   {
     "order": "h",
     "md5sum": "3c0d63c4689b9af7baa82469a6f51a19",
+    "modelName": "orca-2-13b.Q4_0",
     "name": "Orca 2 (Full)",
     "filename": "orca-2-13b.Q4_0.gguf",
     "filesize": 7.36,
@@ -68,6 +72,7 @@
   {
     "order": "i",
     "md5sum": "5aff90007499bce5c64b1c0760c0b186",
+    "modelName": "wizardlm-13b-v1.2.Q4_0",
     "name": "Wizard v1.2",
     "filename": "wizardlm-13b-v1.2.Q4_0.gguf",
     "filesize": 7.36,
@@ -84,6 +89,7 @@
   {
     "order": "k",
     "md5sum": "3d12810391d04d1153b692626c0c6e16",
+    "modelName": "nous-hermes-llama2-13b.Q4_0",
     "name": "Hermes",
     "filename": "nous-hermes-llama2-13b.Q4_0.gguf",
     "filesize": 7.36,
@@ -101,6 +107,7 @@
   {
     "order": "l",
     "md5sum": "40388eb2f8d16bb5d08c96fdfaac6b2c",
+    "modelName": "gpt4all-13b-snoozy-q4_0",
     "name": "Snoozy",
     "filename": "gpt4all-13b-snoozy-q4_0.gguf",
     "filesize": 7.36,
@@ -117,6 +124,7 @@
   {
     "order": "p",
     "md5sum": "0e769317b90ac30d6e09486d61fefa26",
+    "modelName": "orca-mini-3b-gguf2-q4_0",
     "name": "Mini Orca (Small)",
     "filename": "orca-mini-3b-gguf2-q4_0.gguf",
     "filesize": 1.97,
@@ -135,6 +143,7 @@
     "order": "s",
     "md5sum": "e973dd26f0ffa6e46783feaea8f08c83",
     "disableGUI": true,
+    "modelName": "rift-coder-v0-7b-q4_0",
     "name": "Rift coder",
     "filename": "rift-coder-v0-7b-q4_0.gguf",
     "filesize": 3.82,

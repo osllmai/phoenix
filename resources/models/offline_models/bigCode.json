@@ -3,6 +3,7 @@
     "order": "r",
     "md5sum": "70841751ccd95526d3dcfa829e11cd4c",
     "disableGUI": true,
+    "modelName": "starcoder-newbpe-q4_0",
     "name": "Starcoder",
     "filename": "starcoder-newbpe-q4_0.gguf",
     "filesize": 8.98,

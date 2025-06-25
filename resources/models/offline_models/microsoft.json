@@ -2,6 +2,7 @@
   {
     "order": "o",
     "md5sum": "f8347badde9bfc2efbe89124d78ddaf5",
+    "modelName": "Phi-3-mini-4k-instruct.Q4_0",
     "name": "Phi-3 Mini Instruct",
     "filename": "Phi-3-mini-4k-instruct.Q4_0.gguf",
     "filesize": 2.17,

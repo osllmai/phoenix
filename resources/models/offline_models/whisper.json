@@ -2,6 +2,7 @@
   {
     "order": "a",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base",
     "filename": "ggml-base.bin",
     "filesize": 0.14,
@@ -20,6 +21,7 @@
   {
     "order": "b",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base q5_1",
     "filename": "ggml-base-q5_1.bin",
     "filesize": 0.05,
@@ -38,6 +40,7 @@
   {
     "order": "c",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base q8_0",
     "filename": "ggml-base-q8_0.bin",
     "filesize": 0.07,
@@ -56,6 +59,7 @@
   {
     "order": "d",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base En",
     "filename": "ggml-base.en.bin",
     "filesize": 0.14,
@@ -74,6 +78,7 @@
   {
     "order": "e",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base En q5_1",
     "filename": "ggml-base.en-q5_1.bin",
     "filesize": 0.05,
@@ -92,6 +97,7 @@
   {
     "order": "f",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Base En q8_0",
     "filename": "ggml-base.en-q8_0.bin",
     "filesize": 0.07,
@@ -110,6 +116,7 @@
   {
     "order": "g",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Medium",
     "filename": "ggml-medium.bin",
     "filesize": 1.42,
@@ -128,6 +135,7 @@
   {
     "order": "h",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Medium q5_0",
     "filename": "ggml-medium-q5_0.bin",
     "filesize": 0.54,
@@ -146,6 +154,7 @@
   {
     "order": "i",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Medium q8_0",
     "filename": "ggml-medium-q8_0.bin",
     "filesize": 1,
@@ -164,6 +173,7 @@
   {
     "order": "j",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Medium En q5_0",
     "filename": "ggml-medium.en-q5_0.bin",
     "filesize": 0.51,
@@ -182,6 +192,7 @@
   {
     "order": "k",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Medium En q8_0",
     "filename": "ggml-medium.en-q8_0.bin",
     "filesize": 0.83,
@@ -200,6 +211,7 @@
   {
     "order": "l",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v1",
     "filename": "ggml-large-v1.bin",
     "filesize": 2.95,
@@ -218,6 +230,7 @@
   {
     "order": "m",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v2",
     "filename": "ggml-large-v2.bin",
     "filesize": 2.97,
@@ -236,6 +249,7 @@
   {
     "order": "n",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v2 q5_0",
     "filename": "ggml-large-v2-q5_0.bin",
     "filesize": 1.18,
@@ -254,6 +268,7 @@
   {
     "order": "o",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v2 q8_0",
     "filename": "ggml-large-v2-q8_0.bin",
     "filesize": 1.98,
@@ -272,6 +287,7 @@
   {
     "order": "p",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v3",
     "filename": "ggml-large-v3.bin",
     "filesize": 2.98,
@@ -290,6 +306,7 @@
   {
     "order": "q",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v3 Turbo",
     "filename": "ggml-large-v3-turbo.bin",
     "filesize": 2.48,
@@ -308,6 +325,7 @@
   {
     "order": "r",
     "md5sum": "",
+    "modelName": "SBert",
     "name": "Whisper Large v3 Turbo q5_0",
     "filename": "ggml-large-v3-turbo-q5_0.bin",
     "filesize": 1.54,
@@ -326,6 +344,7 @@
   {
     "order": "s",
     "md5sum": "",
+    "modelName": "ggml-large-v3-turbo-q8_0",
     "name": "Whisper Large v3 Turbo q8_0",
     "filename": "ggml-large-v3-turbo-q8_0.bin",
     "filesize": 2.48,
