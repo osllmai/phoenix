@@ -44,7 +44,28 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
 
     //create socket
    appSocket = QCoreApplication::instance();
+}
 
+void CodeDeveloperList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
+    setModelId(id);
+    setModelText(text);
+    setModelIcon(icon);
+    setModelPromptTemplate(promptTemplate);
+    setModelSystemPrompt(systemPrompt);
+    if(id == -1)
+        setModelSelect(false);
+    else{
+        setModelSelect(true);
+
+        OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
+        if(offlineModel != nullptr){
+            getCurrentProgramLanguage()->getCodeGenerator()->setModelName("localModel/"+offlineModel.modelName);
+        }
+        OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+        if(onlineModel != nullptr){
+            getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel.company.name + "/" + onlineModel.modelName);
+        }
+    }
 }
 
 void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt)
@@ -105,6 +126,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
     if (newCurrentProgramLanguage) {
         CodeGenerator* newGenerator = nullptr;
 
+        bool modelName = previousGenerator ? previousGenerator->modelName() : "Openai/gpt-4o";
         bool stream = previousGenerator ? previousGenerator->stream() : true;
         QString promptTemplate = previousGenerator ? previousGenerator->promptTemplate() : "";
         QString systemPrompt = previousGenerator ? previousGenerator->systemPrompt() : "";
@@ -130,7 +152,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
 
         switch (newCurrentProgramLanguage->id()) {
         case 0:
-            newGenerator = new CurlCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new CurlCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
                                                  topK, topP, minP, repeatPenalty, promptBatchSize,
                                                  maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                 topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -138,7 +160,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                 contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 1:
-            newGenerator = new PythonRequestsCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new PythonRequestsCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
                                                            topK, topP, minP, repeatPenalty, promptBatchSize,
                                                            maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                            topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -146,7 +168,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                            contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 2:
-            newGenerator = new NodeJsAxiosCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new NodeJsAxiosCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
                                                         topK, topP, minP, repeatPenalty, promptBatchSize,
                                                         maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                         topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -154,7 +176,7 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
                                                         contextLengthVisible, numberOfGPULayersVisible);
             break;
         case 3:
-            newGenerator = new JavascriptFetchCodeGenerator(stream, promptTemplate, systemPrompt, temperature,
+            newGenerator = new JavascriptFetchCodeGenerator(modelName, stream, promptTemplate, systemPrompt, temperature,
                                                             topK, topP, minP, repeatPenalty, promptBatchSize,
                                                             maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
                                                             topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
@@ -326,4 +348,52 @@ void CodeDeveloperList::setCurrentLanguage(int newId) {
         }
     }
     qCWarning(logDeveloper) << "Language ID not found:" << newId;
+}
+
+int CodeDeveloperList::modelId() const{return m_modelId;}
+void CodeDeveloperList::setModelId(int newModelId){
+    if (m_modelId == newModelId)
+        return;
+    m_modelId = newModelId;
+    emit modelIdChanged();
+}
+
+QString CodeDeveloperList::modelText() const{return m_modelText;}
+void CodeDeveloperList::setModelText(const QString &newModelText){
+    if (m_modelText == newModelText)
+        return;
+    m_modelText = newModelText;
+    emit modelTextChanged();
+}
+
+QString CodeDeveloperList::modelIcon() const{return m_modelIcon;}
+void CodeDeveloperList::setModelIcon(const QString &newModelIcon){
+    if (m_modelIcon == newModelIcon)
+        return;
+    m_modelIcon = newModelIcon;
+    emit modelIconChanged();
+}
+
+QString CodeDeveloperList::modelSystemPrompt() const{ return m_modelSystemPrompt; }
+void CodeDeveloperList::setModelSystemPrompt(const QString &newModelSystemPrompt){
+    if (m_modelSystemPrompt == newModelSystemPrompt)
+        return;
+    m_modelSystemPrompt = newModelSystemPrompt;
+    emit modelSystemPromptChanged();
+}
+
+QString CodeDeveloperList::modelPromptTemplate() const{ return m_modelPromptTemplate; }
+void CodeDeveloperList::setModelPromptTemplate(const QString &newModelPromptTemplate){
+    if (m_modelPromptTemplate == newModelPromptTemplate)
+        return;
+    m_modelPromptTemplate = newModelPromptTemplate;
+    emit modelPromptTemplateChanged();
+}
+
+bool CodeDeveloperList::modelSelect() const{return m_modelSelect;}
+void CodeDeveloperList::setModelSelect(bool newModelSelect){
+    if (m_modelSelect == newModelSelect)
+        return;
+    m_modelSelect = newModelSelect;
+    emit modelSelectChanged();
 }

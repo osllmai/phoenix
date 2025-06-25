@@ -8,16 +8,14 @@ QString CurlCodeGenerator::postChat() {
     QStringList params;
 
     params << QString("\"model\": \"deepseek-r1-distill-qwen-7b\"");
-    params << QString("\"messages\": ["
-                      "{ \"role\": \"system\", \"content\": \"%1\" },"
-                      "{ \"role\": \"user\", \"content\": \"What day is it today?\" }"
-                      "]").arg(systemPrompt());
-    params << QString("\"temperature\": %1").arg(temperature());
-    params << QString("\"max_tokens\": %1").arg(maxTokens());
+    params << QString("\"messages\": \"Hi dear!\"");
+    params << QString("\"promptTemplate\": \"%1\"").arg(promptTemplate());
+    params << QString("\"systemPrompt\": \"%1\"").arg(systemPrompt());
     params << QString("\"stream\": %1").arg(stream() ? "true" : "false");
+    params << QString("\"temperature\": %1").arg(temperature());
 
-    qInfo()<<"***************m_repeatPenaltyTokensVisible"<<repeatPenaltyTokensVisible();
-
+    if (maxTokensVisible())
+        params << QString("\"maxTokens\": %1").arg(maxTokens());
     if (topKVisible())
         params << QString("\"top_k\": %1").arg(topK());
     if (topPVisible())

@@ -28,37 +28,10 @@ Item {
             font.pointSize: 10
         }
 
-        MyIcon {
+        MyCopyButton{
             id: copyId
-            myIcon: copyId.selectIcon()
-            iconType: Style.RoleEnum.IconType.Primary
-            width: 26; height: 26
+            myText: textId
             anchors.verticalCenter: parent.verticalCenter
-            Connections{
-                target: copyId
-                function onClicked(){
-                    textId.selectAll()
-                    textId.copy()
-                    textId.deselect()
-                    root.checkCopy= true
-                    successTimer.start();
-                }
-            }
-
-            Timer {
-                id: successTimer
-                interval: 2000
-                repeat: false
-                onTriggered: root.checkCopy = false
-            }
-
-            function selectIcon(){
-                if(root.checkCopy === false){
-                    return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
-                }else{
-                    return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"
-                }
-            }
         }
     }
 }

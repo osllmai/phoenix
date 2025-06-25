@@ -2,6 +2,7 @@
 
 CodeGenerator::CodeGenerator(QObject* parent)
     : QObject(parent),
+    m_modelName("Openai/gpt-4o"),
     m_stream(true),
     m_promptTemplate("### Human:\n%1\n\n### Assistant:\n"),
     m_systemPrompt("### System:\nYou are an AI assistant who gives a quality response to whatever humans ask of you.\n\n"),
@@ -27,7 +28,8 @@ CodeGenerator::CodeGenerator(QObject* parent)
     m_numberOfGPULayersVisible(false)
 {}
 
-CodeGenerator::CodeGenerator(const bool &stream,
+CodeGenerator::CodeGenerator(const QString &modelName,
+                             const bool &stream,
                              const QString &promptTemplate,
                              const QString &systemPrompt,
                              const double &temperature,
@@ -51,6 +53,7 @@ CodeGenerator::CodeGenerator(const bool &stream,
                              const bool &numberOfGPULayersVisible,
                              QObject *parent)
     : QObject(parent),
+    m_modelName(modelName),
     m_stream(stream),
     m_promptTemplate(promptTemplate),
     m_systemPrompt(systemPrompt),
@@ -80,6 +83,15 @@ CodeGenerator::~CodeGenerator() {}
 
 QString CodeGenerator::text(){
     return postChat();
+}
+
+QString CodeGenerator::modelName() const{return m_modelName;}
+void CodeGenerator::setModelName(const QString &newModelName){
+    if (m_modelName == newModelName)
+        return;
+    m_modelName = newModelName;
+    emit textChanged();
+    emit modelNameChanged();
 }
 
 bool CodeGenerator::stream() const{return m_stream;}
@@ -260,7 +272,6 @@ bool CodeGenerator::repeatPenaltyTokensVisible() const{ return m_repeatPenaltyTo
 void CodeGenerator::setRepeatPenaltyTokensVisible(bool newRepeatPenaltyTokensVisible){
     if (m_repeatPenaltyTokensVisible == newRepeatPenaltyTokensVisible)
         return;
-    qInfo()<<"*****************"<<m_repeatPenaltyTokensVisible;
     m_repeatPenaltyTokensVisible = newRepeatPenaltyTokensVisible;
     emit repeatPenaltyTokensVisibleChanged();
 }

@@ -8,6 +8,7 @@ class CodeGenerator : public QObject {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString text READ text NOTIFY textChanged FINAL)
+    Q_PROPERTY(QString modelName READ modelName WRITE setModelName NOTIFY modelNameChanged FINAL)
 
     Q_PROPERTY(bool stream READ stream WRITE setStream NOTIFY streamChanged FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate WRITE setPromptTemplate NOTIFY promptTemplateChanged FINAL)
@@ -35,7 +36,8 @@ class CodeGenerator : public QObject {
 
 public:
     explicit CodeGenerator(QObject* parent = nullptr);
-    explicit CodeGenerator(const bool &stream,
+    explicit CodeGenerator(const QString &modelName,
+                           const bool &stream,
                            const QString &promptTemplate,
                            const QString &systemPrompt,
                            const double &temperature,
@@ -132,6 +134,9 @@ public:
     bool numberOfGPULayersVisible() const;
     void setNumberOfGPULayersVisible(bool newNumberOfGPULayersVisible);
 
+    QString modelName() const;
+    void setModelName(const QString &newModelName);
+
 signals:
     void textChanged();
     void streamChanged();
@@ -156,9 +161,11 @@ signals:
     void repeatPenaltyTokensVisibleChanged();
     void contextLengthVisibleChanged();
     void numberOfGPULayersVisibleChanged();
+    void modelNameChanged();
 
 private:
     QString m_text;
+    QString m_modelName;
 
     bool m_stream;
     QString m_promptTemplate;

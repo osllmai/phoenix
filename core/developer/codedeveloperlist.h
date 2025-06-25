@@ -76,6 +76,13 @@ class CodeDeveloperList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(ProgramLanguage *currentProgramLanguage READ getCurrentProgramLanguage WRITE setCurrentProgramLanguage NOTIFY currentProgramLanguageChanged FINAL)
 
+    Q_PROPERTY(int modelId READ modelId WRITE setModelId NOTIFY modelIdChanged FINAL)
+    Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
+    Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(QString modelPromptTemplate READ modelPromptTemplate NOTIFY modelPromptTemplateChanged FINAL)
+    Q_PROPERTY(QString modelSystemPrompt READ modelSystemPrompt NOTIFY modelSystemPromptChanged FINAL)
+    Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
+
 public:
     static CodeDeveloperList* instance(QObject* parent);
 
@@ -90,6 +97,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void setCurrentLanguage(int id);
+    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
 
     ProgramLanguage *getCurrentProgramLanguage() const;
     void setCurrentProgramLanguage(ProgramLanguage *newCurrentProgramLanguage);
@@ -106,6 +114,24 @@ public:
     bool isRunningAPI() const;
     void setIsRunningAPI(bool newIsRunningAPI);
 
+    int modelId() const;
+    void setModelId(int newModelId);
+
+    QString modelIcon() const;
+    void setModelIcon(const QString &newModelIcon);
+
+    QString modelText() const;
+    void setModelText(const QString &newModelText);
+
+    bool modelSelect() const;
+    void setModelSelect(bool newModelSelect);
+
+    QString modelPromptTemplate() const;
+    void setModelPromptTemplate(const QString &newModelPromptTemplate);
+
+    QString modelSystemPrompt() const;
+    void setModelSystemPrompt(const QString &newModelSystemPrompt);
+
 signals:
     void countChanged();
     void portSocketChanged();
@@ -113,6 +139,13 @@ signals:
     void currentProgramLanguageChanged();
     void portAPIChanged();
     void isRunningAPIChanged();
+
+    void modelIdChanged();
+    void modelIconChanged();
+    void modelTextChanged();
+    void modelSelectChanged();
+    void modelPromptTemplateChanged();
+    void modelSystemPromptChanged();
 
 private:
     explicit CodeDeveloperList(QObject* parent);
@@ -141,6 +174,13 @@ private:
     ChatServer *m_chatServer = nullptr;
     QCommandLineParser m_parserChat;
     QCoreApplication *appSocket;
+
+    int m_modelId;
+    QString m_modelIcon;
+    QString m_modelText;
+    QString m_modelPromptTemplate;
+    QString m_modelSystemPrompt;
+    bool m_modelSelect;
 };
 
 #endif // CODEDEVELOPERLIST_H

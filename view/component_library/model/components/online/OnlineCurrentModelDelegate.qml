@@ -55,6 +55,7 @@ T.Button {
             MyCopyButton{
                 id: copyId
                 myText: TextArea{text: model.company.name + "/" + model.modelName;}
+                anchors.verticalCenter: logoModelId.verticalCenter
             }
             MyButton{
                 id: rejectChatButton
