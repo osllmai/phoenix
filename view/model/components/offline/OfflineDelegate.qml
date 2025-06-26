@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Qt5Compat.GraphicalEffects
 import QtQuick.Templates 2.1 as T
+import QtQuick.Layouts
 import '../../../component_library/style' as Style
 import "../../../component_library/button"
 
@@ -37,6 +38,7 @@ T.Button {
                 Row{
                     width: parent.width - logoModelId.width - likeIconId.width
                     anchors.verticalCenter: logoModelId.verticalCenter
+                    clip: true
                     Label {
                         id: titleId
                         text: model.name
@@ -50,6 +52,7 @@ T.Button {
                         id: copyId
                         myText: TextArea{text: "localModel/"+model.modelName;}
                         anchors.verticalCenter: titleId.verticalCenter
+                        clip: true
                     }
                 }
 

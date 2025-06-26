@@ -10,7 +10,8 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
-    flags: Qt.FramelessWindowHint
+    flags: Qt.Window | Qt.FramelessWindowHint
+
 
     property string theme: "Defualt"
     onThemeChanged: {

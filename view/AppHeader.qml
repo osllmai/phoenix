@@ -10,35 +10,48 @@ Item {
     width: parent.width
     height: 40
 
-    // Rectangle {
-    //     anchors.fill: parent
-    //     color: Style.Colors.background
-    // }
+    Rectangle {
+        anchors.fill: parent
+        color: Style.Colors.background
+    }
 
-    // Row {
-    //     anchors.verticalCenter: parent.verticalCenter
-    //     anchors.right: parent.right
-    //     spacing: 10
-    //     padding: 10
+    Row {
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        spacing: 10
+        padding: 10
 
-    //     Button {
-    //         text: "-"
-    //         onClicked: window.showMinimized()
-    //     }
-    //     Button {
-    //         text: "□"
-    //         onClicked: {
-    //             window.visibility = window.visibility === Window.Maximized ? Window.Windowed : Window.Windowed
-    //         }
-    //     }
-    //     Button {
-    //         text: "X"
-    //         onClicked: Qt.quit()
-    //     }
-    // }
+        Button {
+            text: "-"
+            onClicked: window.showMinimized()
+        }
+        Button {
+            text: "□"
+            onClicked: {
+                window.showFullScreen()
+            }
+        }
+        Button {
+            text: "X"
+            onClicked: Qt.quit()
+        }
+    }
 
     // MouseArea {
     //     anchors.fill: parent
-    //     drag.target: window
+    //     property var clickPos: Qt.point(0, 0)
+
+    //     onPressed: function(mouse) {
+    //         clickPos = Qt.point(mouse.x, mouse.y)
+    //     }
+
+    //     onPositionChanged: function(mouse) {
+    //         var dx = mouse.x - clickPos.x
+    //         var dy = mouse.y - clickPos.y
+    //         window.x += dx
+    //         window.y += dy
+    //     }
     // }
+
+
 }
