@@ -134,7 +134,7 @@ Dialog {
                 MouseArea{
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked:{comboBoxId.popup.close()}
+                    onClicked:{settingsDialogId.close()}
                 }
             }
         }

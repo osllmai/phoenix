@@ -6,7 +6,9 @@ import "../../component_library/model_settings"
 Drawer{
     id: drawerId
     width: 320
-    height: parent.height
+    height: parent.height - 40
+    y: 40
+
     interactive: true
     edge: Qt.RightEdge
 

@@ -10,8 +10,24 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
-    flags: Qt.Window | Qt.FramelessWindowHint
+    // flags: Qt.Window | Qt.FramelessWindowHint
+    flags: Qt.Window |
+           Qt.CustomizeWindowHint |
+           Qt.WindowMinimizeButtonHint |
+           Qt.WindowMaximizeButtonHint |
+           Qt.WindowContextHelpButtonHint
+           // Qt.WindowStaysOnTopHint |
+           // Qt.WindowTitleHint |
+           // Qt.WindowActive |
+           // Qt.WindowNoState |
+           // Qt.CustomDashLine |
+            // Qt.FramelessWindowHint
+           // Qt.ElideLeft
 
+    property int prevX: 0
+    property int prevY: 0
+    property int prevW: 0
+    property int prevH: 0
 
     property string theme: "Defualt"
     onThemeChanged: {
@@ -65,24 +81,7 @@ ApplicationWindow {
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)
         property real speechRate: value("speechRate", 0.0)
-
-        // property alias modelSpeechPath: window.modelSpeechPath
-        // property bool modelSpeechSelect: window.modelSpeechSelect
     }
-
-    // function setModelSpeech(){
-    //     speechToText.modelPath = window.modelSpeechPath
-    //     speechToText.modelSelect = window.modelSpeechSelect
-    // }
-
-    // property string modelSpeechPath: ""
-    // property bool modelSpeechSelect: false
-    // onModelSpeechPathChanged: {
-    //     window.setModelSpeech()
-    // }
-    // onModelSpeechSelectChanged: {
-    //     window.setModelSpeech()
-    // }
 
     TextToSpeech {
         id: textToSpeechId
@@ -120,46 +119,124 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    Column{
         anchors.fill: parent
         anchors.margins: 0
-
-        AppMenu {
-            id: appMenuDesktopId
-            visible: window.isDesktopSize
-            clip: true
+        AppHeader{
+            id: appHeader
         }
+        Item {
+            width: parent.width
+            height: parent.height - appHeader.height
 
-        Column {
-            anchors.fill: parent
-            anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
-
-            AppHeader{
-                id: appHeader
-            }
-
-            AppBody {
-                id: appBodyId
-                width: parent.width
-                height: parent.height - appFooter.height - appHeader.height
+            AppMenu {
+                id: appMenuDesktopId
+                visible: window.isDesktopSize
                 clip: true
             }
 
-            AppFooter {
-                id: appFooter
+            Column {
+                anchors.fill: parent
+                anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
+
+                AppBody {
+                    id: appBodyId
+                    width: parent.width
+                    height: parent.height - appFooter.height
+                    clip: true
+                }
+
+                AppFooter {
+                    id: appFooter
+                }
+            }
+            AppMenuDrawer{
+                id: appMenuApplicationId
             }
         }
     }
 
-    Rectangle {
-        id: line
-        width: parent.width
-        height: 1
-        color: Style.Colors.boxBorder
-        anchors.top: parent.top
-    }
+    // MouseArea {
+    //     id: tapEdge
+    //     z: 10
+    //     anchors.top: parent.top
+    //     anchors.left: parent.left
+    //     anchors.right: parent.right
+    //     height: 6
+    //     cursorShape: Qt.SizeVerCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.TopEdge)
+    // }
 
-    AppMenuDrawer{
-        id: appMenuApplicationId
-    }
+    // MouseArea {
+    //     id: bottomEdge
+    //     z: 10
+    //     anchors.bottom: parent.bottom
+    //     anchors.left: parent.left
+    //     anchors.right: parent.right
+    //     height: 6
+    //     cursorShape: Qt.SizeVerCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.BottomEdge)
+    // }
+
+    // MouseArea {
+    //     id: leftEdge
+    //     z: 10
+    //     anchors.left: parent.left
+    //     anchors.top: parent.top
+    //     anchors.bottom: parent.bottom
+    //     width: 6
+    //     cursorShape: Qt.SizeHorCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.LeftEdge)
+    // }
+
+    // MouseArea {
+    //     id: rightEdge
+    //     z: 10
+    //     anchors.right: parent.right
+    //     anchors.top: parent.top
+    //     anchors.bottom: parent.bottom
+    //     width: 6
+    //     cursorShape: Qt.SizeHorCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.RightEdge)
+    // }
+
+    // MouseArea {
+    //     id: topRightCorner
+    //     z: 100
+    //     width: 12; height: 12
+    //     anchors.top: parent.top
+    //     anchors.left: parent.left
+    //     cursorShape: Qt.SizeFDiagCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.BottomRightCorner)
+    // }
+
+    // MouseArea {
+    //     id: topLeftCorner
+    //     z: 100
+    //     width: 12; height: 12
+    //     anchors.top: parent.top
+    //     anchors.right: parent.right
+    //     cursorShape: Qt.SizeBDiagCursor
+    //     onPressed: mouse =>{ window.startSystemResize(Qt.RightEdge); window.startSystemResize(Qt.TopEdge)}
+    // }
+
+    // MouseArea {
+    //     id: bottomLeftCorner
+    //     z: 100
+    //     width: 12; height: 12
+    //     anchors.bottom: parent.bottom
+    //     anchors.left: parent.left
+    //     cursorShape: Qt.SizeBDiagCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.TopLeftCorner)
+    // }
+
+    // MouseArea {
+    //     id: bottomRightCorner
+    //     z: 100
+    //     width: 12; height: 12
+    //     anchors.bottom: parent.bottom
+    //     anchors.right: parent.right
+    //     cursorShape: Qt.SizeFDiagCursor
+    //     onPressed: mouse => window.startSystemResize(Qt.TopRightCorner)
+    // }
 }

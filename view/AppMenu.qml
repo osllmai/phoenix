@@ -11,6 +11,8 @@ Rectangle{
 
     color: Style.Colors.menu
 
+    property bool isDrawer: false
+
     Item{
         id: appInfoId
         anchors.left: parent.left
@@ -65,6 +67,9 @@ Rectangle{
             Connections {
                 target: homeItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 0){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 0
                 }
             }
@@ -82,6 +87,9 @@ Rectangle{
             Connections {
                 target: chatItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 1){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 1
                 }
             }
@@ -99,6 +107,9 @@ Rectangle{
             Connections {
                 target: modelsItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 2){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 2
                 }
             }
@@ -115,6 +126,9 @@ Rectangle{
             Connections {
                 target: devloperItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 3){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 3
                 }
             }

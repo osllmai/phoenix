@@ -29,7 +29,6 @@ T.Button {
              }
          }
 
-
         Row {
             id: headerId
             width: parent.width
