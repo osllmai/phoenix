@@ -2,19 +2,32 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs
 
-import '../../../component_library/style' as Style
-import "../../../component_library/button"
+import '../../../../component_library/style' as Style
+import "../../../../component_library/button"
 
 Item {
     id: control
+
+    property bool isFillWidthDownloadButton: true
+
     height: 35
-    width: parent.width
+    width: control.isFillWidthDownloadButton? parent.width: Math.max(modelAvailableId.width, downloadPercentButton.width)
 
     MyButton{
-        id: dounloadButton
+        id: dounloadFillButton
+        visible: isFillWidthDownloadButton && (!model.downloadFinished && !model.isDownloading)
         anchors.right: parent.right
         anchors.left: parent.left
-        visible: !model.downloadFinished && !model.isDownloading
+        myText: "Download"
+        bottonType: Style.RoleEnum.BottonType.Primary
+        onClicked:{
+            folderDialogId.open()
+        }
+    }
+    MyButton{
+        id: dounloadButton
+        visible: !isFillWidthDownloadButton && (!model.downloadFinished && !model.isDownloading)
+        anchors.right: parent.right
         myText: "Download"
         bottonType: Style.RoleEnum.BottonType.Primary
         onClicked:{
@@ -23,8 +36,19 @@ Item {
     }
 
     MyButton{
+        id: downloadPercentFillButton
+        visible: isFillWidthDownloadButton && model.isDownloading
+        progressBarValue: model.downloadPercent
+        bottonType: Style.RoleEnum.BottonType.Progress
+        onClicked:{
+            offlineModelList.cancelRequest(model.id)
+        }
+    }
+
+    MyButton{
         id: downloadPercentButton
-        visible: model.isDownloading
+        visible: !isFillWidthDownloadButton && model.isDownloading
+        width: 200
         progressBarValue: model.downloadPercent
         bottonType: Style.RoleEnum.BottonType.Progress
         onClicked:{
@@ -33,6 +57,7 @@ Item {
     }
 
     Row{
+        id: modelAvailableId
         spacing: 5
         visible: model.downloadFinished
         anchors.right: parent.right
@@ -66,8 +91,31 @@ Item {
             }
         }
         MyButton{
-            id: startChatButton
+            id: startChatFillButton
+            visible: isFillWidthDownloadButton
             width: control.width - deleteButton.width - (rejectButton.visible? (rejectButton.width +5): 0) - 5
+            myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
+            bottonType: Style.RoleEnum.BottonType.Primary
+            onClicked:{
+                if(model.type === "Text Generation"){
+
+                    conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
+                    conversationList.isEmptyConversation = true
+                    appBodyId.currentIndex = 1
+
+                }else if(model.type === "Speech"){
+
+                    speechToText.modelPath = model.key
+                    speechToText.modelSelect = true
+
+                }else{
+                    console.log(model.type)
+                }
+            }
+        }
+        MyButton{
+            id: startChatButton
+            visible: !isFillWidthDownloadButton
             myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{

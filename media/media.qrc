@@ -17,7 +17,7 @@
         <file>icon/offline.svg</file>
         <file>icon/online.svg</file>
         <file>icon/phoenixCli.svg</file>
-        <file>icon/phoenix.svg</file>
+        <file>icon/Phoenix.svg</file>
         <file>icon/like.svg</file>
         <file>icon/disLike.svg</file>
         <file>icon/favorite.svg</file>
@@ -59,6 +59,7 @@
         <file>icon/rewrite.svg</file>
         <file>image_company/Phoenix.png</file>
         <file>image_company/Phoenix.ico</file>
+        <file>image_company/Phoenix.svg</file>
         <file>image_company/Bert.svg</file>
         <file>image_company/Meta.svg</file>
         <file>image_company/Mistral.svg</file>
@@ -93,5 +94,21 @@
         <file>icon/microphoneOn.svg</file>
         <file>icon/microphoneOnFill.svg</file>
         <file>fonts/DMSans-Regular.ttf</file>
+        <file>icon/developer.svg</file>
+        <file>icon/developerFill.svg</file>
+        <file>icon/closeSquare.svg</file>
+        <file>icon/closeSquareFill.svg</file>
+        <file>icon/maximizeHSquare.svg</file>
+        <file>icon/maximizeHSquareFill.svg</file>
+        <file>icon/maximizeSquare.svg</file>
+        <file>icon/maximizeSquareFill.svg</file>
+        <file>icon/minimizeSquare.svg</file>
+        <file>icon/minimizeSquareFill.svg</file>
+        <file>icon/minusSquare.svg</file>
+        <file>icon/minusSquareFill.svg</file>
+        <file>icon/notFound.svg</file>
+        <file>icon/historyEmpty.svg</file>
+        <file>icon/gridView.svg</file>
+        <file>icon/listView.svg</file>
     </qresource>
 </RCC>

@@ -22,11 +22,11 @@ Item {
 
     OfflineGridView {
         id: gridView
-        visible: gridView.count !== 0 && false
+        visible: (gridView.count !== 0) && (window.isGridView)
     }
     OfflineListView {
         id: listView
-        visible: gridView.count !== 0 && true
+        visible: (gridView.count !== 0) && (!window.isGridView)
     }
     Item{
         id:emptyHistory

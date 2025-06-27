@@ -38,74 +38,76 @@ Item{
                     }
                 }
             }
-            Item{
-                width: parent.width - searchBoxId.width - 30
-                height: searchBoxId.height + 20
+            Column{
+                Item{
+                    width: parent.width - searchBoxId.width - 30
+                    height: searchBoxId.height + 20
 
-                ListView{
-                    id: companyList
-                    anchors.fill: parent
-                    spacing: 5
+                    ListView{
+                        id: companyList
+                        anchors.fill: parent
+                        spacing: 5
 
-                    layoutDirection: Qt.RightToLeft
+                        layoutDirection: Qt.RightToLeft
 
-                    orientation: Qt.Horizontal
-                    clip: true
-
-                    model: ListModel {
-
-                        ListElement {
-                            name: "Embeddings"
-                            type: "Embeddings"
-                        }
-                        ListElement {
-                            name: "Vision"
-                            type: "Vision"
-                        }
-                        ListElement {
-                            name: "Image"
-                            type: "Image"
-                        }
-                        ListElement {
-                            name: "Chat"
-                            type: "Text Generation"
-                        }
-                        ListElement {
-                            name: "Favorite"
-                            type: "Favorite"
-                        }
-                        ListElement {
-                            name: "All"
-                            type: "All"
-                        }
-                    }
-                    delegate: MyButton {
-                        id: delegateId
-                        myText: model.name
-                        bottonType: Style.RoleEnum.BottonType.Feature
-                        iconType: Style.RoleEnum.IconType.FeatureBlue
-                        isNeedAnimation: true
-                        checkable: true
+                        orientation: Qt.Horizontal
                         clip: true
-                        checked: headerId.filtter === model.type
-                        onClicked:{
-                            if(model.type ==="All" || model.type ==="Favorite"){
-                                onlineModelListFilter.filter(model.type)
-                            }else{
-                                onlineModelListFilter.type = model.type
+
+                        model: ListModel {
+
+                            ListElement {
+                                name: "Embeddings"
+                                type: "Embeddings"
                             }
-                            headerId.filtter= model.type
+                            ListElement {
+                                name: "Vision"
+                                type: "Vision"
+                            }
+                            ListElement {
+                                name: "Image"
+                                type: "Image"
+                            }
+                            ListElement {
+                                name: "Chat"
+                                type: "Text Generation"
+                            }
+                            ListElement {
+                                name: "Favorite"
+                                type: "Favorite"
+                            }
+                            ListElement {
+                                name: "All"
+                                type: "All"
+                            }
                         }
+                        delegate: MyButton {
+                            id: delegateId
+                            myText: model.name
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.FeatureBlue
+                            isNeedAnimation: true
+                            checkable: true
+                            clip: true
+                            checked: headerId.filtter === model.type
+                            onClicked:{
+                                if(model.type ==="All" || model.type ==="Favorite"){
+                                    onlineModelListFilter.filter(model.type)
+                                }else{
+                                    onlineModelListFilter.type = model.type
+                                }
+                                headerId.filtter= model.type
+                            }
+                        }
+                        // header: MyButton {
+                        //     id: footerItem
+                        //     myText: "..."
+                        //     bottonType: Style.RoleEnum.BottonType.Feature
+                        //     iconType: Style.RoleEnum.IconType.FeatureBlue
+                        //     isNeedAnimation: true
+                        //     checkable: true
+                        //     clip: true
+                        // }
                     }
-                    // header: MyButton {
-                    //     id: footerItem
-                    //     myText: "..."
-                    //     bottonType: Style.RoleEnum.BottonType.Feature
-                    //     iconType: Style.RoleEnum.IconType.FeatureBlue
-                    //     isNeedAnimation: true
-                    //     checkable: true
-                    //     clip: true
-                    // }
                 }
             }
         }

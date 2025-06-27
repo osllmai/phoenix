@@ -53,6 +53,8 @@ ApplicationWindow {
         }
     }
 
+    property bool isGridView: true
+
     Component.onCompleted: {
         codeColors.defaultColor = Style.Colors.textInformation
         codeColors.keywordColor = Style.Colors.textTagInfo
@@ -77,6 +79,7 @@ ApplicationWindow {
         property alias height: window.height
         property alias theme: window.theme
         property alias fontFamily: window.font.family
+        property alias isGridView: window.isGridView
 
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)

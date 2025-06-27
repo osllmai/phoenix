@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import '../../../component_library/style' as Style
+import '../../../../component_library/style' as Style
 
 ListView {
     id: gridView
@@ -22,7 +22,7 @@ ListView {
     model: offlineModelListFilter
     delegate: Item{
        width: gridView.width
-       height: 50
+       height: window.isDesktopSize? 100:135
 
        OfflineRowDelegate {
            id: indoxItem
