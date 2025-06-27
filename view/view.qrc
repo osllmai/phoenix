@@ -24,20 +24,34 @@
         <file>home/components/HomeHeader.qml</file>
         <file>home/components/FeatureList.qml</file>
         <file>home/components/FeatureDelegate.qml</file>
+
+
+
         <file>model/ModelsView.qml</file>
         <file>model/components/ModelHeader.qml</file>
         <file>model/components/ModelBody.qml</file>
+
         <file>model/components/offline/OfflineModelView.qml</file>
         <file>model/components/offline/OfflineHeader.qml</file>
-        <file>model/components/offline/OfflineList.qml</file>
-        <file>model/components/offline/OfflineDelegate.qml</file>
-        <file>model/components/offline/DownloadButton.qml</file>
+        <file>model/components/offline/OfflineBody.qml</file>
+        <file>model/components/offline/components/OfflineGridView.qml</file>
+        <file>model/components/offline/components/OfflineListView.qml</file>
+        <file>model/components/offline/components/OfflineBoxDelegate.qml</file>
+        <file>model/components/offline/components/OfflineRowDelegate.qml</file>
+        <file>model/components/offline/components/DownloadButton.qml</file>
+
         <file>model/components/online/OnlineModelView.qml</file>
         <file>model/components/online/OnlineHeader.qml</file>
-        <file>model/components/online/OnlineList.qml</file>
-        <file>model/components/online/OnlineDelegate.qml</file>
-        <file>model/components/online/InputApikey.qml</file>
-        <file>model/components/online/ApikeyButton.qml</file>
+        <file>model/components/online/OnlineBody.qml</file>
+        <file>model/components/online/components/OnlineGridView.qml</file>
+        <file>model/components/online/components/OnlineListView.qml</file>
+        <file>model/components/online/components/OnlineBoxDelegate.qml</file>
+        <file>model/components/online/components/OnlineRowDelegate.qml</file>
+        <file>model/components/online/components/InputApikey.qml</file>
+        <file>model/components/online/components/ApikeyButton.qml</file>
+
+
+
         <file>chat/ChatView.qml</file>
         <file>chat/components/ChatHeader.qml</file>
         <file>chat/components/ChatBody.qml</file>

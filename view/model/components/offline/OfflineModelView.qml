@@ -8,7 +8,7 @@ Item {
     OfflineHeader{
         id: headerId
     }
-    OfflineList{
+    OfflineBody{
         id:offlineBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right

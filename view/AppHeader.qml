@@ -5,71 +5,11 @@ import QtQuick.Controls.Basic
 import './component_library/style' as Style
 import './component_library/button'
 
-// Item {
-//     id: customTitleBar
-
-//     width: parent.width
-//     height: 40
-
-//     Rectangle {
-//         anchors.fill: parent
-//         color: "#333333"
-//     }
-
-//     Row {
-//         anchors.verticalCenter: parent.verticalCenter
-//         anchors.right: parent.right
-//         spacing: 10
-//         padding: 10
-
-//         Button {
-//             text: "—"
-//             onClicked: window.showMinimized()
-//         }
-
-//         Button {
-//             text: window.visibility === Window.Maximized ? "❐" : "□"
-//             onClicked: {
-//                 if (window.visibility === Window.Maximized)
-//                     window.showNormal()
-//                 else
-//                     window.showMaximized()
-//             }
-//         }
-
-//         Button {
-//             text: "✕"
-//             onClicked: Qt.quit()
-//         }
-//     }
-
-//     MouseArea {
-//         anchors.fill: parent
-//         property point clickPos: Qt.point(0, 0)
-
-//         onPressed: (mouse) => {
-//             clickPos = Qt.point(mouse.x, mouse.y)
-//         }
-
-//         onPositionChanged: (mouse) => {
-//             var dx = mouse.x - clickPos.x
-//             var dy = mouse.y - clickPos.y
-//             window.x += dx
-//             window.y += dy
-//         }
-//     }
-// }
 
 T.Button {
     id: titleBar
     width: parent.width
     height: 40
-
-    // HoverHandler {
-    //     id: hoverHandler
-    //     acceptedDevices: PointerDevice.Mouse
-    //     cursorShape: Qt.SizeAllCursor
-    // }
 
     onPressed: mouse => window.startSystemMove()
 
@@ -108,8 +48,12 @@ T.Button {
                  Connections{
                      target: maximizeHSquareButtonId
                      function onClicked(){
+
                         if ((window.width !== 400 ) && (window.height !== Screen.height) &&
                                 (window.x !== Screen.width - 400) && (window.y !== 0)) {
+
+                            if (window.visibility === Window.Maximized)
+                                window.showNormal()
 
                                window.prevX = window.x
                                window.prevY = window.y

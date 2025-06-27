@@ -8,7 +8,7 @@ Item {
     OnlineHeader{
         id: headerId
     }
-    OnlineList{
+    OnlineBody{
         id:onlineBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right
