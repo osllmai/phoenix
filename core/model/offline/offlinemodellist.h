@@ -32,6 +32,7 @@ public:
         ModeNameRole,
         KeyRole,
         InformationRole,
+        TypeRole,
         IconRole,
         CompanyRole,
         IsLikeRole,
@@ -43,7 +44,6 @@ public:
         DownloadFinishedRole,
         IsDownloadingRole,
         DownloadPercentRole,
-        TypeRole,
         ModelObjectRole
     };
 

@@ -305,8 +305,6 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
 
     }else if (m_httpServer) {
             m_tcpServer->close();
-            // delete m_httpServer;
-            // m_httpServer = nullptr;
             qCInfo(logDeveloper) << "HTTP Server stopped.";
             qCInfo(logDeveloperView) << "HTTP Server stopped.";
     }

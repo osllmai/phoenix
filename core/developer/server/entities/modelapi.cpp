@@ -8,6 +8,7 @@ ModelAPI::ModelAPI(const QString &scheme, const QString &hostName, int port)
 
 QHttpServerResponse ModelAPI::getFullList() const {
     qCInfo(logDeveloper) << "GET Request";
+    qCInfo(logDeveloperView) << "GET Request";
 
     const auto onlineModels = OnlineModelList::instance(nullptr);
     auto* onlineModelInstallFilter = new OnlineModelListFilter(onlineModels, nullptr);
@@ -33,6 +34,10 @@ QHttpServerResponse ModelAPI::getFullList() const {
     result["online"] = onlineArray;
     result["offline"] = offlineArray;
 
+    // QJsonDocument doc(result);
+    // QByteArray prettyJson = doc.toJson(QJsonDocument::Indented);
+    qCInfo(logDeveloperView) << result;
+
     qCInfo(logDeveloper) << "Returning full list response with online and offline models";
     return QHttpServerResponse(result);
 }
@@ -44,7 +49,6 @@ QHttpServerResponse ModelAPI::getItem(qint64 itemId) const{
 
 void ModelAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder){
     qCInfo(logDeveloper) << "POST Request" ;
-    // No implementation yet
 }
 
 QHttpServerResponse ModelAPI::updateItem(qint64 itemId, const QHttpServerRequest &request){
@@ -71,14 +75,9 @@ QJsonArray ModelAPI::extractModelsAsJsonArray(QSortFilterProxyModel* proxyModel)
         QModelIndex index = proxyModel->index(row, 0);
 
         QJsonObject item;
-        item["name"] = proxyModel->data(index, Qt::UserRole + 2).toString();          // NameRole
-        item["information"] = proxyModel->data(index, Qt::UserRole + 4).toString();   // InformationRole
-        item["type"] = proxyModel->data(index, Qt::UserRole + 8).toString();          // TypeRole
-        item["contextWindows"] = proxyModel->data(index, Qt::UserRole + 9).toString();// ContextWindowsRole
-        item["output"] = proxyModel->data(index, Qt::UserRole + 10).toString();       // OutputRole
-        item["commercial"] = proxyModel->data(index, Qt::UserRole + 11).toBool();     // CommercialRole
-
-        qCInfo(logDeveloper) << "Model extracted:" << item["name"].toString();
+        item["modelName"] = proxyModel->data(index, Qt::UserRole + 3).toString();          // NameRole
+        item["information"] = proxyModel->data(index, Qt::UserRole + 5).toString();   // InformationRole
+        item["type"] = proxyModel->data(index, Qt::UserRole + 6).toString();          // TypeRole
 
         models.append(item);
     }

@@ -22,12 +22,15 @@ ListView {
     model: onlineModelListFilter
     delegate: Item{
        width: gridView.width
-       height: window.isDesktopSize? 100:135
+       height: window.isDesktopSize? 65:90
 
        OnlineRowDelegate {
            id: indoxItem
-           anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-           Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+           anchors.fill: parent
+           anchors.leftMargin: 10
+           anchors.rightMargin: 10
+           anchors.topMargin: 5
+           anchors.bottomMargin: 5
        }
     }
 }

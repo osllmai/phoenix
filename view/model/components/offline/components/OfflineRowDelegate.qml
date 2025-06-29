@@ -33,16 +33,17 @@ T.Button {
                 myIcon: "qrc:/media/image_company/" + model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
-                width: 40; height: 40
+                width: 32; height: 32
             }
             Row{
-                width: parent.width - logoModelId.width /*- likeIconId.width*/
-                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - logoModelId.width
+                anchors.verticalCenter: logoModelId.verticalCenter
                 clip: true
                 Label {
                     id: titleId
                     text: model.name
                     color: Style.Colors.textTitle
+                    anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 14
                     font.styleName: "Bold"
                     clip: true
@@ -70,23 +71,12 @@ T.Button {
                     clip: true
                 }
             }
-            // MyIcon{
-            //     id: likeIconId
-            //     myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
-            //     anchors.verticalCenter: logoModelId.verticalCenter
-            //     iconType: Style.RoleEnum.IconType.Like
-            //     isNeedAnimation: true
-            //     onClicked: {
-            //         offlineModelList.likeRequest(model.id, !model.isLike)
-            //         model.isLike = !model.isLike
-            //     }
-            // }
         }
 
         Rectangle{
             id: informationAboutDownloadId
             visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
-            height: 45; width: 300
+            height: 40; width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: headerId.right
             anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
@@ -100,7 +90,7 @@ T.Button {
                     id:fileSizeBox
                     width: (parent.width/4)-8
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 5
+                    spacing: 2
                     Label {
                         id: fileSizeText
                         color: Style.Colors.textInformation
@@ -127,7 +117,7 @@ T.Button {
                     id: ramRequiredBox
                     width: (parent.width/4)+ 17
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 5
+                    spacing: 2
                     Label {
                         id: ramRequiredText
                         color: Style.Colors.textInformation
@@ -154,7 +144,7 @@ T.Button {
                     id: parameterersBox
                     width: (parent.width/4)
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 5
+                    spacing: 2
                     Label {
                         id: parameterersText
                         color: Style.Colors.textInformation
@@ -181,7 +171,7 @@ T.Button {
                     id: quantBox
                     width: (parent.width/4)-20
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 5
+                    spacing: 2
                     Label {
                         id: quantText
                         color: Style.Colors.textInformation
@@ -213,7 +203,7 @@ T.Button {
         Column{
             visible: !window.isDesktopSize
             anchors.fill: parent
-            anchors.margins: 10
+            anchors.margins: 5
             Row{
                 id: header2Id
                 width: parent.width
@@ -223,16 +213,17 @@ T.Button {
                     myIcon: "qrc:/media/image_company/" + model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
-                    width: 40; height: 40
+                    width: 30; height: 30
                 }
                 Row{
-                    width: parent.width - logoModel2Id.width /*- likeIcon2Id.width*/
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - logoModel2Id.width
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
                     clip: true
                     Label {
                         id: title2Id
                         text: model.name
                         color: Style.Colors.textTitle
+                        anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: 14
                         font.styleName: "Bold"
                         clip: true
@@ -260,23 +251,12 @@ T.Button {
                         clip: true
                     }
                 }
-                // MyIcon{
-                //     id: likeIcon2Id
-                //     myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
-                //     anchors.verticalCenter: logoModelId.verticalCenter
-                //     iconType: Style.RoleEnum.IconType.Like
-                //     isNeedAnimation: true
-                //     onClicked: {
-                //         offlineModelList.likeRequest(model.id, !model.isLike)
-                //         model.isLike = !model.isLike
-                //     }
-                // }
             }
 
             DownloadButton{
                 id: downloadButton2Id
                 anchors.right: parent.right
-                anchors.rightMargin: 10
+                anchors.rightMargin: 5
                 isFillWidthDownloadButton:false
             }
         }
