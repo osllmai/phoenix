@@ -1,8 +1,6 @@
 #ifndef CRUDAPI_H
 #define CRUDAPI_H
 
-#include "utils.h"
-
 #include <QtHttpServer/QHttpServer>
 #include <QtConcurrent/qtconcurrentrun.h>
 #include <QtCore/QFile>

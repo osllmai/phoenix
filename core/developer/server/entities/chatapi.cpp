@@ -27,8 +27,7 @@ QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
 
 void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder)
 {
-     qCInfo(logDeveloper) << "POST Request" ;
-     qCInfo(logDeveloperView) << "POST Request" ;
+    qCInfo(logDeveloper) << "POST Request";
 
     responder->writeBeginChunked("text/event-stream");
 
@@ -43,15 +42,18 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    if (!json->contains("messages") || !(*json)["messages"].isString()) {
-        qCWarning(logDeveloper) << "postItem missing or invalid 'prompt' field";
+    if (!json->contains("message") || !(*json)["message"].isString()) {
+        qCWarning(logDeveloper) << "postItem missing or invalid 'message' field";
+        qCWarning(logDeveloperView) << "postItem missing or invalid 'message' field";
         QJsonObject errorObj;
-        errorObj["error"] = "Missing or invalid 'prompt' field";
+        errorObj["error"] = "Missing or invalid 'message' field";
         QJsonDocument doc(errorObj);
         responder->writeChunk(doc.toJson(QJsonDocument::Compact));
         responder->writeEndChunked("{}");
         return;
     }
+
+    qCInfo(logDeveloperView) << "POST Request. message: "<< (*json)["message"].toString();
 
     if(json->contains("model") && (*json)["model"].isString()){
         QString modelName = (*json)["model"].toString();
@@ -99,7 +101,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         return;
     }
 
-    qCInfo(logDeveloper) << "postItem valid JSON received, prompt:" << (*json)["messages"].toString().left(50) << "model:" << (*json)["model"].toString();
+    qCInfo(logDeveloper) << "postItem valid JSON received, message:" << (*json)["message"].toString().left(50) << "model:" << (*json)["model"].toString();
 
     m_responder = responder;
 

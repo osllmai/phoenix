@@ -15,7 +15,8 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     m_portSocket(49425),
     m_isRunningSocket(false),
     m_portAPI(8080),
-    m_isRunningAPI(false)
+    m_isRunningAPI(false),
+    m_modelSelect(false)
 {
     QList<QPair<int, QString>> languages = {
         {0, "Curl"},

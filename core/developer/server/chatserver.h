@@ -14,6 +14,10 @@
 #include <QtCore/QString>
 #include <QList>
 
+#include "QtWebSockets/qwebsocketserver.h"
+#include "QtWebSockets/qwebsocket.h"
+#include <QtCore/QDebug>
+
 #include <algorithm>
 #include <optional>
 #include "../crudapi.h"
@@ -31,7 +35,6 @@
 #include "provider.h"
 #include "offlineprovider.h"
 #include "onlineprovider.h"
-// #include "codedeveloperlist.h"
 
 #include <QLoggingCategory>
 #include "logcategories.h"

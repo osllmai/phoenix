@@ -42,7 +42,6 @@
 #include "modelapi.h"
 #include "chatapi.h"
 #include "modelapi.h"
-#include "utils.h"
 #include <QtCore/QCoreApplication>
 #include <QtHttpServer/QHttpServer>
 #include <QSharedPointer>

@@ -1,8 +1,6 @@
 #include "chatserver.h"
 
-#include "QtWebSockets/qwebsocketserver.h"
-#include "QtWebSockets/qwebsocket.h"
-#include <QtCore/QDebug>
+#include "codedeveloperlist.h"
 
 QT_USE_NAMESPACE
 
@@ -73,62 +71,50 @@ void ChatServer::processTextMessage(QString message){
     }
     QJsonObject obj = doc.object();
 
-    // if (!obj.contains("messages") || !obj["messages"].isString()) {
-    //     qCWarning(logDeveloper) << "postItem missing or invalid 'prompt' field";
-    //     QJsonObject errorObj;
-    //     errorObj["error"] = "Missing or invalid 'prompt' field";
-    //     QJsonDocument doc(errorObj);
-    //     qCWarning(logDeveloper) << "JSON missing required fields:" << message;
-    //     return;
-    // }
 
-    // if(obj.contains("model") && obj["model"].isString()){
-    //     QString modelName = obj["model"].toString();
-    //     if (modelName.startsWith("localModel/")){
-    //         modelName.remove(0, QString("localModel/").length());
-    //         OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
+    if (!obj.contains("message") || !obj["message"].isString()) {
+        qCWarning(logDeveloper) << "JSON missing required fields:" << message;
+        qCWarning(logDeveloperView) << "JSON missing required fields:" << message;
+        return;
+    }
 
-    //         if(offlineModel != nullptr && offlineModel->isDownloading()){
-    //             m_socketToModelId[pClient] = offlineModel->id();
-    //         }else{
-    //             qCWarning(logDeveloper) << "models is not evailable";
-    //             qCWarning(logDeveloperView) << "models is not evailable";
-    //             QJsonObject errorObj;
-    //             errorObj["error"] = "models is not evailable";
-    //             QJsonDocument doc(errorObj);
-    //             qCWarning(logDeveloper) << "JSON missing required fields:" << message;
-    //             return;
-    //         }
-    //     }else{
-    //         OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
-    //         if(onlineModel != nullptr &&onlineModel->installModel() ){
-    //             m_socketToModelId[pClient] = onlineModel->id();
-    //         }else{
-    //             qCWarning(logDeveloper) << "models is not evailable";
-    //             qCWarning(logDeveloperView) << "models is not evailable";
-    //             QJsonObject errorObj;
-    //             errorObj["error"] = "models is not evailable";
-    //             QJsonDocument doc(errorObj);
-    //             qCWarning(logDeveloper) << "JSON missing required fields:" << message;
-    //             return;
-    //         }
-    //     }
-    // }else if(CodeDeveloperList::instance(nullptr)->modelId() == -1){
-    //     setModelId(CodeDeveloperList::instance(nullptr)->modelId());
-    // }else{
-    //     qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
-    //     qCWarning(logDeveloperView) << "postItem missing or invalid 'modelId' field";
-    //     QJsonObject errorObj;
-    //     errorObj["error"] = "Missing or invalid 'modelId' field";
-    //     QJsonDocument doc(errorObj);
-    //     qCWarning(logDeveloper) << "JSON missing required fields:" << message;
-    //     return;
-    // }
+    qCInfo(logDeveloperView) << "WebSocket Request. message: "<< obj["message"].toString();
 
-    m_socketToPrompt[pClient] = obj["messages"].toString();
+    if(obj.contains("model") && obj["model"].isString()){
+        QString modelName = obj["model"].toString();
+        if (modelName.startsWith("localModel/")){
+            modelName.remove(0, QString("localModel/").length());
+            OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
+
+            if(offlineModel != nullptr && offlineModel->isDownloading()){
+                m_socketToModelId[pClient] = offlineModel->id();
+            }else{
+                qCWarning(logDeveloper) << "models is not evailable";
+                qCWarning(logDeveloperView) << "models is not evailable";
+                return;
+            }
+        }else{
+            OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
+            if(onlineModel != nullptr &&onlineModel->installModel() ){
+                m_socketToModelId[pClient] = onlineModel->id();
+            }else{
+                qCWarning(logDeveloper) << "models is not evailable";
+                qCWarning(logDeveloperView) << "models is not evailable";
+                return;
+            }
+        }
+    }else if(CodeDeveloperList::instance(nullptr)->modelId() == -1){
+        setModelId(CodeDeveloperList::instance(nullptr)->modelId());
+    }else{
+        qCWarning(logDeveloper) << "WebSocket data missing or invalid 'model' field";
+        qCWarning(logDeveloperView) << "WebSocket data missing or invalid 'model' field";
+        return;
+    }
+
+    m_socketToPrompt[pClient] = obj["message"].toString();
     m_socketToGeneratedText[pClient] = "";
 
-    qCInfo(logDeveloper) << "Set modelId to" << m_socketToModelId[pClient] << "and prompt to" << m_socketToPrompt[pClient];
+    qCInfo(logDeveloper) << "Set modelId to" << m_socketToModelId[pClient] << "and message to" << m_socketToPrompt[pClient];
 
     //create or update model-settings
     auto *settings = m_socketToModelSettings.value(pClient, nullptr);
@@ -162,7 +148,7 @@ void ChatServer::processTextMessage(QString message){
 
     m_currentClient = pClient;
 
-    qCInfo(logDeveloper) << "Calling prompt() for current client";
+    qCInfo(logDeveloper) << "Calling message() for current client";
 
     prompt();
 }
