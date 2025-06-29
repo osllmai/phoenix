@@ -55,6 +55,9 @@ void ChatServer::onNewConnection()
 
 //! [processTextMessage]
 void ChatServer::processTextMessage(QString message){
+    if (!CodeDeveloperList::instance(nullptr)->isRunningSocket())
+        return;
+
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
     if (!pClient) {
         qCWarning(logDeveloper) << "processTextMessage called but sender is not a QWebSocket";
@@ -343,6 +346,16 @@ void ChatServer::updateModelSettingsDeveloper(){
                                              m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
+
+void ChatServer::closeServer() {
+    for (auto client : m_clients) {
+        client->close();
+    }
+    if (m_pWebSocketServer) {
+        m_pWebSocketServer->close();
+    }
+}
+
 
 int ChatServer::modelId() const{return m_modelId;}
 void ChatServer::setModelId(int newModelId){

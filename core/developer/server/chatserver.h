@@ -59,9 +59,10 @@ public:
     explicit ChatServer(quint16 port, bool debug = false, QObject *parent = nullptr);
     ~ChatServer();
 
+    void closeServer();
+
     Provider *provider() const;
     void setProvider(Provider *newProvider);
-
 
     int modelId() const;
     void setModelId(int newModelId);

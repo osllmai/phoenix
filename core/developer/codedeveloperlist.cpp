@@ -34,6 +34,21 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
     m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
     qCInfo(logDeveloper) << "Default language set to Curl";
 
+    //info api connection
+    m_parserModel.setApplicationDescription("Qt Developer Server");
+    m_parserModel.addHelpOption();
+    m_parserModel.addOptions({
+        { "portAPI", QCoreApplication::translate("main", "The portAPIt the server listens on."), "portAPI" }
+    });
+
+    m_parserModel.process(*appAPI);
+
+    Q_ASSERT(!m_tcpServer);
+    m_httpServer = new QHttpServer(this);
+
+    m_tcpServer = std::make_unique<QTcpServer>();
+    //end info api connection
+
     setIsRunningAPI(true);
 
     //create API
@@ -80,37 +95,57 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
 
     auto &api = apiOpt.value();
 
+    // GET /apiPath
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Get,
-                        [&api]() {
+                        [this, &api]() {
+                            if (!isRunningAPI())
+                                return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->getFullList();
                         });
 
-
+    // GET /apiPath/<id>
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Get,
-                        [&api](qint64 itemId) {
+                        [this, &api](qint64 itemId) {
+                            if (!isRunningAPI())
+                                return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->getItem(itemId);
                         });
 
+    // POST /apiPath
     m_httpServer->route(QString("%1").arg(apiPath), QHttpServerRequest::Method::Post,
-                        [&api](const QHttpServerRequest &request, QHttpServerResponder &responder) {
+                        [this, &api](const QHttpServerRequest &request, QHttpServerResponder &responder) {
+                            if (!isRunningAPI()) {
+                                responder.write(QByteArray("Service unavailable"), "text/plain", QHttpServerResponder::StatusCode::ServiceUnavailable);
+                                return;
+                            }
                             QSharedPointer<QHttpServerResponder> responderPtr = QSharedPointer<QHttpServerResponder>::create(std::move(responder));
                             api->postItem(request, responderPtr);
                         });
 
+    // PUT /apiPath/<id>
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Put,
-                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                        [this, &api](qint64 itemId, const QHttpServerRequest &request) {
+                            if (!isRunningAPI())
+                                return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->updateItem(itemId, request);
                         });
 
+    // PATCH /apiPath/<id>
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Patch,
-                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                        [this, &api](qint64 itemId, const QHttpServerRequest &request) {
+                            if (!isRunningAPI())
+                                return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->updateItemFields(itemId, request);
                         });
 
+    // DELETE /apiPath/<id>
     m_httpServer->route(QString("%1/<arg>").arg(apiPath), QHttpServerRequest::Method::Delete,
-                        [&api](qint64 itemId, const QHttpServerRequest &request) {
+                        [this, &api](qint64 itemId, const QHttpServerRequest &request) {
+                            if (!isRunningAPI())
+                                return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->deleteItem(itemId);
                         });
+
 
     qCDebug(logDeveloper) << "CRUD routes added for" << apiPath;
 }
@@ -244,17 +279,6 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
     m_isRunningAPI = newIsRunningAPI;
     if(m_isRunningAPI){
 
-        m_parserModel.setApplicationDescription("Qt Developer Server");
-        m_parserModel.addHelpOption();
-        m_parserModel.addOptions({
-            { "portAPI", QCoreApplication::translate("main", "The portAPIt the server listens on."), "portAPI" }
-        });
-
-        m_parserModel.process(*appAPI);
-
-        Q_ASSERT(!m_tcpServer);
-        m_httpServer = new QHttpServer(this);
-
         quint16 portAPIArg = portAPI();
         if (!m_parserModel.value("portAPI").isEmpty())
             portAPIArg = m_parserModel.value("portAPI").toUShort();
@@ -271,7 +295,6 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
         addCrudRoutes("/api/models", m_modelsApi);
         addCrudRoutes("/api/chat", m_chatApi);
 
-        m_tcpServer = std::make_unique<QTcpServer>();
         if (!m_tcpServer->listen(QHostAddress::Any, portAPIArg) || !m_httpServer->bind(m_tcpServer.get())) {
             qCWarning(logDeveloper) << "Server failed to bind to portAPI:" << portAPIArg;
             return;
@@ -280,10 +303,12 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
         quint16 portAPIModel = m_tcpServer->serverPort();
         qCInfo(logDeveloper) << "HTTP Server running at portAPI:" << portAPIModel;
 
-    }else{
-        m_tcpServer->close();
-        qCInfo(logDeveloper) << "stop HTTP Server at portAPI";
-        qCInfo(logDeveloperView) << "stop HTTP Server at port";
+    }else if (m_httpServer) {
+            m_tcpServer->close();
+            // delete m_httpServer;
+            // m_httpServer = nullptr;
+            qCInfo(logDeveloper) << "HTTP Server stopped.";
+            qCInfo(logDeveloperView) << "HTTP Server stopped.";
     }
     emit isRunningAPIChanged();
 }
@@ -329,9 +354,13 @@ void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
 
         qCInfo(logDeveloper) << "Developer server started successfully.";
     }else{
-        // m_chatServer->closed();
-        qCInfo(logDeveloper) << "stop WebSocket Server at portAPI";
-        qCInfo(logDeveloperView) << "stop WebSocket Server at port";
+        if (m_chatServer) {
+            m_chatServer->closeServer();
+            delete m_chatServer;
+            m_chatServer = nullptr;
+        }
+        qCInfo(logDeveloper) << "Stopped WebSocket Server.";
+        qCInfo(logDeveloperView) << "Stopped WebSocket Server.";
     }
     emit isRunningSocketChanged();
     qCInfo(logDeveloper) << "Socket isRunning set to" << newIsRunningSocket;
