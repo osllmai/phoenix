@@ -85,7 +85,6 @@ Rectangle{
                 onTextChanged: {
                     control.layer.enabled = true
                     adjustHeight()
-                    console.log(inputTextBox.text)
                 }
 
                 onContentHeightChanged: {
@@ -143,8 +142,6 @@ Rectangle{
                     myIcon: selectSpeechIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        console.log(speechToText.modelSelect)
-                        console.log(speechToText.speechInProcess)
                         if(speechToText.modelSelect){
                             if(speechToText.speechInProcess)
                                 speechToText.stopRecording()
@@ -162,7 +159,6 @@ Rectangle{
                     myIcon: selectSendIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        console.log("HIHIIHIHIIH ISFNVKBKKNBGKFNjkf")
                         if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
                             control.openModelIsLoaded()
                         }else if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
@@ -172,8 +168,6 @@ Rectangle{
                                    !conversationList.currentConversation.loadModelInProgress) ||
                                    conversationList.isEmptyConversation){
                             sendPrompt(inputTextBox.text)
-                            console.log("HIHIIHIHIIH ISFNVKBKKNBGKFNjkf               1")
-                            console.log(inputTextBox.text)
 
                             if (conversationList.modelSelect)
                                 inputTextBox.text = ""

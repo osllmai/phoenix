@@ -10,7 +10,10 @@ Item {
     height: parent.height
     signal openModelList()
     function sendMessage(){
-        inputBoxId.sendMessage = true
+        if(conversationList.isEmptyConversation)
+            inputBoxId2.sendMessage()
+        else
+            inputBoxId.sendMessage()
     }
 
     Column{
@@ -25,16 +28,11 @@ Item {
             Connections{
                 target: inputBoxId
                 function onSendPrompt(prompt){
-
                     if((conversationList.modelSelect) && (prompt !== "")){
-
                         conversationList.currentConversation.prompt(prompt, conversationList.modelId)
-                        console.log("DHFIHFIGHHIDGGGGGGGGGGGGIB                  1")
-
                     }else if((prompt !== "")){
                         notificationDialogId.open()
                         chatBodyBoxId.openModelList()
-                        console.log("DHFIHFIGHHIDGGGGGGGGGGG                2")
                     }
                 }
                 function onOpenModelIsLoaded(){

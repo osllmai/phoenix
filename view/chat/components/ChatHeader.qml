@@ -43,6 +43,7 @@ Item{
                 target: currentModelComboBoxId
                 function onSendMessage(){
                     headerId.sendMessage()
+                    currentModelComboBoxId.popup.close()
                 }
             }
         }

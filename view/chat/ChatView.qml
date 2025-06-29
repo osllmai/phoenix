@@ -16,7 +16,6 @@ Item {
             function onSendMessage(){
                 chatBodyId.sendMessage()
             }
-
         }
     }
     ChatBody{

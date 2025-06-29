@@ -12,6 +12,7 @@ ModelSelectComboBox{
         target: modelComboBoxId
         function onSetModelRequest(id, name, icon, promptTemplate, systemPrompt) {
             conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+
             modelComboBoxId.sendMessage()
         }
     }

@@ -61,17 +61,10 @@ Popup{
 
     Timer {
         id: progressTimer
-        interval: 100
-        running: true
-        repeat: true
+        interval: 2000
+        repeat: false
         onTriggered: {
-            if (control.progressValue < 1) {
-                control.progressValue += 0.01;
-            } else {
-                control.close();
-                stop();
-                progressValue = 0;
-            }
+            control.close();
         }
     }
 }
