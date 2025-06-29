@@ -5,7 +5,6 @@ import QtQuick.Controls.Basic
 import './component_library/style' as Style
 import './component_library/button'
 
-
 T.Button {
     id: titleBar
     width: parent.width
@@ -41,19 +40,23 @@ T.Button {
              }
              MyIcon {
                  id: maximizeHSquareButtonId
-                 myIcon:  maximizeHSquareButtonId.hovered? "qrc:/media/icon/maximizeHSquareFill.svg":
-                                                                                                "qrc:/media/icon/maximizeHSquare.svg"
+                 myIcon:  "qrc:/media/icon/maximizeH.svg"
                  iconType: Style.RoleEnum.IconType.Primary
-                 width:28; height:28
+                 anchors.verticalCenter: phoenixTitleId.verticalCenter
+                 width:23; height:23
                  Connections{
                      target: maximizeHSquareButtonId
                      function onClicked(){
 
-                        if ((window.width !== 400 ) && (window.height !== Screen.height) &&
-                                (window.x !== Screen.width - 400) && (window.y !== 0)) {
-
-                            if (window.visibility === Window.Maximized)
-                                window.showNormal()
+                        if ((window.width === 400 ) && (window.height === Screen.height) &&
+                                (window.x === Screen.width - 400) && (window.y === 0)){
+                               window.width = window.prevW
+                               window.height = window.prevH
+                               window.x = window.prevX
+                               window.y = window.prevY
+                        }else{
+                                if (window.visibility === Window.Maximized)
+                                    window.showNormal()
 
                                window.prevX = window.x
                                window.prevY = window.y
@@ -64,12 +67,7 @@ T.Button {
                                window.height = Screen.height
                                window.x = Screen.width - 400
                                window.y = 0
-                           } else {
-                               window.width = window.prevW
-                               window.height = window.prevH
-                               window.x = window.prevX
-                               window.y = window.prevY
-                            }
+                        }
                      }
                  }
              }
@@ -80,10 +78,10 @@ T.Button {
              anchors.verticalCenter: parent.verticalCenter
              MyIcon {
                  id: minusSquareButtonId
-                 myIcon: minusSquareButtonId.hovered? "qrc:/media/icon/minusSquareFill.svg":
-                                                          "qrc:/media/icon/minusSquare.svg"
+                 myIcon: "qrc:/media/icon/minus.svg"
                  iconType: Style.RoleEnum.IconType.Primary
-                 width:30; height:30
+                 anchors.verticalCenter: closeSquareButtonId.verticalCenter
+                 width:28; height:28
                  Connections{
                      target: minusSquareButtonId
                      function onClicked(){
@@ -93,10 +91,11 @@ T.Button {
              }
              MyIcon {
                  id: maximizeSquareButtonId
-                 myIcon: maximizeSquareButtonId.hovered? ("qrc:/media/icon/maximizeSquareFill.svg"):
-                                                          ("qrc:/media/icon/maximizeSquare.svg")
+                 myIcon: (window.visibility === Window.Maximized)? ("qrc:/media/icon/minimize.svg"):
+                                                          ("qrc:/media/icon/maximize.svg")
                  iconType: Style.RoleEnum.IconType.Primary
-                 width:30; height:30
+                 anchors.verticalCenter: closeSquareButtonId.verticalCenter
+                 width:25; height:25
                  Connections{
                      target: maximizeSquareButtonId
                      function onClicked(){
@@ -109,8 +108,7 @@ T.Button {
              }
              MyIcon {
                  id: closeSquareButtonId
-                 myIcon: closeSquareButtonId.hovered? "qrc:/media/icon/closeSquareFill.svg":
-                                                          "qrc:/media/icon/closeSquare.svg"
+                 myIcon: "qrc:/media/icon/close.svg"
                  iconType: Style.RoleEnum.IconType.Primary
                  width:30; height:30
                  Connections{

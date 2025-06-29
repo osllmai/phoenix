@@ -27,12 +27,12 @@ Item{
             model: ListModel {
                 id: model
                 ListElement {
-                                name: "Offline Model";
-                                pageNumber: 0
+                        name: "Offline Model";
+                        pageNumber: 0
                 }
                 ListElement {
-                                name: "Online Model";
-                                pageNumber: 1
+                        name: "Online Model";
+                        pageNumber: 1
                 }
             }
 
@@ -45,6 +45,7 @@ Item{
                 isNeedAnimation: true
                 checkable: true
                 checked: control.currentPageNumber === model.pageNumber
+                selected: control.currentPageNumber === model.pageNumber
                 onClicked: {
                     control.currentPageNumber = model.pageNumber;
                     control.currentPage(model.pageNumber);

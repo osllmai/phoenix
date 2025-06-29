@@ -7,12 +7,26 @@ import "../../../../component_library/button"
 
 Item {
     id: control
+    property bool isFillWidthDownloadButton: true
+
     height: 35
-    width: parent.width
+    width: control.isFillWidthDownloadButton? parent.width: Math.max(inputApikey.width, installRowId.width)
+
+    InputApikey{
+        id: inputApikeyFill
+        visible: isFillWidthDownloadButton && !model.installModel
+        Connections{
+            target: inputApikeyFill
+            function onSaveAPIKey(apiKey){
+                onlineModelList.saveAPIKey(model.id, apiKey)
+            }
+        }
+    }
 
     InputApikey{
         id: inputApikey
-        visible: !model.installModel
+        width: 200
+        visible: !isFillWidthDownloadButton && !model.installModel
         Connections{
             target: inputApikey
             function onSaveAPIKey(apiKey){
@@ -22,6 +36,7 @@ Item {
     }
 
     Row{
+        id: installRowId
         spacing: 5
         visible: model.installModel
         anchors.right: parent.right
@@ -55,8 +70,31 @@ Item {
             }
         }
         MyButton{
-            id: startChatButton
+            id: startChatFillButton
+            visible: isFillWidthDownloadButton
             width: control.width - deleteButton.width - (rejectButton.visible? (rejectButton.width +5): 0) - 5
+            myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
+            bottonType: Style.RoleEnum.BottonType.Primary
+            onClicked:{
+                if(model.type === "Text Generation"){
+
+                        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon , model.promptTemplate, model.systemPrompt)
+                        conversationList.isEmptyConversation = true
+                        appBodyId.currentIndex = 1
+
+                }else if(model.type === "Speech"){
+
+                        speechToText.modelPath = model.key
+                        speechToText.modelSelect = true
+
+                }else{
+                    console.log(model.type)
+                }
+            }
+        }
+        MyButton{
+            id: startChatButton
+            visible: !isFillWidthDownloadButton
             myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{

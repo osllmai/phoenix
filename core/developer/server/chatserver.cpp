@@ -72,13 +72,60 @@ void ChatServer::processTextMessage(QString message){
         return;
     }
     QJsonObject obj = doc.object();
-    if (!obj.contains("modelId") || !obj.contains("prompt")) {
-        qCWarning(logDeveloper) << "JSON missing required fields:" << message;
-        return;
-    }
 
-    m_socketToModelId[pClient] = obj["modelId"].toInt();
-    m_socketToPrompt[pClient] = obj["prompt"].toString();
+    // if (!obj.contains("messages") || !obj["messages"].isString()) {
+    //     qCWarning(logDeveloper) << "postItem missing or invalid 'prompt' field";
+    //     QJsonObject errorObj;
+    //     errorObj["error"] = "Missing or invalid 'prompt' field";
+    //     QJsonDocument doc(errorObj);
+    //     qCWarning(logDeveloper) << "JSON missing required fields:" << message;
+    //     return;
+    // }
+
+    // if(obj.contains("model") && obj["model"].isString()){
+    //     QString modelName = obj["model"].toString();
+    //     if (modelName.startsWith("localModel/")){
+    //         modelName.remove(0, QString("localModel/").length());
+    //         OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
+
+    //         if(offlineModel != nullptr && offlineModel->isDownloading()){
+    //             m_socketToModelId[pClient] = offlineModel->id();
+    //         }else{
+    //             qCWarning(logDeveloper) << "models is not evailable";
+    //             qCWarning(logDeveloperView) << "models is not evailable";
+    //             QJsonObject errorObj;
+    //             errorObj["error"] = "models is not evailable";
+    //             QJsonDocument doc(errorObj);
+    //             qCWarning(logDeveloper) << "JSON missing required fields:" << message;
+    //             return;
+    //         }
+    //     }else{
+    //         OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
+    //         if(onlineModel != nullptr &&onlineModel->installModel() ){
+    //             m_socketToModelId[pClient] = onlineModel->id();
+    //         }else{
+    //             qCWarning(logDeveloper) << "models is not evailable";
+    //             qCWarning(logDeveloperView) << "models is not evailable";
+    //             QJsonObject errorObj;
+    //             errorObj["error"] = "models is not evailable";
+    //             QJsonDocument doc(errorObj);
+    //             qCWarning(logDeveloper) << "JSON missing required fields:" << message;
+    //             return;
+    //         }
+    //     }
+    // }else if(CodeDeveloperList::instance(nullptr)->modelId() == -1){
+    //     setModelId(CodeDeveloperList::instance(nullptr)->modelId());
+    // }else{
+    //     qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
+    //     qCWarning(logDeveloperView) << "postItem missing or invalid 'modelId' field";
+    //     QJsonObject errorObj;
+    //     errorObj["error"] = "Missing or invalid 'modelId' field";
+    //     QJsonDocument doc(errorObj);
+    //     qCWarning(logDeveloper) << "JSON missing required fields:" << message;
+    //     return;
+    // }
+
+    m_socketToPrompt[pClient] = obj["messages"].toString();
     m_socketToGeneratedText[pClient] = "";
 
     qCInfo(logDeveloper) << "Set modelId to" << m_socketToModelId[pClient] << "and prompt to" << m_socketToPrompt[pClient];
@@ -286,6 +333,7 @@ void ChatServer::tokenResponse(const QString &token)
 
     m_socketToGeneratedText[m_currentClient] += token;
     qCInfo(logDeveloper) << "tokenResponse received token:" << token << "for client:" << m_currentClient;
+    qCInfo(logDeveloperView) << token;
 
     QJsonObject response;
     response["response"] = token;
@@ -295,6 +343,7 @@ void ChatServer::tokenResponse(const QString &token)
 
 void ChatServer::finishedResponse(const QString &warning) {
     qCInfo(logDeveloper) << "finishedResponse called with warning:" << warning;
+    qCInfo(logDeveloperView) << "finishedResponse called";
     setResponseInProgress(false);
 }
 
@@ -309,68 +358,12 @@ void ChatServer::updateModelSettingsDeveloper(){
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
-// void ChatServer::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
-//     setModelId(id);
-//     setModelText(text);
-//     setModelIcon(icon);
-//     setModelPromptTemplate(promptTemplate);
-//     setModelSystemPrompt(systemPrompt);
-//     if(id == -1)
-//         setModelSelect(false);
-//     else
-//         setModelSelect(true);
-
-//     // if(!m_isEmptyChatServer){
-//     //     if(m_modelPromptTemplate != "")
-//     //         m_currentChatServer->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
-//     //     if(m_modelSystemPrompt != "")
-//     //         m_currentChatServer->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
-//     // }
-// }
-
-QString ChatServer::modelSystemPrompt() const{return m_modelSystemPrompt;}
-void ChatServer::setModelSystemPrompt(const QString &newModelSystemPrompt){
-    if (m_modelSystemPrompt == newModelSystemPrompt)
-        return;
-    m_modelSystemPrompt = newModelSystemPrompt;
-    emit modelSystemPromptChanged();
-    qCInfo(logDeveloper) << "modelSystemPrompt set to" << newModelSystemPrompt;
-}
-
-QString ChatServer::modelPromptTemplate() const{return m_modelPromptTemplate;}
-void ChatServer::setModelPromptTemplate(const QString &newModelPromptTemplate){
-    if (m_modelPromptTemplate == newModelPromptTemplate)
-        return;
-    m_modelPromptTemplate = newModelPromptTemplate;
-    emit modelPromptTemplateChanged();
-    qCInfo(logDeveloper) << "modelPromptTemplate set to" << newModelPromptTemplate;
-}
-
-QString ChatServer::modelText() const{return m_modelText;}
-void ChatServer::setModelText(const QString &newModelText){
-    if (m_modelText == newModelText)
-        return;
-    m_modelText = newModelText;
-    emit modelTextChanged();
-    qCInfo(logDeveloper) << "modelText set to" << newModelText;
-}
-
-QString ChatServer::modelIcon() const{return m_modelIcon;}
-void ChatServer::setModelIcon(const QString &newModelIcon){
-    if (m_modelIcon == newModelIcon)
-        return;
-    m_modelIcon = newModelIcon;
-    emit modelIconChanged();
-    qCInfo(logDeveloper) << "modelIcon set to" << newModelIcon;
-}
-
 int ChatServer::modelId() const{return m_modelId;}
 void ChatServer::setModelId(int newModelId){
     if (m_modelId == newModelId)
         return;
     m_modelId = newModelId;
     emit modelIdChanged();
-    qCInfo(logDeveloper) << "modelId set to" << newModelId;
 }
 
 Provider *ChatServer::provider() const { return m_provider; }
@@ -379,16 +372,6 @@ void ChatServer::setProvider(Provider *newProvider) {
         return;
     m_provider = newProvider;
     emit providerChanged();
-    qCInfo(logDeveloper) << "Provider changed.";
-}
-
-bool ChatServer::modelSelect() const{return m_modelSelect;}
-void ChatServer::setModelSelect(bool newModelSelect){
-    if (m_modelSelect == newModelSelect)
-        return;
-    m_modelSelect = newModelSelect;
-    emit modelSelectChanged();
-    qCInfo(logDeveloper) << "modelSelect set to" << newModelSelect;
 }
 
 bool ChatServer::responseInProgress() const{return m_responseInProgress;}
@@ -397,7 +380,6 @@ void ChatServer::setResponseInProgress(bool newResponseInProgress){
         return;
     m_responseInProgress = newResponseInProgress;
     emit responseInProgressChanged();
-    qCInfo(logDeveloper) << "responseInProgress set to" << newResponseInProgress;
 }
 
 bool ChatServer::loadModelInProgress() const{return m_loadModelInProgress;}
@@ -406,7 +388,6 @@ void ChatServer::setLoadModelInProgress(bool newLoadModelInProgress){
         return;
     m_loadModelInProgress = newLoadModelInProgress;
     emit loadModelInProgressChanged();
-    qCInfo(logDeveloper) << "loadModelInProgress set to" << newLoadModelInProgress;
 }
 
 bool ChatServer::isLoadModel() const{return m_isLoadModel;}
@@ -415,7 +396,6 @@ void ChatServer::setIsLoadModel(bool newIsLoadModel){
         return;
     m_isLoadModel = newIsLoadModel;
     emit isLoadModelChanged();
-    qCInfo(logDeveloper) << "isLoadModel set to" << newIsLoadModel;
 }
 
 ModelSettings *ChatServer::modelSettings() const{return m_modelSettings;}
@@ -426,5 +406,4 @@ void ChatServer::setModel(Model *newModel){
         return;
     m_model = newModel;
     emit modelChanged();
-    qCInfo(logDeveloper) << "model pointer changed";
 }

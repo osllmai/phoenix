@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
+import '../../../component_library/button'
+
 
 Item {
     id: control
@@ -40,18 +42,33 @@ Item {
            }
         }
     }
+
+    Item{
+        id:searchEmptyHistory
+        visible: conversationList.count === 0 && listView.count === 0
+        anchors.fill: parent
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/history.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 120; height: 120
+        }
+    }
     Item{
         id:emptyHistory
-        visible: listView.count === 0
+        visible: conversationList.count !== 0 && listView.count === 0
         anchors.fill: parent
-        Label {
-            id: textId
-            text: "History is empty."
-            anchors.verticalCenter: parent.verticalCenter
+        MyIcon {
+            id: searchNotFoundModelIconId
+            myIcon: "qrc:/media/icon/notFoundHistory.svg"
+            iconType: Style.RoleEnum.IconType.Image
             anchors.horizontalCenter: parent.horizontalCenter
-            color: Style.Colors.textInformation
-            font.pixelSize: 14
-            clip: true
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 80; height: 80
         }
     }
 }

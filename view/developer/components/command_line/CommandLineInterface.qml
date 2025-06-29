@@ -51,6 +51,7 @@ Item {
                     isNeedAnimation: true
                     checkable: true
                     checked: control.selectedFilter === modelData
+                    selected: control.selectedFilter === modelData
                     onClicked: control.selectedFilter = modelData
                 }
                 // footer: MyButton {

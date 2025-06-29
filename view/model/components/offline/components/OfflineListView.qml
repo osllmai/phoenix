@@ -22,11 +22,11 @@ ListView {
     model: offlineModelListFilter
     delegate: Item{
        width: gridView.width
-       height: window.isDesktopSize? 100:135
+       height: window.isDesktopSize? 80:115
 
        OfflineRowDelegate {
            id: indoxItem
-           anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
+           anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/8
            Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
        }
     }

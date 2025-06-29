@@ -108,7 +108,6 @@ signals:
     void requestUnLoadModel();
     void requestStop();
 
-
 private:
     void prompt(const std::optional<QJsonObject> json);
     void loadModel(const int id);

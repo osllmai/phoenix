@@ -198,7 +198,7 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
 
     QString logLine = QString("[%1] [%2] %3 %4\n").arg(timestamp, levelStr, contextInfo, message);
 
-    if (QString(context.category) == "phoenix.developer") {
+    if (QString(context.category) == "phoenix.developerView") {
         QMutexLocker locker(&m_mutex_developerList);
         m_developerLogs = m_developerLogs + QString("%1 [%2] %3\n").arg(timestamp, levelStr, message) ;
         emit developerLogsChanged();

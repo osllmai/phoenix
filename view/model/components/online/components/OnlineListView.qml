@@ -20,10 +20,9 @@ ListView {
     clip: true
 
     model: onlineModelListFilter
-    delegate: Rectangle{
-       width: gridView.cellWidth
-       height: gridView.cellHeight
-       color: "#00ffffff"
+    delegate: Item{
+       width: gridView.width
+       height: window.isDesktopSize? 100:135
 
        OnlineRowDelegate {
            id: indoxItem

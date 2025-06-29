@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
+import '../../../component_library/button'
 import './components'
 
 Item {
@@ -22,24 +23,25 @@ Item {
 
     OfflineGridView {
         id: gridView
-        visible: (gridView.count !== 0) && (window.isGridView)
+        visible: (gridView.count !== 0) && (window.modelPageView === "gridView")
     }
     OfflineListView {
         id: listView
-        visible: (gridView.count !== 0) && (!window.isGridView)
+        visible: (gridView.count !== 0) && (window.modelPageView === "listView")
     }
+
     Item{
         id:emptyHistory
         visible: gridView.count === 0
         anchors.fill: parent
-        Label {
-            id: textId
-            text: "OfflineModel List is empty."
-            anchors.verticalCenter: parent.verticalCenter
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/notFoundModel.svg"
+            iconType: Style.RoleEnum.IconType.Image
             anchors.horizontalCenter: parent.horizontalCenter
-            color: Style.Colors.textInformation
-            font.pixelSize: 14
-            clip: true
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 120; height: 120
         }
     }
 }

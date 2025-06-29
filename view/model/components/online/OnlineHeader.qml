@@ -39,9 +39,11 @@ Item{
                 }
             }
             Column{
+                width: parent.width - searchBoxId.width - 40
+                height: (2*searchBoxId.height)
                 Item{
-                    width: parent.width - searchBoxId.width - 30
-                    height: searchBoxId.height + 20
+                    width: parent.width
+                    height: searchBoxId.height +10
 
                     ListView{
                         id: companyList
@@ -89,6 +91,7 @@ Item{
                             checkable: true
                             clip: true
                             checked: headerId.filtter === model.type
+                            selected: headerId.filtter === model.type
                             onClicked:{
                                 if(model.type ==="All" || model.type ==="Favorite"){
                                     onlineModelListFilter.filter(model.type)
@@ -98,15 +101,56 @@ Item{
                                 headerId.filtter= model.type
                             }
                         }
-                        // header: MyButton {
-                        //     id: footerItem
-                        //     myText: "..."
-                        //     bottonType: Style.RoleEnum.BottonType.Feature
-                        //     iconType: Style.RoleEnum.IconType.FeatureBlue
-                        //     isNeedAnimation: true
-                        //     checkable: true
-                        //     clip: true
-                        // }
+                    }
+                }
+                Item{
+                    width: parent.width
+                    height: searchBoxId.height +10
+
+                    ListView{
+                        id: viewList
+                        anchors.fill: parent
+                        spacing: 5
+                        cacheBuffer: Math.max(0, companyList.contentWidth)
+
+                        layoutDirection: Qt.RightToLeft
+                        orientation: Qt.Horizontal
+                        snapMode: ListView.SnapToItem
+
+                        interactive: contentWidth > width
+                        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                        ScrollBar.horizontal: ScrollBar {
+                            policy: ScrollBar.AsNeeded
+                        }
+                        clip: true
+
+                        model: ListModel {
+                            ListElement {
+                                modelPageView: "gridView"
+                                icon: "qrc:/media/icon/gridView.svg"
+                            }
+                            ListElement {
+                                modelPageView: "listView"
+                                icon: "qrc:/media/icon/listView.svg"
+                            }
+                        }
+                        delegate: MyButton {
+                            id: delegateViewId
+                            width: 30; height: 30
+                            myIcon: model.icon
+                            bottonType: Style.RoleEnum.BottonType.Feature
+                            iconType: Style.RoleEnum.IconType.Primary
+                            isNeedAnimation: true
+                            checkable: true
+                            checked: window.modelPageView === model.modelPageView
+                            selected: window.modelPageView === model.modelPageView
+                            onClicked:{
+                                if(window.modelPageView !== model.modelPageView){
+                                    window.modelPageView = model.modelPageView
+                                }
+                            }
+                        }
                     }
                 }
             }

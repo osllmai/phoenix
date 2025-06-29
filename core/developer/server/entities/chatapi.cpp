@@ -28,6 +28,7 @@ QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
 void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder)
 {
      qCInfo(logDeveloper) << "POST Request" ;
+     qCInfo(logDeveloperView) << "POST Request" ;
 
     responder->writeBeginChunked("text/event-stream");
 
@@ -62,6 +63,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
                 setModelId(offlineModel->id());
             }else{
                 qCWarning(logDeveloper) << "models is not evailable";
+                qCWarning(logDeveloperView) << "models is not evailable";
                 QJsonObject errorObj;
                 errorObj["error"] = "models is not evailable";
                 QJsonDocument doc(errorObj);
@@ -75,6 +77,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
                 setModelId(onlineModel->id());
             }else{
                 qCWarning(logDeveloper) << "models is not evailable";
+                qCWarning(logDeveloperView) << "models is not evailable";
                 QJsonObject errorObj;
                 errorObj["error"] = "models is not evailable";
                 QJsonDocument doc(errorObj);
@@ -87,6 +90,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
         setModelId(CodeDeveloperList::instance(nullptr)->modelId());
     }else{
         qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
+        qCWarning(logDeveloperView) << "postItem missing or invalid 'modelId' field";
         QJsonObject errorObj;
         errorObj["error"] = "Missing or invalid 'modelId' field";
         QJsonDocument doc(errorObj);
@@ -232,6 +236,7 @@ void ChatAPI::loadModelResult(const bool result, const QString &warning){
 
 void ChatAPI::tokenResponse(const QString &token) {
     qCInfo(logDeveloper) << "tokenResponse called with token:" << token;
+    qCInfo(logDeveloperView) << token;
     QJsonObject obj;
     obj["response"] = token;
     QJsonDocument doc(obj);
@@ -243,6 +248,7 @@ void ChatAPI::tokenResponse(const QString &token) {
 
 void ChatAPI::finishedResponse(const QString &warning) {
     qCInfo(logDeveloper) << "finishedResponse called with warning:" << warning;
+    qCInfo(logDeveloper) << "finishedResponse called ";
     QJsonObject obj;
     obj["status"] = "end";
     obj["warning"] = warning;
@@ -269,7 +275,6 @@ void ChatAPI::setModelId(int newModelId){
         return;
     m_modelId = newModelId;
     emit modelIdChanged();
-    qCInfo(logDeveloper) << "Model id changed to:" << newModelId;
 }
 
 Provider *ChatAPI::provider() const { return m_provider; }
@@ -278,7 +283,6 @@ void ChatAPI::setProvider(Provider *newProvider) {
         return;
     m_provider = newProvider;
     emit providerChanged();
-    qCInfo(logDeveloper) << "Provider changed.";
 }
 
 bool ChatAPI::responseInProgress() const{return m_responseInProgress;}
@@ -287,7 +291,6 @@ void ChatAPI::setResponseInProgress(bool newResponseInProgress){
         return;
     m_responseInProgress = newResponseInProgress;
     emit responseInProgressChanged();
-    qCInfo(logDeveloper) << "Response in progress changed to:" << newResponseInProgress;
 }
 
 bool ChatAPI::loadModelInProgress() const{return m_loadModelInProgress;}
@@ -296,7 +299,6 @@ void ChatAPI::setLoadModelInProgress(bool newLoadModelInProgress){
         return;
     m_loadModelInProgress = newLoadModelInProgress;
     emit loadModelInProgressChanged();
-    qCInfo(logDeveloper) << "Load model in progress changed to:" << newLoadModelInProgress;
 }
 
 bool ChatAPI::isLoadModel() const{return m_isLoadModel;}
@@ -305,7 +307,6 @@ void ChatAPI::setIsLoadModel(bool newIsLoadModel){
         return;
     m_isLoadModel = newIsLoadModel;
     emit isLoadModelChanged();
-    qCInfo(logDeveloper) << "Is load model changed to:" << newIsLoadModel;
 }
 
 ModelSettings *ChatAPI::modelSettings() const{return m_modelSettings;}
@@ -316,5 +317,4 @@ void ChatAPI::setModel(Model *newModel){
         return;
     m_model = newModel;
     emit modelChanged();
-    qCInfo(logDeveloper) << "Model pointer changed.";
 }

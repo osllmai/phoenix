@@ -23,10 +23,9 @@ GridView {
     clip: true
 
     model: onlineModelListFilter
-    delegate: Rectangle{
+    delegate: Item{
        width: gridView.cellWidth
        height: gridView.cellHeight
-       color: "#00ffffff"
 
        OnlineBoxDelegate {
            id: indoxItem

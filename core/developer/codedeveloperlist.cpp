@@ -259,6 +259,7 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
             portAPIArg = m_parserModel.value("portAPI").toUShort();
 
         qCInfo(logDeveloper) << "Developer server starting on portAPI:" << portAPIArg;
+        qCInfo(logDeveloperView) << "Server starting on port:" << portAPIArg;
 
         auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
         auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
@@ -281,6 +282,7 @@ void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
     }else{
         m_tcpServer->close();
         qCInfo(logDeveloper) << "stop HTTP Server at portAPI";
+        qCInfo(logDeveloperView) << "stop HTTP Server at port";
     }
     emit isRunningAPIChanged();
 }
@@ -320,12 +322,15 @@ void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
         m_chatServer = new ChatServer(portSocketChat, debug);
 
         qCInfo(logDeveloper) << "WebSocket Server running at portSocket:" << portSocketChat;
+        qCInfo(logDeveloperView) << "WebSocket Server running at port:" << portSocketChat;
 
         emit isRunningSocketChanged();
 
         qCInfo(logDeveloper) << "Developer server started successfully.";
     }else{
         // m_chatServer->closed();
+        qCInfo(logDeveloper) << "stop WebSocket Server at portAPI";
+        qCInfo(logDeveloperView) << "stop WebSocket Server at port";
     }
     emit isRunningSocketChanged();
     qCInfo(logDeveloper) << "Socket isRunning set to" << newIsRunningSocket;
@@ -337,7 +342,7 @@ void CodeDeveloperList::setPortSocket(quint16 newportSocket) {
         return;
     m_portSocket = newportSocket;
     emit portSocketChanged();
-    qCInfo(logDeveloper) << "portSocket changed to" << m_portSocket;
+    qCInfo(logDeveloper) << "portSocket changed to " << m_portSocket;
 }
 
 void CodeDeveloperList::setCurrentLanguage(int newId) {

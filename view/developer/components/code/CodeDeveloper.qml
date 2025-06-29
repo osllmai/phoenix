@@ -51,7 +51,8 @@ Item {
                     iconType: Style.RoleEnum.IconType.FeatureBlue
                     isNeedAnimation: true
                     checkable: true
-                    checked: codeDeveloperList.currentProgramLanguage.name === model.name
+                    checked:codeDeveloperList.currentProgramLanguage.name === model.name
+                    selected: codeDeveloperList.currentProgramLanguage.name === model.name
                     onClicked: codeDeveloperList.setCurrentLanguage(model.id)
                 }
                 // footer: MyButton {

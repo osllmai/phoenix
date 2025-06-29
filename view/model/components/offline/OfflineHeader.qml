@@ -41,11 +41,10 @@ Item{
             }
             Column{
                 width: parent.width - searchBoxId.width - 40
-                height: (2*searchBoxId.height) + 20 + 10
-                spacing: 10
+                height: (2*searchBoxId.height)
                 Item{
-                    width: parent.width - searchBoxId.width - 40
-                    height: searchBoxId.height + 20
+                    width: parent.width
+                    height: searchBoxId.height +10
 
                     ListView{
                         id: companyList
@@ -91,6 +90,7 @@ Item{
                             isNeedAnimation: true
                             checkable: true
                             checked: headerId.filtter === model.type
+                            selected: headerId.filtter === model.type
                             onClicked:{
                                 if(model.type ==="All" || model.type ==="Favorite"){
                                     offlineModelListFilter.filter(model.type)
@@ -103,8 +103,8 @@ Item{
                     }
                 }
                 Item{
-                    width: parent.width - searchBoxId.width - 40
-                    height: searchBoxId.height + 20
+                    width: parent.width
+                    height: searchBoxId.height +10
 
                     ListView{
                         id: viewList
@@ -126,11 +126,11 @@ Item{
 
                         model: ListModel {
                             ListElement {
-                                isGridView: true
+                                modelPageView: "gridView"
                                 icon: "qrc:/media/icon/gridView.svg"
                             }
                             ListElement {
-                                isGridView: false
+                                modelPageView: "listView"
                                 icon: "qrc:/media/icon/listView.svg"
                             }
                         }
@@ -138,13 +138,16 @@ Item{
                             id: delegateViewId
                             width: 30; height: 30
                             myIcon: model.icon
-                            bottonType: Style.RoleEnum.BottonType.Primary
+                            bottonType: Style.RoleEnum.BottonType.Feature
                             iconType: Style.RoleEnum.IconType.Primary
                             isNeedAnimation: true
                             checkable: true
-                            checked: window.isGridView === model.isGridView
+                            checked: window.modelPageView === model.modelPageView
+                            selected: window.modelPageView === model.modelPageView
                             onClicked:{
-                                window.isGridView = model.isGridView
+                                if(window.modelPageView !== model.modelPageView){
+                                    window.modelPageView = model.modelPageView
+                                }
                             }
                         }
                     }

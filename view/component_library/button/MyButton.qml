@@ -535,7 +535,7 @@ T.Button {
     property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
     property bool isPressed: control.pressed && control.enabled
     property bool isDisabled: !control.enabled
-    property bool isSelected: (selected || (control.checked && control.checkable)) && control.enabled
+    property bool isSelected: (control.selected || (control.checked && control.checkable)) && control.enabled
 
     states: [
         State {

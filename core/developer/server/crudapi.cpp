@@ -28,6 +28,7 @@ std::optional<QJsonObject> CrudAPI::byteArrayToJsonObject(const QByteArray &arr)
     const auto json = QJsonDocument::fromJson(arr, &err);
     if (err.error || !json.isObject()) {
         qCWarning(logDeveloper) << "Failed to parse JSON:" << err.errorString();
+        qCWarning(logDeveloperView) << "Failed to parse JSON:" << err.errorString();
         return std::nullopt;
     }
     qCInfo(logDeveloper) << "JSON parsed successfully";
