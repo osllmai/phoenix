@@ -5,7 +5,7 @@ import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Rectangle{
-    id: controlId
+    id: control
     height: 90; width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
@@ -16,10 +16,14 @@ Rectangle{
     property string textInput: speechToText.text
     onTextInputChanged: {
         if(textInput != "")
-            inputTextBox.text  = controlId.textInput
+            inputTextBox.text  = control.textInput
+    }
+    function sendMessage(){
+        sendIconId.clicked()
     }
 
     signal sendPrompt(var prompt)
+    signal openModelIsLoaded()
 
     function selectSendIcon(){
         if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
@@ -79,8 +83,9 @@ Rectangle{
                 placeholderTextColor: Style.Colors.textInformation
 
                 onTextChanged: {
-                    controlId.layer.enabled = true
+                    control.layer.enabled = true
                     adjustHeight()
+                    console.log(inputTextBox.text)
                 }
 
                 onContentHeightChanged: {
@@ -90,9 +95,9 @@ Rectangle{
                 function adjustHeight() {
                     const newHeight = Math.max(40, inputTextBox.contentHeight);
                     if (inputTextBox.text === "") {
-                        controlId.height = 90;
+                        control.height = 90;
                     } else {
-                        controlId.height = Math.min(newHeight + 27, 180) + iconList.height ;
+                        control.height = Math.min(newHeight + 27, 180) + iconList.height ;
                     }
                 }
 
@@ -115,10 +120,10 @@ Rectangle{
                 }
 
                 onEditingFinished: {
-                    controlId.layer.enabled= false
+                    control.layer.enabled= false
                 }
                 onPressed: {
-                    controlId.layer.enabled= true
+                    control.layer.enabled= true
                 }
             }
         }
@@ -157,8 +162,9 @@ Rectangle{
                     myIcon: selectSendIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
+                        console.log("HIHIIHIHIIH ISFNVKBKKNBGKFNjkf")
                         if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
-                            modelIsloadedDialogId.open()
+                            control.openModelIsLoaded()
                         }else if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
                             conversationList.currentConversation.stop()
                         } else if((!conversationList.isEmptyConversation &&
@@ -166,6 +172,8 @@ Rectangle{
                                    !conversationList.currentConversation.loadModelInProgress) ||
                                    conversationList.isEmptyConversation){
                             sendPrompt(inputTextBox.text)
+                            console.log("HIHIIHIHIIH ISFNVKBKKNBGKFNjkf               1")
+                            console.log(inputTextBox.text)
 
                             if (conversationList.modelSelect)
                                 inputTextBox.text = ""
@@ -208,10 +216,5 @@ Rectangle{
                 appBodyId.currentIndex = 2
             }
         }
-    }
-    NotificationDialog{
-        id: modelIsloadedDialogId
-        titleText: "Model is Loded"
-        about:"Sorry! Please wait for finishe load model.."
     }
 }

@@ -5,10 +5,13 @@ import '../../component_library/style' as Style
 import '../../component_library/button'
 
 Item {
-    id: control
+    id: chatBodyBoxId
     width: parent.width
     height: parent.height
     signal openModelList()
+    function sendMessage(){
+        inputBoxId.sendMessage = true
+    }
 
     Column{
         spacing: 10
@@ -26,11 +29,16 @@ Item {
                     if((conversationList.modelSelect) && (prompt !== "")){
 
                         conversationList.currentConversation.prompt(prompt, conversationList.modelId)
+                        console.log("DHFIHFIGHHIDGGGGGGGGGGGGIB                  1")
 
                     }else if((prompt !== "")){
                         notificationDialogId.open()
-                        control.openModelList()
+                        chatBodyBoxId.openModelList()
+                        console.log("DHFIHFIGHHIDGGGGGGGGGGG                2")
                     }
+                }
+                function onOpenModelIsLoaded(){
+                    modelIsloadedDialogId.open()
                 }
             }
         }
@@ -40,6 +48,12 @@ Item {
         id: notificationDialogId
         titleText: "No model selected"
         about:"Sorry! No model is currently active. Please try again later or check the settings."
+    }
+
+    NotificationDialog {
+        id: modelIsloadedDialogId
+        titleText: "Loading Model"
+        about: "Please wait until the model finishes loading. You can stop the process after the loading is complete."
     }
 
     Column{
@@ -73,7 +87,7 @@ Item {
                         conversationList.addRequest(prompt)
                     }else if((prompt !== "")){
                         notificationDialogId.open()
-                        control.openModelList()
+                        chatBodyBoxId.openModelList()
                     }
                 }
             }

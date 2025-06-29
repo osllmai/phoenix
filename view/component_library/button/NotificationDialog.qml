@@ -50,26 +50,6 @@ Popup{
             }
         }
 
-        // ProgressBar {
-        //     id: progressBarCPU
-        //     width: parent.width
-        //     height: 6
-        //     value: control.progressValue
-        //     anchors.bottom: parent.bottom
-
-        //     background: null
-
-        //     contentItem: Item {
-        //         implicitHeight: 6
-        //         Rectangle {
-        //             radius: 2
-        //             width: progressBarCPU.visualPosition * parent.width; height: 6
-        //             color: Style.Colors.boxBorder
-        //             Behavior on width { NumberAnimation { duration: 100 } }
-        //         }
-        //     }
-        // }
-
         layer.enabled: true
         layer.effect: Glow {
              samples: 40

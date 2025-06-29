@@ -11,6 +11,7 @@ Item{
     function openModelComboBox(){
         currentModelComboBoxId.popup.open();
     }
+    signal sendMessage()
 
     clip: true
 
@@ -38,6 +39,12 @@ Item{
         }
         ModelChatComboBox{
             id: currentModelComboBoxId
+            Connections{
+                target: currentModelComboBoxId
+                function onSendMessage(){
+                    headerId.sendMessage()
+                }
+            }
         }
     }
 

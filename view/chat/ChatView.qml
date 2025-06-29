@@ -13,6 +13,10 @@ Item {
             function onOpenHistoryDrawer(){
                 historyId.open()
             }
+            function onSendMessage(){
+                chatBodyId.sendMessage()
+            }
+
         }
     }
     ChatBody{

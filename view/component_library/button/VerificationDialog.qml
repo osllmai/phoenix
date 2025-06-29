@@ -5,8 +5,8 @@ import '../style' as Style
 
 Dialog {
     id: dialogId
-    x: (parent.width - width) / 2
-    y: (parent.height - height) / 2
+    x: (window.width - width) / 2
+    y: (window.height - height) / 2
     width: 300
     height: 180
 
