@@ -5,8 +5,11 @@ import '../../../component_library/button'
 
 Item{
     id:headerId
+
+    property bool isSearchInColumn: window.isDesktopSize
+
     width: parent.width
-    height: phoenixId.height + fillterBox.height  + 18
+    height: phoenixId.height + fillterBox.height + (headerId.isSearchInColumn? 0: searchBox2Id.height + 10)
     clip:true
 
     signal search(var text)
@@ -26,12 +29,24 @@ Item{
             font.styleName: "Bold"
         }
 
+        SearchButton{
+            id: searchBox2Id
+            visible: !headerId.isSearchInColumn
+            Connections{
+                target: searchBoxId
+                function onSearch(myText){
+                    offlineModelListFilter.setFilterFixedString(myText)
+                }
+            }
+        }
+
         Row{
             id: fillterBox
             width: parent.width
             spacing: 10
             SearchButton{
                 id: searchBoxId
+                visible: headerId.isSearchInColumn
                 Connections{
                     target: searchBoxId
                     function onSearch(myText){
@@ -40,8 +55,9 @@ Item{
                 }
             }
             Column{
-                width: parent.width - searchBoxId.width - 40
-                height: (2*searchBoxId.height)
+                width: headerId.isSearchInColumn? parent.width - searchBoxId.width - 40: parent.width - 20
+                height: 2*searchBoxId.height + 20
+
                 Item{
                     width: parent.width
                     height: searchBoxId.height +10
@@ -104,13 +120,13 @@ Item{
                 }
                 Item{
                     width: parent.width
-                    height: searchBoxId.height +10
+                    height: searchBoxId.height + 10
 
                     ListView{
                         id: viewList
                         anchors.fill: parent
                         spacing: 5
-                        cacheBuffer: Math.max(0, companyList.contentWidth)
+                        cacheBuffer: Math.max(0, viewList.contentWidth)
 
                         layoutDirection: Qt.RightToLeft
                         orientation: Qt.Horizontal

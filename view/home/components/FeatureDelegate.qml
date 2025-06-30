@@ -85,7 +85,7 @@ T.Button {
                 MyButton{
                     id:goPageId
                     visible: control.goPage !== -1
-                    myText: "Select"
+                    myText: "Start"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
                         target: goPageId
