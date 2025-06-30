@@ -177,10 +177,12 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelSystemPrompt(systemPrompt);
     if(id == -1){
         setModelSelect(false);
-        if(m_currentConversation != nullptr && m_currentConversation->isLoadModel()){
+        if(m_currentConversation != nullptr && m_currentConversation->isLoadModel() &&
+            !m_currentConversation->loadModelInProgress() && !m_currentConversation->responseInProgress()){
             m_currentConversation->unloadModel();
         }
-        if(m_previousConversation != nullptr && m_previousConversation->isLoadModel()){
+        if(m_previousConversation != nullptr && m_previousConversation->isLoadModel() &&
+            !m_previousConversation->loadModelInProgress() && !m_previousConversation->responseInProgress()){
             m_previousConversation->unloadModel();
         }
     }else

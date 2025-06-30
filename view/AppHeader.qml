@@ -32,7 +32,7 @@ T.Button {
              }
              Label {
                  id: phoenixTitleId
-                 text: "Phoenix"
+                 text: "Phoenix v0.1.2"
                  color: Style.Colors.textTitle
                  anchors.verticalCenter: logoId.verticalCenter
                  font.pixelSize: 14

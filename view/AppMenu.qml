@@ -161,7 +161,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v0.1.1-2025.05.03"
+            text: "v0.1.2-2025.06.29"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"
@@ -180,9 +180,9 @@ Rectangle{
         height: 230
         width: 365
         titleText: "Phoenix"
-        about: "Version: 0.1.1 (user setup)
+        about: "Version: 0.1.2 (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.05.03
+Date: 2025.06.29
 OS: Windows x64
 "
         textBotton1: "Copy"

@@ -153,32 +153,89 @@ Rectangle{
                     }
                 }
 
-                MyIcon {
-                    id: sendIconId
-                    width: 30; height: 30
-                    myIcon: selectSendIcon()
-                    iconType: Style.RoleEnum.IconType.Primary
-                    onClicked: {
-                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
-                            control.openModelIsLoaded()
-                        }else if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
-                            conversationList.currentConversation.stop()
-                        } else if((!conversationList.isEmptyConversation &&
-                                   !conversationList.currentConversation.responseInProgress &&
-                                   !conversationList.currentConversation.loadModelInProgress) ||
-                                   conversationList.isEmptyConversation){
-                            sendPrompt(inputTextBox.text)
+                Item {
+                    id: sendButtonArea
+                    width: 30
+                    height: 30
 
-                            if (conversationList.modelSelect)
-                                inputTextBox.text = ""
+                    Loader {
+                        id: loadedImage
+                        anchors.fill: parent
+                        active: !conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress
+                        sourceComponent: BusyIndicator {
+                            running: true
+                            width: 30
+                            height: 30
 
-                            if(speechToText.speechInProcess){
-                                speechToText.stopRecording()
-                                speechToText.text = ""
+                            contentItem: Item {
+                                implicitWidth: 30
+                                implicitHeight: 30
+
+                                Canvas {
+                                    id: spinnerCanvas
+                                    anchors.fill: parent
+                                    onPaint: {
+                                        var ctx = getContext("2d")
+                                        ctx.clearRect(0, 0, width, height)
+                                        ctx.beginPath()
+                                        ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
+                                        ctx.lineWidth = 3
+                                        ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                        ctx.stroke()
+                                    }
+                                    Component.onCompleted: requestPaint()
+                                }
+
+                                RotationAnimator on rotation {
+                                    from: 0
+                                    to: 360
+                                    duration: 1000
+                                    loops: Animation.Infinite
+                                    running: true
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        control.openModelIsLoaded()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    MyIcon {
+                        id: sendIconId
+                        visible: conversationList.isEmptyConversation || (!conversationList.isEmptyConversation && !conversationList.currentConversation.loadModelInProgress)
+                        anchors.fill: parent
+                        myIcon: selectSendIcon()
+                        iconType: Style.RoleEnum.IconType.Primary
+
+                        onClicked: {
+                            if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
+                                control.openModelIsLoaded()
+                            } else if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
+                                conversationList.currentConversation.stop()
+                            } else if (
+                                (!conversationList.isEmptyConversation &&
+                                 !conversationList.currentConversation.responseInProgress &&
+                                 !conversationList.currentConversation.loadModelInProgress) ||
+                                 conversationList.isEmptyConversation)
+                            {
+                                sendPrompt(inputTextBox.text)
+
+                                if (conversationList.modelSelect)
+                                    inputTextBox.text = ""
+
+                                if (speechToText.speechInProcess) {
+                                    speechToText.stopRecording()
+                                    speechToText.text = ""
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
     }
