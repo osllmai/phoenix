@@ -8,7 +8,7 @@ import "../../../../../component_library/button"
 
 Column{
     id:control
-    width: (parent.width/4)-8
+    width: parent.width
     anchors.verticalCenter: parent.verticalCenter
     spacing: 5
 
