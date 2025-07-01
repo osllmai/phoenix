@@ -35,11 +35,33 @@ T.Button {
                     width: 40; height: 40
                 }
 
+                Label {
+                    id: titleId
+                    visible: !titleAndCopy.visible
+                    text: model.name
+                    color: Style.Colors.textTitle
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - logoModelId.width - likeIconId.width - copyId.width
+                    font.pixelSize: 14
+                    font.styleName: "Bold"
+                    clip: true
+                    elide: Label.ElideRight
+                }
+                MyCopyButton{
+                    id: copyId
+                    visible: !titleAndCopy.visible
+                    myText: TextArea{text: model.company.name + "/" + model.modelName;}
+                    anchors.verticalCenter: titleId.verticalCenter
+                    clip: true
+                }
+
                 Row{
+                    id: titleAndCopy
+                    visible: parent.width - logoModelId.width - likeIconId.width - title2Id.implicitWidth - copy2Id.width > 0
                     width: parent.width - logoModelId.width - likeIconId.width
                     anchors.verticalCenter: logoModelId.verticalCenter
                     Label {
-                        id: titleId
+                        id: title2Id
                         text: model.name
                         color: Style.Colors.textTitle
                         anchors.verticalCenter: parent.verticalCenter
@@ -49,9 +71,10 @@ T.Button {
                         elide: Label.ElideRight
                     }
                     MyCopyButton{
-                        id: copyId
+                        id: copy2Id
                         myText: TextArea{text: model.company.name + "/" + model.modelName;}
-                        anchors.verticalCenter: titleId.verticalCenter
+                        anchors.verticalCenter: title2Id.verticalCenter
+                        clip: true
                     }
                 }
 

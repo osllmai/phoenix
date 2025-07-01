@@ -24,7 +24,7 @@ T.Button {
         Row{
             id: headerId
             visible: window.isDesktopSize
-            width: 250
+            width: 150
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
@@ -35,12 +35,47 @@ T.Button {
                 enabled: false
                 width: 32; height: 32
             }
+            Label {
+                id: titleId
+                visible: !titleAndCopy.visible
+                text: model.name
+                color: Style.Colors.textTitle
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: 14
+                font.styleName: "Bold"
+                clip: true
+                elide: Label.ElideRight
+                MouseArea {
+                    id: infoMouseArea
+                    anchors.fill: titleId
+                    hoverEnabled: true
+
+                    onPositionChanged: {
+                        toolTip.x = mouseX
+                        toolTip.y = mouseY
+                    }
+
+                    MyToolTip{
+                        id: toolTip
+                        toolTipText: model.information
+                    }
+                }
+            }
+            MyCopyButton{
+                id: copyId
+                visible: !titleAndCopy.visible
+                myText: TextArea{text: "localModel/"+model.modelName;}
+                anchors.verticalCenter: titleId.verticalCenter
+                clip: true
+            }
             Row{
+                id: titleAndCopy
+                visible: parent.width - logoModelId.width - title2Id.implicitWidth - copy2Id.width > 0
                 width: parent.width - logoModelId.width
                 anchors.verticalCenter: logoModelId.verticalCenter
                 clip: true
                 Label {
-                    id: titleId
+                    id: title2Id
                     text: model.name
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: parent.verticalCenter
@@ -49,8 +84,8 @@ T.Button {
                     clip: true
                     elide: Label.ElideRight
                     MouseArea {
-                        id: infoMouseArea
-                        anchors.fill: titleId
+                        id: infoMouseArea2
+                        anchors.fill: title2Id
                         hoverEnabled: true
 
                         onPositionChanged: {
@@ -59,15 +94,15 @@ T.Button {
                         }
 
                         MyToolTip{
-                            id: toolTip
+                            id: toolTip2
                             toolTipText: model.information
                         }
                     }
                 }
                 MyCopyButton{
-                    id: copyId
+                    id: copy2Id
                     myText: TextArea{text: "localModel/"+model.modelName;}
-                    anchors.verticalCenter: titleId.verticalCenter
+                    anchors.verticalCenter: title2Id.verticalCenter
                     clip: true
                 }
             }
@@ -220,7 +255,7 @@ T.Button {
                     anchors.verticalCenter: logoModel2Id.verticalCenter
                     clip: true
                     Label {
-                        id: title2Id
+                        id: title3Id
                         text: model.name
                         color: Style.Colors.textTitle
                         anchors.verticalCenter: parent.verticalCenter
@@ -229,8 +264,8 @@ T.Button {
                         clip: true
                         elide: Label.ElideRight
                         MouseArea {
-                            id: infoMouseArea2
-                            anchors.fill: title2Id
+                            id: infoMouseArea3
+                            anchors.fill: title3Id
                             hoverEnabled: true
 
                             onPositionChanged: {
@@ -239,15 +274,15 @@ T.Button {
                             }
 
                             MyToolTip{
-                                id: toolTip2
+                                id: toolTip3
                                 toolTipText: model.information
                             }
                         }
                     }
                     MyCopyButton{
-                        id: copy2Id
+                        id: copy3Id
                         myText: TextArea{text: "localModel/"+model.modelName;}
-                        anchors.verticalCenter: title2Id.verticalCenter
+                        anchors.verticalCenter: title3Id.verticalCenter
                         clip: true
                     }
                 }
