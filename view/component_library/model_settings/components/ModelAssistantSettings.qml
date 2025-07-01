@@ -12,6 +12,8 @@ Item {
          id: instructionsBox
          height: 80; width: parent.width
          color: Style.Colors.boxHover
+         border.width: 0
+         border.color: Style.Colors.boxBorder
          radius: 12
          ScrollView {
              id: scrollInstruction
@@ -42,6 +44,12 @@ Item {
                  }
                  onTextChanged: {
                      modelSettingsId.updateSystemPrompt(instructionTextBox.text.replace(/\\n/g, "\n"))
+                 }
+                 onEditingFinished: {
+                     instructionsBox.border.width = 0
+                 }
+                 onPressed: {
+                     instructionsBox.border.width = 1
                  }
              }
          }

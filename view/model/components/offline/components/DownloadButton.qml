@@ -71,7 +71,8 @@ Item {
         }
         MyButton{
             id: rejectButton
-            visible: model.id === conversationList.modelId? true: false
+            visible: ((model.type === "Text Generation" && model.id === conversationList.modelId)? true: false) ||
+                     ((model.type === "Speech" && speechToText.modelPath === model.key)? true: false)
             width: 60
             myText: "Eject"
             bottonType: Style.RoleEnum.BottonType.Secondary
@@ -94,7 +95,7 @@ Item {
             id: startChatFillButton
             visible: isFillWidthDownloadButton
             width: control.width - deleteButton.width - (rejectButton.visible? (rejectButton.width +5): 0) - 5
-            myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
+            myText: model.type === "Text Generation"? ("Start Chat"): ((model.type === "Speech" && speechToText.modelPath === model.key)? "Go to Chat": "Set Model")
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){
@@ -104,10 +105,12 @@ Item {
                     appBodyId.currentIndex = 1
 
                 }else if(model.type === "Speech"){
-
-                    speechToText.modelPath = model.key
-                    speechToText.modelSelect = true
-
+                    if(startChatFillButton.myText === "Go to Chat"){
+                        appBodyId.currentIndex = 1
+                    }else{
+                        speechToText.modelPath = model.key
+                        speechToText.modelSelect = true
+                    }
                 }else{
                     console.log(model.type)
                 }
@@ -116,7 +119,7 @@ Item {
         MyButton{
             id: startChatButton
             visible: !isFillWidthDownloadButton
-            myText: model.type === "Text Generation"? ("Start Chat"): ("Set Model")
+            myText: model.type === "Text Generation"? ("Start Chat"): (model.type === "Speech"? "Go to Chat": "Set Model")
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){

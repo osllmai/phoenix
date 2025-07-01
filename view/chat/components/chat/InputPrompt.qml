@@ -18,6 +18,11 @@ Rectangle{
         if(textInput != "")
             inputTextBox.text  = control.textInput
     }
+
+    function requestEmptyTheInput(){
+        inputTextBox.text = ""
+    }
+
     function sendMessage(){
         sendIconId.clicked()
     }
@@ -63,6 +68,7 @@ Rectangle{
 
             TextArea {
                 id: inputTextBox
+
                 color: Style.Colors.textInformation
                 background: null
 

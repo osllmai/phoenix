@@ -25,6 +25,8 @@ Item {
             id: promptTemplateBox
             height: 80; width: parent.width
             color: Style.Colors.boxHover
+            border.width: 0
+            border.color: Style.Colors.boxBorder
             radius: 12
             ScrollView {
                 id: scrollPromptTemplate
@@ -54,6 +56,12 @@ Item {
                     }
                     onTextChanged: {
                         modelSettingsId.updatePromptTemplate(promptTemplateTextBox.text.replace(/\\n/g, "\n"))
+                    }
+                    onEditingFinished: {
+                        promptTemplateBox.border.width = 0
+                    }
+                    onPressed: {
+                        promptTemplateBox.border.width = 1
                     }
                 }
             }

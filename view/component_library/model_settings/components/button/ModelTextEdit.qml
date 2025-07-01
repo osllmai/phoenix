@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt5Compat.GraphicalEffects
+
 import '../../../style' as Style
 
 Item {
@@ -49,7 +51,20 @@ Item {
                     top: 65535
                 }
                 onTextChanged: sendValue(text)
+                onEditingFinished: {
+                    valueSliderBoxId.layer.enabled= false
+                }
+                onPressed: {
+                    valueSliderBoxId.layer.enabled= true
+                }
             }
+            layer.enabled: false
+            layer.effect: Glow {
+                 samples: 40
+                 color:  Style.Colors.boxBorder
+                 spread: 0.1
+                 transparentBorder: true
+             }
         }
     }
 }

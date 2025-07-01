@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import Qt5Compat.GraphicalEffects
 import '../../../style' as Style
 import '../../../button'
 
@@ -109,6 +110,12 @@ Item {
                     top: root.sliderTo
                     decimals: root.decimalPart
                 }
+                onEditingFinished: {
+                    valueSliderBoxId.layer.enabled= false
+                }
+                onPressed: {
+                    valueSliderBoxId.layer.enabled= true
+                }
             }
             TextField {
                 id: valueSlider2Id
@@ -130,7 +137,20 @@ Item {
                     bottom: root.sliderFrom
                     top: root.sliderTo
                 }
+                onEditingFinished: {
+                    valueSliderBoxId.layer.enabled= false
+                }
+                onPressed: {
+                    valueSliderBoxId.layer.enabled= true
+                }
             }
+            layer.enabled: false
+            layer.effect: Glow {
+                 samples: 40
+                 color:  Style.Colors.boxBorder
+                 spread: 0.1
+                 transparentBorder: true
+             }
         }
     }
 }

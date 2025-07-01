@@ -16,10 +16,19 @@ Item {
             inputBoxId.sendMessage()
     }
 
+    function requestEmptyTheInput(){
+        inputBoxId.requestEmptyTheInput()
+        inputBoxId2.requestEmptyTheInput()
+    }
+
     Column{
         spacing: 10
         anchors.fill: parent
         visible: !conversationList.isEmptyConversation
+        onVisibleChanged: {
+            chatBodyBoxId.requestEmptyTheInput()
+        }
+
         MyMessageList{
             id: myMessageView
         }
@@ -30,6 +39,7 @@ Item {
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
                         conversationList.currentConversation.prompt(prompt, conversationList.modelId)
+                        chatBodyBoxId.requestEmptyTheInput()
                     }else if((prompt !== "")){
                         notificationDialogId.open()
                         chatBodyBoxId.openModelList()
@@ -83,6 +93,7 @@ Item {
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
                         conversationList.addRequest(prompt)
+                        chatBodyBoxId.requestEmptyTheInput()
                     }else if((prompt !== "")){
                         notificationDialogId.open()
                         chatBodyBoxId.openModelList()

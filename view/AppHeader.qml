@@ -11,6 +11,7 @@ T.Button {
     height: 40
 
     onPressed: mouse => window.startSystemMove()
+    onDoubleClicked: mouse => maximizeSquareButtonId.clicked()
 
     background: null
      contentItem: Rectangle {
