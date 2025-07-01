@@ -36,47 +36,9 @@ T.Button {
                     width: 40; height: 40
                 }
 
-                Label {
-                    id: titleId
-                    visible: !titleAndCopy.visible
-                    text: model.name
-                    color: Style.Colors.textTitle
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: parent.width - logoModelId.width - likeIconId.width - copyId.width
-                    font.pixelSize: 14
-                    font.styleName: "Bold"
-                    clip: true
-                    elide: Label.ElideRight
-                }
-                MyCopyButton{
-                    id: copyId
-                    visible: !titleAndCopy.visible
-                    myText: TextArea{text: model.company.name + "/" + model.modelName;}
-                    anchors.verticalCenter: titleId.verticalCenter
-                    clip: true
-                }
-
-                Row{
-                    id: titleAndCopy
-                    visible: parent.width - logoModelId.width - likeIconId.width - title2Id.implicitWidth - copy2Id.width > 0
+                OnlineDelegateTitleAndCopyButton{
                     width: parent.width - logoModelId.width - likeIconId.width
-                    anchors.verticalCenter: logoModelId.verticalCenter
-                    Label {
-                        id: title2Id
-                        text: model.name
-                        color: Style.Colors.textTitle
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.pixelSize: 14
-                        font.styleName: "Bold"
-                        clip: true
-                        elide: Label.ElideRight
-                    }
-                    MyCopyButton{
-                        id: copy2Id
-                        myText: TextArea{text: model.company.name + "/" + model.modelName;}
-                        anchors.verticalCenter: title2Id.verticalCenter
-                        clip: true
-                    }
+                    height: parent.height
                 }
 
                 MyIcon{
@@ -129,80 +91,40 @@ T.Button {
                 color: "#00ffffff"
                 Row{
                     anchors.fill: parent
-                    Column{
-                        id:fileSizeBox
+
+                    OnlineDelegateInfoBox{
+                        id:typeBox
+                        myText: qsTr("Type")
+                        myValue: model.type
                         width: (parent.width/3)-2
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: fileSizeText
-                            color: Style.Colors.textInformation
-                            text: qsTr("Type")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: fileSizeValue
-                            color: Style.Colors.textInformation
-                            text: model.type
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
                     }
+
                     Rectangle{
                         id:line1
                         width: 1
                         height: parent.height
                         color: Style.Colors.boxBorder
                     }
-                    Column{
-                        id: ramRequiredBox
+
+                    OnlineDelegateInfoBox{
+                        id: contextWindowsBox
+                        myText: qsTr("Context Windows")
+                        myValue: model.contextWindows
                         width: (parent.width/3) + 12
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: ramRequiredText
-                            color: Style.Colors.textInformation
-                            text: qsTr("Context Windows")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: ramRequiredValue
-                            color: Style.Colors.textInformation
-                            text: model.contextWindows
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
                     }
+
                     Rectangle{
                         id:line2
                         width: 1
                         height: parent.height
                         color: Style.Colors.boxBorder
                     }
-                    Column{
-                        id: parameterersBox
+
+                    OnlineDelegateInfoBox{
+                        id:outputBox
+                        myText: qsTr("Output")
+                        myValue: model.output
                         width: (parent.width/3) - 10
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: parameterersText
-                            color: Style.Colors.textInformation
-                            text: qsTr("Output")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: parameterersValue
-                            color: Style.Colors.textInformation
-                            text: model.output
-                            font.pointSize: 8
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
                     }
                 }
             }

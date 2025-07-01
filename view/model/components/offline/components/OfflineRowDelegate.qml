@@ -25,7 +25,7 @@ T.Button {
         Row{
             id: headerId
             visible: window.isDesktopSize
-            width: 180
+            width: 220
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
