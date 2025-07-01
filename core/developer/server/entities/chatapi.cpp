@@ -61,7 +61,7 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
             modelName.remove(0, QString("localModel/").length());
             OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
 
-            if(offlineModel != nullptr && offlineModel->isDownloading()){
+            if(offlineModel != nullptr && offlineModel->downloadFinished()){
                 setModelId(offlineModel->id());
             }else{
                 qCWarning(logDeveloper) << "models is not evailable";
@@ -91,10 +91,10 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
     }else if(CodeDeveloperList::instance(nullptr)->modelId() == -1){
         setModelId(CodeDeveloperList::instance(nullptr)->modelId());
     }else{
-        qCWarning(logDeveloper) << "postItem missing or invalid 'modelId' field";
-        qCWarning(logDeveloperView) << "postItem missing or invalid 'modelId' field";
+        qCWarning(logDeveloper) << "postItem missing or invalid 'model' field";
+        qCWarning(logDeveloperView) << "postItem missing or invalid 'model' field";
         QJsonObject errorObj;
-        errorObj["error"] = "Missing or invalid 'modelId' field";
+        errorObj["error"] = "Missing or invalid 'model' field";
         QJsonDocument doc(errorObj);
         responder->writeChunk(doc.toJson(QJsonDocument::Compact));
         responder->writeEndChunked("{}");

@@ -227,10 +227,10 @@ void MessageTextProcessor::handleCodeBlocks(){
 // disabling this code and included functionality for v3.0.0 until I can figure out how to make this much
 // less buggy
 #if 0
-//            QTextBlockFormat blockFormat;
-//            blockFormat.setAlignment(Qt::AlignRight);
-//            copyCursor.setBlockFormat(blockFormat);
-//            copyCursor.insertImage(copyImageFormat, QTextFrameFormat::FloatRight);
+           QTextBlockFormat blockFormat;
+           blockFormat.setAlignment(Qt::AlignRight);
+           copyCursor.setBlockFormat(blockFormat);
+           copyCursor.insertImage(copyImageFormat, QTextFrameFormat::FloatRight);
 #endif
         }
 
