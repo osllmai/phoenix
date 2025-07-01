@@ -24,6 +24,7 @@ Item {
         visible: !titleAndCopy.visible
         myText: TextArea{text: "localModel/"+model.modelName;}
         anchors.verticalCenter: titleId.verticalCenter
+        anchors.right: parent.right
         clip: true
     }
     Row{

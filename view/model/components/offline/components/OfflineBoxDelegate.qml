@@ -29,6 +29,7 @@ T.Button {
             Row{
                 id: headerId
                 width: parent.width
+                height: Math.max(logoModelId.height, likeIconId.height)
                 MyIcon {
                     id: logoModelId
                     myIcon: "qrc:/media/image_company/" + model.icon
@@ -39,6 +40,7 @@ T.Button {
 
                 OfflineDelegateTitleAndCopyButton{
                     width: parent.width - logoModelId.width - likeIconId.width
+                    height: parent.height
                 }
 
                 MyIcon{
@@ -91,107 +93,47 @@ T.Button {
                 color: "#00ffffff"
                 Row{
                     anchors.fill: parent
-                    Column{
+
+                    OfflineDelegateInfoBox{
                         id:fileSizeBox
-                        width: (parent.width/4)-8
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: fileSizeText
-                            color: Style.Colors.textInformation
-                            text: qsTr("File size")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: fileSizeValue
-                            color: Style.Colors.textInformation
-                            text: model.fileSize + " GB"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
+                        myText: qsTr("File size")
+                        myValue: model.fileSize + " GB"
                     }
+
                     Rectangle{
                         id:line1
-                        width: 1
-                        height: parent.height
+                        width: 1; height: parent.height
                         color: Style.Colors.boxBorder
                     }
-                    Column{
-                        id: ramRequiredBox
-                        width: (parent.width/4)+ 17
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: ramRequiredText
-                            color: Style.Colors.textInformation
-                            text: qsTr("RAM requierd")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: ramRequiredValue
-                            color: Style.Colors.textInformation
-                            text: model.ramRamrequired + " GB"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
+
+                    OfflineDelegateInfoBox{
+                        id:ramRequiredBox
+                        myText: qsTr("RAM requierd")
+                        myValue: model.ramRamrequired + " GB"
                     }
+
                     Rectangle{
                         id:line2
-                        width: 1
-                        height: parent.height
+                        width: 1; height: parent.height
                         color: Style.Colors.boxBorder
                     }
-                    Column{
-                        id: parameterersBox
-                        width: (parent.width/4)
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: parameterersText
-                            color: Style.Colors.textInformation
-                            text: qsTr("Parameters")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: parameterersValue
-                            color: Style.Colors.textInformation
-                            text: model.parameters
-                            font.pointSize: 8
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
+
+                    OfflineDelegateInfoBox{
+                        id:parameterersBox
+                        myText: qsTr("Parameters")
+                        myValue: model.parameters
                     }
+
                     Rectangle{
                         id:line3
-                        width: 1
-                        height: parent.height
+                        width: 1; height: parent.height
                         color: Style.Colors.boxBorder
                     }
-                    Column{
-                        id: quantBox
-                        width: (parent.width/4)-20
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 5
-                        Label {
-                            id: quantText
-                            color: Style.Colors.textInformation
-                            text: qsTr("Quant")
-                            font.styleName: "Bold"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            font.pointSize: 8
-                        }
-                        Label {
-                            id: quantValue
-                            color: Style.Colors.textInformation
-                            text: model.quant
-                            font.pointSize: 8
-                            anchors.horizontalCenter: parent.horizontalCenter
-                        }
+
+                    OfflineDelegateInfoBox{
+                        id:quantBox
+                        myText: qsTr("Quant")
+                        myValue: model.quant
                     }
                 }
             }

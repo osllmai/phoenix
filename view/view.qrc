@@ -40,6 +40,7 @@
         <file>model/components/offline/components/OfflineRowDelegate.qml</file>
         <file>model/components/offline/components/components/DownloadButton.qml</file>
         <file>model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml</file>
+        <file>model/components/offline/components/components/OfflineDelegateInfoBox</file>
 
         <file>model/components/online/OnlineModelView.qml</file>
         <file>model/components/online/OnlineHeader.qml</file>
@@ -51,6 +52,7 @@
         <file>model/components/online/components/components/InputApikey.qml</file>
         <file>model/components/online/components/components/ApikeyButton.qml</file>
         <file>model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml</file>
+        <file>model/components/online/components/components/OnlineDelegateInfoBox</file>
 
 
 
