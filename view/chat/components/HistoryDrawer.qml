@@ -1,10 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls
 import '../../component_library/style' as Style
+import '../../component_library/button'
 import "./history"
 
 Drawer{
-    id: drawerId
+    id: historyDrawerId
     width: 320
     height: parent.height - 40
     y: 40
@@ -33,4 +34,10 @@ Drawer{
             }
         }
     }
+    // NotificationDialog {
+    //     id: modelIsloadedDialog2Id
+    //     z:100
+    //     titleText: "Loading Model"
+    //     about: "Please wait until the model finishes loading. You can stop the process after the loading is complete."
+    // }
 }
