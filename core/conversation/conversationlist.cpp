@@ -249,10 +249,14 @@ void ConversationList::updateDescriptionText(const int conversationId, const QSt
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){
+    Conversation* conversation = findConversationById(id);
+    if(conversation == nullptr) return;
+    // const int index = m_conversations.indexOf(conversation);
+
     if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
         setPreviousConversation(m_currentConversation);
 
-    setCurrentConversation(findConversationById(id));
+    setCurrentConversation(conversation);
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();
     setIsEmptyConversation(false);

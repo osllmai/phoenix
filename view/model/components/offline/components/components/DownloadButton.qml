@@ -105,7 +105,7 @@ Item {
                     appBodyId.currentIndex = 1
 
                 }else if(model.type === "Speech"){
-                    if(startChatFillButton.myText === "Go to Chat"){
+                    if(speechToText.modelPath === model.key){
                         appBodyId.currentIndex = 1
                     }else{
                         speechToText.modelPath = model.key
@@ -119,7 +119,7 @@ Item {
         MyButton{
             id: startChatButton
             visible: !isFillWidthDownloadButton
-            myText: model.type === "Text Generation"? ("Start Chat"): (model.type === "Speech"? "Go to Chat": "Set Model")
+            myText: model.type === "Text Generation"? ("Start Chat"): ((model.type === "Speech" && speechToText.modelPath === model.key)? "Go to Chat": "Set Model")
             bottonType: Style.RoleEnum.BottonType.Primary
             onClicked:{
                 if(model.type === "Text Generation"){
@@ -129,10 +129,12 @@ Item {
                     appBodyId.currentIndex = 1
 
                 }else if(model.type === "Speech"){
-
-                    speechToText.modelPath = model.key
-                    speechToText.modelSelect = true
-
+                    if(speechToText.modelPath === model.key){
+                        appBodyId.currentIndex = 1
+                    }else{
+                        speechToText.modelPath = model.key
+                        speechToText.modelSelect = true
+                    }
                 }else{
                     console.log(model.type)
                 }

@@ -41,7 +41,9 @@ T.Button {
              }
              MyIcon {
                  id: maximizeHSquareButtonId
-                 myIcon:  "qrc:/media/icon/maximizeH.svg"
+                 myIcon: ((window.width === 400 ) && (window.height === Screen.height) &&
+                          (window.x === Screen.width - 400) && (window.y === 0))? ("qrc:/media/icon/minimize.svg"):
+                                                                                                    ("qrc:/media/icon/maximizeH.svg")
                  iconType: Style.RoleEnum.IconType.Primary
                  anchors.verticalCenter: phoenixTitleId.verticalCenter
                  width:23; height:23

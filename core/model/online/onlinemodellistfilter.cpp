@@ -20,9 +20,14 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     if (!index.isValid())
         return false;
 
-    QString name = sourceModel()->data(index, OnlineModelList::NameRole).toString();
-    bool isLikeModel = sourceModel()->data(index, OnlineModelList::IsLikeRole).toBool();
-    bool installModel = sourceModel()->data(index, OnlineModelList::InstallModelRole).toBool();
+    QString name = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::NameRole).toString();
+    QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
+    Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
+    QString companyName = company ? company->name() : QStringLiteral("Unknown");
+
+    QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
+    bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
+    bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
 
     QVariant modelVariant = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelObjectRole);
     OnlineModel* model = modelVariant.value<OnlineModel*>();
@@ -30,7 +35,10 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     if (!model) return false;
 
     QRegularExpression filterExp = filterRegularExpression();
-    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch();
+    bool matchesFilter = filterExp.pattern().isEmpty() ||
+                                         filterExp.match(name).hasMatch() ||
+                                         filterExp.match(modelName).hasMatch() ||
+                                         filterExp.match(modelNameOffline).hasMatch();
 
     switch (m_filterType) {
     case FilterType::All:

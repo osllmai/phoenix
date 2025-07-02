@@ -97,7 +97,7 @@ ApplicationWindow {
     visible: true
     title: qsTr("Phoenix v0.1.1")
 
-    property bool isDesktopSize: width >= 630;
+    property bool isDesktopSize: width >= 800;
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){

@@ -102,7 +102,8 @@ Item {
                 background: null
 
                 onTextChanged:{
-                    sliderId.value = valueSlider1Id.text
+                    if((valueSlider1Id.text>=sliderId.from) && (valueSlider1Id.text<=sliderId.to))
+                        sliderId.value = valueSlider1Id.text
                 }
 
                 validator: DoubleValidator {
@@ -130,7 +131,8 @@ Item {
                 background: null
 
                 onTextChanged:{
-                    sliderId.value = valueSlider2Id.text
+                    if((valueSlider2Id.text>=sliderId.from) && (valueSlider2Id.text<=sliderId.to))
+                        sliderId.value = valueSlider2Id.text
                 }
 
                 validator: IntValidator{

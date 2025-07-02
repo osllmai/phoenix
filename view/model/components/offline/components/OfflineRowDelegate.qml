@@ -25,10 +25,11 @@ T.Button {
         Row{
             id: headerId
             visible: window.isDesktopSize
-            width: 220
+            width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
+
             MyIcon {
                 id: logoModelId
                 myIcon: "qrc:/media/image_company/" + model.icon
@@ -36,9 +37,30 @@ T.Button {
                 enabled: false
                 width: 32; height: 32
             }
+
             OfflineDelegateTitleAndCopyButton{
-                width: parent.width - logoModelId.width
+                width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
                 height: parent.height
+            }
+
+            MyIcon{
+                id: aboutIcon
+                width: 32; height: 32
+                myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                anchors.verticalCenter: logoModelId.verticalCenter
+                myTextToolTip:model.information
+            }
+
+            MyIcon{
+                id: likeIconId
+                width: 32; height: 32
+                myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                anchors.verticalCenter: logoModelId.verticalCenter
+                iconType: Style.RoleEnum.IconType.Like
+                onClicked: {
+                    offlineModelList.likeRequest(model.id, !model.isLike)
+                    model.isLike = !model.isLike
+                }
             }
         }
 
@@ -131,9 +153,30 @@ T.Button {
                     enabled: false
                     width: 30; height: 30
                 }
+
                 OfflineDelegateTitleAndCopyButton{
-                    width: parent.width - logoModel2Id.width
+                    width: parent.width - logoModelId.width - likeIcon2Id.width - about2Icon.width
                     height: parent.height
+                }
+
+                MyIcon{
+                    id: about2Icon
+                    width: 32; height: 32
+                    myIcon: about2Icon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    myTextToolTip:model.information
+                }
+
+                MyIcon{
+                    id: likeIcon2Id
+                    width: 32; height: 32
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    onClicked: {
+                        offlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
+                    }
                 }
             }
 
