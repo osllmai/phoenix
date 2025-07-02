@@ -66,21 +66,6 @@ T.Button {
                 wrapMode: Text.Wrap
                 elide: Label.ElideRight
                 clip: true
-                MouseArea {
-                    id: infoMouseArea
-                    anchors.fill: informationId
-                    hoverEnabled: true
-
-                    onPositionChanged: {
-                        toolTip.x = mouseX
-                        toolTip.y = mouseY
-                    }
-
-                    MyToolTip{
-                        id: toolTip
-                        toolTipText: model.information
-                    }
-                }
             }
             Rectangle{
                 id: informationAboutDownloadId
@@ -89,44 +74,7 @@ T.Button {
                 border.color: Style.Colors.boxBorder
                 border.width: 1
                 color: "#00ffffff"
-                Row{
-                    anchors.fill: parent
-
-                    OnlineDelegateInfoBox{
-                        id:typeBox
-                        myText: qsTr("Type")
-                        myValue: model.type
-                        width: (parent.width/3)-2
-                    }
-
-                    Rectangle{
-                        id:line1
-                        width: 1
-                        height: parent.height
-                        color: Style.Colors.boxBorder
-                    }
-
-                    OnlineDelegateInfoBox{
-                        id: contextWindowsBox
-                        myText: qsTr("Context Windows")
-                        myValue: model.contextWindows
-                        width: (parent.width/3) + 12
-                    }
-
-                    Rectangle{
-                        id:line2
-                        width: 1
-                        height: parent.height
-                        color: Style.Colors.boxBorder
-                    }
-
-                    OnlineDelegateInfoBox{
-                        id:outputBox
-                        myText: qsTr("Output")
-                        myValue: model.output
-                        width: (parent.width/3) - 10
-                    }
-                }
+                OnlineInformationModel{}
             }
             ApikeyButton{
                 id: apikeyButton

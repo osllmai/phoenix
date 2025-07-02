@@ -62,21 +62,6 @@ T.Button {
                 wrapMode: Text.Wrap
                 elide: Label.ElideRight
                 clip: true
-                MouseArea {
-                    id: infoMouseArea
-                    anchors.fill: informationId
-                    hoverEnabled: true
-
-                    onPositionChanged: {
-                        toolTip.x = mouseX
-                        toolTip.y = mouseY
-                    }
-
-                    MyToolTip{
-                        id: toolTip
-                        toolTipText: control.about
-                    }
-                }
             }
             Row{
                 id: buttonList

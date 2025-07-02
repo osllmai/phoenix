@@ -25,7 +25,7 @@ T.Button {
         Row{
             id: headerId
             visible: window.isDesktopSize
-            width: 220
+            width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
@@ -38,8 +38,28 @@ T.Button {
             }
 
             OnlineDelegateTitleAndCopyButton{
-                width: parent.width - logoModelId.width
+                width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
                 height: parent.height
+            }
+
+            MyIcon{
+                id: aboutIcon
+                width: 32; height: 32
+                myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                anchors.verticalCenter: logoModelId.verticalCenter
+                myTextToolTip:model.information
+            }
+
+            MyIcon{
+                id: likeIconId
+                width: 32; height: 32
+                myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                anchors.verticalCenter: logoModelId.verticalCenter
+                iconType: Style.RoleEnum.IconType.Like
+                onClicked: {
+                    offlineModelList.likeRequest(model.id, !model.isLike)
+                    model.isLike = !model.isLike
+                }
             }
         }
 
@@ -54,44 +74,7 @@ T.Button {
             border.color: Style.Colors.boxBorder
             border.width: 1
             color: "#00ffffff"
-            Row{
-                anchors.fill: parent
-
-                OnlineDelegateInfoBox{
-                    id:typeBox
-                    myText: qsTr("Type")
-                    myValue: model.type
-                    width: (parent.width/3)-7
-                }
-
-                Rectangle{
-                    id:line1
-                    width: 1
-                    height: parent.height
-                    color: Style.Colors.boxBorder
-                }
-
-                OnlineDelegateInfoBox{
-                    id: contextWindowsBox
-                    myText: qsTr("Context Windows")
-                    myValue: model.contextWindows
-                    width: (parent.width/3) + 11
-                }
-
-                Rectangle{
-                    id:line2
-                    width: 1
-                    height: parent.height
-                    color: Style.Colors.boxBorder
-                }
-
-                OnlineDelegateInfoBox{
-                    id:outputBox
-                    myText: qsTr("Output")
-                    myValue: model.output
-                    width: (parent.width/3) - 4
-                }
-            }
+            OnlineInformationModel{}
         }
 
         ApikeyButton{
@@ -118,9 +101,30 @@ T.Button {
                     enabled: false
                     width: 30; height: 30
                 }
+
                 OnlineDelegateTitleAndCopyButton{
-                    width: parent.width - logoModel2Id.width
+                    width: parent.width - logoModelId.width - likeIcon2Id.width - about2Icon.width
                     height: parent.height
+                }
+
+                MyIcon{
+                    id: about2Icon
+                    width: 32; height: 32
+                    myIcon: about2Icon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    myTextToolTip:model.information
+                }
+
+                MyIcon{
+                    id: likeIcon2Id
+                    width: 32; height: 32
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    onClicked: {
+                        offlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
+                    }
                 }
             }
 
