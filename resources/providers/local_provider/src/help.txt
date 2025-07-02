@@ -1,0 +1,9 @@
+build:
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release --parallel 32
+
+ run:
+./bin/applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
+applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
+ 
