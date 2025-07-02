@@ -49,6 +49,7 @@ Item {
         id: downloadPercentButton
         visible: !isFillWidthDownloadButton && model.isDownloading
         width: 200
+        anchors.right: parent.right
         progressBarValue: model.downloadPercent
         bottonType: Style.RoleEnum.BottonType.Progress
         onClicked:{

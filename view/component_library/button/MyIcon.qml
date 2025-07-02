@@ -43,9 +43,7 @@ ToolButton {
 
     MyToolTip{
         visible: control.hovered && (control.myTextToolTip !== "")
-        width: control.myWidthToolTip
         toolTipText: control.myTextToolTip
-        toolTipInCenter: control.toolTipInCenter
     }
 
     function choiceNormalColor(iconType) {
