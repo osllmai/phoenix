@@ -5,7 +5,7 @@ import '../../component_library/button'
 import "./history"
 
 Drawer{
-    id: historyDrawerId
+    id: drawerId
     width: 320
     height: parent.height - 40
     y: 40

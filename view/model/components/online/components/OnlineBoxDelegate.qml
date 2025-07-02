@@ -37,8 +37,15 @@ T.Button {
                 }
 
                 OnlineDelegateTitleAndCopyButton{
-                    width: parent.width - logoModelId.width - likeIconId.width
+                    width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
                     height: parent.height
+                }
+
+                MyIcon{
+                    id: aboutIcon
+                    myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    myTextToolTip:model.information
                 }
 
                 MyIcon{

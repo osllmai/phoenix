@@ -21,7 +21,7 @@ T.Button {
 
     onClicked: {
         conversationList.selectCurrentConversationRequest(model.id)
-        historyDrawerId.close()
+        drawerId.close()
     }
 
     background: null
@@ -196,7 +196,7 @@ T.Button {
             function onButtonAction2() {
                 conversationList.deleteRequest(model.id)
                 deleteConversationVerificationId.close()
-                // historyDrawerId.modelIsloadedDialog2Id.open()
+                // drawerId.modelIsloadedDialog2Id.open()
             }
         }
     }
