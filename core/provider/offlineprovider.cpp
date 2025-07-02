@@ -11,7 +11,6 @@ OfflineProvider::OfflineProvider(QObject *parent, const QString &model, const QS
 {}
 
 OfflineProvider::~OfflineProvider(){
-    qInfo()<<"delete offline provider";
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
@@ -48,7 +47,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 m_process->waitForBytesWritten();
 
                 state = ProviderState::ReadingResponse;
-                qInfo()<< "send prompt finished";
             } else {
                 qWarning() << "Not ready for prompt. Current state:" << static_cast<int>(state);
             }
@@ -81,61 +79,54 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                     emit requestFinishedResponse("");
                 }
 
-                if (!outputString.trimmed().isEmpty()){
-                    switch (state) {
-                        case ProviderState::LoadingModel:{
-                            if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
-                                state = ProviderState::WaitingForPrompt;
-                                if (m_hasPendingPrompt) {
-                                    QString paramBlock =
-                                        "__PARAMS_SETTINGS__\n" +
-                                        QString("stream=%1\n").arg(m_pendingPrompt.stream ? "true" : "false") +
-                                        // QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
-                                        // QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
-                                        QString("n_predict=%1\n").arg(m_pendingPrompt.maxTokens) +
-                                        QString("top_k=%1\n").arg(m_pendingPrompt.topK) +
-                                        QString("top_p=%1\n").arg(m_pendingPrompt.topP) +
-                                        QString("min_p=%1\n").arg(m_pendingPrompt.minP) +
-                                        QString("temp=%1\n").arg(m_pendingPrompt.temperature) +
-                                        QString("n_batch=%1\n").arg(m_pendingPrompt.promptBatchSize) +
-                                        QString("repeat_penalty=%1\n").arg(m_pendingPrompt.repeatPenalty) +
-                                        QString("repeat_last_n=%1\n").arg(m_pendingPrompt.repeatPenaltyTokens) +
-                                        QString("ctx_size=%1\n").arg(m_pendingPrompt.contextLength) +
-                                        QString("n_gpu_layers=%1\n").arg(m_pendingPrompt.numberOfGPULayers) +
-                                        "__END_PARAMS_SETTINGS__\n";
-                                    emit sendPromptToProcess(m_pendingPrompt.input, paramBlock);
-                                    m_hasPendingPrompt = false;
-                                    qInfo() << "Sent pending prompt after model load.";
-                                }
-                            }
-                            break;
-                        }
-
-                        case ProviderState::SendingPrompt: {
+                switch (state) {
+                    case ProviderState::LoadingModel:{
+                        if(outputString.trimmed().endsWith("__LoadingModel__Finished__")){
                             state = ProviderState::WaitingForPrompt;
-                            break;
-                        }
-
-                        case ProviderState::ReadingResponse: {
-                            QString text = "__STOP__\n";
-                            if (_stopFlag) {
-                                state = ProviderState::SendingPrompt;
-                                qInfo()<<"_stopFlag";
-                                qInfo()<<outputString.trimmed();
-                                m_process->write(text.toUtf8());
-                                m_process->waitForBytesWritten();
-                                _stopFlag = false;
+                            if (m_hasPendingPrompt) {
+                                QString paramBlock =
+                                    "__PARAMS_SETTINGS__\n" +
+                                    QString("stream=%1\n").arg(m_pendingPrompt.stream ? "true" : "false") +
+                                    QString("prompt_template=%1\n").arg(m_pendingPrompt.promptTemplate) +
+                                    QString("system_prompt=%1\n").arg(m_pendingPrompt.systemPrompt) +
+                                    QString("n_predict=%1\n").arg(m_pendingPrompt.maxTokens) +
+                                    QString("top_k=%1\n").arg(m_pendingPrompt.topK) +
+                                    QString("top_p=%1\n").arg(m_pendingPrompt.topP) +
+                                    QString("min_p=%1\n").arg(m_pendingPrompt.minP) +
+                                    QString("temp=%1\n").arg(m_pendingPrompt.temperature) +
+                                    QString("n_batch=%1\n").arg(m_pendingPrompt.promptBatchSize) +
+                                    QString("repeat_penalty=%1\n").arg(m_pendingPrompt.repeatPenalty) +
+                                    QString("repeat_last_n=%1\n").arg(m_pendingPrompt.repeatPenaltyTokens) +
+                                    QString("ctx_size=%1\n").arg(m_pendingPrompt.contextLength) +
+                                    QString("n_gpu_layers=%1\n").arg(m_pendingPrompt.numberOfGPULayers) +
+                                    "__END_PARAMS_SETTINGS__\n";
+                                emit sendPromptToProcess(m_pendingPrompt.input, paramBlock);
+                                m_hasPendingPrompt = false;
                             }
-
-                            if (!outputString.isEmpty()) {
-                                emit requestTokenResponse(outputString);
-                            }
-                            break;
                         }
-
-                        default:
-                            break;
+                        break;
                     }
+
+                    case ProviderState::SendingPrompt: {
+                        state = ProviderState::WaitingForPrompt;
+                        break;
+                    }
+
+                    case ProviderState::ReadingResponse: {
+                        QString text = "__STOP__\n";
+                        if (_stopFlag) {
+                            state = ProviderState::SendingPrompt;
+                            m_process->write(text.toUtf8());
+                            m_process->waitForBytesWritten();
+                            _stopFlag = false;
+                        }
+
+                            emit requestTokenResponse(outputString);
+                        break;
+                    }
+
+                    default:
+                        break;
                 }
             }
         }
@@ -143,7 +134,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         m_process->waitForFinished(50);
         _stopFlag = false;
 
-        qInfo() << "Process finished.";
         m_process->deleteLater();
         emit requestFinishedResponse(fullResponse);
     })->start();
@@ -171,8 +161,8 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
     QString paramBlock =
         "__PARAMS_SETTINGS__\n" +
         QString("stream=%1\n").arg(request.stream ? "true" : "false") +
-        // QString("prompt_template=%1\n").arg(request.promptTemplate) +
-        // QString("system_prompt=%1\n").arg(request.systemPrompt) +
+        QString("prompt_template=%1\n").arg(request.promptTemplate) +
+        QString("system_prompt=%1\n").arg(request.systemPrompt) +
         QString("n_predict=%1\n").arg(request.maxTokens) +
         QString("top_k=%1\n").arg(request.topK) +
         QString("top_p=%1\n").arg(request.topP) +
@@ -190,6 +180,5 @@ void OfflineProvider::prompt(const QString &input, const bool &stream, const QSt
     } else {
         m_pendingPrompt = request;
         m_hasPendingPrompt = true;
-        qInfo() << "Prompt saved to be sent later";
     }
 }

@@ -281,10 +281,8 @@ void Conversation::tokenResponse(const QString &token){
     setLoadModelInProgress(false);
 
     QVariantMap lastMessage = messageList()->lastMessageInfo();
-    if (!lastMessage.isEmpty()) {
-        QString lastText = lastMessage["text"].toString();
-        emit requestUpdateDescriptionText(m_id, lastText);
-    }
+    QString lastText = lastMessage["text"].toString();
+    emit requestUpdateDescriptionText(m_id, lastText);
     messageList()->updateLastMessage(token);
 }
 

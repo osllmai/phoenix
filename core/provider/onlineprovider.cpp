@@ -11,7 +11,6 @@ OnlineProvider::OnlineProvider(QObject *parent, const QString &model, const QStr
 {}
 
 OnlineProvider::~OnlineProvider(){
-    qInfo()<<"delete online provider";
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
@@ -96,7 +95,6 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
 
         _stopFlag = false;
 
-        qInfo() << "Process finished.";
         emit requestFinishedResponse("");
     })->start();
 }
