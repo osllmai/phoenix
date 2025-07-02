@@ -49,7 +49,7 @@
     "parameters": "74 million",
     "quant": "q8_0",
     "company": "OpenAI",
-    "recommended": false,
+    "recommended": true,
     "type": "Speech",
     "systemPrompt": "",
     "promptTemplate": "",
