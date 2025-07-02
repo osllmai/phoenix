@@ -80,6 +80,7 @@ ApplicationWindow {
         property alias theme: window.theme
         property alias fontFamily: window.font.family
         property alias modelPageView: window.modelPageView
+        property alias isOpenMenu: window.isOpenMenu
 
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)
@@ -101,11 +102,15 @@ ApplicationWindow {
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){
-            window.isOpenMenu = true
+            if(window.isOpenMenu){
+                appMenuDesktopId.width = 200
+            }else{
+                appMenuDesktopId.width = 60
+            }
         }
     }
 
-    property bool isOpenMenu: true
+    property bool isOpenMenu: false
     onIsOpenMenuChanged: {
         if(window.isOpenMenu){
             if(window.isDesktopSize){
