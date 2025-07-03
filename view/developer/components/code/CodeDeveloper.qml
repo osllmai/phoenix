@@ -94,10 +94,19 @@ Item {
                     ScrollBar.horizontal.active: (scrollInput.contentX > 0) &&
                                     (scrollInput.contentX < scrollInput.contentWidth - scrollInput.width)
 
+                    Component.onCompleted: {
+                        scrollInput.contentItem.contentX = 0
+                    }
+
+                    onVisibleChanged: {
+                        if (scrollInput.visible) {
+                            scrollInput.contentItem.contentX = 0
+                      }
+                    }
 
                     TextArea {
                         id: textId
-                        width: scrollInstruction.width
+                        width: scrollInput.width
 
                         readOnly: true
                         wrapMode: Text.NoWrap

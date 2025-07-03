@@ -62,21 +62,40 @@ Dialog {
             anchors.topMargin: 40
 
             ScrollView {
-                id: scrollInstruction
-                anchors.fill: parent
-                clip: true
+                id: scrollInput
+                width: parent.width
+                height: parent.height
+                ScrollBar.vertical.interactive: true
 
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
+                ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                           ? ScrollBar.AlwaysOn
+                                           : ScrollBar.AlwaysOff
+
+                ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                                (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
+                ScrollBar.horizontal.interactive: true
+
+                ScrollBar.horizontal.policy: scrollInput.contentWidth > scrollInput.width
+                                           ? ScrollBar.AlwaysOn
+                                           : ScrollBar.AlwaysOff
+
+                ScrollBar.horizontal.active: (scrollInput.contentX > 0) &&
+                                (scrollInput.contentX < scrollInput.contentWidth - scrollInput.width)
+
+                Component.onCompleted: {
+                    scrollInput.contentItem.contentX = 0
                 }
 
-                ScrollBar.horizontal: ScrollBar {
-                    policy: ScrollBar.AsNeeded
+                onVisibleChanged: {
+                    if (scrollInput.visible) {
+                        scrollInput.contentItem.contentX = 0
+                  }
                 }
 
                 TextArea {
                     id: textId
-                    width: scrollInstruction.width
+                    width: scrollInput.width
                     height: implicitHeight
                     wrapMode: Text.NoWrap
                     color: Style.Colors.textInformation

@@ -9,7 +9,7 @@ Item {
     ScrollView {
         id: scrollInput
         width: parent.width
-        height: parent.height - iconList.height
+        height: parent.height
         ScrollBar.vertical.interactive: true
 
         ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
