@@ -8,6 +8,10 @@ StackLayout {
     id: page
     currentIndex: 0
 
+    function setModelPages(page, filter){
+        modelsPage.setModelPages(page, filter)
+    }
+
     HomeView{id: homeViewId}
 
     ChatView{id: chatPage}

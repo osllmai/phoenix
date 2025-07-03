@@ -4,7 +4,16 @@ import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Item{
-    id:headerId
+    id: headerId
+
+    property string filtter: "All"
+    onFiltterChanged: {
+        if(headerId.filtter ==="All" || headerId.filtter ==="Favorite"){
+            onlineModelListFilter.filter(headerId.filtter)
+        }else{
+            onlineModelListFilter.type = headerId.filtter
+        }
+    }
 
     property bool isSearchInColumn: window.isDesktopSize
 
@@ -13,8 +22,6 @@ Item{
     clip:true
 
     signal search(var text)
-
-    property string filtter: "All"
 
     Column{
         id: columnId

@@ -5,6 +5,10 @@ import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
 
 Item {
+    function setFilter(filter){
+        headerId.filtter = filter
+    }
+
     OfflineHeader{
         id: headerId
     }

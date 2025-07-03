@@ -44,6 +44,7 @@ T.Button {
     property bool isNeedAnimation: false
     property int bottonType: Style.RoleEnum.BottonType.Primary
     property int iconType: Style.RoleEnum.IconType.Primary
+    property int myRadius: 8
 
     checkable: false
     checked: false
@@ -70,7 +71,7 @@ T.Button {
         width: parent.width-3; height: parent.height-3
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        radius: 8
+        radius: control.myRadius
         border.width: 1
 
         Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}

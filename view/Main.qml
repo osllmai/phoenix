@@ -54,6 +54,9 @@ ApplicationWindow {
     }
 
     property string modelPageView: "gridView"
+    function setModelPages(page, filter){
+        appBodyId.setModelPages(page, filter)
+    }
 
     Component.onCompleted: {
         codeColors.defaultColor = Style.Colors.textInformation
@@ -163,88 +166,4 @@ ApplicationWindow {
             }
         }
     }
-
-    // MouseArea {
-    //     id: tapEdge
-    //     z: 10
-    //     anchors.top: parent.top
-    //     anchors.left: parent.left
-    //     anchors.right: parent.right
-    //     height: 6
-    //     cursorShape: Qt.SizeVerCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.TopEdge)
-    // }
-
-    // MouseArea {
-    //     id: bottomEdge
-    //     z: 10
-    //     anchors.bottom: parent.bottom
-    //     anchors.left: parent.left
-    //     anchors.right: parent.right
-    //     height: 6
-    //     cursorShape: Qt.SizeVerCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.BottomEdge)
-    // }
-
-    // MouseArea {
-    //     id: leftEdge
-    //     z: 10
-    //     anchors.left: parent.left
-    //     anchors.top: parent.top
-    //     anchors.bottom: parent.bottom
-    //     width: 6
-    //     cursorShape: Qt.SizeHorCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.LeftEdge)
-    // }
-
-    // MouseArea {
-    //     id: rightEdge
-    //     z: 10
-    //     anchors.right: parent.right
-    //     anchors.top: parent.top
-    //     anchors.bottom: parent.bottom
-    //     width: 6
-    //     cursorShape: Qt.SizeHorCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.RightEdge)
-    // }
-
-    // MouseArea {
-    //     id: topRightCorner
-    //     z: 100
-    //     width: 12; height: 12
-    //     anchors.top: parent.top
-    //     anchors.left: parent.left
-    //     cursorShape: Qt.SizeFDiagCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.BottomRightCorner)
-    // }
-
-    // MouseArea {
-    //     id: topLeftCorner
-    //     z: 100
-    //     width: 12; height: 12
-    //     anchors.top: parent.top
-    //     anchors.right: parent.right
-    //     cursorShape: Qt.SizeBDiagCursor
-    //     onPressed: mouse =>{ window.startSystemResize(Qt.RightEdge); window.startSystemResize(Qt.TopEdge)}
-    // }
-
-    // MouseArea {
-    //     id: bottomLeftCorner
-    //     z: 100
-    //     width: 12; height: 12
-    //     anchors.bottom: parent.bottom
-    //     anchors.left: parent.left
-    //     cursorShape: Qt.SizeBDiagCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.TopLeftCorner)
-    // }
-
-    // MouseArea {
-    //     id: bottomRightCorner
-    //     z: 100
-    //     width: 12; height: 12
-    //     anchors.bottom: parent.bottom
-    //     anchors.right: parent.right
-    //     cursorShape: Qt.SizeFDiagCursor
-    //     onPressed: mouse => window.startSystemResize(Qt.TopRightCorner)
-    // }
 }

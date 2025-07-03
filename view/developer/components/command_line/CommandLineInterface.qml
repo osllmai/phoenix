@@ -23,11 +23,11 @@ Item {
             spacing: 8
 
             ListView {
-                id: companyList
+                id: listView
                 height: 40
                 width: parent.width
                 spacing: 5
-                cacheBuffer: Math.max(0, companyList.contentWidth)
+                cacheBuffer: Math.max(0, listView.contentWidth)
 
                 layoutDirection: Qt.LeftToRight
                 orientation: Qt.Horizontal
@@ -36,8 +36,10 @@ Item {
                 interactive: contentWidth > width
                 boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                ScrollBar.horizontal: ScrollBar {
-                    policy: ScrollBar.AsNeeded
+                ScrollBar.vertical: ScrollBar {
+                    policy: listView.contentHeight > listView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
                 }
                 clip: true
 
@@ -66,23 +68,18 @@ Item {
             }
 
             ScrollView {
-                id: scrollInstruction
+                id: scrollInput
                 width: parent.width
-                height:  parent.height - companyList.height - 8
-                clip: true
+                height: parent.height - listView.height - 8
+                ScrollBar.vertical.interactive: true
 
-                ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
-                    // width: 6
-                    // contentItem: Rectangle {
-                    //     implicitWidth: 6
-                    //     radius: 3
-                    //     color: "#888"
-                    // }
-                    // background: Rectangle {
-                    //     color: "#2e2e2e"
-                    // }
-                }
+                ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                           ? ScrollBar.AlwaysOn
+                                           : ScrollBar.AlwaysOff
+
+                ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                                (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
                 TextArea {
                     id: instructionTextBox
                     readOnly: true

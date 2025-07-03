@@ -6,6 +6,14 @@ import '../../../component_library/button'
 Item{
     id:headerId
 
+    property string filtter: "All"
+    onFiltterChanged: {
+        if(headerId.filtter ==="All" || headerId.filtter ==="Favorite"){
+            offlineModelListFilter.filter(headerId.filtter)
+        }else{
+            offlineModelListFilter.type = headerId.filtter
+        }
+    }
     property bool isSearchInColumn: window.isDesktopSize
 
     width: parent.width
@@ -13,8 +21,6 @@ Item{
     clip:true
 
     signal search(var text)
-
-     property string filtter: "All"
 
     Column{
         id: columnId

@@ -16,11 +16,26 @@ Item {
          border.color: Style.Colors.boxBorder
          radius: 12
          ScrollView {
-             id: scrollInstruction
-             anchors.fill:parent; anchors.margins: 10
-             ScrollBar.vertical: ScrollBar {
-                 policy: ScrollBar.AsNeeded
-             }
+             id: scrollInput
+             width: parent.width
+             height: parent.height
+             ScrollBar.vertical.interactive: true
+
+             ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                        ? ScrollBar.AlwaysOn
+                                        : ScrollBar.AlwaysOff
+
+             ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                             (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
+             ScrollBar.horizontal.interactive: true
+
+             ScrollBar.horizontal.policy: scrollInput.contentWidth > scrollInput.width
+                                        ? ScrollBar.AlwaysOn
+                                        : ScrollBar.AlwaysOff
+
+             ScrollBar.horizontal.active: (scrollInput.contentX > 0) &&
+                             (scrollInput.contentX < scrollInput.contentWidth - scrollInput.width)
 
              TextArea {
                  id: instructionTextBox

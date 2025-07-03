@@ -25,11 +25,11 @@ Item {
 
 
             ListView {
-                id: companyList
+                id: listView
                 height: 40
                 width: parent.width
                 spacing: 5
-                cacheBuffer: Math.max(0, companyList.contentWidth)
+                cacheBuffer: Math.max(0, listView.contentWidth)
 
                 layoutDirection: Qt.LeftToRight
                 orientation: Qt.Horizontal
@@ -38,8 +38,10 @@ Item {
                 interactive: contentWidth > width
                 boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                ScrollBar.horizontal: ScrollBar {
-                    policy: ScrollBar.AsNeeded
+                ScrollBar.vertical: ScrollBar {
+                    policy: listView.contentHeight > listView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
                 }
                 clip: true
                 model: codeDeveloperList
@@ -68,24 +70,35 @@ Item {
 
             Item{
                 width: parent.width
-                height:  parent.height - companyList.height - 8
+                height:  parent.height - listView.height - 8
+                anchors.margins: 10
                 ScrollView {
-                    id: scrollInstruction
-                    anchors.fill: parent
-                    clip: true
+                    id: scrollInput
+                    width: parent.width
+                    height: parent.height
+                    ScrollBar.vertical.interactive: true
 
-                    ScrollBar.vertical: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
+                    ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                               ? ScrollBar.AlwaysOn
+                                               : ScrollBar.AlwaysOff
 
-                    ScrollBar.horizontal: ScrollBar {
-                        policy: ScrollBar.AsNeeded
-                    }
+                    ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                                    (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
+                    ScrollBar.horizontal.interactive: true
+
+                    ScrollBar.horizontal.policy: scrollInput.contentWidth > scrollInput.width
+                                               ? ScrollBar.AlwaysOn
+                                               : ScrollBar.AlwaysOff
+
+                    ScrollBar.horizontal.active: (scrollInput.contentX > 0) &&
+                                    (scrollInput.contentX < scrollInput.contentWidth - scrollInput.width)
+
 
                     TextArea {
                         id: textId
                         width: scrollInstruction.width
-                        height: implicitHeight
+
                         readOnly: true
                         wrapMode: Text.NoWrap
                         color: Style.Colors.textInformation
