@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractListModel>
+#include <algorithm>
+#include <QFileInfo>
 
 #include <QFutureWatcher>
 
@@ -21,13 +23,16 @@ class OfflineModelList: public QAbstractListModel
 public:
     static OfflineModelList* instance(QObject* parent );
     OfflineModel* findModelById(const int id);
+    OfflineModel* findModelByModelName(const QString modelName);
     void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        ModeNameRole,
         KeyRole,
         InformationRole,
+        TypeRole,
         IconRole,
         CompanyRole,
         IsLikeRole,
@@ -39,7 +44,6 @@ public:
         DownloadFinishedRole,
         IsDownloadingRole,
         DownloadPercentRole,
-        TypeRole,
         ModelObjectRole
     };
 
@@ -56,6 +60,7 @@ public:
     Q_INVOKABLE void addRequest(QString directoryPath);
 
     double downloadProgress() const;
+
 
 public slots:
     void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,

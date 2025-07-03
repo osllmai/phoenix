@@ -5,10 +5,14 @@ import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
 
 Item {
+    function setFilter(filter){
+        headerId.filtter = filter
+    }
+
     OnlineHeader{
         id: headerId
     }
-    OnlineList{
+    OnlineBody{
         id:onlineBodyId
         anchors.top: headerId.bottom; anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right

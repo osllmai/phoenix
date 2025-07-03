@@ -2,6 +2,7 @@
   {
     "order": "z",
     "md5sum": "a8c5a783105f87a481543d4ed7d7586d",
+    "modelName": "qwen2-1_5b-instruct-q4_0",
     "name": "Qwen2-1.5B-Instruct",
     "filename": "qwen2-1_5b-instruct-q4_0.gguf",
     "filesize": 0.93,

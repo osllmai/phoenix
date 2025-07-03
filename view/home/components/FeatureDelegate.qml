@@ -62,21 +62,6 @@ T.Button {
                 wrapMode: Text.Wrap
                 elide: Label.ElideRight
                 clip: true
-                MouseArea {
-                    id: infoMouseArea
-                    anchors.fill: informationId
-                    hoverEnabled: true
-
-                    onPositionChanged: {
-                        toolTip.x = mouseX
-                        toolTip.y = mouseY
-                    }
-
-                    MyToolTip{
-                        id: toolTip
-                        toolTipText: control.about
-                    }
-                }
             }
             Row{
                 id: buttonList
@@ -85,7 +70,7 @@ T.Button {
                 MyButton{
                     id:goPageId
                     visible: control.goPage !== -1
-                    myText: "Select"
+                    myText: "Start"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     Connections {
                         target: goPageId

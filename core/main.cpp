@@ -26,6 +26,15 @@
 
 #include "clipboard.h"
 
+#include "./library/textprocessor/messagetextprocessor.h"
+
+#include "./developer/codedeveloperlist.h"
+
+#include "./log/logger.h"
+#include "./log/logcategories.h"
+
+#include "./library/textprocessor/codecolors.h"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -49,8 +58,15 @@ int main(int argc, char *argv[])
         qDebug() << "Loaded font families:" << loadedFonts;
     }
 
+    Logger::instance().setMinLogLevel(QtDebugMsg);
+    Logger::instance().installMessageHandler();
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("QmlEngine", &engine);
+
+    engine.rootContext()->setContextProperty("Logger", &Logger::instance());
+
+    qDebug(logCore) << "Program start";
 
     QStringList fontFamilies = QFontDatabase::families();
     engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
@@ -61,8 +77,14 @@ int main(int argc, char *argv[])
     SpeechToText* speechToText = SpeechToText::instance(&engine);
     engine.rootContext()->setContextProperty("speechToText", speechToText);
 
+    CodeDeveloperList* codeDeveloperList = CodeDeveloperList::instance(&engine);
+    engine.rootContext()->setContextProperty("codeDeveloperList", codeDeveloperList);
+
     engine.addImportPath("../view/component_library/button");
     engine.addImportPath("../view/component_library/style");
+
+    qmlRegisterType<MessageTextProcessor>("MyMessageTextProcessor", 1, 0, "MessageTextProcessor");
+
 
     Database* database = Database::instance(&engine);
 
@@ -144,6 +166,9 @@ int main(int argc, char *argv[])
 
     Clipboard clipboard;
     engine.rootContext()->setContextProperty("Clipboard", &clipboard);
+
+    CodeColors* codeColors= CodeColors::instance(&engine);
+    engine.rootContext()->setContextProperty("codeColors", codeColors);
 
     const QUrl url(u"qrc:/view/Main.qml"_qs);
 

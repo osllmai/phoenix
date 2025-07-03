@@ -6,9 +6,6 @@ import '../style' as Style
 ToolTip {
     id: toolTip
     visible: infoMouseArea.containsMouse
-    width: 300
-    delay: 2000
-    timeout: 5000
 
     property string toolTipText
     property bool toolTipInCenter: false
@@ -24,8 +21,8 @@ ToolTip {
     }
 
     background: Rectangle {
-        width: Math.min(toolTip.width, toolTipId.width+10)
-        height: toolTipId.height + 10
+        width:  toolTipId.width +15
+        height: toolTipId.height + 15
         color: Style.Colors.toolTipBackground
         border.color: Style.Colors.toolTipGlowAndBorder
         radius: 4

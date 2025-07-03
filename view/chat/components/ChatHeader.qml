@@ -1,24 +1,24 @@
 import QtQuick 2.15
 import '../../component_library/style' as Style
 import "../../component_library/button"
-import "./model"
 import "../../menu"
 
 Item{
     id:headerId
-    width: parent.width; height: 80
+    width: parent.width; height: 60
     signal openModelSettingsDrawer()
     signal openHistoryDrawer()
     function openModelComboBox(){
         currentModelComboBoxId.popup.open();
     }
+    signal sendMessage()
 
     clip: true
 
     Row{
         spacing: 10
         anchors.left: parent.left; anchors.leftMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyOpenMenuButton{
             id: openMenuId
@@ -26,6 +26,7 @@ Item{
         MyButton{
             id: newChatId
             visible: !conversationList.isEmptyConversation
+            anchors.verticalCenter: openMenuId.verticalCenter
             myText: (headerId.width<500)? "": "New Chat"
             myIcon: "qrc:/media/icon/add.svg"
             bottonType: Style.RoleEnum.BottonType.Primary
@@ -36,15 +37,22 @@ Item{
                 }
             }
         }
-        ModelComboBox{
+        ModelChatComboBox{
             id: currentModelComboBoxId
+            Connections{
+                target: currentModelComboBoxId
+                function onSendMessage(){
+                    headerId.sendMessage()
+                    currentModelComboBoxId.popup.close()
+                }
+            }
         }
     }
 
     Row{
         spacing: 10
         anchors.right: parent.right; anchors.rightMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
             id: openModelSettingsId

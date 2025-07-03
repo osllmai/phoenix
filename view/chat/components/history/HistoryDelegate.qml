@@ -21,6 +21,7 @@ T.Button {
 
     onClicked: {
         conversationList.selectCurrentConversationRequest(model.id)
+        drawerId.close()
     }
 
     background: null
@@ -42,10 +43,22 @@ T.Button {
                 width: parent.width
                 MyIcon {
                     id: logoModelId
+                    visible: model.icon !== "qrc:/media/image_company/user.svg"
                     myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 30; height: 30
+                }
+                ToolButton {
+                    id: phoenixIconId
+                    visible: model.icon === "qrc:/media/image_company/user.svg"
+                    width: 30; height: 30
+                    background: null
+                    icon{
+                        source: model.icon
+                        color: Style.Colors.menuHoverAndCheckedIcon
+                        width:24; height:24
+                    }
                 }
                 TextArea {
                     id: titleId
@@ -98,6 +111,7 @@ T.Button {
                 width: parent.width
                 height: 16
                 font.pixelSize: 12
+                font.bold: control.checkselectItem? true: false
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
@@ -114,6 +128,7 @@ T.Button {
                     width: parent.width - editId.width - deleteId.width - pinId.width
                     anchors.verticalCenter: editId.verticalCenter
                     color: Style.Colors.textInformation
+                    font.bold: control.checkselectItem? true: false
                     clip: true
                     font.pixelSize: 10
                     horizontalAlignment: Text.AlignJustify
@@ -181,6 +196,7 @@ T.Button {
             function onButtonAction2() {
                 conversationList.deleteRequest(model.id)
                 deleteConversationVerificationId.close()
+                // drawerId.modelIsloadedDialog2Id.open()
             }
         }
     }

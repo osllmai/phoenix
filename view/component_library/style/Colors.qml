@@ -133,6 +133,12 @@ Item{
     //text color
     readonly property color textTitle: currentTextColor[6]
     readonly property color textInformation: currentTextColor[5]
+    readonly property color textTagInfo: currentSuccessColor[2]
+    readonly property color textTagDebug: currentInfoColor[2]
+    readonly property color textTagError: currentErrorColor[2]
+    readonly property color textTagWarning: currentAvatarBGDynamicColor[8]
+    readonly property color textTagCritical: currentErrorColor[2]
+    readonly property color textTagFatal: currentErrorColor[2]
 
     //icon color
     readonly property color iconPrimaryNormal: currentBackgroundColor[4]
@@ -167,7 +173,7 @@ Item{
     readonly property color buttonPrimaryHover: currentPrimaryColor[3]
     readonly property color buttonPrimaryPressed: currentPrimaryColor[4]
     readonly property color buttonPrimaryDisabled: currentPrimaryColor[1]
-    readonly property color buttonPrimarySelected: currentPrimaryColor[0]
+    readonly property color buttonPrimarySelected: currentBackgroundColor[2]
     readonly property color buttonPrimaryBorderNormal: currentPrimaryColor[2]
     readonly property color buttonPrimaryBorderHover: currentPrimaryColor[3]
     readonly property color buttonPrimaryBorderPressed: currentPrimaryColor[4]
@@ -184,7 +190,7 @@ Item{
     readonly property color buttonSecondaryHover: currentBackgroundColor[3]
     readonly property color buttonSecondaryPressed: currentPrimaryColor[1]
     readonly property color buttonSecondaryDisabled: currentPrimaryColor[1]
-    readonly property color buttonSecondarySelected: currentPrimaryColor[0]
+    readonly property color buttonSecondarySelected: currentBackgroundColor[2]
     readonly property color buttonSecondaryBorderNormal: currentPrimaryColor[0]
     readonly property color buttonSecondaryBorderHover: currentPrimaryColor[2]
     readonly property color buttonSecondaryBorderPressed: currentPrimaryColor[3]
@@ -218,7 +224,7 @@ Item{
     readonly property color buttonFeatureHover: currentBackgroundColor[2]
     readonly property color buttonFeaturePressed: currentPrimaryColor[1]
     readonly property color buttonFeatureDisabled: currentPrimaryColor[1]
-    readonly property color buttonFeatureSelected: currentBackgroundColor[1]
+    readonly property color buttonFeatureSelected: currentBackgroundColor[2]
     readonly property color buttonFeatureBorderNormal: currentBackgroundColor[2]
     readonly property color buttonFeatureBorderHover: currentBackgroundColor[3]
     readonly property color buttonFeatureBorderPressed: currentPrimaryColor[2]
@@ -266,6 +272,7 @@ Item{
     readonly property color boxBorder: currentBackgroundColor[3]
     readonly property color boxChecked: currentPrimaryColor[0]
     readonly property color boxHover: currentBackgroundColor[1]
+    readonly property color boxSuccessColor: currentSuccessColor[0]
 
     //like color
     readonly property color like: currentErrorColor[1]

@@ -6,19 +6,19 @@ import '../../component_library/style' as Style
 Item {
     id: controlId
     clip: true
-    Flickable {
-        anchors.fill: parent
-        anchors.rightMargin: 10
-        anchors.bottomMargin: 20
-        clip: true
-        contentHeight: textId.implicitHeight
+    ScrollView {
+        id: scrollInput
+        width: parent.width
+        height: parent.height
+        ScrollBar.vertical.interactive: true
 
-        interactive: true
-        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+        ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                   ? ScrollBar.AlwaysOn
+                                   : ScrollBar.AlwaysOff
 
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-        }
+        ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                        (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
         TextArea{
             id: textId
             text:"# OS LLM AI

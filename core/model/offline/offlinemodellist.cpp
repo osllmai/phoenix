@@ -1,7 +1,5 @@
 #include "offlinemodellist.h"
 
-#include <algorithm>
-
 #include "../../conversation/conversationlist.h"
 
 OfflineModelList* OfflineModelList::m_instance = nullptr;
@@ -35,6 +33,8 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->id();
     case NameRole:
         return model->name();
+    case ModeNameRole:
+        return model->modelName();
     case KeyRole:
         return model->key();
     case InformationRole:
@@ -74,6 +74,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
+    roles[ModeNameRole] = "modelName";
     roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconRole] = "icon";
@@ -267,6 +268,15 @@ OfflineModel* OfflineModelList::findModelById(int id) {
     });
 
     return (it != m_models.end()) ? *it : nullptr;
+}
+
+OfflineModel* OfflineModelList::findModelByModelName(const QString modelName){
+    for (OfflineModel* model : m_models) {
+        if (model->modelName() == modelName) {
+            return model;
+        }
+    }
+    return nullptr;
 }
 
 void OfflineModelList::updateDownloadProgress(){

@@ -1,0 +1,16 @@
+git clone https://github.com/ggml-org/whisper.cpp.git
+
+
+------------------------------NVIDIA gpu-----------------------------
+cmake -B build -DGGML_CUDA=1 -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/cpp_doing/phoenix/sweechToText/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+ cmake --build build -j --config Release
+./build/bin/Release/whisper-stream -m ./models/ggml-base.en.bin -t 6 --step 0 --length 30000 -vth 0.6
+
+
+
+------------------------------VULKAN gpu-----------------------------
+cmake -B build -DGGML_VULKAN=1 -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/cpp_doing/phoenix/sweechToText/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+ cmake --build build -j --config Release
+./build/bin/Release/whisper-stream -m ./models/ggml-base.en.bin -t 6 --step 0 --length 30000 -vth 0.6
+
+

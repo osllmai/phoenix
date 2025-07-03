@@ -3,11 +3,9 @@
 
 #include <QObject>
 #include <QtQml>
-#include <QQmlEngine>
 #include <QAbstractListModel>
 
 #include <QFutureWatcher>
-#include <QtConcurrent>
 
 #include "company.h"
 

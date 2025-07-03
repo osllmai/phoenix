@@ -20,6 +20,8 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
         return false;
 
     QString name = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::NameRole).toString();
+    QString modelName = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::ModeNameRole).toString();
+    QString modelNameOffline = "localModel/" + sourceModel()->data(index, OfflineModelList::OfflineModelRoles::ModeNameRole).toString();
     bool isLikeModel = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsLikeRole).toBool();
     bool isDownloading = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsDownloadingRole).toBool();
     double downloadPercent = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::DownloadPercentRole).toDouble();
@@ -31,7 +33,10 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     if (!model) return false;
 
     QRegularExpression filterExp = filterRegularExpression();
-    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch();
+    bool matchesFilter = filterExp.pattern().isEmpty() ||
+                                        filterExp.match(name).hasMatch() ||
+                                        filterExp.match(modelName).hasMatch() ||
+                                        filterExp.match(modelNameOffline).hasMatch();
 
     switch (m_filterType) {
     case FilterType::All:

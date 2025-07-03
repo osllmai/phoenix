@@ -4,11 +4,11 @@ import '../component_library/style' as Style
 import '../component_library/button'
 import "./components"
 
-Rectangle{
+Rectangle {
     id: root
     width: 200
     anchors.top: parent.top; anchors.bottom: parent.bottom
-    color: Style.Colors.background
+    color: window.isDesktopSize? "#00ffffff": Style.Colors.background
 
     Item{
         id: appInfoId

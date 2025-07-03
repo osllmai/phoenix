@@ -5,13 +5,13 @@
 #include <QQmlEngine>
 #include <QDateTime>
 
-#include "./chat/modelsettings.h"
+#include "../model/modelsettings.h"
 #include "./chat/messagelist.h"
 #include "../model/model.h"
 #include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
-#include "./provider/provider.h"
+#include "../provider/provider.h"
 
 class Conversation : public QObject
 {
@@ -139,6 +139,8 @@ private:
     ModelSettings *m_modelSettings;
     ResponseList *m_responseList;
     Provider *m_provider;
+
+    bool m_stopRequest;
 };
 
 #endif // CONVERSATION_H

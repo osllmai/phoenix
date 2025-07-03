@@ -109,14 +109,15 @@ ComboBox {
                 width: parent.width
                 height: parent.height
                 anchors.fill: parent
-                // anchors.top: searchBoxId.bottom
                 anchors.margins: 10
                 clip: true
                 cacheBuffer: Math.max(0, myListView.contentHeight)
                 interactive: contentHeight > height
                 boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
                 ScrollBar.vertical: ScrollBar {
-                    policy: ScrollBar.AsNeeded
+                    policy: myListView.contentHeight > myListView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
                 }
                 implicitHeight: Math.min(contentHeight, 240)
                 model: comboBoxId.popup.visible ? comboBoxId.delegateModel : null

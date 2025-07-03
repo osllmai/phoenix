@@ -3,6 +3,7 @@
         <file>Main.qml</file>
         <file>component_library/style/Colors.qml</file>
         <file>component_library/style/RoleEnum.qml</file>
+        <file>component_library/style/qmldir</file>
         <file>component_library/button/MyButton.qml</file>
         <file>component_library/button/MyComboBox.qml</file>
         <file>component_library/button/MyIcon.qml</file>
@@ -23,25 +24,47 @@
         <file>home/components/HomeHeader.qml</file>
         <file>home/components/FeatureList.qml</file>
         <file>home/components/FeatureDelegate.qml</file>
+
+
+
         <file>model/ModelsView.qml</file>
         <file>model/components/ModelHeader.qml</file>
         <file>model/components/ModelBody.qml</file>
+
         <file>model/components/offline/OfflineModelView.qml</file>
         <file>model/components/offline/OfflineHeader.qml</file>
-        <file>model/components/offline/OfflineList.qml</file>
-        <file>model/components/offline/OfflineDelegate.qml</file>
-        <file>model/components/offline/DownloadButton.qml</file>
+        <file>model/components/offline/OfflineBody.qml</file>
+        <file>model/components/offline/components/OfflineGridView.qml</file>
+        <file>model/components/offline/components/OfflineListView.qml</file>
+        <file>model/components/offline/components/OfflineBoxDelegate.qml</file>
+        <file>model/components/offline/components/OfflineRowDelegate.qml</file>
+        <file>model/components/offline/components/components/DownloadButton.qml</file>
+        <file>model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml</file>
+        <file>model/components/offline/components/components/OfflineDelegateInfoBox.qml</file>
+        <file>model/components/offline/components/components/OfflineInformationModel.qml</file>
+
         <file>model/components/online/OnlineModelView.qml</file>
         <file>model/components/online/OnlineHeader.qml</file>
-        <file>model/components/online/OnlineList.qml</file>
-        <file>model/components/online/OnlineDelegate.qml</file>
-        <file>model/components/online/InputApikey.qml</file>
-        <file>model/components/online/ApikeyButton.qml</file>
+        <file>model/components/online/OnlineBody.qml</file>
+        <file>model/components/online/components/OnlineGridView.qml</file>
+        <file>model/components/online/components/OnlineListView.qml</file>
+        <file>model/components/online/components/OnlineBoxDelegate.qml</file>
+        <file>model/components/online/components/OnlineRowDelegate.qml</file>
+        <file>model/components/online/components/components/InputApikey.qml</file>
+        <file>model/components/online/components/components/ApikeyButton.qml</file>
+        <file>model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml</file>
+        <file>model/components/online/components/components/OnlineDelegateInfoBox.qml</file>
+        <file>model/components/online/components/components/OnlineInformationModel.qml</file>
+
+
+
+
         <file>chat/ChatView.qml</file>
         <file>chat/components/ChatHeader.qml</file>
-        <file>chat/components/HistoryDrawer.qml</file>
-        <file>chat/components/ModelSettingsDrawer.qml</file>
         <file>chat/components/ChatBody.qml</file>
+        <file>chat/components/HistoryDrawer.qml</file>
+        <file>chat/components/ModelSettingsChatDrawer.qml</file>
+        <file>chat/components/ModelChatComboBox.qml</file>
         <file>chat/components/chat/InputPrompt.qml</file>
         <file>chat/components/chat/MessageDelegate.qml</file>
         <file>chat/components/chat/MyMessageList.qml</file>
@@ -49,26 +72,43 @@
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
         <file>chat/components/history/HistoryDelegate.qml</file>
-        <file>chat/components/model_settings/ModelSettingsHeader.qml</file>
-        <file>chat/components/model_settings/ModelSettingsBody.qml</file>
-        <file>chat/components/model_settings/ModelAssistantSettings.qml</file>
-        <file>chat/components/model_settings/ModelInferencesSettings.qml</file>
-        <file>chat/components/model_settings/ModelInformationSettings.qml</file>
-        <file>chat/components/model_settings/ModelEngineSettings.qml</file>
-        <file>chat/components/model_settings/components/ModelSettingsSlider.qml</file>
-        <file>chat/components/model_settings/components/ModelSettingsSwitch.qml</file>
-        <file>chat/components/model_settings/components/ModelMenuSettings.qml</file>
-        <file>chat/components/model/ModelComboBox.qml</file>
-        <file>chat/components/model/components/ModelDialogHeader.qml</file>
-        <file>chat/components/model/components/ModelDialogBody.qml</file>
-        <file>chat/components/model/components/online/OnlineCurrentModelDelegate.qml</file>
-        <file>chat/components/model/components/online/OnlineCurrentModelList.qml</file>
-        <file>chat/components/model/components/online/OnlineCurrentModelinformation.qml</file>
-        <file>chat/components/model/components/online/OnlineCurrentView.qml</file>
-        <file>chat/components/model/components/offline/OfflineCurrentModelDelegate.qml</file>
-        <file>chat/components/model/components/offline/OfflineCurrentModelList.qml</file>
-        <file>chat/components/model/components/offline/OfflineCurrentModelinformation.qml</file>
-        <file>chat/components/model/components/offline/OfflineCurrentView.qml</file>
+        <file>component_library/model_settings/ModelSettingsView.qml</file>
+        <file>component_library/model_settings/ModelSettingsHeader.qml</file>
+        <file>component_library/model_settings/ModelSettingsBody.qml</file>
+        <file>component_library/model_settings/components/ModelAssistantSettings.qml</file>
+        <file>component_library/model_settings/components/ModelInferencesSettings.qml</file>
+        <file>component_library/model_settings/components/ModelInformationSettings.qml</file>
+        <file>component_library/model_settings/components/ModelEngineSettings.qml</file>
+        <file>component_library/model_settings/components/APISettings.qml</file>
+        <file>component_library/model_settings/components/SocketSettings.qml</file>
+        <file>component_library/model_settings/components/button/ModelSettingsSlider.qml</file>
+        <file>component_library/model_settings/components/button/ModelSettingsSwitch.qml</file>
+        <file>component_library/model_settings/components/button/ModelMenuSettings.qml</file>
+        <file>component_library/model_settings/components/button/ModelTextEdit.qml</file>
+        <file>component_library/model/ModelSelectView.qml</file>
+        <file>component_library/model/ModelSelectComboBox.qml</file>
+        <file>component_library/model/components/ModelSelectHeader.qml</file>
+        <file>component_library/model/components/ModelSelectBody.qml</file>
+        <file>component_library/model/components/online/InputApikeyDialog.qml</file>
+        <file>component_library/model/components/online/OnlineCurrentModelDelegate.qml</file>
+        <file>component_library/model/components/online/OnlineCurrentModelList.qml</file>
+        <file>component_library/model/components/online/OnlineCurrentModelinformation.qml</file>
+        <file>component_library/model/components/online/OnlineCurrentView.qml</file>
+        <file>component_library/model/components/offline/OfflineCurrentModelDelegate.qml</file>
+        <file>component_library/model/components/offline/OfflineCurrentModelList.qml</file>
+        <file>component_library/model/components/offline/OfflineCurrentModelinformation.qml</file>
+        <file>component_library/model/components/offline/OfflineCurrentView.qml</file>
+        <file>developer/DeveloperView.qml</file>
+        <file>developer/components/DeveloperHeader.qml</file>
+        <file>developer/components/DeveloperBody.qml</file>
+        <file>developer/components/model/ModelDeveloperComboBox.qml</file>
+        <file>developer/components/model/ModelDeveloperView.qml</file>
+        <file>developer/components/command_line/CommandLineInterface.qml</file>
+        <file>developer/components/command_line/CommandLineInterfaceApp.qml</file>
+        <file>developer/components/model_settings/ModelSettingsDeveloperView.qml</file>
+        <file>developer/components/model_settings/ModelSettingsDeveloperDrawer.qml</file>
+        <file>developer/components/code/CodeDeveloper.qml</file>
+        <file>developer/components/code/EditCodeDeveloper.qml</file>
         <file>SettingsDialog.qml</file>
         <file>settings/SettingsHeader.qml</file>
         <file>settings/SettingsBody.qml</file>
@@ -86,8 +126,8 @@
         <file>AppFooter.qml</file>
         <file>component_footer/SystemMonitoring.qml</file>
         <file>component_footer/Downloading.qml</file>
-        <file>component_library/style/qmldir</file>
+        <file>component_library/model_settings/components/button/ModelTextCopyBox.qml</file>
         <file>AppHeader.qml</file>
-        <file>chat/components/model/components/online/InputApikeyDialog.qml</file>
+        <file>component_library/button/MyCopyButton.qml</file>
     </qresource>
 </RCC>

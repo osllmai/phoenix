@@ -13,6 +13,9 @@ Item {
             function onOpenHistoryDrawer(){
                 historyId.open()
             }
+            function onSendMessage(){
+                chatBodyId.sendMessage()
+            }
         }
     }
     ChatBody{
@@ -28,7 +31,7 @@ Item {
     HistoryDrawer{
         id: historyId
     }
-    ModelSettingsDrawer{
+    ModelSettingsChatDrawer{
         id: modelSettingsId
     }
 }

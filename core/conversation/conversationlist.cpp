@@ -109,7 +109,7 @@ void ConversationList::addRequest(const QString &firstPrompt){
         _propmtTemplate = m_modelPromptTemplate;
 
     emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
-                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,2048,80, true);
+                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -175,9 +175,17 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    if(id == -1)
+    if(id == -1){
         setModelSelect(false);
-    else
+        if(m_currentConversation != nullptr && m_currentConversation->isLoadModel() &&
+            !m_currentConversation->loadModelInProgress() && !m_currentConversation->responseInProgress()){
+            m_currentConversation->unloadModel();
+        }
+        if(m_previousConversation != nullptr && m_previousConversation->isLoadModel() &&
+            !m_previousConversation->loadModelInProgress() && !m_previousConversation->responseInProgress()){
+            m_previousConversation->unloadModel();
+        }
+    }else
         setModelSelect(true);
 
     if(!m_isEmptyConversation){
@@ -241,10 +249,14 @@ void ConversationList::updateDescriptionText(const int conversationId, const QSt
 }
 
 void ConversationList::selectCurrentConversationRequest(const int id){
+    Conversation* conversation = findConversationById(id);
+    if(conversation == nullptr) return;
+    // const int index = m_conversations.indexOf(conversation);
+
     if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
         setPreviousConversation(m_currentConversation);
 
-    setCurrentConversation(findConversationById(id));
+    setCurrentConversation(conversation);
     if(m_currentConversation->messageList()->count()<1)
         m_currentConversation->readMessages();
     setIsEmptyConversation(false);

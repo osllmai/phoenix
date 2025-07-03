@@ -44,6 +44,7 @@ public:
     QString type() const;
     void setType(const QString &newType);
 
+
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 

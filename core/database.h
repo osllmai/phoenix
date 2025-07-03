@@ -7,6 +7,13 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QThread>
+#include <QStandardPaths>
+#include <QFile>
+#include <QJsonParseError>
+#include <QFileInfo>
+#include <QDir>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "./model/offline/offlinemodel.h"
 #include "./model/online/onlinemodel.h"

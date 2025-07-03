@@ -11,23 +11,24 @@ Rectangle{
 
     color: Style.Colors.menu
 
+    property bool isDrawer: false
+
     Item{
         id: appInfoId
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: 80
-        ToolButton {
+        height: 60
+
+        MyIcon {
             id: phoenixIconId
+            myIcon: "qrc:/media/image_company/Phoenix.svg"
+            iconType: Style.RoleEnum.IconType.Image
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 10
-            background: null
-            icon{
-                source: "qrc:/media/icon/phoenix.svg"
-                color: Style.Colors.menuHoverAndCheckedIcon;
-                width:24; height:24
-            }
+            enabled: false
+            width: 40; height: 40
         }
         Label {
             id: textId
@@ -66,6 +67,9 @@ Rectangle{
             Connections {
                 target: homeItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 0){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 0
                 }
             }
@@ -83,6 +87,9 @@ Rectangle{
             Connections {
                 target: chatItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 1){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 1
                 }
             }
@@ -100,7 +107,29 @@ Rectangle{
             Connections {
                 target: modelsItemMenu
                 function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 2){
+                        drawerId.close()
+                    }
                     appBodyId.currentIndex = 2
+                }
+            }
+        }
+        MyMenuButton {
+            id: devloperItemMenu
+            myText: "Devloper"
+            myToolTipText: "Devloper"
+            myIcon: "qrc:/media/icon/developer.svg"
+            myFillIcon: "qrc:/media/icon/developerFill.svg"
+            autoExclusive: true
+            numberPage:3
+
+            Connections {
+                target: devloperItemMenu
+                function onClicked(){
+                    if(isDrawer && appBodyId.currentIndex !== 3){
+                        drawerId.close()
+                    }
+                    appBodyId.currentIndex = 3
                 }
             }
         }
@@ -132,7 +161,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v0.1.1-2025.05.03"
+            text: "v0.1.2-2025.06.29"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"
@@ -151,9 +180,9 @@ Rectangle{
         height: 230
         width: 365
         titleText: "Phoenix"
-        about: "Version: 0.1.1 (user setup)
+        about: "Version: 0.1.2 (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.05.03
+Date: 2025.06.29
 OS: Windows x64
 "
         textBotton1: "Copy"
@@ -183,6 +212,8 @@ OS: Windows x64
             return chatItemMenu.y + appInfoId.height
         if(appBodyId.currentIndex === 2)
             return modelsItemMenu.y + appInfoId.height
+        if(appBodyId.currentIndex === 3)
+            return devloperItemMenu.y + appInfoId.height
         return homeItemMenu.y + appInfoId.height
     }
 

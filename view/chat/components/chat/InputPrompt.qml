@@ -5,7 +5,7 @@ import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Rectangle{
-    id: controlId
+    id: control
     height: 90; width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
@@ -16,10 +16,19 @@ Rectangle{
     property string textInput: speechToText.text
     onTextInputChanged: {
         if(textInput != "")
-            inputTextBox.text  = controlId.textInput
+            inputTextBox.text  = control.textInput
+    }
+
+    function requestEmptyTheInput(){
+        inputTextBox.text = ""
+    }
+
+    function sendMessage(){
+        sendIconId.clicked()
     }
 
     signal sendPrompt(var prompt)
+    signal openModelIsLoaded()
 
     function selectSendIcon(){
         if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
@@ -56,9 +65,18 @@ Rectangle{
             id: scrollInput
             width: parent.width
             height: parent.height - iconList.height
+            ScrollBar.vertical.interactive: true
+
+            ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
+                                       ? ScrollBar.AlwaysOn
+                                       : ScrollBar.AlwaysOff
+
+            ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
+                            (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
 
             TextArea {
                 id: inputTextBox
+
                 color: Style.Colors.textInformation
                 background: null
 
@@ -79,7 +97,7 @@ Rectangle{
                 placeholderTextColor: Style.Colors.textInformation
 
                 onTextChanged: {
-                    controlId.layer.enabled = true
+                    control.layer.enabled = true
                     adjustHeight()
                 }
 
@@ -90,19 +108,19 @@ Rectangle{
                 function adjustHeight() {
                     const newHeight = Math.max(40, inputTextBox.contentHeight);
                     if (inputTextBox.text === "") {
-                        controlId.height = 90;
+                        control.height = 90;
                     } else {
-                        controlId.height = Math.min(newHeight + 27, 180) + iconList.height ;
+                        control.height = Math.min(newHeight + 27, 180) + iconList.height ;
                     }
                 }
 
                 Keys.onReturnPressed: (event)=> {
                       if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                         event.accepted = false;
-                      }else {
-                          if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress)
-                              conversationList.currentConversation.stop()
-                        else{
+                      }else if((!conversationList.isEmptyConversation &&
+                                                !conversationList.currentConversation.responseInProgress &&
+                                                !conversationList.currentConversation.loadModelInProgress) ||
+                                                conversationList.isEmptyConversation){
                           sendPrompt(inputTextBox.text)
                           if(conversationList.modelSelect)
                                 inputTextBox.text = ""
@@ -111,15 +129,14 @@ Rectangle{
                               speechToText.stopRecording()
                               speechToText.text = ""
                           }
-                        }
                     }
                 }
 
                 onEditingFinished: {
-                    controlId.layer.enabled= false
+                    control.layer.enabled= false
                 }
                 onPressed: {
-                    controlId.layer.enabled= true
+                    control.layer.enabled= true
                 }
             }
         }
@@ -139,8 +156,6 @@ Rectangle{
                     myIcon: selectSpeechIcon()
                     iconType: Style.RoleEnum.IconType.Primary
                     onClicked: {
-                        console.log(speechToText.modelSelect)
-                        console.log(speechToText.speechInProcess)
                         if(speechToText.modelSelect){
                             if(speechToText.speechInProcess)
                                 speechToText.stopRecording()
@@ -152,27 +167,89 @@ Rectangle{
                     }
                 }
 
-                MyIcon {
-                    id: sendIconId
-                    width: 30; height: 30
-                    myIcon: selectSendIcon()
-                    iconType: Style.RoleEnum.IconType.Primary
-                    onClicked: {
-                        if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
-                            conversationList.currentConversation.stop()
-                        } else {
-                            sendPrompt(inputTextBox.text)
+                Item {
+                    id: sendButtonArea
+                    width: 30
+                    height: 30
 
-                            if (conversationList.modelSelect)
-                                inputTextBox.text = ""
+                    Loader {
+                        id: loadedImage
+                        anchors.fill: parent
+                        active: !conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress
+                        sourceComponent: BusyIndicator {
+                            running: true
+                            width: 30
+                            height: 30
 
-                            if(speechToText.speechInProcess){
-                                speechToText.stopRecording()
-                                speechToText.text = ""
+                            contentItem: Item {
+                                implicitWidth: 30
+                                implicitHeight: 30
+
+                                Canvas {
+                                    id: spinnerCanvas
+                                    anchors.fill: parent
+                                    onPaint: {
+                                        var ctx = getContext("2d")
+                                        ctx.clearRect(0, 0, width, height)
+                                        ctx.beginPath()
+                                        ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
+                                        ctx.lineWidth = 3
+                                        ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                        ctx.stroke()
+                                    }
+                                    Component.onCompleted: requestPaint()
+                                }
+
+                                RotationAnimator on rotation {
+                                    from: 0
+                                    to: 360
+                                    duration: 1000
+                                    loops: Animation.Infinite
+                                    running: true
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        control.openModelIsLoaded()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    MyIcon {
+                        id: sendIconId
+                        visible: conversationList.isEmptyConversation || (!conversationList.isEmptyConversation && !conversationList.currentConversation.loadModelInProgress)
+                        anchors.fill: parent
+                        myIcon: selectSendIcon()
+                        iconType: Style.RoleEnum.IconType.Primary
+
+                        onClicked: {
+                            if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
+                                control.openModelIsLoaded()
+                            } else if (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) {
+                                conversationList.currentConversation.stop()
+                            } else if (
+                                (!conversationList.isEmptyConversation &&
+                                 !conversationList.currentConversation.responseInProgress &&
+                                 !conversationList.currentConversation.loadModelInProgress) ||
+                                 conversationList.isEmptyConversation)
+                            {
+                                sendPrompt(inputTextBox.text)
+
+                                if (conversationList.modelSelect)
+                                    inputTextBox.text = ""
+
+                                if (speechToText.speechInProcess) {
+                                    speechToText.stopRecording()
+                                    speechToText.text = ""
+                                }
                             }
                         }
                     }
                 }
+
             }
         }
     }
@@ -199,9 +276,9 @@ Rectangle{
                 selectSpeechModelVerificationId.close()
             }
             function onButtonAction2() {
-                offlineModelListFilter.type = "Speech"
                 selectSpeechModelVerificationId.close()
                 appBodyId.currentIndex = 2
+                window.setModelPages("offline", "Speech")
             }
         }
     }

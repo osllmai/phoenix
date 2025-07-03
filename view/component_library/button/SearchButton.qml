@@ -6,6 +6,8 @@ Rectangle{
     id: control
     width: (textArea.visible? 200: control.height); height: 32
     color: Style.Colors.menuHoverBackground
+    border.width: 0
+    border.color: Style.Colors.boxBorder
     radius: 8
     clip: true
     property bool isTextAreaVisible: true
@@ -49,6 +51,12 @@ Rectangle{
               }else {
                     control.search(textArea.text)
               }
+            }
+            onEditingFinished: {
+                control.border.width = 0
+            }
+            onPressed: {
+                control.border.width = 1
             }
         }
     }

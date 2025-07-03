@@ -16,16 +16,19 @@ class OnlineModelList: public QAbstractListModel
 public:
     static OnlineModelList* instance(QObject* parent );
     OnlineModel* findModelById(const int id);
+    OnlineModel* findModelByModelName(const QString modelName);
 
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
+        ModeNameRole,
         KeyRole,
         InformationRole,
+        TypeRole,
         IconModelRole,
+        CompanyRole,
         IsLikeRole,
         AddModelTimeRole,
-        TypeRole,
         ContextWindowsRole,
         OutputRole,
         CommercialRole,
@@ -43,6 +46,7 @@ public:
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
     Q_INVOKABLE void saveAPIKey(const int id, QString key);
     Q_INVOKABLE void deleteRequest(const int id);
+
 
 public slots:
     void addModel(const int id, const QString& modelName, const QString& name, const QString& key,

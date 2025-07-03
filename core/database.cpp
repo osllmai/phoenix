@@ -47,7 +47,6 @@ Database::Database(QObject* parent)
     }
 }
 
-
 Database::~Database(){
     m_db.close();
     m_dbThread.quit();
@@ -116,7 +115,7 @@ void Database::addModel(const QString &name, const QString &key){
             ramRequ = 32;
 
         emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+                             id, name, name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime(), false);
 
     }
@@ -549,7 +548,7 @@ void Database::readModel(const QList<Company*> companys){
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
-                                   id, "", name, key, addDate, isLike, company,
+                                   id, obj["modelName"].toString(), name, key, addDate, isLike, company,
                                    obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool() /*, nullptr*/);
@@ -633,7 +632,7 @@ void Database::readModel(const QList<Company*> companys){
                     deleteModel(id);
                 }else{
                     QFileInfo fileInfo(key);
-                    QString icon = "user.svg";
+                    QString icon = "Phoenix.svg";
                     QString information = "This model has been successfully added to the application by you.";
                     double fileSize = (fileInfo.size()/10000000)*0.01;
                     int ramRequ;
@@ -651,7 +650,7 @@ void Database::readModel(const QList<Company*> companys){
                         ramRequ = 32;
 
                     emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, "", name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+                                         id, name,  name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime(), false);
                 }
             }
@@ -662,7 +661,6 @@ void Database::readModel(const QList<Company*> companys){
 void Database::readConversation(){
     QSqlQuery query(m_db);
     query.prepare(READ_CONVERSATION_SQL);
-
 
     if (query.exec()){
         while(query.next()) {

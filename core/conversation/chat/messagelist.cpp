@@ -119,6 +119,13 @@ void MessageList::updateLastMessage(const QString &newText) {
     emit dataChanged(lastIndex, lastIndex, {TextRole});
 }
 
+void MessageList::updateAllTextMessage() {
+    if (m_messages.isEmpty())
+        return;
+
+    emit dataChanged(createIndex(0, 0), createIndex(m_messages.size() - 1, 0), {TextRole});
+}
+
 
 QVariantMap MessageList::lastMessageInfo() const {
     QVariantMap result;

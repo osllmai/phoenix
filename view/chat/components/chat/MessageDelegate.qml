@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Templates 2.1 as T
 import QtQuick.Controls 6.6
 import QtTextToSpeech
+import MyMessageTextProcessor 1.0
 
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
@@ -17,22 +18,45 @@ T.Button {
          id: backgroundId
          anchors.fill: parent
 
+         MessageTextProcessor {
+             id: textProcessor
+         }
+
+         Connections {
+             target: model
+             function onTextChanged() {
+                 textProcessor.setValue(model.text)
+             }
+         }
+
         Row {
             id: headerId
             width: parent.width
             MyIcon {
                 id: logoModelId
+                visible: model.icon !== "qrc:/media/image_company/user.svg"
                 myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 35; height: 35
             }
+            ToolButton {
+                id: phoenixIconId
+                visible: model.icon === "qrc:/media/image_company/user.svg"
+                width: 35; height: 35
+                background: null
+                icon{
+                    source: model.icon
+                    color: Style.Colors.menuHoverAndCheckedIcon
+                    width:24; height:24
+                }
+            }
             Column {
                 spacing: 2
                 width: parent.width
+
                 TextArea {
                     id: textId
-                    text: model.text
                     color: Style.Colors.textTitle
                     selectionColor: "blue"
                     selectedTextColor: "white"
@@ -40,16 +64,26 @@ T.Button {
                     font.pixelSize: 14
                     focus: false
                     readOnly: true
-                    wrapMode: TextEdit.Wrap
-                    textFormat: TextEdit.MarkdownText
+                    wrapMode: TextEdit.WordWrap
+                    textFormat: TextEdit.PlainText
+
+                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ? conversationList.currentConversation.responseInProgress: false
+                    cursorPosition: text.length
+
                     selectByMouse: true
                     background: null
+
                     Accessible.role: Accessible.Button
                     Accessible.name: text
                     Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
 
                     onLinkActivated: function(url) {
                         Qt.openUrlExternally(url)
+                    }
+
+                    Component.onCompleted: {
+                        textProcessor.textDocument = textId.textDocument
+                        textProcessor.setValue(model.text)
                     }
                 }
 
@@ -59,7 +93,7 @@ T.Button {
                     height: Math.max(dateId.height, copyId.height)
                     anchors.left: parent.left
                     anchors.leftMargin: 10
-                    property bool checkCopy: false
+
                     Label {
                         id: dateId
                         visible: control.hovered
@@ -72,29 +106,10 @@ T.Button {
                         verticalAlignment: Text.AlignTop
                         wrapMode: Text.NoWrap
                     }
-                    MyIcon {
+                    MyCopyButton{
                         id: copyId
                         visible: control.hovered
-                        myIcon: copyId.selectIcon()
-                        iconType: Style.RoleEnum.IconType.Primary
-                        width: 26; height: 26
-                        Connections{
-                            target: copyId
-                            function onClicked(){
-                                textId.selectAll()
-                                textId.copy()
-                                textId.deselect()
-                                dateAndIconId.checkCopy= true
-                                successTimer.start();
-                            }
-                        }
-                        function selectIcon(){
-                            if(dateAndIconId.checkCopy === false){
-                                return copyId.hovered? "qrc:/media/icon/copyFill.svg": "qrc:/media/icon/copy.svg"
-                            }else{
-                                return copyId.hovered? "qrc:/media/icon/copySuccessFill.svg": "qrc:/media/icon/copySuccess.svg"
-                            }
-                        }
+                        myText: textId
                     }
                     MyIcon {
                         id: likeId
@@ -164,12 +179,6 @@ T.Button {
                                     speakerTimer.start()
                                 }
                             }
-                        }
-                        Timer {
-                            id: successTimer
-                            interval: 1000
-                            repeat: false
-                            onTriggered: dateAndIconId.checkCopy = false
                         }
 
                         Timer {

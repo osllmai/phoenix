@@ -7,16 +7,24 @@ Item{
     width: parent.width; height: 120
     clip:true
 
+    function setModelPages(page){
+        if(page === "offline"){
+            offlineModel.clicked()
+        }else if(page === "online"){
+            onlineModel.clicked()
+        }
+    }
+
     MyOpenMenuButton{
         id: openMenuId
         anchors.left:parent.left; anchors.leftMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
     }
 
     Row{
         spacing: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         MyMenu {
             id: offlineModel
             myText: "Offline Model"

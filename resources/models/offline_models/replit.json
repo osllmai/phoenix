@@ -3,6 +3,7 @@
     "order": "q",
     "md5sum": "c232f17e09bca4b7ee0b5b1f4107c01e",
     "disableGUI": true,
+    "modelName": "replit-code-v1_5-3b-newbpe-q4_0",
     "name": "Replit",
     "filename": "replit-code-v1_5-3b-newbpe-q4_0.gguf",
     "filesize": 1.953,

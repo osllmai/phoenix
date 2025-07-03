@@ -24,7 +24,7 @@ Popup{
         anchors.fill: parent
         radius: 10
         border.width: 1
-        border.color: Style.Colors.boxBorder
+        border.color: Style.Colors.buttonFeatureBorderPressed
         color: Style.Colors.background
 
         Column{
@@ -50,26 +50,6 @@ Popup{
             }
         }
 
-        ProgressBar {
-            id: progressBarCPU
-            width: parent.width
-            height: 6
-            value: control.progressValue
-            anchors.bottom: parent.bottom
-
-            background: null
-
-            contentItem: Item {
-                implicitHeight: 6
-                Rectangle {
-                    radius: 2
-                    width: progressBarCPU.visualPosition * parent.width; height: 6
-                    color: Style.Colors.boxBorder
-                    Behavior on width { NumberAnimation { duration: 100 } }
-                }
-            }
-        }
-
         layer.enabled: true
         layer.effect: Glow {
              samples: 40
@@ -81,17 +61,10 @@ Popup{
 
     Timer {
         id: progressTimer
-        interval: 100
-        running: true
-        repeat: true
+        interval: 2000
+        repeat: false
         onTriggered: {
-            if (control.progressValue < 1) {
-                control.progressValue += 0.01;
-            } else {
-                control.close();
-                stop();
-                progressValue = 0;
-            }
+            control.close();
         }
     }
 }

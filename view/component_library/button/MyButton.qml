@@ -6,7 +6,7 @@ import '../style' as Style
 
 T.Button {
     id: control
-    width: calculateWidthBotton()+3; height: 35
+    width: calculateWidthBotton()+6; height: 35
 
     function calculateWidthBotton(){
         if(bottonType == Style.RoleEnum.BottonType.Progress){
@@ -14,11 +14,11 @@ T.Button {
         }
         switch(iconType){
         case Style.RoleEnum.IconType.Primary:
-            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
         case Style.RoleEnum.IconType.Image:
-            return (textBoxId.visible? (textId.width + primaryIconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
         default:
-            return (textBoxId.visible? (textId.width + iconId.width + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?iconId.width: 0) + 16): control.height);
         }
     }
     function calculateHeightText(){
@@ -44,9 +44,11 @@ T.Button {
     property bool isNeedAnimation: false
     property int bottonType: Style.RoleEnum.BottonType.Primary
     property int iconType: Style.RoleEnum.IconType.Primary
+    property int myRadius: 8
 
     checkable: false
     checked: false
+    property bool selected:  false
 
     HoverHandler {
         id: hoverHandler
@@ -69,7 +71,7 @@ T.Button {
         width: parent.width-3; height: parent.height-3
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        radius: 8
+        radius: control.myRadius
         border.width: 1
 
         Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}
@@ -138,6 +140,7 @@ T.Button {
                 width: textId.width + ((control.myIcon != "")? 10: 0)
                 height: textId.height
                 visible: (control.myText != "") && (control.textIsVisible)
+
                 Label {
                     id: textId
                     height: control.calculateHeightText()
@@ -529,11 +532,11 @@ T.Button {
             }
     }
 
-    property bool isNormal: ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
-    property bool isHover: ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
-    property bool isPressed: ((!control.checked && control.checkable) || !control.checkable) && control.pressed && control.enabled
+    property bool isNormal: !selected && ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
+    property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
+    property bool isPressed: control.pressed && control.enabled
     property bool isDisabled: !control.enabled
-    property bool isSelected: control.checked && control.checkable && control.enabled
+    property bool isSelected: (control.selected || (control.checked && control.checkable)) && control.enabled
 
     states: [
         State {
@@ -548,10 +551,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -572,10 +577,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -596,10 +603,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId
@@ -613,17 +622,19 @@ T.Button {
             when: control.isSelected
             PropertyChanges {
                 target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, /*Style.RoleEnum.State.Selected*/ "red")
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
                 border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
                 width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
             }
             PropertyChanges {
                 target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                font.bold: true
             }
             PropertyChanges {
                 target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                font.bold: true
             }
             PropertyChanges {
                 target: progressBarId
@@ -644,10 +655,12 @@ T.Button {
             PropertyChanges {
                 target: textId
                 color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarTextId
                 color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                font.bold: false
             }
             PropertyChanges {
                 target: progressBarId

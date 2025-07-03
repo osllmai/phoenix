@@ -10,7 +10,24 @@ ApplicationWindow {
     minimumWidth: 400; minimumHeight: 600
     color: Style.Colors.background
 
-    // flags: Qt.FramelessWindowHint
+    // flags: Qt.Window | Qt.FramelessWindowHint
+    flags: Qt.Window |
+           Qt.CustomizeWindowHint |
+           Qt.WindowMinimizeButtonHint |
+           Qt.WindowMaximizeButtonHint |
+           Qt.WindowContextHelpButtonHint
+           // Qt.WindowStaysOnTopHint |
+           // Qt.WindowTitleHint |
+           // Qt.WindowActive |
+           // Qt.WindowNoState |
+           // Qt.CustomDashLine |
+            // Qt.FramelessWindowHint
+           // Qt.ElideLeft
+
+    property int prevX: 0
+    property int prevY: 0
+    property int prevW: 0
+    property int prevH: 0
 
     property string theme: "Defualt"
     onThemeChanged: {
@@ -20,6 +37,37 @@ ApplicationWindow {
             Style.Colors.theme = "Dark"
         else
             Style.Colors.theme = "Light"
+
+        codeColors.defaultColor = Style.Colors.textInformation
+        codeColors.keywordColor = Style.Colors.textTagInfo
+        codeColors.functionColor = Style.Colors.textTagWarning
+        codeColors.functionCallColor = Style.Colors.textTagError
+        codeColors.commentColor = Style.Colors.textTitle
+        codeColors.stringColor = Style.Colors.textTagInfo
+        codeColors.numberColor = Style.Colors.textTitle
+        codeColors.headerColor = Style.Colors.boxNormalGradient1
+        codeColors.backgroundColor = Style.Colors.boxNormalGradient0
+
+        if(!conversationList.isEmptyConversation){
+            conversationList.currentConversation.messageList.updateAllTextMessage()
+        }
+    }
+
+    property string modelPageView: "gridView"
+    function setModelPages(page, filter){
+        appBodyId.setModelPages(page, filter)
+    }
+
+    Component.onCompleted: {
+        codeColors.defaultColor = Style.Colors.textInformation
+        codeColors.keywordColor = Style.Colors.textTagInfo
+        codeColors.functionColor = Style.Colors.textTagWarning
+        codeColors.functionCallColor = Style.Colors.textTagError
+        codeColors.commentColor = Style.Colors.textTitle
+        codeColors.stringColor = Style.Colors.textTagInfo
+        codeColors.numberColor = Style.Colors.textTitle
+        codeColors.headerColor = Style.Colors.boxNormalGradient1
+        codeColors.backgroundColor = Style.Colors.boxNormalGradient0
     }
 
     font.family: "DM Sans"
@@ -34,28 +82,13 @@ ApplicationWindow {
         property alias height: window.height
         property alias theme: window.theme
         property alias fontFamily: window.font.family
+        property alias modelPageView: window.modelPageView
+        property alias isOpenMenu: window.isOpenMenu
 
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)
         property real speechRate: value("speechRate", 0.0)
-
-        // property alias modelSpeechPath: window.modelSpeechPath
-        // property bool modelSpeechSelect: window.modelSpeechSelect
     }
-
-    // function setModelSpeech(){
-    //     speechToText.modelPath = window.modelSpeechPath
-    //     speechToText.modelSelect = window.modelSpeechSelect
-    // }
-
-    // property string modelSpeechPath: ""
-    // property bool modelSpeechSelect: false
-    // onModelSpeechPathChanged: {
-    //     window.setModelSpeech()
-    // }
-    // onModelSpeechSelectChanged: {
-    //     window.setModelSpeech()
-    // }
 
     TextToSpeech {
         id: textToSpeechId
@@ -66,17 +99,21 @@ ApplicationWindow {
     }
 
     visible: true
-    title: qsTr("Phoenix v0.1.1")
+    title: qsTr("Phoenix v0.1.2")
 
-    property bool isDesktopSize: width >= 630;
+    property bool isDesktopSize: width >= 750;
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){
-            window.isOpenMenu = true
+            if(window.isOpenMenu){
+                appMenuDesktopId.width = 200
+            }else{
+                appMenuDesktopId.width = 60
+            }
         }
     }
 
-    property bool isOpenMenu: true
+    property bool isOpenMenu: false
     onIsOpenMenuChanged: {
         if(window.isOpenMenu){
             if(window.isDesktopSize){
@@ -93,46 +130,40 @@ ApplicationWindow {
         }
     }
 
-    Item {
+    Column{
         anchors.fill: parent
         anchors.margins: 0
-
-        AppMenu {
-            id: appMenuDesktopId
-            visible: window.isDesktopSize
-            clip: true
+        AppHeader{
+            id: appHeader
         }
+        Item {
+            width: parent.width
+            height: parent.height - appHeader.height
 
-        Column {
-            anchors.fill: parent
-            anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
-
-            // AppHeader{
-            //     id: appHeader
-            // }
-
-            AppBody {
-                id: appBodyId
-                width: parent.width
-                height: parent.height - appFooter.height /*- appHeader.height*/
+            AppMenu {
+                id: appMenuDesktopId
+                visible: window.isDesktopSize
                 clip: true
             }
 
-            AppFooter {
-                id: appFooter
+            Column {
+                anchors.fill: parent
+                anchors.leftMargin: window.isDesktopSize ? appMenuDesktopId.width : 0
+
+                AppBody {
+                    id: appBodyId
+                    width: parent.width
+                    height: parent.height - appFooter.height
+                    clip: true
+                }
+
+                AppFooter {
+                    id: appFooter
+                }
+            }
+            AppMenuDrawer{
+                id: appMenuApplicationId
             }
         }
-    }
-
-    Rectangle {
-        id: line
-        width: parent.width
-        height: 1
-        color: Style.Colors.boxBorder
-        anchors.top: parent.top
-    }
-
-    AppMenuDrawer{
-        id: appMenuApplicationId
     }
 }

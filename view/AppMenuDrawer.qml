@@ -5,7 +5,9 @@ import './component_library/style' as Style
 Drawer{
     id: drawerId
     width: appMenuId.width
-    height: parent.height
+    height: parent.height - 40
+    y: 40
+
     interactive: true
     edge: Qt.LeftEdge
 
@@ -16,5 +18,6 @@ Drawer{
     background: null
     AppMenu{
         id: appMenuId
+        isDrawer: true
     }
 }

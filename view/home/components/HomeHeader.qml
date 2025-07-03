@@ -6,12 +6,12 @@ import "../../menu"
 
 Item{
     id:headerId
-    width: parent.width; height: 80
+    width: parent.width; height: 68
     clip:true
     Row{
         anchors.verticalCenter: parent.verticalCenter
         anchors.left:parent.left; anchors.leftMargin: 24
-        anchors.top: parent.top; anchors.topMargin: 24
+        anchors.top: parent.top; anchors.topMargin: 12
         spacing: 15
 
         MyOpenMenuButton{
