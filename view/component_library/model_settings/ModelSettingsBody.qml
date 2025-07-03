@@ -8,16 +8,23 @@ Item {
     height: parent.height - headerId.height
     width: parent.width
     Flickable {
+        id: flickable
         anchors.fill: parent
-        clip: true
         contentHeight: columnId.implicitHeight
+        clip: true
 
-        interactive: true
-        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+        interactive: flickable.contentHeight > flickable.height
+        boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+        flickDeceleration: 200
+        maximumFlickVelocity: 12000
 
         ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
+            policy: flickable.contentHeight > flickable.height
+                    ? ScrollBar.AlwaysOn
+                    : ScrollBar.AlwaysOff
         }
+
         Column{
             id: columnId
             anchors.fill: parent

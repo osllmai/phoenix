@@ -9,7 +9,6 @@ Item {
     height: 600
     clip: true
 
-
     Column{
         anchors.fill: parent
         Flickable {
@@ -19,14 +18,16 @@ Item {
             contentHeight: column.implicitHeight
             clip: true
 
-            interactive: contentHeight > height
-            boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+            interactive: flickable.contentHeight > flickable.height
+            boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-            flickDeceleration: 500
-            maximumFlickVelocity: 6000
+            flickDeceleration: 200
+            maximumFlickVelocity: 12000
 
             ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AsNeeded
+                policy: flickable.contentHeight > flickable.height
+                        ? ScrollBar.AlwaysOn
+                        : ScrollBar.AlwaysOff
             }
 
             Column {

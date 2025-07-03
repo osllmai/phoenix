@@ -16,11 +16,13 @@ Item {
         interactive: contentHeight > height
         boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-        flickDeceleration: 500
-        maximumFlickVelocity: 6000
+        flickDeceleration: 200
+        maximumFlickVelocity: 12000
 
         ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
+            policy: listView.contentHeight > listView.height
+                    ? ScrollBar.AlwaysOn
+                    : ScrollBar.AlwaysOff
         }
         clip: true
 

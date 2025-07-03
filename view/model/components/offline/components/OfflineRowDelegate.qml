@@ -14,6 +14,8 @@ T.Button {
 
     background:null
 
+    focusPolicy: Qt.NoFocus
+
     contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent

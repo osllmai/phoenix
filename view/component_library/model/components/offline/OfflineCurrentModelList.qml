@@ -3,8 +3,12 @@ import QtQuick.Controls 2.15
 
 ListView {
     id: listView
+
     height: listView.contentHeight
     width: parent.width
+
+    interactive: listView.contentHeight > listView.height
+    boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
     clip: true
 
