@@ -41,7 +41,6 @@ T.Button {
              }
              MyIcon {
                  id: maximizeHSquareButtonId
-
                  property int menuHeight: 45
 
                  myIcon: ((window.width === 400 ) && (window.height === Screen.height - maximizeHSquareButtonId.menuHeight) &&
@@ -75,6 +74,15 @@ T.Button {
                                window.y = 0
                         }
                      }
+                 }
+             }
+             MyIcon{
+                 id: aboutIcon
+                 width: 26; height: 26
+                 anchors.verticalCenter: logoId.verticalCenter
+                 myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                 onClicked: {
+                     aboutVersion.open()
                  }
              }
          }

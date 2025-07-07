@@ -38,6 +38,7 @@ RowLayout {
         }
         ModelSettingsDeveloperDrawer{
             id: modelSettingsId
+            interactive: !modelSettingSpaceId.visible && (appBodyId.currentIndex === 3)
         }
     }
     ModelSettingsDeveloperView{

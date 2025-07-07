@@ -30,8 +30,10 @@ Item {
     }
     HistoryDrawer{
         id: historyId
+        interactive: appBodyId.currentIndex === 1
     }
     ModelSettingsChatDrawer{
         id: modelSettingsId
+        interactive: appBodyId.currentIndex === 1
     }
 }

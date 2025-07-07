@@ -29,6 +29,9 @@ Dialog {
 
     parent: Overlay.overlay
     Overlay.modal: Rectangle {
+        width: window.width
+        height: window.height - 40
+        y: 40
         color: Style.Colors.overlayDrawer
     }
 

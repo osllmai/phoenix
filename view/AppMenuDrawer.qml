@@ -8,7 +8,7 @@ Drawer{
     height: parent.height - 40
     y: 40
 
-    interactive: true
+    interactive: !window.isDesktopSize
     edge: Qt.LeftEdge
 
     parent: Overlay.overlay

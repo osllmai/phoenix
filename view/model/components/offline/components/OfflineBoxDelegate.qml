@@ -45,6 +45,7 @@ T.Button {
 
                 MyIcon{
                     id: aboutIcon
+                    width: 29; height: 29
                     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
                     myTextToolTip:model.information
