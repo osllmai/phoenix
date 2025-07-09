@@ -21,6 +21,7 @@ T.Button {
 
     onClicked: {
         conversationList.selectCurrentConversationRequest(model.id)
+        drawerId.goToEnd()
         drawerId.close()
     }
 
@@ -139,6 +140,7 @@ T.Button {
                     id: editId
                     visible: control.hovered || control.checkselectItem
                     myIcon: editId.hovered? (titleId.readOnly? "qrc:/media/icon/editFill.svg": "qrc:/media/icon/okFill.svg"): (titleId.readOnly? "qrc:/media/icon/edit.svg": "qrc:/media/icon/ok.svg")
+                    myTextToolTip: titleId.readOnly? "Edit": "OK"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: editId
@@ -161,6 +163,7 @@ T.Button {
                     id: deleteId
                     visible: control.hovered || control.checkselectItem
                     myIcon: deleteId.hovered? "qrc:/media/icon/deleteFill.svg": "qrc:/media/icon/delete.svg"
+                    myTextToolTip: "Delete"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: deleteId
@@ -173,6 +176,7 @@ T.Button {
                     width: 27; height: 27
                     y: deleteId.y + 4
                     myIcon: model.pinned? "qrc:/media/icon/pinFill.svg": "qrc:/media/icon/pin.svg"
+                    myTextToolTip:  model.pinned? "DisPin": "Pin"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: pinId

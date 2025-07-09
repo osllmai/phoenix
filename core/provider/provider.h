@@ -43,7 +43,7 @@ public slots:
                         const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers);
     virtual void stop();
     virtual void loadModel(const QString &model, const QString &key);
-    virtual void unLoadModel();
+    // virtual void unLoadModel();
 
 signals:
     void requestLoadModelResult(const bool result, const QString &warning);

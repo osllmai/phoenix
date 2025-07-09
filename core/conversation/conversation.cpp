@@ -87,6 +87,165 @@ Conversation::~Conversation() {
     qInfo()<<"delete conversation";
 }
 
+void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
+    m_messageList->addMessage(id, text, date, icon, isPrompt, like);
+}
+
+void Conversation::readMessages(){
+    emit requestReadMessages(m_id);
+}
+
+void Conversation::prompt(const QString &input){
+    m_isModelChanged = false;
+
+    if(ConversationList::instance(nullptr)->previousConversation() != nullptr &&
+        ConversationList::instance(nullptr)->previousConversation() != ConversationList::instance(nullptr)->currentConversation() &&
+        !ConversationList::instance(nullptr)->previousConversation()->loadModelInProgress() &&
+        !ConversationList::instance(nullptr)->previousConversation()->responseInProgress() &&
+        ConversationList::instance(nullptr)->previousConversation()->isLoadModel()){
+
+            ConversationList::instance(nullptr)->previousConversation()->unloadModel();
+    }
+
+    setLoadModelInProgress(true);
+    setResponseInProgress(false);
+
+    if(!isLoadModel()){
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            m_provider = new OfflineProvider(this);
+        }else if(m_model->backend() == BackendType::OnlineModel){
+            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+        }
+
+        //load and unload model
+        connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+        connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
+        // connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+
+        //prompt
+        connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
+
+        //finished response
+        connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
+        connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
+
+        if(m_model->backend() == BackendType::OfflineModel){
+            emit requestLoadModel( m_model->modelName(), m_model->key());
+        }
+
+        setIsLoadModel(true);
+    }
+
+    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
+    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
+
+    //add history from massage
+    QString finalPrompt = m_modelSettings->promptTemplate();
+    finalPrompt.replace("{{history}}", m_messageList->history());
+    finalPrompt.replace("{{input}}", input);
+
+    m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
+                       m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
+                       m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
+                       m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
+                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
+                       m_modelSettings->numberOfGPULayers());
+}
+
+void Conversation::stop(){
+    if(m_stopRequest)
+        return;
+    m_stopRequest = true;
+    m_provider->stop();
+}
+
+void Conversation::loadModel(const int id){
+
+    OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
+    if(offlineModel != nullptr){
+        setModel(offlineModel);
+    }
+    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+    if(onlineModel != nullptr){
+        setModel(onlineModel);
+    }
+    m_isModelChanged = true;
+}
+
+void Conversation::unloadModel(){
+
+    if(responseInProgress() && loadModelInProgress()){
+        m_isModelChanged = true;
+        return;
+    }
+
+    setIsLoadModel(false);
+    setLoadModelInProgress(false);
+
+    if(m_provider != nullptr){
+        //disconnect load and unload model
+        disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
+        disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
+        // disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+
+        //disconnect prompt
+        disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
+
+        //disconnect finished response
+        disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
+        disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
+        delete m_provider;
+    }
+}
+
+void Conversation::loadModelResult(const bool result, const QString &warning){
+
+}
+
+void Conversation::tokenResponse(const QString &token){
+    setResponseInProgress(true);
+    setLoadModelInProgress(false);
+
+    QVariantMap lastMessage = messageList()->lastMessageInfo();
+    QString lastText = lastMessage["text"].toString();
+    emit requestUpdateDescriptionText(m_id, lastText);
+    messageList()->updateLastMessage(token);
+}
+
+void Conversation::finishedResponse(const QString &warning){
+    QVariantMap lastMessage = messageList()->lastMessageInfo();
+    if (!lastMessage.isEmpty()) {
+        int lastId = lastMessage["id"].toInt();
+        QString lastText = lastMessage["text"].toString();
+
+        emit requestUpdateTextMessage(m_id, lastId, lastText);
+    }
+    setResponseInProgress(false);
+    setLoadModelInProgress(false);
+    m_stopRequest = false;
+
+    if(m_isModelChanged ){
+        unloadModel();
+        m_isModelChanged = false;
+    }
+}
+
+void Conversation::updateModelSettingsConversation(){
+    emit requestUpdateModelSettingsConversation(m_modelSettings->id(), m_modelSettings->stream(),
+                                                m_modelSettings->promptTemplate(), m_modelSettings->systemPrompt(),
+                                                m_modelSettings->temperature(), m_modelSettings->topK(),
+                                                m_modelSettings->topP(), m_modelSettings->minP(),
+                                                m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
+                                                m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
+                                                m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}
+
+void Conversation::likeMessageRequest( const int messageId, const int like){
+    m_messageList->likeMessageRequest(messageId, like);
+}
+
+
 const int Conversation::id() const {return m_id;}
 
 const QString &Conversation::title() const {return m_title;}
@@ -166,149 +325,3 @@ void Conversation::setModel(Model *model) {
 ModelSettings* Conversation::modelSettings() {return m_modelSettings;}
 
 ResponseList *Conversation::responseList() const{return m_responseList;}
-
-void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
-    m_messageList->addMessage(id, text, date, icon, isPrompt, like);
-}
-
-void Conversation::readMessages(){
-    emit requestReadMessages(m_id);
-}
-
-void Conversation::prompt(const QString &input, const int idModel){
-
-    setLoadModelInProgress(true);
-    setResponseInProgress(false);
-
-    if(!m_isLoadModel){
-        loadModel(idModel);
-        if(m_provider != nullptr){
-            //disconnect load and unload model
-            disconnect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel);
-            disconnect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult);
-            disconnect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel);
-
-            //disconnect prompt
-            disconnect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse);
-
-            //disconnect finished response
-            disconnect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse);
-            disconnect(this, &Conversation::requestStop, m_provider, &Provider::stop);
-            delete m_provider;
-        }
-
-        if(m_model->backend() == BackendType::OfflineModel){
-            m_provider = new OfflineProvider(this);
-        }else if(m_model->backend() == BackendType::OnlineModel){
-            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-        }
-        //load and unload model
-        connect(this, &Conversation::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
-        connect(m_provider, &Provider::requestLoadModelResult, this, &Conversation::loadModelResult, Qt::QueuedConnection);
-        connect(this, &Conversation::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
-
-        //prompt
-        connect(m_provider, &Provider::requestTokenResponse, this, &Conversation::tokenResponse, Qt::QueuedConnection);
-
-        //finished response
-        connect(m_provider, &Provider::requestFinishedResponse, this, &Conversation::finishedResponse, Qt::QueuedConnection);
-        connect(this, &Conversation::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
-
-        if(m_model->backend() == BackendType::OfflineModel){
-            emit requestLoadModel( m_model->modelName(), m_model->key());
-        }
-
-    }
-    if(idModel != m_model->id()){
-        setIsLoadModel(false);
-        prompt(input, idModel);
-        return;
-    }
-
-    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
-
-    //add history from massage
-    QString finalPrompt = m_modelSettings->promptTemplate();
-    finalPrompt.replace("{{history}}", m_messageList->history());
-    finalPrompt.replace("{{input}}", input);
-
-    m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
-                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
-                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
-                        m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),
-                       m_modelSettings->repeatPenaltyTokens(),m_modelSettings->contextLength(),
-                       m_modelSettings->numberOfGPULayers());
-}
-
-void Conversation::stop(){
-    if(m_stopRequest)
-        return;
-    m_stopRequest = true;
-    qInfo()<<"Stop";
-    m_provider->stop();
-}
-
-void Conversation::loadModel(const int id){
-
-    if(ConversationList::instance(nullptr)->previousConversation() != nullptr){
-        ConversationList::instance(nullptr)->previousConversation()->unloadModel();
-    }
-
-    OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
-    if(offlineModel != nullptr){
-        setModel(offlineModel);
-    }
-    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
-    if(onlineModel != nullptr){
-        setModel(onlineModel);
-    }
-}
-
-void Conversation::unloadModel(){
-    setIsLoadModel(false);
-    setLoadModelInProgress(false);
-    m_provider->unLoadModel();
-}
-
-void Conversation::loadModelResult(const bool result, const QString &warning){
-
-}
-
-void Conversation::tokenResponse(const QString &token){
-    setIsLoadModel(true);
-    setResponseInProgress(true);
-    setLoadModelInProgress(false);
-
-    QVariantMap lastMessage = messageList()->lastMessageInfo();
-    QString lastText = lastMessage["text"].toString();
-    emit requestUpdateDescriptionText(m_id, lastText);
-    messageList()->updateLastMessage(token);
-}
-
-void Conversation::finishedResponse(const QString &warning){
-    QVariantMap lastMessage = messageList()->lastMessageInfo();
-    if (!lastMessage.isEmpty()) {
-        int lastId = lastMessage["id"].toInt();
-        QString lastText = lastMessage["text"].toString();
-
-        emit requestUpdateTextMessage(m_id, lastId, lastText);
-    }
-    setResponseInProgress(false);
-    setLoadModelInProgress(false);
-    m_stopRequest = false;
-}
-
-void Conversation::updateModelSettingsConversation(){
-    emit requestUpdateModelSettingsConversation(m_modelSettings->id(), m_modelSettings->stream(),
-                                                m_modelSettings->promptTemplate(), m_modelSettings->systemPrompt(),
-                                                m_modelSettings->temperature(), m_modelSettings->topK(),
-                                                m_modelSettings->topP(), m_modelSettings->minP(),
-                                                m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
-                                                m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
-                                                m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
-}
-
-void Conversation::likeMessageRequest( const int messageId, const int like){
-    m_messageList->likeMessageRequest(messageId, like);
-}

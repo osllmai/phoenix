@@ -36,6 +36,7 @@ Item{
         MyButton{
             id: openModelSettingsId
             myIcon: "qrc:/media/icon/settings.svg"
+            myTextToolTip: "Model Settings"
             bottonType: Style.RoleEnum.BottonType.Secondary
            visible: window.width<=1500
             Connections {

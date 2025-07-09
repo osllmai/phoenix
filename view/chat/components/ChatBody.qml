@@ -21,6 +21,10 @@ Item {
         inputBoxId2.requestEmptyTheInput()
     }
 
+    function goToEnd(){
+        myMessageView.goToEnd();
+    }
+
     Column{
         spacing: 10
         anchors.fill: parent
@@ -38,7 +42,8 @@ Item {
                 target: inputBoxId
                 function onSendPrompt(prompt){
                     if((conversationList.modelSelect) && (prompt !== "")){
-                        conversationList.currentConversation.prompt(prompt, conversationList.modelId)
+                        myMessageView.goToEnd()
+                        conversationList.currentConversation.prompt(prompt)
                         chatBodyBoxId.requestEmptyTheInput()
                     }else if((prompt !== "")){
                         notificationDialogId.open()

@@ -11,4 +11,4 @@ void Provider::prompt(const QString &input, const bool &stream, const QString &p
                       const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers){}
 void Provider::stop(){}
 void Provider::loadModel(const QString &model, const QString &key){}
-void Provider::unLoadModel(){}
+// void Provider::unLoadModel(){}

@@ -13,6 +13,8 @@ Drawer{
     interactive: true
     edge: Qt.RightEdge
 
+    signal goToEnd()
+
     parent: Overlay.overlay
     Overlay.modal: Rectangle {
         color: Style.Colors.overlayDrawer

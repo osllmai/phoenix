@@ -58,7 +58,6 @@ axios.post("http://localhost:%2/api/chat", data, {
 .catch(error => {
   console.error("Error:", error);
 });)")
-        .arg(json)
-        .arg(port());
+        .arg(json, QString::number(port()));
 }
 

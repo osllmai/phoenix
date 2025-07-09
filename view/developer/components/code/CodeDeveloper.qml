@@ -144,6 +144,7 @@ Item {
                         id: editId
                         myIcon: editId.hovered? "qrc:/media/icon/editFill.svg": "qrc:/media/icon/edit.svg"
                         iconType: Style.RoleEnum.IconType.Primary
+                        myTextToolTip: "Edit"
                         width: 26; height: 26
                         Connections{
                             target: editId

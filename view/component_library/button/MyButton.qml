@@ -38,6 +38,7 @@ T.Button {
     padding: 5
 
     property string myText: ""
+    property string myTextToolTip: ""
     property string myIcon: ""
     property double progressBarValue: 0
     property bool textIsVisible: true
@@ -64,6 +65,11 @@ T.Button {
             if(control.state === "pressed")
                 control.state = "hover"
         }
+    }
+
+    MyToolTip{
+        visible: control.hovered && (control.myTextToolTip !== "") && (!control.textIsVisible || control.myText === "")
+        toolTipText: control.myTextToolTip
     }
 
     background: Rectangle{

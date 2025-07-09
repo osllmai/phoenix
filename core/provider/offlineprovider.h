@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <QProcess>
 
+#include <QLoggingCategory>
+#include "logcategories.h"
+
 class OfflineProvider : public Provider
 {
     Q_OBJECT
@@ -22,7 +25,7 @@ public slots:
 
     void stop() override;
     void loadModel(const QString &model, const QString &key) override;
-    void unLoadModel() override;
+    // void unLoadModel() override;
 
 signals:
     void sendPromptToProcess(const QString &promptText, const QString &paramBlock);

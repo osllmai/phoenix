@@ -21,7 +21,7 @@ public slots:
                 const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers) override;
     void stop() override;
     void loadModel(const QString &model, const QString &key) override;
-    void unLoadModel() override;
+    // void unLoadModel() override;
 
 private:
     QThread chatLLMThread;

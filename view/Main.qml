@@ -9,7 +9,15 @@ ApplicationWindow {
     id: window
     width: 1700; height: 900
     minimumWidth: 400; minimumHeight: 600
+
+    // flags: Qt.FramelessWindowHint | Qt.Window
+
     color: Style.Colors.background
+    visible: true
+    // id: window
+    // width: 1700; height: 900
+    // minimumWidth: 400; minimumHeight: 600
+    // color: Style.Colors.background
 
     // flags: Qt.Window | Qt.FramelessWindowHint
     flags: Qt.Window |
@@ -99,7 +107,7 @@ ApplicationWindow {
         property int messageId: -1
     }
 
-    visible: true
+    // visible: true
     title: qsTr("Phoenix v0.1.2")
 
     property bool isDesktopSize: width >= 750;

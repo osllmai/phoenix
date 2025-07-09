@@ -81,6 +81,7 @@ T.Button {
                  width: 26; height: 26
                  anchors.verticalCenter: logoId.verticalCenter
                  myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                 myTextToolTip: "About"
                  onClicked: {
                      aboutVersion.open()
                  }
