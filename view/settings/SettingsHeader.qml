@@ -23,6 +23,6 @@ Item{
         myIcon: "qrc:/media/icon/close.svg"
         myTextToolTip: "Close"
         isNeedAnimation: true
-        onClicked: drawerId.close()
+        onClicked: settingsDialogId.close()
     }
 }

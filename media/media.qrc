@@ -96,18 +96,12 @@
         <file>fonts/DMSans-Regular.ttf</file>
         <file>icon/developer.svg</file>
         <file>icon/developerFill.svg</file>
-        <file>icon/closeSquare.svg</file>
-        <file>icon/closeSquareFill.svg</file>
-        <file>icon/maximizeHSquare.svg</file>
-        <file>icon/maximizeHSquareFill.svg</file>
-        <file>icon/maximizeSquare.svg</file>
-        <file>icon/maximizeSquareFill.svg</file>
-        <file>icon/minimizeSquare.svg</file>
-        <file>icon/minimizeSquareFill.svg</file>
-        <file>icon/minusSquare.svg</file>
-        <file>icon/minusSquareFill.svg</file>
-        <file>icon/notFound.svg</file>
-        <file>icon/historyEmpty.svg</file>
+        <file>icon/maximizeH.svg</file>
+        <file>icon/maximize.svg</file>
+        <file>icon/minimize.svg</file>
+        <file>icon/minus.svg</file>
+        <file>icon/notFoundHistory.svg</file>
+        <file>icon/notFoundModel.svg</file>
         <file>icon/gridView.svg</file>
         <file>icon/listView.svg</file>
     </qresource>

@@ -191,6 +191,7 @@ void ChatServer::socketDisconnected()
 //! [socketDisconnected]
 
 void ChatServer::prompt(){
+    m_isModelChanged = false;
     qCInfo(logDeveloper) << "prompt() called";
 
     if (!m_currentClient) {

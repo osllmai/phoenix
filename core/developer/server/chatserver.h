@@ -128,6 +128,7 @@ private:
     bool m_responseInProgress;
 
     int m_modelId;
+    bool m_isModelChanged;
 
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
