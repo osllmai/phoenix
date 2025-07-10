@@ -54,30 +54,14 @@ Item{
         }
     }
 
-    Item{
+    MyIcon{
         id: closeBox
         visible: control.needCloseButton
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         width: 25; height: 25
-        ToolButton {
-            id: searchIcon
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            width:searchIcon.hovered? 24: 23; height: searchIcon.hovered? 24: 23
-            Behavior on width{ NumberAnimation{ duration: 150}}
-            Behavior on height{ NumberAnimation{ duration: 150}}
-            background: null
-            icon{
-                source: "qrc:/media/icon/close.svg"
-                color: searchIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
-                width: searchIcon.width; height: searchIcon.height
-            }
-            MouseArea{
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked:{comboBoxId.popup.close()}
-            }
-        }
+        myIcon: "qrc:/media/icon/close.svg"
+        myTextToolTip: "Close"
+        onClicked:{comboBoxId.popup.close()}
     }
 }

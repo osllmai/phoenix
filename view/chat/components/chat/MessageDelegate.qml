@@ -115,6 +115,7 @@ T.Button {
                         id: likeId
                         visible: control.hovered && (model.like>=0)
                         myIcon: (model.like === 0)? "qrc:/media/icon/like.svg": "qrc:/media/icon/likeFill.svg"
+                        myTextToolTip: "Like"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
@@ -131,6 +132,7 @@ T.Button {
                         id: disLikeId
                         visible: control.hovered && (model.like<=0)
                         myIcon: (model.like === 0)? "qrc:/media/icon/disLike.svg": "qrc:/media/icon/disLikeFill.svg"
+                        myTextToolTip: "DisLike"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26; height: 26
                         Connections{
@@ -147,6 +149,7 @@ T.Button {
                         id: speakerId
                         visible: control.hovered
                         myIcon: speakerId.selectIcon()
+                        myTextToolTip: "Speaker"
                         iconType: Style.RoleEnum.IconType.Primary
                         width: 26
                         height: 26

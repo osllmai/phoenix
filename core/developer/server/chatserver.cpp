@@ -191,6 +191,7 @@ void ChatServer::socketDisconnected()
 //! [socketDisconnected]
 
 void ChatServer::prompt(){
+    m_isModelChanged = false;
     qCInfo(logDeveloper) << "prompt() called";
 
     if (!m_currentClient) {
@@ -217,7 +218,7 @@ void ChatServer::prompt(){
             //disconnect load and unload model
             disconnect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel);
             disconnect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult);
-            disconnect(this, &ChatServer::requestUnLoadModel, m_provider, &Provider::unLoadModel);
+            // disconnect(this, &ChatServer::requestUnLoadModel, m_provider, &Provider::unLoadModel);
 
             //disconnect prompt
             disconnect(m_provider, &Provider::requestTokenResponse, this, &ChatServer::tokenResponse);
@@ -239,7 +240,7 @@ void ChatServer::prompt(){
         //load and unload model
         connect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
         connect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult, Qt::QueuedConnection);
-        connect(this, &ChatServer::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
+        // connect(this, &ChatServer::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
 
         //prompt
         connect(m_provider, &Provider::requestTokenResponse, this, &ChatServer::tokenResponse, Qt::QueuedConnection);
@@ -304,7 +305,7 @@ void ChatServer::unloadModel(){
     qCInfo(logDeveloper) << "unloadModel called";
     setIsLoadModel(false);
     if (m_provider) {
-        m_provider->unLoadModel();
+        // m_provider->unLoadModel();
         qCInfo(logDeveloper) << "Provider unloadModel called";
     }
 }

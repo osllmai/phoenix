@@ -32,11 +32,13 @@ Rectangle{
 
     function selectSendIcon(){
         if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
+            sendIconId.myTextToolTip = "Stop"
             if(sendIconId.hovered)
                 return "qrc:/media/icon/stopFill.svg"
             else
                 return "qrc:/media/icon/stop.svg"
         }else{
+            sendIconId.myTextToolTip = "Send"
             if(sendIconId.hovered)
                 return "qrc:/media/icon/sendFill.svg"
             else

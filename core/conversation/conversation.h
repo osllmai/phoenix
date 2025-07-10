@@ -13,6 +13,9 @@
 #include "../model/online/onlinemodellist.h"
 #include "../provider/provider.h"
 
+#include <QLoggingCategory>
+#include "logcategories.h"
+
 class Conversation : public QObject
 {
     Q_OBJECT
@@ -45,7 +48,7 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
-    Q_INVOKABLE void prompt(const QString &input, const int idModel);
+    Q_INVOKABLE void prompt(const QString &input);
     Q_INVOKABLE void stop();
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
@@ -121,7 +124,7 @@ signals:
                                      const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                      const int &contextLength, const int &numberOfGPULayers);
     void requestLoadModel(const QString &model, const QString &key);
-    void requestUnLoadModel();
+    // void requestUnLoadModel();
     void requestStop();
 
 private:
@@ -141,6 +144,7 @@ private:
     Provider *m_provider;
 
     bool m_stopRequest;
+    bool m_isModelChanged;
 };
 
 #endif // CONVERSATION_H

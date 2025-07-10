@@ -57,7 +57,6 @@ try:
     print(response.json())
 except requests.exceptions.RequestException as e:
     print("Error:", e))")
-        .arg(json)
-        .arg(port());
+        .arg(json, QString::number(port()));
 }
 

@@ -41,7 +41,9 @@ T.Button {
              }
              MyIcon {
                  id: maximizeHSquareButtonId
-                 myIcon: ((window.width === 400 ) && (window.height === Screen.height) &&
+                 property int menuHeight: 45
+
+                 myIcon: ((window.width === 400 ) && (window.height === Screen.height - maximizeHSquareButtonId.menuHeight) &&
                           (window.x === Screen.width - 400) && (window.y === 0))? ("qrc:/media/icon/minimize.svg"):
                                                                                                     ("qrc:/media/icon/maximizeH.svg")
                  iconType: Style.RoleEnum.IconType.Primary
@@ -51,7 +53,7 @@ T.Button {
                      target: maximizeHSquareButtonId
                      function onClicked(){
 
-                        if ((window.width === 400 ) && (window.height === Screen.height) &&
+                        if ((window.width === 400 ) && (window.height === Screen.height - maximizeHSquareButtonId.menuHeight) &&
                                 (window.x === Screen.width - 400) && (window.y === 0)){
                                window.width = window.prevW
                                window.height = window.prevH
@@ -67,11 +69,21 @@ T.Button {
                                window.prevH = window.height
 
                                window.width = 400
-                               window.height = Screen.height
+                               window.height = Screen.height - maximizeHSquareButtonId.menuHeight
                                window.x = Screen.width - 400
                                window.y = 0
                         }
                      }
+                 }
+             }
+             MyIcon{
+                 id: aboutIcon
+                 width: 26; height: 26
+                 anchors.verticalCenter: logoId.verticalCenter
+                 myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                 myTextToolTip: "About"
+                 onClicked: {
+                     aboutVersion.open()
                  }
              }
          }

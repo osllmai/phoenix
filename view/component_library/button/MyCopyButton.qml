@@ -5,6 +5,7 @@ MyIcon {
     id: copyId
     myIcon: copyId.selectIcon()
     iconType: Style.RoleEnum.IconType.Primary
+    myTextToolTip: "Copy"
     width: 26; height: 26
 
     property var myText

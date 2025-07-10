@@ -130,32 +130,17 @@ Dialog {
             }
         }
 
-        Item{
+        MyIcon{
             id: closeBox
             anchors.right: parent.right
             anchors.rightMargin: 10
             anchors.top: parent.top
             anchors.topMargin: 10
-            width: 28; height: 28
-            ToolButton {
-                id: closeIcon
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width:closeIcon.hovered? 26: 25; height: closeIcon.hovered? 26: 25
-                Behavior on width{ NumberAnimation{ duration: 150}}
-                Behavior on height{ NumberAnimation{ duration: 150}}
-                background: null
-                icon{
-                    source: "qrc:/media/icon/close.svg"
-                    color: closeIcon.hovered? Style.Colors.iconPrimaryHoverAndChecked: Style.Colors.iconPrimaryNormal
-                    width: closeIcon.width; height: closeIcon.height
-                }
-                MouseArea{
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked:{settingsDialogId.close()}
-                }
-            }
+            width: 30; height: 30
+            myIcon: "qrc:/media/icon/close.svg"
+            myTextToolTip: "Close"
+            isNeedAnimation: true
+            onClicked: settingsDialogId.close()
         }
 
         layer.enabled: true

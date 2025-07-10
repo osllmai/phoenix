@@ -3,12 +3,21 @@ import QtCore
 import QtQuick.Controls.Basic
 import QtTextToSpeech
 import './component_library/style' as Style
+import './component_library/button'
 
 ApplicationWindow {
     id: window
     width: 1700; height: 900
     minimumWidth: 400; minimumHeight: 600
+
+    // flags: Qt.FramelessWindowHint | Qt.Window
+
     color: Style.Colors.background
+    visible: true
+    // id: window
+    // width: 1700; height: 900
+    // minimumWidth: 400; minimumHeight: 600
+    // color: Style.Colors.background
 
     // flags: Qt.Window | Qt.FramelessWindowHint
     flags: Qt.Window |
@@ -98,7 +107,7 @@ ApplicationWindow {
         property int messageId: -1
     }
 
-    visible: true
+    // visible: true
     title: qsTr("Phoenix v0.1.2")
 
     property bool isDesktopSize: width >= 750;
@@ -163,6 +172,32 @@ ApplicationWindow {
             }
             AppMenuDrawer{
                 id: appMenuApplicationId
+            }
+        }
+    }
+
+    VerificationDialog {
+        id: aboutVersion
+        height: 230
+        width: 365
+        titleText: "Phoenix"
+        about: "Version: 0.1.2 (user setup)
+Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
+Date: 2025.06.29
+OS: Windows x64
+"
+        textBotton1: "Copy"
+        textBotton2: "OK"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        locationText: Text.AlignLeft
+        Connections{
+            target:aboutVersion
+            function onButtonAction1(){
+                Clipboard.copyText(aboutVersion.about)
+            }
+            function onButtonAction2() {
+                aboutVersion.close()
             }
         }
     }

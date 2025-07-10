@@ -29,6 +29,7 @@ Item{
             anchors.verticalCenter: openMenuId.verticalCenter
             myText: (headerId.width<500)? "": "New Chat"
             myIcon: "qrc:/media/icon/add.svg"
+            myTextToolTip: (headerId.width<500)? "New Chat": ""
             bottonType: Style.RoleEnum.BottonType.Primary
             Connections {
                 target: newChatId
@@ -57,6 +58,7 @@ Item{
         MyButton{
             id: openModelSettingsId
             myIcon: "qrc:/media/icon/settings.svg"
+            myTextToolTip: "Settings model"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
                 target: openModelSettingsId
@@ -68,6 +70,7 @@ Item{
         MyButton{
             id: openHistoryId
             myIcon: "qrc:/media/icon/history.svg"
+            myTextToolTip: "History"
             bottonType: Style.RoleEnum.BottonType.Secondary
             Connections {
                 target: openHistoryId

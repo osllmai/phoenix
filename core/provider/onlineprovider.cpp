@@ -11,6 +11,7 @@ OnlineProvider::OnlineProvider(QObject *parent, const QString &model, const QStr
 {}
 
 OnlineProvider::~OnlineProvider(){
+     _stopFlag = true;
     if (m_process) {
         m_process->kill();
         m_process->deleteLater();
@@ -26,13 +27,13 @@ void OnlineProvider::loadModel(const QString &model, const QString &key){
     m_key = key;
 }
 
-void OnlineProvider::unLoadModel(){
-    _stopFlag = true;
-    if (m_process) {
-        m_process->kill();
-        m_process->deleteLater();
-    }
-}
+// void OnlineProvider::unLoadModel(){
+//     _stopFlag = true;
+//     if (m_process) {
+//         m_process->kill();
+//         m_process->deleteLater();
+//     }
+// }
 
 void OnlineProvider::prompt(const QString &input, const bool &stream, const QString &promptTemplate,
                             const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
@@ -83,7 +84,7 @@ void OnlineProvider::prompt(const QString &input, const bool &stream, const QStr
                 if (!outputString.isEmpty()) {
                     emit requestTokenResponse(outputString);
                 }
-                qInfo()<<outputString;
+                // qInfo()<<outputString;
             }
 
             if (_stopFlag) {

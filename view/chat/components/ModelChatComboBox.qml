@@ -11,8 +11,13 @@ ModelSelectComboBox{
     Connections{
         target: modelComboBoxId
         function onSetModelRequest(id, name, icon, promptTemplate, systemPrompt) {
-            conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
-            modelComboBoxId.sendMessage()
+            if((!conversationList.isEmptyConversation && !conversationList.currentConversation.responseInProgress && !conversationList.currentConversation.loadModelInProgress)
+                      || conversationList.isEmptyConversation){
+                conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+                modelComboBoxId.sendMessage()
+            }else{
+                conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+            }
         }
     }
 }

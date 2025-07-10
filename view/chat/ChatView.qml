@@ -30,8 +30,16 @@ Item {
     }
     HistoryDrawer{
         id: historyId
+        interactive: appBodyId.currentIndex === 1
+        Connections{
+            target: historyId
+            function onGoToEnd(){
+                chatBodyId.goToEnd();
+            }
+        }
     }
     ModelSettingsChatDrawer{
         id: modelSettingsId
+        interactive: appBodyId.currentIndex === 1
     }
 }

@@ -114,9 +114,7 @@ void ConversationList::addRequest(const QString &firstPrompt){
 
 void ConversationList::deleteRequest(const int id){
     Conversation* conversation = findConversationById(id);
-    if(conversation->responseInProgress()){
-        conversation->stop();
-    }
+
     if(conversation->isLoadModel()){
         conversation->unloadModel();
     }
@@ -175,17 +173,9 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
-    if(id == -1){
+    if(id == -1)
         setModelSelect(false);
-        if(m_currentConversation != nullptr && m_currentConversation->isLoadModel() &&
-            !m_currentConversation->loadModelInProgress() && !m_currentConversation->responseInProgress()){
-            m_currentConversation->unloadModel();
-        }
-        if(m_previousConversation != nullptr && m_previousConversation->isLoadModel() &&
-            !m_previousConversation->loadModelInProgress() && !m_previousConversation->responseInProgress()){
-            m_previousConversation->unloadModel();
-        }
-    }else
+    else
         setModelSelect(true);
 
     if(!m_isEmptyConversation){
@@ -193,6 +183,23 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
             m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
         if(m_modelSystemPrompt != "")
             m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+        m_currentConversation->loadModel(id);
+    }
+
+    if(previousConversation() != nullptr &&
+        previousConversation() != currentConversation() &&
+        !previousConversation()->loadModelInProgress() &&
+        !previousConversation()->responseInProgress() &&
+        previousConversation()->isLoadModel()){
+
+                previousConversation()->unloadModel();
+    }
+    if(!m_isEmptyConversation &&
+        !currentConversation()->loadModelInProgress() &&
+        !currentConversation()->responseInProgress() &&
+        currentConversation()->isLoadModel()){
+
+                currentConversation()->unloadModel();
     }
 }
 
@@ -224,7 +231,8 @@ void ConversationList::addConversation(const int id, const QString &title, const
             setPreviousConversation(m_currentConversation);
 
         setCurrentConversation(conversation);
-        m_currentConversation->prompt(description, m_modelId);
+        m_currentConversation->loadModel(modelId());
+        m_currentConversation->prompt(description);
         setIsEmptyConversation(false);
     }
 }
@@ -253,6 +261,15 @@ void ConversationList::selectCurrentConversationRequest(const int id){
     if(conversation == nullptr) return;
     // const int index = m_conversations.indexOf(conversation);
 
+    if(previousConversation() != nullptr &&
+        previousConversation() != currentConversation() &&
+        !previousConversation()->loadModelInProgress() &&
+        !previousConversation()->responseInProgress() &&
+        previousConversation()->isLoadModel()){
+
+            previousConversation()->unloadModel();
+    }
+
     if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
         setPreviousConversation(m_currentConversation);
 
@@ -265,6 +282,7 @@ void ConversationList::selectCurrentConversationRequest(const int id){
             m_currentConversation->modelSettings()->setPromptTemplate(m_modelPromptTemplate);
         if(m_modelSystemPrompt != "")
             m_currentConversation->modelSettings()->setSystemPrompt(m_modelSystemPrompt);
+        m_currentConversation->loadModel(modelId());
     }
 }
 

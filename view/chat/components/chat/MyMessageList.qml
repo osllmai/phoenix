@@ -9,6 +9,10 @@ Item {
     height: parent.height - inputBoxId.height - 20
     clip: true
 
+    function goToEnd(){
+        listView.positionViewAtEnd();
+    }
+
     ListView {
         id: listView
         anchors.fill: parent

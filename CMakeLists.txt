@@ -30,6 +30,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
+    ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight
+    ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight/languageHighlightingRules
     ${CMAKE_SOURCE_DIR}/core/developer/
     ${CMAKE_SOURCE_DIR}/core/developer/code
     ${CMAKE_SOURCE_DIR}/core/developer/code/code_generator
@@ -165,6 +167,15 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/microphoneOnFill.svg
         media/icon/developer.svg
         media/icon/developerFill.svg
+        media/icon/notFoundHistory.svg
+        media/icon/notFoundModel.svg
+        media/icon/listView.svg
+        media/icon/gridView.svg
+
+        media/icon/maximizeH.svg
+        media/icon/maximize.svg
+        media/icon/minimize.svg
+        media/icon/minus.svg
 
         media/image_company/user.svg
         media/image_company/Phoenix.svg
@@ -199,6 +210,9 @@ qt_add_qml_module(app${PROJECT_NAME}
 
     QML_FILES
         view/Main.qml
+
+
+
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
@@ -213,34 +227,56 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/NotificationDialog.qml
         view/component_library/button/MyToolTip.qml
 
+
+
         view/component_library/model_settings/components/APISettings.qml
+
+
 
         view/AppMenu.qml
         view/AppMenuDrawer.qml
         view/menu/MyMenuButton.qml
         view/menu/MyOpenMenuButton.qml
 
+
+
         view/AppBody.qml
+
+
 
         view/home/HomeView.qml
         view/home/components/HomeHeader.qml
         view/home/components/FeatureList.qml
         view/home/components/FeatureDelegate.qml
 
+
+
         view/model/ModelsView.qml
         view/model/components/ModelHeader.qml
         view/model/components/ModelBody.qml
+
         view/model/components/offline/OfflineModelView.qml
         view/model/components/offline/OfflineHeader.qml
-        view/model/components/offline/OfflineList.qml
-        view/model/components/offline/OfflineDelegate.qml
-        view/model/components/offline/DownloadButton.qml
+        view/model/components/offline/OfflineBody.qml
+        view/model/components/offline/components/OfflineGridView.qml
+        view/model/components/offline/components/OfflineListView.qml
+        view/model/components/offline/components/OfflineBoxDelegate.qml
+        view/model/components/offline/components/OfflineRowDelegate.qml
+        view/model/components/offline/components/components/DownloadButton.qml
+        view/model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml
+
         view/model/components/online/OnlineModelView.qml
         view/model/components/online/OnlineHeader.qml
-        view/model/components/online/OnlineList.qml
-        view/model/components/online/OnlineDelegate.qml
-        view/model/components/online/InputApikey.qml
-        view/model/components/online/ApikeyButton.qml
+        view/model/components/online/OnlineBody.qml
+        view/model/components/online/components/OnlineGridView.qml
+        view/model/components/online/components/OnlineListView.qml
+        view/model/components/online/components/OnlineBoxDelegate.qml
+        view/model/components/online/components/OnlineRowDelegate.qml
+        view/model/components/online/components/components/InputApikey.qml
+        view/model/components/online/components/components/ApikeyButton.qml
+        view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml
+
+
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -256,6 +292,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/history/HistoryList.qml
         view/chat/components/history/HistoryDelegate.qml
 
+
+
         view/component_library/model_settings/ModelSettingsView.qml
         view/component_library/model_settings/ModelSettingsHeader.qml
         view/component_library/model_settings/ModelSettingsBody.qml
@@ -266,6 +304,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/model_settings/components/button/ModelSettingsSlider.qml
         view/component_library/model_settings/components/button/ModelSettingsSwitch.qml
         view/component_library/model_settings/components/button/ModelMenuSettings.qml
+
+
 
         view/component_library/model/ModelSelectView.qml
         view/component_library/model/components/ModelSelectHeader.qml
@@ -280,6 +320,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/model/components/offline/OfflineCurrentModelinformation.qml
         view/component_library/model/components/offline/OfflineCurrentView.qml
 
+
+
         view/developer/DeveloperView.qml
         view/developer/components/DeveloperHeader.qml
         view/developer/components/DeveloperBody.qml
@@ -290,6 +332,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/developer/components/model_settings/ModelSettingsDeveloperView.qml
         view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml
         view/developer/components/code/CodeDeveloper.qml
+
+
 
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
@@ -305,6 +349,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/components/SettingsSlider.qml
         view/settings/components/ThemeOption.qml
         view/settings/components/OpenMenuSettingsButton.qml
+
+
 
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
@@ -358,7 +404,6 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp
     SOURCES core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/highlightingcategory.cpp
 
     SOURCES core/developer/codedeveloperlist.h core/developer/codedeveloperlist.cpp
     SOURCES core/developer/code/programlanguage.h core/developer/code/programlanguage.cpp
@@ -370,7 +415,6 @@ qt_add_qml_module(app${PROJECT_NAME}
     SOURCES core/log/logger.h core/log/logger.cpp
     SOURCES core/log/logcategories.h core/log/logcategories.cpp
     QML_FILES view/component_library/model/ModelSelectComboBox.qml
-    SOURCES core/developer/server/utils.h
     SOURCES core/developer/server/crudapi.h core/developer/server/crudapi.cpp
     SOURCES core/developer/server/entities/modelapi.h core/developer/server/entities/modelapi.cpp
     SOURCES core/developer/server/entities/chatapi.h core/developer/server/entities/chatapi.cpp
@@ -379,6 +423,12 @@ qt_add_qml_module(app${PROJECT_NAME}
     QML_FILES view/component_library/model_settings/components/SocketSettings.qml
     QML_FILES view/component_library/model_settings/components/button/ModelTextEdit.qml
     QML_FILES view/component_library/model_settings/components/button/ModelTextCopyBox.qml
+    SOURCES core/library/textprocessor/codecolors.h core/library/textprocessor/codecolors.cpp
+    QML_FILES view/component_library/button/MyCopyButton.qml
+    QML_FILES view/model/components/offline/components/components/OfflineDelegateInfoBox.qml
+    QML_FILES view/model/components/online/components/components/OnlineDelegateInfoBox.qml
+    QML_FILES view/model/components/offline/components/components/OfflineInformationModel.qml
+    QML_FILES view/model/components/online/components/components/OnlineInformationModel.qml
 
 )
 
