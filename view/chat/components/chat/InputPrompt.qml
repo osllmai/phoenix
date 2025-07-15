@@ -1,12 +1,13 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 
 Rectangle{
     id: control
-    height: 90; width: Math.min(670, parent.width - 48)
+    height: 90 + (allFileExist.visible? allFileExist.height:0); width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
     color: Style.Colors.boxNormalGradient0
     border.width: 1
@@ -63,10 +64,33 @@ Rectangle{
     Column{
         anchors.fill: parent
         anchors.margins: 10
+
+        Item{
+            id: allFileExist
+            width: parent.width
+            height: 60
+            visible: false
+            onVisibleChanged: {
+                if(allFileExist.visible)
+                    control.height = control.height + allFileExist.height
+                else
+                    control.height = control.height - allFileExist.height
+            }
+
+            MyIcon {
+                id: pdfId
+                width: 60; height: 60
+                myIcon: "qrc:/media/icon/pdf.svg"
+                iconType: Style.RoleEnum.IconType.Image
+                onClicked: {
+                }
+            }
+        }
+
         ScrollView {
             id: scrollInput
             width: parent.width
-            height: parent.height - iconList.height
+            height: parent.height - iconList.height - (allFileExist.visible? allFileExist.height:0)
             ScrollBar.vertical.interactive: true
 
             ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
@@ -110,9 +134,9 @@ Rectangle{
                 function adjustHeight() {
                     const newHeight = Math.max(40, inputTextBox.contentHeight);
                     if (inputTextBox.text === "") {
-                        control.height = 90;
+                        control.height =  90 + (allFileExist.visible? allFileExist.height:0);
                     } else {
-                        control.height = Math.min(newHeight + 27, 180) + iconList.height ;
+                        control.height = Math.min(newHeight + 28, 180) + iconList.height + (allFileExist.visible? allFileExist.height:0);
                     }
                 }
 
@@ -146,7 +170,31 @@ Rectangle{
         Item {
             id:iconList
             width: parent.width
-            height: 30
+            height: 32
+
+            Row {
+                anchors.left: parent.left
+                spacing: 10
+
+                MyIcon {
+                    id: selectFileIconId
+                    width: 32; height: 32
+                    myIcon: "qrc:/media/icon/selectFile.svg"
+                    iconType: Style.RoleEnum.IconType.Primary
+                    onClicked: {
+                        fileDialogId.open();
+                    }
+                }
+                FileDialog{
+                    id: fileDialogId
+                    title: "Choose file"
+                    nameFilters: ["Text files (*.pdf)"]
+                    fileMode: FileDialog.OpenFiles
+                    onAccepted: function(){
+                        allFileExist.visible = true
+                    }
+                }
+            }
 
             Row {
                 anchors.right: parent.right
@@ -253,6 +301,7 @@ Rectangle{
                 }
 
             }
+
         }
     }
 
