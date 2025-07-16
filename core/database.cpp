@@ -98,7 +98,7 @@ void Database::addModel(const QString &name, const QString &key){
 
         QFileInfo fileInfo(key);
         double fileSize = (fileInfo.size()/10000000)*0.01;
-        QString icon = "user.svg";
+        QString icon = "Phoenix.svg";
         QString information = "This model has been successfully added to the application by you.";
         int ramRequ;
         if(fileSize<0.6)
