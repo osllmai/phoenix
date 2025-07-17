@@ -4,6 +4,7 @@ import QtQuick.Dialogs
 import Qt5Compat.GraphicalEffects
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
+import './components'
 
 Rectangle{
     id: control
@@ -65,25 +66,14 @@ Rectangle{
         anchors.fill: parent
         anchors.margins: 10
 
-        Item{
+        FileConverteInputPrompt{
             id: allFileExist
-            width: parent.width
-            height: 60
             visible: false
             onVisibleChanged: {
                 if(allFileExist.visible)
                     control.height = control.height + allFileExist.height
                 else
                     control.height = control.height - allFileExist.height
-            }
-
-            MyIcon {
-                id: pdfId
-                width: 60; height: 60
-                myIcon: "qrc:/media/icon/pdf.svg"
-                iconType: Style.RoleEnum.IconType.Image
-                onClicked: {
-                }
             }
         }
 
@@ -185,15 +175,35 @@ Rectangle{
                         fileDialogId.open();
                     }
                 }
-                FileDialog{
+                FileDialog {
                     id: fileDialogId
                     title: "Choose file"
-                    nameFilters: ["Text files (*.pdf)"]
                     fileMode: FileDialog.OpenFiles
-                    onAccepted: function(){
+
+                    nameFilters: [
+                        "Supported files (*.docx *.pptx *.html *.htm *.jpg *.jpeg *.png *.pdf *.adoc *.asciidoc *.md *.csv *.xlsx *.xml *.json *.mp3 *.wav)",
+                        "Word files (*.docx)",
+                        "PowerPoint files (*.pptx)",
+                        "HTML files (*.html *.htm)",
+                        "Image files (*.jpg *.jpeg *.png)",
+                        "PDF files (*.pdf)",
+                        "AsciiDoc files (*.adoc *.asciidoc)",
+                        "Markdown files (*.md)",
+                        "CSV files (*.csv)",
+                        "Excel files (*.xlsx)",
+                        "XML files (*.xml)",
+                        "JSON files (*.json)",
+                        "Audio files (*.mp3 *.wav)",
+                        "All files (*)"
+                    ]
+
+                    onAccepted: function() {
+                        convertToMD.filePath = currentFile
+                        convertToMD.startConvert()
                         allFileExist.visible = true
                     }
                 }
+
             }
 
             Row {
