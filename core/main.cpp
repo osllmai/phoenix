@@ -35,6 +35,8 @@
 
 #include "./library/textprocessor/codecolors.h"
 
+#include "./converttomd.h"
+
 int main(int argc, char *argv[])
 {
     try {
@@ -141,6 +143,8 @@ int main(int argc, char *argv[])
         SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
         engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 
+        ConvertToMD* convertToMD = ConvertToMD::instance(&engine);
+        engine.rootContext()->setContextProperty("convertToMD", convertToMD);
 
         ConversationList* conversationList = ConversationList::instance(&engine);
         engine.rootContext()->setContextProperty("conversationList", conversationList);

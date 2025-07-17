@@ -13,7 +13,7 @@ class ConvertToMD : public QObject
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY filePathChanged FINAL)
-    Q_PROPERTY(QString text READ text NOTIFY textChanged FINAL)
+    Q_PROPERTY(QString textMD READ textMD NOTIFY textMDChanged FINAL)
     Q_PROPERTY(bool convertInProcess READ convertInProcess NOTIFY convertInProcessChanged FINAL)
 
 public:
@@ -26,15 +26,15 @@ public:
     QString filePath() const;
     void setFilePath(const QString &newFilePath);
 
-    QString text() const;
-    void setText(const QString &newText);
+    QString textMD() const;
+    void setTextMD(const QString &newTextMD);
 
     bool convertInProcess() const;
     void setConvertInProcess(bool newConvertInProcess);
 
 signals:
     void filePathChanged();
-    void textChanged();
+    void textMDChanged();
     void convertInProcessChanged();
 
 private:
@@ -44,7 +44,7 @@ private:
     QProcess *m_process = nullptr;
 
     QString m_filePath;
-    QString m_text;
+    QString m_textMD;
     bool m_convertInProcess;
 };
 

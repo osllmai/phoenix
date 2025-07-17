@@ -1,8 +1,19 @@
 #include "converttomd.h"
 
+ConvertToMD* ConvertToMD::m_instance = nullptr;
+
+ConvertToMD* ConvertToMD::instance(QObject* parent){
+    if (!m_instance) {
+        m_instance = new ConvertToMD(parent);
+    }
+    return m_instance;
+}
+
 ConvertToMD::ConvertToMD(QObject *parent)
-    : QObject(parent), m_process(nullptr), m_filePath(""), m_text(""), m_convertInProcess(false)
-{}
+    : QObject(parent), m_process(nullptr), m_filePath(""), m_convertInProcess(false)
+{
+    setTextMD("");
+}
 
 ConvertToMD::~ConvertToMD(){
     if (m_process) {
@@ -14,7 +25,7 @@ ConvertToMD::~ConvertToMD(){
 void ConvertToMD::startConvert() {
     if(m_filePath == "")
         return;
-    setText("");
+    setTextMD("");
     setConvertInProcess(true);
 
     if (m_process) {
@@ -27,13 +38,13 @@ void ConvertToMD::startConvert() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/docling/ConvertToMD/convert_to_md.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/docling/convert/convert_to_md.exe";
         QStringList arguments;
         arguments << m_filePath;
 
         m_process->start(exePath, arguments);
 
-        qInfo()<<m_filePath;
+        qInfo()<< "\"" + m_filePath + "\"";
 
         if (!m_process->waitForStarted()) {
             qCritical() << "Failed to start process: " << m_process->errorString();
@@ -48,10 +59,10 @@ void ConvertToMD::startConvert() {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output, output.size());
                 qInfo() << outputString;
-                if((m_text == "") && (outputString == "---- BEGIN MARKDOWN ----") && (!run)){
+                if((m_textMD == "") && (outputString == "---- BEGIN MARKDOWN ----") && (!run)){
                     run = true;
                 }else if(run){
-                    setText(m_text + outputString);
+                    setTextMD(m_textMD + outputString);
                 }
             }
         }
@@ -77,15 +88,16 @@ void ConvertToMD::setFilePath(const QString &newFilePath){
     if (m_filePath == newFilePath)
         return;
     m_filePath = newFilePath;
+    m_filePath.remove("file:///");
     emit filePathChanged();
 }
 
-QString ConvertToMD::text() const{return m_text;}
-void ConvertToMD::setText(const QString &newText){
-    if (m_text == newText)
+QString ConvertToMD::textMD() const{return m_textMD;}
+void ConvertToMD::setTextMD(const QString &newTextMD){
+    if (m_textMD == newTextMD)
         return;
-    m_text = newText;
-    emit textChanged();
+    m_textMD = newTextMD;
+    emit textMDChanged();
 }
 
 bool ConvertToMD::convertInProcess() const{return m_convertInProcess;}
