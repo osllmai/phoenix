@@ -151,7 +151,7 @@ private:
     Conversation *m_previousConversation;
     bool m_isEmptyConversation;
 
-    int m_modelId;
+    int m_modelId = -1;
     QString m_modelIcon;
     QString m_modelText;
     QString m_modelPromptTemplate;

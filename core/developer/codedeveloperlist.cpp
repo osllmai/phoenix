@@ -353,7 +353,7 @@ void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
         qCInfo(logDeveloper) << "Developer server started successfully.";
     }else{
         if (m_chatServer) {
-            m_chatServer->closeServer();
+            // m_chatServer->closeServer();////////////////////////////////////////////////////////////////////////
             delete m_chatServer;
             m_chatServer = nullptr;
         }

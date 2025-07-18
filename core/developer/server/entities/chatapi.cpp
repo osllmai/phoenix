@@ -138,10 +138,8 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
             qCInfo(logDeveloper) << "Disconnecting existing provider signals";
             disconnect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel);
             disconnect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult);
-            // disconnect(this, &ChatAPI::requestUnLoadModel, m_provider, &Provider::unLoadModel);
             disconnect(m_provider, &Provider::requestTokenResponse, this, &ChatAPI::tokenResponse);
             disconnect(m_provider, &Provider::requestFinishedResponse, this, &ChatAPI::finishedResponse);
-            disconnect(this, &ChatAPI::requestStop, m_provider, &Provider::stop);
             delete m_provider;
             m_provider = nullptr;
             qCInfo(logDeveloper) << "Old provider deleted";
@@ -157,12 +155,10 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
         //load and unload model connections
         connect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
         connect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult, Qt::QueuedConnection);
-        // connect(this, &ChatAPI::requestUnLoadModel, m_provider, &Provider::unLoadModel, Qt::QueuedConnection);
         //prompt connections
         connect(m_provider, &Provider::requestTokenResponse, this, &ChatAPI::tokenResponse, Qt::QueuedConnection);
         //finished response connections
         connect(m_provider, &Provider::requestFinishedResponse, this, &ChatAPI::finishedResponse, Qt::QueuedConnection);
-        connect(this, &ChatAPI::requestStop, m_provider, &Provider::stop, Qt::QueuedConnection);
 
         if(m_model->backend() == BackendType::OfflineModel){
             qCInfo(logDeveloper) << "Emitting requestLoadModel for model name:" << m_model->modelName();

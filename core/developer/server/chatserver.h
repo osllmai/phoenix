@@ -49,31 +49,31 @@ class ChatServer : public QObject
 
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged FINAL)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged FINAL)
-    Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged FINAL)
+    // Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged FINAL)
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged FINAL)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged FINAL)
 
-    Q_PROPERTY(int modelId READ modelId NOTIFY modelIdChanged FINAL)
+    // Q_PROPERTY(int modelId READ modelId NOTIFY modelIdChanged FINAL)
 
 public:
     explicit ChatServer(quint16 port, bool debug = false, QObject *parent = nullptr);
     ~ChatServer();
 
-    void closeServer();
+    // void closeServer();
 
     Provider *provider() const;
     void setProvider(Provider *newProvider);
 
-    int modelId() const;
-    void setModelId(int newModelId);
+    // int modelId() const;
+    // void setModelId(int newModelId);
 
     Model *model() const;
     void setModel(Model *newModel);
 
     ModelSettings *modelSettings() const;
 
-    bool isLoadModel() const;
-    void setIsLoadModel(bool newIsLoadModel);
+    // bool isLoadModel() const;
+    // void setIsLoadModel(bool newIsLoadModel);
 
     bool loadModelInProgress() const;
     void setLoadModelInProgress(bool newLoadModelInProgress);
@@ -98,10 +98,10 @@ public slots:
 
 signals:
     void providerChanged();
-    void modelIdChanged();
+    // void modelIdChanged();
     void modelChanged();
     void modelSettingsChanged();
-    void isLoadModelChanged();
+    // void isLoadModelChanged();
     void loadModelInProgressChanged();
     void responseInProgressChanged();
     void requestUpdateModelSettingsDeveloper(const int id, const bool &stream,
@@ -116,6 +116,7 @@ signals:
 
 private:
     void prompt();
+    void loadModel(QString modelName);
     void loadModel(const int id);
     void unloadModel();
 
@@ -123,12 +124,12 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
 
-    bool m_isLoadModel;
+    // bool m_isLoadModel;
     bool m_loadModelInProgress;
     bool m_responseInProgress;
 
-    int m_modelId;
-    bool m_isModelChanged;
+    // int m_modelId;
+    // bool m_isModelChanged;
 
     QWebSocketServer *m_pWebSocketServer;
     QList<QWebSocket *> m_clients;
