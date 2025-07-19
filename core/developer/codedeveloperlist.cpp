@@ -340,10 +340,9 @@ void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
                                             QCoreApplication::translate("main", "portSocket"), QLatin1String(QString::number(static_cast<int>(portSocket())).toLatin1()));
         m_parserChat.addOption(portSocketOption);
         m_parserChat.process(*appSocket);
-        bool debug = m_parserChat.isSet(dbgOption);
         quint16 portSocketChat = m_parserChat.value(portSocketOption).toInt();
 
-        m_chatServer = new ChatServer(portSocketChat, debug);
+        m_chatServer = new ChatServer(portSocketChat);
 
         qCInfo(logDeveloper) << "WebSocket Server running at portSocket:" << portSocketChat;
         qCInfo(logDeveloperView) << "WebSocket Server running at port:" << portSocketChat;

@@ -55,7 +55,7 @@ class ChatServer : public QObject
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged FINAL)
 
 public:
-    explicit ChatServer(quint16 port, bool debug = false, QObject *parent = nullptr);
+    explicit ChatServer(quint16 port, QObject *parent = nullptr);
     ~ChatServer();
 
     Provider *provider() const;
@@ -99,17 +99,16 @@ signals:
                                              const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                              const int &contextLength, const int &numberOfGPULayers);
     void requestLoadModel(const QString &model, const QString &key);
-    void requestUnLoadModel();
     void requestStop();
 
 
 private:
     void prompt();
-    void loadModel(QString modelName);
-    void loadModel(const int id);
-    void unloadModel();
+    bool loadModel(QString modelName);
+    bool loadModel(const int id);
 
     void sendErrorMessage(QWebSocket *client, const QString &message);
+    void sendClientMessage(QWebSocket *client, const QString &message);
 
     Provider *m_provider;
     Model *m_model;
