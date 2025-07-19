@@ -1,52 +1,46 @@
+// chatserver.cpp - Stable, Cleaned & ErrorMessage Enabled Version
 #include "chatserver.h"
-
 #include "codedeveloperlist.h"
 
 QT_USE_NAMESPACE
 
-//! [constructor]
-ChatServer::ChatServer(quint16 port, bool debug, QObject *parent) :
-    QObject(parent),
+ChatServer::ChatServer(quint16 port, bool debug, QObject *parent)
+    : QObject(parent),
     m_provider(nullptr),
     m_model(new Model(this)),
-    m_modelSettings(new ModelSettings(150,this)),
-    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("Echo Server"),
-                                            QWebSocketServer::NonSecureMode, this)),
-    m_debug(debug),
-    // m_isLoadModel(false),
+    m_modelSettings(new ModelSettings(150, this)),
+    m_pWebSocketServer(new QWebSocketServer(QStringLiteral("Chat Server"), QWebSocketServer::NonSecureMode, this)),
     m_loadModelInProgress(false),
     m_responseInProgress(false)
 {
     if (!m_pWebSocketServer->listen(QHostAddress::Any, port)) {
-        qCWarning(logDeveloper) << "WebSocket server failed to listen on port" << port << ":" << m_pWebSocketServer->errorString();
+        qCWarning(logDeveloper) << "WebSocket server failed to start on port" << port << ":" << m_pWebSocketServer->errorString();
         return;
     }
 
-    if (m_debug)
-        qCInfo(logDeveloper) << "ChatServer listening on port" << port;
-    connect(m_pWebSocketServer, &QWebSocketServer::newConnection,
-            this, &ChatServer::onNewConnection);
+    connect(m_pWebSocketServer, &QWebSocketServer::newConnection, this, &ChatServer::onNewConnection);
     connect(m_pWebSocketServer, &QWebSocketServer::closed, this, &ChatServer::closed);
 
-    qCInfo(logDeveloper) << "ChatServer constructed with debug =" << m_debug;
 }
-//! [constructor]
 
-ChatServer::~ChatServer()
-{
+ChatServer::~ChatServer(){
     m_pWebSocketServer->close();
-    qDeleteAll(m_clients.begin(), m_clients.end());
-    qCInfo(logDeveloper) << "ChatServer destroyed, WebSocket server closed and clients deleted";
+    qDeleteAll(m_clients);
+    m_clients.clear();
+    m_currentClient.clear();
+
+    if (m_provider) {
+        m_provider->deleteLater();
+        m_provider = nullptr;
+    }
+
+    qCInfo(logDeveloper) << "ChatServer destroyed. Cleaned up WebSocket server and clients.";
 }
 
-//! [onNewConnection]
-void ChatServer::onNewConnection()
-{
-    qCInfo(logDeveloper) << "New WebSocket connection received";
-
+void ChatServer::onNewConnection(){
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
     if (!pSocket) {
-        qCWarning(logDeveloper) << "nextPendingConnection() returned nullptr!";
+        qCWarning(logDeveloper) << "Null socket on new connection";
         return;
     }
 
@@ -54,90 +48,64 @@ void ChatServer::onNewConnection()
     connect(pSocket, &QWebSocket::binaryMessageReceived, this, &ChatServer::processBinaryMessage);
     connect(pSocket, &QWebSocket::disconnected, this, &ChatServer::socketDisconnected);
 
-    m_clients << pSocket;
-    qCInfo(logDeveloper) << "Client connected, total clients:" << m_clients.size();
+    m_clients.insert(pSocket);
+    qCInfo(logDeveloper) << "New client connected. Total clients:" << m_clients.size();
 }
-//! [onNewConnection]
 
-//! [processTextMessage]
+
+
 void ChatServer::processTextMessage(QString message){
-
-    // if (!CodeDeveloperList::instance(nullptr)->isRunningSocket())
-    //     return;
-
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    if (!pClient) {
-        qCWarning(logDeveloper) << "processTextMessage called but sender is not a QWebSocket";
+    if (!pClient) return;
+
+    if (m_loadModelInProgress || m_responseInProgress) {
+        sendErrorMessage(pClient, "Server is busy. Please wait.");
         return;
     }
 
-    if(m_loadModelInProgress ||m_responseInProgress){
-        QJsonObject response;
-        response["response"] = "Server is busy processing another request. Please wait...";
-        m_currentClient->sendTextMessage(QJsonDocument(response).toJson(QJsonDocument::Compact));
-        qCWarning(logDeveloperView) << "Server is busy processing another request. Please wait..";
-        return;
-    }
     setLoadModelInProgress(true);
     m_currentClient = pClient;
-
-    qCInfo(logDeveloper) << "Received text message from client:" << message;
 
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8(), &parseError);
     if (parseError.error != QJsonParseError::NoError || !doc.isObject()) {
-        qCWarning(logDeveloper) << "Invalid JSON received:" << message << "Error:" << parseError.errorString();
         setLoadModelInProgress(false);
+        qCWarning(logDeveloper) << "Invalid JSON message received:" << parseError.errorString();
+        sendErrorMessage(pClient, "Invalid JSON: " + parseError.errorString());
         return;
     }
-    QJsonObject obj = doc.object();
 
+    QJsonObject obj = doc.object();
     if (!obj.contains("message") || !obj["message"].isString()) {
-        qCWarning(logDeveloperView) << "JSON missing required fields:" << message;
         setLoadModelInProgress(false);
+        sendErrorMessage(pClient, "Missing or invalid 'message' field.");
         return;
     }
+
     m_socketToPrompt[m_currentClient] = obj["message"].toString();
     m_socketToGeneratedText[m_currentClient] = "";
 
-    qCInfo(logDeveloperView) << "WebSocket Request. message: "<< obj["message"].toString();
-
-    if(obj.contains("model") && obj["model"].isString()){
-        QString modelName = obj["model"].toString();
-
-        loadModel(modelName);
-        if(m_socketToModelId[m_currentClient] == -1){
-            qCWarning(logDeveloperView) << "models is not evailable";
-            setLoadModelInProgress(false);
-            return;
-        }
-
-    }else if(CodeDeveloperList::instance(nullptr)->modelId() != -1){
-        // setModelId(CodeDeveloperList::instance(nullptr)->modelId());
+    if (obj.contains("model")) {
+        loadModel(obj["model"].toString());
+    } else if (CodeDeveloperList::instance(nullptr)->modelId() != -1) {
         loadModel(CodeDeveloperList::instance(nullptr)->modelId());
-        if(m_socketToModelId[m_currentClient] == -1){
-            qCWarning(logDeveloperView) << "models is not evailable";
-            setLoadModelInProgress(false);
-            return;
-        }
-
-    }else{
-        qCWarning(logDeveloperView) << "WebSocket data missing or invalid 'model' field";
+    } else {
         setLoadModelInProgress(false);
+        sendErrorMessage(pClient, "No model specified and default model not set.");
         return;
     }
 
-    //create or update model-settings
-    auto *settings = m_socketToModelSettings.value(m_currentClient, nullptr);
-    // if (!settings) {
-    //     settings = new ModelSettings(this);
-    //     m_socketToModelSettings[m_currentClient] = settings;
-    //     qCInfo(logDeveloper) << "Created new ModelSettings for client";
-    // }
+    if (m_socketToModelId[m_currentClient] == -1) {
+        setLoadModelInProgress(false);
+        sendErrorMessage(pClient, "Failed to load model.");
+        return;
+    }
 
-    settings = new ModelSettings(this);
-    m_socketToModelSettings[m_currentClient] = settings;
-    qCInfo(logDeveloper) << "Created new ModelSettings for client";
+    auto *settings = m_socketToModelSettings.value(m_currentClient, nullptr);
+    if (!settings) {
+        settings = new ModelSettings(this);
+        m_socketToModelSettings[m_currentClient] = settings;
+    }
 
     //set settings
     settings->setStream(obj.contains("stream") ? obj["stream"].toBool() : m_modelSettings->stream());
@@ -156,89 +124,59 @@ void ChatServer::processTextMessage(QString message){
 
     prompt();
 }
-//! [processTextMessage]
 
-//! [processBinaryMessage]
-void ChatServer::processBinaryMessage(QByteArray message)
-{
+void ChatServer::processBinaryMessage(QByteArray message){
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    qCDebug(logDeveloper) << "processBinaryMessage called with message size:" << message.size();
-    if (m_debug)
-        qDebug() << "Binary Message received:" << message;
-    if (pClient) {
-        qCInfo(logDeveloper) << "Sending binary message back to client:" << pClient;
+    if (pClient && pClient->state() == QAbstractSocket::ConnectedState) {
         pClient->sendBinaryMessage(message);
-    } else {
-        qCWarning(logDeveloper) << "No valid client to send binary message.";
     }
 }
-//! [processBinaryMessage]
 
-//! [socketDisconnected]
-void ChatServer::socketDisconnected()
-{
+void ChatServer::socketDisconnected(){
     QWebSocket *pClient = qobject_cast<QWebSocket *>(sender());
-    qCInfo(logDeveloper) << "socketDisconnected called for client:" << pClient;
-    if (m_debug)
-        qDebug() << "socketDisconnected:" << pClient;
-    if (pClient) {
-        qCInfo(logDeveloper) << "Client removed from clients list and deleted:" << pClient;
-        pClient->deleteLater();
-    } else {
-        qCWarning(logDeveloper) << "socketDisconnected called but no valid client found.";
+    if (!pClient) return;
+
+    m_clients.remove(pClient);
+
+    if (pClient == m_currentClient) {
+        finishedResponse("Client disconnected");
+        m_currentClient.clear();
     }
-    finishedResponse("delete server");
+
+    pClient->deleteLater();
+    qCInfo(logDeveloper) << "Client disconnected. Remaining clients:" << m_clients.size();
 }
-//! [socketDisconnected]
 
 void ChatServer::prompt(){
-    // m_isModelChanged = false;
-    qCInfo(logDeveloper) << "---------------------------------------------" << m_model->name();
-
-    if (!m_currentClient) {
-        qCWarning(logDeveloper) << "No current client set.";
+    if (!m_currentClient || !m_socketToModelId.contains(m_currentClient)) {
         setLoadModelInProgress(false);
+        sendErrorMessage(m_currentClient, "Invalid client or model ID.");
         return;
     }
 
-    if (!m_socketToModelId.contains(m_currentClient)) {
-        qCWarning(logDeveloper) << "No model ID assigned for this client:" << m_currentClient;
-        setLoadModelInProgress(false);
-        return;
+    if (m_provider) {
+        m_provider->deleteLater();
+        m_provider = nullptr;
     }
 
-    // int idModel = m_socketToModelId[m_currentClient];
-    QString input = m_socketToPrompt.value(m_currentClient);
+    m_provider = (m_model->backend() == BackendType::OfflineModel)
+                     ? static_cast<Provider *>(new OfflineProvider(this))
+                     : static_cast<Provider *>(new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(), m_model->key()));
 
-    // if(!m_isLoadModel){
+    connect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
+    connect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult, Qt::QueuedConnection);
+    connect(m_provider, &Provider::requestTokenResponse, this, &ChatServer::tokenResponse, Qt::QueuedConnection);
+    connect(m_provider, &Provider::requestFinishedResponse, this, &ChatServer::finishedResponse, Qt::QueuedConnection);
 
-        if(m_model->backend() == BackendType::OfflineModel){
-            m_provider = new OfflineProvider(this);
-        }else if(m_model->backend() == BackendType::OnlineModel){
-            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
-        }
-
-        //load and unload model
-        connect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
-        connect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult, Qt::QueuedConnection);
-
-        //prompt
-        connect(m_provider, &Provider::requestTokenResponse, this, &ChatServer::tokenResponse, Qt::QueuedConnection);
-
-        //finished response
-        connect(m_provider, &Provider::requestFinishedResponse, this, &ChatServer::finishedResponse, Qt::QueuedConnection);
-
-        if(m_model->backend() == BackendType::OfflineModel){
-            emit requestLoadModel( m_model->modelName(), m_model->key());
-        }
-    // }
-
-    ModelSettings *settings = m_socketToModelSettings.value(m_currentClient, m_modelSettings);
+    if (m_model->backend() == BackendType::OfflineModel) {
+        emit requestLoadModel(m_model->modelName(), m_model->key());
+    }
 
     setResponseInProgress(true);
+    ModelSettings *settings = m_socketToModelSettings.value(m_currentClient, m_modelSettings);
 
     m_provider->prompt(
-        input,
+        m_socketToPrompt.value(m_currentClient),
         settings->stream(),
         settings->promptTemplate(),
         settings->systemPrompt(),
@@ -256,90 +194,77 @@ void ChatServer::prompt(){
 }
 
 void ChatServer::loadModel(QString modelName){
-
-    if (modelName.startsWith("localModel/")){
+    if (modelName.startsWith("localModel/")) {
         modelName.remove(0, QString("localModel/").length());
-        OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
-
-        if(offlineModel != nullptr && offlineModel->isDownloading()){
+        OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
+        if (offlineModel && offlineModel->isDownloading()) {
             m_socketToModelId[m_currentClient] = offlineModel->id();
             setModel(offlineModel);
-        }else{
+        } else {
             m_socketToModelId[m_currentClient] = -1;
         }
-    }else{
-        OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if(onlineModel != nullptr &&onlineModel->installModel() ){
+    } else {
+        OnlineModel *onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
+        if (onlineModel && onlineModel->installModel()) {
             m_socketToModelId[m_currentClient] = onlineModel->id();
             setModel(onlineModel);
-        }else{
-            m_socketToModelId[m_currentClient] =  -1;
+        } else {
+            m_socketToModelId[m_currentClient] = -1;
         }
     }
 }
 
-void ChatServer::loadModel(const int id){
-
-    OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
-    if(offlineModel != nullptr){
-        setModel(offlineModel);
-    }
-    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
-    if(onlineModel != nullptr){
-        setModel(onlineModel);
+void ChatServer::loadModel(int id){
+    if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
+        setModel(offline);
+    } else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
+        setModel(online);
+    } else {
+        m_socketToModelId[m_currentClient] = -1;
     }
 }
 
-// void ChatServer::unloadModel(){
-//     qCInfo(logDeveloper) << "unloadModel called";
-//     setIsLoadModel(false);
-//     if (m_provider) {
-//         // m_provider->unLoadModel();
-//         qCInfo(logDeveloper) << "Provider unloadModel called";
-//     }
-// }
-
-void ChatServer::loadModelResult(const bool result, const QString &warning){
-    qCInfo(logDeveloper) << "loadModelResult called with result:" << result << "warning:" << warning;
+void ChatServer::loadModelResult(bool result, const QString &warning){
+    qCInfo(logDeveloper) << "Model load result:" << result << "| Warning:" << warning;
 }
 
-void ChatServer::tokenResponse(const QString &token)
-{
-    if (!m_currentClient) {
-        qCWarning(logDeveloper) << "tokenResponse called but no current client.";
+void ChatServer::tokenResponse(const QString &token){
+    if (!m_currentClient || m_currentClient->state() != QAbstractSocket::ConnectedState) {
+        if (m_provider) m_provider->stop();
         setLoadModelInProgress(false);
         setResponseInProgress(false);
         return;
     }
 
     m_socketToGeneratedText[m_currentClient] += token;
-    qCInfo(logDeveloperView) << token;
-
     QJsonObject response;
     response["response"] = token;
     m_currentClient->sendTextMessage(QJsonDocument(response).toJson(QJsonDocument::Compact));
 }
 
-void ChatServer::finishedResponse(const QString &warning) {
-    qCInfo(logDeveloperView) << "start finishedResponse called";
-
-    if(m_provider != nullptr){
-        //disconnect load and unload model
+void ChatServer::finishedResponse(const QString &warning){
+    if (m_provider) {
         disconnect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel);
         disconnect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult);
-
-        //disconnect prompt
         disconnect(m_provider, &Provider::requestTokenResponse, this, &ChatServer::tokenResponse);
-
-        //disconnect finished response
         disconnect(m_provider, &Provider::requestFinishedResponse, this, &ChatServer::finishedResponse);
-        delete m_provider;
+        m_provider->deleteLater();
+        m_provider = nullptr;
     }
 
     setResponseInProgress(false);
     setLoadModelInProgress(false);
-    qCInfo(logDeveloperView) << "end finishedResponse called";
 
+    if (!warning.isEmpty())
+        qCInfo(logDeveloper) << "Finished with warning:" << warning;
+}
+
+void ChatServer::sendErrorMessage(QWebSocket *client, const QString &message){
+    if (client && client->state() == QAbstractSocket::ConnectedState) {
+        QJsonObject errorResponse;
+        errorResponse["error"] = message;
+        client->sendTextMessage(QJsonDocument(errorResponse).toJson(QJsonDocument::Compact));
+    }
 }
 
 void ChatServer::updateModelSettingsDeveloper(){
@@ -351,24 +276,6 @@ void ChatServer::updateModelSettingsDeveloper(){
                                              m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
-
-// void ChatServer::closeServer() {
-//     for (auto client : m_clients) {
-//         client->close();
-//     }
-//     if (m_pWebSocketServer) {
-//         m_pWebSocketServer->close();
-//     }
-// }
-
-
-// int ChatServer::modelId() const{return m_modelId;}
-// void ChatServer::setModelId(int newModelId){
-//     if (m_modelId == newModelId)
-//         return;
-//     m_modelId = newModelId;
-//     emit modelIdChanged();
-// }
 
 Provider *ChatServer::provider() const { return m_provider; }
 void ChatServer::setProvider(Provider *newProvider) {
