@@ -42,12 +42,12 @@ class ChatAPI : public CrudAPI
 
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged FINAL)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged FINAL)
-    Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged FINAL)
-    Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged FINAL)
 
 public:
 
-    ChatAPI(const QString &scheme, const QString &hostName, int port);
+    explicit ChatAPI(const QString &scheme, const QString &hostName, int port);
+
+    ~ChatAPI();
 
     QHttpServerResponse getFullList() const override;
 
@@ -69,12 +69,6 @@ public:
 
     ModelSettings *modelSettings() const;
 
-    bool loadModelInProgress() const;
-    void setLoadModelInProgress(bool newLoadModelInProgress);
-
-    bool responseInProgress() const;
-    void setResponseInProgress(bool newResponseInProgress);
-
 public slots:
     void loadModelResult(const bool result, const QString &warning);
     void tokenResponse(const QString &token);
@@ -86,14 +80,12 @@ signals:
     void modelChanged();
     void modelSettingsChanged();
     void loadModelInProgressChanged();
-    void responseInProgressChanged();
     void requestUpdateModelSettingsDeveloper(const int id, const bool &stream,
                                              const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
                                              const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                              const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                              const int &contextLength, const int &numberOfGPULayers);
     void requestLoadModel(const QString &model, const QString &key);
-    void requestStop();
 
 private:
     void prompt(const std::optional<QJsonObject> json);
@@ -111,8 +103,7 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
 
-    bool m_loadModelInProgress;
-    bool m_responseInProgress;
+    bool m_responseInProgress = false;
 
     QSharedPointer<QHttpServerResponder> m_responder;
 };

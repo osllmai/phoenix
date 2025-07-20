@@ -2,13 +2,29 @@
 
 ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
     : CrudAPI(scheme, hostName, port),
-    m_loadModelInProgress(false),
-    m_responseInProgress(false),
     m_model(new Model(this)),
     m_modelSettings(new ModelSettings(1, this)),
     m_provider(nullptr)
 {
     qCInfo(logDeveloper) << "ChatAPI constructed with scheme:" << scheme << "host:" << hostName << "port:" << port;
+}
+
+ChatAPI::~ChatAPI(){
+    qCInfo(logDeveloper) << "Destroying ChatAPI...";
+
+    // Free dynamically allocated resources if this class owns them
+    delete m_provider;
+    m_provider = nullptr;
+
+    delete m_model;
+    m_model = nullptr;
+
+    delete m_modelSettings;
+    m_modelSettings = nullptr;
+
+    // No need to delete m_responder; it's a QSharedPointer and auto-managed
+
+    qCInfo(logDeveloper) << "ChatAPI destroyed successfully.";
 }
 
 QHttpServerResponse ChatAPI::getFullList() const {
@@ -24,14 +40,28 @@ QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
 void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpServerResponder> responder){
     responder->writeBeginChunked("text/event-stream");
 
+    if (m_responseInProgress) {
+        qCWarning(logDeveloperView) << "Another POST request is already in progress";
+        QJsonObject obj;
+        obj["error"] = "Server is busy. Please wait for the previous request to finish.";
+        QJsonDocument doc(obj);
+        QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
+        responder->writeEndChunked(jsonData);
+        return;
+    }
+
+
+    m_responseInProgress = true;
+    m_responder = responder;
+
     const std::optional<QJsonObject> json = byteArrayToJsonObject(request.body());
     if (!json) {
-        writeError("Invalid JSON");
+        writeFinished("Invalid JSON");
         return;
     }
 
     if (!json->contains("message") || !(*json)["message"].isString()) {
-        writeError("Missing or invalid 'message' field");
+        writeFinished("Missing or invalid 'message' field");
         return;
     }
 
@@ -39,24 +69,23 @@ void ChatAPI::postItem(const QHttpServerRequest &request, QSharedPointer<QHttpSe
 
     if(json->contains("model") && (*json)["model"].isString()){
         if(!loadModel((*json)["model"].toString())){
-            writeError("Invalid 'model' field");
+            writeFinished("Invalid 'model' field");
             return;
         }
         qCInfo(logDeveloperView) << "Model selected successfully: " << m_model->name();
 
     }else if(CodeDeveloperList::instance(nullptr)->modelId() != -1){
         if(!loadModel(CodeDeveloperList::instance(nullptr)->modelId())){
-            writeError("Missing 'model' field");
+            writeFinished("Missing 'model' field");
             return;
         }
         qCInfo(logDeveloperView) << "Default model selected successfully. Model: " << m_model->name();
 
     }else{
-        writeError("Missing or invalid 'model' field");
+        writeFinished("Missing or invalid 'model' field");
         return;
     }
 
-    m_responder = responder;
     prompt(json);
 }
 
@@ -119,7 +148,7 @@ bool ChatAPI::loadModel(QString modelName){
     if (modelName.startsWith("localModel/")) {
         modelName.remove(0, QString("localModel/").length());
         OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if (offlineModel && offlineModel->isDownloading()) {
+        if (offlineModel && offlineModel->downloadFinished()) {
             setModel(offlineModel);
         } else {
             return false;
@@ -151,10 +180,29 @@ void ChatAPI::loadModelResult(const bool result, const QString &warning){
 }
 
 void ChatAPI::tokenResponse(const QString &token) {
+    if (m_responder.isNull()) {
+        qCWarning(logDeveloperView) << "Responder is null. Stopping generation.";
+        m_provider->stop();
+        return;
+    }
     writeToken(token);
 }
 
 void ChatAPI::finishedResponse(const QString &warning) {
+    if (m_provider) {
+        disconnect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel);
+        disconnect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult);
+        disconnect(m_provider, &Provider::requestTokenResponse, this, &ChatAPI::tokenResponse);
+        disconnect(m_provider, &Provider::requestFinishedResponse, this, &ChatAPI::finishedResponse);
+        m_provider->deleteLater();
+        m_provider = nullptr;
+    }
+
+    if (m_responder.isNull()) {
+        m_responseInProgress = false;
+        m_responder.clear();
+        return;
+    }
     writeFinished(warning);
 }
 
@@ -174,22 +222,6 @@ void ChatAPI::setProvider(Provider *newProvider) {
         return;
     m_provider = newProvider;
     emit providerChanged();
-}
-
-bool ChatAPI::responseInProgress() const{return m_responseInProgress;}
-void ChatAPI::setResponseInProgress(bool newResponseInProgress){
-    if (m_responseInProgress == newResponseInProgress)
-        return;
-    m_responseInProgress = newResponseInProgress;
-    emit responseInProgressChanged();
-}
-
-bool ChatAPI::loadModelInProgress() const{return m_loadModelInProgress;}
-void ChatAPI::setLoadModelInProgress(bool newLoadModelInProgress){
-    if (m_loadModelInProgress == newLoadModelInProgress)
-        return;
-    m_loadModelInProgress = newLoadModelInProgress;
-    emit loadModelInProgressChanged();
 }
 
 ModelSettings *ChatAPI::modelSettings() const{return m_modelSettings;}
@@ -220,9 +252,10 @@ void ChatAPI::writeJson(const QJsonObject &obj, bool end) {
     QJsonDocument doc(obj);
     QByteArray jsonData = doc.toJson(QJsonDocument::Compact);
     QByteArray sseData = "data: " + jsonData + "\n\n";
-    if (end)
+    if (end){
         m_responder->writeEndChunked(sseData);
-    else
+        m_responder.clear();
+    }else
         m_responder->writeChunk(sseData);
 }
 
@@ -234,11 +267,13 @@ void ChatAPI::writeToken(const QString &token) {
 }
 
 void ChatAPI::writeFinished(const QString &warning) {
-    qCInfo(logDeveloperView) << warning;
+    if(warning != "")
+        qCWarning(logDeveloperView) << warning;
     QJsonObject obj;
     obj["status"] = "end";
     obj["warning"] = warning;
     writeJson(obj, true);
+    m_responseInProgress = false;
 }
 
 void ChatAPI::beginChunked() {

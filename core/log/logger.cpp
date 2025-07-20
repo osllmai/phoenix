@@ -200,7 +200,17 @@ void Logger::writeLog(const QString& category, QtMsgType type, const QString& me
 
     if (QString(context.category) == "phoenix.developerView") {
         QMutexLocker locker(&m_mutex_developerList);
-        m_developerLogs = m_developerLogs + QString("%1 [%2] %3\n").arg(timestamp, levelStr, message) ;
+
+        QString newLog = QString("%1 [%2] %3").arg(timestamp, levelStr, message);
+
+        m_developerLogs += newLog + "\n";
+
+        QStringList lines = m_developerLogs.split("\n", Qt::SkipEmptyParts);
+        if (lines.size() > 80) {
+            lines = lines.mid(lines.size() - 80);
+            m_developerLogs = lines.join("\n") + "\n";
+        }
+
         emit developerLogsChanged();
     }
 

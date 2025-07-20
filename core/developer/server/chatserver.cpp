@@ -23,18 +23,63 @@ ChatServer::ChatServer(quint16 port, QObject *parent)
 }
 
 ChatServer::~ChatServer(){
-    m_pWebSocketServer->close();
-    qDeleteAll(m_clients);
-    m_clients.clear();
-    m_currentClient.clear();
+    qCInfo(logDeveloper) << "Destroying ChatServer...";
 
-    if (m_provider) {
-        m_provider->deleteLater();
-        m_provider = nullptr;
+    // Stop accepting new connections
+    if (m_pWebSocketServer) {
+        if (m_pWebSocketServer->isListening()) {
+            m_pWebSocketServer->close();
+        }
+        delete m_pWebSocketServer;
+        m_pWebSocketServer = nullptr;
     }
 
-    qCInfo(logDeveloper) << "ChatServer destroyed. Cleaned up WebSocket server and clients.";
+    // Disconnect and delete all connected clients
+    for (QWebSocket *client : std::as_const(m_clients)) {
+        if (client) {
+            client->close();  // Gracefully close the connection
+            client->deleteLater();
+        }
+    }
+    m_clients.clear();
+    m_socketToModelId.clear();
+    m_socketToPrompt.clear();
+    m_socketToGeneratedText.clear();
+
+    // Delete per-socket model settings
+    for (auto *settings : std::as_const(m_socketToModelSettings)) {
+        delete settings;
+    }
+    m_socketToModelSettings.clear();
+
+    m_currentClient.clear();  // QPointer will auto-null if deleted
+
+    // Delete model and settings (if owner)
+    delete m_model;
+    m_model = nullptr;
+
+    delete m_modelSettings;
+    m_modelSettings = nullptr;
+
+    delete m_provider;
+    m_provider = nullptr;
+
+    qCInfo(logDeveloper) << "ChatServer destroyed successfully.";
 }
+
+// ChatServer::~ChatServer(){
+//     m_pWebSocketServer->close();
+//     qDeleteAll(m_clients);
+//     m_clients.clear();
+//     m_currentClient.clear();
+
+//     if (m_provider) {
+//         m_provider->deleteLater();
+//         m_provider = nullptr;
+//     }
+
+//     qCInfo(logDeveloper) << "ChatServer destroyed. Cleaned up WebSocket server and clients.";
+// }
 
 void ChatServer::onNewConnection(){
     QWebSocket *pSocket = m_pWebSocketServer->nextPendingConnection();
@@ -210,7 +255,7 @@ bool ChatServer::loadModel(QString modelName){
     if (modelName.startsWith("localModel/")) {
         modelName.remove(0, QString("localModel/").length());
         OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if (offlineModel && offlineModel->isDownloading()) {
+        if (offlineModel && offlineModel->downloadFinished()) {
             setModel(offlineModel);
         } else {
             return false;
