@@ -151,11 +151,15 @@ private:
     static CodeDeveloperList* m_instance;
 
     void addCrudRoutes(const QString &apiPath, std::optional<std::unique_ptr<CrudAPI>> &apiOpt);
+    void runSocket(bool start);
+    void runAPI(bool start);
 
     quint16 m_portSocket;
     bool m_isRunningSocket;
+    bool m_RunSocketInProcess;
     quint16 m_portAPI;
     bool m_isRunningAPI;
+    bool m_RunAPIInProcess;
 
     ProgramLanguage *m_currentProgramLanguage;
 
@@ -171,8 +175,6 @@ private:
     QList<ProgramLanguage*> m_programLanguags;
 
     ChatServer *m_chatServer = nullptr;
-    QCommandLineParser m_parserChat;
-    QCoreApplication *appSocket;
 
     int m_modelId = -1;
     QString m_modelIcon;

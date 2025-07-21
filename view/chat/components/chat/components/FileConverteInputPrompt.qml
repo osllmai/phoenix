@@ -5,23 +5,25 @@ import '../../../../component_library/button'
 
 Rectangle{
     id: allFileExist
-    width: parent.width
+    width: parent.width/2
     height: 60
     color:  "#00ffffff"
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
 
+    property string iconSource
+
     Row{
         anchors.fill: parent
         MyIcon {
             id: pdfId
             width: 60; height: 60
-            myIcon: "qrc:/media/icon/pdf.svg"
+            myIcon: allFileExist.iconSource
             iconType: Style.RoleEnum.IconType.Image
         }
         Item{
-            width: parent.width -pdfId.width - closeBox.width - 160
+            width: parent.width -pdfId.width - closeBox.width - 80
             height: parent.height
             Label {
                 id: titleId

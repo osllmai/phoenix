@@ -1,5 +1,18 @@
 #include "AudioRecorder.h"
 
+#include <QCoreApplication>
+
+AudioRecorder* AudioRecorder::m_instance = nullptr;
+
+AudioRecorder* AudioRecorder::instance(QObject* parent){
+    if (!m_instance) {
+        m_instance = new AudioRecorder(parent);
+    }
+    return m_instance;
+}
+
+AudioRecorder::~AudioRecorder(){}
+
 AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent) {
     m_recorder = new QMediaRecorder(this);
 

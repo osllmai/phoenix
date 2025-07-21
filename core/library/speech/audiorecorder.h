@@ -22,7 +22,9 @@ class AudioRecorder : public QObject {
     Q_PROPERTY(float level READ level NOTIFY levelChanged)
 
 public:
-    explicit AudioRecorder(QObject *parent = nullptr);
+    static AudioRecorder* instance(QObject* parent);
+
+    ~AudioRecorder();
     Q_INVOKABLE void startRecording();
     Q_INVOKABLE void stopRecording();
 
@@ -38,6 +40,9 @@ signals:
     void recordingFinished(const QString &filePath);
 
 private:
+    explicit AudioRecorder(QObject *parent = nullptr);
+    static AudioRecorder* m_instance;
+
     QMediaCaptureSession m_session;
     QMediaRecorder *m_recorder = nullptr;
     QAudioSource *m_audioSource = nullptr;

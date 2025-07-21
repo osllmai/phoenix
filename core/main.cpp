@@ -7,6 +7,7 @@
 
 #include "database.h"
 #include "speechtotext.h"
+#include "audiorecorder.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -79,6 +80,9 @@ int main(int argc, char *argv[])
 
         SpeechToText* speechToText = SpeechToText::instance(&engine);
         engine.rootContext()->setContextProperty("speechToText", speechToText);
+
+        AudioRecorder* audioRecorder = AudioRecorder::instance(&engine);
+        engine.rootContext()->setContextProperty("audioRecorder", audioRecorder);
 
         CodeDeveloperList* codeDeveloperList = CodeDeveloperList::instance(&engine);
         engine.rootContext()->setContextProperty("codeDeveloperList", codeDeveloperList);
