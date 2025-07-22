@@ -12,6 +12,7 @@ Item {
     function recoderAction(){
         if(audioRecorder.isRecording){
             audioRecorder.stopRecording()
+            speechToText.start()
         }else{
             levelModel.clear()
             audioRecorder.startRecording()

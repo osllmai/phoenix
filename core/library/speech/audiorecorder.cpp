@@ -80,10 +80,10 @@ void AudioRecorder::startRecording() {
     QAudioDevice micDevice = QMediaDevices::defaultAudioInput();
     m_audioSource = new QAudioSource(micDevice, format, this);
 
-    QString dir = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QDir().mkpath(dir);
-    QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
-    m_outputFile = dir + "/recording_" + timestamp + ".wav";
+    // QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
+    m_outputFile = dir + "/recording" /*+ timestamp*/ + ".wav";
 
     QMediaFormat mediaFormat;
     mediaFormat.setFileFormat(QMediaFormat::Wave);

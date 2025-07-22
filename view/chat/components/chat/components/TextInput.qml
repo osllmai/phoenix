@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import '../../../../component_library/style' as Style
 
 Item {
+
     ScrollView {
         id: scrollInput
         anchors.fill: parent
@@ -14,6 +15,17 @@ Item {
 
         ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
                         (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+
+
+        property string textInput: speechToText.text
+        onTextInputChanged: {
+            if(textInput != "")
+                inputTextBox.text  = scrollInput.textInput
+        }
+
+        function requestEmptyTheInput(){
+            inputTextBox.text = ""
+        }
 
         TextArea {
             id: inputTextBox

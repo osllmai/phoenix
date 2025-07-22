@@ -15,16 +15,6 @@ Rectangle{
     border.color: Style.Colors.boxBorder
     radius: 8
 
-    property string textInput: speechToText.text
-    onTextInputChanged: {
-        if(textInput != "")
-            inputTextBox.text  = control.textInput
-    }
-
-    function requestEmptyTheInput(){
-        inputTextBox.text = ""
-    }
-
     function sendMessage(){
         sendIconId.clicked()
     }

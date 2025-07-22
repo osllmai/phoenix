@@ -18,7 +18,7 @@ SpeechToText::SpeechToText(QObject *parent)
     : QObject(parent), m_process(nullptr), m_modelPath(""), m_text("")
 {
     setModelSelect(false);
-    setSpeechInProcess(false);
+    setModelInProcess(false);
 }
 
 SpeechToText::~SpeechToText(){
@@ -28,52 +28,81 @@ SpeechToText::~SpeechToText(){
     }
 }
 
-void SpeechToText::startRecording() {
+void SpeechToText::start() {
+    QString dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir().mkpath(dir);
+    QString audioPath = dir + "/recording"+ ".wav";
+
+    QFileInfo fileInfo(audioPath);
+    if (!fileInfo.exists() || fileInfo.suffix().toLower() != "wav") {
+        qWarning() << "Invalid audio file: either not exists or not a .wav file";
+        return;
+    }
+
     if(m_modelPath == "")
         return;
-    setText("");
-    setSpeechInProcess(true);
 
     if (m_process) {
         qWarning() << "Already recording!";
         return;
     }
-    m_stopFlag = false;
 
-    QThread::create([this]() {
+    qInfo()<<"-------------------------------"<<m_modelPath<< "\n "<<audioPath;
+
+    setText("");
+    setModelInProcess(true);
+
+    QThread::create([this, audioPath]() {
         m_process = new QProcess;
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-stream.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-cli.exe";
+
         QStringList arguments;
         arguments << "-m" << m_modelPath
-                  << "--step" << "0"
-                  << "--length" << "3000"
-                  << "--keep" << "1000";
+                  << "-f" << audioPath
+                  << "--print-progress"
+                  << "--language" << "auto";
 
         m_process->start(exePath, arguments);
-
-        qInfo()<<m_modelPath;
 
         if (!m_process->waitForStarted()) {
             qCritical() << "Failed to start process: " << m_process->errorString();
             delete m_process;
             m_process = nullptr;
+            setModelInProcess(false);
             return;
         }
 
-        bool run = false;
-        while (m_process->state() == QProcess::Running && !m_stopFlag) {
-            if (m_process->waitForReadyRead(500)) {
+        std::regex timestamp_regex(R"(^\[\d{2}:\d{2}:\d{2}\.\d{3} --> \d{2}:\d{2}:\d{2}\.\d{3}\]\s*(.+)$)");
+        std::regex progress_regex(R"(whisper_print_progress_callback:\s*progress\s*=\s*(\d{1,3})%)");
+
+        while (m_process->state() == QProcess::Running) {
+            if (m_process->waitForReadyRead(300)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output, output.size());
+
                 qInfo() << outputString;
-                if((m_text == "") && (outputString == "Run") && (!run)){
-                    run = true;
-                }else if(run){
-                    setText(m_text + outputString);
+                QStringList lines = outputString.split(QRegularExpression("[\r\n]+"), Qt::SkipEmptyParts);
+
+                for (const QString& line : lines) {
+                    std::string stdLine = line.toStdString();
+                    std::smatch match;
+
+                    if (std::regex_search(stdLine, match, timestamp_regex)) {
+                        QString text = QString::fromStdString(match[1]);
+                        std::cout << "Text: " << match[1] << std::endl;
+                        setText(m_text + text);
+                    }
+                    else if (std::regex_search(stdLine, match, progress_regex)) {
+                        int progress = std::stoi(match[1]);
+                        setPercent(progress);
+                        std::cout << "Progress: " << progress << "%" << std::endl;
+                    }
                 }
+
+
             }
         }
 
@@ -84,22 +113,23 @@ void SpeechToText::startRecording() {
                 m_process->waitForFinished();
             }
         }
+
         delete m_process;
         m_process = nullptr;
         qInfo() << "Recording process finished.";
 
+        if (QFile::exists(audioPath)) {
+            if (QFile::remove(audioPath)) {
+                qDebug() << "File deleted successfully.";
+            } else {
+                qWarning() << "Failed to delete the file.";
+            }
+        } else {
+            qWarning() << "File does not exist.";
+        }
+
     })->start();
-}
 
-void SpeechToText::stopRecording() {
-    setText("");
-    setSpeechInProcess(false);
-
-    if (!m_process) {
-        qWarning() << "No recording process to stop.";
-        return;
-    }
-    m_stopFlag = true;
 }
 
 bool SpeechToText::modelSelect() const{return m_modelSelect;}
@@ -126,11 +156,19 @@ void SpeechToText::setText(const QString &newText){
     emit textChanged();
 }
 
-bool SpeechToText::speechInProcess() const{return m_speechInProcess;}
-void SpeechToText::setSpeechInProcess(bool newSpeechInProcess){
-    if (m_speechInProcess == newSpeechInProcess)
+bool SpeechToText::modelInProcess() const{return m_modelInProcess;}
+void SpeechToText::setModelInProcess(bool newmodelInProcess){
+    if (m_modelInProcess == newmodelInProcess)
         return;
-    m_speechInProcess = newSpeechInProcess;
-    qInfo()<<m_speechInProcess;
-    emit speechInProcessChanged();
+    m_modelInProcess = newmodelInProcess;
+    qInfo()<<m_modelInProcess;
+    emit modelInProcessChanged();
+}
+
+bool SpeechToText::percent() const{return m_percent;}
+void SpeechToText::setPercent(bool newPercent){
+    if (m_percent == newPercent)
+        return;
+    m_percent = newPercent;
+    emit percentChanged();
 }
