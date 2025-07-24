@@ -3,6 +3,12 @@ import QtQuick.Controls 2.15
 import '../../../../component_library/style' as Style
 
 Item {
+    id: root
+    property string inputValue: ""
+
+    function setText(text){
+        inputTextBox.text = text
+    }
 
     ScrollView {
         id: scrollInput
@@ -16,16 +22,6 @@ Item {
         ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
                         (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
 
-
-        property string textInput: speechToText.text
-        onTextInputChanged: {
-            if(textInput != "")
-                inputTextBox.text  = scrollInput.textInput
-        }
-
-        function requestEmptyTheInput(){
-            inputTextBox.text = ""
-        }
 
         TextArea {
             id: inputTextBox
@@ -50,6 +46,7 @@ Item {
             placeholderTextColor: Style.Colors.textInformation
 
             onTextChanged: {
+                root.inputValue = inputTextBox.text
                 control.layer.enabled = true
                 adjustHeight()
             }
@@ -93,5 +90,4 @@ Item {
             }
         }
     }
-
 }

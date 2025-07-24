@@ -16,14 +16,64 @@ Rectangle{
 
     Row{
         anchors.fill: parent
-        MyIcon {
-            id: pdfId
-            width: 60; height: 60
-            myIcon: allFileExist.iconSource
-            iconType: Style.RoleEnum.IconType.Image
+
+        Item {
+            id: fileIconWithBusy
+            width: 60
+            height: 60
+
+            MyIcon {
+                id: pdfId
+                anchors.centerIn: parent
+                width: 50
+                height: 50
+                myIcon: allFileExist.iconSource
+                iconType: Style.RoleEnum.IconType.Primary
+                enabled: false
+            }
+
+            Loader {
+                id: busyLoader
+                anchors.centerIn: parent
+                active: convertToMD.convertInProcess
+                sourceComponent: BusyIndicator {
+                    running: true
+                    width: 60
+                    height: 60
+
+                    contentItem: Item {
+                        implicitWidth: 60
+                        implicitHeight: 60
+
+                        Canvas {
+                            id: spinnerCanvas
+                            anchors.fill: parent
+                            onPaint: {
+                                var ctx = getContext("2d")
+                                ctx.clearRect(0, 0, width, height)
+                                ctx.beginPath()
+                                ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
+                                ctx.lineWidth = 3
+                                ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                ctx.stroke()
+                            }
+                            Component.onCompleted: requestPaint()
+                        }
+
+                        RotationAnimator on rotation {
+                            from: 0
+                            to: 360
+                            duration: 1000
+                            loops: Animation.Infinite
+                            running: true
+                        }
+                    }
+                }
+            }
         }
+
         Item{
-            width: parent.width -pdfId.width - closeBox.width - 80
+            width: parent.width -fileIconWithBusy.width - closeBox.width - 80
             height: parent.height
             Label {
                 id: titleId

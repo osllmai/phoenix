@@ -12,17 +12,10 @@ ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
 ChatAPI::~ChatAPI(){
     qCInfo(logDeveloper) << "Destroying ChatAPI...";
 
-    // Free dynamically allocated resources if this class owns them
-    delete m_provider;
-    m_provider = nullptr;
-
-    delete m_model;
-    m_model = nullptr;
-
-    delete m_modelSettings;
-    m_modelSettings = nullptr;
-
-    // No need to delete m_responder; it's a QSharedPointer and auto-managed
+    if(m_provider){
+        delete m_provider;
+        m_provider = nullptr;
+    }
 
     qCInfo(logDeveloper) << "ChatAPI destroyed successfully.";
 }

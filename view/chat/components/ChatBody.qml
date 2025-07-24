@@ -17,12 +17,20 @@ Item {
     }
 
     function requestEmptyTheInput(){
-        inputBoxId.requestEmptyTheInput()
-        inputBoxId2.requestEmptyTheInput()
+        inputBoxId.textInput = ""
+        inputBoxId2.textInput = ""
     }
 
     function goToEnd(){
         myMessageView.goToEnd();
+    }
+
+    property string textInput: speechToText.text
+    onTextInputChanged: {
+        if((textInput != "") && (conversationList.isEmptyConversation))
+            inputBoxId2.textInput  = chatBodyBoxId.textInput
+        else if((textInput != "") && (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress))
+            inputBoxId.textInput  = chatBodyBoxId.textInput
     }
 
     Column{

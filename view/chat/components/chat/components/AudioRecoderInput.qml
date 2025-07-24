@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import '../../../../component_library/style' as Style
+import '../../../../component_library/button'
 
 Item {
-
     property int maxItems: levelView.width/5
 
     ListModel {
@@ -10,13 +10,17 @@ Item {
     }
 
     function recoderAction(){
-        if(audioRecorder.isRecording){
-            audioRecorder.stopRecording()
-            speechToText.start()
+        if(speechToText.modelSelect){
+            if(audioRecorder.isRecording){
+                audioRecorder.stopRecording()
+                speechToText.start()
+            }else{
+                levelModel.clear()
+                audioRecorder.startRecording()
+                updateTimer.start()
+            }
         }else{
-            levelModel.clear()
-            audioRecorder.startRecording()
-            updateTimer.start()
+            selectSpeechModelVerificationId.open()
         }
     }
 
@@ -62,4 +66,24 @@ Item {
         }
     }
 
+    VerificationDialog {
+        id: selectSpeechModelVerificationId
+        titleText: "Select Speech Model"
+        about: "Are you sure you want to leave this page and select a new speech model?"
+        textBotton1: "Cancel"
+        textBotton2: "Select Model"
+        typeBotton1: Style.RoleEnum.BottonType.Secondary
+        typeBotton2: Style.RoleEnum.BottonType.Primary
+        Connections{
+            target:selectSpeechModelVerificationId
+            function onButtonAction1(){
+                selectSpeechModelVerificationId.close()
+            }
+            function onButtonAction2() {
+                selectSpeechModelVerificationId.close()
+                appBodyId.currentIndex = 2
+                window.setModelPages("offline", "Speech")
+            }
+        }
+    }
 }

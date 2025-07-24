@@ -22,6 +22,11 @@ Rectangle{
     signal sendPrompt(var prompt)
     signal openModelIsLoaded()
 
+    property string textInput: ""
+    onTextInputChanged: {
+        textInputId.setText(control.textInput)
+    }
+
     function selectSendIcon(){
         if(!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress){
             sendIconId.myTextToolTip = "Stop"
@@ -40,10 +45,16 @@ Rectangle{
 
     function selectSpeechIcon(){
         if(speechToText.modelSelect){
-            if(speechToText.speechInProcess)
-                return "qrc:/media/icon/microphoneOnFill.svg"
+            if(audioRecorder.isRecording)
+                if(speechIconId.hovered)
+                    return "qrc:/media/icon/stopFill.svg"
+                else
+                    return "qrc:/media/icon/stop.svg"
             else
-                return "qrc:/media/icon/microphoneOn.svg"
+                if(speechIconId.hovered)
+                    return "qrc:/media/icon/microphoneOnFill.svg"
+                else
+                    return "qrc:/media/icon/microphoneOn.svg"
         }else{
             if(speechIconId.hovered)
                 return "qrc:/media/icon/microphoneOn.svg"
@@ -53,24 +64,25 @@ Rectangle{
     }
 
     function iconForFile(fileUrl) {
-        let ext = fileUrl.split('.').pop().toLowerCase();
+        let path = (typeof fileUrl === "string") ? fileUrl : fileUrl.toString();
+        let ext = path.split('.').pop().toLowerCase();
         switch (ext) {
-        case "docx": return "qrc:/media/icon/fileDocx.svg"
-        case "pptx": return "qrc:/media/icon/filePptx.svg"
-        case "html":
-        case "htm": return "qrc:/media/icon/fileHtml.svg"
-        case "jpg":
-        case "jpeg": return "qrc:/media/icon/fileJpg.svg"
-        case "png": return "qrc:/media/icon/filePng.svg"
-        case "pdf": return "qrc:/media/icon/filePdf.svg"
-        case "md": return "qrc:/media/icon/fileMd.svg"
-        case "csv": return "qrc:/media/icon/fileCsv.svg"
-        case "xlsx": return "qrc:/media/icon/fileXlsx.svg"
-        case "xml": return "qrc:/media/icon/fileXml.svg"
-        case "json": return "qrc:/media/icon/fileJson.svg"
-        case "mp3": return "qrc:/media/icon/fileMp3Audio.svg"
-        case "wav": return "qrc:/media/icon/fileWav.svg"
-        default: return "qrc:/media/icon/filePdf.svg"
+            case "docx": return "qrc:/media/icon/fileDocx.svg"
+            case "pptx": return "qrc:/media/icon/filePptx.svg"
+            case "html":
+            case "htm": return "qrc:/media/icon/fileHtml.svg"
+            case "jpg":
+            case "jpeg": return "qrc:/media/icon/fileJpg.svg"
+            case "png": return "qrc:/media/icon/filePng.svg"
+            case "pdf": return "qrc:/media/icon/filePdf.svg"
+            case "md": return "qrc:/media/icon/fileMd.svg"
+            case "csv": return "qrc:/media/icon/fileCsv.svg"
+            case "xlsx": return "qrc:/media/icon/fileXlsx.svg"
+            case "xml": return "qrc:/media/icon/fileXml.svg"
+            case "json": return "qrc:/media/icon/fileJson.svg"
+            case "mp3": return "qrc:/media/icon/fileMp3Audio.svg"
+            case "wav": return "qrc:/media/icon/fileWav.svg"
+            default: return "qrc:/media/icon/filePdf.svg"
         }
     }
 
@@ -91,6 +103,7 @@ Rectangle{
         }
 
         TextInput{
+            id: textInputId
             visible: !audioRecorder.isRecording
             width: parent.width
             height: parent.height - iconList.height - (allFileExist.visible? allFileExist.height:0)
@@ -144,7 +157,7 @@ Rectangle{
                     ]
 
                     onAccepted: function() {
-                        convertToMD.filePath = currentFile
+                        convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
                         convertToMD.startConvert()
                         allFileExist.iconSource = iconForFile(currentFile)
                         allFileExist.visible = true
@@ -157,34 +170,14 @@ Rectangle{
                 anchors.right: parent.right
                 spacing: 10
 
-                MyIcon {
+                Item{
                     id: speechIconId
                     width: 30; height: 30
-                    myIcon: selectSpeechIcon()
-                    iconType: Style.RoleEnum.IconType.Primary
-                    onClicked: {
-                        // if(speechToText.modelSelect){
-                        //     if(speechToText.speechInProcess)
-                        //         speechToText.stopRecording()
-                        //     else
-                        //         speechToText.startRecording()
-                        // }else{
-                        //     selectSpeechModelVerificationId.open()
-                        // }
-
-                        audioRecorderInputId.recoderAction()
-                    }
-                }
-
-                Item {
-                    id: sendButtonArea
-                    width: 30
-                    height: 30
 
                     Loader {
-                        id: loadedImage
+                        id: loadedSpeechModel
                         anchors.fill: parent
-                        active: !conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress
+                        active: speechToText.modelInProcess
                         sourceComponent: BusyIndicator {
                             running: true
                             width: 30
@@ -226,6 +219,72 @@ Rectangle{
                             }
                         }
                     }
+                    MyIcon {
+                        visible: !speechToText.modelInProcess
+                        anchors.fill: parent
+                        myIcon: selectSpeechIcon()
+                        iconType: Style.RoleEnum.IconType.Primary
+                        enabled: !speechToText.modelInProcess
+
+                        onClicked: {
+                            audioRecorderInputId.recoderAction()
+                            textInputId.setText("")
+                        }
+                    }
+                }
+
+
+
+                Item {
+                    id: sendButtonArea
+                    width: 30
+                    height: 30
+
+                    Loader {
+                        id: loadedTextGenerationModel
+                        anchors.fill: parent
+                        active: !conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress
+                        sourceComponent: BusyIndicator {
+                            running: true
+                            width: 30
+                            height: 30
+
+                            contentItem: Item {
+                                implicitWidth: 30
+                                implicitHeight: 30
+
+                                Canvas {
+                                    id: spinnerCanvasId
+                                    anchors.fill: parent
+                                    onPaint: {
+                                        var ctx = getContext("2d")
+                                        ctx.clearRect(0, 0, width, height)
+                                        ctx.beginPath()
+                                        ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
+                                        ctx.lineWidth = 3
+                                        ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                        ctx.stroke()
+                                    }
+                                    Component.onCompleted: requestPaint()
+                                }
+
+                                RotationAnimator on rotation {
+                                    from: 0
+                                    to: 360
+                                    duration: 1000
+                                    loops: Animation.Infinite
+                                    running: true
+                                }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        control.openModelIsLoaded()
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     MyIcon {
                         id: sendIconId
@@ -233,6 +292,8 @@ Rectangle{
                         anchors.fill: parent
                         myIcon: selectSendIcon()
                         iconType: Style.RoleEnum.IconType.Primary
+
+                        enabled: !(convertToMD.convertInProcess || audioRecorder.isRecording || speechToText.modelInProcess)
 
                         onClicked: {
                             if (!conversationList.isEmptyConversation && conversationList.currentConversation.loadModelInProgress){
@@ -245,10 +306,10 @@ Rectangle{
                                  !conversationList.currentConversation.loadModelInProgress) ||
                                  conversationList.isEmptyConversation)
                             {
-                                sendPrompt(inputTextBox.text)
+                                control.sendPrompt(textInputId.inputValue)
 
                                 if (conversationList.modelSelect)
-                                    inputTextBox.text = ""
+                                    textInputId.inputValue = ""
 
                                 if (speechToText.speechInProcess) {
                                     speechToText.stopRecording()
@@ -258,9 +319,7 @@ Rectangle{
                         }
                     }
                 }
-
             }
-
         }
     }
 
@@ -271,25 +330,4 @@ Rectangle{
          spread: 0.1
          transparentBorder: true
      }
-
-    VerificationDialog {
-        id: selectSpeechModelVerificationId
-        titleText: "Select Speech Model"
-        about: "Are you sure you want to leave this page and select a new speech model?"
-        textBotton1: "Cancel"
-        textBotton2: "Select Model"
-        typeBotton1: Style.RoleEnum.BottonType.Secondary
-        typeBotton2: Style.RoleEnum.BottonType.Primary
-        Connections{
-            target:selectSpeechModelVerificationId
-            function onButtonAction1(){
-                selectSpeechModelVerificationId.close()
-            }
-            function onButtonAction2() {
-                selectSpeechModelVerificationId.close()
-                appBodyId.currentIndex = 2
-                window.setModelPages("offline", "Speech")
-            }
-        }
-    }
 }

@@ -117,16 +117,7 @@ void SpeechToText::start() {
         delete m_process;
         m_process = nullptr;
         qInfo() << "Recording process finished.";
-
-        if (QFile::exists(audioPath)) {
-            if (QFile::remove(audioPath)) {
-                qDebug() << "File deleted successfully.";
-            } else {
-                qWarning() << "Failed to delete the file.";
-            }
-        } else {
-            qWarning() << "File does not exist.";
-        }
+        setModelInProcess(false);
 
     })->start();
 
