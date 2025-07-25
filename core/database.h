@@ -35,7 +35,8 @@ public slots:
     void addModel(const QString &name, const QString &key);
 
     void readConversation();
-    void insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+    void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
+                           const QDateTime date, const QString &icon,
                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -51,7 +52,7 @@ public slots:
                             const int &contextLength, const int &numberOfGPULayers);
 
     void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
     void updateTextMessage(const int idConversation, const int messageId, const QString &text);
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
@@ -75,13 +76,14 @@ signals:
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
 
-    void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
+    void addConversation(const int id, const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
+                           const QDateTime date, const QString &icon,
                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
-    void addMessage(const int idConversation, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int idConversation, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
 
 private:

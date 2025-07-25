@@ -14,6 +14,8 @@
 #include <regex>
 #include <string>
 #include <sstream>
+#include <iostream>
+#include <filesystem>
 
 class SpeechToText : public QObject
 {
@@ -66,6 +68,8 @@ private:
     QString m_text;
     bool m_modelInProcess;
     bool m_percent;
+
+    bool isCudaAvailable();
 };
 
 #endif // SPEECHTOTEXT_H

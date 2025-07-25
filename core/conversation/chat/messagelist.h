@@ -18,6 +18,7 @@ public:
     enum MessageRoles {
         IdRole = Qt::UserRole + 1,
         TextRole,
+        FileNameRole,
         DateRole,
         IconRole,
         IsPromptRole,
@@ -38,13 +39,13 @@ public:
     Q_INVOKABLE void updateAllTextMessage();
 
 public slots:
-    void addMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
+    void addMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
     void updateLastMessage(const QString &newText);
 
 signals:
     void countChanged();
     void requestDeleteMessage(const int &id);
-    void requestAddMessage(const int id, const QString &text, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
+    void requestAddMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
 
 private:
     QList<Message*> m_messages;

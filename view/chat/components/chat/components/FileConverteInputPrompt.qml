@@ -4,15 +4,42 @@ import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
 Rectangle{
-    id: allFileExist
-    width: parent.width/2
+    id: control
+    width: window.isDesktopSize? parent.width/2 : parent.width
     height: 60
     color:  "#00ffffff"
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
 
-    property string iconSource
+    property string filePath
+    property string textMD
+    property bool convertInProcess
+    property bool isInputBox
+    signal closeFile()
+
+    function iconForFile(fileUrl) {
+        let path = (typeof fileUrl === "string") ? fileUrl : fileUrl.toString();
+        let ext = path.split('.').pop().toLowerCase();
+        switch (ext) {
+            case "docx": return "qrc:/media/icon/fileDocx.svg"
+            case "pptx": return "qrc:/media/icon/filePptx.svg"
+            case "html":
+            case "htm": return "qrc:/media/icon/fileHtml.svg"
+            case "jpg":
+            case "jpeg": return "qrc:/media/icon/fileJpg.svg"
+            case "png": return "qrc:/media/icon/filePng.svg"
+            case "pdf": return "qrc:/media/icon/filePdf.svg"
+            case "md": return "qrc:/media/icon/fileMd.svg"
+            case "csv": return "qrc:/media/icon/fileCsv.svg"
+            case "xlsx": return "qrc:/media/icon/fileXlsx.svg"
+            case "xml": return "qrc:/media/icon/fileXml.svg"
+            case "json": return "qrc:/media/icon/fileJson.svg"
+            case "mp3": return "qrc:/media/icon/fileMp3Audio.svg"
+            case "wav": return "qrc:/media/icon/fileWav.svg"
+            default: return "qrc:/media/icon/filePdf.svg"
+        }
+    }
 
     Row{
         anchors.fill: parent
@@ -27,7 +54,7 @@ Rectangle{
                 anchors.centerIn: parent
                 width: 50
                 height: 50
-                myIcon: allFileExist.iconSource
+                myIcon: control.iconForFile(control.filePath)
                 iconType: Style.RoleEnum.IconType.Primary
                 enabled: false
             }
@@ -35,7 +62,7 @@ Rectangle{
             Loader {
                 id: busyLoader
                 anchors.centerIn: parent
-                active: convertToMD.convertInProcess
+                active: control.convertInProcess
                 sourceComponent: BusyIndicator {
                     running: true
                     width: 60
@@ -79,7 +106,7 @@ Rectangle{
                 id: titleId
                 visible: !titleAndCopy.visible
                 text: {
-                    var pathParts = convertToMD.filePath.split(/[/\\]/);
+                    var pathParts = control.filePath.split(/[/\\]/);
                     return pathParts[pathParts.length - 1];
                 }
                 color: Style.Colors.textTitle
@@ -93,7 +120,7 @@ Rectangle{
             MyCopyButton{
                 id: copyId
                 visible: !titleAndCopy.visible
-                myText: TextArea{text: convertToMD.textMD}
+                myText: TextArea{text: control.textMD}
                 anchors.verticalCenter: titleId.verticalCenter
                 anchors.right: parent.right
                 clip: true
@@ -107,7 +134,7 @@ Rectangle{
                 Label {
                     id: title2Id
                     text: {
-                        var pathParts = convertToMD.filePath.split(/[/\\]/);
+                        var pathParts = control.filePath.split(/[/\\]/);
                         return pathParts[pathParts.length - 1];
                     }
                     color: Style.Colors.textTitle
@@ -119,7 +146,7 @@ Rectangle{
                 }
                 MyCopyButton{
                     id: copy2Id
-                    myText: TextArea{text: convertToMD.textMD;}
+                    myText: TextArea{text: control.textMD;}
                     anchors.verticalCenter: title2Id.verticalCenter
                     clip: true
                 }
@@ -128,12 +155,15 @@ Rectangle{
     }
     MyIcon{
         id: closeBox
+        visible: control.isInputBox
         anchors.right: parent.right; anchors.rightMargin: 10;
         anchors.top: parent.top; anchors.topMargin: 10;
         width: 30; height: 30
         myIcon: "qrc:/media/icon/close.svg"
         myTextToolTip: "Close"
         isNeedAnimation: true
-        onClicked: allFileExist.visible = false
+        onClicked: {
+            control.closeFile()
+        }
     }
 }

@@ -6,10 +6,11 @@ import MyMessageTextProcessor 1.0
 
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
+import './components'
 
 T.Button {
     id: control
-    height: textId.height + dateAndIconId.height  + 2
+    height: textId.height + dateAndIconId.height + (allFileExist.visible? allFileExist.height: 0)  + 2
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -55,6 +56,15 @@ T.Button {
                 spacing: 2
                 width: parent.width
 
+                FileConverteInputPrompt{
+                    id: allFileExist
+                    visible: (model.fileName !== "")? true: false
+                    filePath: model.fileName
+                    textMD: model.fileName
+                    convertInProcess: false
+                    isInputBox: false
+                }
+
                 TextArea {
                     id: textId
                     color: Style.Colors.textTitle
@@ -67,7 +77,8 @@ T.Button {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.PlainText
 
-                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ? conversationList.currentConversation.responseInProgress: false
+                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ?
+                                                                conversationList.currentConversation.responseInProgress: false
                     cursorPosition: text.length
 
                     selectByMouse: true

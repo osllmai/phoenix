@@ -310,4 +310,3 @@ void OfflineModelList::deleteDownloadModel(const int id){
         }
     }
 }
-

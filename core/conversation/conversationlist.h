@@ -51,7 +51,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void addRequest(const QString &firstPrompt);
+    Q_INVOKABLE void addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo);
     Q_INVOKABLE void selectCurrentConversationRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
@@ -87,23 +87,24 @@ public:
     void setModelSystemPrompt(const QString &newModelSystemPrompt);
 
 public slots:
-    void addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
-                  const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
-                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                  const int &contextLength, const int &numberOfGPULayersconst, bool selectConversation);
+    void addConversation(const int id, const QString &title, const QString &description, const QString &fileName,
+                                     const QString &fileInfo, const QDateTime date, const QString &icon,
+                                     const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                                     const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                     const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
-    void addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
     void readMessages(const int conversationId);
-    void insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
     void updateTextMessage(const int conversationId, const int messageId, const QString &text);
     void updateDescriptionText(const int conversationId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
     void updateModelSettingsConversation(const int id, const bool &stream,
-                                                const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                                const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                                const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                                const int &contextLength, const int &numberOfGPULayers);
+                                    const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                    const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                    const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                    const int &contextLength, const int &numberOfGPULayers);
 
 signals:
     void countChanged();
@@ -117,7 +118,8 @@ signals:
     void modelPromptTemplateChanged();
     void modelSystemPromptChanged();
 
-    void requestInsertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+    void requestInsertConversation(const QString &title, const QString &description, const QString &fileName,
+                            const QString &fileInfo, const QDateTime date, const QString &icon,
                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -136,7 +138,7 @@ signals:
     void requestUpdateLikeMessage(const int conversationId, const int messageId, const int like);
 
     void requestReadMessages(const int conversationId);
-    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
 
 private:

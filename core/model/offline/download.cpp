@@ -9,7 +9,7 @@ Download::Download(const int id, const QString &url, const QString &modelPath, Q
 }
 
 Download::~Download(){
-    delete reply;
+    // delete reply;
 }
 
 int Download::id() const{

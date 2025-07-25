@@ -57,7 +57,12 @@ void SpeechToText::start() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-cli.exe";
+        QString exePath = "";
+
+        if(isCudaAvailable())
+            exePath = QCoreApplication::applicationDirPath() + "/whisper/cuda-device/whisper-cli.exe";
+        else
+            exePath = QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-cli.exe";
 
         QStringList arguments;
         arguments << "-m" << m_modelPath
@@ -101,8 +106,6 @@ void SpeechToText::start() {
                         std::cout << "Progress: " << progress << "%" << std::endl;
                     }
                 }
-
-
             }
         }
 
@@ -122,6 +125,12 @@ void SpeechToText::start() {
     })->start();
 
 }
+
+bool SpeechToText::isCudaAvailable() {
+    std::string cudaDllPath = "C:\\Windows\\System32\\nvcuda.dll";
+    return std::filesystem::exists(cudaDllPath);
+}
+
 
 bool SpeechToText::modelSelect() const{return m_modelSelect;}
 void SpeechToText::setModelSelect(bool newModelSelect){

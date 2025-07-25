@@ -154,7 +154,8 @@ void Database::updateIsLikeModel(const int id, const bool isLike){
         return;
 }
 
-void Database::insertConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+void Database::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
+                                 const QDateTime date, const QString &icon,
                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
                                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -186,7 +187,7 @@ void Database::insertConversation(const QString &title, const QString &descripti
 
     int id = query.lastInsertId().toInt();
 
-    emit addConversation(id, title, description, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
+    emit addConversation(id, title, description, fileName, fileInfo, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
                          repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers, selectConversation);
 }
 
@@ -273,7 +274,7 @@ void Database::updateModelSettingsConversation(const int id, const bool stream,
     }
 }
 
-void Database::insertMessage(const int idConversation, const QString &text, const QString &icon, bool isPrompt, const int like){
+void Database::insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
     QDateTime date = QDateTime::currentDateTime();
 
     QSqlQuery query(m_db);
@@ -282,6 +283,7 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
         return;
     query.addBindValue(idConversation);
     query.addBindValue(text);
+    query.addBindValue(fileName);
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPrompt);
@@ -291,7 +293,7 @@ void Database::insertMessage(const int idConversation, const QString &text, cons
 
     int id = query.lastInsertId().toInt();
 
-    emit addMessage(idConversation, id, text, date, icon, isPrompt, like);
+    emit addMessage(idConversation, id, text, fileName, date, icon, isPrompt, like);
 
     updateDateConversation(idConversation, text, icon);
 }
@@ -451,6 +453,7 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
             conversation_id INTEGER NOT NULL,
             id INTEGER NOT NULL UNIQUE,
             text TEXT,
+            fileName TEXT,
             date DATE NOT NULL,
             icon TEXT NOT NULL,
             isPrompt BOOL NOT NULL,
@@ -461,11 +464,11 @@ const QString Database::MESSAGE_SQL = QLatin1String(R"(
 )");
 
 const QString Database::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, date, icon, isPrompt, like FROM message WHERE conversation_id=?
+    SELECT id, text, fileName, date, icon, isPrompt, like FROM message WHERE conversation_id=?
 )");
 
 const QString Database::INSERT_MESSAGE_SQL = QLatin1String(R"(
-    INSERT INTO message(conversation_id, text, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO message(conversation_id, text, fileName, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::DELETE_MESSAGE_SQL = QLatin1String(R"(
@@ -668,6 +671,8 @@ void Database::readConversation(){
                     query.value(0).toInt(),
                     query.value(1).toString(),
                     query.value(2).toString(),
+                    "",
+                    "",
                     query.value(3).toDateTime(),
                     query.value(4).toString(),
                     query.value(5).toBool(),
@@ -702,10 +707,11 @@ void Database::readMessages(const int idConversation){
                 idConversation,
                 query.value(0).toInt(),
                 query.value(1).toString(),
-                query.value(2).toDateTime(),
-                query.value(3).toString(),
-                query.value(4).toBool(),
-                query.value(5).toInt()
+                query.value(2).toString(),
+                query.value(3).toDateTime(),
+                query.value(4).toString(),
+                query.value(5).toBool(),
+                query.value(6).toInt()
                 );
          }
     }

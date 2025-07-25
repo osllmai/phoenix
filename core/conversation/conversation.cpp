@@ -87,15 +87,15 @@ Conversation::~Conversation() {
     qInfo()<<"delete conversation";
 }
 
-void Conversation::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
-    m_messageList->addMessage(id, text, date, icon, isPrompt, like);
+void Conversation::addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
+    m_messageList->addMessage(id, text, fileName, date, icon, isPrompt, like);
 }
 
 void Conversation::readMessages(){
     emit requestReadMessages(m_id);
 }
 
-void Conversation::prompt(const QString &input){
+void Conversation::prompt(const QString &input, const QString &fileName, const QString &fileInfo){
     m_isModelChanged = false;
 
     if(ConversationList::instance(nullptr)->previousConversation() != nullptr &&
@@ -137,15 +137,22 @@ void Conversation::prompt(const QString &input){
         setIsLoadModel(true);
     }
 
-    emit requestInsertMessage(m_id, input, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(m_id, "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
+    emit requestInsertMessage(m_id, input, fileName, "qrc:/media/image_company/user.svg", true, 0);
+    emit requestInsertMessage(m_id, "", "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
 
-    //add history from massage
-    QString finalPrompt = m_modelSettings->promptTemplate();
-    finalPrompt.replace("{{history}}", m_messageList->history());
-    finalPrompt.replace("{{input}}", input);
+    QString finalInput = "";
 
-    m_provider->prompt(input, m_modelSettings->stream(), /*m_modelSettings->promptTemplate(),*/ finalPrompt,
+    if(fileInfo != ""){
+        finalInput = "I have extracted the following text from a user's document. Please carefully read and analyze the content. Then, based on the user's question at the end, provide a detailed and helpful response.\n\nExtracted Document Text:\n" +
+                     fileInfo + "\n\nUser's Question:\n" +
+                     input + "\n\nPlease focus on accuracy and relevance, and explain your answer clearly, using examples if helpful.";
+    }else{
+        //add history from massage
+        finalInput.replace("{{history}}", m_messageList->history());
+        finalInput.replace("{{input}}", input);
+    }
+
+    m_provider->prompt(finalInput, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
                        m_modelSettings->promptBatchSize(),m_modelSettings->maxTokens(),

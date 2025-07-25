@@ -43,7 +43,9 @@ Item{
             Connections{
                 target: currentModelComboBoxId
                 function onSendMessage(){
-                    headerId.sendMessage()
+                    if(!(convertToMD.convertInProcess || audioRecorder.isRecording || speechToText.modelInProcess)){
+                        headerId.sendMessage()
+                    }
                     currentModelComboBoxId.popup.close()
                 }
             }

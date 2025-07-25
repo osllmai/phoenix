@@ -63,42 +63,25 @@ Rectangle{
         }
     }
 
-    function iconForFile(fileUrl) {
-        let path = (typeof fileUrl === "string") ? fileUrl : fileUrl.toString();
-        let ext = path.split('.').pop().toLowerCase();
-        switch (ext) {
-            case "docx": return "qrc:/media/icon/fileDocx.svg"
-            case "pptx": return "qrc:/media/icon/filePptx.svg"
-            case "html":
-            case "htm": return "qrc:/media/icon/fileHtml.svg"
-            case "jpg":
-            case "jpeg": return "qrc:/media/icon/fileJpg.svg"
-            case "png": return "qrc:/media/icon/filePng.svg"
-            case "pdf": return "qrc:/media/icon/filePdf.svg"
-            case "md": return "qrc:/media/icon/fileMd.svg"
-            case "csv": return "qrc:/media/icon/fileCsv.svg"
-            case "xlsx": return "qrc:/media/icon/fileXlsx.svg"
-            case "xml": return "qrc:/media/icon/fileXml.svg"
-            case "json": return "qrc:/media/icon/fileJson.svg"
-            case "mp3": return "qrc:/media/icon/fileMp3Audio.svg"
-            case "wav": return "qrc:/media/icon/fileWav.svg"
-            default: return "qrc:/media/icon/filePdf.svg"
-        }
-    }
-
-
     Column{
         anchors.fill: parent
         anchors.margins: 10
 
         FileConverteInputPrompt{
             id: allFileExist
-            visible: false
+            visible: convertToMD.fileIsSelect
             onVisibleChanged: {
                 if(allFileExist.visible)
                     control.height = control.height + allFileExist.height
                 else
                     control.height = control.height - allFileExist.height
+            }
+            filePath: convertToMD.filePath
+            textMD: convertToMD.textMD
+            convertInProcess: convertToMD.convertInProcess
+            isInputBox: true
+            onCloseFile: {
+                convertToMD.fileIsSelect = false
             }
         }
 
@@ -159,8 +142,6 @@ Rectangle{
                     onAccepted: function() {
                         convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
                         convertToMD.startConvert()
-                        allFileExist.iconSource = iconForFile(currentFile)
-                        allFileExist.visible = true
                     }
                 }
 
