@@ -45,12 +45,8 @@ Item {
                 <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none; font-weight:bold;'>OS LLM AI</a> is a cutting-edge platform dedicated to harnessing the power of AI for creativity and productivity. Continuously evolving to meet user needs, it incorporates innovative features and updates designed to streamline workflows and enhance the user experience.
                 </p>
 
-                <hr/>
-
                 <h3>About OS LLM AI:</h3>
                 <p><a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> provides a comprehensive suite of AI-powered tools for various applications, making advanced AI technology accessible to everyone. With a focus on user-friendly interfaces and powerful functionality, <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> empowers individuals and businesses to achieve more with less effort.</p>
-
-                <hr/>
 
                 <h3>Key Features:</h3>
 
@@ -73,22 +69,18 @@ Item {
                     <li><strong>Image Scaling:</strong> Resize images while maintaining quality and clarity, ideal for various creative projects.</li>
                 </ul>
 
-                <hr/>
-
                 <h3>Accessibility and Ease of Use:</h3>
                 <p><a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> is available across multiple platforms, including browser extensions, mobile apps, and desktop applications. Its intuitive design ensures that users of all skill levels can get started quickly and efficiently.</p>
-
-                <hr/>
 
                 <h3>Empowering Creativity and Productivity:</h3>
                 <p>By combining cutting-edge AI models with innovative tools, <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> redefines the boundaries of what’s possible. Whether you are creating, translating, or automating tasks, <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> is your ultimate partner in achieving success.</p>
 
-                <hr/>
-
                 <h3>Contact Us:</h3>
                 <p>Feel free to reach out if you need any help or have any questions:</p>
                 <p><strong>Email:</strong> Support@osllm.ai</p>
-<hr/>
+<br>
+<br>
+<br>
             "
 
             onLinkActivated: function(link) {

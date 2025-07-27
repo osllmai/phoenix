@@ -143,14 +143,41 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
     QString finalInput = "";
 
     if(fileInfo != ""){
-        finalInput = "I have extracted the following text from a user's document. Please carefully read and analyze the content. Then, based on the user's question at the end, provide a detailed and helpful response.\n\nExtracted Document Text:\n" +
-                     fileInfo + "\n\nUser's Question:\n" +
-                     input + "\n\nPlease focus on accuracy and relevance, and explain your answer clearly, using examples if helpful.";
+        finalInput = R"(
+                I have extracted the following text from a user's document. Please carefully read and analyze the content.
+                Then, based on the user's question at the end, provide a detailed and helpful response.
+
+                Extracted Document Text:
+                {{fileInfo}}
+
+                User's Question: {{input}}
+
+                Assistant:
+        )";
+
+        finalInput.replace("{{fileInfo}}", fileInfo);
+        finalInput.replace("{{input}}", input);
+
     }else{
-        //add history from massage
+        //add history for massage
+        finalInput = R"(
+                You are a helpful assistant. The following is a conversation history.
+                Only consider relevant messages when generating your answer. Ignore unrelated messages.
+
+                Chat History:
+                {{history}}
+
+                Current user message:
+                User: {{input}}
+
+                Assistant:
+        )";
+
         finalInput.replace("{{history}}", m_messageList->history());
         finalInput.replace("{{input}}", input);
     }
+
+    qInfo()<<finalInput;
 
     m_provider->prompt(finalInput, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),

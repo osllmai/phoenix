@@ -68,7 +68,7 @@ void Download::onDownloadFinished() {
         emit downloadFailed(m_id, reply->errorString());
     }
     reply->deleteLater();
-    this->reply = nullptr;
+    // this->reply = nullptr;
 }
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){

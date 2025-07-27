@@ -47,8 +47,6 @@ void SpeechToText::start() {
         return;
     }
 
-    qInfo()<<"-------------------------------"<<m_modelPath<< "\n "<<audioPath;
-
     setText("");
     setModelInProcess(true);
 

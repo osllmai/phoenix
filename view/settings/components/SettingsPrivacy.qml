@@ -325,7 +325,10 @@ Item {
                 <h2>Contact Us:</h2>
 
                 <p>If you have any questions about this Privacy Policy, You can contact us at support: <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></p>
-<hr/>
+
+<br>
+<br>
+<br>
 "
 
             onLinkActivated: function(link) {

@@ -513,6 +513,7 @@ endif()
 
 #copy whisper
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
 
 #copy ConvertToMD
 configure_file(${CMAKE_SOURCE_DIR}/resources/docling/convert/convert_to_md.exe ${BIN_DIR}/docling/convert/convert_to_md.exe COPYONLY)
