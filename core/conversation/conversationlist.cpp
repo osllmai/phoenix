@@ -87,7 +87,7 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     return roles;
 }
 
-void ConversationList::addRequest(const QString &firstPrompt){
+void ConversationList::addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
     QStringList selectedWords;
@@ -108,7 +108,7 @@ void ConversationList::addRequest(const QString &firstPrompt){
     if(m_modelPromptTemplate != "")
         _propmtTemplate = m_modelPromptTemplate;
 
-    emit requestInsertConversation(title, firstPrompt, QDateTime::currentDateTime(), m_modelIcon, false, true,
+    emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, true,
                     _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
 }
 
@@ -203,7 +203,8 @@ void ConversationList::setModelRequest(const int id, const QString &text,  const
     }
 }
 
-void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QDateTime date, const QString &icon,
+void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QString &fileName,
+                                       const QString &fileInfo, const QDateTime date, const QString &icon,
                                        const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                                        const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                        const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
@@ -232,16 +233,16 @@ void ConversationList::addConversation(const int id, const QString &title, const
 
         setCurrentConversation(conversation);
         m_currentConversation->loadModel(modelId());
-        m_currentConversation->prompt(description);
+        m_currentConversation->prompt(description, fileName, fileInfo);
         setIsEmptyConversation(false);
     }
 }
 
-void ConversationList::addMessage(const int conversationId, const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like){
+void ConversationList::addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
     Conversation* conversation = findConversationById(conversationId);
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
-    conversation->addMessage(id, text, date, icon, isPrompt, like);
+    conversation->addMessage(id, text, fileName, date, icon, isPrompt, like);
     conversation->setDescription(text);
     conversation->setDate(date);
     conversation->setIcon(icon);
@@ -290,8 +291,8 @@ void ConversationList::readMessages(const int conversationId){
     emit requestReadMessages(conversationId);
 }
 
-void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like){
-    emit requestInsertMessage(conversationId, text, icon, isPrompt, like);
+void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
+    emit requestInsertMessage(conversationId, text, fileName, icon, isPrompt, like);
 }
 
 void ConversationList::updateTextMessage(const int conversationId, const int messageId, const QString &text){

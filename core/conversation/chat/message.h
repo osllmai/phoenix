@@ -18,7 +18,7 @@ class Message : public QObject
 
 public:
     explicit Message(QObject* parent = nullptr) : QObject(parent) {}
-    explicit Message(const int &id, const QString &text, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent = nullptr );
+    explicit Message(const int &id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent = nullptr );
 
     int id() const;
 
@@ -34,17 +34,24 @@ public:
     int like() const;
     void setLike(const int &newLike);
 
+    QString fileName() const;
+    void setFileName(const QString &newFileName);
+
 signals:
     void textChanged();
     void likeChanged();
 
+    void fileNameChanged();
+
 private:
     int m_id;
     QString m_text;
+    QString m_fileName;
     QDateTime m_date;
     QString m_icon;
     bool m_isPrompt;
     int m_like;
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged FINAL)
 };
 
 #endif // MESSAGE_H

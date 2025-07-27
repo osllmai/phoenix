@@ -48,14 +48,14 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
-    Q_INVOKABLE void prompt(const QString &input);
+    Q_INVOKABLE void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
     Q_INVOKABLE void stop();
     Q_INVOKABLE void loadModel(const int id);
     Q_INVOKABLE void unloadModel();
 
     void likeMessageRequest( const int messageId, const int like);
 
-    void addMessage(const int id, const QString &text, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
     const int id() const;
 
@@ -114,7 +114,7 @@ signals:
     void conversationChange();
 
     void requestReadMessages(const int conversationId);
-    void requestInsertMessage(const int conversationId, const QString &text, const QString &icon, bool isPrompt, const int like);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
     void requestUpdateDescriptionText(const int conversationId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);

@@ -108,7 +108,7 @@ ApplicationWindow {
     }
 
     // visible: true
-    title: qsTr("Phoenix v0.1.2")
+    title: qsTr("Phoenix v0.1.2 Beta")
 
     property bool isDesktopSize: width >= 750;
     onIsDesktopSizeChanged: {

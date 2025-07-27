@@ -18,6 +18,7 @@ OfflineProvider::~OfflineProvider() {
         m_process->kill();
         m_process->deleteLater();
     }
+    qCInfo(logOfflineProvider) << "delete Offline provider";
 }
 
 void OfflineProvider::stop() {

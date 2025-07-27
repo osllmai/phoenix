@@ -4,6 +4,18 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QProcess>
+#include <QThread>
+#include <QStandardPaths>
+#include <QFile>
+#include <QFileInfo>
+#include <QDir>
+#include <QRegularExpression>
+#include <iostream>
+#include <regex>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <filesystem>
 
 class SpeechToText : public QObject
 {
@@ -11,16 +23,16 @@ class SpeechToText : public QObject
     QML_ELEMENT
     Q_PROPERTY(QString modelPath READ getModelPath WRITE setModelPath NOTIFY modelPathChanged FINAL)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged FINAL)
-    Q_PROPERTY(bool speechInProcess READ speechInProcess WRITE setSpeechInProcess NOTIFY speechInProcessChanged FINAL)
+    Q_PROPERTY(bool modelInProcess READ modelInProcess WRITE setModelInProcess NOTIFY modelInProcessChanged FINAL)
     Q_PROPERTY(bool modelSelect READ modelSelect WRITE setModelSelect NOTIFY modelSelectChanged FINAL)
+    Q_PROPERTY(bool percent READ percent WRITE setPercent NOTIFY percentChanged FINAL)
 
 public:
     static SpeechToText* instance(QObject* parent);
 
     ~SpeechToText();
 
-    Q_INVOKABLE void startRecording();
-    Q_INVOKABLE void stopRecording();
+    Q_INVOKABLE void start();
 
     QString getModelPath() const;
     void setModelPath(const QString &newModelPath);
@@ -28,17 +40,21 @@ public:
     QString text() const;
     void setText(const QString &newText);
 
-    bool speechInProcess() const;
-    void setSpeechInProcess(bool newSpeechInProcess);
+    bool modelInProcess() const;
+    void setModelInProcess(bool newmodelInProcess);
 
     bool modelSelect() const;
     void setModelSelect(bool newModelSelect);
 
+    bool percent() const;
+    void setPercent(bool newPercent);
+
 signals:
     void modelPathChanged();
     void textChanged();
-    void speechInProcessChanged();
+    void modelInProcessChanged();
     void modelSelectChanged();
+    void percentChanged();
 
 private:
     explicit SpeechToText(QObject *parent = nullptr);
@@ -50,7 +66,10 @@ private:
     QString m_modelPath;
     bool m_modelSelect;
     QString m_text;
-    bool m_speechInProcess;
+    bool m_modelInProcess;
+    bool m_percent;
+
+    bool isCudaAvailable();
 };
 
 #endif // SPEECHTOTEXT_H

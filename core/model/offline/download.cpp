@@ -9,7 +9,7 @@ Download::Download(const int id, const QString &url, const QString &modelPath, Q
 }
 
 Download::~Download(){
-    delete reply;
+    // delete reply;
 }
 
 int Download::id() const{
@@ -68,7 +68,7 @@ void Download::onDownloadFinished() {
         emit downloadFailed(m_id, reply->errorString());
     }
     reply->deleteLater();
-    this->reply = nullptr;
+    // this->reply = nullptr;
 }
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){

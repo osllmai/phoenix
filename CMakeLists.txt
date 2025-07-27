@@ -32,6 +32,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight/languageHighlightingRules
+    ${CMAKE_SOURCE_DIR}/core/library/convert
+    ${CMAKE_SOURCE_DIR}/core/library/speech
     ${CMAKE_SOURCE_DIR}/core/developer/
     ${CMAKE_SOURCE_DIR}/core/developer/code
     ${CMAKE_SOURCE_DIR}/core/developer/code/code_generator
@@ -56,8 +58,10 @@ qt_add_executable(app${PROJECT_NAME}
 
     core/database.h core/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
-    core/speechtotext.h core/speechtotext.cpp
     core/clipboard.h core/clipboard.cpp
+
+    core/log/logger.h core/log/logger.cpp
+    core/log/logcategories.h core/log/logcategories.cpp
 
     core/model/BackendType.h
     core/model/model.h core/model/model.cpp
@@ -85,6 +89,69 @@ qt_add_executable(app${PROJECT_NAME}
     core/provider/onlineprovider.h core/provider/onlineprovider.cpp
     core/provider/offlineprovider.h core/provider/offlineprovider.cpp
     core/provider/provider.h core/provider/provider.cpp
+
+    core/developer/codedeveloperlist.h core/developer/codedeveloperlist.cpp
+    core/developer/code/programlanguage.h core/developer/code/programlanguage.cpp
+    core/developer/code/codegenerator.h core/developer/code/codegenerator.cpp
+    core/developer/code/code_generator/curlcodegenerator.h core/developer/code/code_generator/curlcodegenerator.cpp
+    core/developer/code/code_generator/pythonrequestscodegenerator.h core/developer/code/code_generator/pythonrequestscodegenerator.cpp
+    core/developer/code/code_generator/nodejsaxioscodegenerator.h core/developer/code/code_generator/nodejsaxioscodegenerator.cpp
+    core/developer/code/code_generator/javascriptfetchcodegenerator.h core/developer/code/code_generator/javascriptfetchcodegenerator.cpp
+
+    core/developer/server/crudapi.h core/developer/server/crudapi.cpp
+    core/developer/server/entities/modelapi.h core/developer/server/entities/modelapi.cpp
+    core/developer/server/entities/chatapi.h core/developer/server/entities/chatapi.cpp
+    core/developer/server/chatserver.h core/developer/server/chatserver.cpp
+
+    core/library/speech/speechtotext.h core/library/speech/speechtotext.cpp
+    core/library/speech/audiorecorder.h core/library/speech/audiorecorder.cpp
+
+    core/library/convert/converttomd.h core/library/convert/converttomd.cpp
+
+    core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
+    core/library/textprocessor/codecolors.h core/library/textprocessor/codecolors.cpp
+    core/library/textprocessor/highlight/syntaxhighlighter.h core/library/textprocessor/highlight/syntaxhighlighter.cpp
+    core/library/textprocessor/highlight/highlightingcategory.h
+    core/library/textprocessor/highlight/language.h
+    core/library/textprocessor/highlight/highlightingrule.h
+    core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp
+    core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
 )
 
 qt_add_resources(app${PROJECT_NAME}
@@ -171,6 +238,23 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/notFoundModel.svg
         media/icon/listView.svg
         media/icon/gridView.svg
+        media/icon/selectFile.svg
+
+        media/icon/fileCsv.svg
+        media/icon/fileDocx.svg
+        media/icon/fileHtm.svg
+        media/icon/fileHtml.svg
+        media/icon/fileJpg.svg
+        media/icon/fileJson.svg
+        media/icon/fileMd.svg
+        media/icon/fileMp3Audio.svg
+        media/icon/filePdf.svg
+        media/icon/filePng.svg
+        media/icon/filePptx.svg
+        media/icon/fileWav.svg
+        media/icon/fileXlsx.svg
+        media/icon/fileXml.svg
+
 
         media/icon/maximizeH.svg
         media/icon/maximize.svg
@@ -211,8 +295,6 @@ qt_add_qml_module(app${PROJECT_NAME}
     QML_FILES
         view/Main.qml
 
-
-
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
@@ -226,30 +308,24 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/button/VerificationDialog.qml
         view/component_library/button/NotificationDialog.qml
         view/component_library/button/MyToolTip.qml
-
-
-
+        view/component_library/button/MyCopyButton.qml
+        view/component_library/model/ModelSelectComboBox.qml
         view/component_library/model_settings/components/APISettings.qml
-
-
+        view/component_library/model_settings/components/SocketSettings.qml
+        view/component_library/model_settings/components/button/ModelTextEdit.qml
+        view/component_library/model_settings/components/button/ModelTextCopyBox.qml
 
         view/AppMenu.qml
         view/AppMenuDrawer.qml
         view/menu/MyMenuButton.qml
         view/menu/MyOpenMenuButton.qml
 
-
-
         view/AppBody.qml
-
-
 
         view/home/HomeView.qml
         view/home/components/HomeHeader.qml
         view/home/components/FeatureList.qml
         view/home/components/FeatureDelegate.qml
-
-
 
         view/model/ModelsView.qml
         view/model/components/ModelHeader.qml
@@ -264,6 +340,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/model/components/offline/components/OfflineRowDelegate.qml
         view/model/components/offline/components/components/DownloadButton.qml
         view/model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml
+        view/model/components/offline/components/components/OfflineDelegateInfoBox.qml
+        view/model/components/offline/components/components/OfflineInformationModel.qml
 
         view/model/components/online/OnlineModelView.qml
         view/model/components/online/OnlineHeader.qml
@@ -275,8 +353,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/model/components/online/components/components/InputApikey.qml
         view/model/components/online/components/components/ApikeyButton.qml
         view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml
-
-
+        view/model/components/online/components/components/OnlineDelegateInfoBox.qml
+        view/model/components/online/components/components/OnlineInformationModel.qml
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -287,11 +365,13 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/chat/components/chat/InputPrompt.qml
         view/chat/components/chat/MessageDelegate.qml
         view/chat/components/chat/MyMessageList.qml
+        view/chat/components/chat/components/FileConverteInputPrompt.qml
+        view/chat/components/chat/components/AudioRecoderInput.qml
+        view/chat/components/chat/components/TextInput.qml
         view/chat/components/history/HistoryHeader.qml
         view/chat/components/history/HistoryBody.qml
         view/chat/components/history/HistoryList.qml
         view/chat/components/history/HistoryDelegate.qml
-
 
 
         view/component_library/model_settings/ModelSettingsView.qml
@@ -304,8 +384,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/model_settings/components/button/ModelSettingsSlider.qml
         view/component_library/model_settings/components/button/ModelSettingsSwitch.qml
         view/component_library/model_settings/components/button/ModelMenuSettings.qml
-
-
 
         view/component_library/model/ModelSelectView.qml
         view/component_library/model/components/ModelSelectHeader.qml
@@ -320,8 +398,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/component_library/model/components/offline/OfflineCurrentModelinformation.qml
         view/component_library/model/components/offline/OfflineCurrentView.qml
 
-
-
         view/developer/DeveloperView.qml
         view/developer/components/DeveloperHeader.qml
         view/developer/components/DeveloperBody.qml
@@ -332,8 +408,7 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/developer/components/model_settings/ModelSettingsDeveloperView.qml
         view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml
         view/developer/components/code/CodeDeveloper.qml
-
-
+        view/developer/components/code/EditCodeDeveloper.qml
 
         view/SettingsDialog.qml
         view/settings/SettingsHeader.qml
@@ -350,8 +425,6 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/components/ThemeOption.qml
         view/settings/components/OpenMenuSettingsButton.qml
 
-
-
         view/AppFooter.qml
         view/component_footer/SystemMonitoring.qml
         view/component_footer/Downloading.qml
@@ -361,75 +434,6 @@ qt_add_qml_module(app${PROJECT_NAME}
     RESOURCES
         view/component_library/style/qmldir
     RESOURCE_PREFIX /
-    SOURCES core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
-    SOURCES core/library/textprocessor/highlight/syntaxhighlighter.h core/library/textprocessor/highlight/syntaxhighlighter.cpp
-    SOURCES core/library/textprocessor/highlight/highlightingcategory.h
-    SOURCES core/library/textprocessor/highlight/language.h
-    SOURCES core/library/textprocessor/highlight/highlightingrule.h
-    SOURCES core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp
-    SOURCES core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
-
-    SOURCES core/developer/codedeveloperlist.h core/developer/codedeveloperlist.cpp
-    SOURCES core/developer/code/programlanguage.h core/developer/code/programlanguage.cpp
-    SOURCES core/developer/code/codegenerator.h core/developer/code/codegenerator.cpp
-    SOURCES core/developer/code/code_generator/curlcodegenerator.h core/developer/code/code_generator/curlcodegenerator.cpp
-    SOURCES core/developer/code/code_generator/pythonrequestscodegenerator.h core/developer/code/code_generator/pythonrequestscodegenerator.cpp
-    SOURCES core/developer/code/code_generator/nodejsaxioscodegenerator.h core/developer/code/code_generator/nodejsaxioscodegenerator.cpp
-    SOURCES core/developer/code/code_generator/javascriptfetchcodegenerator.h core/developer/code/code_generator/javascriptfetchcodegenerator.cpp
-    SOURCES core/log/logger.h core/log/logger.cpp
-    SOURCES core/log/logcategories.h core/log/logcategories.cpp
-    QML_FILES view/component_library/model/ModelSelectComboBox.qml
-    SOURCES core/developer/server/crudapi.h core/developer/server/crudapi.cpp
-    SOURCES core/developer/server/entities/modelapi.h core/developer/server/entities/modelapi.cpp
-    SOURCES core/developer/server/entities/chatapi.h core/developer/server/entities/chatapi.cpp
-    SOURCES core/developer/server/chatserver.h core/developer/server/chatserver.cpp
-    QML_FILES view/developer/components/code/EditCodeDeveloper.qml
-    QML_FILES view/component_library/model_settings/components/SocketSettings.qml
-    QML_FILES view/component_library/model_settings/components/button/ModelTextEdit.qml
-    QML_FILES view/component_library/model_settings/components/button/ModelTextCopyBox.qml
-    SOURCES core/library/textprocessor/codecolors.h core/library/textprocessor/codecolors.cpp
-    QML_FILES view/component_library/button/MyCopyButton.qml
-    QML_FILES view/model/components/offline/components/components/OfflineDelegateInfoBox.qml
-    QML_FILES view/model/components/online/components/components/OnlineDelegateInfoBox.qml
-    QML_FILES view/model/components/offline/components/components/OfflineInformationModel.qml
-    QML_FILES view/model/components/online/components/components/OnlineInformationModel.qml
-
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -509,6 +513,10 @@ endif()
 
 #copy whisper
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
+file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
+
+#copy ConvertToMD
+configure_file(${CMAKE_SOURCE_DIR}/resources/docling/convert/convert_to_md.exe ${BIN_DIR}/docling/convert/convert_to_md.exe COPYONLY)
 
 #copy exe provider for offline-model
 if(WIN32)

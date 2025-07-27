@@ -65,13 +65,21 @@
         <file>chat/components/HistoryDrawer.qml</file>
         <file>chat/components/ModelSettingsChatDrawer.qml</file>
         <file>chat/components/ModelChatComboBox.qml</file>
+
         <file>chat/components/chat/InputPrompt.qml</file>
         <file>chat/components/chat/MessageDelegate.qml</file>
         <file>chat/components/chat/MyMessageList.qml</file>
+        <file>chat/components/chat/components/FileConverteInputPrompt.qml</file>
+        <file>chat/components/chat/components/AudioRecoderInput.qml</file>
+        <file>chat/components/chat/components/TextInput.qml</file>
+
         <file>chat/components/history/HistoryHeader.qml</file>
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
         <file>chat/components/history/HistoryDelegate.qml</file>
+
+
+
         <file>component_library/model_settings/ModelSettingsView.qml</file>
         <file>component_library/model_settings/ModelSettingsHeader.qml</file>
         <file>component_library/model_settings/ModelSettingsBody.qml</file>

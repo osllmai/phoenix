@@ -104,5 +104,21 @@
         <file>icon/notFoundModel.svg</file>
         <file>icon/gridView.svg</file>
         <file>icon/listView.svg</file>
+        <file>icon/selectFile.svg</file>
+        <file>icon/fileCsv.svg</file>
+        <file>icon/fileDocx.svg</file>
+        <file>icon/fileHtm.svg</file>
+        <file>icon/fileHtml.svg</file>
+        <file>icon/fileJpg.svg</file>
+        <file>icon/fileJson.svg</file>
+        <file>icon/fileMd.svg</file>
+        <file>icon/fileMp3Audio.svg</file>
+        <file>icon/filePdf.svg</file>
+        <file>icon/filePng.svg</file>
+        <file>icon/filePptx.svg</file>
+        <file>icon/fileWav.svg</file>
+        <file>icon/fileXlsx.svg</file>
+        <file>icon/fileXml.svg</file>
+
     </qresource>
 </RCC>

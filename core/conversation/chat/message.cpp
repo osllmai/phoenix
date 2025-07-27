@@ -1,7 +1,7 @@
 #include "message.h"
 
-Message::Message(const int &id, const QString &text, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent):
-    m_id(id), m_text(text),m_date(date), m_icon(icon), m_isPrompt(isPrompt), m_like(like), QObject(parent){}
+Message::Message(const int &id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent):
+    m_id(id), m_text(text), m_fileName(fileName), m_date(date), m_icon(icon), m_isPrompt(isPrompt), m_like(like), QObject(parent){}
 
 int Message::id() const {return m_id;}
 
@@ -25,4 +25,12 @@ void Message::setLike(const int &newLike){
         return;
     m_like = newLike;
     emit likeChanged();
+}
+
+QString Message::fileName() const{return m_fileName;}
+void Message::setFileName(const QString &newFileName){
+    if (m_fileName == newFileName)
+        return;
+    m_fileName = newFileName;
+    emit fileNameChanged();
 }

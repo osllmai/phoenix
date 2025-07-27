@@ -23,6 +23,8 @@ QVariant MessageList::data(const QModelIndex &index, int role) const {
         return message->id();
     case TextRole:
         return message->text();
+    case FileNameRole:
+        return message->fileName();
     case DateRole:
         return dateCalculation(message->date());
     case IconRole:
@@ -40,6 +42,7 @@ QHash<int, QByteArray> MessageList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[TextRole] = "text";
+    roles[FileNameRole] = "fileName";
     roles[DateRole] = "date";
     roles[IconRole] = "icon";
     roles[IsPromptRole] = "isPrompt";
@@ -76,13 +79,13 @@ bool MessageList::setData(const QModelIndex &index, const QVariant &value, int r
     return false;
 }
 
-void MessageList::addMessage(const int id, const QString &text, QDateTime date, const QString &icon, const bool isPrompt, const int like) {
+void MessageList::addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, const bool isPrompt, const int like) {
     beginInsertRows(QModelIndex(), m_messages.size(), m_messages.size());
-    Message* message = new Message(id, text, date, icon, isPrompt, like, this);
+    Message* message = new Message(id, text, fileName, date, icon, isPrompt, like, this);
     m_messages.append(message);
     endInsertRows();
     emit countChanged();
-    emit requestAddMessage(id, text, date, icon, isPrompt, like);
+    emit requestAddMessage(id, text, fileName, date, icon, isPrompt, like);
 }
 
 Message* MessageList::findMessageById(const int id) {

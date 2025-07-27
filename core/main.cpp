@@ -7,6 +7,7 @@
 
 #include "database.h"
 #include "speechtotext.h"
+#include "audiorecorder.h"
 #include "systemmonitor.h"
 
 #include "./model/companylist.h"
@@ -34,6 +35,8 @@
 #include "./log/logcategories.h"
 
 #include "./library/textprocessor/codecolors.h"
+
+#include "./converttomd.h"
 
 int main(int argc, char *argv[])
 {
@@ -77,6 +80,9 @@ int main(int argc, char *argv[])
 
         SpeechToText* speechToText = SpeechToText::instance(&engine);
         engine.rootContext()->setContextProperty("speechToText", speechToText);
+
+        AudioRecorder* audioRecorder = AudioRecorder::instance(&engine);
+        engine.rootContext()->setContextProperty("audioRecorder", audioRecorder);
 
         CodeDeveloperList* codeDeveloperList = CodeDeveloperList::instance(&engine);
         engine.rootContext()->setContextProperty("codeDeveloperList", codeDeveloperList);
@@ -141,6 +147,8 @@ int main(int argc, char *argv[])
         SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
         engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 
+        ConvertToMD* convertToMD = ConvertToMD::instance(&engine);
+        engine.rootContext()->setContextProperty("convertToMD", convertToMD);
 
         ConversationList* conversationList = ConversationList::instance(&engine);
         engine.rootContext()->setContextProperty("conversationList", conversationList);

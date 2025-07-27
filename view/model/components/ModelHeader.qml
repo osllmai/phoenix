@@ -10,8 +10,12 @@ Item{
     function setModelPages(page){
         if(page === "offline"){
             offlineModel.clicked()
+            offlineModel.checked = true
+            onlineModel.checked = false
         }else if(page === "online"){
             onlineModel.clicked()
+            onlineModel.checked = true
+            offlineModel.checked = false
         }
     }
 

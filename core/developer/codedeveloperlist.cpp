@@ -57,9 +57,63 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
         qCWarning(logDeveloper) << "QCoreApplication instance is null!";
         return;
     }
+}
 
-    //create socket
-   appSocket = QCoreApplication::instance();
+void CodeDeveloperList::runAPI(bool start){
+    m_RunAPIInProcess = true;
+
+    if(start){
+
+        quint16 portAPIArg = portAPI();
+        if (!m_parserModel.value("portAPI").isEmpty())
+            portAPIArg = m_parserModel.value("portAPI").toUShort();
+
+        qCInfo(logDeveloperView) << "Server starting on port:" << portAPIArg;
+
+        auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
+        auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
+
+        m_modelsApi = std::move(modelFactory);
+        m_chatApi = std::move(chatFactory);
+
+        addCrudRoutes("/api/models", m_modelsApi);
+        addCrudRoutes("/api/chat", m_chatApi);
+
+        if (!m_tcpServer->listen(QHostAddress::Any, portAPIArg) || !m_httpServer->bind(m_tcpServer.get())) {
+            qCWarning(logDeveloper) << "Server failed to bind to portAPI:" << portAPIArg;
+            return;
+        }
+
+        quint16 portAPIModel = m_tcpServer->serverPort();
+        qCInfo(logDeveloper) << "HTTP Server running at portAPI:" << portAPIModel;
+
+    }else{
+        m_tcpServer->close();
+        qCInfo(logDeveloper) << "HTTP Server stopped.";
+        qCInfo(logDeveloperView) << "HTTP Server stopped.";
+    }
+
+    m_RunAPIInProcess = false;
+}
+
+void CodeDeveloperList::runSocket(bool start){
+    m_RunSocketInProcess = true;
+
+    if(start){
+
+        quint16 portSocketChat = m_portSocket;
+        m_chatServer = new ChatServer(portSocketChat);
+        qCInfo(logDeveloperView) << "WebSocket Server running at port:" << portSocketChat;
+
+    }else{
+
+        delete m_chatServer;
+        m_chatServer = nullptr;
+        qCInfo(logDeveloperView) << "Stopped WebSocket Server.";
+
+    }
+
+    m_RunSocketInProcess = false;
 }
 
 void CodeDeveloperList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
@@ -150,98 +204,6 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
     qCDebug(logDeveloper) << "CRUD routes added for" << apiPath;
 }
 
-ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
-void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentProgramLanguage) {
-    if (m_currentProgramLanguage == newCurrentProgramLanguage)
-        return;
-
-    CodeGenerator* previousGenerator = nullptr;
-    if (m_currentProgramLanguage != nullptr)
-        previousGenerator = m_currentProgramLanguage->getCodeGenerator();
-
-    if (newCurrentProgramLanguage) {
-        CodeGenerator* newGenerator = nullptr;
-
-        QString modelName = previousGenerator ? previousGenerator->modelName() : "Openai/gpt-4o";
-        quint16 port = previousGenerator ? previousGenerator->port() : 8080;
-
-        bool stream = previousGenerator ? previousGenerator->stream() : true;
-        QString promptTemplate = previousGenerator ? previousGenerator->promptTemplate() : "";
-        QString systemPrompt = previousGenerator ? previousGenerator->systemPrompt() : "";
-        double temperature = previousGenerator ? previousGenerator->temperature() : 0.7;
-        int topK = previousGenerator ? previousGenerator->topK() : 40;
-        double topP = previousGenerator ? previousGenerator->topP() : 0.95;
-        double minP = previousGenerator ? previousGenerator->minP() : 0.05;
-        double repeatPenalty = previousGenerator ? previousGenerator->repeatPenalty() : 1.1;
-        int promptBatchSize = previousGenerator ? previousGenerator->promptBatchSize() : 1;
-        int maxTokens = previousGenerator ? previousGenerator->maxTokens() : 512;
-        int repeatPenaltyTokens = previousGenerator ? previousGenerator->repeatPenaltyTokens() : 64;
-        int contextLength = previousGenerator ? previousGenerator->contextLength() : 2048;
-        int numberOfGPULayers = previousGenerator ? previousGenerator->numberOfGPULayers() : 20;
-        bool topKVisible = previousGenerator ? previousGenerator->topKVisible() : false;
-        bool topPVisible = previousGenerator ? previousGenerator->topPVisible() : false;
-        bool minPVisible = previousGenerator ? previousGenerator->minPVisible() : false;
-        bool repeatPenaltyVisible = previousGenerator ? previousGenerator->repeatPenaltyVisible() : false;
-        bool promptBatchSizeVisible = previousGenerator ? previousGenerator->promptBatchSizeVisible() : false;
-        bool maxTokensVisible = previousGenerator ? previousGenerator->maxTokensVisible() : false;
-        bool repeatPenaltyTokensVisible = previousGenerator ? previousGenerator->repeatPenaltyTokensVisible() : false;
-        bool contextLengthVisible = previousGenerator ? previousGenerator->contextLengthVisible() : false;
-        bool numberOfGPULayersVisible = previousGenerator ? previousGenerator->numberOfGPULayersVisible() : false;
-
-        switch (newCurrentProgramLanguage->id()) {
-        case 0:
-            newGenerator = new CurlCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
-                                                 topK, topP, minP, repeatPenalty, promptBatchSize,
-                                                 maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
-                                                topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
-                                                promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
-                                                contextLengthVisible, numberOfGPULayersVisible);
-            break;
-        case 1:
-            newGenerator = new PythonRequestsCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
-                                                           topK, topP, minP, repeatPenalty, promptBatchSize,
-                                                           maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
-                                                           topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
-                                                           promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
-                                                           contextLengthVisible, numberOfGPULayersVisible);
-            break;
-        case 2:
-            newGenerator = new NodeJsAxiosCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
-                                                        topK, topP, minP, repeatPenalty, promptBatchSize,
-                                                        maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
-                                                        topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
-                                                        promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
-                                                        contextLengthVisible, numberOfGPULayersVisible);
-            break;
-        case 3:
-            newGenerator = new JavascriptFetchCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
-                                                            topK, topP, minP, repeatPenalty, promptBatchSize,
-                                                            maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
-                                                            topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
-                                                            promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
-                                                            contextLengthVisible, numberOfGPULayersVisible);
-            break;
-        default:
-            qCWarning(logDeveloper) << "UnsupportSocketed language ID:" << newCurrentProgramLanguage->id();
-            break;
-        }
-
-        if (newGenerator != nullptr) {
-            newCurrentProgramLanguage->setCodeGenerator(newGenerator);
-
-            if (previousGenerator != nullptr) {
-                delete previousGenerator;
-            }
-
-            qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
-        }
-    }
-
-    m_currentProgramLanguage = newCurrentProgramLanguage;
-    emit currentProgramLanguageChanged();
-    qCInfo(logDeveloper) << "Current language changed to:" << newCurrentProgramLanguage->name();
-}
-
 int CodeDeveloperList::count() const { return m_programLanguags.count(); }
 
 int CodeDeveloperList::rowCount(const QModelIndex &parent) const {
@@ -274,40 +236,10 @@ QHash<int, QByteArray> CodeDeveloperList::roleNames() const {
 
 bool CodeDeveloperList::isRunningAPI() const{return m_isRunningAPI;}
 void CodeDeveloperList::setIsRunningAPI(bool newIsRunningAPI){
-    if (m_isRunningAPI == newIsRunningAPI)
+    if ((m_isRunningAPI == newIsRunningAPI) || m_RunAPIInProcess)
         return;
+    runAPI(newIsRunningAPI);
     m_isRunningAPI = newIsRunningAPI;
-    if(m_isRunningAPI){
-
-        quint16 portAPIArg = portAPI();
-        if (!m_parserModel.value("portAPI").isEmpty())
-            portAPIArg = m_parserModel.value("portAPI").toUShort();
-
-        qCInfo(logDeveloper) << "Developer server starting on portAPI:" << portAPIArg;
-        qCInfo(logDeveloperView) << "Server starting on port:" << portAPIArg;
-
-        auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
-        auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
-
-        m_modelsApi = std::move(modelFactory);
-        m_chatApi = std::move(chatFactory);
-
-        addCrudRoutes("/api/models", m_modelsApi);
-        addCrudRoutes("/api/chat", m_chatApi);
-
-        if (!m_tcpServer->listen(QHostAddress::Any, portAPIArg) || !m_httpServer->bind(m_tcpServer.get())) {
-            qCWarning(logDeveloper) << "Server failed to bind to portAPI:" << portAPIArg;
-            return;
-        }
-
-        quint16 portAPIModel = m_tcpServer->serverPort();
-        qCInfo(logDeveloper) << "HTTP Server running at portAPI:" << portAPIModel;
-
-    }else if (m_httpServer) {
-            m_tcpServer->close();
-            qCInfo(logDeveloper) << "HTTP Server stopped.";
-            qCInfo(logDeveloperView) << "HTTP Server stopped.";
-    }
     emit isRunningAPIChanged();
 }
 
@@ -322,46 +254,11 @@ void CodeDeveloperList::setPortAPI(quint16 newPortAPI){
 
 bool CodeDeveloperList::isRunningSocket() const { return m_isRunningSocket; }
 void CodeDeveloperList::setIsRunningSocket(bool newIsRunningSocket) {
-    if (m_isRunningSocket == newIsRunningSocket)
+    if ((m_isRunningSocket == newIsRunningSocket) || m_RunSocketInProcess)
         return;
+    runSocket(newIsRunningSocket);
     m_isRunningSocket = newIsRunningSocket;
-    if(m_isRunningSocket){
-
-        m_parserChat.setApplicationDescription("Chat with Phoenix");
-        m_parserChat.addHelpOption();
-
-        QCommandLineOption dbgOption(QStringList() << "d" << "debug",
-                                     QCoreApplication::translate("main", "Debug output [default: off]."));
-        m_parserChat.addOption(dbgOption);
-
-
-        QCommandLineOption portSocketOption(QStringList() << "p" << "portSocket",
-                                            QCoreApplication::translate("main", "portSocket for ChatServer [default: 8080]."),
-                                            QCoreApplication::translate("main", "portSocket"), QLatin1String(QString::number(static_cast<int>(portSocket())).toLatin1()));
-        m_parserChat.addOption(portSocketOption);
-        m_parserChat.process(*appSocket);
-        bool debug = m_parserChat.isSet(dbgOption);
-        quint16 portSocketChat = m_parserChat.value(portSocketOption).toInt();
-
-        m_chatServer = new ChatServer(portSocketChat, debug);
-
-        qCInfo(logDeveloper) << "WebSocket Server running at portSocket:" << portSocketChat;
-        qCInfo(logDeveloperView) << "WebSocket Server running at port:" << portSocketChat;
-
-        emit isRunningSocketChanged();
-
-        qCInfo(logDeveloper) << "Developer server started successfully.";
-    }else{
-        if (m_chatServer) {
-            m_chatServer->closeServer();
-            delete m_chatServer;
-            m_chatServer = nullptr;
-        }
-        qCInfo(logDeveloper) << "Stopped WebSocket Server.";
-        qCInfo(logDeveloperView) << "Stopped WebSocket Server.";
-    }
     emit isRunningSocketChanged();
-    qCInfo(logDeveloper) << "Socket isRunning set to" << newIsRunningSocket;
 }
 
 quint16 CodeDeveloperList::portSocket() const { return m_portSocket; }
@@ -433,3 +330,96 @@ void CodeDeveloperList::setModelSelect(bool newModelSelect){
     m_modelSelect = newModelSelect;
     emit modelSelectChanged();
 }
+
+ProgramLanguage *CodeDeveloperList::getCurrentProgramLanguage() const { return m_currentProgramLanguage; }
+void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentProgramLanguage) {
+    if (m_currentProgramLanguage == newCurrentProgramLanguage)
+        return;
+
+    CodeGenerator* previousGenerator = nullptr;
+    if (m_currentProgramLanguage != nullptr)
+        previousGenerator = m_currentProgramLanguage->getCodeGenerator();
+
+    if (newCurrentProgramLanguage) {
+        CodeGenerator* newGenerator = nullptr;
+
+        QString modelName = previousGenerator ? previousGenerator->modelName() : "Openai/gpt-4o";
+        quint16 port = previousGenerator ? previousGenerator->port() : 8080;
+
+        bool stream = previousGenerator ? previousGenerator->stream() : true;
+        QString promptTemplate = previousGenerator ? previousGenerator->promptTemplate() : "";
+        QString systemPrompt = previousGenerator ? previousGenerator->systemPrompt() : "";
+        double temperature = previousGenerator ? previousGenerator->temperature() : 0.7;
+        int topK = previousGenerator ? previousGenerator->topK() : 40;
+        double topP = previousGenerator ? previousGenerator->topP() : 0.95;
+        double minP = previousGenerator ? previousGenerator->minP() : 0.05;
+        double repeatPenalty = previousGenerator ? previousGenerator->repeatPenalty() : 1.1;
+        int promptBatchSize = previousGenerator ? previousGenerator->promptBatchSize() : 1;
+        int maxTokens = previousGenerator ? previousGenerator->maxTokens() : 512;
+        int repeatPenaltyTokens = previousGenerator ? previousGenerator->repeatPenaltyTokens() : 64;
+        int contextLength = previousGenerator ? previousGenerator->contextLength() : 2048;
+        int numberOfGPULayers = previousGenerator ? previousGenerator->numberOfGPULayers() : 20;
+        bool topKVisible = previousGenerator ? previousGenerator->topKVisible() : false;
+        bool topPVisible = previousGenerator ? previousGenerator->topPVisible() : false;
+        bool minPVisible = previousGenerator ? previousGenerator->minPVisible() : false;
+        bool repeatPenaltyVisible = previousGenerator ? previousGenerator->repeatPenaltyVisible() : false;
+        bool promptBatchSizeVisible = previousGenerator ? previousGenerator->promptBatchSizeVisible() : false;
+        bool maxTokensVisible = previousGenerator ? previousGenerator->maxTokensVisible() : false;
+        bool repeatPenaltyTokensVisible = previousGenerator ? previousGenerator->repeatPenaltyTokensVisible() : false;
+        bool contextLengthVisible = previousGenerator ? previousGenerator->contextLengthVisible() : false;
+        bool numberOfGPULayersVisible = previousGenerator ? previousGenerator->numberOfGPULayersVisible() : false;
+
+        switch (newCurrentProgramLanguage->id()) {
+        case 0:
+            newGenerator = new CurlCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
+                                                 topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                 maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                 topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                 promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                 contextLengthVisible, numberOfGPULayersVisible);
+            break;
+        case 1:
+            newGenerator = new PythonRequestsCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
+                                                           topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                           maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                           topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                           promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                           contextLengthVisible, numberOfGPULayersVisible);
+            break;
+        case 2:
+            newGenerator = new NodeJsAxiosCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
+                                                        topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                        maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                        topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                        promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                        contextLengthVisible, numberOfGPULayersVisible);
+            break;
+        case 3:
+            newGenerator = new JavascriptFetchCodeGenerator(modelName, port, stream, promptTemplate, systemPrompt, temperature,
+                                                            topK, topP, minP, repeatPenalty, promptBatchSize,
+                                                            maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers,
+                                                            topKVisible, topPVisible, minPVisible, repeatPenaltyVisible,
+                                                            promptBatchSizeVisible, maxTokensVisible, repeatPenaltyTokensVisible,
+                                                            contextLengthVisible, numberOfGPULayersVisible);
+            break;
+        default:
+            qCWarning(logDeveloper) << "UnsupportSocketed language ID:" << newCurrentProgramLanguage->id();
+            break;
+        }
+
+        if (newGenerator != nullptr) {
+            newCurrentProgramLanguage->setCodeGenerator(newGenerator);
+
+            if (previousGenerator != nullptr) {
+                delete previousGenerator;
+            }
+
+            qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
+        }
+    }
+
+    m_currentProgramLanguage = newCurrentProgramLanguage;
+    emit currentProgramLanguageChanged();
+    qCInfo(logDeveloper) << "Current language changed to:" << newCurrentProgramLanguage->name();
+}
+

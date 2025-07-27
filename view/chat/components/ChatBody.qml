@@ -17,12 +17,20 @@ Item {
     }
 
     function requestEmptyTheInput(){
-        inputBoxId.requestEmptyTheInput()
-        inputBoxId2.requestEmptyTheInput()
+        inputBoxId.textInput = ""
+        inputBoxId2.textInput = ""
     }
 
     function goToEnd(){
         myMessageView.goToEnd();
+    }
+
+    property string textInput: speechToText.text
+    onTextInputChanged: {
+        if(conversationList.isEmptyConversation)
+            inputBoxId2.textInput  = chatBodyBoxId.textInput
+        else if(!conversationList.isEmptyConversation)
+            inputBoxId.textInput  = chatBodyBoxId.textInput
     }
 
     Column{
@@ -40,16 +48,31 @@ Item {
             id: inputBoxId
             Connections{
                 target: inputBoxId
-                function onSendPrompt(prompt){
-                    if((conversationList.modelSelect) && (prompt !== "")){
+                function onSendPrompt(prompt) {
+                    const hasPrompt = prompt !== "";
+                    if (conversationList.modelSelect && hasPrompt) {
                         myMessageView.goToEnd()
-                        conversationList.currentConversation.prompt(prompt)
+                        conversationList.currentConversation.prompt(prompt,
+                                                                    (convertToMD.fileIsSelect? convertToMD.filePath:""),
+                                                                    (convertToMD.fileIsSelect? convertToMD.textMD:""))
                         chatBodyBoxId.requestEmptyTheInput()
-                    }else if((prompt !== "")){
-                        notificationDialogId.open()
-                        chatBodyBoxId.openModelList()
+                    } else if (hasPrompt) {
+                        notificationDialogId.open();
+                        chatBodyBoxId.openModelList();
                     }
                 }
+
+                // function onSendPrompt(prompt){
+                //     if((conversationList.modelSelect) && (prompt !== "")){
+                //         myMessageView.goToEnd()
+                //         conversationList.currentConversation.prompt(prompt)
+                //         chatBodyBoxId.requestEmptyTheInput()
+                //     }else if((prompt !== "")){
+                //         notificationDialogId.open()
+                //         chatBodyBoxId.openModelList()
+                //     }
+                // }
+
                 function onOpenModelIsLoaded(){
                     modelIsloadedDialogId.open()
                 }
@@ -95,15 +118,29 @@ Item {
             id:inputBoxId2
             Connections{
                 target: inputBoxId2
-                function onSendPrompt(prompt){
-                    if((conversationList.modelSelect) && (prompt !== "")){
-                        conversationList.addRequest(prompt)
+                function onSendPrompt(prompt) {
+                    const hasPrompt = prompt !== "";
+                    if (conversationList.modelSelect && hasPrompt) {
+                        conversationList.addRequest(prompt,
+                                                    (convertToMD.fileIsSelect? convertToMD.filePath:""),
+                                                    (convertToMD.fileIsSelect? convertToMD.textMD:""))
                         chatBodyBoxId.requestEmptyTheInput()
-                    }else if((prompt !== "")){
-                        notificationDialogId.open()
-                        chatBodyBoxId.openModelList()
+                    } else if (hasPrompt) {
+                        notificationDialogId.open();
+                        chatBodyBoxId.openModelList();
                     }
                 }
+
+
+                // function onSendPrompt(prompt){
+                //     if((conversationList.modelSelect) && (prompt !== "")){
+                //         conversationList.addRequest(prompt)
+                //         chatBodyBoxId.requestEmptyTheInput()
+                //     }else if((prompt !== "")){
+                //         notificationDialogId.open()
+                //         chatBodyBoxId.openModelList()
+                //     }
+                // }
             }
         }
         // Flow{

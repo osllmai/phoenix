@@ -176,7 +176,7 @@ T.Button {
                     width: 27; height: 27
                     y: deleteId.y + 4
                     myIcon: model.pinned? "qrc:/media/icon/pinFill.svg": "qrc:/media/icon/pin.svg"
-                    myTextToolTip:  model.pinned? "DisPin": "Pin"
+                    myTextToolTip:  model.pinned? "Pin removed": "Pin"
                     iconType: Style.RoleEnum.IconType.Primary
                     Connections{
                         target: pinId

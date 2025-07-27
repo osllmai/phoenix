@@ -56,7 +56,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             enabled: false
-            width: 120; height: 120
+            width: 80; height: 80
         }
     }
     Item{

@@ -19,21 +19,34 @@ Item {
 
         TextArea {
             id: textId
+            textFormat: TextEdit.RichText
+            wrapMode: TextEdit.Wrap
+            readOnly: true
+            // clip: true
+            focus: false
+            horizontalAlignment: Text.AlignJustify
+            width: parent.width
+            anchors.fill: parent
+            anchors.margins: 10
+            color: Style.Colors.textInformation
+            font.pixelSize: 14
+            selectionColor: "blue"
+            selectedTextColor: "white"
             text: "<h1>Terms of Use:</h1>
 <p><b>Established &amp; Effective Date:</b> January 01, 2024<br><b>Update:</b> April 26, 2025</p>
-<p>Please read these terms of use (agreement) carefully before using the services offered by Durabuy American Import Export LLC (Company). By visiting the website <a href='https://osllm.ai' style='color:inherit;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:inherit;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
+<p>Please read these terms of use (agreement) carefully before using the services offered by Durabuy American Import Export LLC (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
 <ul>
 <li><b>Country refers to:</b> United States</li>
 <li><b>Country:</b> United States</li>
 <li><b>Company:</b> Durabuy American Import Export LLC (referred to as the Company, We, Us, or Our)</li>
 <li><b>Address:</b> 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>
 <li><b>Phone:</b> +1 (971) 400-2132</li>
-<li><b>Website:</b> <a href='https://osllm.ai' style='color:inherit;'>osllm.ai</a></li>
-<li><b>Email:</b> <a href='mailto:support@osllm.ai' style='color:inherit;'>support@osllm.ai</a></li>
+<li><b>Website:</b> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;' >osllm.ai</a></li>
+<li><b>Email:</b> <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></li>
 </ul>
 
 <h2>Children's Privacy:</h2>
-<p>The Company does not knowingly collect or solicit personal information from anyone under the age of 13, nor does it knowingly allow such individuals to register for the Services. If you are under 13 years of age, please do not attempt to register for the Services or provide any personal information to us, including your name, address, telephone number, or email address. No person under the age of 13 may provide any personal information to the Company or through the Services. In the event that the Company becomes aware that it has collected personal information from a child under age 13 without verifying parental consent, the Company will delete that information promptly. If you believe that the Company might have any information from or about a child under 13, please contact us at <a href='mailto:support@osllm.ai' style='color:inherit;'>support@osllm.ai</a>.</p>
+<p>The Company does not knowingly collect or solicit personal information from anyone under the age of 13, nor does it knowingly allow such individuals to register for the Services. If you are under 13 years of age, please do not attempt to register for the Services or provide any personal information to us, including your name, address, telephone number, or email address. No person under the age of 13 may provide any personal information to the Company or through the Services. In the event that the Company becomes aware that it has collected personal information from a child under age 13 without verifying parental consent, the Company will delete that information promptly. If you believe that the Company might have any information from or about a child under 13, please contact us at <a href='mailto:support@osllm.ai'color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a>.</p>
 
 <h2>User Representations and Warranties:</h2>
 <p>By accessing or using the Services, you represent and warrant to the Company that:</p>
@@ -100,7 +113,7 @@ Item {
 <p>The Service, or certain parts of it, are available only with a paid Subscription. You will be billed in advance on a recurring and periodic basis, either monthly or yearly, depending on the Subscription plan you select when purchasing the Subscription. At the end of each period, your Subscription will automatically renew under the same conditions unless you cancel it or the Company cancels it.</p>
 
 <h2>Subscription Cancellations:</h2>
-<p>You may cancel your Subscription renewal by contacting us at <a href='mailto:support@osllm.ai' style='color:inherit;'>support@osllm.ai</a> or through the dashboard. You will not receive a refund for fees already paid for the current Subscription period, and you will be able to access the Service until the end of your current Subscription period.</p>
+<p>You may cancel your Subscription renewal by contacting us at <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a> or through the dashboard. You will not receive a refund for fees already paid for the current Subscription period, and you will be able to access the Service until the end of your current Subscription period.</p>
 
 <h1>Billing:</h1>
 
@@ -331,108 +344,100 @@ Item {
 <p>In such cases, the Company reserves the right to refund your transactions or hold your funds for a period of up to 180 days from the date of termination, after which they may be released to your account.</p>\
 <p>All provisions of this Agreement that, by their nature, should survive termination, will remain in effect after termination. These provisions include, but are not limited to, ownership provisions, warranty disclaimers, and limitations of liability.</p>\
 
-" +
-            "<h1>Indemnity:</h1>" +
-                              "<p>You agree to indemnify and hold the Company, its parents, subsidiaries, affiliates, officers, and employees harmless from any and all claims or demands made by third parties arising out of or related to your access to or use of the Services, your violation of this Agreement, or the infringement by you or anyone using your account of any intellectual property or other rights of any person or entity. This includes, without limitation, all damages, liabilities, settlements, costs, and attorneys' fees.</p>" +
+<h1>Indemnity:</h1>
+                              <p>You agree to indemnify and hold the Company, its parents, subsidiaries, affiliates, officers, and employees harmless from any and all claims or demands made by third parties arising out of or related to your access to or use of the Services, your violation of this Agreement, or the infringement by you or anyone using your account of any intellectual property or other rights of any person or entity. This includes, without limitation, all damages, liabilities, settlements, costs, and attorneys' fees.</p>
 
-                              "<h1>Limitation of Liability:</h1>" +
-                              "<p>To the fullest extent permissible by law, and notwithstanding anything to the contrary in this Agreement, in no event shall either party, its affiliates, or any licensor or supplier of the Company be liable under or in connection with this Agreement for:</p>" +
+                              <h1>Limitation of Liability:</h1>
+                              <p>To the fullest extent permissible by law, and notwithstanding anything to the contrary in this Agreement, in no event shall either party, its affiliates, or any licensor or supplier of the Company be liable under or in connection with this Agreement for:</p>
 
-                              "<ol>" +
-                              "<li>Any consequential, indirect, special, incidental, or punitive damages;</li>" +
-                              "<li>Any loss of profits, business, revenue, anticipated savings, or wasted expenditure;</li>" +
-                              "<li>Any loss of or damage to data, networks, information systems, reputation, or goodwill; or</li>" +
-                              "<li>The cost of procuring substitute goods or services.</li>" +
-                              "</ol>" +
+                              <ol>
+                              <li>Any consequential, indirect, special, incidental, or punitive damages;</li>
+                              <li>Any loss of profits, business, revenue, anticipated savings, or wasted expenditure;</li>
+                              <li>Any loss of or damage to data, networks, information systems, reputation, or goodwill; or</li>
+                              <li>The cost of procuring substitute goods or services.</li>
+                              </ol>
 
-                              "<p>To the maximum extent permitted by law, the combined aggregate liability of the Company and its affiliates under or in connection with this Agreement, the Software, and the Service shall not exceed the amount actually paid by you to the Company under this Agreement in the three (3) months preceding the date giving rise to the liability.</p>" +
+                              <p>To the maximum extent permitted by law, the combined aggregate liability of the Company and its affiliates under or in connection with this Agreement, the Software, and the Service shall not exceed the amount actually paid by you to the Company under this Agreement in the three (3) months preceding the date giving rise to the liability.</p>
 
-                              "<p>These exclusions and limitations apply:</p>" +
+                              <p>These exclusions and limitations apply:</p>
 
-                              "<ol>" +
-                              "<li>to the maximum extent allowed by applicable law;</li>" +
-                              "<li>even if a party was advised or should have been aware of the possibility of such damages;</li>" +
-                              "<li>even if any remedy in this Agreement fails of its essential purpose; and</li>" +
-                              "<li>regardless of the theory or basis of liability, including but not limited to contract, tort (including negligence or breach of statutory duty), misrepresentation, restitution, or otherwise.</li>" +
-                              "</ol>" +
+                              <ol>
+                              <li>to the maximum extent allowed by applicable law;</li>
+                              <li>even if a party was advised or should have been aware of the possibility of such damages;</li>
+                              <li>even if any remedy in this Agreement fails of its essential purpose; and</li>
+                              <li>regardless of the theory or basis of liability, including but not limited to contract, tort (including negligence or breach of statutory duty), misrepresentation, restitution, or otherwise.</li>
+                              </ol>
 
-                              "<h2>Disclaimer:</h2>" +
-                              "<p>To the maximum extent permitted by law, you acknowledge that the Service, the Company Content, and any related goods or services provided (collectively, the Company Materials) are provided on an as is and as available basis, with all faults and without any warranties, guarantees, or conditions of any kind. This includes but is not limited to express, implied, or statutory warranties or conditions such as merchantability, satisfactory quality, fitness for a particular purpose, non-infringement, title, or reliability, all of which are disclaimed by the Company, its suppliers, and licensors.</p>" +
+                              <h2>Disclaimer:</h2>
+                              <p>To the maximum extent permitted by law, you acknowledge that the Service, the Company Content, and any related goods or services provided (collectively, the Company Materials) are provided on an as is and as available basis, with all faults and without any warranties, guarantees, or conditions of any kind. This includes but is not limited to express, implied, or statutory warranties or conditions such as merchantability, satisfactory quality, fitness for a particular purpose, non-infringement, title, or reliability, all of which are disclaimed by the Company, its suppliers, and licensors.</p>
 
-                              "<p>To the maximum extent permitted by law, the Company and its licensors make no representations, warranties, or guarantees regarding:</p>" +
+                              <p>To the maximum extent permitted by law, the Company and its licensors make no representations, warranties, or guarantees regarding:</p>
 
-                              "<ol>" +
-                              "<li>the effectiveness, reliability, completeness, timeliness, or quality of the Company Materials, the Services, or the Software;</li>" +
-                              "<li>uninterrupted, secure, or error-free use of the Company Materials, Services, or Software;</li>" +
-                              "<li>the operation of networks, data transmission, or connectivity issues; or</li>" +
-                              "<li>compliance with laws, regulations, or other standards.</li>" +
-                              "</ol>" +
+                              <ol>
+                              <li>the effectiveness, reliability, completeness, timeliness, or quality of the Company Materials, the Services, or the Software;</li>
+                              <li>uninterrupted, secure, or error-free use of the Company Materials, Services, or Software;</li>
+                              <li>the operation of networks, data transmission, or connectivity issues; or</li>
+                              <li>compliance with laws, regulations, or other standards.</li>
+                              </ol>
 
-                              "<p>The Company does not warrant that the content available on or generated by the Software or Service is accurate, complete, or error-free, or that the Service or Software is free of viruses or harmful code. The Company reserves the right to make changes to the content, Software, and/or Services at any time without notice.</p>" +
+                              <p>The Company does not warrant that the content available on or generated by the Software or Service is accurate, complete, or error-free, or that the Service or Software is free of viruses or harmful code. The Company reserves the right to make changes to the content, Software, and/or Services at any time without notice.</p>
 
-                              "<p>The Company will not be liable for delays, interruptions, service failures, or issues related to internet use, public networks, or hosting providers. You assume all risks and costs associated with using the Software or Service and agree that the Company is not responsible for any consequences, including technical problems such as slow connections, traffic congestion, or server overloads. Applicable law may not allow the exclusion of certain warranties. To the extent that such exclusions are not allowed, they may not apply to you.</p>" +
+                              <p>The Company will not be liable for delays, interruptions, service failures, or issues related to internet use, public networks, or hosting providers. You assume all risks and costs associated with using the Software or Service and agree that the Company is not responsible for any consequences, including technical problems such as slow connections, traffic congestion, or server overloads. Applicable law may not allow the exclusion of certain warranties. To the extent that such exclusions are not allowed, they may not apply to you.</p>
 
-                              "<h1>Governing Law:</h1>" +
-                              "<p>The laws of the Country, excluding its conflict of law rules, shall govern these Terms and your use of the Service. Your use of the Application may also be subject to local, state, national, or international laws.</p>" +
+                              <h1>Governing Law:</h1>
+                              <p>The laws of the Country, excluding its conflict of law rules, shall govern these Terms and your use of the Service. Your use of the Application may also be subject to local, state, national, or international laws.</p>
 
-                              "<h1>Disputes Resolution:</h1>" +
-                              "<p>If you have any concerns or disputes regarding the Service, you agree to first attempt to resolve the dispute informally by contacting the company.</p>" +
+                              <h1>Disputes Resolution:</h1>
+                              <p>If you have any concerns or disputes regarding the Service, you agree to first attempt to resolve the dispute informally by contacting the company.</p>
 
-                              "<p><b>For European Union (EU) Users:</b></p>" +
-                              "<p>If you are a European Union consumer, you will benefit from any mandatory provisions of the law of the country in which you reside.</p>" +
+                              <p><b>For European Union (EU) Users:</b></p>
+                              <p>If you are a European Union consumer, you will benefit from any mandatory provisions of the law of the country in which you reside.</p>
 
-                              "<p>United States Federal Government End Use Provisions:<br>" +
-                              "If you are a U.S. federal government end user, our Service is classified as a Commercial Item, as defined in 48 C.F.R. §2.101.</p>" +
+                              <p>United States Federal Government End Use Provisions:<br>
+                              If you are a U.S. federal government end user, our Service is classified as a Commercial Item, as defined in 48 C.F.R. §2.101.</p>
 
-                              "<p>United States Legal Compliance:</p>" +
-                              "<p>You represent and warrant that:</p>" +
+                              <p>United States Legal Compliance:</p>
+                              <p>You represent and warrant that:</p>
 
-                              "<ol>" +
-                              "<li>You are not located in a country subject to a United States government embargo or designated by the United States government as a terrorist-supporting country; and</li>" +
-                              "<li>You are not listed on any United States government list of prohibited or restricted parties.</li>" +
-                              "</ol>" +
+                              <ol>
+                              <li>You are not located in a country subject to a United States government embargo or designated by the United States government as a terrorist-supporting country; and</li>
+                              <li>You are not listed on any United States government list of prohibited or restricted parties.</li>
+                              </ol>
 
-                              "<h1>Severability and Waiver:</h1>" +
+                              <h1>Severability and Waiver:</h1>
 
-                              "<h2>Severability:</h2>" +
-                              "<p>If any provision of these Terms is found to be unenforceable or invalid, such provision will be modified and interpreted to accomplish its objectives to the greatest extent possible under applicable law, and the remaining provisions will remain in full force and effect.</p>" +
 
-                              "<h2>Waiver:</h2>" +
-                              "<p>Except as explicitly stated herein, the failure to exercise a right or enforce an obligation under these Terms shall not affect a party's ability to exercise such right or enforce such obligation at any time thereafter, nor shall a waiver of any breach constitute a waiver of any subsequent breach.</p>" +
+                              <h2>Severability:</h2>
+                              <p>If any provision of these Terms is found to be unenforceable or invalid, such provision will be modified and interpreted to accomplish its objectives to the greatest extent possible under applicable law, and the remaining provisions will remain in full force and effect.</p>
 
-                              "<h2>Translation Interpretation:</h2>" +
-                              "<p>These Terms and Conditions may have been translated if made available to you in another language on our Service. In the event of a dispute, the original English version shall prevail.</p>" +
+                              <h2>Waiver:</h2>
+                              <p>Except as explicitly stated herein, the failure to exercise a right or enforce an obligation under these Terms shall not affect a party's ability to exercise such right or enforce such obligation at any time thereafter, nor shall a waiver of any breach constitute a waiver of any subsequent breach.</p>
 
-                              "<h2>Changes to These Terms and Conditions:</h2>" +
-                              "<p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will make reasonable efforts to provide at least 30 days' notice before the new terms take effect. The determination of what constitutes a material change will be made at our sole discretion. By continuing to access or use our Service after the revisions become effective, you agree to be bound by the updated Terms. If you do not agree to the revised Terms, either in whole or in part, you must stop using the Service and website.</p>" +
+                              <h2>Translation Interpretation:</h2>
+                              <p>These Terms and Conditions may have been translated if made available to you in another language on our Service. In the event of a dispute, the original English version shall prevail.</p>
 
-                              "<ul>" +
-                              "<li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>" +
-                              "<li>contact us at</li>" +
-                              "<li><b>Company</b> (referred to as the Company, We, Us, or Our)</li>" +
-                              "<li>refers to: <b>Durabuy American Import Export LLC</b></li>" +
-                              "<li><b>Address</b>: 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>" +
-                              "<li><b>Phone</b>: +1 (971) 400-2132</li>" +
-                              "<li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>" +
-                              "<li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>" +
-                              "</ul>
-<hr/>"
-            color: Style.Colors.textInformation
-            anchors.fill: parent
-            anchors.margins: 10
-            selectionColor: "blue"
-            selectedTextColor: "white"
-            font.pixelSize: 14
-            width: parent.width
-            focus: false
-            readOnly: true
-            clip: true
-            horizontalAlignment: Text.AlignJustify
-            wrapMode: TextEdit.Wrap
-            textFormat: TextEdit.RichText
+
+                              <h2>Changes to These Terms and Conditions:</h2>
+                              <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will make reasonable efforts to provide at least 30 days' notice before the new terms take effect. The determination of what constitutes a material change will be made at our sole discretion. By continuing to access or use our Service after the revisions become effective, you agree to be bound by the updated Terms. If you do not agree to the revised Terms, either in whole or in part, you must stop using the Service and website.</p>
+                              <ul>
+                                  <li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>
+                                  <li>contact us at</li>
+                                  <li><b>Company</b> (referred to as the Company, We, Us, or Our)</li>
+                                  <li>refers to: <b>Durabuy American Import Export LLC</b></li>
+                                  <li><b>Address</b>: 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>
+                                  <li><b>Phone</b>: +1 (971) 400-2132</li>
+                                  <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
+                                  <li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>
+                              </ul>
+<br>
+<br>
+<br>
+"
+
             onLinkActivated: function(link) {
                 Qt.openUrlExternally(link)
             }
+
             Accessible.role: Accessible.Button
             Accessible.name: text
             Accessible.description: qsTr("Select the current chat or edit the chat when in edit mode")
