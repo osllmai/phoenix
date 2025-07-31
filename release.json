@@ -2,6 +2,7 @@
   {
     "version": "0.1.2",
     "title": "Phoenix Initial Public Release",
+    "date": "2025-07-31",
     "notes": "The first release of Phoenix, a local-first chat interface supporting both offline and online LLMs. Phoenix includes a built-in interactive chat UI for immediate use. Alternatively, users can connect to language models via API or socket interfaces, whether running locally or hosted remotely. This version also features voice-to-text and text-to-speech modules, and supports direct chat with PDF documents. The system is developer-friendly and can operate fully offline after setup when using local models.",
     "features": [
       "Support for both offline (local) and online (API/socket) language models",
