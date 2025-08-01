@@ -63,9 +63,6 @@ Item {
 
                 <ul>
                     <li><strong>Country:</strong> United States</li>
-                    <li><strong>Company:</strong> Durabuy American Import Export LLC (referred to as the Company, We, Us, or Our)</li>
-                    <li><strong>Address:</strong> 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>
-                    <li><strong>Phone:</strong> +1 (971) 400-2132</li>
                     <li><strong>Website:</strong> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>osllm.ai</a></li>
                     <li><strong>Email:</strong> <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></li>
                 </ul>

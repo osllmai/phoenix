@@ -119,7 +119,7 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
         emit requestLoadModel(m_model->modelName(), m_model->key());
     }
 
-    const bool stream = json->contains("stream") ? (*json)["stream"].toBool() : m_modelSettings->stream();
+    const bool stream = json->contains("stream")? toBoolFlexible((*json)["stream"], m_modelSettings->stream()): m_modelSettings->stream();
     const QString promptTemplate = json->contains("promptTemplate") ? (*json)["promptTemplate"].toString() : m_modelSettings->promptTemplate();
     const QString systemPrompt = json->contains("systemPrompt") ? (*json)["systemPrompt"].toString() : m_modelSettings->systemPrompt();
     const double temperature = json->contains("temperature") ? (*json)["temperature"].toDouble() : m_modelSettings->temperature();
@@ -207,6 +207,17 @@ void ChatAPI::updateModelSettingsDeveloper(){
                                              m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
                                              m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}
+
+bool ChatAPI::toBoolFlexible(const QJsonValue &value, bool defaultValue) {
+    if (value.isBool()) {
+        return value.toBool();
+    } else if (value.isString()) {
+        QString str = value.toString().trimmed().toLower();
+        if (str == "true") return true;
+        if (str == "false") return false;
+    }
+    return defaultValue;
 }
 
 Provider *ChatAPI::provider() const { return m_provider; }

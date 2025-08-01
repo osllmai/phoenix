@@ -52,8 +52,8 @@ Rectangle{
             MyIcon {
                 id: pdfId
                 anchors.centerIn: parent
-                width: 50
-                height: 50
+                width: 40
+                height: 40
                 myIcon: control.iconForFile(control.filePath)
                 iconType: Style.RoleEnum.IconType.Primary
                 enabled: false
@@ -80,8 +80,8 @@ Rectangle{
                                 ctx.clearRect(0, 0, width, height)
                                 ctx.beginPath()
                                 ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
-                                ctx.lineWidth = 3
-                                ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                ctx.lineWidth = 2
+                                ctx.strokeStyle = Style.Colors.iconPrimaryHoverAndChecked;
                                 ctx.stroke()
                             }
                             Component.onCompleted: requestPaint()

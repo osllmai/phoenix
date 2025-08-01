@@ -40,7 +40,7 @@ void ConvertToMD::startConvert() {
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/docling/convert/convert_to_md.exe";
+        QString exePath = QCoreApplication::applicationDirPath() + "/markitdown/markitdown.exe";
         QStringList arguments;
         arguments << m_filePath;
 
@@ -58,31 +58,33 @@ void ConvertToMD::startConvert() {
             return;
         }
 
-        bool run = false;
+        // bool run = false;
         while (m_process->state() == QProcess::Running) {
             if (m_process->waitForReadyRead(500)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output, output.size());
                 qInfo() << outputString;
 
-                if ((m_textMD == "") && outputString.contains("---- BEGIN MARKDOWN ----") && !run) {
-                    int startIndex = outputString.indexOf("---- BEGIN MARKDOWN ----") + QString("---- BEGIN MARKDOWN ----").length();
-                    int endIndex = outputString.indexOf("---- END MARKDOWN ----");
+                // ---------------------set whisper---------------------
+                // if ((m_textMD == "") && outputString.contains("---- BEGIN MARKDOWN ----") && !run) {
+                //     int startIndex = outputString.indexOf("---- BEGIN MARKDOWN ----") + QString("---- BEGIN MARKDOWN ----").length();
+                //     int endIndex = outputString.indexOf("---- END MARKDOWN ----");
 
-                    QString extracted;
-                    if (endIndex != -1) {
-                        extracted = outputString.mid(startIndex, endIndex - startIndex);
-                    } else {
-                        extracted = outputString.mid(startIndex);
-                    }
+                //     QString extracted;
+                //     if (endIndex != -1) {
+                //         extracted = outputString.mid(startIndex, endIndex - startIndex);
+                //     } else {
+                //         extracted = outputString.mid(startIndex);
+                //     }
 
-                    setTextMD(m_textMD + extracted.trimmed());
-                    run = true;
+                //     setTextMD(m_textMD + extracted.trimmed());
+                //     run = true;
 
-                }else if(run){
-                    setTextMD(m_textMD + outputString);
+                // }else if(run){
+                //     setTextMD(m_textMD + outputString);
 
-                }
+                // }
+                // ---------------------end whisper---------------------
             }
         }
 
@@ -96,6 +98,25 @@ void ConvertToMD::startConvert() {
         delete m_process;
         m_process = nullptr;
         qInfo() << "Recording process finished.";
+
+        // ---------------------set markitdown---------------------
+        QString mdFilePath = QFileInfo(m_filePath).absolutePath() + "/" + QFileInfo(m_filePath).completeBaseName() + ".md";
+        QFile mdFile(mdFilePath);
+        if (mdFile.exists()) {
+            if (mdFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QString markdownText = QString::fromUtf8(mdFile.readAll());
+                mdFile.close();
+
+                QMetaObject::invokeMethod(this, [this, markdownText]() {
+                    setTextMD(markdownText);
+                }, Qt::QueuedConnection);
+            } else {
+                qWarning() << "Cannot open markdown file for reading:" << mdFilePath;
+            }
+        } else {
+            qWarning() << "Markdown file does not exist:" << mdFilePath;
+        }
+        // ---------------------end markitdown---------------------
 
         setConvertInProcess(false);
 

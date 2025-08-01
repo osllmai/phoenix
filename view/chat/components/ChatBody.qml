@@ -55,6 +55,7 @@ Item {
                         conversationList.currentConversation.prompt(prompt,
                                                                     (convertToMD.fileIsSelect? convertToMD.filePath:""),
                                                                     (convertToMD.fileIsSelect? convertToMD.textMD:""))
+                        convertToMD.fileIsSelect = false;
                         chatBodyBoxId.requestEmptyTheInput()
                     } else if (hasPrompt) {
                         notificationDialogId.open();
@@ -124,6 +125,7 @@ Item {
                         conversationList.addRequest(prompt,
                                                     (convertToMD.fileIsSelect? convertToMD.filePath:""),
                                                     (convertToMD.fileIsSelect? convertToMD.textMD:""))
+                        convertToMD.fileIsSelect = false;
                         chatBodyBoxId.requestEmptyTheInput()
                     } else if (hasPrompt) {
                         notificationDialogId.open();

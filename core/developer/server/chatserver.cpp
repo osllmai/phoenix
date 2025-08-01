@@ -121,7 +121,7 @@ void ChatServer::processTextMessage(QString message){
     }
 
     //set settings
-    settings->setStream(obj.contains("stream") ? obj["stream"].toBool() : m_modelSettings->stream());
+    settings->setStream(obj.contains("stream") ? toBoolFlexible(obj["stream"], m_modelSettings->stream()) : m_modelSettings->stream());
     settings->setPromptTemplate(obj.contains("promptTemplate") ? obj["promptTemplate"].toString() : m_modelSettings->promptTemplate());
     settings->setSystemPrompt(obj.contains("systemPrompt") ? obj["systemPrompt"].toString() : m_modelSettings->systemPrompt());
     settings->setTemperature(obj.contains("temperature") ? obj["temperature"].toDouble() : m_modelSettings->temperature());
@@ -302,6 +302,17 @@ void ChatServer::updateModelSettingsDeveloper(){
                                              m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
                                              m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
                                              m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}
+
+bool ChatServer::toBoolFlexible(const QJsonValue &value, bool defaultValue) {
+    if (value.isBool()) {
+        return value.toBool();
+    } else if (value.isString()) {
+        QString str = value.toString().trimmed().toLower();
+        if (str == "true") return true;
+        if (str == "false") return false;
+    }
+    return defaultValue;
 }
 
 Provider *ChatServer::provider() const { return m_provider; }
