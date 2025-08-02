@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/view">
         <file>Main.qml</file>
+        <file>UpdateAvailable.qml</file>
         <file>component_library/style/Colors.qml</file>
         <file>component_library/style/RoleEnum.qml</file>
         <file>component_library/style/qmldir</file>

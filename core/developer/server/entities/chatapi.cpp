@@ -283,4 +283,3 @@ void ChatAPI::writeFinished(const QString &warning) {
 void ChatAPI::beginChunked() {
     m_responder->writeBeginChunked("text/event-stream");
 }
-

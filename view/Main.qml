@@ -1,6 +1,7 @@
 import QtQuick
 import QtCore
 import QtQuick.Controls.Basic
+import QtQuick.Layouts
 import QtTextToSpeech
 import './component_library/style' as Style
 import './component_library/button'
@@ -201,4 +202,27 @@ OS: Windows x64
             }
         }
     }
+
+    Timer {
+        id: updateTimer
+        interval: 3000 // 2 minutes
+        running: true
+        repeat: false
+        onTriggered: {
+            updateChecker.checkForUpdatesAsync()
+        }
+    }
+
+    property bool isUpdateAvailable: updateChecker.isUpdateAvailable
+    onIsUpdateAvailableChanged: {
+        if (updateChecker.isUpdateAvailable) {
+            updateDialog.showAnimated()
+        }
+    }
+
+    UpdateAvailable{
+        id: updateDialog
+        visible: false
+    }
+
 }

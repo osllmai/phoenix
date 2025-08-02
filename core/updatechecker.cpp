@@ -1,7 +1,16 @@
 #include "UpdateChecker.h"
 
+UpdateChecker* UpdateChecker::m_instance = nullptr;
+
+UpdateChecker* UpdateChecker::instance(QObject* parent){
+    if (!m_instance) {
+        m_instance = new UpdateChecker(parent);
+    }
+    return m_instance;
+}
+
 UpdateChecker::UpdateChecker(QObject *parent)
-    : QObject(parent), manager(new QNetworkAccessManager(this)) {
+    : QObject(parent), m_isUpdateAvailable(false), manager(new QNetworkAccessManager(this)) {
     connect(manager, &QNetworkAccessManager::finished, this, &UpdateChecker::onReplyFinished);
 }
 
@@ -37,9 +46,9 @@ void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
     QString notes = latest.value("notes").toString();
 
     if (isNewerVersion(latestVersion)) {
-        emit updateAvailable(latestVersion, notes);
+        setIsUpdateAvailable(true);
     } else {
-        emit noUpdateAvailable();
+        setIsUpdateAvailable(false);
     }
 
     reply->deleteLater();
@@ -47,4 +56,32 @@ void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
 
 bool UpdateChecker::isNewerVersion(const QString &newVersion) {
     return QVersionNumber::fromString(newVersion) > QVersionNumber::fromString(m_currentVersion);
+}
+
+bool UpdateChecker::checkForUpdates() const {
+    QString tool;
+
+#if defined(Q_OS_LINUX)
+    tool = QStringLiteral("maintenancetool");
+#elif defined(Q_OS_WINDOWS)
+    tool = QStringLiteral("maintenancetool.exe");
+#elif defined(Q_OS_DARWIN)
+    tool = QStringLiteral("../../../maintenancetool.app/Contents/MacOS/maintenancetool");
+#endif
+
+    QString fileName = QCoreApplication::applicationDirPath() + "/../" + tool;
+    if (!QFileInfo::exists(fileName)) {
+        qDebug() << "Couldn't find tool at" << fileName << "so cannot check for updates!";
+        return false;
+    }
+
+    return QProcess::startDetached(fileName);
+}
+
+bool UpdateChecker::isUpdateAvailable() const{return m_isUpdateAvailable;}
+void UpdateChecker::setIsUpdateAvailable(bool newIsUpdateAvailable){
+    if (m_isUpdateAvailable == newIsUpdateAvailable)
+        return;
+    m_isUpdateAvailable = newIsUpdateAvailable;
+    emit isUpdateAvailableChanged();
 }

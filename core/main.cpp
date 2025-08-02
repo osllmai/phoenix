@@ -37,6 +37,7 @@
 #include "./library/textprocessor/codecolors.h"
 
 #include "./converttomd.h"
+#include "./updatechecker.h"'
 
 int main(int argc, char *argv[])
 {
@@ -149,6 +150,9 @@ int main(int argc, char *argv[])
 
         ConvertToMD* convertToMD = ConvertToMD::instance(&engine);
         engine.rootContext()->setContextProperty("convertToMD", convertToMD);
+
+        UpdateChecker* updateChecker = UpdateChecker::instance(&engine);
+        engine.rootContext()->setContextProperty("updateChecker", updateChecker);
 
         ConversationList* conversationList = ConversationList::instance(&engine);
         engine.rootContext()->setContextProperty("conversationList", conversationList);
