@@ -69,7 +69,7 @@ bool UpdateChecker::checkForUpdates() const {
     tool = QStringLiteral("../../../maintenancetool.app/Contents/MacOS/maintenancetool");
 #endif
 
-    QString fileName = QCoreApplication::applicationDirPath() + "/../" + tool;
+    QString fileName = QCoreApplication::applicationDirPath() + "/" + tool;
     if (!QFileInfo::exists(fileName)) {
         qDebug() << "Couldn't find tool at" << fileName << "so cannot check for updates!";
         return false;
