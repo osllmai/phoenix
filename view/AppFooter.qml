@@ -14,14 +14,14 @@ Item {
         anchors.top: parent.top
     }
     Row{
-        anchors.left: parent.left; anchors.leftMargin: 20
+        anchors.left: parent.left; anchors.leftMargin: 5
         anchors.verticalCenter: parent.verticalCenter
 
         MyProgress{
             id: downloading
             visible: offlineModelList.downloadProgress>0.0001
 
-            myText: "Downloading"
+            myText: window.isDesktopSize? "Downloading": ""
             myValue: offlineModelList.downloadProgress
             myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
             textLenght: 75
@@ -42,7 +42,7 @@ Item {
         }
     }
     Row{
-        anchors.right: parent.right; anchors.rightMargin: 20
+        anchors.right: parent.right; anchors.rightMargin: 5
         anchors.verticalCenter: parent.verticalCenter
         MyIcon {
             id: systemMonitoring
@@ -63,6 +63,31 @@ Item {
                 y: systemMonitoring.y - systemMonitorPupup.height - 10
             }
         }
+
+        MyIcon {
+            id: discordIcon
+            myIcon: "qrc:/media/icon/discord.svg"
+            myTextToolTip: "Discord"
+            myWidthToolTip: 65
+            toolTipInCenter: true
+            iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")
+            }
+        }
+
+        MyIcon {
+            id: twitterIcon
+            myIcon: "qrc:/media/icon/twitter.svg"
+            myTextToolTip: "Twitter"
+            myWidthToolTip: 60
+            toolTipInCenter: true
+            iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                Qt.openUrlExternally("https://x.com/osllmai")
+            }
+        }
+
         MyIcon {
             id: githubIcon
             myIcon: "qrc:/media/icon/github.svg"
@@ -74,15 +99,16 @@ Item {
                 Qt.openUrlExternally("https://github.com/osllmai")
             }
         }
+
         MyIcon {
-            id: discordIcon
-            myIcon: "qrc:/media/icon/discord.svg"
-            myTextToolTip: "Discord"
-            myWidthToolTip: 65
+            id: linkedinIcon
+            myIcon: "qrc:/media/icon/linkedin.svg"
+            myTextToolTip: "Linkedin"
+            myWidthToolTip: 60
             toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                Qt.openUrlExternally("https://discord.gg/pufX5Aua2g")
+                Qt.openUrlExternally("https://www.linkedin.com/company/osllmai/")
             }
         }
     }

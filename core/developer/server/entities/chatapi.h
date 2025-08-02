@@ -91,6 +91,7 @@ private:
     void prompt(const std::optional<QJsonObject> json);
     bool loadModel(QString modelName);
     bool loadModel(const int id);
+    bool toBoolFlexible(const QJsonValue &value, bool defaultValue);
 
     void writeInfo(const QString &message);
     void writeError(const QString &errorMessage, bool end = true);

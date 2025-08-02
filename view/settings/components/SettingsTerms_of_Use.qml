@@ -38,9 +38,6 @@ Item {
 <ul>
 <li><b>Country refers to:</b> United States</li>
 <li><b>Country:</b> United States</li>
-<li><b>Company:</b> Durabuy American Import Export LLC (referred to as the Company, We, Us, or Our)</li>
-<li><b>Address:</b> 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>
-<li><b>Phone:</b> +1 (971) 400-2132</li>
 <li><b>Website:</b> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;' >osllm.ai</a></li>
 <li><b>Email:</b> <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></li>
 </ul>
@@ -422,10 +419,6 @@ Item {
                               <ul>
                                   <li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>
                                   <li>contact us at</li>
-                                  <li><b>Company</b> (referred to as the Company, We, Us, or Our)</li>
-                                  <li>refers to: <b>Durabuy American Import Export LLC</b></li>
-                                  <li><b>Address</b>: 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States</li>
-                                  <li><b>Phone</b>: +1 (971) 400-2132</li>
                                   <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
                                   <li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>
                               </ul>

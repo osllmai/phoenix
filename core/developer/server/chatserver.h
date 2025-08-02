@@ -106,6 +106,7 @@ private:
     void prompt();
     bool loadModel(QString modelName);
     bool loadModel(const int id);
+    bool toBoolFlexible(const QJsonValue &value, bool defaultValue);
 
     void sendErrorMessage(QWebSocket *client, const QString &message);
     void sendClientMessage(QWebSocket *client, const QString &message);

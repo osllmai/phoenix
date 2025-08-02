@@ -176,8 +176,8 @@ Rectangle{
                                         ctx.clearRect(0, 0, width, height)
                                         ctx.beginPath()
                                         ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
-                                        ctx.lineWidth = 3
-                                        ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                        ctx.lineWidth = 2
+                                        ctx.strokeStyle = Style.Colors.iconPrimaryHoverAndChecked;
                                         ctx.stroke()
                                     }
                                     Component.onCompleted: requestPaint()
@@ -242,8 +242,8 @@ Rectangle{
                                         ctx.clearRect(0, 0, width, height)
                                         ctx.beginPath()
                                         ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
-                                        ctx.lineWidth = 3
-                                        ctx.strokeStyle = Style.Colors.iconPrimaryNormal;
+                                        ctx.lineWidth = 2
+                                        ctx.strokeStyle = Style.Colors.iconPrimaryHoverAndChecked;
                                         ctx.stroke()
                                     }
                                     Component.onCompleted: requestPaint()

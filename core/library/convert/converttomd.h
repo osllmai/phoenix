@@ -7,6 +7,7 @@
 #include <QProcess>
 #include <QThread>
 #include <QDebug>
+#include <QFileInfo>
 
 class ConvertToMD : public QObject
 {

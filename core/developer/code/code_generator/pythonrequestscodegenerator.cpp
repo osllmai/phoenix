@@ -18,7 +18,7 @@ QString PythonRequestsCodeGenerator::postChat() {
     params << QString("\"message\": \"Hi dear!\"");
     params << QString("\"promptTemplate\": \"%1\"").arg(escapeForJson(promptTemplate()));
     params << QString("\"systemPrompt\": \"%1\"").arg(escapeForJson(systemPrompt()));
-    params << QString("\"stream\": %1").arg(stream() ? "true" : "false");
+    params << QString("\"stream\": %1").arg(stream() ? "True" : "False");
     params << QString("\"temperature\": %1").arg(temperature());
 
     if (maxTokensVisible())
