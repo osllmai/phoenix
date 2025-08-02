@@ -7,7 +7,7 @@ import '../style' as Style
 T.Button  {
     id: control
     height: 30
-    width: (myIcon ==""?0:iconId.width+5) + cpuText.width + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
+    width: (myIcon ==""?0:iconId.width+5) + (cpuText.visible? cpuText.width: 0) + progressBarCPU.width + progressBarTextCPU.width + 10 + 6
 
     property string myText: ""
     property double myValue: 0.0
@@ -32,6 +32,7 @@ T.Button  {
         }
         Label {
             id: cpuText
+            visible: (myText !== "")?true:false
             text: control.myText
             width: control.textLenght
             color: Style.Colors.progressBarText

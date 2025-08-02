@@ -120,5 +120,7 @@
         <file>icon/fileXlsx.svg</file>
         <file>icon/fileXml.svg</file>
 
+        <file>icon/twitter.svg</file>
+        <file>icon/linkedin.svg</file>
     </qresource>
 </RCC>

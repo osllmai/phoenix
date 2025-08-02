@@ -261,6 +261,11 @@ qt_add_resources(app${PROJECT_NAME}
         media/icon/minimize.svg
         media/icon/minus.svg
 
+
+        media/icon/twitter.svg
+        media/icon/linkedin.svg
+
+
         media/image_company/user.svg
         media/image_company/Phoenix.svg
         media/image_company/Phoenix.png
@@ -434,6 +439,8 @@ qt_add_qml_module(app${PROJECT_NAME}
     RESOURCES
         view/component_library/style/qmldir
     RESOURCE_PREFIX /
+    SOURCES core/updatechecker.h core/updatechecker.cpp
+    QML_FILES view/UpdateAvailable.qml
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -516,7 +523,7 @@ file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
 
 #copy ConvertToMD
-configure_file(${CMAKE_SOURCE_DIR}/resources/docling/convert/convert_to_md.exe ${BIN_DIR}/docling/convert/convert_to_md.exe COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/resources/markitdown/markitdown.exe ${BIN_DIR}/markitdown/markitdown.exe COPYONLY)
 
 #copy exe provider for offline-model
 if(WIN32)
