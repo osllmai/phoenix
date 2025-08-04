@@ -109,7 +109,7 @@ ApplicationWindow {
     }
 
     // visible: true
-    title: qsTr("Phoenix v0.1.3 Beta")
+    title: qsTr("Phoenix v0.1.4 Beta")
 
     property bool isDesktopSize: width >= 750;
     onIsDesktopSizeChanged: {
@@ -182,7 +182,7 @@ ApplicationWindow {
         height: 230
         width: 365
         titleText: "Phoenix"
-        about: "Version: 0.1.3 (user setup)
+        about: "Version: 0.1.4 (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
 Date: 2025.08.02
 OS: Windows x64
@@ -210,13 +210,6 @@ OS: Windows x64
         repeat: false
         onTriggered: {
             updateChecker.checkForUpdatesAsync()
-        }
-    }
-
-    property bool isUpdateAvailable: updateChecker.isUpdateAvailable
-    onIsUpdateAvailableChanged: {
-        if (updateChecker.isUpdateAvailable) {
-            updateDialog.showAnimated()
         }
     }
 

@@ -33,7 +33,7 @@ T.Button {
              }
              Label {
                  id: phoenixTitleId
-                 text: "Phoenix v0.1.3 Beta"
+                 text: "Phoenix v0.1.4 Beta"
                  color: Style.Colors.textTitle
                  anchors.verticalCenter: logoId.verticalCenter
                  font.pixelSize: 14
@@ -84,6 +84,17 @@ T.Button {
                  myTextToolTip: "About"
                  onClicked: {
                      aboutVersion.open()
+                 }
+             }
+             MyButton {
+                 id: botton3
+                 height: 26
+                 visible: updateChecker.isUpdateAvailable
+                 myText: "Update Now"
+                 bottonType: Style.RoleEnum.BottonType.Secondary
+                 anchors.verticalCenter: logoId.verticalCenter
+                 onClicked: {
+                     updateChecker.checkForUpdates()
                  }
              }
          }

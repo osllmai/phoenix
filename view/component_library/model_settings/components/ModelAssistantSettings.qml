@@ -48,9 +48,9 @@ Item {
                  font.pointSize: 10
                  hoverEnabled: true
                  tabStopDistance: 80
-                 selectionColor: "white"
                  persistentSelection: true
-                 placeholderTextColor: Style.Colors.textInformation
+                 selectionColor: Style.Colors.textSelection
+                 placeholderTextColor: Style.Colors.textPlaceholder
                  background: null
                  onHeightChanged: {
                      if(instructionTextBox.height < 70 && instructionTextBox.text !== ""){

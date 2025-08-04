@@ -40,10 +40,10 @@ Item {
             font.pointSize: 10
             hoverEnabled: true
             tabStopDistance: 80
-            selectionColor: Style.Colors.boxNormalGradient1
             cursorVisible: false
             persistentSelection: true
-            placeholderTextColor: Style.Colors.textInformation
+            selectionColor: Style.Colors.textSelection
+            placeholderTextColor: Style.Colors.textPlaceholder
 
             onTextChanged: {
                 root.inputValue = inputTextBox.text

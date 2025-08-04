@@ -25,6 +25,7 @@ Rectangle{
     property string textInput: ""
     onTextInputChanged: {
         textInputId.setText(control.textInput)
+        textInputId.inputValue = control.textInput
     }
 
     function selectSendIcon(){
@@ -214,8 +215,6 @@ Rectangle{
                     }
                 }
 
-
-
                 Item {
                     id: sendButtonArea
                     width: 30
@@ -288,6 +287,7 @@ Rectangle{
                                  conversationList.isEmptyConversation)
                             {
                                 control.sendPrompt(textInputId.inputValue)
+                                textInputId.setText("")
 
                                 if (conversationList.modelSelect)
                                     textInputId.inputValue = ""

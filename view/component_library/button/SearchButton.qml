@@ -38,8 +38,8 @@ Rectangle{
             cursorVisible: false
             persistentSelection: true
             placeholderText: qsTr("Search")
-            placeholderTextColor: Style.Colors.menuNormalIcon
-            selectionColor: Style.Colors.boxNormalGradient1
+            selectionColor: Style.Colors.textSelection
+            placeholderTextColor: Style.Colors.textPlaceholder
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10
             wrapMode: TextEdit.NoWrap

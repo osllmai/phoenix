@@ -15,6 +15,14 @@ Item{
     property alias textColor: textColor
 
     QtObject{
+        id: textSelectionColor
+        readonly property var light: ["#FFFFFF", "#44546F"]
+        readonly property var dark: ["#B6C2CF", "#FFFFFF" ]
+    }
+    property var currentTextSelectionColor: (colorId.theme === "Light")? textColor.light: textColor.dark
+    property alias textSelectionColor: textColor
+
+    QtObject{
         id: backgroundColor
         readonly property var light: ["#FFFFFF", "#F7F8F9", "#F1F2F4", "#DCDFE4", "#758195"]
         readonly property var dark: ["#161A1D", "#1D2125", "#22272B", "#2C333A", "#738496"]
@@ -139,6 +147,8 @@ Item{
     readonly property color textTagWarning: currentAvatarBGDynamicColor[8]
     readonly property color textTagCritical: currentErrorColor[2]
     readonly property color textTagFatal: currentErrorColor[2]
+    readonly property color textSelection:currentTextSelectionColor[1]
+    readonly property color textPlaceholder:currentTextSelectionColor[0]
 
     //icon color
     readonly property color iconPrimaryNormal: currentBackgroundColor[4]

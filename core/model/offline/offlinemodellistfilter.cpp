@@ -7,10 +7,10 @@ OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObje
     QSortFilterProxyModel::setSourceModel(models);
 
     setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
+    setFilterRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
 
-    setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
-    sort(0, Qt::AscendingOrder);
+    setSortRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
+    sort(0, Qt::DescendingOrder);
 }
 
 bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{

@@ -105,6 +105,8 @@ Dialog {
                     cursorVisible: false
                     persistentSelection: false
                     clip: true
+                    selectionColor: Style.Colors.textSelection
+                    placeholderTextColor: Style.Colors.textPlaceholder
 
                     text: !codeDeveloperList.currentProgramLanguage.codeGenerator? "": codeDeveloperList.currentProgramLanguage.codeGenerator.text
 
