@@ -19,6 +19,7 @@ class OfflineModelList: public QAbstractListModel
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged FINAL)
+    Q_PROPERTY(int numberDownload READ numberDownload WRITE setNumberDownload NOTIFY numberDownloadChanged FINAL)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -62,6 +63,9 @@ public:
     double downloadProgress() const;
 
 
+    int numberDownload() const;
+    void setNumberDownload(int newNumberDownload);
+
 public slots:
     void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
@@ -84,6 +88,7 @@ signals:
     void requestDeleteModel(const int id);
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
+    void numberDownloadChanged();
 
 private:
     explicit OfflineModelList(QObject* parent);
@@ -92,11 +97,11 @@ private:
     QList<OfflineModel*> m_models;
     QList<Download*>downloads;
     double m_downloadProgress;
+    int m_numberDownload = 0;
 
     OfflineModel* at(int index) const;
     void updateDownloadProgress();
     void deleteDownloadModel(const int id);
-
 };
 
 #endif // OFFLINEMODELLIST_H

@@ -122,6 +122,8 @@ Item {
                         cursorVisible: false
                         persistentSelection: false
                         clip: true
+                        selectionColor: Style.Colors.textSelection
+                        placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
 
                         text: !codeDeveloperList.currentProgramLanguage.codeGenerator? "": codeDeveloperList.currentProgramLanguage.codeGenerator.text
 

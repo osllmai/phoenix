@@ -27,7 +27,9 @@ Item {
 
         Column{
             id: columnId
-            anchors.fill: parent
+            width: parent.width - 12
+            height: parent.height
+            anchors.left: parent.left
             spacing: 10
 
             Rectangle{
@@ -132,6 +134,7 @@ Item {
                             }
                         }
                     }
+
                     ModelInformationSettings{
                         id: modelInformationBody
                     }

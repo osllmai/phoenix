@@ -7,10 +7,10 @@ OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObje
     QSortFilterProxyModel::setSourceModel(models);
 
     setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
+    setFilterRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
 
-    setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
-    sort(0, Qt::AscendingOrder);
+    setSortRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
+    sort(0, Qt::DescendingOrder);
 }
 
 bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
@@ -24,7 +24,6 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     QString modelNameOffline = "localModel/" + sourceModel()->data(index, OfflineModelList::OfflineModelRoles::ModeNameRole).toString();
     bool isLikeModel = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsLikeRole).toBool();
     bool isDownloading = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::IsDownloadingRole).toBool();
-    double downloadPercent = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::DownloadPercentRole).toDouble();
     bool downloadFinished = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::DownloadFinishedRole).toBool();
 
     QVariant modelVariant = sourceModel()->data(index, OfflineModelList::OfflineModelRoles::ModelObjectRole);
@@ -52,7 +51,7 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::Favorite:
         return matchesFilter && isLikeModel;
     case FilterType::IsDownloading:
-        return matchesFilter && isDownloading && (downloadPercent>=0.0001);
+        return matchesFilter && isDownloading;
     default:
         return true;
     }

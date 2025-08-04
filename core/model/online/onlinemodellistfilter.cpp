@@ -7,11 +7,17 @@ OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject 
 {
     QSortFilterProxyModel::setSourceModel(model);
 
-    setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OnlineModelList::OnlineModelRoles::NameRole);
+    // setFilterCaseSensitivity(Qt::CaseInsensitive);
+    // setFilterRole(OnlineModelList::OnlineModelRoles::NameRole);
 
-    setSortRole(OnlineModelList::OnlineModelRoles::NameRole);
-    sort(0, Qt::AscendingOrder);
+    // setSortRole(OnlineModelList::OnlineModelRoles::NameRole);
+    // sort(0, Qt::AscendingOrder);
+
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+
+    setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+    sort(0, Qt::DescendingOrder);
 }
 
 bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{

@@ -33,28 +33,86 @@ T.Button {
         Row {
             id: headerId
             width: parent.width
-            MyIcon {
+            // MyIcon {
+            //     id: logoModelId
+            //     visible: model.icon !== "qrc:/media/image_company/user.svg"
+            //     myIcon: model.icon
+            //     iconType: Style.RoleEnum.IconType.Image
+            //     enabled: false
+            //     width: 35; height: 35
+            // }
+
+            Item {
                 id: logoModelId
-                visible: model.icon !== "qrc:/media/image_company/user.svg"
-                myIcon: model.icon
-                iconType: Style.RoleEnum.IconType.Image
-                enabled: false
-                width: 35; height: 35
-            }
-            ToolButton {
-                id: phoenixIconId
-                visible: model.icon === "qrc:/media/image_company/user.svg"
-                width: 35; height: 35
-                background: null
-                icon{
-                    source: model.icon
-                    color: Style.Colors.menuHoverAndCheckedIcon
-                    width:24; height:24
+                width: 50; height: 50
+
+                MyIcon {
+                    id: companyId
+                    anchors.centerIn: parent
+                    visible: model.icon !== "qrc:/media/image_company/user.svg"
+                    myIcon: model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 35; height: 35
+                }
+
+                ToolButton {
+                    id: fphoenixIconId
+                    anchors.centerIn: parent
+                    visible: model.icon === "qrc:/media/image_company/user.svg"
+                    width: 35; height: 35
+                    background: null
+                    icon{
+                        source: model.icon
+                        color: Style.Colors.menuHoverAndCheckedIcon
+                        width:24; height:24
+                    }
+                }
+
+                Loader {
+                    id: busyLoader
+                    anchors.centerIn: parent
+                    active: (model.text === ""?true:false)
+                    sourceComponent: BusyIndicator {
+                        running: true
+                        width: 50; height: 50
+
+                        contentItem: Item {
+                            implicitWidth: 50
+                            implicitHeight: 50
+
+                            Canvas {
+                                id: spinnerCanvas
+                                anchors.fill: parent
+                                onPaint: {
+                                    var ctx = getContext("2d")
+                                    ctx.clearRect(0, 0, width, height)
+                                    ctx.beginPath()
+                                    ctx.arc(width / 2, height / 2, width / 2 - 2, 0, Math.PI * 1.5)
+                                    ctx.lineWidth = 2
+                                    ctx.strokeStyle = Style.Colors.iconPrimaryHoverAndChecked;
+                                    ctx.stroke()
+                                }
+                                Component.onCompleted: requestPaint()
+                            }
+
+                            RotationAnimator on rotation {
+                                from: 0
+                                to: 360
+                                duration: 1000
+                                loops: Animation.Infinite
+                                running: true
+                            }
+                        }
+                    }
                 }
             }
+
             Column {
                 spacing: 2
                 width: parent.width
+                anchors.top: parent.top
+                anchors.topMargin: 8
 
                 FileConverteInputPrompt{
                     id: allFileExist
@@ -65,11 +123,38 @@ T.Button {
                     isInputBox: false
                 }
 
+                Item {
+                    id: loadingTextItem
+                    visible: model.text === ""
+                    width: parent.width - logoModelId.width
+                    height: 30
+
+                    property int dotCount: 0
+
+                    Timer {
+                        interval: 500
+                        running: loadingTextItem.visible
+                        repeat: true
+                        onTriggered: {
+                            loadingTextItem.dotCount = (loadingTextItem.dotCount + 1) % 5
+                        }
+                    }
+
+                    Label {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: 12
+                        color: Style.Colors.textInformation
+                        text: "Processing your text " + ".".repeat(loadingTextItem.dotCount)
+                    }
+                }
+
                 TextArea {
                     id: textId
+                    visible: model.text !== ""
                     color: Style.Colors.textTitle
-                    selectionColor: "blue"
-                    selectedTextColor: "white"
+                    selectionColor: Style.Colors.textSelection
+                    placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
                     width: parent.width - logoModelId.width
                     font.pixelSize: 14
                     focus: false

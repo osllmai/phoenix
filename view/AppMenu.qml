@@ -7,50 +7,51 @@ import "./menu"
 Rectangle{
     id: root
     width: 200
-    anchors.top: parent.top; anchors.bottom: parent.bottom
+    anchors.top: parent.top;
+    anchors.bottom: parent.bottom;
 
     color: Style.Colors.menu
 
     property bool isDrawer: false
 
-    Item{
-        id: appInfoId
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: 60
+    // Item{
+    //     id: appInfoId
+    //     anchors.left: parent.left
+    //     anchors.right: parent.right
+    //     anchors.top: parent.top
+    //     height: 60
 
-        MyIcon {
-            id: phoenixIconId
-            myIcon: "qrc:/media/image_company/Phoenix.svg"
-            iconType: Style.RoleEnum.IconType.Image
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            enabled: false
-            width: 40; height: 40
-        }
-        Label {
-            id: textId
-            visible: root.width>100
-            color: Style.Colors.textTitle
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: phoenixIconId.right
-            anchors.leftMargin: 2
-            text: "Phoenix"
-            font.weight: 400
-            font.pixelSize: 20
-            font.styleName: "Bold"
-            clip: true
-        }
-    }
+    //     MyIcon {
+    //         id: phoenixIconId
+    //         myIcon: "qrc:/media/image_company/Phoenix.svg"
+    //         iconType: Style.RoleEnum.IconType.Image
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         anchors.left: parent.left
+    //         anchors.leftMargin: 10
+    //         enabled: false
+    //         width: 40; height: 40
+    //     }
+    //     Label {
+    //         id: textId
+    //         visible: root.width>100
+    //         color: Style.Colors.textTitle
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         anchors.left: phoenixIconId.right
+    //         anchors.leftMargin: 2
+    //         text: "Phoenix"
+    //         font.weight: 400
+    //         font.pixelSize: 20
+    //         font.styleName: "Bold"
+    //         clip: true
+    //     }
+    // }
 
     Column {
         id: columnId
         anchors.left: parent.left
         anchors.right:parent.right
-        anchors.top: appInfoId.bottom
-        anchors.topMargin: 0
+        anchors.top: /*appInfoId.bottom*/parent.top
+        anchors.topMargin: 10
         spacing: 5
         clip:true
 
@@ -139,9 +140,9 @@ Rectangle{
         id: asettingsAndNameId
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: parent.bottom;
+        anchors.bottom: parent.bottom; anchors.bottomMargin: 10
 
-        height: 80
+        height: 40
         MyIcon {
             id: settingsIcon
             width: 36; height: 36
@@ -161,7 +162,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v0.1.2-2025.06.29"
+            text: "v0.1.5-2025.08.04"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"
@@ -175,20 +176,20 @@ Rectangle{
 
     function setShowSelectMenu(){
         if(appBodyId.currentIndex === 0)
-            return homeItemMenu.y + appInfoId.height
+            return homeItemMenu.y + 10 + 2
         if(appBodyId.currentIndex === 1)
-            return chatItemMenu.y + appInfoId.height
+            return chatItemMenu.y + 10 + 2
         if(appBodyId.currentIndex === 2)
-            return modelsItemMenu.y + appInfoId.height
+            return modelsItemMenu.y + 10 + 2
         if(appBodyId.currentIndex === 3)
-            return devloperItemMenu.y + appInfoId.height
-        return homeItemMenu.y + appInfoId.height
+            return devloperItemMenu.y + 10 + 2
+        return homeItemMenu.y + 10 + 2
     }
 
     Rectangle{
         id: showSelectMenuId
         color: Style.Colors.menuShowCheckedRectangle
-        height: homeItemMenu.height
+        height: homeItemMenu.height - 5
         width: 3
         anchors.left: parent.left
         anchors.leftMargin: 10

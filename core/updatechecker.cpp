@@ -20,6 +20,9 @@ void UpdateChecker::checkForUpdatesAsync() {
 }
 
 void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
+
+    // setIsUpdateAvailable(true);
+
     if (reply->error() != QNetworkReply::NoError) {
         qWarning() << "Failed to check updates:" << reply->errorString();
         reply->deleteLater();
@@ -42,10 +45,10 @@ void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
     }
 
     QJsonObject latest = releases.last().toObject();
-    QString latestVersion = latest.value("version").toString();
-    QString notes = latest.value("notes").toString();
+    setLatestVersion(latest.value("version").toString());
+    setNotes(latest.value("notes").toString());
 
-    if (isNewerVersion(latestVersion)) {
+    if (isNewerVersion(getLatestVersion())) {
         setIsUpdateAvailable(true);
     } else {
         setIsUpdateAvailable(false);
@@ -84,4 +87,20 @@ void UpdateChecker::setIsUpdateAvailable(bool newIsUpdateAvailable){
         return;
     m_isUpdateAvailable = newIsUpdateAvailable;
     emit isUpdateAvailableChanged();
+}
+
+QString UpdateChecker::getNotes() const{return m_notes;}
+void UpdateChecker::setNotes(const QString &newNotes){
+    if (m_notes == newNotes)
+        return;
+    m_notes = newNotes;
+    emit notesChanged();
+}
+
+QString UpdateChecker::getLatestVersion() const{return m_latestVersion;}
+void UpdateChecker::setLatestVersion(const QString &newLatestVersion){
+    if (m_latestVersion == newLatestVersion)
+        return;
+    m_latestVersion = newLatestVersion;
+    emit latestVersionChanged();
 }

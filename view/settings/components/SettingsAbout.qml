@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-
 import '../../component_library/style' as Style
 
 Item {
@@ -8,32 +7,24 @@ Item {
     clip: true
 
     ScrollView {
-        id: scrollInput
-        width: parent.width
-        height: parent.height
+        id: scrollView
+        anchors.fill: parent
+        anchors.margins: 10
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        clip: true
 
-        ScrollBar.vertical.interactive: true
-        ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
-                                   ? ScrollBar.AlwaysOn
-                                   : ScrollBar.AlwaysOff
-        ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
-                                   (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+        contentWidth: scrollView.width
 
-        TextArea {
-            id: textId
-            textFormat: TextEdit.RichText
-            wrapMode: TextEdit.Wrap
-            readOnly: true
-            clip: true
-            focus: false
-            horizontalAlignment: Text.AlignJustify
-            width: parent.width - 20
-            anchors.fill: parent
-            anchors.margins: 10
-            color: Style.Colors.textInformation
+        Label {
+            id: labelId
+            width: scrollView.width - 15
+            textFormat: Text.RichText
+            wrapMode: Text.Wrap
             font.pixelSize: 14
-            selectionColor: "blue"
-            selectedTextColor: "white"
+            color: Style.Colors.textInformation
+            horizontalAlignment: Text.AlignJustify
+            anchors.margins: 10
 
             text: "
                 <h2>OS LLM AI</h2>
@@ -79,13 +70,13 @@ Item {
                 <p>Feel free to reach out if you need any help or have any questions:</p>
                 <p><strong>Email:</strong> Support@osllm.ai</p>
 <br>
-<br>
-<br>
             "
 
             onLinkActivated: function(link) {
                 Qt.openUrlExternally(link)
             }
+
+            height: implicitHeight
 
             Accessible.role: Accessible.Button
             Accessible.name: text

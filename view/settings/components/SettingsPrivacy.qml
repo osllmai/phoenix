@@ -4,34 +4,28 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
+    clip: true
+
     ScrollView {
-        id: scrollInput
-        width: parent.width
-        height: parent.height
-        ScrollBar.vertical.interactive: true
+        id: scrollView
+        anchors.fill: parent
+        anchors.margins: 15
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-        ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
-                                   ? ScrollBar.AlwaysOn
-                                   : ScrollBar.AlwaysOff
+        clip: true
 
-        ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
-                                   (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
+        contentWidth: scrollView.width
 
-        TextArea{
-            id: textId
-            textFormat: TextEdit.RichText
-            wrapMode: TextEdit.Wrap
-            readOnly: true
-            clip: true
-            focus: false
-            horizontalAlignment: Text.AlignJustify
-            width: parent.width
-            anchors.fill: parent
-            anchors.margins: 10
-            color: Style.Colors.textInformation
+        Label {
+            id: labelId
+            width: scrollView.width - 15
+            textFormat: Text.RichText
+            wrapMode: Text.Wrap
             font.pixelSize: 14
-            selectionColor: "blue"
-            selectedTextColor: "white"
+            color: Style.Colors.textInformation
+            horizontalAlignment: Text.AlignJustify
+            anchors.margins: 10
 
             text: "
                 <h1>Privacy Policy:</h1>
@@ -322,15 +316,13 @@ Item {
                 <h2>Contact Us:</h2>
 
                 <p>If you have any questions about this Privacy Policy, You can contact us at support: <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></p>
-
-<br>
-<br>
-<br>
-"
+            "
 
             onLinkActivated: function(link) {
                 Qt.openUrlExternally(link)
             }
+
+            height: implicitHeight
 
             Accessible.role: Accessible.Button
             Accessible.name: text

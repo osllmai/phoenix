@@ -19,11 +19,13 @@ ComboBox {
     Accessible.role: Accessible.ComboBox
     contentItem: Row {
         id: contentRow
+        height: comboBoxId.height
+        width: comboBoxId.width
         MyIcon{
             id:iconId
             width: 33; height: 33
             myIcon: comboBoxId.modelIcon
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.topMargin: 0
             iconType: Style.RoleEnum.IconType.Image
             MouseArea {
                 anchors.fill: parent
@@ -35,7 +37,7 @@ ComboBox {
         Label {
             id: textId
             text: comboBoxId.modelName
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: iconId.verticalCenter
             width: parent.width - iconId.width - iconId.width
             color: Style.Colors.textTitle
             verticalAlignment: Text.AlignLeft

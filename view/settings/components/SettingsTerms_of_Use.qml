@@ -4,34 +4,28 @@ import '../../component_library/style' as Style
 
 Item {
     id: controlId
+    clip: true
+
     ScrollView {
-        id: scrollInput
-        width: parent.width
-        height: parent.height
-        ScrollBar.vertical.interactive: true
+        id: scrollView
+        anchors.fill: parent
+        anchors.margins: 15
+        ScrollBar.vertical.policy: ScrollBar.AlwaysOn
+        ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+        clip: true
 
-        ScrollBar.vertical.policy: scrollInput.contentHeight > scrollInput.height
-                                   ? ScrollBar.AlwaysOn
-                                   : ScrollBar.AlwaysOff
+        contentWidth: scrollView.width
 
-        ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
-                                   (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
-
-        TextArea {
-            id: textId
-            textFormat: TextEdit.RichText
-            wrapMode: TextEdit.Wrap
-            readOnly: true
-            // clip: true
-            focus: false
-            horizontalAlignment: Text.AlignJustify
-            width: parent.width
-            anchors.fill: parent
-            anchors.margins: 10
-            color: Style.Colors.textInformation
+        Label {
+            id: labelId
+            width: scrollView.width - 15
+            textFormat: Text.RichText
+            wrapMode: Text.Wrap
             font.pixelSize: 14
-            selectionColor: "blue"
-            selectedTextColor: "white"
+            color: Style.Colors.textInformation
+            horizontalAlignment: Text.AlignJustify
+            anchors.margins: 10
+
             text: "<h1>Terms of Use:</h1>
 <p><b>Established &amp; Effective Date:</b> January 01, 2024<br><b>Update:</b> April 26, 2025</p>
 <p>Please read these terms of use (agreement) carefully before using the services offered by Durabuy American Import Export LLC (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
@@ -422,14 +416,13 @@ Item {
                                   <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
                                   <li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>
                               </ul>
-<br>
-<br>
-<br>
-"
+            "
 
             onLinkActivated: function(link) {
                 Qt.openUrlExternally(link)
             }
+
+            height: implicitHeight
 
             Accessible.role: Accessible.Button
             Accessible.name: text

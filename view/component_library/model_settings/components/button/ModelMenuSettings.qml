@@ -7,7 +7,7 @@ import '../../../style' as Style
 import '../../../button'
 
  T.Button{
-    id:control
+    id: control
     width: parent.width; height: 35
 
     property var myText
@@ -51,7 +51,7 @@ import '../../../button'
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
         radius: 8
-        border.width: 1
+        border.width: control.isOpen?1:0
         Row{
             anchors.fill: parent
             leftPadding: 10
@@ -70,6 +70,12 @@ import '../../../button'
                 iconType: Style.RoleEnum.IconType.Primary
                 enabled: false
             }
+        }
+        Rectangle{
+            visible: !control.isOpen
+            height: 1; width: parent.width
+            anchors.bottom: parent.bottom
+            color: Style.Colors.boxBorder
         }
     }
     function choiceBackgroundColor(buttonType, state) {
