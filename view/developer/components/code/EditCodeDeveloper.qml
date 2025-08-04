@@ -7,10 +7,10 @@ import '../../../component_library/button'
 
 Dialog {
     id: settingsDialogId
-    x: (parent.width - width) / 2
-    y: (parent.height - height) / 2
-    width: Math.min( 600 , parent.width-40)
-    height: Math.min( 400 , parent.height-40)
+    x: (window.width - width) / 2
+    y: (window.height - height) / 2
+    width: Math.min( 600 , window.width-40)
+    height: Math.min( 400 , window.height-40)
 
     property bool isDesktopSize: width >= 630;
     onIsDesktopSizeChanged: {
@@ -42,6 +42,9 @@ Dialog {
 
     parent: Overlay.overlay
     Overlay.modal: Rectangle {
+        width: window.width
+        height: window.height - 40
+        y: 40
         color: Style.Colors.overlayDrawer
     }
 
@@ -106,13 +109,9 @@ Dialog {
                     persistentSelection: false
                     clip: true
                     selectionColor: Style.Colors.textSelection
-                    placeholderTextColor: Style.Colors.textPlaceholder
+                    placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
 
                     text: !codeDeveloperList.currentProgramLanguage.codeGenerator? "": codeDeveloperList.currentProgramLanguage.codeGenerator.text
-
-                    onTextChanged: {
-                        textId.cursorPosition = textId.length
-                    }
                 }
             }
             Row {

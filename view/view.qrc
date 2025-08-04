@@ -133,10 +133,12 @@
         <file>settings/components/ThemeOption.qml</file>
         <file>settings/components/OpenMenuSettingsButton.qml</file>
         <file>AppFooter.qml</file>
-        <file>component_footer/SystemMonitoring.qml</file>
-        <file>component_footer/Downloading.qml</file>
+        <file>footer/DownloadProgressComboBox.qml</file>
+        <file>footer/SystemMonitoring.qml</file>
+        <file>footer/Downloading.qml</file>
         <file>component_library/model_settings/components/button/ModelTextCopyBox.qml</file>
         <file>AppHeader.qml</file>
         <file>component_library/button/MyCopyButton.qml</file>
+        <file>footer/DownloadingDelegate.qml</file>
     </qresource>
 </RCC>

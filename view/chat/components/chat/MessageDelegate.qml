@@ -154,7 +154,7 @@ T.Button {
                     visible: model.text !== ""
                     color: Style.Colors.textTitle
                     selectionColor: Style.Colors.textSelection
-                    placeholderTextColor: Style.Colors.textPlaceholder
+                    placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
                     width: parent.width - logoModelId.width
                     font.pixelSize: 14
                     focus: false

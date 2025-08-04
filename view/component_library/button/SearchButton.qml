@@ -39,7 +39,7 @@ Rectangle{
             persistentSelection: true
             placeholderText: qsTr("Search")
             selectionColor: Style.Colors.textSelection
-            placeholderTextColor: Style.Colors.textPlaceholder
+            placeholderTextColor: textArea.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10
             wrapMode: TextEdit.NoWrap

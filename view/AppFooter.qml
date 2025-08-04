@@ -1,7 +1,7 @@
 import QtQuick
 import './component_library/style' as Style
 import './component_library/button'
-import './component_footer'
+import './footer'
 
 Item {
     id: control
@@ -17,28 +17,9 @@ Item {
         anchors.left: parent.left; anchors.leftMargin: 5
         anchors.verticalCenter: parent.verticalCenter
 
-        MyProgress{
+        DownloadProgressComboBox{
             id: downloading
-            visible: offlineModelList.downloadProgress>0.0001
-
-            myText: window.isDesktopSize? "Downloading": ""
-            myValue: offlineModelList.downloadProgress
-            myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
-            textLenght: 75
-            enabled: true
-            onHoveredChanged: function(){
-                if(downloading.hovered){
-                    downloadingPupup.open()
-                }else{
-                    downloadingPupup.close()
-                }
-            }
-
-            Downloading{
-                id: downloadingPupup
-                x: downloading.x
-                y: downloading.y - downloadingPupup.height - 10
-            }
+            visible: (offlineModelList.numberDownload > 0)?true:false
         }
     }
     Row{

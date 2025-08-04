@@ -12,6 +12,7 @@ Item {
         anchors.margins: 15
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
         clip: true
 
         contentWidth: scrollView.width

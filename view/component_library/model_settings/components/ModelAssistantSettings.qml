@@ -50,7 +50,7 @@ Item {
                  tabStopDistance: 80
                  persistentSelection: true
                  selectionColor: Style.Colors.textSelection
-                 placeholderTextColor: Style.Colors.textPlaceholder
+                 placeholderTextColor: instructionTextBox.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
                  background: null
                  onHeightChanged: {
                      if(instructionTextBox.height < 70 && instructionTextBox.text !== ""){

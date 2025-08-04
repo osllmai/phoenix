@@ -97,7 +97,7 @@ Item {
                     cursorVisible: false
                     persistentSelection: false
                     selectionColor: Style.Colors.textSelection
-                    placeholderTextColor: Style.Colors.textPlaceholder
+                    placeholderTextColor: instructionTextBox.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
 
                     property string fullLogs: Logger.developerLogs
 

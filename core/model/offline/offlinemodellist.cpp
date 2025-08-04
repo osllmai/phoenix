@@ -125,6 +125,8 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
 }
 
 void OfflineModelList::downloadRequest(const int id, QString directoryPath){
+    setNumberDownload(m_numberDownload+1);
+
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
     const int index = m_models.indexOf(model);
@@ -161,6 +163,7 @@ void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesRe
 }
 
 void OfflineModelList::handleDownloadFinished(const int id){
+    setNumberDownload(m_numberDownload-1);
 
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
@@ -185,6 +188,7 @@ void OfflineModelList::handleDownloadFailed(const int id, const QString &error){
 }
 
 void OfflineModelList::cancelRequest(const int id){
+    setNumberDownload(m_numberDownload-1);
 
     OfflineModel* model = findModelById(id);
     if(model == nullptr) return;
@@ -283,9 +287,16 @@ void OfflineModelList::updateDownloadProgress(){
     qint64 totalBytesDownload =0;
     qint64 receivedBytesDownload =0;
     for (auto &&model : m_models){
-        if(model->isDownloading() && model->bytesTotal()>=0.0001 && model->bytesReceived()>=0.0001){
-            totalBytesDownload += model->bytesTotal();
-            receivedBytesDownload += model->bytesReceived();
+        for(int searchIndex = 0; searchIndex<downloads.size(); searchIndex++){
+            if((downloads[searchIndex]->id() == model->id()) &&
+                model->bytesTotal()>=100 &&
+                model->bytesReceived()>=10 &&
+                model->bytesReceived()< model->bytesTotal() &&
+                (static_cast<double>(model->bytesReceived())/static_cast<double>(model->bytesTotal()))>0.0001 &&
+                (static_cast<double>(model->bytesReceived())/static_cast<double>(model->bytesTotal()))<1){
+                totalBytesDownload += model->bytesTotal();
+                receivedBytesDownload += model->bytesReceived();
+            }
         }
     }
     if(totalBytesDownload != 0)
@@ -309,4 +320,13 @@ void OfflineModelList::deleteDownloadModel(const int id){
             delete download;
         }
     }
+}
+
+int OfflineModelList::numberDownload() const{return m_numberDownload;}
+void OfflineModelList::setNumberDownload(int newNumberDownload){
+    if (m_numberDownload == newNumberDownload)
+        return;
+    m_numberDownload = newNumberDownload;
+    qInfo()<<newNumberDownload;
+    emit numberDownloadChanged();
 }

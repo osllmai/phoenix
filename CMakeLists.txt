@@ -431,8 +431,8 @@ qt_add_qml_module(app${PROJECT_NAME}
         view/settings/components/OpenMenuSettingsButton.qml
 
         view/AppFooter.qml
-        view/component_footer/SystemMonitoring.qml
-        view/component_footer/Downloading.qml
+        view/footer/SystemMonitoring.qml
+        view/footer/Downloading.qml
 
         view/AppHeader.qml
 
@@ -441,6 +441,8 @@ qt_add_qml_module(app${PROJECT_NAME}
     RESOURCE_PREFIX /
     SOURCES core/updatechecker.h core/updatechecker.cpp
     QML_FILES view/UpdateAvailable.qml
+    QML_FILES view/footer/DownloadProgressComboBox.qml
+    QML_FILES view/footer/DownloadingDelegate.qml
 )
 
 #for show logger-contect (file name, message line, ...)

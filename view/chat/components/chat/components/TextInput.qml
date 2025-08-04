@@ -43,7 +43,7 @@ Item {
             cursorVisible: false
             persistentSelection: true
             selectionColor: Style.Colors.textSelection
-            placeholderTextColor: Style.Colors.textPlaceholder
+            placeholderTextColor: inputTextBox.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
 
             onTextChanged: {
                 root.inputValue = inputTextBox.text
