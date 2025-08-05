@@ -1,7 +1,8 @@
 # Privacy Policy:
 
-**Established & Effective Date:** January 2024\
-**Update:** April 26, 2025
+**Established & Effective Date:** January 2024
+
+**Update:** August 04, 2025
 
 We at [OS LLM AI](http://www.osllm.ai/) (the "Company", "we", or "us") are committed to safeguarding the privacy of our customers. This Privacy Policy outlines how your **Personal Information** or **Usage Information** will be collected, used, shared, stored protected, or disclosed by our services (including [https://osllm.ai](https://osllm.ai)). 
 
