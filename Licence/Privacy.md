@@ -12,7 +12,7 @@ By using our Services, you agree to be bound by the terms of this Privacy Policy
 
 Please read these terms of use ("agreement") carefully before using the
 
-Please read these **Terms of Use** ("Agreement") carefully before using the services offered by **Durabuy American Import Export LLC** ("Company"). 
+Please read these **Terms of Use** ("Agreement") carefully before using the services offered by **Nemati AI** ("Company"). 
 
 By visiting the website [https://osllm.ai](https://osllm.ai) and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this Agreement are considered an offer, acceptance is expressly limited to such terms.
 
@@ -21,9 +21,9 @@ If you do not unconditionally agree to all the terms and conditions of this Agre
 Use of the Company's services is expressly conditioned upon your acceptance of these terms.
 
 - **Country:** United States
-- **Company:** Durabuy American Import Export LLC (referred to as "the Company", "We", "Us", or "Our")
-- **Address:** 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States
-- **Phone:** +1 (971) 400-2132
+- **Company:** Nemati AI (referred to as "the Company", "We", "Us", or "Our")
+- **Address:** Milwaukee, WI 53209, United States
+- **Phone:** +1 ‪(971) 813-5163‬
 - **Website:** [osllm.ai](https://osllm.ai)
 - **Email:** [support@osllm.ai](mailto:support@osllm.ai)
 
@@ -328,3 +328,6 @@ You are encouraged to review this Privacy Policy periodically for any changes. U
 # Contact Us:
 
 If you have any questions about this Privacy Policy, You can contact us at support: <support@osllm.ai>
+
+
+
