@@ -1,14 +1,15 @@
 # Terms of Use:
 
-**Established & Effective Date:** January 01, 2024\
-**Update:** April 26, 2025
+**Established & Effective Date:** January 01, 2024
 
-Please read these terms of use ("agreement") carefully before using the services offered by Durabuy American Import Export LLC ("Company"). By visiting the website <https://osllm.ai> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <https://osllm.ai>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.
+**Update:** August 04, 2025
+
+Please read these terms of use ("agreement") carefully before using the services offered by Nemati AI ("Company"). By visiting the website <https://osllm.ai> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <https://osllm.ai>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.
 
 - **Country** **refers to:** United States
 - **Country:** United States
-- **Company:** Durabuy American Import Export LLC (referred to as "the Company", "We", "Us", or "Our")
-- **Address:** 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States
+- **Company:** Nemati AI (referred to as "the Company", "We", "Us", or "Our")
+- **Address:** Milwaukee, WI 53209, United States
 - **Phone:** +1 (971) 400-2132
 - **Website:** [osllm.ai](https://osllm.ai)
 - **Email:** [support@osllm.ai](mailto:support@osllm.ai)
@@ -533,8 +534,8 @@ We reserve the right, at our sole discretion, to modify or replace these Terms a
 - **Contact Us**: If you have any questions about these Terms and Conditions, you can
 - contact us at
 - **Company** (referred to as "the Company", "We", "Us", or "Our")
-- refers to: **Durabuy American Import Export LLC**
-- **Address**: 7343 N Teutonia Ave Unit 7, Milwaukee, WI 53209, United States
-- **Phone**: +1 (971) 400-2132
+- refers to: **Nemati AI**
+- **Address**:  Milwaukee, WI 53209, United States
+- **Phone**: +1 ‪(971) 813-5163‬
 - **Website**: <https://osllm.ai>
 - **Email**: [support@osllm.ai](mailto:support@osllm.ai)
