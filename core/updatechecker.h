@@ -46,7 +46,6 @@ signals:
     void notesChanged();
 
 private slots:
-    // void onReplyFinished(QNetworkReply *reply);
     void onUpdatesXmlFinished(QNetworkReply *reply);
 
 private:

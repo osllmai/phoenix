@@ -11,56 +11,9 @@ UpdateChecker* UpdateChecker::instance(QObject* parent){
 
 UpdateChecker::UpdateChecker(QObject *parent)
     : QObject(parent), m_isUpdateAvailable(false), manager(new QNetworkAccessManager(this)) {
-    // connect(manager, &QNetworkAccessManager::finished, this, &UpdateChecker::onUpdatesXmlFinished);
 }
 
-// void UpdateChecker::checkForUpdatesAsync() {
-//     QNetworkRequest request(m_updateUrl);
-//     manager->get(request);
-// }
-
-// void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
-
-//     qInfo() <<"         m_currentVersion: "<<m_currentVersion;
-
-//     // setIsUpdateAvailable(true);
-
-//     if (reply->error() != QNetworkReply::NoError) {
-//         qWarning() << "Failed to check updates:" << reply->errorString();
-//         reply->deleteLater();
-//         return;
-//     }
-
-//     const QByteArray data = reply->readAll();
-//     QJsonDocument doc = QJsonDocument::fromJson(data);
-//     if (!doc.isArray()) {
-//         qWarning() << "Invalid JSON format";
-//         reply->deleteLater();
-//         return;
-//     }
-
-//     QJsonArray releases = doc.array();
-//     if (releases.isEmpty()) {
-//         qWarning() << "No releases found";
-//         reply->deleteLater();
-//         return;
-//     }
-
-//     QJsonObject latest = releases.last().toObject();
-//     setLatestVersion(latest.value("version").toString());
-//     setNotes(latest.value("notes").toString());
-
-//     if (isNewerVersion(getLatestVersion())) {
-//         setIsUpdateAvailable(true);
-//     } else {
-//         setIsUpdateAvailable(false);
-//     }
-
-//     reply->deleteLater();
-// }
-
 bool UpdateChecker::isNewerVersion(const QString &newVersion) {
-    qInfo()<<"newVersion: "<<newVersion<<"         m_currentVersion: "<<m_currentVersion;
     return QVersionNumber::fromString(newVersion) > QVersionNumber::fromString(m_currentVersion);
 }
 
@@ -83,7 +36,6 @@ void UpdateChecker::onUpdatesXmlFinished(QNetworkReply *reply) {
 
     const QByteArray data = reply->readAll();
     QDomDocument doc;
-    qInfo() << "Received data:" << data;
     if (!doc.setContent(data)) {
         qWarning() << "Invalid XML format in Updates.xml";
         reply->deleteLater();
@@ -124,7 +76,6 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
         }
 
         const QByteArray data = reply->readAll();
-        qInfo() << "Received data:" << data;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
         if (!jsonDoc.isArray()) {
             qWarning() << "Invalid JSON format in release.json";

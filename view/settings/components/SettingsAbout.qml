@@ -30,7 +30,7 @@ Item {
                 <h2>OS LLM AI</h2>
 
                 <p><strong>Established:</strong> January 2024<br/>
-                <strong>Update:</strong> April 26, 2025</p>
+                <strong>Update:</strong> August 04, 2025</p>
 
                 <p>
                 <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none; font-weight:bold;'>OS LLM AI</a> is a cutting-edge platform dedicated to harnessing the power of AI for creativity and productivity. Continuously evolving to meet user needs, it incorporates innovative features and updates designed to streamline workflows and enhance the user experience.

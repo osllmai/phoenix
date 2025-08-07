@@ -27,17 +27,20 @@ Item {
             anchors.margins: 10
 
             text: "<h1>Terms of Use:</h1>
-<p><b>Established &amp; Effective Date:</b> January 01, 2024<br><b>Update:</b> April 26, 2025</p>
-<p>Please read these terms of use (agreement) carefully before using the services offered by Durabuy American Import Export LLC (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
+<p><b>Established &amp; Effective Date:</b> January 01, 2024<br><b>Update:</b> August 04, 2025</p>
+<p>Please read these terms of use (agreement) carefully before using the services offered by Nemati AI (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
 <ul>
 <li><b>Country refers to:</b> United States</li>
 <li><b>Country:</b> United States</li>
+<li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+<li><b>Address:</b> Milwaukee, WI 53209, United States</li>
+<li><b>Phone:</b> +1 (971) 400-2132</li>
 <li><b>Website:</b> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;' >osllm.ai</a></li>
 <li><b>Email:</b> <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></li>
 </ul>
 
 <h2>Children's Privacy:</h2>
-<p>The Company does not knowingly collect or solicit personal information from anyone under the age of 13, nor does it knowingly allow such individuals to register for the Services. If you are under 13 years of age, please do not attempt to register for the Services or provide any personal information to us, including your name, address, telephone number, or email address. No person under the age of 13 may provide any personal information to the Company or through the Services. In the event that the Company becomes aware that it has collected personal information from a child under age 13 without verifying parental consent, the Company will delete that information promptly. If you believe that the Company might have any information from or about a child under 13, please contact us at <a href='mailto:support@osllm.ai'color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a>.</p>
+<p>The Company does not knowingly collect or solicit personal information from anyone under the age of 13, nor does it knowingly allow such individuals to register for the Services. If you are under 13 years of age, please do not attempt to register for the Services or provide any personal information to us, including your name, address, telephone number, or email address. No person under the age of 13 may provide any personal information to the Company or through the Services. In the event that the Company becomes aware that it has collected personal information from a child under age 13 without verifying parental consent, the Company will delete that information promptly. If you believe that the Company might have any information from or about a child under 13, please contact us at <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;' >support@osllm.ai</a>.</p>
 
 <h2>User Representations and Warranties:</h2>
 <p>By accessing or using the Services, you represent and warrant to the Company that:</p>
@@ -410,12 +413,16 @@ Item {
 
                               <h2>Changes to These Terms and Conditions:</h2>
                               <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will make reasonable efforts to provide at least 30 days' notice before the new terms take effect. The determination of what constitutes a material change will be made at our sole discretion. By continuing to access or use our Service after the revisions become effective, you agree to be bound by the updated Terms. If you do not agree to the revised Terms, either in whole or in part, you must stop using the Service and website.</p>
-                              <ul>
-                                  <li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>
-                                  <li>contact us at</li>
-                                  <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
-                                  <li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>
-                              </ul>
+<ul>
+    <li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>
+    <li>contact us at</li>
+    <li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+    <li><b>refers to:</b> Nemati AI</li>
+    <li><b>Address:</b> Milwaukee, WI 53209, United States</li>
+    <li><b>Phone:</b> +1 (971) 400-2132</li>
+    <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
+    <li><b>Email</b>: <a href=\"mailto:support@osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">support@osllm.ai</a></li>
+</ul>
             "
 
             onLinkActivated: function(link) {
