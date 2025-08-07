@@ -162,7 +162,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v0.1.5-2025.08.04"
+            text: "v" + updateChecker.currentVersion + "-2025.08.04"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"

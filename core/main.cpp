@@ -23,7 +23,7 @@
 #include "./conversation/conversationlist.h"
 #include "./conversation/conversationlistfilter.h"
 
-#include "../cmake/config.h.in"
+#include "config.h"
 
 #include "clipboard.h"
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
         QCoreApplication::setOrganizationName("nemati.ai");
         QCoreApplication::setOrganizationDomain("indox.io");
-        QCoreApplication::setApplicationName("PHOENIX");
+        QCoreApplication::setApplicationName(APP_NAME);
         QCoreApplication::setApplicationVersion(APP_VERSION);
 
     #ifdef Q_OS_WINDOWS
