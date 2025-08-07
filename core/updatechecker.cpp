@@ -11,45 +11,50 @@ UpdateChecker* UpdateChecker::instance(QObject* parent){
 
 UpdateChecker::UpdateChecker(QObject *parent)
     : QObject(parent), m_isUpdateAvailable(false), manager(new QNetworkAccessManager(this)) {
-    connect(manager, &QNetworkAccessManager::finished, this, &UpdateChecker::onReplyFinished);
+}
+
+bool UpdateChecker::isNewerVersion(const QString &newVersion) {
+    return QVersionNumber::fromString(newVersion) > QVersionNumber::fromString(m_currentVersion);
 }
 
 void UpdateChecker::checkForUpdatesAsync() {
-    QNetworkRequest request(m_updateUrl);
-    manager->get(request);
+    const QString updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/update/Updates.xml";
+
+    QNetworkRequest request(updatesXmlUrl);
+    QNetworkReply *reply = manager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        onUpdatesXmlFinished(reply);
+    });
 }
 
-void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
-
-    // setIsUpdateAvailable(true);
-
+void UpdateChecker::onUpdatesXmlFinished(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
-        qWarning() << "Failed to check updates:" << reply->errorString();
+        qWarning() << "Failed to download Updates.xml:" << reply->errorString();
         reply->deleteLater();
         return;
     }
 
     const QByteArray data = reply->readAll();
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    if (!doc.isArray()) {
-        qWarning() << "Invalid JSON format";
+    QDomDocument doc;
+    if (!doc.setContent(data)) {
+        qWarning() << "Invalid XML format in Updates.xml";
         reply->deleteLater();
         return;
     }
 
-    QJsonArray releases = doc.array();
-    if (releases.isEmpty()) {
-        qWarning() << "No releases found";
+    QDomNodeList versionNodes = doc.elementsByTagName("Version");
+    if (versionNodes.isEmpty()) {
+        qWarning() << "No <Version> tag found in Updates.xml";
         reply->deleteLater();
         return;
     }
 
-    QJsonObject latest = releases.last().toObject();
-    setLatestVersion(latest.value("version").toString());
-    setNotes(latest.value("notes").toString());
+    QString latestVersion = versionNodes.at(0).toElement().text();
+    setLatestVersion(latestVersion);
 
-    if (isNewerVersion(getLatestVersion())) {
-        setIsUpdateAvailable(true);
+    if (isNewerVersion(latestVersion)) {
+        qInfo() << "Newer version found:" << latestVersion;
+        fetchReleaseJson(latestVersion);
     } else {
         setIsUpdateAvailable(false);
     }
@@ -57,9 +62,50 @@ void UpdateChecker::onReplyFinished(QNetworkReply *reply) {
     reply->deleteLater();
 }
 
-bool UpdateChecker::isNewerVersion(const QString &newVersion) {
-    return QVersionNumber::fromString(newVersion) > QVersionNumber::fromString(m_currentVersion);
+void UpdateChecker::fetchReleaseJson(const QString &version) {
+    const QString releaseJsonUrl = "https://raw.githubusercontent.com/osllmai/phoenix/master/release.json";
+
+    QNetworkRequest request(releaseJsonUrl);
+    QNetworkReply *reply = manager->get(request);
+    connect(reply, &QNetworkReply::finished, this, [this, reply, version]() {
+        if (reply->error() != QNetworkReply::NoError) {
+            qWarning() << "Failed to download release.json:" << reply->errorString();
+            setIsUpdateAvailable(true);
+            reply->deleteLater();
+            return;
+        }
+
+        const QByteArray data = reply->readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+        if (!jsonDoc.isArray()) {
+            qWarning() << "Invalid JSON format in release.json";
+            setIsUpdateAvailable(true);
+            reply->deleteLater();
+            return;
+        }
+
+        QJsonArray releases = jsonDoc.array();
+        bool found = false;
+        for (const QJsonValue &val : releases) {
+            QJsonObject obj = val.toObject();
+            if (obj.value("version").toString() == version) {
+                setNotes(obj.value("notes").toString());
+                // setCommitHash(obj.value("commit").toString());
+                // setCommitDate(obj.value("date").toString());
+                found = true;
+                break;
+            }
+        }
+
+        setIsUpdateAvailable(true);
+        if (!found) {
+            qWarning() << "Version" << version << "not found in release.json details";
+        }
+
+        reply->deleteLater();
+    });
 }
+
 
 bool UpdateChecker::checkForUpdates() const {
     QString tool;
@@ -80,6 +126,8 @@ bool UpdateChecker::checkForUpdates() const {
 
     return QProcess::startDetached(fileName);
 }
+
+QString UpdateChecker::currentVersion() const{return m_currentVersion;}
 
 bool UpdateChecker::isUpdateAvailable() const{return m_isUpdateAvailable;}
 void UpdateChecker::setIsUpdateAvailable(bool newIsUpdateAvailable){

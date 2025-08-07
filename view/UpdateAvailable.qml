@@ -12,14 +12,14 @@ T.Button{
     height:  titleBoxId.height + (informationNotesId.visible?  (informationNotesId.height+20): 10) + buttonBoxId.height + 32
 
     visible: false
-    x: parent.width - backgroundId.width - 10
-    y: parent.height - backgroundId.height - 45
+    x: window.width - backgroundId.width - 10
+    y: window.height - backgroundId.height - 45
     z: 200
 
-    property int parentWidth: parent.width
+    property int parentWidth: window.width
     onParentWidthChanged: {
         if(backgroundId.visible === true){
-            backgroundId.x = parent.width - backgroundId.width - 10
+            backgroundId.x = window.width - backgroundId.width - 10
         }
     }
 
@@ -27,7 +27,7 @@ T.Button{
     onIsUpdateAvailableChanged: {
         if (updateChecker.isUpdateAvailable) {
             backgroundId.visible = true
-            backgroundId.x = parent.width
+            backgroundId.x = window.width
             backgroundId.showAnimatedFunction()
         }
     }
@@ -36,7 +36,7 @@ T.Button{
         id: hideAnimated
         target: backgroundId
         property: "x"
-        to: parent.width
+        to: window.width
         duration: 300
         easing.type: Easing.InCubic
         onFinished: {
@@ -47,11 +47,11 @@ T.Button{
         id: showAnimated
         target: backgroundId
         property: "x"
-        to: parent.width - backgroundId.width - 10
+        to: window.width - backgroundId.width - 10
         duration: 300
         easing.type: Easing.OutCubic
         onFinished: {
-            backgroundId.x = parent.width - backgroundId.width - 10
+            backgroundId.x = window.width - backgroundId.width - 10
         }
     }
 

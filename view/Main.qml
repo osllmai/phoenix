@@ -109,7 +109,7 @@ ApplicationWindow {
     }
 
     // visible: true
-    title: qsTr("Phoenix v0.1.5 Beta")
+    title: qsTr("Phoenix v" + updateChecker.currentVersion + " Beta")
 
     property bool isDesktopSize: width >= 750;
     onIsDesktopSizeChanged: {
@@ -182,7 +182,7 @@ ApplicationWindow {
         height: 230
         width: 365
         titleText: "Phoenix"
-        about: "Version: 0.1.5 (user setup)
+        about: "Version: "  + updateChecker.currentVersion + " (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
 Date: 2025.08.04
 OS: Windows x64

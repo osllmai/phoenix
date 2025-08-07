@@ -31,7 +31,7 @@ Item {
                 <h1>Privacy Policy:</h1>
 
                 <p><strong>Established & Effective Date:</strong> January 2024<br/>
-                <strong>Update:</strong> April 26, 2025</p>
+                <strong>Update:</strong> August 04, 2025</p>
 
                 <p>
                 We at <a href='http://www.osllm.ai/' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>OS LLM AI</a> (the Company, we, or us) are committed to safeguarding the privacy of our customers. This Privacy Policy outlines how your <strong>Personal Information</strong> or <strong>Usage Information</strong> will be collected, used, shared, stored protected, or disclosed by our services (including <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>).
@@ -45,8 +45,6 @@ Item {
                 By using our Services, you agree to be bound by the terms of this Privacy Policy. If you do not accept the terms of this Privacy Policy, you are directed to discontinue accessing or using our applications in any way. We strongly recommend that you read this policy carefully before proceeding with any transaction on our platform.
                 </p>
 
-                <p>Please read these terms of use (agreement) carefully before using the</p>
-
                 <p>Please read these <strong>Terms of Use</strong> (Agreement) carefully before using the services offered by <strong>Durabuy American Import Export LLC</strong> (Company).</p>
 
                 <p>By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this Agreement are considered an offer, acceptance is expressly limited to such terms.</p>
@@ -56,7 +54,10 @@ Item {
                 <p>Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
 
                 <ul>
-                    <li><strong>Country:</strong> United States</li>
+                    <li><b>Country:</b> United States</li>
+                    <li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+                    <li><b>Address:</b> Milwaukee, WI 53209, United States</li>
+                    <li><b>Phone:</b> +1 (971) 400-2132</li>
                     <li><strong>Website:</strong> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>osllm.ai</a></li>
                     <li><strong>Email:</strong> <a href='mailto:support@osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>support@osllm.ai</a></li>
                 </ul>

@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
-set(APP_VERSION_MINOR 0)
-set(APP_VERSION_PATCH 18)
+set(APP_VERSION_MINOR 1)
+set(APP_VERSION_PATCH 5)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
-set(APP_VERSION "${APP_VERSION_BASE}-dev0")
+set(APP_VERSION "${APP_VERSION_BASE}")
 
-set(PROJECT_NAME phoenix)
-project(${PROJECT_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
+set(APP_NAME Phoenix)
+project(${APP_NAME} VERSION ${APP_VERSION_BASE} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
@@ -17,7 +17,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network TextToSpeech HttpServer)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network Xml TextToSpeech HttpServer)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -52,7 +52,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-qt_add_executable(app${PROJECT_NAME}
+qt_add_executable(app${APP_NAME}
     core/main.cpp
     media/image_company/appIcon.rc
 
@@ -154,7 +154,7 @@ qt_add_executable(app${PROJECT_NAME}
     core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp
 )
 
-qt_add_resources(app${PROJECT_NAME}
+qt_add_resources(app${APP_NAME}
     PREFIX /
     FILES
         media/icon/add.svg
@@ -293,8 +293,8 @@ qt_add_resources(app${PROJECT_NAME}
 
 qt_policy(SET QTP0004 NEW)
 
-qt_add_qml_module(app${PROJECT_NAME}
-    URI ${PROJECT_NAME}
+qt_add_qml_module(app${APP_NAME}
+    URI ${APP_NAME}
     VERSION 1.0
 
     QML_FILES
@@ -451,15 +451,15 @@ add_definitions(-DQT_MESSAGELOGCONTEXT)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-set_target_properties(app${PROJECT_NAME} PROPERTIES
-   MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${PROJECT_NAME}
+set_target_properties(app${APP_NAME} PROPERTIES
+   MACOSX_BUNDLE_GUI_IDENTIFIER com.example.app${APP_NAME}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(app${PROJECT_NAME}
+target_link_libraries(app${APP_NAME}
     PRIVATE
         Qt${QT_VERSION_MAJOR}::Quick
         Qt${QT_VERSION_MAJOR}::Concurrent
@@ -468,12 +468,13 @@ target_link_libraries(app${PROJECT_NAME}
         Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt${QT_VERSION_MAJOR}::HttpServer
+        Qt${QT_VERSION_MAJOR}::Xml
         Qt::Qml
         Qt::Gui
 )
 
 include(GNUInstallDirs)
-install(TARGETS app${PROJECT_NAME}
+install(TARGETS app${APP_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -482,6 +483,10 @@ install(TARGETS app${PROJECT_NAME}
 # set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
 
 #copy company.json
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)

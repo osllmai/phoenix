@@ -11,10 +11,15 @@
 #include <QCoreApplication>
 #include <QProcess>
 #include <QFileInfo>
+#include <QDomDocument>
+#include <QNetworkReply>
+
+#include "config.h"
 
 class UpdateChecker : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString currentVersion READ currentVersion CONSTANT FINAL)
     Q_PROPERTY(bool isUpdateAvailable READ isUpdateAvailable WRITE setIsUpdateAvailable NOTIFY isUpdateAvailableChanged FINAL)
     Q_PROPERTY(QString latestVersion READ getLatestVersion WRITE setLatestVersion NOTIFY latestVersionChanged FINAL)
     Q_PROPERTY(QString notes READ getNotes WRITE setNotes NOTIFY notesChanged FINAL)
@@ -33,27 +38,28 @@ public:
     QString getNotes() const;
     void setNotes(const QString &newNotes);
 
+    QString currentVersion() const;
+
 signals:
     void isUpdateAvailableChanged();
-
     void latestVersionChanged();
-
     void notesChanged();
 
 private slots:
-    void onReplyFinished(QNetworkReply *reply);
+    void onUpdatesXmlFinished(QNetworkReply *reply);
 
 private:
     explicit UpdateChecker(QObject* parent = nullptr);
     static UpdateChecker* m_instance;
 
     QNetworkAccessManager *manager;
-    const QString m_currentVersion = "0.1.4";
+    const QString m_currentVersion = APP_VERSION;
     const QString m_updateUrl = "https://raw.githubusercontent.com/osllmai/phoenix/master/release.json";
-    QString m_latestVersion = "0.1.4";
+    QString m_latestVersion = APP_VERSION;
     QString m_notes = "";
 
     bool m_isUpdateAvailable;
 
     bool isNewerVersion(const QString &newVersion);
+    void fetchReleaseJson(const QString &version);
 };
