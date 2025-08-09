@@ -58,18 +58,6 @@ Item{
         anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyButton{
-            id: openModelSettingsId
-            myIcon: "qrc:/media/icon/settings.svg"
-            myTextToolTip: "Settings model"
-            bottonType: Style.RoleEnum.BottonType.Secondary
-            Connections {
-                target: openModelSettingsId
-                function onClicked(){
-                    headerId.openModelSettingsDrawer()
-                }
-            }
-        }
-        MyButton{
             id: openHistoryId
             myIcon: "qrc:/media/icon/history.svg"
             myTextToolTip: "History"
@@ -78,6 +66,18 @@ Item{
                 target: openHistoryId
                 function onClicked(){
                     headerId.openHistoryDrawer()
+                }
+            }
+        }
+        MyButton{
+            id: openModelSettingsId
+            myIcon: "qrc:/media/icon/settings.svg"
+            myTextToolTip: "Settings model"
+            bottonType: Style.RoleEnum.BottonType.Secondary
+            Connections {
+                target: openModelSettingsId
+                function onClicked(){
+                    headerId.openModelSettingsDrawer()
                 }
             }
         }

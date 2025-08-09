@@ -6,14 +6,14 @@ import '../../component_library/style' as Style
 
 T.Button {
     id: control
-    height: (control.myIcon !== "")? 65: 35
-    width: 100
+    height: 35
+    width: (control.myText !== ""? textId.width: 0 ) + (control.myIcon !== ""? iconId.width: 0 ) + 20
 
     leftPadding: 4; rightPadding: 4
     autoExclusive: false
     checkable: true
 
-    property alias myText: textId.text
+    property string myText: ""
     property string myIcon: ""
 
     function iconColor(){
@@ -45,25 +45,26 @@ T.Button {
         Behavior on height{ NumberAnimation{ duration: 200}}
 
 
-        Column{
-            anchors.centerIn: parent.Center
-            anchors.horizontalCenter: parent.horizontalCenter
+        Row{
             anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             MyIcon {
                 id: iconId
+                width: 30; height: 30
                 visible: control.myIcon !== ""
                 myIcon: control.myIcon
                 iconType: Style.RoleEnum.IconType.Primary
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
                 enabled: false
             }
 
             Label {
                 id: textId
                 color: Style.Colors.buttonFeatureTextNormal
-                text: "Default"
+                text: control.myText
                 font.weight: 400
                 font.pixelSize: 12
+                anchors.verticalCenter: iconId.verticalCenter
                 visible: control.width>60
                 clip: true
             }

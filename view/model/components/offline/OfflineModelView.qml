@@ -11,6 +11,10 @@ Item {
 
     OfflineHeader{
         id: headerId
+        width: parent.width - 500
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.right: parent.right
     }
     OfflineBody{
         id:offlineBodyId

@@ -2,9 +2,9 @@ import QtQuick 2.15
 import "../../component_library/button"
 import "../../menu"
 
-Item{
+Rectangle{
     id:headerId
-    width: parent.width; height: 120
+    width: window.isDesktopSize? 350: 120; height: 60
     clip:true
 
     function setModelPages(page){
@@ -26,12 +26,12 @@ Item{
     }
 
     Row{
-        spacing: 10
+        spacing: 5
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top; anchors.topMargin: 12
         MyMenu {
             id: offlineModel
-            myText: "Offline Model"
+            myText: window.isDesktopSize? "Offline Provider": ""
             myIcon: "qrc:/media/icon/offline.svg"
             autoExclusive: true
             checked: true
@@ -44,7 +44,7 @@ Item{
         }
         MyMenu {
             id: onlineModel
-            myText: "Online Model"
+            myText: window.isDesktopSize? "Online Provider": ""
             myIcon: "qrc:/media/icon/online.svg"
             autoExclusive: true
             Connections {

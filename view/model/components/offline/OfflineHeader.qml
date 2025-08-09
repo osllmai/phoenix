@@ -17,7 +17,7 @@ Item{
     property bool isSearchInColumn: window.isDesktopSize
 
     width: parent.width
-    height: phoenixId.height + fillterBox.height + (headerId.isSearchInColumn? 0: searchBox2Id.height + 10)
+    height: fillterBox.height + (headerId.isSearchInColumn? 0: searchBox2Id.height + 10)
     clip:true
 
     signal search(var text)
@@ -27,14 +27,6 @@ Item{
         anchors.fill: parent
         anchors.leftMargin: 30
         spacing: 10
-        Label {
-            id: phoenixId
-            text: qsTr("Offline Model")
-            color: Style.Colors.textTitle
-            font.pixelSize: 20
-            font.styleName: "Bold"
-        }
-
         SearchButton{
             id: searchBox2Id
             visible: !headerId.isSearchInColumn
@@ -52,6 +44,7 @@ Item{
             spacing: 10
             SearchButton{
                 id: searchBoxId
+                width: 400
                 visible: headerId.isSearchInColumn
                 Connections{
                     target: searchBoxId
@@ -60,12 +53,12 @@ Item{
                     }
                 }
             }
-            Column{
-                width: headerId.isSearchInColumn? parent.width - searchBoxId.width - 40: parent.width - 20
-                height: 2*searchBoxId.height + 20
+            Row{
+                width: /*headerId.isSearchInColumn?*/ parent.width - searchBoxId.width - 40/*: parent.width - 20*/
+                height: /*2**/searchBoxId.height + 20
 
                 Item{
-                    width: parent.width
+                    width: parent.width - 80
                     height: searchBoxId.height +10
 
                     ListView{
@@ -107,6 +100,7 @@ Item{
                         delegate: MyButton {
                             id: delegateId
                             myText: model.name
+                            height: 30
                             bottonType: Style.RoleEnum.BottonType.Feature
                             iconType: Style.RoleEnum.IconType.FeatureBlue
                             isNeedAnimation: true
@@ -125,7 +119,7 @@ Item{
                     }
                 }
                 Item{
-                    width: parent.width
+                    width: 80
                     height: searchBoxId.height + 10
 
                     ListView{
