@@ -133,6 +133,10 @@ int main(int argc, char *argv[])
         offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
         engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
 
+        OfflineModelListFilter* offlineTextModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        offlineTextModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadTextModelFinished);
+        engine.rootContext()->setContextProperty("offlineTextModelListFinishedDownloadFilter", offlineTextModelListFinishedDownloadFilter);
+
         OfflineModelListFilter* offlineModelListRecommendedFilter = new OfflineModelListFilter(offlineModelList, &engine);
         offlineModelListRecommendedFilter->setFilterType(OfflineModelListFilter::FilterType::Recommended);
         engine.rootContext()->setContextProperty("offlineModelListRecommendedFilter", offlineModelListRecommendedFilter);

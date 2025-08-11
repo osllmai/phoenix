@@ -132,9 +132,11 @@ Item{
 
                     ListView{
                         id: viewList
-                        anchors.fill: parent
+                        // anchors.fill: parent
+                        width: viewList.contentWidth
+                        height: parent.height
                         spacing: 5
-                        cacheBuffer: Math.max(0, viewList.contentWidth)
+                        // cacheBuffer: Math.max(0, viewList.contentWidth)
 
                         layoutDirection: Qt.RightToLeft
                         orientation: Qt.Horizontal

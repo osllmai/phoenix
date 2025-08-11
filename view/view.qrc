@@ -140,5 +140,8 @@
         <file>AppHeader.qml</file>
         <file>component_library/button/MyCopyButton.qml</file>
         <file>footer/DownloadingDelegate.qml</file>
+
+        <file>model/components/offline/components/SearchOfflineModel.qml</file>
+        <file>model/components/offline/components/components/SearchTagPupup.qml</file>
     </qresource>
 </RCC>

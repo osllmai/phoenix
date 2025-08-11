@@ -7,10 +7,14 @@ OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObje
     QSortFilterProxyModel::setSourceModel(models);
 
     setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
+    setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
 
-    setSortRole(OfflineModelList::OfflineModelRoles::DownloadFinishedRole);
-    sort(0, Qt::DescendingOrder);
+    setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
+    sort(0, Qt::AscendingOrder);
+
+    connect(this, &QAbstractItemModel::rowsInserted, this, &OfflineModelListFilter::countChanged);
+    connect(this, &QAbstractItemModel::rowsRemoved, this, &OfflineModelListFilter::countChanged);
+    connect(this, &QAbstractItemModel::modelReset, this, &OfflineModelListFilter::countChanged);
 }
 
 bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
@@ -45,6 +49,8 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::DownloadFinished:
+        return matchesFilter && (downloadFinished);
+    case FilterType::DownloadTextModelFinished:
         return matchesFilter && model->type() == "Text Generation" && (downloadFinished);
     case FilterType::Recommended:
         return matchesFilter && model->type() == "Text Generation" && (!downloadFinished && model->recommended());
@@ -66,6 +72,8 @@ void OfflineModelListFilter::filter(QString filter){
         setFilterType(FilterType::Type);
     if(filter == "DownloadFinished")
         setFilterType(FilterType::DownloadFinished);
+    if(filter == "DownloadTextModelFinished")
+        setFilterType(FilterType::DownloadTextModelFinished);
     if(filter == "Recommended")
         setFilterType(FilterType::Recommended);
     if(filter == "Favorite")
@@ -73,6 +81,20 @@ void OfflineModelListFilter::filter(QString filter){
     if(filter == "IsDownloading")
         setFilterType(FilterType::IsDownloading);
 }
+
+QVariantMap OfflineModelListFilter::get(int index) const {
+    QVariantMap map;
+    if (index < 0 || index >= rowCount())
+        return map;
+
+    QHash<int, QByteArray> roles = roleNames();
+    QModelIndex modelIndex = this->index(index, 0);
+    for (auto it = roles.begin(); it != roles.end(); ++it) {
+        map[it.value()] = data(modelIndex, it.key());
+    }
+    return map;
+}
+
 
 int OfflineModelListFilter::count() const { return rowCount(); }
 

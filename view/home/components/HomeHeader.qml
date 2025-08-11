@@ -10,7 +10,7 @@ Item{
     clip:true
     Row{
         anchors.verticalCenter: parent.verticalCenter
-        anchors.left:parent.left; anchors.leftMargin: 24
+        anchors.left:parent.left; anchors.leftMargin: 12
         anchors.top: parent.top; anchors.topMargin: 12
         spacing: 15
 

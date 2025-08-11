@@ -2,9 +2,9 @@ import QtQuick 2.15
 import "../../component_library/button"
 import "../../menu"
 
-Rectangle{
+Item{
     id:headerId
-    width: window.isDesktopSize? 350: 120; height: 60
+    width: window.isDesktopSize? 440: 205; height: 60
     clip:true
 
     function setModelPages(page){
@@ -21,7 +21,7 @@ Rectangle{
 
     MyOpenMenuButton{
         id: openMenuId
-        anchors.left:parent.left; anchors.leftMargin: 24
+        anchors.left:parent.left; anchors.leftMargin: 12
         anchors.top: parent.top; anchors.topMargin: 12
     }
 
@@ -29,6 +29,7 @@ Rectangle{
         spacing: 5
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top; anchors.topMargin: 12
+        anchors.left: openMenuId.right; anchors.leftMargin: 5
         MyMenu {
             id: offlineModel
             myText: window.isDesktopSize? "Offline Provider": ""
@@ -49,6 +50,18 @@ Rectangle{
             autoExclusive: true
             Connections {
                 target: onlineModel
+                function onClicked(){
+                    modelBodyId.currentIndex = 1
+                }
+            }
+        }
+        MyMenu {
+            id: huggingfaceModel
+            myText: window.isDesktopSize? "Online Provider": ""
+            myIcon: "qrc:/media/icon/online.svg"
+            autoExclusive: true
+            Connections {
+                target: huggingfaceModel
                 function onClicked(){
                     modelBodyId.currentIndex = 1
                 }

@@ -17,7 +17,7 @@ Item{
 
     Row{
         spacing: 10
-        anchors.left: parent.left; anchors.leftMargin: 24
+        anchors.left: parent.left; anchors.leftMargin: 12
         anchors.top: parent.top; anchors.topMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         MyOpenMenuButton{

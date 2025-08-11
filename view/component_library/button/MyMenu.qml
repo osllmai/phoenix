@@ -7,7 +7,7 @@ import '../../component_library/style' as Style
 T.Button {
     id: control
     height: 35
-    width: (control.myText !== ""? textId.width: 0 ) + (control.myIcon !== ""? iconId.width: 0 ) + 20
+    width: (control.myText !== ""? textId.width: 0 ) + (control.myIcon !== ""? iconId.width: 0 ) + 15
 
     leftPadding: 4; rightPadding: 4
     autoExclusive: false

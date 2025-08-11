@@ -66,7 +66,7 @@ ComboBox {
     }
 
     delegate: ItemDelegate {
-        height: 35; width: popupId.width - 50
+        height: 35; width: popupId.width /*- 50*/
         contentItem: Label {
             text: modelData
             color: Style.Colors.textInformation
@@ -75,7 +75,7 @@ ComboBox {
         }
         background: Rectangle {
             radius: 10
-            width: popupId.width - 50; height: 35
+            width: popupId.width /*- 50*/; height: 35
             color: highlighted ? Style.Colors.boxHover : Style.Colors.background
         }
         highlighted: comboBoxId.highlightedIndex === index
@@ -89,7 +89,7 @@ ComboBox {
 
         background: null
         contentItem: Rectangle {
-            implicitWidth: myListView.contentWidth
+            implicitWidth: /*myListView.contentWidth*/ comboBoxId.width
             implicitHeight: myListView.contentHeight
             color: Style.Colors.background
             border.width: 1; border.color: Style.Colors.boxBorder
@@ -109,7 +109,7 @@ ComboBox {
                 width: parent.width
                 height: parent.height
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: 5
                 clip: true
                 cacheBuffer: Math.max(0, myListView.contentHeight)
                 interactive: contentHeight > height
@@ -193,7 +193,7 @@ ComboBox {
                 target: backgroundId
                 color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
                 border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
-                width: comboBoxId.width-3; height: comboBoxId.height-3
+                // width: comboBoxId.width-3; height: comboBoxId.height-3
             }
             PropertyChanges {
                 target: textId
@@ -207,7 +207,7 @@ ComboBox {
                 target: backgroundId
                 color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
                 border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
-                width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
+                // width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
             }
             PropertyChanges {
                 target: textId
@@ -221,7 +221,7 @@ ComboBox {
                 target: backgroundId
                 color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
                 border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
-                width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
+                // width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
             }
             PropertyChanges {
                 target: textId
@@ -235,7 +235,7 @@ ComboBox {
                 target: backgroundId
                 color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
                 border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
-                width: comboBoxId.width-3; height: comboBoxId.height-3
+                // width: comboBoxId.width-3; height: comboBoxId.height-3
             }
             PropertyChanges {
                 target: textId

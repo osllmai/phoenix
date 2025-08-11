@@ -24,10 +24,12 @@ public:
     explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent);
 
     Q_INVOKABLE void filter(QString filter);
+    Q_INVOKABLE QVariantMap get(int index) const;
 
     enum class FilterType {
         IsDownloading,
         DownloadFinished,
+        DownloadTextModelFinished,
         Recommended,
         Company,
         Type,
