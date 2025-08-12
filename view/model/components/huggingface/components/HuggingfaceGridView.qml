@@ -66,7 +66,7 @@ Flickable {
                 width: delegateId.visible ? gridView.cellWidth: 0
                 height:  delegateId.visible ? gridView.cellHeight : 0
 
-                OfflineBoxDelegate {
+                HuggingfaceBoxDelegate {
                    id: indoxItem
                    anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
                    Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
@@ -126,7 +126,7 @@ Flickable {
                width: gridView2.cellWidth
                height: gridView2.cellHeight
 
-               OfflineBoxDelegate {
+               HuggingfaceBoxDelegate {
                    id: indoxItem2
                    anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
                    Behavior on anchors.margins{ NumberAnimation{ duration: 200}}

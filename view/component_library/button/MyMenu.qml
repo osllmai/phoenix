@@ -15,6 +15,7 @@ T.Button {
 
     property string myText: ""
     property string myIcon: ""
+    property int iconType: Style.RoleEnum.IconType.Primary
 
     function iconColor(){
         if(!control.pressed && !control.checked &&!control.hovered)
@@ -53,7 +54,7 @@ T.Button {
                 width: 30; height: 30
                 visible: control.myIcon !== ""
                 myIcon: control.myIcon
-                iconType: Style.RoleEnum.IconType.Primary
+                iconType: control.iconType
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: false
             }

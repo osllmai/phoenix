@@ -1,10 +1,11 @@
 import QtQuick 2.15
 import "../../component_library/button"
+import '../../component_library/style' as Style
 import "../../menu"
 
 Item{
     id:headerId
-    width: window.isDesktopSize? 440: 205; height: 60
+    width: window.isDesktopSize? 330: 210; height: 60
     clip:true
 
     function setModelPages(page){
@@ -32,7 +33,7 @@ Item{
         anchors.left: openMenuId.right; anchors.leftMargin: 5
         MyMenu {
             id: offlineModel
-            myText: window.isDesktopSize? "Offline Provider": ""
+            myText: window.isDesktopSize? "Local": ""
             myIcon: "qrc:/media/icon/offline.svg"
             autoExclusive: true
             checked: true
@@ -45,7 +46,7 @@ Item{
         }
         MyMenu {
             id: onlineModel
-            myText: window.isDesktopSize? "Online Provider": ""
+            myText: window.isDesktopSize? "Online": ""
             myIcon: "qrc:/media/icon/online.svg"
             autoExclusive: true
             Connections {
@@ -57,13 +58,14 @@ Item{
         }
         MyMenu {
             id: huggingfaceModel
-            myText: window.isDesktopSize? "Online Provider": ""
-            myIcon: "qrc:/media/icon/online.svg"
+            myText: window.isDesktopSize? "Huggingface": ""
+            myIcon: "qrc:/media/image_company/Huggingface.svg"
+            iconType: Style.RoleEnum.IconType.Image
             autoExclusive: true
             Connections {
                 target: huggingfaceModel
                 function onClicked(){
-                    modelBodyId.currentIndex = 1
+                    modelBodyId.currentIndex = 2
                 }
             }
         }

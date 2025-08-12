@@ -57,7 +57,16 @@
         <file>model/components/online/components/components/OnlineDelegateInfoBox.qml</file>
         <file>model/components/online/components/components/OnlineInformationModel.qml</file>
 
-
+        <file>model/components/huggingface/HuggingfaceModelView.qml</file>
+        <file>model/components/huggingface/HuggingfaceHeader.qml</file>
+        <file>model/components/huggingface/HuggingfaceBody.qml</file>
+        <file>model/components/huggingface/components/HuggingfaceGridView.qml</file>
+        <file>model/components/huggingface/components/HuggingfaceListView.qml</file>
+        <file>model/components/huggingface/components/HuggingfaceBoxDelegate.qml</file>
+        <file>model/components/huggingface/components/HuggingfaceRowDelegate.qml</file>
+        <file>model/components/huggingface/components/components/HuggingfaceDelegateTitleAndCopyButton.qml</file>
+        <file>model/components/huggingface/components/components/HuggingfaceDelegateInfoBox.qml</file>
+        <file>model/components/huggingface/components/components/HuggingfaceInformationModel.qml</file>
 
 
         <file>chat/ChatView.qml</file>

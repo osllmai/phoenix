@@ -34,11 +34,11 @@ Item {
             return Math.max(gridView.width,300);
     }
 
-    OfflineGridView {
+    HuggingfaceGridView {
         id: gridView
         visible: (gridView.count !== 0) && (window.modelPageView === "gridView")
     }
-    OfflineListView {
+    HuggingfaceListView {
         id: listView
         visible: (gridView.count !== 0) && (window.modelPageView === "listView")
     }

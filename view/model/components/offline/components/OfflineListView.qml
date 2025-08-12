@@ -6,6 +6,7 @@ import '../../../../component_library/button'
 Flickable {
     id: flickable
     anchors.fill: parent
+    anchors.topMargin: 10
 
     contentHeight: column.implicitHeight
     clip: true
@@ -27,12 +28,12 @@ Flickable {
     Column {
         id: column
         width: flickable.width
-        spacing: 10
+        spacing: 5
 
         Label {
             id: availablemodelsId
             visible: offlineFinishedDownloadModelList.height>30
-            text: "Available Models"
+            text: "Recent Downloaded Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
             elide: Text.ElideRight
@@ -47,9 +48,6 @@ Flickable {
 
             height: offlineFinishedDownloadModelList.contentHeight
             width: parent.width
-
-            interactive: offlineFinishedDownloadModelList.contentHeight > offlineFinishedDownloadModelList.height
-            boundsBehavior: offlineFinishedDownloadModelList.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
             clip: true
 
@@ -71,14 +69,39 @@ Flickable {
             }
         }
 
-        MyButton{
+        // MyButton{
+        //     id: installButton
+        //     visible: offlineModelListFinishedDownloadFilter.count > 3
+        //     myText: flickable.showAllModels ? "Show Less" : "Show More"
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     bottonType: Style.RoleEnum.BottonType.Primary
+        //     onClicked:{
+        //         flickable.showAllModels = !flickable.showAllModels
+        //     }
+        // }
+
+        Row{
             id: installButton
             visible: offlineModelListFinishedDownloadFilter.count > 3
-            myText: flickable.showAllModels ? "Show Less" : "Show More"
+            width: parent.width - 40
+            height: 30
             anchors.horizontalCenter: parent.horizontalCenter
-            bottonType: Style.RoleEnum.BottonType.Primary
-            onClicked:{
-                flickable.showAllModels = !flickable.showAllModels
+            Rectangle{
+                width: parent.width - 30
+                height: 1
+                color: Style.Colors.boxBorder
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MyIcon{
+                id:iconId
+                width: 30; height: 30
+                myIcon: flickable.showAllModels ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        flickable.showAllModels = !flickable.showAllModels
+                    }
+                }
             }
         }
 
@@ -99,9 +122,6 @@ Flickable {
 
             height: allModelList.contentHeight
             width: parent.width
-
-            interactive: allModelList.contentHeight > allModelList.height
-            boundsBehavior: allModelList.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
             clip: true
 

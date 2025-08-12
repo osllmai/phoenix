@@ -5,14 +5,14 @@ import '../../../component_library/button'
 import './components'
 
 Item{
-    id: headerId
+    id:headerId
 
     property string filtter: "All"
     onFiltterChanged: {
         if(headerId.filtter ==="All" || headerId.filtter ==="Favorite"){
-            onlineModelListFilter.filter(headerId.filtter)
+            offlineModelListFilter.filter(headerId.filtter)
         }else{
-            onlineModelListFilter.type = headerId.filtter
+            offlineModelListFilter.type = headerId.filtter
         }
     }
 
@@ -22,10 +22,22 @@ Item{
 
     signal search(var text)
 
+
     Row{
         id: fillterBox
         width: parent.width
         spacing: 10
+
+        // SearchHuggingfaceModel{
+        //     id: searchBoxId
+        //     width: parent.width - companyList.width - viewList.width - 20 - 10
+        //     Connections{
+        //         target: searchBoxId
+        //         function onSearch(myText){
+        //             offlineModelListFilter.setFilterFixedString(myText)
+        //         }
+        //     }
+        // }
         SearchButton{
             id: searchBoxId
             visible: headerId.isSearchInColumn
@@ -37,6 +49,7 @@ Item{
                 }
             }
         }
+
         Row{
             height: searchBoxId.height
             spacing: 10
@@ -48,19 +61,17 @@ Item{
                     "All",
                     "Favorite",
                     "Text Generation",
-                    "Image",
-                    "Vision",
-                    "Embeddings"
+                    "Speech"
                 ]
                 displayText: headerId.filtter
                 onActivated: {
                     var selectedType = model[currentIndex]
-                    if(selectedType ==="All" || selectedType ==="Favorite"){
-                        onlineModelListFilter.filter(selectedType)
-                    }else{
-                        onlineModelListFilter.type = selectedType
+                    if (selectedType === "All" || selectedType === "Favorite") {
+                        offlineModelListFilter.filter(selectedType)
+                    } else {
+                        offlineModelListFilter.type = selectedType
                     }
-                    headerId.filtter= selectedType
+                    headerId.filtter = selectedType
                 }
             }
 
@@ -88,7 +99,7 @@ Item{
                 }
                 delegate: MyButton {
                     id: delegateViewId
-                    width: 30; height: 30
+                    width: searchBoxId.height; height: searchBoxId.height
                     myIcon: model.icon
                     bottonType: Style.RoleEnum.BottonType.Feature
                     iconType: Style.RoleEnum.IconType.Primary

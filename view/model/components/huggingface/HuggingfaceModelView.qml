@@ -9,13 +9,13 @@ Item {
         headerId.filtter = filter
     }
 
-    OfflineHeader{
+    HuggingfaceHeader{
         id: headerId
         width: parent.width - (window.isDesktopSize? 330: 210)
         anchors.top: parent.top; anchors.topMargin: 12
         anchors.right: parent.right; anchors.rightMargin:12
     }
-    OfflineBody{
+    HuggingfaceBody{
         id:offlineBodyId
         anchors.top: headerId.bottom; anchors.topMargin: 8
         anchors.bottom: parent.bottom

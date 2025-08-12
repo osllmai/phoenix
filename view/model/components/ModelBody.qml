@@ -1,6 +1,7 @@
 import QtQuick.Layouts
 import "./offline"
 import "./online"
+import "./huggingface"
 
 StackLayout {
     id: page
@@ -17,4 +18,6 @@ StackLayout {
     OfflineModelView{id: offlineModel}
 
     OnlineModelView{id: onlineModel}
+
+    HuggingfaceModelView{id: huggingfaceModel}
 }

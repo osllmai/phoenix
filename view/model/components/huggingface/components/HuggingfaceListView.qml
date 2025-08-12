@@ -32,7 +32,7 @@ Flickable {
 
         Label {
             id: availablemodelsId
-            visible: gridView.height>30
+            visible: offlineFinishedDownloadModelList.height>30
             text: "Recent Downloaded Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
@@ -42,37 +42,43 @@ Flickable {
             clip: true
         }
 
-        GridView {
-            id: gridView
-            visible: gridView.count !== 0
+        ListView {
+            id: offlineFinishedDownloadModelList
+            visible: offlineFinishedDownloadModelList.count !== 0
+
+            height: offlineFinishedDownloadModelList.contentHeight
             width: parent.width
-            height: flickable.showAllModels? gridView.contentHeight: 300
-
-            interactive: false
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AlwaysOff
-            }
-
-            cellWidth: control.calculationCellWidth()
-            cellHeight: 300
 
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
             delegate: Item{
-                id: delegateId
-                visible: !flickable.showAllModels ? index < control.calculationCellNumber() : true
-                width: delegateId.visible ? gridView.cellWidth: 0
-                height:  delegateId.visible ? gridView.cellHeight : 0
+               id: delegateId
+               visible: !flickable.showAllModels ? index < 3 : true
+               width: offlineFinishedDownloadModelList.width
+               height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
 
-                OfflineBoxDelegate {
+               HuggingfaceRowDelegate {
                    id: indoxItem
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-                }
+                   anchors.fill: parent
+                   anchors.leftMargin: 10
+                   anchors.rightMargin: 10
+                   anchors.topMargin: 5
+                   anchors.bottomMargin: 5
+               }
             }
         }
+
+        // MyButton{
+        //     id: installButton
+        //     visible: offlineModelListFinishedDownloadFilter.count > 3
+        //     myText: flickable.showAllModels ? "Show Less" : "Show More"
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     bottonType: Style.RoleEnum.BottonType.Primary
+        //     onClicked:{
+        //         flickable.showAllModels = !flickable.showAllModels
+        //     }
+        // }
 
         Row{
             id: installButton
@@ -110,29 +116,29 @@ Flickable {
             clip: true
         }
 
-        GridView {
-            id: gridView2
-            visible: gridView2.count !== 0
-            width: parent.width
-            height: gridView2.contentHeight
+        ListView {
+            id: allModelList
+            visible: allModelList.count !== 0
 
-            cellWidth: control.calculationCellWidth()
-            cellHeight: 300
+            height: allModelList.contentHeight
+            width: parent.width
 
             clip: true
 
             model: offlineModelListFilter
             delegate: Item{
-               width: gridView2.cellWidth
-               height: gridView2.cellHeight
+               width: allModelList.width
+               height: window.isDesktopSize? 65:90
 
-               OfflineBoxDelegate {
+               HuggingfaceRowDelegate {
                    id: indoxItem2
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+                   anchors.fill: parent
+                   anchors.leftMargin: 10
+                   anchors.rightMargin: 10
+                   anchors.topMargin: 5
+                   anchors.bottomMargin: 5
                }
             }
         }
     }
 }
-
