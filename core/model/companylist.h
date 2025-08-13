@@ -2,7 +2,6 @@
 #define COMPANYLIST_H
 
 #include <QObject>
-#include <QtQml>
 #include <QAbstractListModel>
 
 #include <QFutureWatcher>
@@ -35,6 +34,7 @@ public:
 signals:
     void countChanged();
     void requestReadModel(const QList<Company*> companys);
+    void finishedReadCompany();
 
 private:
     explicit CompanyList(QObject* parent);

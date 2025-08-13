@@ -13,12 +13,21 @@ OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject 
     // setSortRole(OnlineModelList::OnlineModelRoles::NameRole);
     // sort(0, Qt::AscendingOrder);
 
-    setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+    // setFilterCaseSensitivity(Qt::CaseInsensitive);
+    // setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
 
-    setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-    sort(0, Qt::DescendingOrder);
+    // setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+    // sort(0, Qt::DescendingOrder);
 }
+
+// void OnlineModelListFilter::finalizeSetup(){
+//     setFilterCaseSensitivity(Qt::CaseInsensitive);
+//     setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+
+//     setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
+//     setDynamicSortFilter(true);
+//     sort(0, Qt::DescendingOrder);
+// }
 
 bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
 

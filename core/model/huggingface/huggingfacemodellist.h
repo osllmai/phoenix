@@ -1,9 +1,19 @@
 #ifndef HUGGINGFACEMODELLIST_H
 #define HUGGINGFACEMODELLIST_H
 
-#include <QObject>
-#include <QQmlEngine>
 #include <QAbstractListModel>
+#include <QList>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QThread>
+#include <QDebug>
+#include <QtConcurrent>
+#include <QStandardPaths>
+#include <QFile>
+#include <QDir>
 
 #include "./huggingfacemodel.h"
 
@@ -14,6 +24,9 @@ class HuggingfaceModelList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     static HuggingfaceModelList* instance(QObject* parent);
+
+    Q_INVOKABLE void fetchModels(bool fromCacheOnly);
+    Q_INVOKABLE void loadMore(int count = 5);
 
     enum HuggingfaceModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -35,11 +48,19 @@ public:
 signals:
     void countChanged();
 
+private slots:
+    void onReplyFinished(QNetworkReply *reply);
+
 private:
     explicit HuggingfaceModelList(QObject* parent);
     static HuggingfaceModelList* m_instance;
 
     QList<HuggingfaceModel*> m_models;
+    QList<HuggingfaceModel*> remainingModels;
+    QNetworkAccessManager *m_manager;
+
+    QString cacheFilePath() const;
+    void processJson(const QByteArray &rawData);
 };
 
 #endif // HUGGINGFACEMODELLIST_H

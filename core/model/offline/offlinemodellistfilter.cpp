@@ -6,11 +6,11 @@ OfflineModelListFilter::OfflineModelListFilter(QAbstractItemModel *models, QObje
 {
     QSortFilterProxyModel::setSourceModel(models);
 
-    setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
+    // setFilterCaseSensitivity(Qt::CaseInsensitive);
+    // setFilterRole(OfflineModelList::OfflineModelRoles::NameRole);
 
-    setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
-    sort(0, Qt::AscendingOrder);
+    // setSortRole(OfflineModelList::OfflineModelRoles::NameRole);
+    // sort(0, Qt::AscendingOrder);
 
     connect(this, &QAbstractItemModel::rowsInserted, this, &OfflineModelListFilter::countChanged);
     connect(this, &QAbstractItemModel::rowsRemoved, this, &OfflineModelListFilter::countChanged);

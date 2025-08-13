@@ -609,6 +609,8 @@ void Database::readModel(const QList<Company*> companys){
         }
     }
 
+    emit finishedReadOnlineModel();
+
     QSqlQuery query(m_db);
     query.prepare(READALL_MODEL_SQL);
 
@@ -659,6 +661,8 @@ void Database::readModel(const QList<Company*> companys){
             }
         }
     }
+
+    emit finishedReadOfflineModel();
 }
 
 void Database::readConversation(){
@@ -693,8 +697,8 @@ void Database::readConversation(){
             );
         }
     }
+    emit finishedReadConversation();
 }
-
 
 void Database::readMessages(const int idConversation){
     QSqlQuery query(m_db);

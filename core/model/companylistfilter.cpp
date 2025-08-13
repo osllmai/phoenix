@@ -7,6 +7,8 @@ CompanyListFilter::CompanyListFilter(QAbstractItemModel *model, BackendType back
     QSortFilterProxyModel::setSourceModel(model);
 }
 
+void CompanyListFilter::finalizeSetup(){}
+
 const BackendType CompanyListFilter::backendType() const{return m_backendType;}
 void CompanyListFilter::setBackendType(const BackendType backendType){
     if (m_backendType != backendType) {

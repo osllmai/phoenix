@@ -5,7 +5,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QtConcurrent>
-
 #include <QCoreApplication>
 
 #include "./offline/offlinemodellist.h"
@@ -26,6 +25,7 @@ void CompanyList::readDB(){
         beginResetModel();
         m_companys = futureWatcher.result();
         emit requestReadModel(m_companys);
+        emit finishedReadCompany();
         endResetModel();
         emit countChanged();
     });

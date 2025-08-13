@@ -85,6 +85,9 @@ signals:
 
     void addMessage(const int idConversation, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
 
+    void finishedReadOnlineModel();
+    void finishedReadOfflineModel();
+    void finishedReadConversation();
 
 private:
     static Database* m_instance;

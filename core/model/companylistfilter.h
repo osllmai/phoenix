@@ -29,6 +29,9 @@ protected:
 signals:
     void backendTypeChanged();
 
+public slots:
+    void finalizeSetup();
+
 private:
     BackendType m_backendType;
 };
