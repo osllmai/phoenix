@@ -51,7 +51,7 @@ Flickable {
 
             clip: true
 
-            model: offlineModelListFinishedDownloadFilter
+            model: huggingfaceModelList
             delegate: Item{
                id: delegateId
                visible: !flickable.showAllModels ? index < 3 : true
@@ -125,7 +125,7 @@ Flickable {
 
             clip: true
 
-            model: offlineModelListFilter
+            model: huggingfaceModelList
             delegate: Item{
                width: allModelList.width
                height: window.isDesktopSize? 65:90

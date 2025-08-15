@@ -6,8 +6,8 @@
 #include <QAbstractListModel>
 #include <algorithm>
 #include <QFileInfo>
-
 #include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "offlinemodel.h"
 #include "../company.h"
@@ -30,7 +30,7 @@ public:
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
-        ModeNameRole,
+        ModelNameRole,
         KeyRole,
         InformationRole,
         TypeRole,
@@ -59,9 +59,9 @@ public:
     Q_INVOKABLE void cancelRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void addRequest(QString directoryPath);
+    Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
     double downloadProgress() const;
-
 
     int numberDownload() const;
     void setNumberDownload(int newNumberDownload);
@@ -79,6 +79,10 @@ public slots:
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);
     void handleDownloadFailed(const int id, const QString &error);
+    void finalizeSetup();
+
+private slots:
+    void handleSortingFinished();
 
 signals:
     void countChanged();
@@ -89,12 +93,14 @@ signals:
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
     void numberDownloadChanged();
+    void sortingFinished();
 
 private:
     explicit OfflineModelList(QObject* parent);
     static OfflineModelList* m_instance;
 
     QList<OfflineModel*> m_models;
+    QFutureWatcher<QList<OfflineModel*>> m_sortWatcher;
     QList<Download*>downloads;
     double m_downloadProgress;
     int m_numberDownload = 0;

@@ -34,7 +34,7 @@ T.Button {
                 height: Math.max(logoModelId.height, likeIconId.height)
                 MyIcon {
                     id: logoModelId
-                    myIcon: "qrc:/media/image_company/" + model.icon
+                    myIcon: "qrc:/media/image_company/Huggingface.svg"
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 40; height: 40
@@ -50,25 +50,25 @@ T.Button {
                     width: 29; height: 29
                     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    myTextToolTip:model.information
+                    myTextToolTip:model.idModel
                 }
 
                 MyIcon{
                     id: likeIconId
-                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    myIcon: /*model.isLike? "qrc:/media/icon/favorite.svg": */"qrc:/media/icon/disFavorite.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
                     onClicked: {
-                        offlineModelList.likeRequest(model.id, !model.isLike)
-                        model.isLike = !model.isLike
+                        // offlineModelList.likeRequest(model.id, !model.isLike)
+                        // model.isLike = !model.isLike
                     }
                 }
             }
             Label {
                 id:informationId
-                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height /*- downloadButtonId.height*/ - informationAboutDownloadId.height - 30
                 width: parent.width
-                text: model.information
+                text: model.idModel
                 color: Style.Colors.textInformation
                 anchors.left: parent.left; anchors.right: parent.right
                 font.pixelSize: 10
@@ -88,9 +88,9 @@ T.Button {
                 HuggingfaceInformationModel{}
             }
 
-            DownloadButton{
-                id: downloadButtonId
-            }
+            // DownloadButton{
+            //     id: downloadButtonId
+            // }
         }
 
         layer.enabled: control.hovered? true: false

@@ -52,6 +52,7 @@ Flickable {
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
+
             delegate: Item{
                id: delegateId
                visible: !flickable.showAllModels ? index < 3 : true

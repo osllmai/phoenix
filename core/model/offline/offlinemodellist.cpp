@@ -11,9 +11,10 @@ OfflineModelList* OfflineModelList::instance(QObject* parent) {
     return m_instance;
 }
 
-OfflineModelList::OfflineModelList(QObject* parent):
-    m_downloadProgress(0), QAbstractListModel(parent)
-{}
+OfflineModelList::OfflineModelList(QObject* parent): m_downloadProgress(0), QAbstractListModel(parent)
+{
+    connect(&m_sortWatcher, &QFutureWatcher<QList<OfflineModel*>>::finished, this, &OfflineModelList::handleSortingFinished);
+}
 
 int OfflineModelList::count() const{return m_models.count();}
 
@@ -33,7 +34,7 @@ QVariant OfflineModelList::data(const QModelIndex &index, int role = Qt::Display
         return model->id();
     case NameRole:
         return model->name();
-    case ModeNameRole:
+    case ModelNameRole:
         return model->modelName();
     case KeyRole:
         return model->key();
@@ -74,7 +75,7 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
-    roles[ModeNameRole] = "modelName";
+    roles[ModelNameRole] = "modelName";
     roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconRole] = "icon";
@@ -110,6 +111,43 @@ bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, 
         return true;
     }
     return false;
+}
+
+void OfflineModelList::finalizeSetup(){
+    sortAsync(NameRole , Qt::AscendingOrder);
+}
+
+void OfflineModelList::sortAsync(int role, Qt::SortOrder order) {
+    if (m_models.isEmpty()) return;
+
+    auto modelsCopy = m_models;
+    QFuture<QList<OfflineModel*>> future = QtConcurrent::run([modelsCopy, role, order]() mutable {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(modelsCopy.begin(), modelsCopy.end(), [&](OfflineModel* a, OfflineModel* b) {
+            QString sa, sb;
+            if (role == NameRole) {
+                sa = a->name();
+                sb = b->name();
+            } else if (role == ModelNameRole) {
+                sa = a->modelName();
+                sb = b->modelName();
+            }
+            return (order == Qt::AscendingOrder)
+                       ? (collator.compare(sa, sb) < 0)
+                       : (collator.compare(sa, sb) > 0);
+        });
+        return modelsCopy;
+    });
+
+    m_sortWatcher.setFuture(future);
+}
+
+void OfflineModelList::handleSortingFinished() {
+    beginResetModel();
+    m_models = m_sortWatcher.result();
+    endResetModel();
+    emit sortingFinished();
 }
 
 OfflineModel* OfflineModelList::at(int index) const{
@@ -254,16 +292,16 @@ void OfflineModelList::addModel(const double fileSize, const int ramRamrequired,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
                                 const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
 {
-    const int index = m_models.size();
-    beginInsertRows(QModelIndex(), index, index);
+    // const int index = m_models.size();
+    // beginInsertRows(QModelIndex(), index, index);
     OfflineModel* model = new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
                                            id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
     m_models.append(model);
-    endInsertRows();
-    emit countChanged();
+    // endInsertRows();
+    // emit countChanged();
 }
 
 OfflineModel* OfflineModelList::findModelById(int id) {

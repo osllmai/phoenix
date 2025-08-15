@@ -97,21 +97,56 @@ int main(int argc, char *argv[])
 
         Database* database = Database::instance(&engine);
 
-        CompanyList* companyList =  CompanyList::instance(&engine);
+        CompanyList* companyList =  CompanyList::instance(&engine);        
 
         CompanyListFilter* offlineCompanyList = new CompanyListFilter(companyList, BackendType::OfflineModel, &engine);
         CompanyListFilter* onlineCompanyList = new CompanyListFilter(companyList, BackendType::OnlineModel, &engine);
         engine.rootContext()->setContextProperty("offlineCompanyList", offlineCompanyList);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
         engine.rootContext()->setContextProperty("onlineCompanyList", onlineCompanyList);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, onlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
+
 
         OfflineModelList* offlineModelList = OfflineModelList::instance(&engine);
         engine.rootContext()->setContextProperty("offlineModelList", offlineModelList);
+        QObject::connect(database, &Database::finishedReadOfflineModel, offlineModelList, &OfflineModelList::finalizeSetup, Qt::QueuedConnection);
+
         OnlineModelList* onlineModelList = OnlineModelList::instance(&engine);
         engine.rootContext()->setContextProperty("onlineModelList", onlineModelList);
+        QObject::connect(database, &Database::finishedReadOnlineModel, onlineModelList, &OnlineModelList::finalizeSetup, Qt::QueuedConnection);
+
         HuggingfaceModelList* huggingfaceModelList = HuggingfaceModelList::instance(&engine);
         engine.rootContext()->setContextProperty("huggingfaceModelList", huggingfaceModelList);
+
+
+        // qmlRegisterType<OfflineModelListFilter>("MyApp.Models", 1, 0, "OfflineModelListFilter");
+        OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
+
+        OfflineModelListFilter* offlineModelListIsDownloadingFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        offlineModelListIsDownloadingFilter->setFilterType(OfflineModelListFilter::FilterType::IsDownloading);
+        engine.rootContext()->setContextProperty("offlineModelListIsDownloadingFilter", offlineModelListIsDownloadingFilter);
+
+        OfflineModelListFilter* offlineModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
+        engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
+
+        OfflineModelListFilter* offlineTextModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        offlineTextModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadTextModelFinished);
+        engine.rootContext()->setContextProperty("offlineTextModelListFinishedDownloadFilter", offlineTextModelListFinishedDownloadFilter);
+
+        OfflineModelListFilter* offlineModelListRecommendedFilter = new OfflineModelListFilter(offlineModelList, &engine);
+        offlineModelListRecommendedFilter->setFilterType(OfflineModelListFilter::FilterType::Recommended);
+        engine.rootContext()->setContextProperty("offlineModelListRecommendedFilter", offlineModelListRecommendedFilter);
+
+        OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
+        engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
+
+        OnlineModelListFilter* onlineModelInstallFilter = new OnlineModelListFilter(onlineModelList, &engine);
+        onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
+        engine.rootContext()->setContextProperty("onlineModelInstallFilter", onlineModelInstallFilter);
+
+        OnlineModelListFilter* onlineModelListRecommendedFilter = new OnlineModelListFilter(onlineModelList, &engine);
+        onlineModelListRecommendedFilter->setFilterType(OnlineModelListFilter::FilterType::Recommended);
+        engine.rootContext()->setContextProperty("onlineModelListRecommendedFilter", onlineModelListRecommendedFilter);
 
         QObject::connect(companyList, &CompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
         QObject::connect(database, &Database::addOnlineModel, onlineModelList, &OnlineModelList::addModel, Qt::QueuedConnection);
@@ -125,44 +160,6 @@ int main(int argc, char *argv[])
         QObject::connect(offlineModelList, &OfflineModelList::requestDeleteModel, database, &Database::deleteModel, Qt::QueuedConnection);
         companyList->readDB();
 
-        OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
-        engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OnlineModelListFilter* onlineModelListFilter = new OnlineModelListFilter(onlineModelList, &engine);
-        engine.rootContext()->setContextProperty("onlineModelListFilter", onlineModelListFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OfflineModelListFilter* offlineModelListIsDownloadingFilter = new OfflineModelListFilter(offlineModelList, &engine);
-        offlineModelListIsDownloadingFilter->setFilterType(OfflineModelListFilter::FilterType::IsDownloading);
-        engine.rootContext()->setContextProperty("offlineModelListIsDownloadingFilter", offlineModelListIsDownloadingFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OfflineModelListFilter* offlineModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
-        offlineModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadFinished);
-        engine.rootContext()->setContextProperty("offlineModelListFinishedDownloadFilter", offlineModelListFinishedDownloadFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OfflineModelListFilter* offlineTextModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModelList, &engine);
-        offlineTextModelListFinishedDownloadFilter->setFilterType(OfflineModelListFilter::FilterType::DownloadTextModelFinished);
-        engine.rootContext()->setContextProperty("offlineTextModelListFinishedDownloadFilter", offlineTextModelListFinishedDownloadFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OfflineModelListFilter* offlineModelListRecommendedFilter = new OfflineModelListFilter(offlineModelList, &engine);
-        offlineModelListRecommendedFilter->setFilterType(OfflineModelListFilter::FilterType::Recommended);
-        engine.rootContext()->setContextProperty("offlineModelListRecommendedFilter", offlineModelListRecommendedFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OnlineModelListFilter* onlineModelInstallFilter = new OnlineModelListFilter(onlineModelList, &engine);
-        onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
-        engine.rootContext()->setContextProperty("onlineModelInstallFilter", onlineModelInstallFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
-        OnlineModelListFilter* onlineModelListRecommendedFilter = new OnlineModelListFilter(onlineModelList, &engine);
-        onlineModelListRecommendedFilter->setFilterType(OnlineModelListFilter::FilterType::Recommended);
-        engine.rootContext()->setContextProperty("onlineModelListRecommendedFilter", onlineModelListRecommendedFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
         SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);
         engine.rootContext()->setContextProperty("systemMonitor", systemMonitor);
 
@@ -174,10 +171,10 @@ int main(int argc, char *argv[])
 
         ConversationList* conversationList = ConversationList::instance(&engine);
         engine.rootContext()->setContextProperty("conversationList", conversationList);
+
         ConversationListFilter* conversationListFilter = new ConversationListFilter(conversationList, &engine);
         engine.rootContext()->setContextProperty("conversationListFilter", conversationListFilter);
-        QObject::connect(companyList, &CompanyList::finishedReadCompany, offlineCompanyList, &CompanyListFilter::finalizeSetup, Qt::QueuedConnection);
-
+        QObject::connect(database, &Database::finishedReadConversation, conversationListFilter, &ConversationListFilter::finalizeSetup, Qt::QueuedConnection);
 
         QObject::connect(conversationList, &ConversationList::requestReadConversation, database, &Database::readConversation, Qt::QueuedConnection);
         QObject::connect(database, &Database::addConversation, conversationList, &ConversationList::addConversation, Qt::QueuedConnection);

@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QAbstractListModel>
-
 #include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "company.h"
 
@@ -17,6 +17,8 @@ class CompanyList: public QAbstractListModel
 public:
     static CompanyList* instance(QObject* parent );
     void readDB();
+
+    Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,
@@ -34,7 +36,10 @@ public:
 signals:
     void countChanged();
     void requestReadModel(const QList<Company*> companys);
-    void finishedReadCompany();
+    void sortingFinished();
+
+private slots:
+    void handleSortingFinished();
 
 private:
     explicit CompanyList(QObject* parent);
@@ -42,6 +47,7 @@ private:
 
     QList<Company*> m_companys;
     QFutureWatcher<QList<Company*>> futureWatcher;
+    QFutureWatcher<QList<Company*>> m_sortWatcher;
 
     static QList<Company*> parseJson(const QString &filePath);
 };

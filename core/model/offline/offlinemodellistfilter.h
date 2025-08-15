@@ -20,10 +20,10 @@ class OfflineModelListFilter: public QSortFilterProxyModel
     Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged FINAL)
 
 public:
-    explicit OfflineModelListFilter(QObject* parent = nullptr) : QSortFilterProxyModel(parent) {}
-    explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent);
+    explicit OfflineModelListFilter(QObject* parent = nullptr);
+    explicit OfflineModelListFilter(QAbstractItemModel *model, QObject *parent = nullptr);
 
-    Q_INVOKABLE void filter(QString filter);
+    Q_INVOKABLE void filter(const QString &filter);
     Q_INVOKABLE QVariantMap get(int index) const;
 
     enum class FilterType {
@@ -40,17 +40,18 @@ public:
 
     int count() const;
 
-    FilterType filterType() const;
+    FilterType filterType() const { return m_filterType; }
     void setFilterType(FilterType newFilterType);
 
-    int companyId() const;
-    void setCompanyId(const int newCompany);
+    int companyId() const { return m_companyId; }
+    void setCompanyId(int newCompany);
 
-    QString type() const;
+    QString type() const { return m_type; }
     void setType(const QString &newType);
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    void setSourceModel(QAbstractItemModel *sourceModel) override;
 
 signals:
     void countChanged();
@@ -59,9 +60,11 @@ signals:
     void typeChanged();
 
 private:
-    FilterType m_filterType;
-    int m_companyId;
-    QString m_type;
+    void init();
+
+    FilterType m_filterType{FilterType::All};
+    int m_companyId{-1};
+    QString m_type{};
 };
 
 #endif // OFFLINEMODELLISTFILTER_H

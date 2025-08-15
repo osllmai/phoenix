@@ -13,7 +13,10 @@ OnlineModelList* OnlineModelList::instance(QObject* parent) {
     return m_instance;
 }
 
-OnlineModelList::OnlineModelList(QObject *parent): QAbstractListModel(parent){}
+OnlineModelList::OnlineModelList(QObject *parent): QAbstractListModel(parent)
+{
+    connect(&m_sortWatcher, &QFutureWatcher<QList<OnlineModel*>>::finished, this, &OnlineModelList::handleSortingFinished);
+}
 
 int OnlineModelList::count() const{return m_models.count();}
 
@@ -34,7 +37,7 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->id();
     case NameRole:
         return model->name();
-    case ModeNameRole:
+    case ModelNameRole:
         return model->modelName();
     case KeyRole:
         return model->key();
@@ -69,7 +72,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[NameRole] = "name";
-    roles[ModeNameRole] = "modelName";
+    roles[ModelNameRole] = "modelName";
     roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconModelRole] = "icon";
@@ -102,6 +105,43 @@ bool OnlineModelList::setData(const QModelIndex &index, const QVariant &value, i
         return true;
     }
     return false;
+}
+
+void OnlineModelList::finalizeSetup(){
+    sortAsync(NameRole , Qt::AscendingOrder);
+}
+
+void OnlineModelList::sortAsync(int role, Qt::SortOrder order) {
+    if (m_models.isEmpty()) return;
+
+    auto modelsCopy = m_models;
+    QFuture<QList<OnlineModel*>> future = QtConcurrent::run([modelsCopy, role, order]() mutable {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(modelsCopy.begin(), modelsCopy.end(), [&](OnlineModel* a, OnlineModel* b) {
+            QString sa, sb;
+            if (role == NameRole) {
+                sa = a->name();
+                sb = b->name();
+            } else if (role == ModelNameRole) {
+                sa = a->modelName();
+                sb = b->modelName();
+            }
+            return (order == Qt::AscendingOrder)
+                       ? (collator.compare(sa, sb) < 0)
+                       : (collator.compare(sa, sb) > 0);
+        });
+        return modelsCopy;
+    });
+
+    m_sortWatcher.setFuture(future);
+}
+
+void OnlineModelList::handleSortingFinished() {
+    beginResetModel();
+    m_models = m_sortWatcher.result();
+    endResetModel();
+    emit sortingFinished();
 }
 
 OnlineModel* OnlineModelList::at(int index) const{
@@ -149,7 +189,7 @@ void OnlineModelList::addModel(const int id, const QString& modelName, const QSt
               const QString& output, const QString& comments, const bool installModel)
 {
     const int index = m_models.size();
-    beginInsertRows(QModelIndex(), index, index);
+    // beginInsertRows(QModelIndex(), index, index);
     OnlineModel* model = new OnlineModel(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon,
                                   information, promptTemplate, systemPrompt, expireModelTime, recommended, m_instance,
 
@@ -163,7 +203,7 @@ void OnlineModelList::addModel(const int id, const QString& modelName, const QSt
             emit dataChanged(modelIndex, modelIndex);
         }
     });
-    endInsertRows();
+    // endInsertRows();
     emit countChanged();
 }
 

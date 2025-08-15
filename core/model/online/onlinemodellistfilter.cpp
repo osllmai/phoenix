@@ -7,27 +7,8 @@ OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject 
 {
     QSortFilterProxyModel::setSourceModel(model);
 
-    // setFilterCaseSensitivity(Qt::CaseInsensitive);
-    // setFilterRole(OnlineModelList::OnlineModelRoles::NameRole);
-
-    // setSortRole(OnlineModelList::OnlineModelRoles::NameRole);
-    // sort(0, Qt::AscendingOrder);
-
-    // setFilterCaseSensitivity(Qt::CaseInsensitive);
-    // setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-
-    // setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-    // sort(0, Qt::DescendingOrder);
+    setDynamicSortFilter(false);
 }
-
-// void OnlineModelListFilter::finalizeSetup(){
-//     setFilterCaseSensitivity(Qt::CaseInsensitive);
-//     setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-
-//     setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-//     setDynamicSortFilter(true);
-//     sort(0, Qt::DescendingOrder);
-// }
 
 bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
 
@@ -36,11 +17,11 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
         return false;
 
     QString name = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::NameRole).toString();
-    QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
+    QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
     Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
     QString companyName = company ? company->name() : QStringLiteral("Unknown");
 
-    QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
+    QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
     bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
     bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
 

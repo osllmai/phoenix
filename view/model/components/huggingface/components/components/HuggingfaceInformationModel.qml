@@ -12,7 +12,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         id:fileSizeBox
         myText: qsTr("File size")
-        myValue: model.fileSize + " GB"
+        myValue: /*model.fileSize + */" GB"
         width: (parent.width/4)-8
     }
 
@@ -25,7 +25,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         id:ramRequiredBox
         myText: qsTr("RAM requierd")
-        myValue: model.ramRamrequired + " GB"
+        myValue:/* model.ramRamrequired +*/ " GB"
         width: (parent.width/4)+ 17
     }
 
@@ -38,7 +38,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         id:parameterersBox
         myText: qsTr("Parameters")
-        myValue: model.parameters
+        myValue: /*model.parameters*/ ""
         width: (parent.width/4)
     }
 
@@ -51,7 +51,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         id:quantBox
         myText: qsTr("Quant")
-        myValue: model.quant
+        myValue: /*model.quant*/""
         width: (parent.width/4)-20
     }
 }

@@ -40,7 +40,6 @@ Item{
         // }
         SearchButton{
             id: searchBoxId
-            visible: headerId.isSearchInColumn
             width: parent.width - companyList.width - viewList.width - 20 - 10
             Connections{
                 target: searchBoxId

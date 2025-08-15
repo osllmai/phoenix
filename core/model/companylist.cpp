@@ -18,16 +18,20 @@ CompanyList* CompanyList::instance(QObject* parent) {
     return m_instance;
 }
 
-CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent){}
+CompanyList::CompanyList(QObject *parent): QAbstractListModel(parent)
+{
+    connect(&m_sortWatcher, &QFutureWatcher<QList<Company*>>::finished, this, &CompanyList::handleSortingFinished);
+}
 
 void CompanyList::readDB(){
     connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
         beginResetModel();
         m_companys = futureWatcher.result();
         emit requestReadModel(m_companys);
-        emit finishedReadCompany();
         endResetModel();
         emit countChanged();
+
+        sortAsync(NameRole , Qt::AscendingOrder);
     });
 
     QFuture<QList<Company*>> future = QtConcurrent::run(parseJson, QCoreApplication::applicationDirPath() + "/models/company.json");
@@ -71,6 +75,36 @@ QHash<int, QByteArray> CompanyList::roleNames() const{
     roles[BackendRole] = "backend";
     roles[CompanyObjectRole] = "companyObject";
     return roles;
+}
+
+void CompanyList::sortAsync(int role, Qt::SortOrder order) {
+    if (m_companys.isEmpty()) return;
+
+    auto modelsCopy = m_companys;
+    QFuture<QList<Company*>> future = QtConcurrent::run([modelsCopy, role, order]() mutable {
+        QCollator collator;
+        collator.setNumericMode(true);
+        std::sort(modelsCopy.begin(), modelsCopy.end(), [&](Company* a, Company* b) {
+            QString sa, sb;
+            if (role == NameRole) {
+                sa = a->name();
+                sb = b->name();
+            }
+            return (order == Qt::AscendingOrder)
+                       ? (collator.compare(sa, sb) < 0)
+                       : (collator.compare(sa, sb) > 0);
+        });
+        return modelsCopy;
+    });
+
+    m_sortWatcher.setFuture(future);
+}
+
+void CompanyList::handleSortingFinished() {
+    beginResetModel();
+    m_companys = m_sortWatcher.result();
+    endResetModel();
+    emit sortingFinished();
 }
 
 QList<Company*> CompanyList::parseJson(const QString &filePath) {

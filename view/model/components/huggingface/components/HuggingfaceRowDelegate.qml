@@ -35,7 +35,7 @@ T.Button {
 
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/" + model.icon
+                myIcon: "qrc:/media/image_company/Huggingface.svg"
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32
@@ -51,29 +51,29 @@ T.Button {
                 width: 29; height: 29
                 myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                 anchors.verticalCenter: logoModelId.verticalCenter
-                myTextToolTip:model.information
+                myTextToolTip:model.idModel
             }
 
             MyIcon{
                 id: likeIconId
                 width: 32; height: 32
-                myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                myIcon: /*model.isLike? "qrc:/media/icon/favorite.svg": */"qrc:/media/icon/disFavorite.svg"
                 anchors.verticalCenter: logoModelId.verticalCenter
                 iconType: Style.RoleEnum.IconType.Like
                 onClicked: {
-                    offlineModelList.likeRequest(model.id, !model.isLike)
-                    model.isLike = !model.isLike
+                    // offlineModelList.likeRequest(model.id, !model.isLike)
+                    // model.isLike = !model.isLike
                 }
             }
         }
 
         Rectangle{
             id: informationAboutDownloadId
-            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
+            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width /*- downloadButtonId.width*/ - 20))/3 >20
             height: 40; width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: headerId.right
-            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
+            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width/* - downloadButtonId.width*/ - 20))/3
             radius: 10
             border.color: Style.Colors.boxBorder
             border.width: 1
@@ -81,14 +81,14 @@ T.Button {
             HuggingfaceInformationModel{}
         }
 
-        DownloadButton{
-            id: downloadButtonId
-            visible: window.isDesktopSize
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-            isFillWidthDownloadButton:false
-        }
+        // DownloadButton{
+        //     id: downloadButtonId
+        //     visible: window.isDesktopSize
+        //     anchors.verticalCenter: parent.verticalCenter
+        //     anchors.right: parent.right
+        //     anchors.rightMargin: 10
+        //     isFillWidthDownloadButton:false
+        // }
 
         Column{
             visible: !window.isDesktopSize
@@ -100,7 +100,7 @@ T.Button {
 
                 MyIcon {
                     id: logoModel2Id
-                    myIcon: "qrc:/media/image_company/" + model.icon
+                    myIcon: "qrc:/media/image_company/Huggingface.svg"
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 30; height: 30
@@ -116,28 +116,28 @@ T.Button {
                     width: 32; height: 32
                     myIcon: about2Icon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModel2Id.verticalCenter
-                    myTextToolTip:model.information
+                    myTextToolTip:model.idModel
                 }
 
                 MyIcon{
                     id: likeIcon2Id
                     width: 32; height: 32
-                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    myIcon: /*model.isLike? "qrc:/media/icon/favorite.svg": */"qrc:/media/icon/disFavorite.svg"
                     anchors.verticalCenter: logoModel2Id.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
                     onClicked: {
-                        offlineModelList.likeRequest(model.id, !model.isLike)
-                        model.isLike = !model.isLike
+                        // offlineModelList.likeRequest(model.id, !model.isLike)
+                        // model.isLike = !model.isLike
                     }
                 }
             }
 
-            DownloadButton{
-                id: downloadButton2Id
-                anchors.right: parent.right
-                anchors.rightMargin: 5
-                isFillWidthDownloadButton:false
-            }
+            // DownloadButton{
+            //     id: downloadButton2Id
+            //     anchors.right: parent.right
+            //     anchors.rightMargin: 5
+            //     isFillWidthDownloadButton:false
+            // }
         }
 
         layer.enabled: control.hovered? true: false

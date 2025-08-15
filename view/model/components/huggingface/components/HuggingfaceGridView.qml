@@ -59,7 +59,7 @@ Flickable {
 
             clip: true
 
-            model: offlineModelListFinishedDownloadFilter
+            model: huggingfaceModelList
             delegate: Item{
                 id: delegateId
                 visible: !flickable.showAllModels ? index < control.calculationCellNumber() : true
@@ -121,7 +121,7 @@ Flickable {
 
             clip: true
 
-            model: offlineModelListFilter
+            model: huggingfaceModelList
             delegate: Item{
                width: gridView2.cellWidth
                height: gridView2.cellHeight
