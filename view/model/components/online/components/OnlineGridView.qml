@@ -24,7 +24,7 @@ GridView {
     }
     clip: true
 
-    model: onlineModelListFilter
+    model: onlineCompanyList
     delegate: Item{
        width: gridView.cellWidth
        height: gridView.cellHeight

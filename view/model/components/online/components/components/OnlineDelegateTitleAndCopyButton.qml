@@ -13,24 +13,24 @@ Item {
         text: model.name
         color: Style.Colors.textTitle
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width - copyId.width
+        width: parent.width/* - copyId.width*/
         font.pixelSize: 14
         font.styleName: "Bold"
         clip: true
         elide: Label.ElideRight
     }
-    MyCopyButton{
-        id: copyId
-        visible: !titleAndCopy.visible
-        myText: TextArea{text: model.company.name + "/" + model.modelName;}
-        anchors.verticalCenter: titleId.verticalCenter
-        anchors.right: parent.right
-        clip: true
-    }
+    // MyCopyButton{
+    //     id: copyId
+    //     visible: !titleAndCopy.visible
+    //     myText: TextArea{text: model.company.name + "/" + model.modelName;}
+    //     anchors.verticalCenter: titleId.verticalCenter
+    //     anchors.right: parent.right
+    //     clip: true
+    // }
 
     Row{
         id: titleAndCopy
-        visible: parent.width - title2Id.implicitWidth - copy2Id.width > 0
+        visible: parent.width - title2Id.implicitWidth /*- copy2Id.width*/ > 0
         width: parent.width
         anchors.verticalCenter: parent.verticalCenter
         clip: true
@@ -44,11 +44,11 @@ Item {
             clip: true
             elide: Label.ElideRight
         }
-        MyCopyButton{
-            id: copy2Id
-            myText: TextArea{text: model.company.name + "/" + model.modelName;}
-            anchors.verticalCenter: title2Id.verticalCenter
-            clip: true
-        }
+        // MyCopyButton{
+        //     id: copy2Id
+        //     myText: TextArea{text: model.company.name + "/" + model.modelName;}
+        //     anchors.verticalCenter: title2Id.verticalCenter
+        //     clip: true
+        // }
     }
 }
