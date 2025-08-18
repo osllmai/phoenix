@@ -38,14 +38,8 @@ signals:
 
 public slots:
     void finalizeSetup();
-    // void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
-    //               QDateTime addModelTime, const bool isLike, const QString& type, const BackendType backend,
-    //               const QString& icon , const QString& information , const QString& promptTemplate ,
-    //               const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
-
-    //               const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-    //               const QString& contextWindows, const bool commercial, const bool pricey,
-    //               const QString& output, const QString& comments, const bool installModel);
+    void addProvider(const int id, const QString& name, const QString& icon,
+                     const BackendType backend, const QString& filePath, QString key);
 
 private slots:
     void handleSortingFinished();

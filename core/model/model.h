@@ -7,7 +7,6 @@
 
 #include "BackendType.h"
 
-
 class Model : public QObject
 {
     Q_OBJECT

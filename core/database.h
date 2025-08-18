@@ -57,15 +57,8 @@ public slots:
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
 signals:
-    void addOnlineModel(const int id, const QString& modelName, const QString& name, const QString& key,
-                        QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
-                        const BackendType backend,
-                        const QString& icon , const QString& information , const QString& promptTemplate ,
-                        const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
-
-                        const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-                        const QString& contextWindows, const bool commercial, const bool pricey,
-                        const QString& output, const QString& comments, const bool installModel);
+    void addOnlineProvider(const int id, const QString& name, const QString& icon,
+                           const BackendType backend, const QString& filePath, QString key);
 
     void addOfflineModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                          const QString& parameters, const QString& quant, const double downloadPercent,
@@ -126,6 +119,7 @@ private:
     static const QString READ_ICON_MESSAGE_SQL;
 
     int insertModel(const QString &name, const QString &key);
+    QList<int> readOnlineCompany();
 };
 
 #endif // DATABASE_H

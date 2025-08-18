@@ -95,3 +95,12 @@ void OnlineCompanyList::handleSortingFinished() {
     endResetModel();
     emit sortingFinished();
 }
+
+void OnlineCompanyList::addProvider(const int id, const QString& name, const QString& icon,
+                 const BackendType backend, const QString& filePath, QString key){
+    const int index = m_companys.size();
+    beginInsertRows(QModelIndex(), index, index);
+    m_companys.append(new OnlineCompany(id,name,icon,backend,filePath,key, this));
+    endInsertRows();
+    emit countChanged();
+}

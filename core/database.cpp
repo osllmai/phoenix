@@ -29,7 +29,6 @@ Database::Database(QObject* parent)
             qDebug() << "Failed to set encryption key:" << query.lastError().text();
         }
 
-
         query.exec(FOREIGN_KEYS_SQL);
 
         QStringList tables = m_db.tables();
@@ -561,56 +560,11 @@ void Database::readModel(const QList<Company*> companys){
 
                 allID.append(id);
             }
-        }/*else{
-            for (const QJsonValue &value : jsonArray) {
-                if (!value.isObject()) continue;
-
-                QJsonObject obj = value.toObject();
-
-                int id;
-                QString name = obj["name"].toString();
-                QString key = "";
-                QDateTime addDate = QDateTime::currentDateTime();
-                bool isLike = false;
-
-                QSqlQuery query(m_db);
-                query.prepare(READ_MODEL_SQL);
-                query.addBindValue(obj["name"].toString());
-
-                if (!query.exec())
-                    continue;
-
-                bool installModel = false;
-                if (!query.next()) {
-                    id = insertModel(obj["name"].toString(),"");
-                }else{
-
-                    id = query.value(0).toInt();
-                    name = query.value(1).toString();
-                    key = query.value(2).toString();
-                    addDate = query.value(3).toDateTime();
-                    isLike = query.value(4).toBool();
-                    if(key != "")
-                        installModel = true;
-                }
-
-                if(id == -1)
-                    continue;
-
-                emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
-                                    isLike, company, obj["type"].toString(), BackendType::OnlineModel, company->icon(),
-                                    obj["description"].toString(), obj["promptTemplate"].toString(),
-                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(),  nullptr,
-
-                                     obj["inputPricePer1KTokens"].toDouble(),
-                                     obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
-                                     obj["commercial"].toBool(),
-                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),installModel);
-
-                allID.append(id);
-            }
-        }*/
+        }
     }
+
+    QList<int> existId = readOnlineCompany();
+    allID.append(existId);
 
     emit finishedReadOnlineModel();
 
@@ -633,7 +587,6 @@ void Database::readModel(const QList<Company*> companys){
                 QString key = query.value(2).toString();
                 QDateTime addDate = query.value(3).toDateTime();
                 bool isLike = query.value(4).toBool();
-
 
                 QFile file(key);
                 if (!file.exists()){
@@ -722,4 +675,64 @@ void Database::readMessages(const int idConversation){
                 );
          }
     }
+}
+
+QList<int> Database::readOnlineCompany() {
+    QList<int> allID;
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Cannot open JSON file!";
+        return allID;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    if (!doc.isArray()) {
+        qWarning() << "Invalid JSON format!";
+        return allID;
+    }
+
+    int i=0;
+    QJsonArray jsonArray = doc.array();
+    for (const QJsonValue &value : jsonArray) {
+        if (!value.isObject()) continue;
+        QJsonObject obj = value.toObject();
+
+        int id;
+        QString name = obj["name"].toString();
+        QString key = "";
+        QDateTime addDate = QDateTime::currentDateTime();
+        bool isLike = false;
+
+        QSqlQuery query(m_db);
+        query.prepare(READ_MODEL_SQL);
+        query.addBindValue(name);
+
+        if (!query.exec())
+            continue;
+
+        bool installModel = false;
+
+        if (!query.next()) {
+            id = insertModel(name, key);
+        }else{
+            id = query.value(0).toInt();
+            name = query.value(1).toString();
+            key = query.value(2).toString();
+            addDate = query.value(3).toDateTime();
+            isLike = query.value(4).toBool();
+            if(key != "")
+                installModel = true;
+        }
+
+        if(id == -1)
+            continue;
+
+        emit addOnlineProvider(id, name, obj["icon"].toString(), BackendType::OnlineModel, obj["file"].toString(), key);
+
+        allID.append(id);
+    }
+    return allID;
 }

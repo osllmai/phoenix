@@ -80,6 +80,11 @@ void OfflineCompanyList::finalizeSetup(){
     sortAsync(NameRole , Qt::AscendingOrder);
 }
 
+void OfflineCompanyList::addProvider(const int id, const QString& name, const QString& icon,
+                 const BackendType backend, const QString& filePath, QString key){
+
+}
+
 void OfflineCompanyList::sortAsync(int role, Qt::SortOrder order) {
     if (m_companys.isEmpty()) return;
 
@@ -129,12 +134,8 @@ QList<Company*> OfflineCompanyList::parseJson(const QString &filePath) {
     for (const QJsonValue &value : jsonArray) {
         if (!value.isObject()) continue;
         QJsonObject obj = value.toObject();
-
         if (obj["type"].toString() == "OfflineModel") {
-
-            Company *company;
-
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
+            Company *company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
                                   BackendType::OfflineModel, obj["file"].toString(), nullptr);
             tempCompany.append(company);
         }
