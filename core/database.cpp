@@ -114,8 +114,8 @@ void Database::addModel(const QString &name, const QString &key){
         else
             ramRequ = 32;
 
-        emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, name, name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+        emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
+                             id, name, name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime(), false);
 
     }
@@ -494,6 +494,7 @@ void Database::readModel(const QList<Company*> companys){
     for (Company* company : companys){
 
         QFile file(QCoreApplication::applicationDirPath() + "/models/" + company->filePath());
+
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
             continue;
@@ -512,7 +513,9 @@ void Database::readModel(const QList<Company*> companys){
         QJsonArray jsonArray = document.array();
 
         if(company->backend() == BackendType::OfflineModel){
+
             for (const QJsonValue &value : jsonArray) {
+
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
@@ -547,18 +550,18 @@ void Database::readModel(const QList<Company*> companys){
                 if(id == -1)
                     continue;
 
-                emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
+                emit addOfflineModel(company, obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
-                                   id, obj["modelName"].toString(), name, key, addDate, isLike, company,
+                                   id, obj["modelName"].toString(), name, key, addDate, isLike,
                                    obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool() /*, nullptr*/);
 
                 allID.append(id);
             }
-        }else{
+        }/*else{
             for (const QJsonValue &value : jsonArray) {
                 if (!value.isObject()) continue;
 
@@ -597,7 +600,7 @@ void Database::readModel(const QList<Company*> companys){
                 emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
                                     isLike, company, obj["type"].toString(), BackendType::OnlineModel, company->icon(),
                                     obj["description"].toString(), obj["promptTemplate"].toString(),
-                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(),  /*nullptr,*/
+                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(),  nullptr,
 
                                      obj["inputPricePer1KTokens"].toDouble(),
                                      obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
@@ -606,7 +609,7 @@ void Database::readModel(const QList<Company*> companys){
 
                 allID.append(id);
             }
-        }
+        }*/
     }
 
     emit finishedReadOnlineModel();
@@ -654,8 +657,8 @@ void Database::readModel(const QList<Company*> companys){
                     else
                         ramRequ = 32;
 
-                    emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, name,  name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+                    emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
+                                         id, name,  name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime(), false);
                 }
             }

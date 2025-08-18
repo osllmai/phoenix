@@ -10,8 +10,8 @@
 #include <QtConcurrent>
 
 #include "offlinemodel.h"
-#include "../company.h"
-#include "./download.h"
+#include "company.h"
+#include "download.h"
 
 class OfflineModelList: public QAbstractListModel
 {
@@ -67,12 +67,12 @@ public:
     void setNumberDownload(int newNumberDownload);
 
 public slots:
-    void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+    void addModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
                   const bool isDownloading, const bool downloadFinished,
 
                   const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                  const bool isLike, Company* company, const QString& type, const BackendType backend,
+                  const bool isLike, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
                   const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
 

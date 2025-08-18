@@ -6,7 +6,7 @@
 #include <QFutureWatcher>
 #include <QtConcurrent>
 
-#include "company.h"
+#include "onlinecompany.h"
 
 class OnlineCompanyList: public QAbstractListModel
 {
@@ -16,7 +16,6 @@ class OnlineCompanyList: public QAbstractListModel
 
 public:
     static OnlineCompanyList* instance(QObject* parent );
-    void readDB();
 
     Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
@@ -35,8 +34,18 @@ public:
 
 signals:
     void countChanged();
-    void requestReadModel(const QList<Company*> companys);
     void sortingFinished();
+
+public slots:
+    void finalizeSetup();
+    // void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
+    //               QDateTime addModelTime, const bool isLike, const QString& type, const BackendType backend,
+    //               const QString& icon , const QString& information , const QString& promptTemplate ,
+    //               const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
+
+    //               const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+    //               const QString& contextWindows, const bool commercial, const bool pricey,
+    //               const QString& output, const QString& comments, const bool installModel);
 
 private slots:
     void handleSortingFinished();
@@ -45,11 +54,8 @@ private:
     explicit OnlineCompanyList(QObject* parent);
     static OnlineCompanyList* m_instance;
 
-    QList<Company*> m_companys;
-    QFutureWatcher<QList<Company*>> futureWatcher;
-    QFutureWatcher<QList<Company*>> m_sortWatcher;
-
-    static QList<Company*> parseJson(const QString &filePath);
+    QList<OnlineCompany*> m_companys;
+    QFutureWatcher<QList<OnlineCompany*>> m_sortWatcher;
 };
 
 #endif // ONLINECOMPANYLIST_H

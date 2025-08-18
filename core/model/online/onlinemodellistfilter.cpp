@@ -18,10 +18,10 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
 
     QString name = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::NameRole).toString();
     QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
-    Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
-    QString companyName = company ? company->name() : QStringLiteral("Unknown");
+    // Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
+    // QString companyName = company ? company->name() : QStringLiteral("Unknown");
 
-    QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
+    // QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
     bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
     bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
 
@@ -33,14 +33,14 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     QRegularExpression filterExp = filterRegularExpression();
     bool matchesFilter = filterExp.pattern().isEmpty() ||
                                          filterExp.match(name).hasMatch() ||
-                                         filterExp.match(modelName).hasMatch() ||
-                                         filterExp.match(modelNameOffline).hasMatch();
+                                         filterExp.match(modelName).hasMatch() /*||
+                                         filterExp.match(modelNameOffline).hasMatch()*/;
 
     switch (m_filterType) {
     case FilterType::All:
         return matchesFilter;
-    case FilterType::Company:
-        return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
+    // case FilterType::Company:
+        // return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
     case FilterType::InstallModel:

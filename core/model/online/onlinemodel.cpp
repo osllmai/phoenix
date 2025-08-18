@@ -1,7 +1,7 @@
 #include "onlinemodel.h"
 
 OnlineModel::OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                         const bool isLike, Company* company, const QString& type, const BackendType backend,
+                         const bool isLike, const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent,
 
@@ -9,7 +9,7 @@ OnlineModel::OnlineModel(const int id, const QString& modelName, const QString& 
                          const QString& contextWindows, const bool commercial, const bool pricey,
                          const QString& output, const QString& comments, const bool installModel
                          )
-                         :Model(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
+                         :Model(id, modelName, name, key, addModelTime, isLike, type, backend, icon, information,
                                     promptTemplate, systemPrompt, expireModelTime, recommended, parent),
 
                                     m_inputPricePer1KTokens(inputPricePer1KTokens),

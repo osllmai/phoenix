@@ -30,7 +30,6 @@ void OfflineCompanyList::readDB(){
         emit requestReadModel(m_companys);
         endResetModel();
         emit countChanged();
-
         sortAsync(NameRole , Qt::AscendingOrder);
     });
 
@@ -75,6 +74,10 @@ QHash<int, QByteArray> OfflineCompanyList::roleNames() const{
     roles[BackendRole] = "backend";
     roles[CompanyObjectRole] = "companyObject";
     return roles;
+}
+
+void OfflineCompanyList::finalizeSetup(){
+    sortAsync(NameRole , Qt::AscendingOrder);
 }
 
 void OfflineCompanyList::sortAsync(int role, Qt::SortOrder order) {
@@ -126,15 +129,15 @@ QList<Company*> OfflineCompanyList::parseJson(const QString &filePath) {
     for (const QJsonValue &value : jsonArray) {
         if (!value.isObject()) continue;
         QJsonObject obj = value.toObject();
-        Company *company;
+
         if (obj["type"].toString() == "OfflineModel") {
+
+            Company *company;
+
             company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
                                   BackendType::OfflineModel, obj["file"].toString(), nullptr);
-        } else if (obj["type"].toString() == "OnlineModel") {
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                  BackendType::OnlineModel, obj["file"].toString(), nullptr);
+            tempCompany.append(company);
         }
-        tempCompany.append(company);
     }
     return tempCompany;
 }

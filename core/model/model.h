@@ -6,7 +6,7 @@
 #include <QDateTime>
 
 #include "BackendType.h"
-#include "company.h"
+
 
 class Model : public QObject
 {
@@ -19,7 +19,6 @@ class Model : public QObject
     Q_PROPERTY(QString information READ information CONSTANT FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate CONSTANT FINAL)
     Q_PROPERTY(QString systemPrompt READ systemPrompt CONSTANT FINAL)
-    Q_PROPERTY(Company *company READ company CONSTANT FINAL)
     Q_PROPERTY(QString type READ type CONSTANT FINAL)
     Q_PROPERTY(BackendType backend READ backend CONSTANT FINAL)
     Q_PROPERTY(QString key READ key WRITE setKey NOTIFY keyChanged FINAL)
@@ -32,7 +31,7 @@ public:
     explicit Model(QObject* parent = nullptr) : QObject(parent) {}
 
     explicit Model(const int id, const QString& modelName, const QString& name, const QString& key,
-                   QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
+                   QDateTime addModelTime, const bool isLike, const QString& type,
                    const BackendType backend,
                    const QString& icon , const QString& information , const QString& promptTemplate ,
                    const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent);
@@ -51,8 +50,6 @@ public:
     const QString &promptTemplate() const;
 
     const QString &systemPrompt() const;
-
-    Company *company() const;
 
     const QString &type() const;
 
@@ -84,7 +81,6 @@ private:
     QString m_information;
     QString m_promptTemplate;
     QString m_systemPrompt;
-    Company* m_company;
     QString m_type;
     bool m_recommended;
     BackendType m_backend;

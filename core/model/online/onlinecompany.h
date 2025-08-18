@@ -14,10 +14,10 @@ class OnlineCompany: public Company
     Q_PROPERTY(OnlineModelList *onlineModelList READ onlineModelList NOTIFY onlineModelListChanged FINAL)
 
 public:
-    OnlineCompany();
     explicit OnlineCompany(QObject* parent = nullptr) : Company(parent) {}
 
-    // explicit OnlineCompany(Company* company, QObject* parent);
+    explicit OnlineCompany(const int id, const QString& name, const QString& icon,
+                           const BackendType backend, const QString& filePath, QObject* parent);
 
     virtual ~OnlineCompany();
 

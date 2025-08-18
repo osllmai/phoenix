@@ -1,13 +1,13 @@
 #include "model.h"
 
 Model::Model(const int id, const QString& modelName, const QString& name, const QString& key,
-             QDateTime addModelTime, const bool isLike, Company* company, const QString& type,
+             QDateTime addModelTime, const bool isLike, const QString& type,
              const BackendType backend,
              const QString& icon , const QString& information , const QString& promptTemplate ,
              const QString& systemPrompt, QDateTime expireModelTime,
              const bool recommended, QObject* parent)
     : m_id(id), m_name(name), m_modelName(modelName), m_key(key), m_addModelTime(addModelTime), m_isLike(isLike),
-    m_company(company), m_type(type), m_backend(backend), m_icon(icon), m_information(information),
+    m_type(type), m_backend(backend), m_icon(icon), m_information(information),
     m_promptTemplate(promptTemplate), m_systemPrompt(systemPrompt),
     m_expireModelTime(expireModelTime), m_recommended(recommended),
     QObject(parent)
@@ -28,8 +28,6 @@ const QString &Model::promptTemplate() const{return m_promptTemplate;}
 const QString &Model::systemPrompt() const{return m_systemPrompt;}
 
 const QString &Model::information() const{return m_information;}
-
-Company *Model::company() const{return m_company;}
 
 const QString &Model::type() const{return m_type;}
 

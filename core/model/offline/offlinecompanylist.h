@@ -38,6 +38,9 @@ signals:
     void requestReadModel(const QList<Company*> companys);
     void sortingFinished();
 
+public slots:
+    void finalizeSetup();
+
 private slots:
     void handleSortingFinished();
 

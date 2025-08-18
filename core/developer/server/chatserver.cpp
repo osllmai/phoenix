@@ -174,7 +174,7 @@ void ChatServer::prompt(){
 
     m_provider = (m_model->backend() == BackendType::OfflineModel)
                      ? static_cast<Provider *>(new OfflineProvider(this))
-                     : static_cast<Provider *>(new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(), m_model->key()));
+                     : static_cast<Provider *>(new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(), m_model->key()));
 
     connect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
     connect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult, Qt::QueuedConnection);

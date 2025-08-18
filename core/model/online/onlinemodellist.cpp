@@ -45,8 +45,8 @@ QVariant OnlineModelList::data(const QModelIndex &index, int role = Qt::DisplayR
         return model->information();
     case IconModelRole:
         return model->icon();
-    case CompanyRole:
-        return QVariant::fromValue(m_models[index.row()]->company());
+    // case CompanyRole:
+    //     return QVariant::fromValue(m_models[index.row()]->company());
     case IsLikeRole:
         return model->isLike();
     case AddModelTimeRole:
@@ -76,7 +76,7 @@ QHash<int, QByteArray> OnlineModelList::roleNames() const {
     roles[KeyRole] = "key";
     roles[InformationRole] = "information";
     roles[IconModelRole] = "icon";
-    roles[CompanyRole] = "company";
+    // roles[CompanyRole] = "company";
     roles[IsLikeRole] = "isLike";
     roles[AddModelTimeRole] = "addModelTime";
     roles[TypeRole] = "type";
@@ -179,33 +179,33 @@ void OnlineModelList::deleteRequest(const int id){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
 }
 
-void OnlineModelList::addModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-              const bool isLike, Company* company, const QString& type, const BackendType backend,
-              const QString& icon , const QString& information , const QString& promptTemplate ,
-              const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
+// void OnlineModelList::addModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
+//               const bool isLike, Company* company, const QString& type, const BackendType backend,
+//               const QString& icon , const QString& information , const QString& promptTemplate ,
+//               const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
 
-              const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-              const QString& contextWindows, const bool commercial, const bool pricey,
-              const QString& output, const QString& comments, const bool installModel)
-{
-    const int index = m_models.size();
-    // beginInsertRows(QModelIndex(), index, index);
-    OnlineModel* model = new OnlineModel(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon,
-                                  information, promptTemplate, systemPrompt, expireModelTime, recommended, m_instance,
+//               const double inputPricePer1KTokens, const double outputPricePer1KTokens,
+//               const QString& contextWindows, const bool commercial, const bool pricey,
+//               const QString& output, const QString& comments, const bool installModel)
+// {
+//     const int index = m_models.size();
+//     // beginInsertRows(QModelIndex(), index, index);
+//     OnlineModel* model = new OnlineModel(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon,
+//                                   information, promptTemplate, systemPrompt, expireModelTime, recommended, m_instance,
 
-                                  inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
-                                  commercial, pricey, output, comments, installModel);
-    m_models.append(model);
-    connect(model, &OnlineModel::modelChanged, this, [=]() {
-        int row = m_models.indexOf(model);
-        if (row != -1) {
-            QModelIndex modelIndex = createIndex(row, 0);
-            emit dataChanged(modelIndex, modelIndex);
-        }
-    });
-    // endInsertRows();
-    emit countChanged();
-}
+//                                   inputPricePer1KTokens, outputPricePer1KTokens, contextWindows,
+//                                   commercial, pricey, output, comments, installModel);
+//     m_models.append(model);
+//     connect(model, &OnlineModel::modelChanged, this, [=]() {
+//         int row = m_models.indexOf(model);
+//         if (row != -1) {
+//             QModelIndex modelIndex = createIndex(row, 0);
+//             emit dataChanged(modelIndex, modelIndex);
+//         }
+//     });
+//     // endInsertRows();
+//     emit countChanged();
+// }
 
 OnlineModel* OnlineModelList::findModelById(int id) {
     auto it = std::find_if(m_models.begin(), m_models.end(), [id](OnlineModel* model) {
@@ -216,12 +216,12 @@ OnlineModel* OnlineModelList::findModelById(int id) {
 }
 
 OnlineModel* OnlineModelList::findModelByModelName(const QString modelName) {
-    for (OnlineModel* model : m_models) {
-        QString fullModelName =  model->company()->name() + "/" + model->modelName();
-        if (fullModelName == modelName ) {
-            return model;
-        }
-    }
+    // for (OnlineModel* model : m_models) {
+    //     QString fullModelName =  model->company()->name() + "/" + model->modelName();
+    //     if (fullModelName == modelName ) {
+    //         return model;
+    //     }
+    // }
     return nullptr;
 }
 

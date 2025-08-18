@@ -1,22 +1,24 @@
 #include "offlinemodel.h"
 
-OfflineModel::OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+OfflineModel::OfflineModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
 
                            const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                           const bool isLike, Company* company, const QString& type,const BackendType backend,
+                           const bool isLike, const QString& type,const BackendType backend,
                            const QString& icon , const QString& information , const QString& promptTemplate ,
                            const QString& systemPrompt, QDateTime expireModelTime,
                            const bool recommended, QObject* parent)
-    : Model(id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
+    : Model(id, modelName, name, key, addModelTime, isLike, type, backend, icon, information,
             promptTemplate, systemPrompt, expireModelTime, recommended, parent),
-    m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
+    m_company(company), m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
     m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent),
     m_isDownloading(isDownloading), m_downloadFinished(downloadFinished)
 {}
 
 OfflineModel::~OfflineModel(){}
+
+Company *OfflineModel::company() const{return m_company;}
 
 const double OfflineModel::fileSize() const{return m_fileSize;}
 

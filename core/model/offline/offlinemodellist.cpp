@@ -283,21 +283,21 @@ void OfflineModelList::addRequest(QString directoryPath){
     emit requestAddModel(fileName, directoryPath);
 }
 
-void OfflineModelList::addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+void OfflineModelList::addModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                                 const QString& parameters, const QString& quant, const double downloadPercent,
                                 const bool isDownloading, const bool downloadFinished,
 
                                 const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                                const bool isLike, Company* company, const QString& type, const BackendType backend,
+                                const bool isLike, const QString& type, const BackendType backend,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
                                 const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
 {
     // const int index = m_models.size();
     // beginInsertRows(QModelIndex(), index, index);
-    OfflineModel* model = new OfflineModel(fileSize, ramRamrequired, fileName, url, parameters,
+    OfflineModel* model = new OfflineModel(company, fileSize, ramRamrequired, fileName, url, parameters,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
-                                           id, modelName, name, key, addModelTime, isLike, company, type, backend, icon, information,
+                                           id, modelName, name, key, addModelTime, isLike, type, backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
     m_models.append(model);
     // endInsertRows();

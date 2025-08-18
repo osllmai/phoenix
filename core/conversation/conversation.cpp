@@ -115,7 +115,7 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
         if(m_model->backend() == BackendType::OfflineModel){
             m_provider = new OfflineProvider(this);
         }else if(m_model->backend() == BackendType::OnlineModel){
-            m_provider = new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(),m_model->key());
+            m_provider = new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(),m_model->key());
         }
 
         //load and unload model

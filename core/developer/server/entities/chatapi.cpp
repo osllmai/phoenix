@@ -108,7 +108,7 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
 
     m_provider = (m_model->backend() == BackendType::OfflineModel)
                      ? static_cast<Provider *>(new OfflineProvider(this))
-                     : static_cast<Provider *>(new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(), m_model->key()));
+                     : static_cast<Provider *>(new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(), m_model->key()));
 
     connect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
     connect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult, Qt::QueuedConnection);

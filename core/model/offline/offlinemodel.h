@@ -3,12 +3,14 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include "../model.h"
+#include "model.h"
+#include "company.h"
 
 class OfflineModel: public Model
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(Company *company READ company CONSTANT FINAL)
     Q_PROPERTY(double fileSize READ fileSize CONSTANT FINAL)
     Q_PROPERTY(int ramRamrequired READ ramRamrequired CONSTANT FINAL)
     Q_PROPERTY(QString fileName READ fileName CONSTANT FINAL)
@@ -24,15 +26,17 @@ class OfflineModel: public Model
 public:
     explicit OfflineModel(QObject* parent = nullptr) : Model(parent) {}
 
-    explicit OfflineModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+    explicit OfflineModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                           const QString& parameters, const QString& quant, const double downloadPercent,
                           const bool isDownloading, const bool downloadFinished,
                           const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                          const bool isLike, Company* company, const QString& type,const BackendType backend,
+                          const bool isLike, const QString& type,const BackendType backend,
                           const QString& icon , const QString& information , const QString& promptTemplate ,
                           const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent);
 
     virtual ~OfflineModel();
+
+    Company *company() const;
 
     const double fileSize() const;
 
@@ -75,6 +79,7 @@ public slots:
     void handleBytesTotal(qint64 bytesTotal);
 
 private:
+    Company* m_company;
     double m_fileSize;
     int m_ramRamrequired;
     QString m_fileName;

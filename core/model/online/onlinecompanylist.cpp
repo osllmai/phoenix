@@ -20,22 +20,7 @@ OnlineCompanyList* OnlineCompanyList::instance(QObject* parent) {
 
 OnlineCompanyList::OnlineCompanyList(QObject *parent): QAbstractListModel(parent)
 {
-    connect(&m_sortWatcher, &QFutureWatcher<QList<Company*>>::finished, this, &OnlineCompanyList::handleSortingFinished);
-}
-
-void OnlineCompanyList::readDB(){
-    connect(&futureWatcher, &QFutureWatcher<QList<Company*>>::finished, this, [this]() {
-        beginResetModel();
-        m_companys = futureWatcher.result();
-        emit requestReadModel(m_companys);
-        endResetModel();
-        emit countChanged();
-
-        sortAsync(NameRole , Qt::AscendingOrder);
-    });
-
-    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson, QCoreApplication::applicationDirPath() + "/models/company.json");
-    futureWatcher.setFuture(future);
+    connect(&m_sortWatcher, &QFutureWatcher<QList<OnlineCompany*>>::finished, this, &OnlineCompanyList::handleSortingFinished);
 }
 
 int OnlineCompanyList::count() const{return m_companys.count();}
@@ -49,7 +34,7 @@ QVariant OnlineCompanyList::data(const QModelIndex &index, int role) const{
     if (!index.isValid() || index.row() < 0 || index.row() >= m_companys.count())
         return QVariant();
 
-    Company* company = m_companys.at(index.row());
+    OnlineCompany* company = m_companys.at(index.row());
 
     switch (role) {
     case IDRole:
@@ -77,14 +62,18 @@ QHash<int, QByteArray> OnlineCompanyList::roleNames() const{
     return roles;
 }
 
+void OnlineCompanyList::finalizeSetup(){
+    sortAsync(NameRole , Qt::AscendingOrder);
+}
+
 void OnlineCompanyList::sortAsync(int role, Qt::SortOrder order) {
     if (m_companys.isEmpty()) return;
 
     auto modelsCopy = m_companys;
-    QFuture<QList<Company*>> future = QtConcurrent::run([modelsCopy, role, order]() mutable {
+    QFuture<QList<OnlineCompany*>> future = QtConcurrent::run([modelsCopy, role, order]() mutable {
         QCollator collator;
         collator.setNumericMode(true);
-        std::sort(modelsCopy.begin(), modelsCopy.end(), [&](Company* a, Company* b) {
+        std::sort(modelsCopy.begin(), modelsCopy.end(), [&](OnlineCompany* a, OnlineCompany* b) {
             QString sa, sb;
             if (role == NameRole) {
                 sa = a->name();
@@ -105,36 +94,4 @@ void OnlineCompanyList::handleSortingFinished() {
     m_companys = m_sortWatcher.result();
     endResetModel();
     emit sortingFinished();
-}
-
-QList<Company*> OnlineCompanyList::parseJson(const QString &filePath) {
-    QList<Company*> tempCompany;
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Cannot open JSON file!";
-        return tempCompany;
-    }
-    QByteArray jsonData = file.readAll();
-    file.close();
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
-    if (!doc.isArray()) {
-        qWarning() << "Invalid JSON format!";
-        return tempCompany;
-    }
-    int i=0;
-    QJsonArray jsonArray = doc.array();
-    for (const QJsonValue &value : jsonArray) {
-        if (!value.isObject()) continue;
-        QJsonObject obj = value.toObject();
-        Company *company;
-        if (obj["type"].toString() == "OfflineModel") {
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                  BackendType::OfflineModel, obj["file"].toString(), nullptr);
-        } else if (obj["type"].toString() == "OnlineModel") {
-            company = new Company(i++, obj["name"].toString(), obj["icon"].toString(),
-                                  BackendType::OnlineModel, obj["file"].toString(), nullptr);
-        }
-        tempCompany.append(company);
-    }
-    return tempCompany;
 }
