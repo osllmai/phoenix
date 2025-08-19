@@ -680,7 +680,7 @@ void Database::readMessages(const int idConversation){
 QList<int> Database::readOnlineCompany() {
     QList<int> allID;
 
-    QFile file(filePath);
+    QFile file(QCoreApplication::applicationDirPath() + "/models/company.json");
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Cannot open JSON file!";
         return allID;

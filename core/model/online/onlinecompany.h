@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QFutureWatcher>
 
 #include "company.h"
 #include "onlinemodellist.h"
@@ -31,9 +32,14 @@ signals:
     void onlineModelListChanged();
     void keyChanged();
 
+private slots:
+    void onModelsLoaded();
+
 private:
-    OnlineModelList *m_onlineModelList;
+    OnlineModelList *m_onlineModelList = nullptr;
     QString m_key;
+
+    QFutureWatcher<QList<QVariantMap>> m_futureWatcher;
 };
 
 #endif // ONLINECOMPANY_H

@@ -10,13 +10,13 @@ QHttpServerResponse ModelAPI::getFullList() const {
     qCInfo(logDeveloper) << "GET Request";
     qCInfo(logDeveloperView) << "GET Request";
 
-    const auto onlineModels = OnlineModelList::instance(nullptr);
-    auto* onlineModelInstallFilter = new OnlineModelListFilter(onlineModels, nullptr);
-    onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
-    qCInfo(logDeveloper) << "Online model install filter created and filter type set";
+    // const auto onlineModels = OnlineModelList::instance(nullptr);
+    // auto* onlineModelInstallFilter = new OnlineModelListFilter(onlineModels, nullptr);
+    // onlineModelInstallFilter->setFilterType(OnlineModelListFilter::FilterType::InstallModel);
+    // qCInfo(logDeveloper) << "Online model install filter created and filter type set";
 
-    QJsonArray onlineArray = extractModelsAsJsonArray(onlineModelInstallFilter);
-    qCInfo(logDeveloper) << "Extracted" << onlineArray.size() << "online models";
+    // QJsonArray onlineArray = extractModelsAsJsonArray(onlineModelInstallFilter);
+    // qCInfo(logDeveloper) << "Extracted" << onlineArray.size() << "online models";
 
     const auto offlineModels = OfflineModelList::instance(nullptr);
     auto* offlineModelListFinishedDownloadFilter = new OfflineModelListFilter(offlineModels, nullptr);
@@ -26,12 +26,12 @@ QHttpServerResponse ModelAPI::getFullList() const {
     QJsonArray offlineArray = extractModelsAsJsonArray(offlineModelListFinishedDownloadFilter);
     qCInfo(logDeveloper) << "Extracted" << offlineArray.size() << "offline models";
 
-    delete onlineModelInstallFilter;
-    delete offlineModelListFinishedDownloadFilter;
-    qCInfo(logDeveloper) << "Filters deleted";
+    // delete onlineModelInstallFilter;
+    // delete offlineModelListFinishedDownloadFilter;
+    // qCInfo(logDeveloper) << "Filters deleted";
 
     QJsonObject result;
-    result["online"] = onlineArray;
+    // result["online"] = onlineArray;
     result["offline"] = offlineArray;
 
     // QJsonDocument doc(result);

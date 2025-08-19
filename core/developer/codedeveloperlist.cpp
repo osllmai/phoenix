@@ -131,10 +131,10 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
         if(offlineModel != nullptr){
             getCurrentProgramLanguage()->getCodeGenerator()->setModelName("localModel/"+offlineModel->modelName());
         }
-        OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
-        if(onlineModel != nullptr){
-            getCurrentProgramLanguage()->getCodeGenerator()->setModelName(/*onlineModel->company()->name() + "/" +*/ onlineModel->modelName());
-        }
+        // OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+        // if(onlineModel != nullptr){
+        //     getCurrentProgramLanguage()->getCodeGenerator()->setModelName(/*onlineModel->company()->name() + "/" +*/ onlineModel->modelName());
+        // }
     }
 }
 

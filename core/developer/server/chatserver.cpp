@@ -215,23 +215,23 @@ bool ChatServer::loadModel(QString modelName){
         } else {
             return false;
         }
-    } else {
+    } /*else {
         OnlineModel *onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
         if (onlineModel && onlineModel->installModel()) {
             setModel(onlineModel);
         } else {
             return false;
         }
-    }
+    }*/
     return true;
 }
 
 bool ChatServer::loadModel(int id){
     if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
         setModel(offline);
-    } else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
+    } /*else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
         setModel(online);
-    } else {
+    }*/ else {
         return false;
     }
     return true;

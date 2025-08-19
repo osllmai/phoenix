@@ -80,11 +80,6 @@ void OfflineCompanyList::finalizeSetup(){
     sortAsync(NameRole , Qt::AscendingOrder);
 }
 
-void OfflineCompanyList::addProvider(const int id, const QString& name, const QString& icon,
-                 const BackendType backend, const QString& filePath, QString key){
-
-}
-
 void OfflineCompanyList::sortAsync(int role, Qt::SortOrder order) {
     if (m_companys.isEmpty()) return;
 

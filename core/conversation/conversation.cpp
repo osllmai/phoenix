@@ -200,10 +200,10 @@ void Conversation::loadModel(const int id){
     if(offlineModel != nullptr){
         setModel(offlineModel);
     }
-    OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
-    if(onlineModel != nullptr){
-        setModel(onlineModel);
-    }
+    // OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
+    // if(onlineModel != nullptr){
+    //     setModel(onlineModel);
+    // }
     m_isModelChanged = true;
 }
 
