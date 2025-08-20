@@ -33,7 +33,7 @@ Rectangle{
         anchors.fill: parent
         TextArea {
             id: textArea
-            text: model.key
+            text: ""
             width: parent.width - iconId.width - 5
             anchors.verticalCenter: iconId.verticalCenter
             hoverEnabled: true

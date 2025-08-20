@@ -37,29 +37,29 @@ T.Button {
                 }
 
                 OnlineDelegateTitleAndCopyButton{
-                    width: parent.width - logoModelId.width /*- likeIconId.width - aboutIcon.width*/
+                    width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
                     height: parent.height
                 }
 
-                // MyIcon{
-                //     id: aboutIcon
-                //     width: 29; height: 29
-                //     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
-                //     anchors.verticalCenter: logoModelId.verticalCenter
-                //     myTextToolTip:model.information
-                // }
+                MyIcon{
+                    id: aboutIcon
+                    width: 29; height: 29
+                    myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    myTextToolTip:model.name
+                }
 
-                // MyIcon{
-                //     id: likeIconId
-                //     myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
-                //     anchors.verticalCenter: logoModelId.verticalCenter
-                //     iconType: Style.RoleEnum.IconType.Like
-                //     isNeedAnimation: true
-                //     onClicked: {
-                //         onlineModelList.likeRequest(model.id, !model.isLike)
-                //         model.isLike = !model.isLike
-                //     }
-                // }
+                MyIcon{
+                    id: likeIconId
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    isNeedAnimation: true
+                    onClicked: {
+                        onlineCompanyList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
+                    }
+                }
             }
             // Label {
             //     id:informationId

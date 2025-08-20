@@ -152,5 +152,6 @@
 
         <file>model/components/offline/components/SearchOfflineModel.qml</file>
         <file>model/components/offline/components/components/SearchTagPupup.qml</file>
+        <file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
     </qresource>
 </RCC>

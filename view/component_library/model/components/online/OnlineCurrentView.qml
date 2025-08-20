@@ -37,7 +37,7 @@ Item {
 
                 Label {
                     id: availablemodelsId
-                    visible: onlineCurrentModelList.height>30
+                    // visible: onlineCurrentModelList.height>30
                     text: "Available Models"
                     color: Style.Colors.textTitle
                     verticalAlignment: Text.AlignBottom
@@ -46,10 +46,10 @@ Item {
                     clip: true
                 }
 
-                OnlineCurrentModelList{
-                    id: onlineCurrentModelList
-                    model:onlineModelInstallFilter
-                }
+                // OnlineCurrentModelList{
+                //     id: onlineCurrentModelList
+                //     model:onlineModelInstallFilter
+                // }
 
                 Label {
                     id: textId
@@ -62,10 +62,10 @@ Item {
                     clip: true
                 }
 
-                OnlineCurrentModelList {
-                    id: offlinRecommendModelList
-                    model: onlineModelListRecommendedFilter
-                }
+                // OnlineCurrentModelList {
+                //     id: offlinRecommendModelList
+                //     model: onlineModelListRecommendedFilter
+                // }
             }
         }
         MyButton{
