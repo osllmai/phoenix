@@ -696,43 +696,45 @@ QList<int> Database::readOnlineCompany() {
 
     int i=0;
     QJsonArray jsonArray = doc.array();
-    for (const QJsonValue &value : jsonArray) {
+    for (const QJsonValue &value : jsonArray){
         if (!value.isObject()) continue;
         QJsonObject obj = value.toObject();
 
-        int id;
-        QString name = obj["name"].toString();
-        QString key = "";
-        QDateTime addDate = QDateTime::currentDateTime();
-        bool isLike = false;
+        if (obj["type"].toString() == "OnlineModel"){
+            int id;
+            QString name = obj["name"].toString();
+            QString key = "";
+            QDateTime addDate = QDateTime::currentDateTime();
+            bool isLike = false;
 
-        QSqlQuery query(m_db);
-        query.prepare(READ_MODEL_SQL);
-        query.addBindValue(name);
+            QSqlQuery query(m_db);
+            query.prepare(READ_MODEL_SQL);
+            query.addBindValue(name);
 
-        if (!query.exec())
-            continue;
+            if (!query.exec())
+                continue;
 
-        bool installModel = false;
+            bool installModel = false;
 
-        if (!query.next()) {
-            id = insertModel(name, key);
-        }else{
-            id = query.value(0).toInt();
-            name = query.value(1).toString();
-            key = query.value(2).toString();
-            addDate = query.value(3).toDateTime();
-            isLike = query.value(4).toBool();
-            if(key != "")
-                installModel = true;
+            if (!query.next()) {
+                id = insertModel(name, key);
+            }else{
+                id = query.value(0).toInt();
+                name = query.value(1).toString();
+                key = query.value(2).toString();
+                addDate = query.value(3).toDateTime();
+                isLike = query.value(4).toBool();
+                if(key != "")
+                    installModel = true;
+            }
+
+            if(id == -1)
+                continue;
+
+            emit addOnlineProvider(id, name, obj["icon"].toString(), isLike, BackendType::OnlineModel, obj["file"].toString(), key);
+
+            allID.append(id);
         }
-
-        if(id == -1)
-            continue;
-
-        emit addOnlineProvider(id, name, obj["icon"].toString(), BackendType::OnlineModel, obj["file"].toString(), key);
-
-        allID.append(id);
     }
     return allID;
 }

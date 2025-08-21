@@ -131,13 +131,16 @@ int main(int argc, char *argv[])
         engine.rootContext()->setContextProperty("offlineModelListRecommendedFilter", offlineModelListRecommendedFilter);
 
         QObject::connect(offlineCompanyList, &OfflineCompanyList::requestReadModel, database, &Database::readModel, Qt::QueuedConnection);
-        QObject::connect(database, &Database::addOnlineProvider, onlineCompanyList, &OnlineCompanyList::addProvider, Qt::QueuedConnection);
-        QObject::connect(database, &Database::addOfflineModel, offlineModelList, &OfflineModelList::addModel, Qt::QueuedConnection);
 
-        // QObject::connect(offlineModelList, &OfflineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
-        // QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
-        // QObject::connect(offlineModelList, &OfflineModelList::requestAddModel, database, &Database::addModel, Qt::QueuedConnection);
-        // QObject::connect(offlineModelList, &OfflineModelList::requestDeleteModel, database, &Database::deleteModel, Qt::QueuedConnection);
+        QObject::connect(database, &Database::addOfflineModel, offlineModelList, &OfflineModelList::addModel, Qt::QueuedConnection);
+        QObject::connect(offlineModelList, &OfflineModelList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
+        QObject::connect(offlineModelList, &OfflineModelList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
+        QObject::connect(offlineModelList, &OfflineModelList::requestAddModel, database, &Database::addModel, Qt::QueuedConnection);
+        QObject::connect(offlineModelList, &OfflineModelList::requestDeleteModel, database, &Database::deleteModel, Qt::QueuedConnection);
+
+        QObject::connect(database, &Database::addOnlineProvider, onlineCompanyList, &OnlineCompanyList::addProvider, Qt::QueuedConnection);
+        QObject::connect(onlineCompanyList, &OnlineCompanyList::requestUpdateKeyModel, database, &Database::updateKeyModel, Qt::QueuedConnection);
+        QObject::connect(onlineCompanyList, &OnlineCompanyList::requestUpdateIsLikeModel, database, &Database::updateIsLikeModel, Qt::QueuedConnection);
         offlineCompanyList->readDB();
 
         SystemMonitor* systemMonitor = SystemMonitor::instance(&engine);

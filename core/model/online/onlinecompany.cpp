@@ -9,16 +9,18 @@
 #include <QDateTime>
 #include <QDebug>
 
-OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& icon,
-                             const BackendType backend, const QString& filePath, QString key, QObject* parent)
-    : Company(id, name, icon, backend, filePath, parent), m_key(key)
+OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& icon, const bool isLike,
+                             const BackendType backend, const QString& filePath, QString key, bool installModel, QObject* parent)
+    : Company(id, name, icon, backend, filePath, parent), m_key(key), m_isLike(isLike), m_installModel(installModel)
 {
     m_onlineModelList = new OnlineModelList(this);
 
     connect(&m_futureWatcher, &QFutureWatcher<QList<QVariantMap>>::finished,
             this, &OnlineCompany::onModelsLoaded);
 
-    auto future = QtConcurrent::run([filePath]() -> QList<QVariantMap> {
+    QString companyIcon = icon;
+
+    auto future = QtConcurrent::run([filePath, companyIcon]() -> QList<QVariantMap> {
         QList<QVariantMap> models;
 
         QFile file(QCoreApplication::applicationDirPath() + "/models/" + filePath);
@@ -46,7 +48,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
             m["id"] = -1;
             m["name"] = obj["name"].toString();
             m["modelName"] = obj["modelName"].toString();
-            m["icon"] = "icon()";
+            m["icon"] = companyIcon;
             m["description"] = obj["description"].toString();
             m["type"] = obj["type"].toString();
             m["promptTemplate"] = obj["promptTemplate"].toString();
@@ -80,12 +82,26 @@ void OnlineCompany::setKey(const QString &newKey) {
     emit keyChanged();
 }
 
+const bool OnlineCompany::installModel() const{ return m_installModel;}
+void OnlineCompany::setInstallModel(const bool newInstallModel){
+    if (m_installModel == newInstallModel)
+        return;
+    m_installModel = newInstallModel;
+    emit installModelChanged();
+}
+
 void OnlineCompany::onModelsLoaded(){
     QList<QVariantMap> models = m_futureWatcher.result();
     for (const auto &m : models) {
         m_onlineModelList->addModel(m);
     }
-
     emit onlineModelListChanged();
 }
 
+const bool OnlineCompany::isLike() const{return m_isLike;}
+void OnlineCompany::setIsLike(const bool isLike){
+    if(m_isLike == isLike)
+        return;
+    m_isLike = isLike;
+    emit isLikeChanged();
+}

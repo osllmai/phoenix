@@ -22,8 +22,8 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     // QString companyName = company ? company->name() : QStringLiteral("Unknown");
 
     // QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
-    bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
-    bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
+    // bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
+    // bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
 
     QVariant modelVariant = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelObjectRole);
     OnlineModel* model = modelVariant.value<OnlineModel*>();
@@ -43,12 +43,12 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
         // return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
-    case FilterType::InstallModel:
-        return matchesFilter && model->type() == "Text Generation"&& (installModel) ;
-    case FilterType::Recommended:
-        return matchesFilter && model->type() == "Text Generation" && (!installModel && model->recommended() );
-    case FilterType::Favorite:
-        return matchesFilter && isLikeModel;
+    // case FilterType::InstallModel:
+    //     return matchesFilter && model->type() == "Text Generation"&& (installModel) ;
+    // case FilterType::Recommended:
+    //     return matchesFilter && model->type() == "Text Generation" && (!installModel && model->recommended() );
+    // case FilterType::Favorite:
+    //     return matchesFilter && isLikeModel;
     default:
         return true;
     }

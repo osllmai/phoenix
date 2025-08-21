@@ -17,19 +17,18 @@ class OnlineModel : public Model
     Q_PROPERTY(bool pricey READ pricey CONSTANT FINAL)
     Q_PROPERTY(QString output READ output CONSTANT FINAL)
     Q_PROPERTY(QString comments READ comments CONSTANT FINAL)
-    Q_PROPERTY(bool installModel READ installModel WRITE setInstallModel NOTIFY installModelChanged FINAL)
 
 public:
     explicit OnlineModel(QObject* parent = nullptr) : Model(parent) {}
 
     explicit OnlineModel(const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                         const bool isLike, const QString& type, const BackendType backend,
+                         const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
                          const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, QObject* parent,
 
                          const double inputPricePer1KTokens, const double outputPricePer1KTokens,
                          const QString& contextWindows, const bool commercial, const bool pricey,
-                         const QString& output, const QString& comments, const bool installModel
+                         const QString& output, const QString& comments
                          );
 
     virtual ~OnlineModel();
@@ -48,13 +47,6 @@ public:
 
     const QString &comments() const;
 
-    const bool installModel() const;
-    void setInstallModel(const bool newInstallModel);
-
-signals:
-    void installModelChanged();
-    void modelChanged();
-
 private:
     double m_inputPricePer1KTokens;
     double m_outputPricePer1KTokens;
@@ -63,7 +55,6 @@ private:
     bool m_pricey;
     QString m_output;
     QString m_comments;
-    bool m_installModel;
 };
 
 #endif // ONLINEMODEL_H

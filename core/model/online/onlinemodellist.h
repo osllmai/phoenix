@@ -28,12 +28,10 @@ public:
         InformationRole,
         TypeRole,
         IconModelRole,
-        IsLikeRole,
         AddModelTimeRole,
         ContextWindowsRole,
         OutputRole,
         CommercialRole,
-        InstallModelRole,
         ModelObjectRole
     };
 
@@ -44,16 +42,14 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE OnlineModel* at(int index) const;
-    Q_INVOKABLE void likeRequest(const int id, const bool isLike);
-    Q_INVOKABLE void saveAPIKey(const int id, QString key);
-    Q_INVOKABLE void deleteRequest(const int id);
+    // Q_INVOKABLE void likeRequest(const int id, const bool isLike);
+    // Q_INVOKABLE void saveAPIKey(const int id, QString key);
+    // Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
     Q_INVOKABLE void addModel(const QVariantMap &m);
 
 signals:
     void countChanged();
-    void requestUpdateKeyModel(const int id, const QString &key);
-    void requestUpdateIsLikeModel(const int id, const bool isLike);
     void sortingFinished();
 
 public slots:

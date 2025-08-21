@@ -84,6 +84,11 @@ T.Button {
             //     color: "#00ffffff"
             //     OnlineInformationModel{}
             // }
+
+            OnlineModelListComboBox{
+                modelList: /*model.onlineModelList*/model.onlineModelList
+            }
+
             ApikeyButton{
                 id: apikeyButton
             }

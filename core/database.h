@@ -57,7 +57,7 @@ public slots:
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
 signals:
-    void addOnlineProvider(const int id, const QString& name, const QString& icon,
+    void addOnlineProvider(const int id, const QString& name, const QString& icon, const bool isLike,
                            const BackendType backend, const QString& filePath, QString key);
 
     void addOfflineModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,

@@ -9,10 +9,10 @@ OfflineModel::OfflineModel(Company* company, const double fileSize, const int ra
                            const QString& icon , const QString& information , const QString& promptTemplate ,
                            const QString& systemPrompt, QDateTime expireModelTime,
                            const bool recommended, QObject* parent)
-    : Model(id, modelName, name, key, addModelTime, isLike, type, backend, icon, information,
+    : Model(id, modelName, name, key, addModelTime, type, backend, icon, information,
             promptTemplate, systemPrompt, expireModelTime, recommended, parent),
     m_company(company), m_fileSize(fileSize), m_ramRamrequired(ramRamrequired), m_fileName(fileName), m_url(url),
-    m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent),
+    m_parameters(parameters), m_quant(quant), m_downloadPercent(downloadPercent), m_isLike(isLike),
     m_isDownloading(isDownloading), m_downloadFinished(downloadFinished)
 {}
 
@@ -31,6 +31,14 @@ const QString &OfflineModel::url() const{return m_url;}
 const QString &OfflineModel::parameters() const{return m_parameters;}
 
 const QString &OfflineModel::quant() const{return m_quant;}
+
+const bool OfflineModel::isLike() const{return m_isLike;}
+void OfflineModel::setIsLike(const bool isLike){
+    if(m_isLike == isLike)
+        return;
+    m_isLike = isLike;
+    emit isLikeChanged();
+}
 
 double OfflineModel::downloadPercent() const{return m_downloadPercent;}
 void OfflineModel::setDownloadPercent(const double downloadPercent){

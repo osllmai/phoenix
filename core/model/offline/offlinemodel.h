@@ -12,6 +12,7 @@ class OfflineModel: public Model
     QML_ELEMENT
     Q_PROPERTY(Company *company READ company CONSTANT FINAL)
     Q_PROPERTY(double fileSize READ fileSize CONSTANT FINAL)
+    Q_PROPERTY(bool isLike READ isLike WRITE setIsLike NOTIFY isLikeChanged FINAL)
     Q_PROPERTY(int ramRamrequired READ ramRamrequired CONSTANT FINAL)
     Q_PROPERTY(QString fileName READ fileName CONSTANT FINAL)
     Q_PROPERTY(QString url READ url CONSTANT FINAL)
@@ -50,6 +51,9 @@ public:
 
     const QString &quant() const;
 
+    const bool isLike() const;
+    void setIsLike(const bool isLike);
+
     double downloadPercent() const;
     void setDownloadPercent(const double downloadPercent);
 
@@ -73,6 +77,7 @@ signals:
     void bytesTotalChanged();
     void cancelRequest();
     void startRequest(const QString &modelPath);
+    void isLikeChanged();
 
 public slots:
     void handleBytesReceived(qint64 bytesReceived);
@@ -91,6 +96,7 @@ private:
     bool m_downloadFinished;
     qint64 m_bytesReceived;
     qint64 m_bytesTotal;
+    bool m_isLike;
 };
 
 #endif // OFFLINEMODEL_H

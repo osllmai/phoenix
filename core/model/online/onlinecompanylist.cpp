@@ -8,6 +8,7 @@
 #include <QCoreApplication>
 
 #include "onlinemodellist.h"
+#include "../../conversation/conversationlist.h"
 
 OnlineCompanyList* OnlineCompanyList::m_instance = nullptr;
 
@@ -43,10 +44,16 @@ QVariant OnlineCompanyList::data(const QModelIndex &index, int role) const{
         return company->name();
     case IconRole:
         return company->icon();
+    case IsLikeRole:
+        return company->isLike();
+    case InstallModelRole:
+        return company->installModel();
     case BackendRole:
         return static_cast<int>(company->backend());
     case CompanyObjectRole:
         return QVariant::fromValue(m_companys[index.row()]);
+    case OnlineModelListRole:
+        return QVariant::fromValue(company->onlineModelList());
     default:
         return QVariant();
     }
@@ -57,9 +64,31 @@ QHash<int, QByteArray> OnlineCompanyList::roleNames() const{
     roles[IDRole] = "id";
     roles[NameRole] = "name";
     roles[IconRole] = "icon";
+    roles[IsLikeRole] = "isLike";
+    roles[InstallModelRole] = "installModel";
     roles[BackendRole] = "backend";
     roles[CompanyObjectRole] = "companyObject";
+    roles[OnlineModelListRole] = "onlineModelList";
     return roles;
+}
+
+bool OnlineCompanyList::setData(const QModelIndex &index, const QVariant &value, int role) {
+    OnlineCompany* model = m_companys[index.row()];
+    bool somethingChanged{false};
+
+    switch (role) {
+    case IsLikeRole:
+        if( model->isLike()!= value.toBool()){
+            model->setIsLike(value.toBool());
+            somethingChanged = true;
+        }
+        break;
+    }
+    if(somethingChanged){
+        emit dataChanged(index, index, QVector<int>() << role);
+        return true;
+    }
+    return false;
 }
 
 void OnlineCompanyList::finalizeSetup(){
@@ -96,11 +125,51 @@ void OnlineCompanyList::handleSortingFinished() {
     emit sortingFinished();
 }
 
-void OnlineCompanyList::addProvider(const int id, const QString& name, const QString& icon,
+void OnlineCompanyList::addProvider(const int id, const QString& name, const QString& icon, const bool isLike,
                  const BackendType backend, const QString& filePath, QString key){
     const int index = m_companys.size();
     beginInsertRows(QModelIndex(), index, index);
-    m_companys.append(new OnlineCompany(id,name,icon,backend,filePath,key, this));
+    bool isInstall =  true;
+    if(key == "")
+        isInstall = false;
+    m_companys.append(new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this));
     endInsertRows();
     emit countChanged();
+}
+
+void OnlineCompanyList::likeRequest(const int id, const bool isLike){
+    emit requestUpdateIsLikeModel(id, isLike);
+}
+
+void OnlineCompanyList::saveAPIKey(const int id, QString key){
+    OnlineCompany* model = findCompanyById(id);
+    if(model == nullptr) return;
+    const int index = m_companys.indexOf(model);
+    model->setKey(key);
+    model->setInstallModel(true);
+    emit requestUpdateKeyModel(model->id(), model->key());
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
+}
+
+void OnlineCompanyList::deleteRequest(const int id){
+
+    OnlineCompany* model = findCompanyById(id);
+    if(model == nullptr) return;
+    const int index = m_companys.indexOf(model);
+
+    model->setKey("");
+    model->setInstallModel(false);
+    emit requestUpdateKeyModel(model->id(), "");
+
+    ConversationList::instance(this)->setModelSelect(false);
+
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0), {InstallModelRole});
+}
+
+OnlineCompany* OnlineCompanyList::findCompanyById(int id) {
+    auto it = std::find_if(m_companys.begin(), m_companys.end(), [id](OnlineCompany* model) {
+        return model->id() == id;
+    });
+
+    return (it != m_companys.end()) ? *it : nullptr;
 }

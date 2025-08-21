@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <huggingfacemodelinfo.h>
 
 class HuggingfaceModel: public QObject
 {
@@ -15,6 +16,7 @@ class HuggingfaceModel: public QObject
     Q_PROPERTY(QString libraryName READ libraryName CONSTANT FINAL)
     Q_PROPERTY(QStringList tags READ tags CONSTANT FINAL)
     Q_PROPERTY(QString createdAt READ createdAt CONSTANT FINAL)
+    Q_PROPERTY(HuggingfaceModelInfo hugginfaceInfo READ hugginfaceInfo NOTIFY hugginfaceInfoChanged FINAL)
 public:
     explicit HuggingfaceModel(QObject* parent = nullptr) : QObject(parent) {}
 
@@ -35,6 +37,11 @@ public:
 
     const QString &createdAt() const;
 
+    HuggingfaceModelInfo hugginfaceInfo() const;
+
+signals:
+    void hugginfaceInfoChanged();
+
 private:
     QString m_id;
     int m_likes;
@@ -43,6 +50,7 @@ private:
     QString m_libraryName;
     QStringList m_tags;
     QString m_createdAt;
+    HuggingfaceModelInfo m_hugginfaceInfo;
 };
 
 #endif // HUGGINGFACEMODEL_H
