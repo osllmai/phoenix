@@ -1,6 +1,8 @@
 #ifndef HUGGINGFACESTRUCT_H
 #define HUGGINGFACESTRUCT_H
 
+#include <QString>
+
 struct WidgetData {
     QString text;
 };

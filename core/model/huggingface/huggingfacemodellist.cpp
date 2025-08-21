@@ -13,8 +13,7 @@ HuggingfaceModelList::HuggingfaceModelList(QObject* parent)
     : QAbstractListModel(parent),
     m_manager(new QNetworkAccessManager(this))
 {
-    connect(m_manager, &QNetworkAccessManager::finished,
-            this, &HuggingfaceModelList::onReplyFinished);
+    connect(m_manager, &QNetworkAccessManager::finished, this, &HuggingfaceModelList::onReplyFinished);
 }
 
 int HuggingfaceModelList::count() const {
@@ -99,6 +98,14 @@ void HuggingfaceModelList::loadMore(int count) {
     }
     endInsertRows();
     emit countChanged();
+}
+
+void HuggingfaceModelList::OpenModel(QString id){
+
+}
+
+void HuggingfaceModelList::CloseModel(QString id){
+
 }
 
 void HuggingfaceModelList::onReplyFinished(QNetworkReply *reply) {

@@ -28,8 +28,8 @@ public:
 
     Q_INVOKABLE void fetchModels(bool fromCacheOnly);
     Q_INVOKABLE void loadMore(int count = 5);
-    // Q_INVOKABLE void OpenModel(QString id);
-    // Q_INVOKABLE void CloseModel(QString id);
+    Q_INVOKABLE void OpenModel(QString id);
+    Q_INVOKABLE void CloseModel(QString id);
 
     enum HuggingfaceModelRoles {
         IdRole = Qt::UserRole + 1,
