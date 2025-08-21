@@ -21,4 +21,4 @@ const QStringList &HuggingfaceModel::tags() const{return m_tags;}
 
 const QString &HuggingfaceModel::createdAt() const{return m_createdAt;}
 
-// HuggingfaceModelInfo* HuggingfaceModel::hugginfaceInfo() {return m_hugginfaceInfo;}
+HuggingfaceModelInfo* HuggingfaceModel::hugginfaceInfo() {return m_hugginfaceInfo;}

@@ -14,6 +14,8 @@ HuggingfaceModelList::HuggingfaceModelList(QObject* parent)
     m_manager(new QNetworkAccessManager(this))
 {
     connect(m_manager, &QNetworkAccessManager::finished, this, &HuggingfaceModelList::onReplyFinished);
+
+    fetchModels(false);
 }
 
 int HuggingfaceModelList::count() const {
@@ -41,6 +43,8 @@ QVariant HuggingfaceModelList::data(const QModelIndex &index, int role) const {
         return model->downloads();
     case PiplineTagRole:
         return model->pipelineTag();
+    case LibraryNameRole:
+        return model->libraryName();
     case TagsRole:
         return model->tags();
     case CreatedAtRole:
@@ -59,6 +63,7 @@ QHash<int, QByteArray> HuggingfaceModelList::roleNames() const {
     roles[LikesRole] = "likes";
     roles[DownloadsRole] = "downloads";
     roles[PiplineTagRole] = "piplineTag";
+    roles[LibraryNameRole] = "libraryName";
     roles[TagsRole] = "tags";
     roles[CreatedAtRole] = "createdAt";
     roles[ModelObjectRole] = "modelObject";
@@ -80,9 +85,11 @@ void HuggingfaceModelList::fetchModels(bool fromCacheOnly) {
     }
 
     // Fetch from network
-    QUrl url("https://huggingface.co/api/models");
-    QNetworkRequest request(url);
-    m_manager->get(request);
+    if(!QFile::exists(filePath)){
+        QUrl url("https://huggingface.co/api/models");
+        QNetworkRequest request(url);
+        m_manager->get(request);
+    }
 }
 
 void HuggingfaceModelList::loadMore(int count) {

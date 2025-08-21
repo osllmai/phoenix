@@ -37,6 +37,7 @@ public:
         LikesRole,
         DownloadsRole,
         PiplineTagRole,
+        LibraryNameRole,
         TagsRole,
         CreatedAtRole,
         ModelObjectRole

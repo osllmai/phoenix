@@ -10,48 +10,44 @@ Row{
     anchors.fill: parent
 
     HuggingfaceDelegateInfoBox{
-        id:fileSizeBox
-        myText: qsTr("File size")
-        myValue: /*model.fileSize + */" GB"
-        width: (parent.width/4)-8
+        myText: qsTr("Type")
+        myValue: model.piplineTag
+        width: (parent.width/4)+12
     }
 
     Rectangle{
-        id:line1
-        width: 1; height: parent.height
+        width: 1
+        height: parent.height
         color: Style.Colors.boxBorder
     }
 
     HuggingfaceDelegateInfoBox{
-        id:ramRequiredBox
-        myText: qsTr("RAM requierd")
-        myValue:/* model.ramRamrequired +*/ " GB"
-        width: (parent.width/4)+ 17
+        myText: qsTr("Likes")
+        myValue: model.likes
+        width: (parent.width/4) - 20
     }
 
     Rectangle{
-        id:line2
-        width: 1; height: parent.height
+        width: 1
+        height: parent.height
         color: Style.Colors.boxBorder
     }
 
     HuggingfaceDelegateInfoBox{
-        id:parameterersBox
-        myText: qsTr("Parameters")
-        myValue: /*model.parameters*/ ""
-        width: (parent.width/4)
+        myText: qsTr("Downloads")
+        myValue: model.downloads
+        width: (parent.width/4) - 2
     }
 
     Rectangle{
-        id:line3
-        width: 1; height: parent.height
+        width: 1
+        height: parent.height
         color: Style.Colors.boxBorder
     }
 
     HuggingfaceDelegateInfoBox{
-        id:quantBox
-        myText: qsTr("Quant")
-        myValue: /*model.quant*/""
-        width: (parent.width/4)-20
+        myText: qsTr("LibraryName")
+        myValue: model.libraryName
+        width: (parent.width/4) + 10
     }
 }

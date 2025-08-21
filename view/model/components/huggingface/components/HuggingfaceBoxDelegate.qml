@@ -66,7 +66,7 @@ T.Button {
             }
             Label {
                 id:informationId
-                height: parent.height - headerId.height /*- downloadButtonId.height*/ - informationAboutDownloadId.height - 30
+                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - 30
                 width: parent.width
                 text: model.idModel
                 color: Style.Colors.textInformation
@@ -88,6 +88,14 @@ T.Button {
                 HuggingfaceInformationModel{}
             }
 
+            MyButton{
+                id: downloadButtonId
+                myText: "More Information"
+                bottonType: Style.RoleEnum.BottonType.Primary
+                anchors.right: parent.right
+                onClicked:{
+                }
+            }
             // DownloadButton{
             //     id: downloadButtonId
             // }

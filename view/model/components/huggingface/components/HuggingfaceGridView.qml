@@ -30,85 +30,85 @@ Flickable {
         width: flickable.width
         spacing: 5
 
-        Label {
-            id: availablemodelsId
-            visible: gridView.height>30
-            text: "Recent Downloaded Model"
-            color: Style.Colors.textTitle
-            anchors.left: parent.left; anchors.leftMargin: 20
-            elide: Text.ElideRight
-            font.pixelSize: 14
-            font.styleName: "Bold"
-            clip: true
-        }
+        // Label {
+        //     id: availablemodelsId
+        //     visible: gridView.height>30
+        //     text: "Recent Downloaded Model"
+        //     color: Style.Colors.textTitle
+        //     anchors.left: parent.left; anchors.leftMargin: 20
+        //     elide: Text.ElideRight
+        //     font.pixelSize: 14
+        //     font.styleName: "Bold"
+        //     clip: true
+        // }
 
-        GridView {
-            id: gridView
-            visible: gridView.count !== 0
-            width: parent.width
-            height: flickable.showAllModels? gridView.contentHeight: 300
+        // GridView {
+        //     id: gridView
+        //     visible: gridView.count !== 0
+        //     width: parent.width
+        //     height: flickable.showAllModels? gridView.contentHeight: 300
 
-            interactive: false
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AlwaysOff
-            }
+        //     interactive: false
+        //     boundsBehavior: Flickable.StopAtBounds
+        //     ScrollBar.vertical: ScrollBar {
+        //         policy: ScrollBar.AlwaysOff
+        //     }
 
-            cellWidth: control.calculationCellWidth()
-            cellHeight: 300
+        //     cellWidth: control.calculationCellWidth()
+        //     cellHeight: 300
 
-            clip: true
+        //     clip: true
 
-            model: huggingfaceModelList
-            delegate: Item{
-                id: delegateId
-                visible: !flickable.showAllModels ? index < control.calculationCellNumber() : true
-                width: delegateId.visible ? gridView.cellWidth: 0
-                height:  delegateId.visible ? gridView.cellHeight : 0
+        //     model: huggingfaceModelList
+        //     delegate: Item{
+        //         id: delegateId
+        //         visible: !flickable.showAllModels ? index < control.calculationCellNumber() : true
+        //         width: delegateId.visible ? gridView.cellWidth: 0
+        //         height:  delegateId.visible ? gridView.cellHeight : 0
 
-                HuggingfaceBoxDelegate {
-                   id: indoxItem
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-                }
-            }
-        }
+        //         HuggingfaceBoxDelegate {
+        //            id: indoxItem
+        //            anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
+        //            Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+        //         }
+        //     }
+        // }
 
-        Row{
-            id: installButton
-            visible: offlineModelListFinishedDownloadFilter.count > 3
-            width: parent.width - 40
-            height: 30
-            anchors.horizontalCenter: parent.horizontalCenter
-            Rectangle{
-                width: parent.width - 30
-                height: 1
-                color: Style.Colors.boxBorder
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            MyIcon{
-                id:iconId
-                width: 30; height: 30
-                myIcon: flickable.showAllModels ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        flickable.showAllModels = !flickable.showAllModels
-                    }
-                }
-            }
-        }
+        // Row{
+        //     id: installButton
+        //     visible: offlineModelListFinishedDownloadFilter.count > 3
+        //     width: parent.width - 40
+        //     height: 30
+        //     anchors.horizontalCenter: parent.horizontalCenter
+        //     Rectangle{
+        //         width: parent.width - 30
+        //         height: 1
+        //         color: Style.Colors.boxBorder
+        //         anchors.verticalCenter: parent.verticalCenter
+        //     }
+        //     MyIcon{
+        //         id:iconId
+        //         width: 30; height: 30
+        //         myIcon: flickable.showAllModels ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+        //         MouseArea {
+        //             anchors.fill: parent
+        //             onClicked: {
+        //                 flickable.showAllModels = !flickable.showAllModels
+        //             }
+        //         }
+        //     }
+        // }
 
-        Label {
-            id: textId
-            text: "All Model"
-            color: Style.Colors.textTitle
-            anchors.left: parent.left; anchors.leftMargin: 20
-            elide: Text.ElideRight
-            font.pixelSize: 14
-            font.styleName: "Bold"
-            clip: true
-        }
+        // Label {
+        //     id: textId
+        //     text: "All Model"
+        //     color: Style.Colors.textTitle
+        //     anchors.left: parent.left; anchors.leftMargin: 20
+        //     elide: Text.ElideRight
+        //     font.pixelSize: 14
+        //     font.styleName: "Bold"
+        //     clip: true
+        // }
 
         GridView {
             id: gridView2
@@ -133,6 +133,44 @@ Flickable {
                }
             }
         }
+        Row{
+            id: installButton
+            // visible: offlineModelListFinishedDownloadFilter.count > 3
+            width: parent.width - 40
+            height: 45
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            MyButton{
+                id: openHistoryId
+                myIcon: "qrc:/media/icon/add.svg"
+                myTextToolTip: "Add More"
+                myText: "Add More"
+                bottonType: Style.RoleEnum.BottonType.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+                Connections {
+                    target: openHistoryId
+                    function onClicked(){
+                        huggingfaceModelList.loadMore()
+                    }
+                }
+            }
+            // Rectangle{
+            //     width: parent.width - 30
+            //     height: 1
+            //     color: Style.Colors.boxBorder
+            //     anchors.verticalCenter: parent.verticalCenter
+            // }
+            // MyIcon{
+            //     id:iconId
+            //     width: 30; height: 30
+            //     myIcon: /*flickable.showAllModels ? "qrc:/media/icon/up.svg" :*/ "qrc:/media/icon/down.svg"
+            //     MouseArea {
+            //         anchors.fill: parent
+            //         onClicked: {
+            //             huggingfaceModelList.loadMore()
+            //         }
+            //     }
+            // }
+        }
     }
 }
-
