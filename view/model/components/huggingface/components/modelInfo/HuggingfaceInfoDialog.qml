@@ -3,6 +3,7 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import '../../../../../component_library/style' as Style
 import "../../../../../component_library/button"
+import "./components"
 
 Dialog {
     id: settingsDialogId
@@ -57,20 +58,10 @@ Dialog {
         border.color: Style.Colors.boxBorder
         color: Style.Colors.background
 
-        Column{
+        HugginfaceDialogView{
             visible: huggingfaceModelList.hugginfaceInfo.successModelProcess
             anchors.fill: parent
-            anchors.margins: 10
-            Label {
-                id: createdAtText3
-                text: huggingfaceModelList.hugginfaceInfo.id
-                color: Style.Colors.textInformation
-                font.pixelSize: 50
-                font.italic: true
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
+            anchors.margins: 24
         }
 
         Item{

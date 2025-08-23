@@ -24,6 +24,8 @@ class HuggingfaceModelInfo: public QObject
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString id READ id NOTIFY idChanged FINAL)
+    Q_PROPERTY(QString name READ name CONSTANT FINAL)
+    Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
     Q_PROPERTY(bool isPrivate READ isPrivate NOTIFY isPrivateChanged FINAL)
     Q_PROPERTY(QString pipeline_tag READ pipeline_tag NOTIFY pipeline_tagChanged FINAL)
     Q_PROPERTY(QString library_name READ library_name NOTIFY library_nameChanged FINAL)
@@ -52,6 +54,8 @@ public:
     explicit HuggingfaceModelInfo(QObject* parent = nullptr) : QObject(parent) {}
     explicit HuggingfaceModelInfo(const QString& id, QObject* parent);
     ~HuggingfaceModelInfo();
+
+    void fetchModelInfo();
 
     QString id() const;
     void setId(const QString& newId);
@@ -125,6 +129,10 @@ public:
     bool getSuccessModelProcess() const;
     void setSuccessModelProcess(bool newSuccessModelProcess);
 
+    QString name() const;
+
+    QString icon() const;
+
 signals:
     void idChanged();
     void isPrivateChanged();
@@ -159,6 +167,8 @@ private slots:
 
 private:
     QString m_id;
+    QString m_name;
+    QString m_icon;
     bool m_isPrivate;
     QString m_pipeline_tag;
     QString m_library_name;
@@ -182,8 +192,6 @@ private:
     qint64 m_usedStorage;
     bool loadModelProcess;
     bool successModelProcess;
-
-    void fetchModelInfo(const QString& id);
 
     QNetworkAccessManager* m_manager;
 };

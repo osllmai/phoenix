@@ -140,5 +140,6 @@
         <file>model/components/offline/components/components/SearchTagPupup.qml</file>
         <file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
         <file>model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml</file>
+        <file>model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml</file>
     </qresource>
 </RCC>

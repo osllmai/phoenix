@@ -105,6 +105,7 @@ void HuggingfaceModelList::OpenModel(QString id){
     }
 
     m_hugginfaceInfo = new HuggingfaceModelInfo(id, this);
+    m_hugginfaceInfo->fetchModelInfo();
 
     emit hugginfaceInfoChanged();
 
