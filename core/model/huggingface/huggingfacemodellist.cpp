@@ -15,7 +15,7 @@ HuggingfaceModelList::HuggingfaceModelList(QObject* parent)
 {
     connect(m_manager, &QNetworkAccessManager::finished, this, &HuggingfaceModelList::onReplyFinished);
 
-    fetchModels(false);
+    fetchModels();
 }
 
 int HuggingfaceModelList::count() const {
@@ -37,6 +37,10 @@ QVariant HuggingfaceModelList::data(const QModelIndex &index, int role) const {
     case IdRole:
     case IdModelRole:
         return model->id();
+    case NameRole:
+        return model->name();
+    case IconRole:
+        return model->icon();
     case LikesRole:
         return model->likes();
     case DownloadsRole:
@@ -60,6 +64,8 @@ QHash<int, QByteArray> HuggingfaceModelList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
     roles[IdModelRole] = "idModel";
+    roles[NameRole] = "name";
+    roles[IconRole] = "icon";
     roles[LikesRole] = "likes";
     roles[DownloadsRole] = "downloads";
     roles[PiplineTagRole] = "piplineTag";
@@ -70,26 +76,11 @@ QHash<int, QByteArray> HuggingfaceModelList::roleNames() const {
     return roles;
 }
 
-void HuggingfaceModelList::fetchModels(bool fromCacheOnly) {
-    QString filePath = cacheFilePath();
+void HuggingfaceModelList::fetchModels() {
 
-    // Load from cache if available
-    if (fromCacheOnly || QFile::exists(filePath)) {
-        QFile file(filePath);
-        if (file.open(QIODevice::ReadOnly)) {
-            QByteArray rawData = file.readAll();
-            file.close();
-            processJson(rawData);
-            if (fromCacheOnly) return; // Don't fetch from network if cache only
-        }
-    }
-
-    // Fetch from network
-    if(!QFile::exists(filePath)){
-        QUrl url("https://huggingface.co/api/models");
-        QNetworkRequest request(url);
-        m_manager->get(request);
-    }
+    QUrl url("https://huggingface.co/api/models");
+    QNetworkRequest request(url);
+    m_manager->get(request);
 }
 
 void HuggingfaceModelList::loadMore(int count) {
@@ -108,17 +99,43 @@ void HuggingfaceModelList::loadMore(int count) {
 }
 
 void HuggingfaceModelList::OpenModel(QString id){
+    if (m_hugginfaceInfo) {
+        delete m_hugginfaceInfo;
+        m_hugginfaceInfo = nullptr;
+    }
 
+    m_hugginfaceInfo = new HuggingfaceModelInfo(id, this);
+
+    emit hugginfaceInfoChanged();
+
+    qDebug() << "Opened HuggingFace model info with id:" << id;
 }
 
 void HuggingfaceModelList::CloseModel(QString id){
+    if (m_hugginfaceInfo && m_hugginfaceInfo->id() == id) {
+        delete m_hugginfaceInfo;
+        m_hugginfaceInfo = nullptr;
 
+        emit hugginfaceInfoChanged();
+
+        qDebug() << "Closed HuggingFace model info with id:" << id;
+    }
 }
 
 void HuggingfaceModelList::onReplyFinished(QNetworkReply *reply) {
     if (reply->error() != QNetworkReply::NoError) {
         qWarning() << "Network error:" << reply->errorString();
         reply->deleteLater();
+
+        QString filePath = cacheFilePath();
+        if(QFile::exists(filePath)){
+            QFile file(filePath);
+            if (file.open(QIODevice::ReadOnly)) {
+                QByteArray rawData = file.readAll();
+                file.close();
+                processJson(rawData);
+            }
+        }
         return;
     }
 
@@ -192,3 +209,5 @@ QString HuggingfaceModelList::cacheFilePath() const {
     QDir().mkpath(dirPath);
     return dirPath + "/huggingface_models.json";
 }
+
+HuggingfaceModelInfo* HuggingfaceModelList::hugginfaceInfo() {return m_hugginfaceInfo;}

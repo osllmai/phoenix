@@ -11,8 +11,6 @@ ComboBox {
     width: 160
     font.pixelSize: 12
 
-    property var modelList
-
     Accessible.role: Accessible.ComboBox
     contentItem: Row {
         id: contentRow
@@ -75,7 +73,7 @@ ComboBox {
                 interactive: listView.contentHeight > listView.height
                 boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                model: comboBoxId.modelList
+                model: onlineModelList
                 delegate: Item{
                     width: listView.width; height: 45
 

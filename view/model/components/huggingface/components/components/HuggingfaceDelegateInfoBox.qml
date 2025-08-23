@@ -29,5 +29,6 @@ Column{
         text: control.myValue
         anchors.horizontalCenter: parent.horizontalCenter
         font.pointSize: 8
+        clip: true
     }
 }

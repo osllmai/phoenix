@@ -10,7 +10,7 @@ Item {
     Label {
         id: titleId
         visible: !titleAndCopy.visible
-        text: model.idModel
+        text: model.name
         color: Style.Colors.textTitle
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width - copyId.width
@@ -22,7 +22,7 @@ Item {
     MyCopyButton{
         id: copyId
         visible: !titleAndCopy.visible
-        myText: TextArea{text: "localModel/"+model.idModel;}
+        myText: TextArea{text: "localModel/"+model.name;}
         anchors.verticalCenter: titleId.verticalCenter
         anchors.right: parent.right
         clip: true
@@ -35,7 +35,7 @@ Item {
         clip: true
         Label {
             id: title2Id
-            text: model.idModel
+            text: model.name
             color: Style.Colors.textTitle
             anchors.verticalCenter: parent.verticalCenter
             font.pixelSize: 14
@@ -45,7 +45,7 @@ Item {
         }
         MyCopyButton{
             id: copy2Id
-            myText: TextArea{text: "localModel/"+model.idModel;}
+            myText: TextArea{text: "localModel/"+model.name;}
             anchors.verticalCenter: title2Id.verticalCenter
             clip: true
         }

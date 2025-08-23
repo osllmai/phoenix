@@ -12,19 +12,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         myText: qsTr("Type")
         myValue: model.piplineTag
-        width: (parent.width/4)+12
-    }
-
-    Rectangle{
-        width: 1
-        height: parent.height
-        color: Style.Colors.boxBorder
-    }
-
-    HuggingfaceDelegateInfoBox{
-        myText: qsTr("Likes")
-        myValue: model.likes
-        width: (parent.width/4) - 20
+        width: (parent.width/3)+10
     }
 
     Rectangle{
@@ -36,7 +24,7 @@ Row{
     HuggingfaceDelegateInfoBox{
         myText: qsTr("Downloads")
         myValue: model.downloads
-        width: (parent.width/4) - 2
+        width: (parent.width/3) - 15
     }
 
     Rectangle{
@@ -48,6 +36,6 @@ Row{
     HuggingfaceDelegateInfoBox{
         myText: qsTr("LibraryName")
         myValue: model.libraryName
-        width: (parent.width/4) + 10
+        width: (parent.width/3) + 5
     }
 }

@@ -23,10 +23,12 @@ class HuggingfaceModelList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(HuggingfaceModelInfo* hugginfaceInfo READ hugginfaceInfo NOTIFY hugginfaceInfoChanged FINAL)
+
 public:
     static HuggingfaceModelList* instance(QObject* parent);
 
-    Q_INVOKABLE void fetchModels(bool fromCacheOnly);
+    Q_INVOKABLE void fetchModels();
     Q_INVOKABLE void loadMore(int count = 5);
     Q_INVOKABLE void OpenModel(QString id);
     Q_INVOKABLE void CloseModel(QString id);
@@ -34,6 +36,8 @@ public:
     enum HuggingfaceModelRoles {
         IdRole = Qt::UserRole + 1,
         IdModelRole,
+        NameRole,
+        IconRole,
         LikesRole,
         DownloadsRole,
         PiplineTagRole,
@@ -49,8 +53,11 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     // bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
+    HuggingfaceModelInfo* hugginfaceInfo();
+
 signals:
     void countChanged();
+    void hugginfaceInfoChanged();
 
 private slots:
     void onReplyFinished(QNetworkReply *reply);
@@ -62,6 +69,8 @@ private:
     QList<HuggingfaceModel*> m_models;
     QList<HuggingfaceModel*> remainingModels;
     QNetworkAccessManager *m_manager;
+
+    HuggingfaceModelInfo* m_hugginfaceInfo = nullptr;
 
     QString cacheFilePath() const;
     void processJson(const QByteArray &rawData);

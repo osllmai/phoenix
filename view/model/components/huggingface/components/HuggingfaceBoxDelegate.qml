@@ -8,7 +8,6 @@ import "../../../../component_library/button"
 import "./components"
 import "../../offline/components/components"
 
-
 T.Button {
     id: control
     width: 250
@@ -34,7 +33,7 @@ T.Button {
                 height: Math.max(logoModelId.height, likeIconId.height)
                 MyIcon {
                     id: logoModelId
-                    myIcon: "qrc:/media/image_company/Huggingface.svg"
+                    myIcon:model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 40; height: 40
@@ -55,29 +54,60 @@ T.Button {
 
                 MyIcon{
                     id: likeIconId
-                    myIcon: /*model.isLike? "qrc:/media/icon/favorite.svg": */"qrc:/media/icon/disFavorite.svg"
+                    myIcon: /*model.isLike? */"qrc:/media/icon/favorite.svg" /*: "qrc:/media/icon/disFavorite.svg"*/
                     anchors.verticalCenter: logoModelId.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
-                    onClicked: {
-                        // offlineModelList.likeRequest(model.id, !model.isLike)
-                        // model.isLike = !model.isLike
+
+                    Label {
+                        text: model.likes
+                        color: Style.Colors.textTagError
+                        anchors.top: likeIconId.bottom
+                        anchors.topMargin: -5
+                        anchors.horizontalCenter: likeIconId.horizontalCenter
+                        font.pixelSize: 10
+                        clip: true
+                        elide: Label.ElideRight
                     }
                 }
             }
-            Label {
-                id:informationId
-                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - 30
+
+            Item {
+                id: tagsContainer
                 width: parent.width
-                text: model.idModel
-                color: Style.Colors.textInformation
-                anchors.left: parent.left; anchors.right: parent.right
-                font.pixelSize: 10
-                horizontalAlignment: Text.AlignJustify
-                verticalAlignment: Text.AlignTop
-                wrapMode: Text.Wrap
-                elide: Label.ElideRight
+                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - createdAtText.height - 40
                 clip: true
+
+                Flow {
+                    id: tagsFlow
+                    anchors.fill: parent
+                    anchors.topMargin: 4
+                    spacing: 4
+                    flow: Flow.LeftToRight
+                    Repeater {
+                        model: tags
+                        MyButton {
+                            myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
+                            myIcon: ""
+                            bottonType: Style.RoleEnum.BottonType.Secondary
+                            isNeedAnimation: true
+                            height: 20
+                        }
+                    }
+                }
             }
+
+            Label {
+                id: createdAtText
+                text: "Created at: " + model.createdAt
+                color: Style.Colors.textInformation
+                anchors.left: parent.left
+                anchors.right: parent.right
+                font.pixelSize: 10
+                font.italic: true
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignTop
+            }
+
             Rectangle{
                 id: informationAboutDownloadId
                 height: 45; width: parent.width
@@ -94,11 +124,10 @@ T.Button {
                 bottonType: Style.RoleEnum.BottonType.Primary
                 anchors.right: parent.right
                 onClicked:{
+                    huggingfaceModelList.OpenModel(model.id)
+                    huggingfaceDialogId.open()
                 }
             }
-            // DownloadButton{
-            //     id: downloadButtonId
-            // }
         }
 
         layer.enabled: control.hovered? true: false

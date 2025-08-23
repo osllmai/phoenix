@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
 import './components'
+import "./components/modelInfo"
 
 Item {
     id: control
@@ -56,5 +57,8 @@ Item {
             enabled: false
             width: 120; height: 120
         }
+    }
+    HuggingfaceInfoDialog{
+        id: huggingfaceDialogId
     }
 }

@@ -35,7 +35,7 @@ T.Button {
 
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/Huggingface.svg"
+                myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32
@@ -57,7 +57,7 @@ T.Button {
             MyIcon{
                 id: likeIconId
                 width: 32; height: 32
-                myIcon: /*model.isLike? "qrc:/media/icon/favorite.svg": */"qrc:/media/icon/disFavorite.svg"
+                myIcon: /*model.isLike?*/ "qrc:/media/icon/favorite.svg" /*: "qrc:/media/icon/disFavorite.svg"*/
                 anchors.verticalCenter: logoModelId.verticalCenter
                 iconType: Style.RoleEnum.IconType.Like
                 onClicked: {

@@ -86,7 +86,6 @@ T.Button {
             // }
 
             OnlineModelListComboBox{
-                modelList: /*model.onlineModelList*/model.onlineModelList
             }
 
             ApikeyButton{
