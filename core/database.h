@@ -33,6 +33,8 @@ public slots:
     void updateKeyModel(const int id, const QString &key);
     void updateIsLikeModel(const int id, const bool isLike);
     void addModel(const QString &name, const QString &key);
+    void addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
+                            const QString &companyName, const QString &companyIcon);
 
     void readConversation();
     void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,

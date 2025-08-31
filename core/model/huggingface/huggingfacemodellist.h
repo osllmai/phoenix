@@ -58,6 +58,8 @@ public:
 signals:
     void countChanged();
     void hugginfaceInfoChanged();
+    void requestAddModel(const QString &name, const QString &url, const QString& type,
+                  const QString &companyName, const QString &companyIcon);
 
 private slots:
     void onReplyFinished(QNetworkReply *reply);

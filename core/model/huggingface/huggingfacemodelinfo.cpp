@@ -18,7 +18,7 @@ HuggingfaceModelInfo::HuggingfaceModelInfo(const QString& id, QObject* parent)
             QString iconFile;
         };
 
-        static const QVector<IconMap> icons = {
+        static const QList<IconMap> icons = {
             {"adobe", "adobe.svg"},
             {"adobefirefly", "adobefirefly.svg"},
             {"agui", "agui.svg"},
@@ -334,7 +334,7 @@ void HuggingfaceModelInfo::onReplyFinished(QNetworkReply *reply) {
     setDisabled(obj["disabled"].toBool());
 
     // widgetData
-    QVector<WidgetData> widgets;
+    QList<WidgetData> widgets;
     for (auto w : obj["widgetData"].toArray()) {
         WidgetData wd;
         wd.text = w.toObject()["text"].toString();
@@ -378,7 +378,7 @@ void HuggingfaceModelInfo::onReplyFinished(QNetworkReply *reply) {
     setGguf(gg);
 
     // siblings
-    QVector<SiblingFile> siblings;
+    QList<SiblingFile> siblings;
     for (auto s : obj["siblings"].toArray()) {
         SiblingFile sf;
         sf.rfilename = s.toObject()["rfilename"].toString();
@@ -483,7 +483,17 @@ void HuggingfaceModelInfo::setSha(const QString& newSha){
     emit shaChanged();
 }
 
-QString HuggingfaceModelInfo::lastModified() const{return m_lastModified;}
+QString HuggingfaceModelInfo::lastModified() const{
+    if (m_lastModified.isEmpty())
+        return QString();
+
+    QDateTime dt = QDateTime::fromString(m_lastModified, Qt::ISODate);
+
+    if (!dt.isValid())
+        return m_lastModified;
+
+    return dt.toString("dd MMM yyyy");
+}
 void HuggingfaceModelInfo::setLastModified(const QString& newLastModified){
     if (m_lastModified == newLastModified)
         return;
@@ -507,8 +517,8 @@ void HuggingfaceModelInfo::setDisabled(bool newDisabled){
     emit disabledChanged();
 }
 
-QVector<WidgetData> HuggingfaceModelInfo::widgetData() const{return m_widgetData;}
-void HuggingfaceModelInfo::setWidgetData(const QVector<WidgetData>& newWidgetData){
+QList<WidgetData> HuggingfaceModelInfo::widgetData() const{return m_widgetData;}
+void HuggingfaceModelInfo::setWidgetData(const QList<WidgetData>& newWidgetData){
     m_widgetData = newWidgetData;
     emit widgetDataChanged();
 }
@@ -537,11 +547,22 @@ void HuggingfaceModelInfo::setGguf(const GgufData& newGguf){
     emit ggufChanged();
 }
 
-QVector<SiblingFile> HuggingfaceModelInfo::siblings() const{return m_siblings;}
-void HuggingfaceModelInfo::setSiblings(const QVector<SiblingFile>& newSiblings){
+QList<SiblingFile> HuggingfaceModelInfo::siblings() const{return m_siblings;}
+void HuggingfaceModelInfo::setSiblings(const QList<SiblingFile>& newSiblings){
     m_siblings = newSiblings;
     emit siblingsChanged();
 }
+
+QVariantList HuggingfaceModelInfo::siblingsQml() const {
+    QVariantList list;
+    for (const auto &s : m_siblings) {
+        QVariantMap map;
+        map["rfilename"] = s.rfilename;
+        list.append(map);
+    }
+    return list;
+}
+
 
 QStringList HuggingfaceModelInfo::spaces() const{return m_spaces;}
 void HuggingfaceModelInfo::setSpaces(const QStringList& newSpaces){
@@ -549,7 +570,17 @@ void HuggingfaceModelInfo::setSpaces(const QStringList& newSpaces){
     emit spacesChanged();
 }
 
-QString HuggingfaceModelInfo::createdAt() const{return m_createdAt;}
+QString HuggingfaceModelInfo::createdAt() const{
+    if (m_createdAt.isEmpty())
+        return QString();
+
+    QDateTime dt = QDateTime::fromString(m_createdAt, Qt::ISODate);
+
+    if (!dt.isValid())
+        return m_createdAt;
+
+    return dt.toString("dd MMM yyyy");
+}
 void HuggingfaceModelInfo::setCreatedAt(const QString& newCreatedAt){
     if (m_createdAt == newCreatedAt)
         return;

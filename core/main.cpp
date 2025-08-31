@@ -110,6 +110,8 @@ int main(int argc, char *argv[])
         HuggingfaceModelList* huggingfaceModelList = HuggingfaceModelList::instance(&engine);
         engine.rootContext()->setContextProperty("huggingfaceModelList", huggingfaceModelList);
 
+        QObject::connect(huggingfaceModelList, &HuggingfaceModelList::requestAddModel, database, &Database::addHuggingfaceModel, Qt::QueuedConnection);
+
 
         OfflineModelListFilter* offlineModelListFilter = new OfflineModelListFilter(offlineModelList, &engine);
         engine.rootContext()->setContextProperty("offlineModelListFilter", offlineModelListFilter);

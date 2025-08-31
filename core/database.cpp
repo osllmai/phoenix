@@ -120,6 +120,121 @@ void Database::addModel(const QString &name, const QString &key){
     }
 }
 
+void Database::addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
+                        const QString &companyName, const QString &companyIcon) {
+
+    // Ensure models directory exists
+    QString modelsDir = QCoreApplication::applicationDirPath() + "/models";
+    QDir dir(modelsDir);
+    if (!dir.exists())
+        dir.mkpath(".");
+
+    // --- Step 1: Check if the company exists in company.json ---
+    QString companyFilePath = modelsDir + "/company.json";
+    QJsonArray companyArray;
+
+    {
+        QFile companyFile(companyFilePath);
+        if (companyFile.exists() && companyFile.open(QIODevice::ReadOnly)) {
+            QJsonDocument doc = QJsonDocument::fromJson(companyFile.readAll());
+            if (doc.isArray())
+                companyArray = doc.array();
+            companyFile.close();
+        }
+    }
+
+    bool companyExists = false;
+    for (const QJsonValue &val : companyArray) {
+        if (!val.isObject()) continue;
+        QJsonObject obj = val.toObject();
+        if (obj["name"].toString() == companyName &&
+            obj["type"].toString() == "OfflineModel") {
+            companyExists = true;
+            break;
+        }
+    }
+
+    // If company does not exist, add it
+    if (!companyExists) {
+        QJsonObject newCompany;
+        newCompany["name"] = companyName;
+        newCompany["organizationName"] = companyName;
+        newCompany["icon"] = companyIcon;
+        newCompany["file"] = "offline_models/" + companyName.toLower() + ".json";
+        newCompany["type"] = "OfflineModel";
+
+        companyArray.append(newCompany);
+
+        QFile companyFile(companyFilePath);
+        if (companyFile.open(QIODevice::WriteOnly)) {
+            companyFile.write(QJsonDocument(companyArray).toJson(QJsonDocument::Indented));
+            companyFile.close();
+        }
+    }
+
+    // --- Step 2: Add the model to the company's JSON file ---
+    QString companyModelsPath = modelsDir + "/" + "offline_models/" + companyName.toLower() + ".json";
+    QJsonArray modelsArray;
+    {
+        QFile modelFile(companyModelsPath);
+        if (modelFile.exists() && modelFile.open(QIODevice::ReadOnly)) {
+            QJsonDocument doc = QJsonDocument::fromJson(modelFile.readAll());
+            if (doc.isArray())
+                modelsArray = doc.array();
+            modelFile.close();
+        }
+    }
+
+    // Check if model already exists
+    bool modelExists = false;
+    for (const QJsonValue &val : modelsArray) {
+        if (!val.isObject()) continue;
+        QJsonObject obj = val.toObject();
+        if (obj["modelName"].toString() == name) {
+            modelExists = true;
+            break;
+        }
+    }
+
+    // If model does not exist, add it
+    if (!modelExists) {
+        QJsonObject newModel;
+        newModel["modelName"] = name;
+        newModel["url"] = url;
+        newModel["filesize"] = 0.0;
+        newModel["ramrequired"] = 1;
+        newModel["filename"] = name + ".gguf";
+        newModel["parameters"] = "- billion";
+        newModel["quant"] = "q4_0";
+        newModel["type"] = type;
+        newModel["description"] = "You have added this model from the HuggingFace list to your collection.";
+        newModel["promptTemplate"] = "";
+        newModel["systemPrompt"] = "";
+        newModel["recommended"] = false;
+
+        modelsArray.append(newModel);
+
+        QFile modelFile(companyModelsPath);
+        if (modelFile.open(QIODevice::WriteOnly)) {
+            modelFile.write(QJsonDocument(modelsArray).toJson(QJsonDocument::Indented));
+            modelFile.close();
+        }
+    }
+
+    // --- Step 3: Insert model into database and emit signal ---
+    int id = insertModel(name, ""); // Empty key since it's an offline model
+    if (id == -1) return;
+
+    QDateTime addDate = QDateTime::currentDateTime();
+    bool isLike = false;
+    QString icon = companyIcon;
+    QString information = "You have added this model from the HuggingFace list to your collection.";
+
+    emit addOfflineModel(nullptr, 0.0, 1, "", url, "- billion", "q4_0", 0.0, false, false,
+                         id, name, name, "", addDate, isLike, type, BackendType::OfflineModel,
+                         icon, information, "", "", QDateTime::currentDateTime(), false);
+}
+
 void Database::deleteModel(const int id){
     QSqlQuery query(m_db);
 

@@ -5,7 +5,7 @@
 #include <QQmlEngine>
 #include <QString>
 #include <QStringList>
-#include <QVector>
+#include <QList>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -38,12 +38,12 @@ class HuggingfaceModelInfo: public QObject
     Q_PROPERTY(QString lastModified READ lastModified NOTIFY lastModifiedChanged FINAL)
     Q_PROPERTY(bool gated READ gated NOTIFY gatedChanged FINAL)
     Q_PROPERTY(bool disabled READ disabled NOTIFY disabledChanged FINAL)
-    Q_PROPERTY(QVector<WidgetData> widgetData READ widgetData NOTIFY widgetDataChanged FINAL)
+    Q_PROPERTY(QList<WidgetData> widgetData READ widgetData NOTIFY widgetDataChanged FINAL)
     Q_PROPERTY(ConfigData config READ config NOTIFY configChanged FINAL)
     Q_PROPERTY(CardData cardData READ cardData NOTIFY cardDataChanged FINAL)
     Q_PROPERTY(TransformersInfo transformersInfo READ transformersInfo NOTIFY transformersInfoChanged FINAL)
     Q_PROPERTY(GgufData gguf READ gguf NOTIFY ggufChanged FINAL)
-    Q_PROPERTY(QVector<SiblingFile> siblings READ siblings NOTIFY siblingsChanged FINAL)
+    Q_PROPERTY(QVariantList siblings READ siblingsQml NOTIFY siblingsChanged FINAL)
     Q_PROPERTY(QStringList spaces READ spaces NOTIFY spacesChanged FINAL)
     Q_PROPERTY(QString createdAt READ createdAt NOTIFY createdAtChanged FINAL)
     Q_PROPERTY(qint64 usedStorage READ usedStorage NOTIFY usedStorageChanged FINAL)
@@ -96,8 +96,8 @@ public:
     bool disabled() const;
     void setDisabled(bool newDisabled);
 
-    QVector<WidgetData> widgetData() const;
-    void setWidgetData(const QVector<WidgetData>& newWidgetData);
+    QList<WidgetData> widgetData() const;
+    void setWidgetData(const QList<WidgetData>& newWidgetData);
 
     ConfigData config() const;
     void setConfig(const ConfigData& newConfig);
@@ -111,8 +111,10 @@ public:
     GgufData gguf() const;
     void setGguf(const GgufData& newGguf);
 
-    QVector<SiblingFile> siblings() const;
-    void setSiblings(const QVector<SiblingFile>& newSiblings);
+    QList<SiblingFile> siblings() const;
+    void setSiblings(const QList<SiblingFile>& newSiblings);
+
+    QVariantList siblingsQml() const;
 
     QStringList spaces() const;
     void setSpaces(const QStringList& newSpaces);
@@ -181,12 +183,12 @@ private:
     QString m_lastModified;
     bool m_gated;
     bool m_disabled;
-    QVector<WidgetData> m_widgetData;
+    QList<WidgetData> m_widgetData;
     ConfigData m_config;
     CardData m_cardData;
     TransformersInfo m_transformersInfo;
     GgufData m_gguf;
-    QVector<SiblingFile> m_siblings;
+    QList<SiblingFile> m_siblings;
     QStringList m_spaces;
     QString m_createdAt;
     qint64 m_usedStorage;
