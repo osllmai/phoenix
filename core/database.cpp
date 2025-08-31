@@ -121,13 +121,15 @@ void Database::addModel(const QString &name, const QString &key){
 }
 
 void Database::addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
-                        const QString &companyName, const QString &companyIcon) {
+                                   const QString &companyName, const QString &companyIconPath) {
 
     // Ensure models directory exists
     QString modelsDir = QCoreApplication::applicationDirPath() + "/models";
     QDir dir(modelsDir);
     if (!dir.exists())
         dir.mkpath(".");
+
+    QString companyIcon = QFileInfo(companyIconPath).fileName();
 
     // --- Step 1: Check if the company exists in company.json ---
     QString companyFilePath = modelsDir + "/company.json";
@@ -147,7 +149,7 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     for (const QJsonValue &val : companyArray) {
         if (!val.isObject()) continue;
         QJsonObject obj = val.toObject();
-        if (obj["name"].toString() == companyName &&
+        if (obj["name"].toString().compare(QFileInfo(companyName).fileName(), Qt::CaseInsensitive) == 0 &&
             obj["type"].toString() == "OfflineModel") {
             companyExists = true;
             break;
@@ -155,12 +157,13 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     }
 
     // If company does not exist, add it
+    QString companyJsonFileName = "offline_models/" + QFileInfo(companyName).fileName().toLower() + ".json";
     if (!companyExists) {
         QJsonObject newCompany;
-        newCompany["name"] = companyName;
-        newCompany["organizationName"] = companyName;
+        newCompany["name"] = QFileInfo(companyName).fileName();
+        newCompany["organizationName"] = QFileInfo(companyName).fileName();
         newCompany["icon"] = companyIcon;
-        newCompany["file"] = "offline_models/" + companyName.toLower() + ".json";
+        newCompany["file"] = companyJsonFileName;
         newCompany["type"] = "OfflineModel";
 
         companyArray.append(newCompany);
@@ -173,7 +176,7 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     }
 
     // --- Step 2: Add the model to the company's JSON file ---
-    QString companyModelsPath = modelsDir + "/" + "offline_models/" + companyName.toLower() + ".json";
+    QString companyModelsPath = modelsDir + "/" + companyJsonFileName;
     QJsonArray modelsArray;
     {
         QFile modelFile(companyModelsPath);
@@ -199,11 +202,18 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     // If model does not exist, add it
     if (!modelExists) {
         QJsonObject newModel;
-        newModel["modelName"] = name;
+
+        QString cleanName = name;
+        if (cleanName.endsWith(".gguf", Qt::CaseInsensitive)) {
+            cleanName.chop(5);
+        }
+
+        newModel["name"] = cleanName;
+        newModel["modelName"] = cleanName;
         newModel["url"] = url;
         newModel["filesize"] = 0.0;
         newModel["ramrequired"] = 1;
-        newModel["filename"] = name + ".gguf";
+        newModel["filename"] = name ;
         newModel["parameters"] = "- billion";
         newModel["quant"] = "q4_0";
         newModel["type"] = type;
@@ -227,12 +237,11 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
 
     QDateTime addDate = QDateTime::currentDateTime();
     bool isLike = false;
-    QString icon = companyIcon;
     QString information = "You have added this model from the HuggingFace list to your collection.";
 
     emit addOfflineModel(nullptr, 0.0, 1, "", url, "- billion", "q4_0", 0.0, false, false,
                          id, name, name, "", addDate, isLike, type, BackendType::OfflineModel,
-                         icon, information, "", "", QDateTime::currentDateTime(), false);
+                         companyIcon, information, "", "", QDateTime::currentDateTime(), false);
 }
 
 void Database::deleteModel(const int id){

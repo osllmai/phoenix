@@ -104,6 +104,7 @@ private:
     QList<Download*>downloads;
     double m_downloadProgress;
     int m_numberDownload = 0;
+    bool m_finishedSetup = false;
 
     OfflineModel* at(int index) const;
     void updateDownloadProgress();

@@ -114,6 +114,7 @@ bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, 
 }
 
 void OfflineModelList::finalizeSetup(){
+    m_finishedSetup = true;
     sortAsync(NameRole , Qt::AscendingOrder);
 }
 
@@ -292,16 +293,20 @@ void OfflineModelList::addModel(Company* company, const double fileSize, const i
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
                                 const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
 {
-    // const int index = m_models.size();
-    // beginInsertRows(QModelIndex(), index, index);
+    if(m_finishedSetup){
+        const int index = m_models.size();
+        beginInsertRows(QModelIndex(), index, index);
+    }
     OfflineModel* model = new OfflineModel(company, fileSize, ramRamrequired, fileName, url, parameters,
                                            quant, downloadPercent, isDownloading, downloadFinished,
 
                                            id, modelName, name, key, addModelTime, isLike, type, backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
     m_models.append(model);
-    // endInsertRows();
-    // emit countChanged();
+    if(m_finishedSetup){
+        endInsertRows();
+        emit countChanged();
+    }
 }
 
 OfflineModel* OfflineModelList::findModelById(int id) {

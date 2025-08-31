@@ -124,7 +124,7 @@ T.Button {
                 bottonType: Style.RoleEnum.BottonType.Primary
                 anchors.right: parent.right
                 onClicked:{
-                    huggingfaceModelList.OpenModel(model.id)
+                    huggingfaceModelList.openModel(model.id, model.name, model.icon)
                     huggingfaceDialogId.open()
                 }
             }

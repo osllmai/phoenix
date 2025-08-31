@@ -23,7 +23,7 @@ class HuggingfaceModelInfo: public QObject
 {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(QString id READ id NOTIFY idChanged FINAL)
+    Q_PROPERTY(QString id READ id CONSTANT FINAL)
     Q_PROPERTY(QString name READ name CONSTANT FINAL)
     Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
     Q_PROPERTY(bool isPrivate READ isPrivate NOTIFY isPrivateChanged FINAL)
@@ -47,18 +47,22 @@ class HuggingfaceModelInfo: public QObject
     Q_PROPERTY(QStringList spaces READ spaces NOTIFY spacesChanged FINAL)
     Q_PROPERTY(QString createdAt READ createdAt NOTIFY createdAtChanged FINAL)
     Q_PROPERTY(qint64 usedStorage READ usedStorage NOTIFY usedStorageChanged FINAL)
+    Q_PROPERTY(QString readMe READ readMe NOTIFY readMeChanged FINAL)
 
-    Q_PROPERTY(bool loadModelProcess READ getLoadModelProcess NOTIFY loadModelProcessChanged FINAL)
-    Q_PROPERTY(bool successModelProcess READ getSuccessModelProcess NOTIFY successModelProcessChanged FINAL)
+    Q_PROPERTY(bool loadModelProcess READ loadModelProcess NOTIFY loadModelProcessChanged FINAL)
+    Q_PROPERTY(bool successModelProcess READ successModelProcess NOTIFY successModelProcessChanged FINAL)
 public:
     explicit HuggingfaceModelInfo(QObject* parent = nullptr) : QObject(parent) {}
-    explicit HuggingfaceModelInfo(const QString& id, QObject* parent);
+    explicit HuggingfaceModelInfo(const QString& id, const QString& name, const QString& icon, QObject* parent);
     ~HuggingfaceModelInfo();
 
     void fetchModelInfo();
 
     QString id() const;
-    void setId(const QString& newId);
+
+    QString name() const;
+
+    QString icon() const;
 
     bool isPrivate() const;
     void setIsPrivate(bool newIsPrivate);
@@ -125,18 +129,16 @@ public:
     qint64 usedStorage() const;
     void setUsedStorage(qint64 newUsedStorage);
 
-    bool getLoadModelProcess() const;
+    bool loadModelProcess() const;
     void setLoadModelProcess(bool newLoadModelProcess);
 
-    bool getSuccessModelProcess() const;
+    bool successModelProcess() const;
     void setSuccessModelProcess(bool newSuccessModelProcess);
 
-    QString name() const;
-
-    QString icon() const;
+    QString readMe() const;
+    void setReadMe(const QString &newReadMe);
 
 signals:
-    void idChanged();
     void isPrivateChanged();
     void pipeline_tagChanged();
     void library_nameChanged();
@@ -160,6 +162,7 @@ signals:
     void usedStorageChanged();
     void loadModelProcessChanged();
     void successModelProcessChanged();
+    void readMeChanged();
 
     void modelLoaded();
     void modelLoadFailed(QString error);
@@ -192,8 +195,9 @@ private:
     QStringList m_spaces;
     QString m_createdAt;
     qint64 m_usedStorage;
-    bool loadModelProcess;
-    bool successModelProcess;
+    bool m_loadModelProcess;
+    bool m_successModelProcess;
+    QString m_readMe;
 
     QNetworkAccessManager* m_manager;
 };

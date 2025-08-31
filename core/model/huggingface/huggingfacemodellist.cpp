@@ -98,13 +98,13 @@ void HuggingfaceModelList::loadMore(int count) {
     emit countChanged();
 }
 
-void HuggingfaceModelList::OpenModel(QString id){
+void HuggingfaceModelList::openModel(const QString& id, const QString& name, const QString& icon){
     if (m_hugginfaceInfo) {
         delete m_hugginfaceInfo;
         m_hugginfaceInfo = nullptr;
     }
 
-    m_hugginfaceInfo = new HuggingfaceModelInfo(id, this);
+    m_hugginfaceInfo = new HuggingfaceModelInfo(id, name, icon, this);
     m_hugginfaceInfo->fetchModelInfo();
 
     emit hugginfaceInfoChanged();
@@ -112,7 +112,7 @@ void HuggingfaceModelList::OpenModel(QString id){
     qDebug() << "Opened HuggingFace model info with id:" << id;
 }
 
-void HuggingfaceModelList::CloseModel(QString id){
+void HuggingfaceModelList::closeModel(QString id){
     if (m_hugginfaceInfo && m_hugginfaceInfo->id() == id) {
         delete m_hugginfaceInfo;
         m_hugginfaceInfo = nullptr;
@@ -121,6 +121,32 @@ void HuggingfaceModelList::CloseModel(QString id){
 
         qDebug() << "Closed HuggingFace model info with id:" << id;
     }
+}
+
+void HuggingfaceModelList::addModel(const QString &idModel, const QString &fileName, const QString& type,
+                                const QString &companyIcon)
+{
+    // 0. Validate the file extension (only accept .gguf files)
+    if (!fileName.endsWith(".gguf", Qt::CaseInsensitive)) {
+        qWarning() << "Invalid file type, only .gguf files are allowed:" << fileName;
+        return;
+    }
+
+    // 1. Extract company name from the icon file (e.g. "meta.svg" -> "meta")
+    QString companyName = companyIcon;
+    if (companyName.endsWith(".svg", Qt::CaseInsensitive)) {
+        companyName.chop(4); // remove ".svg"
+    }
+
+    // 2. Build the direct download URL
+    QString url = QString("https://huggingface.co/%1/resolve/main/%2")
+                      .arg(idModel, fileName);
+
+    // 3. Use the file name as the model name
+    QString name = fileName;
+
+    // 4. Emit the signal with the collected information
+    emit requestAddModel(name, url, type, companyName, companyIcon);
 }
 
 void HuggingfaceModelList::onReplyFinished(QNetworkReply *reply) {
@@ -163,18 +189,26 @@ void HuggingfaceModelList::processJson(const QByteArray &rawData) {
         }
 
         QList<HuggingfaceModel*> allModels;
-        const QJsonArray arr = doc.array();
+        QJsonArray filteredArray;
 
+        const QJsonArray arr = doc.array();
         for (const QJsonValue &val : arr) {
             if (!val.isObject()) continue;
             const QJsonObject obj = val.toObject();
 
             QStringList tags;
+            bool hasGguf = false;
             if (obj.contains("tags") && obj["tags"].isArray()) {
                 for (const QJsonValue &tagVal : obj["tags"].toArray()) {
-                    tags << tagVal.toString();
+                    QString tag = tagVal.toString();
+                    tags << tag;
+                    if (tag.compare("gguf", Qt::CaseInsensitive) == 0) {
+                        hasGguf = true;
+                    }
                 }
             }
+
+            if (!hasGguf) continue;
 
             HuggingfaceModel *model = new HuggingfaceModel(
                 obj["id"].toString(),
@@ -188,6 +222,14 @@ void HuggingfaceModelList::processJson(const QByteArray &rawData) {
                 );
 
             allModels.append(model);
+            filteredArray.append(obj);
+        }
+
+        QFile file(cacheFilePath());
+        if (file.open(QIODevice::WriteOnly)) {
+            QJsonDocument filteredDoc(filteredArray);
+            file.write(filteredDoc.toJson(QJsonDocument::Indented));
+            file.close();
         }
 
         QList<HuggingfaceModel*> initialModels = allModels.mid(0, 15);
