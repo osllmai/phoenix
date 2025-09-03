@@ -17,55 +17,56 @@ Item{
     }
 
     width: parent.width
-    height: fillterBox.height
+    height:/* fillterBox.height*/35
     clip:true
 
     signal search(var text)
 
-    Row{
-        id: fillterBox
-        width: parent.width
-        spacing: 10
-        SearchButton{
-            id: searchBoxId
-            width: parent.width - companyList.width - viewList.width - 20 - 10
-            Connections{
-                target: searchBoxId
-                function onSearch(myText){
-                    onlineModelListFilter.setFilterFixedString(myText)
-                }
-            }
-        }
-        Row{
-            height: searchBoxId.height
-            spacing: 10
+    // Row{
+    //     id: fillterBox
+    //     width: parent.width
+    //     spacing: 10
+    //     SearchButton{
+    //         id: searchBoxId
+    //         width: parent.width - companyList.width - viewList.width - 20 - 10
+    //         Connections{
+    //             target: searchBoxId
+    //             function onSearch(myText){
+    //                 onlineModelListFilter.setFilterFixedString(myText)
+    //             }
+    //         }
+    //     }
+    //     Row{
+    //         height: searchBoxId.height
+    //         spacing: 10
 
-            MyComboBox {
-                id: companyList
-                width: 110
-                model: [
-                    "All",
-                    "Favorite",
-                    "Text Generation",
-                    "Image",
-                    "Vision",
-                    "Embeddings"
-                ]
-                displayText: headerId.filtter
-                onActivated: {
-                    var selectedType = model[currentIndex]
-                    if(selectedType ==="All" || selectedType ==="Favorite"){
-                        onlineModelListFilter.filter(selectedType)
-                    }else{
-                        onlineModelListFilter.type = selectedType
-                    }
-                    headerId.filtter= selectedType
-                }
-            }
+    //         MyComboBox {
+    //             id: companyList
+    //             width: 110
+    //             model: [
+    //                 "All",
+    //                 "Favorite",
+    //                 "Text Generation",
+    //                 "Image",
+    //                 "Vision",
+    //                 "Embeddings"
+    //             ]
+    //             displayText: headerId.filtter
+    //             onActivated: {
+    //                 var selectedType = model[currentIndex]
+    //                 if(selectedType ==="All" || selectedType ==="Favorite"){
+    //                     onlineModelListFilter.filter(selectedType)
+    //                 }else{
+    //                     onlineModelListFilter.type = selectedType
+    //                 }
+    //                 headerId.filtter= selectedType
+    //             }
+    //         }
 
             ListView{
                 id: viewList
-                width: viewList.contentWidth
+                anchors.right: parent.right
+                width: parent.width
                 height: parent.height
                 spacing: 5
 
@@ -102,6 +103,6 @@ Item{
                     }
                 }
             }
-        }
-    }
+    //     }
+    // }
 }

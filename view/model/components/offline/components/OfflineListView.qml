@@ -51,6 +51,12 @@ Flickable {
 
             clip: true
 
+            interactive: false
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AlwaysOff
+            }
+
             model: offlineModelListFinishedDownloadFilter
 
             delegate: Item{
@@ -125,6 +131,12 @@ Flickable {
             width: parent.width
 
             clip: true
+
+            interactive: false
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AlwaysOff
+            }
 
             model: offlineModelListFilter
             delegate: Item{

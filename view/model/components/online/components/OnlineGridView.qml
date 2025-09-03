@@ -9,7 +9,7 @@ GridView {
     cacheBuffer: Math.max(0, gridView.contentHeight)
 
     cellWidth: control.calculationCellWidth()
-    cellHeight: 300
+    cellHeight: 200
 
     interactive: gridView.contentHeight > gridView.height
     boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds

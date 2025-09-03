@@ -45,7 +45,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
             QJsonObject obj = value.toObject();
 
             QVariantMap m;
-            m["id"] = -1;
+            m["id"] = models.size();
             m["name"] = obj["name"].toString();
             m["modelName"] = obj["modelName"].toString();
             m["icon"] = companyIcon;

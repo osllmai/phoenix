@@ -1,39 +1,41 @@
 import QtQuick
 import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
-import '../../../../../component_library/style' as Style
-import "../../../../../component_library/button"
-import "../../../../../component_library/model/components/online"
+import '../../../style' as Style
+import "../../../button"
 
 ComboBox {
     id: comboBoxId
     height: 35
-    width: 160
+    width: smallComboBox? 40: 160
     font.pixelSize: 12
+
+    property bool smallComboBox: false
 
     Accessible.role: Accessible.ComboBox
     contentItem: Row {
         id: contentRow
         height: comboBoxId.height
         width: comboBoxId.width
-        MyIcon{
-            id:iconId
-            width: 33; height: 33
-            myIcon: comboBoxId.modelIcon
-            anchors.topMargin: 0
-            iconType: Style.RoleEnum.IconType.Image
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
-                }
-            }
-        }
+        // MyIcon{
+        //     id:iconId
+        //     width: 33; height: 33
+        //     myIcon: comboBoxId.modelIcon
+        //     anchors.topMargin: 0
+        //     iconType: Style.RoleEnum.IconType.Image
+        //     MouseArea {
+        //         anchors.fill: parent
+        //         onClicked: {
+        //             comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+        //         }
+        //     }
+        // }
         Label {
             id: textId
-            text: comboBoxId.modelName
-            anchors.verticalCenter: iconId.verticalCenter
-            width: parent.width - iconId.width - iconId.width
+            visible: !smallComboBox
+            text: "   " +(onlineModelList.currentModel? onlineModelList.currentModel.name: "")
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width - iconOpenId.width /*- iconId.width*/
             color: Style.Colors.textTitle
             verticalAlignment: Text.AlignLeft
             elide: Text.ElideRight
@@ -55,8 +57,8 @@ ComboBox {
     popup: Popup {
         id: popupId
         y: comboBoxId.height + 10
-        width: 280
-        height: 360
+        width: 160
+        height: Math.min(300, myListView.contentHeight)
 
         background: null
         contentItem: Rectangle{
@@ -64,36 +66,45 @@ ComboBox {
             anchors.fill: parent
             border.width: 1
             border.color: Style.Colors.boxBorder
+            radius: 8
+
             ListView {
-                id: listView
-
-                height: listView.contentHeight
-                width: parent.width
-
-                interactive: listView.contentHeight > listView.height
-                boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
+                id: myListView
+                anchors.fill: parent
+                anchors.margins: 5
+                clip: true
+                // cacheBuffer: Math.max(0, myListView.contentHeight)
+                interactive: contentHeight > height
+                boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+                ScrollBar.vertical: ScrollBar {
+                    policy: myListView.contentHeight > myListView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
+                }
+                ScrollIndicator.vertical: ScrollIndicator { }
+                implicitHeight: Math.min(contentHeight, 240)
                 model: onlineModelList
-                delegate: Item{
-                    width: listView.width; height: 45
 
-                    OnlineCurrentModelDelegate {
-                        id: indoxItem
+                delegate: Item{
+                    width: listView.width - 150; height: 45
+
+                    OnlineModelDelegateComboBox {
+                       id: indoxItem
                        anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
                        Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-                       onHoveredChanged:{
-                           if(indoxItem.hovered && (appBodyId.width> onlineModelInformation.width + indoxItem.width + 225))
-                               onlineModelInformation.open()
-                           else
-                               onlineModelInformation.close()
-                       }
+                       // onHoveredChanged:{
+                       //     console.log("HIHIHHIIHIHIHIIHhi")
+                       //     if(indoxItem.hovered/* && (appBodyId.width> onlineModelInformation.width + indoxItem.width + 225)*/)
+                       //         onlineModelInformation.open()
+                       //     else
+                       //         onlineModelInformation.close()
+                       // }
 
-                       OnlineCurrentModelinformation{
-                           id: onlineModelInformation
-                           visible: window.isDesktopSize
-                           x: indoxItem.width + 20
-                           y: -onlineModelInformation.height/2 + indoxItem.height
-                       }
+                       // OnlineCurrentModelinformation{
+                       //     id: onlineModelInformation
+                       //     x: indoxItem.width + 20
+                       //     y: -onlineModelInformation.height/2 + indoxItem.height
+                       // }
                    }
                 }
             }

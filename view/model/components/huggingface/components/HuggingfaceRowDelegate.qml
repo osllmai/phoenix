@@ -69,11 +69,11 @@ T.Button {
 
         Rectangle{
             id: informationAboutDownloadId
-            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width /*- downloadButtonId.width*/ - 20))/3 >20
+            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
             height: 40; width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: headerId.right
-            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width/* - downloadButtonId.width*/ - 20))/3
+            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
             radius: 10
             border.color: Style.Colors.boxBorder
             border.width: 1
@@ -90,6 +90,20 @@ T.Button {
         //     isFillWidthDownloadButton:false
         // }
 
+        MyButton{
+            id: downloadButtonId
+            visible: window.isDesktopSize
+            myText: "More Information"
+            bottonType: Style.RoleEnum.BottonType.Primary
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 10
+            onClicked:{
+                huggingfaceModelList.openModel(model.id, model.name, model.icon)
+                huggingfaceDialogId.open()
+            }
+        }
+
         Column{
             visible: !window.isDesktopSize
             anchors.fill: parent
@@ -100,7 +114,7 @@ T.Button {
 
                 MyIcon {
                     id: logoModel2Id
-                    myIcon: "qrc:/media/image_company/Huggingface.svg"
+                    myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 30; height: 30
@@ -138,6 +152,17 @@ T.Button {
             //     anchors.rightMargin: 5
             //     isFillWidthDownloadButton:false
             // }
+            MyButton{
+                id: downloadButtonId2
+                myText: "More Information"
+                bottonType: Style.RoleEnum.BottonType.Primary
+                anchors.right: parent.right
+                anchors.rightMargin: 5
+                onClicked:{
+                    huggingfaceModelList.openModel(model.id, model.name, model.icon)
+                    huggingfaceDialogId.open()
+                }
+            }
         }
 
         layer.enabled: control.hovered? true: false

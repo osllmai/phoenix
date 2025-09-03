@@ -53,7 +53,7 @@ Flickable {
                }
             }
         }
-        Row{
+        Item{
             id: installButton
             // visible: offlineModelListFinishedDownloadFilter.count > 3
             width: parent.width - 40

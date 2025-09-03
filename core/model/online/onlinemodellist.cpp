@@ -157,6 +157,9 @@ void OnlineModelList::addModel(const QVariantMap &m)
                                          pricey, output, comments);
 
     m_models.append(model);
+
+    if(m_models.size() == 1)
+        selectCurrentModelRequest(id);
     // connect(model, &OnlineModel::modelChanged, this, [=]() {
     //     int row = m_models.indexOf(model);
     //     if (row != -1) {
@@ -165,6 +168,13 @@ void OnlineModelList::addModel(const QVariantMap &m)
     //     }
     // });
     emit countChanged();
+}
+
+void OnlineModelList::selectCurrentModelRequest(const int id){
+    OnlineModel* model = findModelById(id);
+    if(model == nullptr) return;
+
+    setCurrentModel(model);
 }
 
 OnlineModel* OnlineModelList::findModelById(int id) {
@@ -185,3 +195,10 @@ OnlineModel* OnlineModelList::findModelByModelName(const QString modelName) {
     return nullptr;
 }
 
+OnlineModel *OnlineModelList::currentModel() const{return m_currentModel;}
+void OnlineModelList::setCurrentModel(OnlineModel *newCurrentModel){
+    if (m_currentModel == newCurrentModel)
+        return;
+    m_currentModel = newCurrentModel;
+    emit currentModelChanged();
+}

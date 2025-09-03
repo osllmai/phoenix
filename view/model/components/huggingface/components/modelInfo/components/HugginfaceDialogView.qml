@@ -14,7 +14,7 @@ Column {
 
         MyIcon {
             id: logoModelId
-            myIcon: huggingfaceModelList.hugginfaceInfo.icon
+            myIcon: huggingfaceModelList.hugginfaceInfo?huggingfaceModelList.hugginfaceInfo.icon:""
             iconType: Style.RoleEnum.IconType.Image
             enabled: false
             width: 40; height: 40
@@ -26,7 +26,7 @@ Column {
             Label {
                 id: titleId
                 visible: !titleAndCopy.visible
-                text: huggingfaceModelList.hugginfaceInfo.name
+                text: huggingfaceModelList.hugginfaceInfo?huggingfaceModelList.hugginfaceInfo.name:""
                 color: Style.Colors.textTitle
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width - copyId.width
@@ -38,7 +38,7 @@ Column {
             MyCopyButton {
                 id: copyId
                 visible: !titleAndCopy.visible
-                myText: TextArea { text: "localModel/" + huggingfaceModelList.hugginfaceInfo.name }
+                myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"") }
                 anchors.verticalCenter: titleId.verticalCenter
                 anchors.right: parent.right
                 clip: true
@@ -51,7 +51,7 @@ Column {
                 clip: true
                 Label {
                     id: title2Id
-                    text: huggingfaceModelList.hugginfaceInfo.name
+                    text: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")
                     color: Style.Colors.textTitle
                     anchors.verticalCenter: parent.verticalCenter
                     font.pixelSize: 14
@@ -61,7 +61,7 @@ Column {
                 }
                 MyCopyButton {
                     id: copy2Id
-                    myText: TextArea { text: "localModel/" + huggingfaceModelList.hugginfaceInfo.name }
+                    myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")}
                     anchors.verticalCenter: title2Id.verticalCenter
                     clip: true
                 }
@@ -73,7 +73,7 @@ Column {
             width: 29; height: 29
             myIcon: aboutIcon.hovered ? "qrc:/media/icon/aboutFill.svg" : "qrc:/media/icon/about.svg"
             anchors.verticalCenter: logoModelId.verticalCenter
-            myTextToolTip: huggingfaceModelList.hugginfaceInfo.id
+            myTextToolTip: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.id:"")
         }
 
         MyIcon {
@@ -83,7 +83,7 @@ Column {
             iconType: Style.RoleEnum.IconType.Like
 
             Label {
-                text: huggingfaceModelList.hugginfaceInfo.likes
+                text: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.likes:"")
                 color: Style.Colors.textTagError
                 anchors.top: likeIconId.bottom
                 anchors.topMargin: -5
@@ -96,23 +96,24 @@ Column {
     }
 
     Column {
+        id: aboutModel
         anchors.leftMargin: 30
         Label {
-            text: "Created at: " + huggingfaceModelList.hugginfaceInfo.createdAt
+            text: "Created at: " + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.createdAt:"")
             color: Style.Colors.textInformation
             font.pixelSize: 10
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignTop
         }
         Label {
-            text: "Author: " + huggingfaceModelList.hugginfaceInfo.author
+            text: "Author: " + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.author:"")
             color: Style.Colors.textInformation
             font.pixelSize: 10
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignTop
         }
         Label {
-            text: "Last Modified: " + huggingfaceModelList.hugginfaceInfo.lastModified
+            text: "Last Modified: " + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.lastModified:"")
             color: Style.Colors.textInformation
             font.pixelSize: 10
             horizontalAlignment: Text.AlignRight
@@ -123,16 +124,18 @@ Column {
     Item {
         id: tagsContainer
         width: parent.width
+        height: 38 + 25
         clip: true
 
         Flow {
             id: tagsFlow
             anchors.fill: parent
-            anchors.topMargin: 4
+            anchors.topMargin: 15
+            anchors.bottomMargin: 10
             spacing: 4
             flow: Flow.LeftToRight
             Repeater {
-                model: huggingfaceModelList.hugginfaceInfo.tags
+                model: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.tags:"")
                 MyButton {
                     myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
                     myIcon: ""
@@ -144,33 +147,48 @@ Column {
         }
     }
 
-    ScrollView {
-        id: mainScroll
-        width: parent.width
-        height: 400
+    // ScrollView {
+    //     id: mainScroll
+    //     width: Math.min(parent.width, 250)
+    //     height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
 
-        Column {
-            id: scrollContent
-            width: parent.width
-            spacing: 10
+        // Column {
+        //     id: scrollContent
+        //     width: parent.width
+        //     spacing: 10
 
             ListView {
                 id: listView
-                width: parent.width
-                height: Math.min(contentHeight, 300)
-                interactive: false
-                model: huggingfaceModelList.hugginfaceInfo.siblings
+                width:  parent.width
+                height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
+
+                clip: true
+
+                interactive: listView.contentHeight > listView.height
+                boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                flickDeceleration: 200
+                maximumFlickVelocity: 12000
+
+                ScrollBar.vertical: ScrollBar {
+                    policy: listView.contentHeight > listView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
+                }
+
+                model:  (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.siblings:[])
                 delegate: Row {
-                    width: listView.width
-                    height: 45
+                    width: Math.min(parent.width, 250)
+                    height: 40
                     spacing: 10
 
                     Label {
                         text: modelData.rfilename
                         color: Style.Colors.textInformation
                         font.pixelSize: 10
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
+                        // horizontalAlignment: Text.AlignRight
+                        // verticalAlignment: Text.AlignVCenter
+                        anchors.verticalCenter: dounloadButton.verticalCenter
                         elide: Label.ElideRight
                         width: parent.width - dounloadButton.width - 20
                     }
@@ -179,6 +197,7 @@ Column {
                         id: dounloadButton
                         myText: "Add Model"
                         bottonType: Style.RoleEnum.BottonType.Primary
+                        height: 30
                         onClicked: {
                             huggingfaceModelList.addModel(
                                 huggingfaceModelList.hugginfaceInfo.id,
@@ -191,16 +210,16 @@ Column {
                 }
             }
 
-            Label {
-                text: huggingfaceModelList.hugginfaceInfo.readMe
-                wrapMode: Text.Wrap
-                color: Style.Colors.textInformation
-                font.pixelSize: 10
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignTop
-                width: parent.width
-            }
-        }
-    }
+        //     Label {
+        //         text: huggingfaceModelList.hugginfaceInfo.readMe
+        //         wrapMode: Text.Wrap
+        //         color: Style.Colors.textInformation
+        //         font.pixelSize: 10
+        //         horizontalAlignment: Text.AlignLeft
+        //         verticalAlignment: Text.AlignTop
+        //         width: parent.width
+        //     }
+        // }
+    // }
 }
 

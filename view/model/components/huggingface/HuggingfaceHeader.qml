@@ -17,16 +17,16 @@ Item{
     }
 
     width: parent.width
-    height: fillterBox.height
+    height: /*fillterBox.height*/35
     clip:true
 
     signal search(var text)
 
 
-    Row{
-        id: fillterBox
-        width: parent.width
-        spacing: 10
+    // Row{
+    //     id: fillterBox
+    //     width: parent.width
+    //     spacing: 10
 
         // SearchHuggingfaceModel{
         //     id: searchBoxId
@@ -38,45 +38,46 @@ Item{
         //         }
         //     }
         // }
-        SearchButton{
-            id: searchBoxId
-            width: parent.width - companyList.width - viewList.width - 20 - 10
-            Connections{
-                target: searchBoxId
-                function onSearch(myText){
-                    onlineModelListFilter.setFilterFixedString(myText)
-                }
-            }
-        }
+        // SearchButton{
+        //     id: searchBoxId
+        //     width: parent.width - companyList.width - viewList.width - 20 - 10
+        //     Connections{
+        //         target: searchBoxId
+        //         function onSearch(myText){
+        //             onlineModelListFilter.setFilterFixedString(myText)
+        //         }
+        //     }
+        // }
 
-        Row{
-            height: searchBoxId.height
-            spacing: 10
+        // Row{
+        //     height: /*searchBoxId.height*/35
+        //     spacing: 10
 
-            MyComboBox {
-                id: companyList
-                width: 110
-                model: [
-                    "All",
-                    "Favorite",
-                    "Text Generation",
-                    "Speech"
-                ]
-                displayText: headerId.filtter
-                onActivated: {
-                    var selectedType = model[currentIndex]
-                    if (selectedType === "All" || selectedType === "Favorite") {
-                        offlineModelListFilter.filter(selectedType)
-                    } else {
-                        offlineModelListFilter.type = selectedType
-                    }
-                    headerId.filtter = selectedType
-                }
-            }
+            // MyComboBox {
+            //     id: companyList
+            //     width: 110
+            //     model: [
+            //         "All",
+            //         "Favorite",
+            //         "Text Generation",
+            //         "Speech"
+            //     ]
+            //     displayText: headerId.filtter
+            //     onActivated: {
+            //         var selectedType = model[currentIndex]
+            //         if (selectedType === "All" || selectedType === "Favorite") {
+            //             offlineModelListFilter.filter(selectedType)
+            //         } else {
+            //             offlineModelListFilter.type = selectedType
+            //         }
+            //         headerId.filtter = selectedType
+            //     }
+            // }
 
             ListView{
                 id: viewList
-                width: viewList.contentWidth
+                anchors.right: parent.right
+                width: parent.width
                 height: parent.height
                 spacing: 5
 
@@ -98,7 +99,7 @@ Item{
                 }
                 delegate: MyButton {
                     id: delegateViewId
-                    width: searchBoxId.height; height: searchBoxId.height
+                    width: /*searchBoxId.height*/ 30; height: /*searchBoxId.height*/30
                     myIcon: model.icon
                     bottonType: Style.RoleEnum.BottonType.Feature
                     iconType: Style.RoleEnum.IconType.Primary
@@ -113,6 +114,6 @@ Item{
                     }
                 }
             }
-        }
-    }
+    //     }
+    // }
 }

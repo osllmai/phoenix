@@ -14,7 +14,7 @@ Dialog {
 
     property bool isDesktopSize: width >= 630;
     onIsDesktopSizeChanged: {
-        settingsMenuDerawerId.close()
+        settingsDialogId.close()
         if(settingsDialogId.isDesktopSize){
             settingsDialogId.isOpenMenu = true
         }
@@ -26,13 +26,13 @@ Dialog {
             if(settingsDialogId.isDesktopSize){
                 settingsMenuId.width = 200
             }else{
-                settingsMenuDerawerId.open()
+                settingsDialogId.open()
             }
         }else{
             if(settingsDialogId.isDesktopSize){
                 settingsMenuId.width = 60
             }else{
-                settingsMenuDerawerId.open()
+                settingsDialogId.open()
             }
         }
     }
@@ -59,14 +59,16 @@ Dialog {
         color: Style.Colors.background
 
         HugginfaceDialogView{
-            visible: huggingfaceModelList.hugginfaceInfo.successModelProcess
+            visible: huggingfaceModelList.hugginfaceInfo &&
+                     huggingfaceModelList.hugginfaceInfo.successModelProcess
             anchors.fill: parent
             anchors.margins: 24
         }
 
         Item{
             id: connectionFail
-            visible: !huggingfaceModelList.hugginfaceInfo.successModelProcess &&
+            visible: huggingfaceModelList.hugginfaceInfo &&
+                     !huggingfaceModelList.hugginfaceInfo.successModelProcess &&
                      !huggingfaceModelList.hugginfaceInfo.loadModelProcess
             anchors.fill: parent
             anchors.margins: 10
@@ -83,7 +85,8 @@ Dialog {
 
         Item{
             id: loadInProgress
-            visible: !huggingfaceModelList.hugginfaceInfo.successModelProcess &&
+            visible: huggingfaceModelList.hugginfaceInfo &&
+                     !huggingfaceModelList.hugginfaceInfo.successModelProcess &&
                      huggingfaceModelList.hugginfaceInfo.loadModelProcess
             anchors.fill: parent
             anchors.margins: 10

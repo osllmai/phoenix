@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
+import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
@@ -76,6 +77,13 @@ T.Button {
         //     color: "#00ffffff"
         //     OnlineInformationModel{}
         // }
+
+        OnlineModelListComboBox{
+            id: informationAboutDownloadId
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: headerId.right
+            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
+        }
 
         ApikeyButton{
             id: downloadButtonId

@@ -195,8 +195,8 @@ private:
     QStringList m_spaces;
     QString m_createdAt;
     qint64 m_usedStorage;
-    bool m_loadModelProcess;
-    bool m_successModelProcess;
+    bool m_loadModelProcess = true;
+    bool m_successModelProcess = false;
     QString m_readMe;
 
     QNetworkAccessManager* m_manager;

@@ -5,14 +5,15 @@ import QtQuick.Templates 2.1 as T
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
+import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
     width: 250
     height: 250
 
-    background:null
-    contentItem:Rectangle{
+    background: null
+    contentItem: Rectangle{
         id: backgroundId
         anchors.fill: parent
         radius: 10
@@ -87,6 +88,18 @@ T.Button {
 
             OnlineModelListComboBox{
             }
+            // OnlineModelListComboBox {
+            //     id: modelListComboBox
+            //     model: onlineModelList
+            //     displayText: onlineModelList.currentModel.name
+            //     // highlightedIndex: 1
+            //     onActivated: {
+            //         var item = modelListComboBox.model[modelListComboBox.currentIndex]
+            //         console.log("Selected:", item.name, "id:", item.id)
+
+            //         onlineModelList.selectCurrentModelRequest(item.id)
+            //     }
+            // }
 
             ApikeyButton{
                 id: apikeyButton

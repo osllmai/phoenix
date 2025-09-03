@@ -140,12 +140,12 @@ Flickable {
                }
             }
         }
-        Row{
+        Item{
             id: installButton
             // visible: offlineModelListFinishedDownloadFilter.count > 3
             width: parent.width - 40
             height: 45
-            anchors.horizontalCenter: parent.horizontalCenter
+            // anchors.horizontalCenter: parent.horizontalCenter
             MyButton{
                 id: openHistoryId
                 myIcon: "qrc:/media/icon/add.svg"

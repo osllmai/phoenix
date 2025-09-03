@@ -14,6 +14,7 @@ class OnlineModelList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(OnlineModel *currentModel READ currentModel NOTIFY currentModelChanged FINAL)
 
 public:
     explicit OnlineModelList(QObject* parent);
@@ -47,10 +48,16 @@ public:
     // Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
     Q_INVOKABLE void addModel(const QVariantMap &m);
+    Q_INVOKABLE void selectCurrentModelRequest(const int id);
+
+    OnlineModel *currentModel() const;
+    void setCurrentModel(OnlineModel *newCurrentModel);
 
 signals:
     void countChanged();
     void sortingFinished();
+
+    void currentModelChanged();
 
 public slots:
     void finalizeSetup();
@@ -61,6 +68,8 @@ private slots:
 private:
     QList<OnlineModel*> m_models;
     QFutureWatcher<QList<OnlineModel*>> m_sortWatcher;
+
+    OnlineModel* m_currentModel;
 };
 
 #endif // ONLINEMODELLIST_H

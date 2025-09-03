@@ -138,7 +138,8 @@
         <file>footer/DownloadingDelegate.qml</file>
         <file>model/components/offline/components/SearchOfflineModel.qml</file>
         <file>model/components/offline/components/components/SearchTagPupup.qml</file>
-        <file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
+        <file>component_library/model/components/online/OnlineModelListComboBox.qml</file>
+        <file>component_library/model/components/online/OnlineModelDelegateComboBox.qml</file>
         <file>model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml</file>
         <file>model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml</file>
     </qresource>

@@ -116,6 +116,12 @@ Flickable {
             width: parent.width
             height: gridView2.contentHeight
 
+            interactive: false
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AlwaysOff
+            }
+
             cellWidth: control.calculationCellWidth()
             cellHeight: 300
 

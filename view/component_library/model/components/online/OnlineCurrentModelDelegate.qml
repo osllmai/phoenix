@@ -36,10 +36,11 @@ T.Button {
             }
             Label {
                 id: modelNameId
-                text: model.name
+                text: onlineModelList.currentModel.name
                 width: backgroundId.width -
                        logoModelId.width -
                        copyId.width -
+                       onlineModelListComboBox.width -
                        (installButton.visible? installButton.width: 0) -
                        (rejectChatButton.visible? rejectChatButton.width: 0) - 5
                 clip: true
@@ -52,9 +53,13 @@ T.Button {
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
+            OnlineModelListComboBox{
+                id: onlineModelListComboBox
+                smallComboBox:true
+            }
             MyCopyButton{
                 id: copyId
-                myText: TextArea{text: model.company.name + "/" + model.modelName;}
+                myText: TextArea{text: /*model.company.name + "/" + model.modelName;*/model.id}
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
             MyButton{

@@ -27,7 +27,7 @@ Item {
                 height: 40
                 width: parent.width
                 spacing: 5
-                cacheBuffer: Math.max(0, listView.contentWidth)
+                // cacheBuffer: Math.max(0, listView.contentWidth)
 
                 layoutDirection: Qt.LeftToRight
                 orientation: Qt.Horizontal

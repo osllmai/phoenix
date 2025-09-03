@@ -132,7 +132,7 @@ void HuggingfaceModelList::addModel(const QString &idModel, const QString &fileN
         return;
     }
 
-    // 1. Extract company name from the icon file (e.g. "meta.svg" -> "meta")
+    // 1. Extract company name from the icon file
     QString companyName = companyIcon;
     if (companyName.endsWith(".svg", Qt::CaseInsensitive)) {
         companyName.chop(4); // remove ".svg"

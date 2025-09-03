@@ -29,7 +29,7 @@ Dialog {
         Connections{
             target: inputApikey
             function onSaveAPIKey(apiKey){
-                onlineModelList.saveAPIKey(model.id, apiKey)
+                onlineCompanyList.saveAPIKey(model.id, apiKey)
                 inputApikeyDialogId.close()
                 if(model.installModel){
                     modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
