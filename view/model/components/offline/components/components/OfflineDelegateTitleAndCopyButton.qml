@@ -22,7 +22,7 @@ Item {
     MyCopyButton{
         id: copyId
         visible: !titleAndCopy.visible
-        myText: TextArea{text: "localModel/"+model.modelName;}
+        myText: TextArea{text: model.modelName;}
         anchors.verticalCenter: titleId.verticalCenter
         anchors.right: parent.right
         clip: true
@@ -45,7 +45,7 @@ Item {
         }
         MyCopyButton{
             id: copy2Id
-            myText: TextArea{text: "localModel/"+model.modelName;}
+            myText: TextArea{text: model.modelName;}
             anchors.verticalCenter: title2Id.verticalCenter
             clip: true
         }

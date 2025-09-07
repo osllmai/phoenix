@@ -15,6 +15,9 @@ HuggingfaceModelList::HuggingfaceModelList(QObject* parent)
 {
     connect(m_manager, &QNetworkAccessManager::finished, this, &HuggingfaceModelList::onReplyFinished);
 
+    connect(&m_futureWatcher, &QFutureWatcher<QList<HuggingfaceModel*>>::finished,
+            this, &HuggingfaceModelList::onModelsReady);
+
     fetchModels();
 }
 
@@ -84,18 +87,25 @@ void HuggingfaceModelList::fetchModels() {
 }
 
 void HuggingfaceModelList::loadMore(int count) {
-    if (remainingModels.isEmpty()) return;
+    if (remainingModels.isEmpty()) {
+        setNoMoreModels(true);
+        return;
+    }
 
-    QList<HuggingfaceModel*> toAdd = remainingModels.mid(0, count);
-    remainingModels = remainingModels.mid(count);
+    int actualCount = qMin(count, remainingModels.count());
 
-    beginInsertRows(QModelIndex(), m_models.count(), m_models.count() + toAdd.count() - 1);
-    for (auto *m : toAdd) {
+    for (int i = 0; i < actualCount; ++i) {
+        beginInsertRows(QModelIndex(), m_models.count(), m_models.count());
+        HuggingfaceModel* m = remainingModels.takeFirst();
         m->setParent(this);
         m_models.append(m);
+        endInsertRows();
+        emit countChanged();
     }
-    endInsertRows();
-    emit countChanged();
+
+    if (remainingModels.isEmpty()) {
+        setNoMoreModels(true);
+    }
 }
 
 void HuggingfaceModelList::openModel(const QString& id, const QString& name, const QString& icon){
@@ -181,17 +191,17 @@ void HuggingfaceModelList::onReplyFinished(QNetworkReply *reply) {
 }
 
 void HuggingfaceModelList::processJson(const QByteArray &rawData) {
-    QtConcurrent::run([this, rawData]() {
+    auto future = QtConcurrent::run([rawData]() -> QList<QVariantMap> {
+        QList<QVariantMap> allModels;
         const QJsonDocument doc = QJsonDocument::fromJson(rawData);
         if (!doc.isArray()) {
             qWarning() << "Invalid JSON format";
-            return;
+            return allModels;
         }
 
-        QList<HuggingfaceModel*> allModels;
         QJsonArray filteredArray;
-
         const QJsonArray arr = doc.array();
+
         for (const QJsonValue &val : arr) {
             if (!val.isObject()) continue;
             const QJsonObject obj = val.toObject();
@@ -210,41 +220,76 @@ void HuggingfaceModelList::processJson(const QByteArray &rawData) {
 
             if (!hasGguf) continue;
 
-            HuggingfaceModel *model = new HuggingfaceModel(
-                obj["id"].toString(),
-                obj["likes"].toInt(),
-                obj["downloads"].toInt(),
-                obj["pipeline_tag"].toString(),
-                obj["library_name"].toString(),
-                tags,
-                obj["createdAt"].toString(),
-                nullptr
-                );
+            QVariantMap model;
+            model["id"] = obj["id"].toString();
+            model["likes"] = obj["likes"].toInt();
+            model["downloads"] = obj["downloads"].toInt();
+            model["pipeline_tag"] = obj["pipeline_tag"].toString();
+            model["library_name"] = obj["library_name"].toString();
+            model["tags"] = tags;
+            model["createdAt"] = obj["createdAt"].toString();
+
+            // HuggingfaceModel *model = new HuggingfaceModel(
+            //     obj["id"].toString(),
+            //     obj["likes"].toInt(),
+            //     obj["downloads"].toInt(),
+            //     obj["pipeline_tag"].toString(),
+            //     obj["library_name"].toString(),
+            //     tags,
+            //     obj["createdAt"].toString(),
+            //     nullptr
+            //     );
 
             allModels.append(model);
             filteredArray.append(obj);
         }
 
-        QFile file(cacheFilePath());
+        QString dirPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        QDir().mkpath(dirPath);
+        QFile file(dirPath + "/huggingface_models.json");
         if (file.open(QIODevice::WriteOnly)) {
             QJsonDocument filteredDoc(filteredArray);
             file.write(filteredDoc.toJson(QJsonDocument::Indented));
             file.close();
         }
 
-        QList<HuggingfaceModel*> initialModels = allModels.mid(0, 15);
-        remainingModels = allModels.mid(15);
-
-        QMetaObject::invokeMethod(this, [this, initialModels]() {
-            beginResetModel();
-            qDeleteAll(m_models);
-            m_models = initialModels;
-            for (auto *m : m_models)
-                m->setParent(this);
-            endResetModel();
-            emit countChanged();
-        }, Qt::QueuedConnection);
+        return allModels;
     });
+
+    m_futureWatcher.setFuture(future);
+}
+
+void HuggingfaceModelList::onModelsReady() {
+    QList<QVariantMap> allModelsVar = m_futureWatcher.result();
+
+    QList<HuggingfaceModel*> allModels;
+    for (const QVariantMap &map : allModelsVar) {
+        auto *model = new HuggingfaceModel(
+            map["id"].toString(),
+            map["likes"].toInt(),
+            map["downloads"].toInt(),
+            map["pipeline_tag"].toString(),
+            map["library_name"].toString(),
+            map["tags"].toStringList(),
+            map["createdAt"].toString(),
+            this
+            );
+        allModels.append(model);
+    }
+
+    QList<HuggingfaceModel*> initialModels = allModels.mid(0, 5);
+    remainingModels = allModels.mid(5);
+
+    beginResetModel();
+    qDeleteAll(m_models);
+    m_models = initialModels;
+    endResetModel();
+
+    emit countChanged();
+
+    if (remainingModels.isEmpty()) {
+        setNoMoreModels(true);
+    }
 }
 
 QString HuggingfaceModelList::cacheFilePath() const {
@@ -254,3 +299,11 @@ QString HuggingfaceModelList::cacheFilePath() const {
 }
 
 HuggingfaceModelInfo* HuggingfaceModelList::hugginfaceInfo() {return m_hugginfaceInfo;}
+
+bool HuggingfaceModelList::noMoreModels() const{return m_noMoreModels;}
+void HuggingfaceModelList::setNoMoreModels(bool newNoMoreModels){
+    if (m_noMoreModels == newNoMoreModels)
+        return;
+    m_noMoreModels = newNoMoreModels;
+    emit noMoreModelsChanged();
+}

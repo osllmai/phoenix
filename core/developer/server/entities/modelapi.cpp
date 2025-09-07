@@ -2,12 +2,9 @@
 
 ModelAPI::ModelAPI(const QString &scheme, const QString &hostName, int port)
     : CrudAPI(scheme, hostName, port)
-{
-    qCInfo(logDeveloper) << "ModelAPI constructed with scheme:" << scheme << ", host:" << hostName << ", port:" << port;
-}
+{}
 
 QHttpServerResponse ModelAPI::getFullList() const {
-    qCInfo(logDeveloper) << "GET Request";
     qCInfo(logDeveloperView) << "GET Request";
 
     // const auto onlineModels = OnlineModelList::instance(nullptr);
@@ -67,8 +64,6 @@ QHttpServerResponse ModelAPI::deleteItem(qint64 itemId){
 }
 
 QJsonArray ModelAPI::extractModelsAsJsonArray(QSortFilterProxyModel* proxyModel) const{
-    qCInfo(logDeveloper) << "extractModelsAsJsonArray() called, rows";
-
     QJsonArray models;
 
     for (int row = 0; row < proxyModel->rowCount(); ++row) {
@@ -81,8 +76,5 @@ QJsonArray ModelAPI::extractModelsAsJsonArray(QSortFilterProxyModel* proxyModel)
 
         models.append(item);
     }
-
-    qCInfo(logDeveloper) << "extractModelsAsJsonArray() finished, total models:" << models.size();
-
     return models;
 }

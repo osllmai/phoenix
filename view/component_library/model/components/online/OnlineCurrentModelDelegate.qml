@@ -59,7 +59,7 @@ T.Button {
             }
             MyCopyButton{
                 id: copyId
-                myText: TextArea{text: /*model.company.name + "/" + model.modelName;*/model.id}
+                myText: TextArea{text: model.name/*modelName*/}
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
             MyButton{

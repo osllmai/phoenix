@@ -9,15 +9,12 @@ Slider {
     from: 0.00
     to: 2.00
 
-    background: backgroundRect
-
-    Rectangle {
+    background: Rectangle {
+        id: backgroundRect
         x: control.leftPadding
         y: control.topPadding + control.availableHeight / 2 - height / 2
         implicitWidth: 200
         implicitHeight: 4
-        parent: control.background
-        id: backgroundRect
 
         width: control.availableWidth
         height: implicitHeight

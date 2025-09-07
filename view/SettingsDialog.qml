@@ -92,4 +92,5 @@ Dialog {
              transparentBorder: true
          }
     }
+
 }

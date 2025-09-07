@@ -186,12 +186,12 @@ OnlineModel* OnlineModelList::findModelById(int id) {
 }
 
 OnlineModel* OnlineModelList::findModelByModelName(const QString modelName) {
-    // for (OnlineModel* model : m_models) {
-    //     QString fullModelName =  model->company()->name() + "/" + model->modelName();
-    //     if (fullModelName == modelName ) {
-    //         return model;
-    //     }
-    // }
+    for (OnlineModel* model : m_models) {
+        QString suffix = "/" + model->modelName();
+        if (modelName.contains(suffix)) {
+            return model;
+        }
+    }
     return nullptr;
 }
 

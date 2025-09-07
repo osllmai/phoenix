@@ -17,10 +17,10 @@ Item {
         anchors.left: parent.left; anchors.leftMargin: 5
         anchors.verticalCenter: parent.verticalCenter
 
-        DownloadProgressComboBox{
-            id: downloading
-            visible: (offlineModelList.numberDownload > 0)?true:false
-        }
+        // DownloadProgressComboBox{
+        //     id: downloading
+        //     visible: (offlineModelList.numberDownload > 0)?true:false
+        // }
     }
     Row{
         anchors.right: parent.right; anchors.rightMargin: 5

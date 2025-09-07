@@ -20,7 +20,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
 
     QString companyIcon = icon;
 
-    auto future = QtConcurrent::run([filePath, companyIcon]() -> QList<QVariantMap> {
+    auto future = QtConcurrent::run([filePath, companyIcon, name]() -> QList<QVariantMap> {
         QList<QVariantMap> models;
 
         QFile file(QCoreApplication::applicationDirPath() + "/models/" + filePath);
@@ -47,7 +47,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
             QVariantMap m;
             m["id"] = models.size();
             m["name"] = obj["name"].toString();
-            m["modelName"] = obj["modelName"].toString();
+            m["modelName"] = name +  "/" + obj["modelName"].toString();
             m["icon"] = companyIcon;
             m["description"] = obj["description"].toString();
             m["type"] = obj["type"].toString();

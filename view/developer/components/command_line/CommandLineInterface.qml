@@ -8,6 +8,10 @@ Item {
     id: control
     property string selectedFilter: "All"
 
+    onSelectedFilterChanged: {
+        instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
+    }
+
     Rectangle {
         id: instructionsBox
         anchors.fill: parent
@@ -147,12 +151,12 @@ Item {
 
                     text: getFilteredLogs(selectedFilter)
 
-                    Connections {
-                        target: instructionsBox
-                        onSelectedFilterChanged: {
-                            instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
-                        }
-                    }
+                    // Connections {
+                    //     target: instructionsBox
+                    //     onSelectedFilterChanged: {
+                    //         instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
+                    //     }
+                    // }
 
                     onTextChanged: {
                         instructionTextBox.cursorPosition = instructionTextBox.length

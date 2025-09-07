@@ -72,8 +72,6 @@ int main(int argc, char *argv[])
 
         engine.rootContext()->setContextProperty("Logger", &Logger::instance());
 
-        qDebug(logCore) << "Program start";
-
         QStringList fontFamilies = QFontDatabase::families();
         engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
 

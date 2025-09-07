@@ -5,7 +5,6 @@ CodeDeveloperList* CodeDeveloperList::m_instance = nullptr;
 CodeDeveloperList* CodeDeveloperList::instance(QObject* parent) {
     if (!m_instance) {
         m_instance = new CodeDeveloperList(parent);
-        qCInfo(logDeveloper) << "CodeDeveloperList instance created.";
     }
     return m_instance;
 }
@@ -27,12 +26,10 @@ CodeDeveloperList::CodeDeveloperList(QObject *parent)
 
     for (const auto& lang : languages) {
         m_programLanguags.append(new ProgramLanguage(lang.first, lang.second, this));
-        qCDebug(logDeveloper) << "Loaded language:" << lang.second;
     }
 
     m_currentProgramLanguage = m_programLanguags.first();
     m_currentProgramLanguage->setCodeGenerator(new CurlCodeGenerator());
-    qCInfo(logDeveloper) << "Default language set to Curl";
 
     //info api connection
     m_parserModel.setApplicationDescription("Qt Developer Server");
@@ -68,8 +65,6 @@ void CodeDeveloperList::runAPI(bool start){
         if (!m_parserModel.value("portAPI").isEmpty())
             portAPIArg = m_parserModel.value("portAPI").toUShort();
 
-        qCInfo(logDeveloperView) << "Server starting on port:" << portAPIArg;
-
         auto modelFactory = std::make_unique<ModelAPI>(SCHEME, HOST, portAPIArg);
         auto chatFactory = std::make_unique<ChatAPI>(SCHEME, HOST, portAPIArg);
 
@@ -84,8 +79,7 @@ void CodeDeveloperList::runAPI(bool start){
             return;
         }
 
-        quint16 portAPIModel = m_tcpServer->serverPort();
-        qCInfo(logDeveloper) << "HTTP Server running at portAPI:" << portAPIModel;
+        qCInfo(logDeveloperView) << "Server starting on port:" << m_tcpServer->serverPort();
 
     }else{
         m_tcpServer->close();
@@ -145,8 +139,6 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
         return;
     }
 
-    qCInfo(logDeveloper) << "Adding CRUD routes for path:" << apiPath;
-
     auto &api = apiOpt.value();
 
     // GET /apiPath
@@ -199,9 +191,6 @@ void CodeDeveloperList::addCrudRoutes(const QString &apiPath, std::optional<std:
                                 return QHttpServerResponse(QHttpServerResponder::StatusCode::ServiceUnavailable);
                             return api->deleteItem(itemId);
                         });
-
-
-    qCDebug(logDeveloper) << "CRUD routes added for" << apiPath;
 }
 
 int CodeDeveloperList::count() const { return m_programLanguags.count(); }
@@ -267,20 +256,16 @@ void CodeDeveloperList::setPortSocket(quint16 newportSocket) {
         return;
     m_portSocket = newportSocket;
     emit portSocketChanged();
-    qCInfo(logDeveloper) << "portSocket changed to " << m_portSocket;
 }
 
 void CodeDeveloperList::setCurrentLanguage(int newId) {
-    qCDebug(logDeveloper) << "setCurrentLanguage called with ID:" << newId;
     for (int number = 0; number < m_programLanguags.size(); number++) {
         ProgramLanguage* programLanguage = m_programLanguags[number];
         if (programLanguage->id() == newId) {
-            qCInfo(logDeveloper) << "Matching language found:" << programLanguage->name();
             setCurrentProgramLanguage(programLanguage);
             return;
         }
     }
-    qCWarning(logDeveloper) << "Language ID not found:" << newId;
 }
 
 int CodeDeveloperList::modelId() const{return m_modelId;}
@@ -413,13 +398,10 @@ void CodeDeveloperList::setCurrentProgramLanguage(ProgramLanguage *newCurrentPro
             if (previousGenerator != nullptr) {
                 delete previousGenerator;
             }
-
-            qCInfo(logDeveloper) << "Code generator set for language:" << newCurrentProgramLanguage->name();
         }
     }
 
     m_currentProgramLanguage = newCurrentProgramLanguage;
     emit currentProgramLanguageChanged();
-    qCInfo(logDeveloper) << "Current language changed to:" << newCurrentProgramLanguage->name();
 }
 

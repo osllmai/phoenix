@@ -48,7 +48,6 @@ void ChatServer::onNewConnection(){
     connect(pSocket, &QWebSocket::disconnected, this, &ChatServer::socketDisconnected);
 
     m_clients.insert(pSocket);
-    qCInfo(logDeveloperView) << "New client connected. Total clients:" << m_clients.size();
 }
 
 void ChatServer::processTextMessage(QString message){

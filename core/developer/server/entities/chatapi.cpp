@@ -5,28 +5,20 @@ ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
     m_model(new Model(this)),
     m_modelSettings(new ModelSettings(1, this)),
     m_provider(nullptr)
-{
-    qCInfo(logDeveloper) << "ChatAPI constructed with scheme:" << scheme << "host:" << hostName << "port:" << port;
-}
+{}
 
 ChatAPI::~ChatAPI(){
-    qCInfo(logDeveloper) << "Destroying ChatAPI...";
-
     if(m_provider){
         delete m_provider;
         m_provider = nullptr;
     }
-
-    qCInfo(logDeveloper) << "ChatAPI destroyed successfully.";
 }
 
 QHttpServerResponse ChatAPI::getFullList() const {
-    qCInfo(logDeveloper) << "GET Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
-    qCInfo(logDeveloper) << "GET-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 

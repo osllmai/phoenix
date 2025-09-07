@@ -24,6 +24,7 @@ class HuggingfaceModelList: public QAbstractListModel
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(HuggingfaceModelInfo* hugginfaceInfo READ hugginfaceInfo NOTIFY hugginfaceInfoChanged FINAL)
+    Q_PROPERTY(bool noMoreModels READ noMoreModels NOTIFY noMoreModelsChanged FINAL)
 
 public:
     static HuggingfaceModelList* instance(QObject* parent);
@@ -57,24 +58,31 @@ public:
 
     HuggingfaceModelInfo* hugginfaceInfo();
 
+    bool noMoreModels() const;
+    void setNoMoreModels(bool newNoMoreModels);
+
 signals:
     void countChanged();
     void hugginfaceInfoChanged();
+    void noMoreModelsChanged();
     void requestAddModel(const QString &name, const QString &url, const QString& type,
                   const QString &companyName, const QString &companyIcon);
 
 private slots:
     void onReplyFinished(QNetworkReply *reply);
+    void onModelsReady();
 
 private:
     explicit HuggingfaceModelList(QObject* parent);
     static HuggingfaceModelList* m_instance;
 
     QList<HuggingfaceModel*> m_models;
+    QFutureWatcher<QList<QVariantMap>> m_futureWatcher;
     QList<HuggingfaceModel*> remainingModels;
     QNetworkAccessManager *m_manager;
 
     HuggingfaceModelInfo* m_hugginfaceInfo = nullptr;
+    bool m_noMoreModels = false;
 
     QString cacheFilePath() const;
     void processJson(const QByteArray &rawData);
