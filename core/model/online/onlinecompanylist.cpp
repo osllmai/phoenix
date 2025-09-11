@@ -173,3 +173,12 @@ OnlineCompany* OnlineCompanyList::findCompanyById(int id) {
 
     return (it != m_companys.end()) ? *it : nullptr;
 }
+
+OnlineCompany* OnlineCompanyList::findCompanyByName(const QString name){
+    for (OnlineCompany* model : m_companys) {
+        if (name.contains(model->name())) {
+            return model;
+        }
+    }
+    return nullptr;
+}

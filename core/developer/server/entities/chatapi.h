@@ -23,6 +23,8 @@
 #include "offlinemodellist.h"
 #include "offlinemodellistfilter.h"
 #include "onlinemodellistfilter.h"
+#include "onlinecompanylist.h"
+#include "onlinecompany.h"
 
 #include "model.h"
 #include "modelsettings.h"

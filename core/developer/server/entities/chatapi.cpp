@@ -131,30 +131,30 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
 
 bool ChatAPI::loadModel(QString modelName){
     if (modelName.startsWith("localModel/")) {
-        modelName.remove(0, QString("localModel/").length());
+        // modelName.remove(0, QString("localModel/").length());
         OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
         if (offlineModel && offlineModel->downloadFinished()) {
             setModel(offlineModel);
         } else {
             return false;
         }
-    } /*else {
-        OnlineModel *onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if (onlineModel && onlineModel->installModel()) {
+    } else {
+        OnlineModel* onlineModel = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->onlineModelList()->findModelByModelName(modelName);
+        if(OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->installModel() && onlineModel){
             setModel(onlineModel);
         } else {
             return false;
         }
-    }*/
+    }
     return true;
 }
 
 bool ChatAPI::loadModel(int id){
     if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
         setModel(offline);
-    } /*else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
+    } else if (OnlineModel *online = OnlineCompanyList::instance(nullptr)->findCompanyById(id)->onlineModelList()->currentModel()) {
         setModel(online);
-    }*/ else {
+    } else {
         return false;
     }
     return true;

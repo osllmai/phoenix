@@ -114,7 +114,7 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
         if(m_model->backend() == BackendType::OfflineModel){
             m_provider = new OfflineProvider(this);
         }else if(m_model->backend() == BackendType::OnlineModel){
-            m_provider = new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(),m_model->key());
+            m_provider = new OnlineProvider(this, m_model->modelName(),m_model->key());
         }
 
         //load and unload model
@@ -176,8 +176,6 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
         finalInput.replace("{{input}}", input);
     }
 
-    qInfo()<<finalInput;
-
     m_provider->prompt(finalInput, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
@@ -199,10 +197,15 @@ void Conversation::loadModel(const int id){
     if(offlineModel != nullptr){
         setModel(offlineModel);
     }
-    // OnlineModel* onlineModel = OnlineModelList::instance(nullptr)->findModelById(id);
-    // if(onlineModel != nullptr){
-    //     setModel(onlineModel);
-    // }
+
+    OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
+    if (company) {
+        OnlineModel* onlineModel = company->onlineModelList()->currentModel();
+        if (onlineModel) {
+            setModel(onlineModel);
+        }
+    }
+
     m_isModelChanged = true;
 }
 

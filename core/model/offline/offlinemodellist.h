@@ -21,7 +21,6 @@ class OfflineModelList: public QAbstractListModel
     Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged FINAL)
     Q_PROPERTY(int numberDownload READ numberDownload WRITE setNumberDownload NOTIFY numberDownloadChanged FINAL)
     Q_PROPERTY(bool finishedSetup READ finishedSetup NOTIFY finishedSetupChanged FINAL)
-    Q_PROPERTY(bool noMoreModels READ noMoreModels NOTIFY noMoreModelsChanged FINAL)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -56,7 +55,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    Q_INVOKABLE void loadMore(int count = 5);
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
     Q_INVOKABLE void downloadRequest(const int id, QString directoryPath);
     Q_INVOKABLE void cancelRequest(const int id);
@@ -71,9 +69,6 @@ public:
 
     bool finishedSetup() const;
     void setFinishedSetup(bool newFinishedSetup);
-
-    bool noMoreModels() const;
-    void setNoMoreModels(bool newNoMoreModels);
 
 public slots:
     void addModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
@@ -98,7 +93,6 @@ signals:
     void downloadProgressChanged();
     void downloadingChanged();
     void finishedSetupChanged();
-    void noMoreModelsChanged();
     void requestAddModel(const QString &name, const QString &key);
     void requestDeleteModel(const int id);
     void requestUpdateKeyModel(const int id, const QString &key);
@@ -112,12 +106,10 @@ private:
 
     QList<OfflineModel*> m_models;
     QFutureWatcher<QList<OfflineModel*>> m_sortWatcher;
-    QList<OfflineModel*> remainingModels;
     QList<Download*>downloads;
     double m_downloadProgress;
     int m_numberDownload = 0;
     bool m_finishedSetup = false;
-    bool m_noMoreModels = false;
 
     OfflineModel* at(int index) const;
     void updateDownloadProgress();

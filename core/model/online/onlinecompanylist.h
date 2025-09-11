@@ -17,6 +17,7 @@ class OnlineCompanyList: public QAbstractListModel
 public:
     static OnlineCompanyList* instance(QObject* parent);
     OnlineCompany* findCompanyById(const int id);
+    OnlineCompany* findCompanyByName(const QString name);
 
     Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);

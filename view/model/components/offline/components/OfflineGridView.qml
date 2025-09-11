@@ -23,7 +23,29 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
-    property bool showAllModels: false
+    property int numberOfLineShow: 1
+    property bool showAllDownloadModels: false
+
+
+    function calculationCellNumber(myWidth){
+        if(myWidth >1650)
+            return 5;
+        else if(myWidth >1300)
+            return 4;
+        else if(myWidth >950)
+            return 3;
+        else if(myWidth >550)
+            return 2;
+        else
+            return 1;
+    }
+
+    function calculationCellWidth(myWidth){
+        if(myWidth >550)
+            return myWidth/calculationCellNumber(myWidth);
+        else
+            return Math.max(myWidth,300);
+    }
 
     Column {
         id: column
@@ -46,7 +68,7 @@ Flickable {
             id: gridView
             visible: gridView.count !== 0
             width: parent.width
-            height: flickable.showAllModels? gridView.contentHeight: 300
+            height: flickable.showAllDownloadModels? gridView.contentHeight: 300
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -54,22 +76,27 @@ Flickable {
                 policy: ScrollBar.AlwaysOff
             }
 
-            cellWidth: control.calculationCellWidth()
+            cellWidth: flickable.calculationCellWidth(gridView.width)
             cellHeight: 300
 
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
-            delegate: Item{
-                id: delegateId
-                visible: !flickable.showAllModels ? index < control.calculationCellNumber() : true
-                width: delegateId.visible ? gridView.cellWidth: 0
-                height:  delegateId.visible ? gridView.cellHeight : 0
+            delegate: Loader {
+                id: delegateLoader
+                active: !flickable.showAllDownloadModels
+                        ? index < flickable.calculationCellNumber(gridView.width)
+                        : true
 
-                OfflineBoxDelegate {
-                   id: indoxItem
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+                sourceComponent: Item {
+                    width: gridView.cellWidth
+                    height: 300
+
+                    OfflineBoxDelegate {
+                        anchors.fill: parent
+                        anchors.margins: 18
+                        Behavior on anchors.margins { NumberAnimation { duration: 200 } }
+                    }
                 }
             }
         }
@@ -89,11 +116,11 @@ Flickable {
             MyIcon{
                 id:iconId
                 width: 30; height: 30
-                myIcon: flickable.showAllModels ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                myIcon: flickable.showAllDownloadModels ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        flickable.showAllModels = !flickable.showAllModels
+                        flickable.showAllDownloadModels = !flickable.showAllDownloadModels
                     }
                 }
             }
@@ -114,7 +141,7 @@ Flickable {
             id: gridView2
             visible: gridView2.count !== 0
             width: parent.width
-            height: gridView2.contentHeight
+            height: flickable.numberOfLineShow * 300
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -122,23 +149,49 @@ Flickable {
                 policy: ScrollBar.AlwaysOff
             }
 
-            cellWidth: control.calculationCellWidth()
+            cellWidth: flickable.calculationCellWidth(gridView2.width)
             cellHeight: 300
 
             clip: true
 
             model: offlineModelListFilter
-            delegate: Item{
-               width: gridView2.cellWidth
-               height: gridView2.cellHeight
+            delegate: Loader {
+                id: delegateLoader2
+                active: index < flickable.calculationCellNumber(gridView2.width) * flickable.numberOfLineShow
 
-               OfflineBoxDelegate {
-                   id: indoxItem2
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-               }
+                sourceComponent: Item {
+                    width: gridView2.cellWidth
+                    height: 300
+
+                    OfflineBoxDelegate {
+                        anchors.fill: parent
+                        anchors.margins: 18
+                        Behavior on anchors.margins { NumberAnimation { duration: 200 } }
+                    }
+                }
+            }
+        }
+
+        Item{
+            id: installButton2
+            visible: offlineModelListFilter.count > (flickable.numberOfLineShow * flickable.calculationCellNumber(gridView2.width))
+            width: parent.width - 40
+            height: 45
+
+            MyButton{
+                id: openHistoryId
+                myIcon: "qrc:/media/icon/add.svg"
+                myTextToolTip: "Add More"
+                myText: "Add More"
+                bottonType: Style.RoleEnum.BottonType.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+                Connections {
+                    target: openHistoryId
+                    function onClicked(){
+                        flickable.numberOfLineShow = flickable.numberOfLineShow + 1
+                    }
+                }
             }
         }
     }
 }
-

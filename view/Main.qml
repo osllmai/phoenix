@@ -184,7 +184,7 @@ ApplicationWindow {
         titleText: "Phoenix"
         about: "Version: "  + updateChecker.currentVersion + " (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.08.04
+Date: 2025.09.10
 OS: Windows x64
 "
         textBotton1: "Copy"

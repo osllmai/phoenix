@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 5)
+set(APP_VERSION_PATCH 6)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -26,6 +26,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/model/
     ${CMAKE_SOURCE_DIR}/core/model/offline
     ${CMAKE_SOURCE_DIR}/core/model/online
+    ${CMAKE_SOURCE_DIR}/core/model/huggingface
     ${CMAKE_SOURCE_DIR}/core/conversation
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
@@ -266,24 +267,248 @@ qt_add_resources(app${APP_NAME}
         media/icon/linkedin.svg
 
 
-        media/image_company/user.svg
-        media/image_company/Phoenix.svg
-        media/image_company/Phoenix.png
+        media/image_company/adobe.svg
+        media/image_company/adobefirefly.svg
+        media/image_company/agui.svg
+        media/image_company/ai21.svg
+        media/image_company/ai302.svg
+        media/image_company/ai360.svg
+        media/image_company/aihubmix.svg
+        media/image_company/aimass.svg
+        media/image_company/aionlabs.svg
+        media/image_company/aistudio.svg
+        media/image_company/alephalpha.svg
+        media/image_company/alibaba.svg
+        media/image_company/alibabacloud.svg
+        media/image_company/antgroup.svg
+        media/image_company/anthropic.svg
+        media/image_company/appIcon.aps
+        media/image_company/appIcon.rc
+        media/image_company/aya.svg
+        media/image_company/azure.svg
+        media/image_company/azureai.svg
+        media/image_company/baai.svg
+        media/image_company/baichuan.svg
+        media/image_company/baidu.svg
+        media/image_company/baiducloud.svg
+        media/image_company/baseten.svg
+        media/image_company/bedrock.svg
         media/image_company/Bert.svg
-        media/image_company/Meta.svg
-        media/image_company/Mistral.svg
-        media/image_company/Databricks.svg
-        media/image_company/Microsoft.svg
-        media/image_company/Qwen.svg
-        media/image_company/Replit.svg
+        media/image_company/bfl.svg
         media/image_company/BigCode.png
-        media/image_company/Openai.svg
+        media/image_company/bilibili.svg
+        media/image_company/bilibiliindex.svg
+        media/image_company/bing.svg
+        media/image_company/burncloud.svg
+        media/image_company/bytedance.svg
+        media/image_company/centml.svg
+        media/image_company/cerebras.svg
+        media/image_company/chatglm.svg
+        media/image_company/civitai.svg
         media/image_company/Claude.svg
+        media/image_company/cline.svg
+        media/image_company/clipdrop.svg
+        media/image_company/cloudflare.svg
+        media/image_company/codegeex.svg
+        media/image_company/cogvideo.svg
+        media/image_company/cogview.svg
         media/image_company/Cohere.svg
+        media/image_company/colab.svg
+        media/image_company/comfyui.svg
+        media/image_company/commanda.svg
+        media/image_company/copilot.svg
+        media/image_company/copilotkit.svg
+        media/image_company/coqui.svg
+        media/image_company/coze.svg
+        media/image_company/crewai.svg
+        media/image_company/crusoe.svg
+        media/image_company/cursor.svg
+        media/image_company/dalle.svg
+        media/image_company/Databricks.svg
+        media/image_company/dbrx.svg
+        media/image_company/deepai.svg
+        media/image_company/deepinfra.svg
+        media/image_company/deepmind.svg
         media/image_company/Deepseek.svg
+        media/image_company/dify.svg
+        media/image_company/doc2x.svg
+        media/image_company/docsearch.svg
+        media/image_company/dolphin.svg
+        media/image_company/doubao.svg
+        media/image_company/dreammachine.svg
+        media/image_company/elevenlabs.svg
+        media/image_company/elevenx.svg
+        media/image_company/exa-color.svg
+        media/image_company/fireworks.svg
+        media/image_company/flowith.svg
+        media/image_company/flux.svg
+        media/image_company/friendli.svg
+        media/image_company/gemini.svg
+        media/image_company/gemma.svg
+        media/image_company/giteeai.svg
+        media/image_company/githubcopilot.svg
+        media/image_company/glama.svg
+        media/image_company/glif.svg
+        media/image_company/glmv.svg
         media/image_company/Google.svg
+        media/image_company/goose.svg
+        media/image_company/gradio.svg
+        media/image_company/greptile.svg
+        media/image_company/grok.svg
+        media/image_company/groq.svg
+        media/image_company/hailuo.svg
+        media/image_company/haiper.svg
+        media/image_company/hedra.svg
+        media/image_company/higress.svg
+        media/image_company/Huggingface.svg
+        media/image_company/hunyuan.svg
+        media/image_company/hyperbolic.svg
+        media/image_company/ibm.svg
+        media/image_company/ideogram.svg
+        media/image_company/iflytekcloud.svg
+        media/image_company/inference.svg
+        media/image_company/infermatic.svg
+        media/image_company/infinigence.svg
+        media/image_company/inflection.svg
+        media/image_company/internlm.svg
+        media/image_company/jimeng.svg
+        media/image_company/jina.svg
+        media/image_company/kera.svg
+        media/image_company/kimi.svg
+        media/image_company/kling.svg
+        media/image_company/kluster.svg
+        media/image_company/kolors.svg
+        media/image_company/lambda.svg
+        media/image_company/langchain.svg
+        media/image_company/langfuse.svg
+        media/image_company/langgraph.svg
+        media/image_company/langsmith.svg
+        media/image_company/lepton.svg
+        media/image_company/lg.svg
+        media/image_company/lightricks.svg
+        media/image_company/liquid.svg
+        media/image_company/livekit.svg
+        media/image_company/llamaindex.svg
+        media/image_company/llava.svg
+        media/image_company/lmstudio.svg
+        media/image_company/lobehub.svg
+        media/image_company/lovable.svg
+        media/image_company/luma.svg
+        media/image_company/magic.svg
+        media/image_company/make.svg
+        media/image_company/manus.svg
+        media/image_company/mastra.svg
+        media/image_company/mcp.svg
+        media/image_company/mcpso.svg
+        media/image_company/menlo.svg
+        media/image_company/Meta.svg
+        media/image_company/metaai.svg
+        media/image_company/metagpt.svg
+        media/image_company/Microsoft.svg
+        media/image_company/midjourney.svg
+        media/image_company/minimax.svg
+        media/image_company/Mistral.svg
+        media/image_company/modelscope.svg
+        media/image_company/monica.svg
+        media/image_company/moonshot.svg
+        media/image_company/MPT.svg
+        media/image_company/myshell.svg
+        media/image_company/n8n.svg
+        media/image_company/nebius.svg
+        media/image_company/notebooklm.svg
+        media/image_company/notion.svg
+        media/image_company/nousresearch.svg
+        media/image_company/nova.svg
+        media/image_company/novelai.svg
+        media/image_company/novita.svg
+        media/image_company/nplcloud.svg
         media/image_company/Nvidia.svg
+        media/image_company/ollama.svg
+        media/image_company/Openai.svg
+        media/image_company/openchat.svg
+        media/image_company/openrouter.svg
+        media/image_company/openwebui.svg
+        media/image_company/palm.svg
+        media/image_company/parasail.svg
+        media/image_company/perplexity.svg
+        media/image_company/phidata.svg
+        media/image_company/phind.svg
+        media/image_company/Phoenix.ico
+        media/image_company/Phoenix.jpg
+        media/image_company/Phoenix.png
+        media/image_company/Phoenix.svg
+        media/image_company/pika.svg
+        media/image_company/pixverse.svg
+        media/image_company/player2.svg
+        media/image_company/poe.svg
+        media/image_company/pollinations.svg
+        media/image_company/ppio.svg
+        media/image_company/pydanticai.svg
+        media/image_company/qingyan.svg
+        media/image_company/qiniu.svg
+        media/image_company/Qwen.svg
+        media/image_company/railway.svg
+        media/image_company/recraft.svg
+        media/image_company/replicate.svg
+        media/image_company/Replit.svg
+        media/image_company/rsshub.svg
+        media/image_company/runway.svg
+        media/image_company/rwkv.svg
+        media/image_company/sambanova.svg
+        media/image_company/search1api.svg
+        media/image_company/searchapi.svg
+        media/image_company/sensenova.svg
+        media/image_company/siliconcloud.svg
+        media/image_company/skywork.svg
+        media/image_company/smithery.svg
+        media/image_company/snowflake.svg
+        media/image_company/spark.svg
+        media/image_company/stability.svg
+        media/image_company/Starcoder.svg
+        media/image_company/statecloud.svg
+        media/image_company/stepfun.svg
+        media/image_company/suno.svg
+        media/image_company/sync.svg
+        media/image_company/targon.svg
+        media/image_company/tavily.svg
+        media/image_company/tencent.svg
+        media/image_company/tencentcloud.svg
+        media/image_company/tiangong.svg
+        media/image_company/tii.svg
+        media/image_company/together.svg
+        media/image_company/topazlabs.svg
+        media/image_company/trae.svg
+        media/image_company/tripo.svg
+        media/image_company/udio.svg
+        media/image_company/unstructured.svg
+        media/image_company/upstage.svg
+        media/image_company/user.svg
+        media/image_company/v0.svg
+        media/image_company/vectorizerai.svg
+        media/image_company/vercel.svg
+        media/image_company/vertexai.svg
+        media/image_company/vidu.svg
+        media/image_company/viggle.svg
+        media/image_company/vllm.svg
+        media/image_company/volcengine.svg
+        media/image_company/voyage.svg
+        media/image_company/wenxin.svg
         media/image_company/Whisper.svg
+        media/image_company/windsurf.svg
+        media/image_company/workersai.svg
+        media/image_company/xai.svg
+        media/image_company/xinference.svg
+        media/image_company/xuanyuan.svg
+        media/image_company/yandex.svg
+        media/image_company/yi.svg
+        media/image_company/youmind.svg
+        media/image_company/yuanbao.svg
+        media/image_company/zai.svg
+        media/image_company/zapier.svg
+        media/image_company/zeabur.svg
+        media/image_company/zeroone.svg
+        media/image_company/zhipu.svg
+
 
         media/fonts/DMSans-Regular.ttf
 
@@ -360,6 +585,17 @@ qt_add_qml_module(app${APP_NAME}
         view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml
         view/model/components/online/components/components/OnlineDelegateInfoBox.qml
         view/model/components/online/components/components/OnlineInformationModel.qml
+
+        view/model/components/huggingface/HuggingfaceModelView.qml
+        view/model/components/huggingface/HuggingfaceHeader.qml
+        view/model/components/huggingface/HuggingfaceBody.qml
+        view/model/components/huggingface/components/HuggingfaceGridView.qml
+        view/model/components/huggingface/components/HuggingfaceListView.qml
+        view/model/components/huggingface/components/HuggingfaceBoxDelegate.qml
+        view/model/components/huggingface/components/HuggingfaceRowDelegate.qml
+        view/model/components/huggingface/components/components/HuggingfaceDelegateTitleAndCopyButton.qml
+        view/model/components/huggingface/components/components/HuggingfaceDelegateInfoBox.qml
+        view/model/components/huggingface/components/components/HuggingfaceInformationModel.qml
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -443,6 +679,20 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/UpdateAvailable.qml
     QML_FILES view/footer/DownloadProgressComboBox.qml
     QML_FILES view/footer/DownloadingDelegate.qml
+    QML_FILES view/model/components/offline/components/SearchOfflineModel.qml
+    QML_FILES view/model/components/offline/components/components/SearchTagPupup.qml
+    SOURCES core/model/huggingface/huggingfacemodel.h core/model/huggingface/huggingfacemodel.cpp
+    SOURCES core/model/huggingface/huggingfacemodellist.h core/model/huggingface/huggingfacemodellist.cpp
+    SOURCES core/model/huggingface/huggingfacemodellistfilter.h core/model/huggingface/huggingfacemodellistfilter.cpp
+    SOURCES core/model/online/onlinecompany.h core/model/online/onlinecompany.cpp
+    SOURCES core/model/online/onlinecompanylist.h core/model/online/onlinecompanylist.cpp
+    SOURCES core/model/huggingface/huggingfacemodelinfo.h core/model/huggingface/huggingfacemodelinfo.cpp
+    SOURCES core/model/offline/offlinecompanylist.h core/model/offline/offlinecompanylist.cpp
+    QML_FILES view/model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml
+    SOURCES core/model/huggingface/huggingfacestruct.h
+    QML_FILES view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml
+    QML_FILES view/component_library/model/components/online/OnlineModelListComboBox.qml
+    QML_FILES view/component_library/model/components/online/OnlineModelDelegateComboBox.qml
 )
 
 #for show logger-contect (file name, message line, ...)

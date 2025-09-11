@@ -23,6 +23,7 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
+    property int numberOfLineShow: 3
     property bool showAllModels: false
 
     Column {
@@ -46,7 +47,7 @@ Flickable {
             id: offlineFinishedDownloadModelList
             visible: offlineFinishedDownloadModelList.count !== 0
 
-            height: offlineFinishedDownloadModelList.contentHeight
+            height: flickable.showAllModels? offlineFinishedDownloadModelList.contentHeight: (3*(window.isDesktopSize ? 65 : 90))
             width: parent.width
 
             clip: true
@@ -59,33 +60,26 @@ Flickable {
 
             model: offlineModelListFinishedDownloadFilter
 
-            delegate: Item{
-               id: delegateId
-               visible: !flickable.showAllModels ? index < 3 : true
-               width: offlineFinishedDownloadModelList.width
-               height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
+            delegate:  Loader {
+                id: delegateLoader
+                active: !flickable.showAllModels ? index < 3 : true
 
-               OfflineRowDelegate {
-                   id: indoxItem
-                   anchors.fill: parent
-                   anchors.leftMargin: 10
-                   anchors.rightMargin: 10
-                   anchors.topMargin: 5
-                   anchors.bottomMargin: 5
-               }
+                sourceComponent: Item{
+                   id: delegateId
+                   width: offlineFinishedDownloadModelList.width
+                   height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
+
+                   OfflineRowDelegate {
+                       id: indoxItem
+                       anchors.fill: parent
+                       anchors.leftMargin: 10
+                       anchors.rightMargin: 10
+                       anchors.topMargin: 5
+                       anchors.bottomMargin: 5
+                   }
+                }
             }
         }
-
-        // MyButton{
-        //     id: installButton
-        //     visible: offlineModelListFinishedDownloadFilter.count > 3
-        //     myText: flickable.showAllModels ? "Show Less" : "Show More"
-        //     anchors.horizontalCenter: parent.horizontalCenter
-        //     bottonType: Style.RoleEnum.BottonType.Primary
-        //     onClicked:{
-        //         flickable.showAllModels = !flickable.showAllModels
-        //     }
-        // }
 
         Row{
             id: installButton
@@ -139,18 +133,45 @@ Flickable {
             }
 
             model: offlineModelListFilter
-            delegate: Item{
-               width: allModelList.width
-               height: window.isDesktopSize? 65:90
+            delegate: Loader {
+                id: delegateLoader2
+                active: index < flickable.numberOfLineShow
 
-               OfflineRowDelegate {
-                   id: indoxItem2
-                   anchors.fill: parent
-                   anchors.leftMargin: 10
-                   anchors.rightMargin: 10
-                   anchors.topMargin: 5
-                   anchors.bottomMargin: 5
-               }
+                sourceComponent: Item{
+                   width: allModelList.width
+                   height: window.isDesktopSize? 65:90
+
+                   OfflineRowDelegate {
+                       id: indoxItem2
+                       anchors.fill: parent
+                       anchors.leftMargin: 10
+                       anchors.rightMargin: 10
+                       anchors.topMargin: 5
+                       anchors.bottomMargin: 5
+                   }
+                }
+            }
+        }
+
+        Item{
+            id: installButton2
+            visible: offlineModelListFilter.count > flickable.numberOfLineShow
+            width: parent.width - 40
+            height: 45
+
+            MyButton{
+                id: openHistoryId
+                myIcon: "qrc:/media/icon/add.svg"
+                myTextToolTip: "Add More"
+                myText: "Add More"
+                bottonType: Style.RoleEnum.BottonType.Secondary
+                anchors.horizontalCenter: parent.horizontalCenter
+                Connections {
+                    target: openHistoryId
+                    function onClicked(){
+                        flickable.numberOfLineShow = flickable.numberOfLineShow + 5
+                    }
+                }
             }
         }
     }

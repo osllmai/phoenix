@@ -6,10 +6,10 @@ import '../../../../model/components/online/components/components'
 
 Dialog {
     id: settingsDialogId
-    x: (parent.width - width) / 2
-    y: (parent.height - height) / 2
-    width: Math.min( 600 , parent.width-40)
-    height: Math.min( 50 , parent.height-40)
+    x: (window.width - width) / 2
+    y: (window.height - height) / 2
+    width: Math.min( 600 , window.width-40)
+    height: Math.min( 50 , window.height-40)
 
     focus: true
     modal: true

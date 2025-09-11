@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import Qt5Compat.GraphicalEffects
 
 import '../../../style' as Style
+import '../../../button'
 
 Item {
     id: root
@@ -13,19 +14,28 @@ Item {
     property int myValue
     signal sendValue(int value)
 
+    property bool needCopy: false
+
     Row{
         id: textEditor
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: /*10*/0
         height: parent.height
         width: parent.width - 5
-        Label {
+        TextArea {
             id: textId
             text: root.myText
-            width: parent.width - valueSliderBoxId.width
+            readOnly: true
+            width: parent.width - valueSliderBoxId.width - (root.needCopy? copyId.width: 0)
             color: Style.Colors.textTitle
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 10
+        }
+        MyCopyButton{
+            id: copyId
+            visible: root.needCopy
+            myText: textId
+            anchors.verticalCenter: parent.verticalCenter
         }
         Rectangle{
             id:valueSliderBoxId

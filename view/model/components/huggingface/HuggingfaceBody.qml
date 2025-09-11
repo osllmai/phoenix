@@ -9,32 +9,6 @@ Item {
     id: control
     clip:true
 
-    function calculationCellNumber(){
-        if(gridView.width >1650)
-            return 5;
-        else if(gridView.width >1300)
-            return 4;
-        else if(gridView.width >950)
-            return 3;
-        else if(gridView.width >550)
-            return 2;
-        else
-            return 1;
-    }
-
-    function calculationCellWidth(){
-        if(gridView.width >1650)
-            return gridView.width/calculationCellNumber();
-        else if(gridView.width >1300)
-            return gridView.width/calculationCellNumber();
-        else if(gridView.width >950)
-            return gridView.width/calculationCellNumber();
-        else if(gridView.width >550)
-            return gridView.width/calculationCellNumber();
-        else
-            return Math.max(gridView.width,300);
-    }
-
     HuggingfaceGridView {
         id: gridView
         visible: (gridView.count !== 0) && (window.modelPageView === "gridView")

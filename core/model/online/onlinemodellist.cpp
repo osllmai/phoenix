@@ -160,6 +160,7 @@ void OnlineModelList::addModel(const QVariantMap &m)
 
     if(m_models.size() == 1)
         selectCurrentModelRequest(id);
+
     // connect(model, &OnlineModel::modelChanged, this, [=]() {
     //     int row = m_models.indexOf(model);
     //     if (row != -1) {

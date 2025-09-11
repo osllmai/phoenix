@@ -94,28 +94,6 @@ QHash<int, QByteArray> OfflineModelList::roleNames() const {
     return roles;
 }
 
-void OfflineModelList::loadMore(int count) {
-    if (remainingModels.isEmpty()) {
-        setNoMoreModels(true);
-        return;
-    }
-
-    int actualCount = qMin(count, remainingModels.count());
-
-    for (int i = 0; i < actualCount; ++i) {
-        beginInsertRows(QModelIndex(), m_models.count(), m_models.count());
-        OfflineModel* m = remainingModels.takeFirst();
-        m->setParent(this);
-        m_models.append(m);
-        endInsertRows();
-        emit countChanged();
-    }
-
-    if (remainingModels.isEmpty()) {
-        setNoMoreModels(true);
-    }
-}
-
 bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, int role) {
     OfflineModel* model = m_models[index.row()]; // The person to edit
     bool somethingChanged{false};
@@ -138,9 +116,6 @@ bool OfflineModelList::setData(const QModelIndex &index, const QVariant &value, 
 void OfflineModelList::finalizeSetup(){
     setFinishedSetup(true);
     sortAsync(NameRole , Qt::AscendingOrder);
-    if (remainingModels.isEmpty()) {
-        setNoMoreModels(true);
-    }
 }
 
 void OfflineModelList::sortAsync(int role, Qt::SortOrder order) {
@@ -197,11 +172,17 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
 
     directoryPath.remove("file:///");
 
-    model->setKey(directoryPath+ "/" + model->fileName());
+    QString cleanFileName = model->fileName();
+    cleanFileName = cleanFileName.section('/', -1);
+    cleanFileName = cleanFileName.section('\\', -1);
+
+    model->setKey(directoryPath + "/" + cleanFileName);
     model->setIsDownloading(true);
 
+    qInfo()<<model->key();
+
     Download *download = new Download(id, model->url(), model->key(), this);
-    if(downloads.size()<3){
+    if(downloads.size() < 3){
         connect(download, &Download::downloadProgress, this, &OfflineModelList::handleDownloadProgress, Qt::QueuedConnection);
         connect(download, &Download::downloadFinished, this, &OfflineModelList::handleDownloadFinished, Qt::QueuedConnection);
         connect(download, &Download::downloadFailed, this, &OfflineModelList::handleDownloadFailed, Qt::QueuedConnection);
@@ -211,6 +192,8 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole});
 }
+
+
 
 void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal){
 
@@ -328,14 +311,7 @@ void OfflineModelList::addModel(Company* company, const double fileSize, const i
                                            id, "localModel/"+modelName, name, key, addModelTime, isLike, type, backend, icon, information,
                                            promptTemplate, systemPrompt, expireModelTime, recommended, m_instance);
 
-    if(finishedSetup()){
-        m_models.append(model);
-    }else{
-        if(m_models.size()<=5)
-            m_models.append(model);
-        else
-            remainingModels.append(model);
-    }
+    m_models.append(model);
 
     if(finishedSetup()){
         endInsertRows();
@@ -413,14 +389,5 @@ void OfflineModelList::setFinishedSetup(bool newFinishedSetup){
     if (m_finishedSetup == newFinishedSetup)
         return;
     m_finishedSetup = newFinishedSetup;
-    qInfo()<< m_finishedSetup;
     emit finishedSetupChanged();
-}
-
-bool OfflineModelList::noMoreModels() const{return m_noMoreModels;}
-void OfflineModelList::setNoMoreModels(bool newNoMoreModels){
-    if (m_noMoreModels == newNoMoreModels)
-        return;
-    m_noMoreModels = newNoMoreModels;
-    emit noMoreModelsChanged();
 }

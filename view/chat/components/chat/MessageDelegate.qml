@@ -33,14 +33,6 @@ T.Button {
         Row {
             id: headerId
             width: parent.width
-            // MyIcon {
-            //     id: logoModelId
-            //     visible: model.icon !== "qrc:/media/image_company/user.svg"
-            //     myIcon: model.icon
-            //     iconType: Style.RoleEnum.IconType.Image
-            //     enabled: false
-            //     width: 35; height: 35
-            // }
 
             Item {
                 id: logoModelId

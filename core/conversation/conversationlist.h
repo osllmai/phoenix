@@ -20,7 +20,7 @@ class ConversationList: public QAbstractListModel
 
     Q_PROPERTY(int modelId READ modelId WRITE setModelId NOTIFY modelIdChanged FINAL)
     Q_PROPERTY(QString modelIcon READ modelIcon NOTIFY modelIconChanged FINAL)
-    Q_PROPERTY(QString modelText READ modelText NOTIFY modelTextChanged FINAL)
+    Q_PROPERTY(QString modelName READ modelName NOTIFY modelNameChanged FINAL)
     Q_PROPERTY(QString modelPromptTemplate READ modelPromptTemplate NOTIFY modelPromptTemplateChanged FINAL)
     Q_PROPERTY(QString modelSystemPrompt READ modelSystemPrompt NOTIFY modelSystemPromptChanged FINAL)
     Q_PROPERTY(bool modelSelect READ modelSelect NOTIFY modelSelectChanged FINAL)
@@ -56,7 +56,7 @@ public:
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);
     Q_INVOKABLE void editTitleRequest(const int id, const QString &title);
-    Q_INVOKABLE void setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
+    Q_INVOKABLE void setModelRequest(const int id, const QString &name,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt);
     Q_INVOKABLE void likeMessageRequest(const int conversationId, const int messageId, const int like);
 
     Conversation *currentConversation();
@@ -74,8 +74,8 @@ public:
     QString modelIcon() const;
     void setModelIcon(const QString &newModelIcon);
 
-    QString modelText() const;
-    void setModelText(const QString &newModelText);
+    QString modelName() const;
+    void setModelName(const QString &newModelText);
 
     bool modelSelect() const;
     void setModelSelect(bool newModelSelect);
@@ -113,7 +113,7 @@ signals:
     void isEmptyConversationChanged();
     void modelIdChanged();
     void modelIconChanged();
-    void modelTextChanged();
+    void modelNameChanged();
     void modelSelectChanged();
     void modelPromptTemplateChanged();
     void modelSystemPromptChanged();
@@ -155,7 +155,7 @@ private:
 
     int m_modelId = -1;
     QString m_modelIcon;
-    QString m_modelText;
+    QString m_modelName;
     QString m_modelPromptTemplate;
     QString m_modelSystemPrompt;
     bool m_modelSelect;

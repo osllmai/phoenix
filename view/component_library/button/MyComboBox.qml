@@ -84,7 +84,7 @@ ComboBox {
     popup: Popup {
         id: popupId
         y: comboBoxId.height - 4
-        x: comboBoxId.x - 10
+        x: - 10
         width: comboBoxId.width + 20
         implicitHeight: Math.min(contentItem.implicitHeight + 50, 260)
 

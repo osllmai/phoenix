@@ -17,18 +17,6 @@ ListView {
             id: indoxItem
            anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
            Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-           // onHoveredChanged:{
-           //     if(indoxItem.hovered && (appBodyId.width> onlineModelInformation.width + indoxItem.width + 225))
-           //         onlineModelInformation.open()
-           //     else
-           //         onlineModelInformation.close()
-           // }
-
-           // OnlineCurrentModelinformation{
-           //     id: onlineModelInformation
-           //     x: indoxItem.width + 20
-           //     y: -onlineModelInformation.height/2 + indoxItem.height
-           // }
        }
     }
 }

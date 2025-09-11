@@ -23,7 +23,27 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
-    property bool showAllModels: false
+    property int numberOfLineShow: 1
+
+    function calculationCellNumber(myWidth){
+        if(myWidth >1650)
+            return 5;
+        else if(myWidth >1300)
+            return 4;
+        else if(myWidth >950)
+            return 3;
+        else if(myWidth >550)
+            return 2;
+        else
+            return 1;
+    }
+
+    function calculationCellWidth(myWidth){
+        if(myWidth >550)
+            return myWidth/calculationCellNumber(myWidth);
+        else
+            return Math.max(myWidth,300);
+    }
 
     Column {
         id: column
@@ -34,12 +54,7 @@ Flickable {
             id: gridView2
             visible: gridView2.count !== 0
             width: parent.width
-            height: gridView2.contentHeight
-
-            cellWidth: control.calculationCellWidth()
-            cellHeight: 300
-
-            clip: true
+            height: flickable.numberOfLineShow * 300
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -47,24 +62,33 @@ Flickable {
                 policy: ScrollBar.AlwaysOff
             }
 
-            model: huggingfaceModelList
-            delegate: Item{
-               width: gridView2.cellWidth
-               height: gridView2.cellHeight
+            cellWidth: flickable.calculationCellWidth(gridView2.width)
+            cellHeight: 300
 
-               HuggingfaceBoxDelegate {
-                   id: indoxItem2
-                   anchors.fill: parent; anchors.margins: /*indoxItem.hovered? 18: 20*/18
-                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-               }
+            clip: true
+
+            model: huggingfaceModelList
+            delegate: Loader {
+                id: delegateLoader2
+                active: index < flickable.calculationCellNumber(gridView2.width) * flickable.numberOfLineShow
+
+                sourceComponent: Item {
+                    width: gridView2.cellWidth
+                    height: 300
+
+                    HuggingfaceBoxDelegate {
+                        anchors.fill: parent
+                        anchors.margins: 18
+                        Behavior on anchors.margins { NumberAnimation { duration: 200 } }
+                    }
+                }
             }
         }
         Item{
             id: installButton
-            // visible: offlineModelListFinishedDownloadFilter.count > 3
+            visible: huggingfaceModelList.count > (flickable.numberOfLineShow * flickable.calculationCellNumber(gridView2.width))
             width: parent.width - 40
             height: 45
-            // anchors.horizontalCenter: parent.horizontalCenter
 
             MyButton{
                 id: openHistoryId
@@ -76,6 +100,7 @@ Flickable {
                 Connections {
                     target: openHistoryId
                     function onClicked(){
+                        flickable.numberOfLineShow = flickable.numberOfLineShow + 1
                         huggingfaceModelList.loadMore()
                     }
                 }

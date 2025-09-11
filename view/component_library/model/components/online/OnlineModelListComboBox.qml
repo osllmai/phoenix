@@ -6,49 +6,54 @@ import "../../../button"
 
 ComboBox {
     id: comboBoxId
-    height: 35
-    width: smallComboBox? 40: 160
+    height: comboBoxId.smallComboBox? 30: 35
+    width: comboBoxId.smallComboBox? 30: 160
     font.pixelSize: 12
 
     property bool smallComboBox: false
 
     Accessible.role: Accessible.ComboBox
-    contentItem: Row {
-        id: contentRow
-        height: comboBoxId.height
-        width: comboBoxId.width
-        // MyIcon{
-        //     id:iconId
-        //     width: 33; height: 33
-        //     myIcon: comboBoxId.modelIcon
-        //     anchors.topMargin: 0
-        //     iconType: Style.RoleEnum.IconType.Image
-        //     MouseArea {
-        //         anchors.fill: parent
-        //         onClicked: {
-        //             comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
-        //         }
-        //     }
-        // }
-        Label {
-            id: textId
-            visible: !smallComboBox
-            text: "   " +(onlineModelList.currentModel? onlineModelList.currentModel.name: "")
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - iconOpenId.width /*- iconId.width*/
-            color: Style.Colors.textTitle
-            verticalAlignment: Text.AlignLeft
-            elide: Text.ElideRight
-            clip: true
-        }
+    contentItem: Item{
         MyIcon{
-            id: iconOpenId
+            id: iconOpenId2
+            visible: comboBoxId.smallComboBox
             myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
             anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                }
+            }
+        }
+
+        Row {
+            id: contentRow
+            visible: !comboBoxId.smallComboBox
+            height: comboBoxId.height
+            width: comboBoxId.width
+
+            Label {
+                id: textId
+                text: "   " +(onlineModelList.currentModel? onlineModelList.currentModel.name: "")
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - iconOpenId.width /*- iconId.width*/
+                color: Style.Colors.textTitle
+                verticalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
+                clip: true
+            }
+
+            MyIcon{
+                id: iconOpenId
+                myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                    }
                 }
             }
         }
@@ -92,19 +97,6 @@ ComboBox {
                        id: indoxItem
                        anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
                        Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-                       // onHoveredChanged:{
-                       //     console.log("HIHIHHIIHIHIHIIHhi")
-                       //     if(indoxItem.hovered/* && (appBodyId.width> onlineModelInformation.width + indoxItem.width + 225)*/)
-                       //         onlineModelInformation.open()
-                       //     else
-                       //         onlineModelInformation.close()
-                       // }
-
-                       // OnlineCurrentModelinformation{
-                       //     id: onlineModelInformation
-                       //     x: indoxItem.width + 20
-                       //     y: -onlineModelInformation.height/2 + indoxItem.height
-                       // }
                    }
                 }
             }

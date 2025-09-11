@@ -37,6 +37,7 @@ T.Button {
             Label {
                 id: modelNameId
                 text: onlineModelList.currentModel.name
+
                 width: backgroundId.width -
                        logoModelId.width -
                        copyId.width -
@@ -59,7 +60,7 @@ T.Button {
             }
             MyCopyButton{
                 id: copyId
-                myText: TextArea{text: model.name/*modelName*/}
+                myText: TextArea{text: onlineModelList.currentModel.modelName}
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
             MyButton{

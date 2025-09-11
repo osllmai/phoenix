@@ -147,79 +147,54 @@ Column {
         }
     }
 
-    // ScrollView {
-    //     id: mainScroll
-    //     width: Math.min(parent.width, 250)
-    //     height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
+    ListView {
+        id: listView
+        width:  parent.width
+        height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
 
-        // Column {
-        //     id: scrollContent
-        //     width: parent.width
-        //     spacing: 10
+        clip: true
 
-            ListView {
-                id: listView
-                width:  parent.width
-                height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
+        interactive: listView.contentHeight > listView.height
+        boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                clip: true
+        flickDeceleration: 200
+        maximumFlickVelocity: 12000
 
-                interactive: listView.contentHeight > listView.height
-                boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+        ScrollBar.vertical: ScrollBar {
+            policy: listView.contentHeight > listView.height
+                    ? ScrollBar.AlwaysOn
+                    : ScrollBar.AlwaysOff
+        }
 
-                flickDeceleration: 200
-                maximumFlickVelocity: 12000
+        model:  (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.siblings:[])
+        delegate: Row {
+            width: listView.width
+            height: 40
+            spacing: 10
 
-                ScrollBar.vertical: ScrollBar {
-                    policy: listView.contentHeight > listView.height
-                            ? ScrollBar.AlwaysOn
-                            : ScrollBar.AlwaysOff
-                }
-
-                model:  (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.siblings:[])
-                delegate: Row {
-                    width: Math.min(parent.width, 250)
-                    height: 40
-                    spacing: 10
-
-                    Label {
-                        text: modelData.rfilename
-                        color: Style.Colors.textInformation
-                        font.pixelSize: 10
-                        // horizontalAlignment: Text.AlignRight
-                        // verticalAlignment: Text.AlignVCenter
-                        anchors.verticalCenter: dounloadButton.verticalCenter
-                        elide: Label.ElideRight
-                        width: parent.width - dounloadButton.width - 20
-                    }
-
-                    MyButton {
-                        id: dounloadButton
-                        myText: "Add Model"
-                        bottonType: Style.RoleEnum.BottonType.Primary
-                        height: 30
-                        onClicked: {
-                            huggingfaceModelList.addModel(
-                                huggingfaceModelList.hugginfaceInfo.id,
-                                modelData.rfilename,
-                                huggingfaceModelList.hugginfaceInfo.pipeline_tag,
-                                huggingfaceModelList.hugginfaceInfo.icon
-                            )
-                        }
-                    }
-                }
+            Label {
+                text: modelData.rfilename
+                color: Style.Colors.textInformation
+                font.pixelSize: 10
+                anchors.verticalCenter: dounloadButton.verticalCenter
+                elide: Label.ElideRight
+                width: parent.width - dounloadButton.width - 20
             }
 
-        //     Label {
-        //         text: huggingfaceModelList.hugginfaceInfo.readMe
-        //         wrapMode: Text.Wrap
-        //         color: Style.Colors.textInformation
-        //         font.pixelSize: 10
-        //         horizontalAlignment: Text.AlignLeft
-        //         verticalAlignment: Text.AlignTop
-        //         width: parent.width
-        //     }
-        // }
-    // }
+            MyButton {
+                id: dounloadButton
+                myText: "Add Model"
+                bottonType: Style.RoleEnum.BottonType.Primary
+                height: 30
+                onClicked: {
+                    huggingfaceModelList.addModel(
+                        huggingfaceModelList.hugginfaceInfo.id,
+                        modelData.rfilename,
+                        huggingfaceModelList.hugginfaceInfo.pipeline_tag,
+                        huggingfaceModelList.hugginfaceInfo.icon
+                    )
+                }
+            }
+        }
+    }
 }
-
