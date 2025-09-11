@@ -18,7 +18,7 @@ Item {
         Connections{
             target: inputApikeyFill
             function onSaveAPIKey(apiKey){
-                onlineModelList.saveAPIKey(model.id, apiKey)
+                onlineCompanyList.saveAPIKey(model.id, apiKey)
             }
         }
     }
@@ -30,7 +30,7 @@ Item {
         Connections{
             target: inputApikey
             function onSaveAPIKey(apiKey){
-                onlineModelList.saveAPIKey(model.id, apiKey)
+                onlineCompanyList.saveAPIKey(model.id, apiKey)
             }
         }
     }
@@ -132,7 +132,7 @@ Item {
                     speechToText.modelPath = ""
                     speechToText.modelSelect = false
                 }
-                onlineModelList.deleteRequest(model.id)
+                onlineCompanyList.deleteRequest(model.id)
                 deleteApikeylVerificationId.close()
             }
         }

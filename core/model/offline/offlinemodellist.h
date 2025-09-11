@@ -6,12 +6,12 @@
 #include <QAbstractListModel>
 #include <algorithm>
 #include <QFileInfo>
-
 #include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "offlinemodel.h"
-#include "../company.h"
-#include "./download.h"
+#include "company.h"
+#include "download.h"
 
 class OfflineModelList: public QAbstractListModel
 {
@@ -20,6 +20,7 @@ class OfflineModelList: public QAbstractListModel
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
     Q_PROPERTY(double downloadProgress READ downloadProgress NOTIFY downloadProgressChanged FINAL)
     Q_PROPERTY(int numberDownload READ numberDownload WRITE setNumberDownload NOTIFY numberDownloadChanged FINAL)
+    Q_PROPERTY(bool finishedSetup READ finishedSetup NOTIFY finishedSetupChanged FINAL)
 
 public:
     static OfflineModelList* instance(QObject* parent );
@@ -30,7 +31,7 @@ public:
     enum OfflineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
-        ModeNameRole,
+        ModelNameRole,
         KeyRole,
         InformationRole,
         TypeRole,
@@ -59,45 +60,56 @@ public:
     Q_INVOKABLE void cancelRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void addRequest(QString directoryPath);
+    Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
     double downloadProgress() const;
-
 
     int numberDownload() const;
     void setNumberDownload(int newNumberDownload);
 
+    bool finishedSetup() const;
+    void setFinishedSetup(bool newFinishedSetup);
+
 public slots:
-    void addModel(const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
+    void addModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                   const QString& parameters, const QString& quant, const double downloadPercent,
                   const bool isDownloading, const bool downloadFinished,
 
                   const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
-                  const bool isLike, Company* company, const QString& type, const BackendType backend,
+                  const bool isLike, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
                   const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
 
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);
     void handleDownloadFailed(const int id, const QString &error);
+    void finalizeSetup();
+
+private slots:
+    void handleSortingFinished();
 
 signals:
     void countChanged();
     void downloadProgressChanged();
     void downloadingChanged();
+    void finishedSetupChanged();
     void requestAddModel(const QString &name, const QString &key);
     void requestDeleteModel(const int id);
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
     void numberDownloadChanged();
+    void sortingFinished();
 
 private:
     explicit OfflineModelList(QObject* parent);
     static OfflineModelList* m_instance;
 
     QList<OfflineModel*> m_models;
+    QFutureWatcher<QList<OfflineModel*>> m_sortWatcher;
     QList<Download*>downloads;
     double m_downloadProgress;
     int m_numberDownload = 0;
+    bool m_finishedSetup = false;
 
     OfflineModel* at(int index) const;
     void updateDownloadProgress();

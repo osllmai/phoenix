@@ -11,6 +11,8 @@
 #include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
+#include "../model/online/onlinecompanylist.h"
+#include "../model/online/onlinecompany.h"
 #include "../provider/provider.h"
 
 #include <QLoggingCategory>

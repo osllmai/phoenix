@@ -5,28 +5,20 @@ ChatAPI::ChatAPI(const QString &scheme, const QString &hostName, int port)
     m_model(new Model(this)),
     m_modelSettings(new ModelSettings(1, this)),
     m_provider(nullptr)
-{
-    qCInfo(logDeveloper) << "ChatAPI constructed with scheme:" << scheme << "host:" << hostName << "port:" << port;
-}
+{}
 
 ChatAPI::~ChatAPI(){
-    qCInfo(logDeveloper) << "Destroying ChatAPI...";
-
     if(m_provider){
         delete m_provider;
         m_provider = nullptr;
     }
-
-    qCInfo(logDeveloper) << "ChatAPI destroyed successfully.";
 }
 
 QHttpServerResponse ChatAPI::getFullList() const {
-    qCInfo(logDeveloper) << "GET Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
 QHttpServerResponse ChatAPI::getItem(qint64 itemId) const{
-    qCInfo(logDeveloper) << "GET-Item Request";
     return QHttpServerResponse(QHttpServerResponder::StatusCode::Ok);
 }
 
@@ -108,7 +100,7 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
 
     m_provider = (m_model->backend() == BackendType::OfflineModel)
                      ? static_cast<Provider *>(new OfflineProvider(this))
-                     : static_cast<Provider *>(new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(), m_model->key()));
+                     : static_cast<Provider *>(new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(), m_model->key()));
 
     connect(this, &ChatAPI::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
     connect(m_provider, &Provider::requestLoadModelResult, this, &ChatAPI::loadModelResult, Qt::QueuedConnection);
@@ -139,7 +131,7 @@ void ChatAPI::prompt(const std::optional<QJsonObject> json){
 
 bool ChatAPI::loadModel(QString modelName){
     if (modelName.startsWith("localModel/")) {
-        modelName.remove(0, QString("localModel/").length());
+        // modelName.remove(0, QString("localModel/").length());
         OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
         if (offlineModel && offlineModel->downloadFinished()) {
             setModel(offlineModel);
@@ -147,8 +139,8 @@ bool ChatAPI::loadModel(QString modelName){
             return false;
         }
     } else {
-        OnlineModel *onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if (onlineModel && onlineModel->installModel()) {
+        OnlineModel* onlineModel = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->onlineModelList()->findModelByModelName(modelName);
+        if(OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->installModel() && onlineModel){
             setModel(onlineModel);
         } else {
             return false;
@@ -160,7 +152,7 @@ bool ChatAPI::loadModel(QString modelName){
 bool ChatAPI::loadModel(int id){
     if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
         setModel(offline);
-    } else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
+    } else if (OnlineModel *online = OnlineCompanyList::instance(nullptr)->findCompanyById(id)->onlineModelList()->currentModel()) {
         setModel(online);
     } else {
         return false;

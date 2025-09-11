@@ -1,10 +1,18 @@
 #include "conversationlistfilter.h"
 #include "conversationlist.h"
 
-ConversationListFilter::ConversationListFilter(QAbstractItemModel *model, QObject *parent)
+ConversationListFilter::ConversationListFilter(QAbstractItemModel *models, QObject *parent)
     : QSortFilterProxyModel(parent) {
-    setSourceModel(model);
+
+    QSortFilterProxyModel::setSourceModel(models);
+    setDynamicSortFilter(true);
+}
+
+void ConversationListFilter::finalizeSetup(){
+    setFilterCaseSensitivity(Qt::CaseInsensitive);
+    setFilterRole(ConversationList::ConversationRoles::TitleRole);
     setSortRole(ConversationList::ConversationRoles::QDateTimeRole);
+    setDynamicSortFilter(true);
     sort(0, Qt::DescendingOrder);
 }
 

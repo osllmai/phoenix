@@ -63,7 +63,7 @@ T.Popup {
                     iconType: Style.RoleEnum.IconType.Like
                     isNeedAnimation: true
                     onClicked: {
-                        onlineModelList.likeRequest(model.id, !model.isLike)
+                        onlineCompanyList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }

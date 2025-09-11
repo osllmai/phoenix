@@ -11,12 +11,15 @@ Item {
 
     OfflineHeader{
         id: headerId
+        width: parent.width - (window.isDesktopSize? 330: 210)
+        anchors.top: parent.top; anchors.topMargin: 12
+        anchors.right: parent.right; anchors.rightMargin:12
     }
     OfflineBody{
         id:offlineBodyId
-        anchors.top: headerId.bottom; anchors.bottom: parent.bottom
+        anchors.top: headerId.bottom; anchors.topMargin: 8
+        anchors.bottom: parent.bottom
         anchors.left: parent.left; anchors.right: parent.right
-        anchors.topMargin: 8
         clip:true
     }
     ToolButton {

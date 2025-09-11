@@ -7,17 +7,7 @@ OnlineModelListFilter::OnlineModelListFilter(QAbstractItemModel *model, QObject 
 {
     QSortFilterProxyModel::setSourceModel(model);
 
-    // setFilterCaseSensitivity(Qt::CaseInsensitive);
-    // setFilterRole(OnlineModelList::OnlineModelRoles::NameRole);
-
-    // setSortRole(OnlineModelList::OnlineModelRoles::NameRole);
-    // sort(0, Qt::AscendingOrder);
-
-    setFilterCaseSensitivity(Qt::CaseInsensitive);
-    setFilterRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-
-    setSortRole(OnlineModelList::OnlineModelRoles::InstallModelRole);
-    sort(0, Qt::DescendingOrder);
+    setDynamicSortFilter(false);
 }
 
 bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const{
@@ -27,13 +17,13 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
         return false;
 
     QString name = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::NameRole).toString();
-    QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
-    Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
-    QString companyName = company ? company->name() : QStringLiteral("Unknown");
+    QString modelName = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
+    // Company* company = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::CompanyRole).value<Company*>();
+    // QString companyName = company ? company->name() : QStringLiteral("Unknown");
 
-    QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModeNameRole).toString();
-    bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
-    bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
+    // QString modelNameOffline = companyName + "/" + sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelNameRole).toString();
+    // bool isLikeModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::IsLikeRole).toBool();
+    // bool installModel = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::InstallModelRole).toBool();
 
     QVariant modelVariant = sourceModel()->data(index, OnlineModelList::OnlineModelRoles::ModelObjectRole);
     OnlineModel* model = modelVariant.value<OnlineModel*>();
@@ -43,22 +33,22 @@ bool OnlineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &s
     QRegularExpression filterExp = filterRegularExpression();
     bool matchesFilter = filterExp.pattern().isEmpty() ||
                                          filterExp.match(name).hasMatch() ||
-                                         filterExp.match(modelName).hasMatch() ||
-                                         filterExp.match(modelNameOffline).hasMatch();
+                                         filterExp.match(modelName).hasMatch() /*||
+                                         filterExp.match(modelNameOffline).hasMatch()*/;
 
     switch (m_filterType) {
     case FilterType::All:
         return matchesFilter;
-    case FilterType::Company:
-        return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
+    // case FilterType::Company:
+        // return matchesFilter && (m_companyId != -1) && model->company() && model->company()->id() == m_companyId;
     case FilterType::Type:
         return matchesFilter && (m_type != "") && model->type() == m_type;
-    case FilterType::InstallModel:
-        return matchesFilter && model->type() == "Text Generation"&& (installModel) ;
-    case FilterType::Recommended:
-        return matchesFilter && model->type() == "Text Generation" && (!installModel && model->recommended() );
-    case FilterType::Favorite:
-        return matchesFilter && isLikeModel;
+    // case FilterType::InstallModel:
+    //     return matchesFilter && (model->type() == "Text Generation" || (model->type() == "text-generation")) && (installModel) ;
+    // case FilterType::Recommended:
+    //     return matchesFilter && (model->type() == "Text Generation" || (model->type() == "text-generation")) && (!installModel && model->recommended() );
+    // case FilterType::Favorite:
+    //     return matchesFilter && isLikeModel;
     default:
         return true;
     }

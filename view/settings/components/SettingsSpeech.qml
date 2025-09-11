@@ -121,6 +121,7 @@ Item {
                 appSettings.setValue("speechRate", sliderValue);
             }
         }
+
     }
 
     Component.onCompleted: {

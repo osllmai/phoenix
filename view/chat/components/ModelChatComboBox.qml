@@ -5,7 +5,7 @@ ModelSelectComboBox{
     id: modelComboBoxId
     modelSelect: conversationList.modelSelect
     modelId: conversationList.modelSelect? conversationList.modelId: -1
-    modelName: conversationList.modelSelect? conversationList.modelText:"Phoenix"
+    modelName: conversationList.modelSelect? conversationList.modelName:"Phoenix"
     modelIcon: conversationList.modelSelect? conversationList.modelIcon:"qrc:/media/image_company/Phoenix.png"
     signal sendMessage()
     Connections{
@@ -15,6 +15,7 @@ ModelSelectComboBox{
                       || conversationList.isEmptyConversation){
                 conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
                 modelComboBoxId.sendMessage()
+                console.log(name)
             }else{
                 conversationList.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
             }

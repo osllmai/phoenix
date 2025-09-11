@@ -56,7 +56,7 @@ T.Button {
             }
             MyCopyButton{
                 id: copyId
-                myText: TextArea{text: "localModel/"+model.modelName;}
+                myText: TextArea{text: model.modelName;}
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
             MyButton{

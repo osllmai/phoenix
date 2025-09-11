@@ -48,7 +48,7 @@ Item {
 
                 OfflineCurrentModelList {
                     id: offlineFinishedDownloadModelList
-                    model: offlineModelListFinishedDownloadFilter
+                    model: offlineTextModelListFinishedDownloadFilter
                 }
 
                 Label {

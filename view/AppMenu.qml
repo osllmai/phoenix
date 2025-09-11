@@ -14,38 +14,6 @@ Rectangle{
 
     property bool isDrawer: false
 
-    // Item{
-    //     id: appInfoId
-    //     anchors.left: parent.left
-    //     anchors.right: parent.right
-    //     anchors.top: parent.top
-    //     height: 60
-
-    //     MyIcon {
-    //         id: phoenixIconId
-    //         myIcon: "qrc:/media/image_company/Phoenix.svg"
-    //         iconType: Style.RoleEnum.IconType.Image
-    //         anchors.verticalCenter: parent.verticalCenter
-    //         anchors.left: parent.left
-    //         anchors.leftMargin: 10
-    //         enabled: false
-    //         width: 40; height: 40
-    //     }
-    //     Label {
-    //         id: textId
-    //         visible: root.width>100
-    //         color: Style.Colors.textTitle
-    //         anchors.verticalCenter: parent.verticalCenter
-    //         anchors.left: phoenixIconId.right
-    //         anchors.leftMargin: 2
-    //         text: "Phoenix"
-    //         font.weight: 400
-    //         font.pixelSize: 20
-    //         font.styleName: "Bold"
-    //         clip: true
-    //     }
-    // }
-
     Column {
         id: columnId
         anchors.left: parent.left
@@ -162,7 +130,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v" + updateChecker.currentVersion + "-2025.08.04"
+            text: "v" + updateChecker.currentVersion + "-2025.09.10"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"

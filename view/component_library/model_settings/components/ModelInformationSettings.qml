@@ -41,6 +41,32 @@ Item {
                 ScrollBar.vertical.active: (scrollInput.contentY > 0) &&
                                 (scrollInput.contentY < scrollInput.contentHeight - scrollInput.height)
 
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    propagateComposedEvents: true
+                    onWheel: function(wheel) {
+                        var maxY = scrollInput.contentHeight - scrollInput.height;
+                        var atTop = scrollInput.contentY <= 0;
+                        var atBottom = scrollInput.contentY >= maxY;
+
+                        var dy = wheel.pixelDelta ? wheel.pixelDelta.y : (wheel.angleDelta ? wheel.angleDelta.y / 8 : 0);
+
+                        if (maxY <= 0) {
+                            wheel.accepted = false;
+                            return;
+                        }
+
+                        if ((dy > 0 && !atTop) || (dy < 0 && !atBottom)) {
+                            var newY = Math.max(0, Math.min(maxY, scrollInput.contentY - dy));
+                            scrollInput.contentY = newY;
+                            wheel.accepted = true;
+                        } else {
+                            wheel.accepted = false;
+                        }
+                    }
+                }
+
                 TextArea {
                     id: promptTemplateTextBox
                     text: modelSettingsId.promptTemplate

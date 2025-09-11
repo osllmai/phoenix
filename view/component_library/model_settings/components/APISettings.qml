@@ -26,6 +26,7 @@ Item {
             id: portChange
             myText: modelSettingsId.api
             myValue: modelSettingsId.portAPI
+            needCopy: true
             Connections{
                 target: portChange
                 function onSendValue(value){

@@ -62,25 +62,30 @@ ComboBox {
         y: comboBoxId.height + 10
         width: 280
         height: 360
-
         background: null
-        contentItem: ModelSelectView{
-            id: modelSelectId
-            anchors.fill: parent
-            // anchors.margins: 10
 
-            modelSelect: comboBoxId.modelSelect
-            modelId: comboBoxId.modelId
-            modelName: comboBoxId.modelName
-            modelIcon: comboBoxId.modelIcon
-            Connections{
-                target: modelSelectId
-                function onSetModelRequest(id, name, icon, promptTemplate, systemPrompt) {
-                    comboBoxId.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+        contentItem: Loader {
+            id: popupLoader
+            anchors.fill: parent
+            active: popupId.visible
+            sourceComponent: ModelSelectView {
+                id: modelSelectId
+                anchors.fill: parent
+                modelSelect: comboBoxId.modelSelect
+                modelId: comboBoxId.modelId
+                modelName: comboBoxId.modelName
+                modelIcon: comboBoxId.modelIcon
+
+                Connections {
+                    target: modelSelectId
+                    function onSetModelRequest(id, name, icon, promptTemplate, systemPrompt) {
+                        comboBoxId.setModelRequest(id, name, icon, promptTemplate, systemPrompt)
+                    }
                 }
             }
         }
     }
+
     indicator: Image {}
     background: Rectangle {
         id: backgroundId

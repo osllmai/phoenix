@@ -5,6 +5,7 @@ CompanyListFilter::CompanyListFilter(QAbstractItemModel *model, BackendType back
     : QSortFilterProxyModel(parent), m_backendType(backendType)
 {
     QSortFilterProxyModel::setSourceModel(model);
+    setDynamicSortFilter(true);
 }
 
 const BackendType CompanyListFilter::backendType() const{return m_backendType;}

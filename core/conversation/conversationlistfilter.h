@@ -11,6 +11,7 @@ public:
 
 public slots:
     void updateFilterList();
+    void finalizeSetup();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;

@@ -5,14 +5,15 @@ import QtQuick.Templates 2.1 as T
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
+import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
     width: 250
     height: 250
 
-    background:null
-    contentItem:Rectangle{
+    background: null
+    contentItem: Rectangle{
         id: backgroundId
         anchors.fill: parent
         radius: 10
@@ -46,7 +47,7 @@ T.Button {
                     width: 29; height: 29
                     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    myTextToolTip:model.information
+                    myTextToolTip:model.name
                 }
 
                 MyIcon{
@@ -56,34 +57,50 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Like
                     isNeedAnimation: true
                     onClicked: {
-                        onlineModelList.likeRequest(model.id, !model.isLike)
+                        onlineCompanyList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }
             }
-            Label {
-                id:informationId
-                height: parent.height - headerId.height - apikeyButton.height - informationAboutDownloadId.height - 30
-                width: parent.width
-                text: model.information
-                color: Style.Colors.textInformation
-                anchors.left: parent.left; anchors.right: parent.right
-                font.pixelSize: 10
-                horizontalAlignment: Text.AlignJustify
-                verticalAlignment: Text.AlignTop
-                wrapMode: Text.Wrap
-                elide: Label.ElideRight
-                clip: true
+            // Label {
+            //     id:informationId
+            //     height: parent.height - headerId.height - apikeyButton.height - informationAboutDownloadId.height - 30
+            //     width: parent.width
+            //     text: model.information
+            //     color: Style.Colors.textInformation
+            //     anchors.left: parent.left; anchors.right: parent.right
+            //     font.pixelSize: 10
+            //     horizontalAlignment: Text.AlignJustify
+            //     verticalAlignment: Text.AlignTop
+            //     wrapMode: Text.Wrap
+            //     elide: Label.ElideRight
+            //     clip: true
+            // }
+            // Rectangle{
+            //     id: informationAboutDownloadId
+            //     height: 45; width: parent.width
+            //     radius: 10
+            //     border.color: Style.Colors.boxBorder
+            //     border.width: 1
+            //     color: "#00ffffff"
+            //     OnlineInformationModel{}
+            // }
+
+            OnlineModelListComboBox{
             }
-            Rectangle{
-                id: informationAboutDownloadId
-                height: 45; width: parent.width
-                radius: 10
-                border.color: Style.Colors.boxBorder
-                border.width: 1
-                color: "#00ffffff"
-                OnlineInformationModel{}
-            }
+            // OnlineModelListComboBox {
+            //     id: modelListComboBox
+            //     model: onlineModelList
+            //     displayText: onlineModelList.currentModel.name
+            //     // highlightedIndex: 1
+            //     onActivated: {
+            //         var item = modelListComboBox.model[modelListComboBox.currentIndex]
+            //         console.log("Selected:", item.name, "id:", item.id)
+
+            //         onlineModelList.selectCurrentModelRequest(item.id)
+            //     }
+            // }
+
             ApikeyButton{
                 id: apikeyButton
             }

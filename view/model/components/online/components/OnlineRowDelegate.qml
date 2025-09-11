@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
+import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
@@ -47,7 +48,7 @@ T.Button {
                 width: 29; height: 29
                 myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                 anchors.verticalCenter: logoModelId.verticalCenter
-                myTextToolTip:model.information
+                myTextToolTip:model.name
             }
 
             MyIcon{
@@ -57,24 +58,31 @@ T.Button {
                 anchors.verticalCenter: logoModelId.verticalCenter
                 iconType: Style.RoleEnum.IconType.Like
                 onClicked: {
-                    offlineModelList.likeRequest(model.id, !model.isLike)
+                    onlineCompanyList.likeRequest(model.id, !model.isLike)
                     model.isLike = !model.isLike
                 }
             }
         }
 
-        Rectangle{
+        // Rectangle{
+        //     id: informationAboutDownloadId
+        //     visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
+        //     height: 45; width: 300
+        //     anchors.verticalCenter: parent.verticalCenter
+        //     anchors.left: headerId.right
+        //     anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
+        //     radius: 10
+        //     border.color: Style.Colors.boxBorder
+        //     border.width: 1
+        //     color: "#00ffffff"
+        //     OnlineInformationModel{}
+        // }
+
+        OnlineModelListComboBox{
             id: informationAboutDownloadId
-            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
-            height: 45; width: 300
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: headerId.right
             anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
-            radius: 10
-            border.color: Style.Colors.boxBorder
-            border.width: 1
-            color: "#00ffffff"
-            OnlineInformationModel{}
         }
 
         ApikeyButton{
@@ -112,7 +120,7 @@ T.Button {
                     width: 32; height: 32
                     myIcon: about2Icon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModel2Id.verticalCenter
-                    myTextToolTip:model.information
+                    myTextToolTip:model.name
                 }
 
                 MyIcon{
@@ -122,7 +130,7 @@ T.Button {
                     anchors.verticalCenter: logoModel2Id.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
                     onClicked: {
-                        offlineModelList.likeRequest(model.id, !model.isLike)
+                        onlineCompanyList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }

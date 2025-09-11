@@ -8,6 +8,10 @@ Item {
     id: control
     property string selectedFilter: "All"
 
+    onSelectedFilterChanged: {
+        instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
+    }
+
     Rectangle {
         id: instructionsBox
         anchors.fill: parent
@@ -27,7 +31,7 @@ Item {
                 height: 40
                 width: parent.width
                 spacing: 5
-                cacheBuffer: Math.max(0, listView.contentWidth)
+                // cacheBuffer: Math.max(0, listView.contentWidth)
 
                 layoutDirection: Qt.LeftToRight
                 orientation: Qt.Horizontal
@@ -147,12 +151,12 @@ Item {
 
                     text: getFilteredLogs(selectedFilter)
 
-                    Connections {
-                        target: instructionsBox
-                        onSelectedFilterChanged: {
-                            instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
-                        }
-                    }
+                    // Connections {
+                    //     target: instructionsBox
+                    //     onSelectedFilterChanged: {
+                    //         instructionTextBox.text = instructionTextBox.getFilteredLogs(selectedFilter)
+                    //     }
+                    // }
 
                     onTextChanged: {
                         instructionTextBox.cursorPosition = instructionTextBox.length

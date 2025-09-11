@@ -48,7 +48,6 @@ void ChatServer::onNewConnection(){
     connect(pSocket, &QWebSocket::disconnected, this, &ChatServer::socketDisconnected);
 
     m_clients.insert(pSocket);
-    qCInfo(logDeveloperView) << "New client connected. Total clients:" << m_clients.size();
 }
 
 void ChatServer::processTextMessage(QString message){
@@ -174,7 +173,7 @@ void ChatServer::prompt(){
 
     m_provider = (m_model->backend() == BackendType::OfflineModel)
                      ? static_cast<Provider *>(new OfflineProvider(this))
-                     : static_cast<Provider *>(new OnlineProvider(this, m_model->company()->name() + "/" + m_model->modelName(), m_model->key()));
+                     : static_cast<Provider *>(new OnlineProvider(this, /*m_model->company()->name() + "/" +*/ m_model->modelName(), m_model->key()));
 
     connect(this, &ChatServer::requestLoadModel, m_provider, &Provider::loadModel, Qt::QueuedConnection);
     connect(m_provider, &Provider::requestLoadModelResult, this, &ChatServer::loadModelResult, Qt::QueuedConnection);
@@ -208,7 +207,6 @@ void ChatServer::prompt(){
 
 bool ChatServer::loadModel(QString modelName){
     if (modelName.startsWith("localModel/")) {
-        modelName.remove(0, QString("localModel/").length());
         OfflineModel *offlineModel = OfflineModelList::instance(nullptr)->findModelByModelName(modelName);
         if (offlineModel && offlineModel->downloadFinished()) {
             setModel(offlineModel);
@@ -216,8 +214,8 @@ bool ChatServer::loadModel(QString modelName){
             return false;
         }
     } else {
-        OnlineModel *onlineModel = OnlineModelList::instance(nullptr)->findModelByModelName(modelName);
-        if (onlineModel && onlineModel->installModel()) {
+        OnlineModel* onlineModel = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->onlineModelList()->findModelByModelName(modelName);
+        if(OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->installModel() && onlineModel){
             setModel(onlineModel);
         } else {
             return false;
@@ -229,7 +227,7 @@ bool ChatServer::loadModel(QString modelName){
 bool ChatServer::loadModel(int id){
     if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
         setModel(offline);
-    } else if (OnlineModel *online = OnlineModelList::instance(nullptr)->findModelById(id)) {
+    } else if (OnlineModel* online = OnlineCompanyList::instance(nullptr)->findCompanyById(id)->onlineModelList()->currentModel()) {
         setModel(online);
     } else {
         return false;

@@ -35,36 +35,9 @@ Item {
                 width: flickable.width
                 spacing: 10
 
-                Label {
-                    id: availablemodelsId
-                    visible: onlineCurrentModelList.height>30
-                    text: "Available Models"
-                    color: Style.Colors.textTitle
-                    verticalAlignment: Text.AlignBottom
-                    horizontalAlignment: Text.AlignLeft
-                    elide: Text.ElideRight
-                    clip: true
-                }
-
                 OnlineCurrentModelList{
                     id: onlineCurrentModelList
-                    model:onlineModelInstallFilter
-                }
-
-                Label {
-                    id: textId
-                    height: 25
-                    text: "Recommended"
-                    color: Style.Colors.textTitle
-                    verticalAlignment: Text.AlignBottom
-                    horizontalAlignment: Text.AlignLeft
-                    elide: Text.ElideRight
-                    clip: true
-                }
-
-                OnlineCurrentModelList {
-                    id: offlinRecommendModelList
-                    model: onlineModelListRecommendedFilter
+                    model: onlineCompanyList
                 }
             }
         }
@@ -77,6 +50,5 @@ Item {
                 appBodyId.currentIndex = 2
             }
         }
-
     }
 }

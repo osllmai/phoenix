@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QAbstractListModel>
+#include <QFutureWatcher>
+#include <QtConcurrent>
 
 #include "onlinemodel.h"
 
@@ -12,27 +14,25 @@ class OnlineModelList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(OnlineModel *currentModel READ currentModel NOTIFY currentModelChanged FINAL)
 
 public:
-    static OnlineModelList* instance(QObject* parent );
+    explicit OnlineModelList(QObject* parent);
     OnlineModel* findModelById(const int id);
     OnlineModel* findModelByModelName(const QString modelName);
 
     enum OnlineModelRoles {
         IdRole = Qt::UserRole + 1,
         NameRole,
-        ModeNameRole,
+        ModelNameRole,
         KeyRole,
         InformationRole,
         TypeRole,
         IconModelRole,
-        CompanyRole,
-        IsLikeRole,
         AddModelTimeRole,
         ContextWindowsRole,
         OutputRole,
         CommercialRole,
-        InstallModelRole,
         ModelObjectRole
     };
 
@@ -43,31 +43,33 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     Q_INVOKABLE OnlineModel* at(int index) const;
-    Q_INVOKABLE void likeRequest(const int id, const bool isLike);
-    Q_INVOKABLE void saveAPIKey(const int id, QString key);
-    Q_INVOKABLE void deleteRequest(const int id);
+    // Q_INVOKABLE void likeRequest(const int id, const bool isLike);
+    // Q_INVOKABLE void saveAPIKey(const int id, QString key);
+    // Q_INVOKABLE void deleteRequest(const int id);
+    Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
+    Q_INVOKABLE void addModel(const QVariantMap &m);
+    Q_INVOKABLE void selectCurrentModelRequest(const int id);
 
-
-public slots:
-    void addModel(const int id, const QString& modelName, const QString& name, const QString& key,
-                  QDateTime addModelTime, const bool isLike, Company* company, const QString& type, const BackendType backend,
-                  const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended,
-
-                  const double inputPricePer1KTokens, const double outputPricePer1KTokens,
-                  const QString& contextWindows, const bool commercial, const bool pricey,
-                  const QString& output, const QString& comments, const bool installModel);
+    OnlineModel *currentModel() const;
+    void setCurrentModel(OnlineModel *newCurrentModel);
 
 signals:
     void countChanged();
-    void requestUpdateKeyModel(const int id, const QString &key);
-    void requestUpdateIsLikeModel(const int id, const bool isLike);
+    void sortingFinished();
+
+    void currentModelChanged();
+
+public slots:
+    void finalizeSetup();
+
+private slots:
+    void handleSortingFinished();
 
 private:
     QList<OnlineModel*> m_models;
+    QFutureWatcher<QList<OnlineModel*>> m_sortWatcher;
 
-    explicit OnlineModelList(QObject* parent);
-    static OnlineModelList* m_instance;
+    OnlineModel* m_currentModel;
 };
 
 #endif // ONLINEMODELLIST_H

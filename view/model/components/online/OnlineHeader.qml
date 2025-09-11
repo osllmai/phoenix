@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../../component_library/style' as Style
 import '../../../component_library/button'
+import './components'
 
 Item{
     id: headerId
@@ -15,168 +16,93 @@ Item{
         }
     }
 
-    property bool isSearchInColumn: window.isDesktopSize
-
     width: parent.width
-    height: phoenixId.height + fillterBox.height + (headerId.isSearchInColumn? 0: searchBox2Id.height + 10)
+    height:/* fillterBox.height*/35
     clip:true
 
     signal search(var text)
 
-    Column{
-        id: columnId
-        anchors.fill: parent
-        anchors.leftMargin: 30
-        spacing: 10
-        Label {
-            id: phoenixId
-            text: qsTr("Online Model")
-            color: Style.Colors.textTitle
-            font.pixelSize: 20
-            font.styleName: "Bold"
-        }
+    // Row{
+    //     id: fillterBox
+    //     width: parent.width
+    //     spacing: 10
+    //     SearchButton{
+    //         id: searchBoxId
+    //         width: parent.width - companyList.width - viewList.width - 20 - 10
+    //         Connections{
+    //             target: searchBoxId
+    //             function onSearch(myText){
+    //                 onlineModelListFilter.setFilterFixedString(myText)
+    //             }
+    //         }
+    //     }
+    //     Row{
+    //         height: searchBoxId.height
+    //         spacing: 10
 
-        SearchButton{
-            id: searchBox2Id
-            visible: !headerId.isSearchInColumn
-            Connections{
-                target: searchBoxId
-                function onSearch(myText){
-                    offlineModelListFilter.setFilterFixedString(myText)
-                }
-            }
-        }
+    //         MyComboBox {
+    //             id: companyList
+    //             width: 110
+    //             model: [
+    //                 "All",
+    //                 "Favorite",
+    //                 "Text Generation",
+    //                 "Image",
+    //                 "Vision",
+    //                 "Embeddings"
+    //             ]
+    //             displayText: headerId.filtter
+    //             onActivated: {
+    //                 var selectedType = model[currentIndex]
+    //                 if(selectedType ==="All" || selectedType ==="Favorite"){
+    //                     onlineModelListFilter.filter(selectedType)
+    //                 }else{
+    //                     onlineModelListFilter.type = selectedType
+    //                 }
+    //                 headerId.filtter= selectedType
+    //             }
+    //         }
 
-        Row{
-            id: fillterBox
-            width: parent.width
-            spacing: 10
-            SearchButton{
-                id: searchBoxId
-                visible: headerId.isSearchInColumn
-                Connections{
-                    target: searchBoxId
-                    function onSearch(myText){
-                        onlineModelListFilter.setFilterFixedString(myText)
+            ListView{
+                id: viewList
+                anchors.right: parent.right
+                width: parent.width
+                height: parent.height
+                spacing: 5
+
+                layoutDirection: Qt.RightToLeft
+                orientation: Qt.Horizontal
+                snapMode: ListView.SnapToItem
+
+                clip: true
+
+                model: ListModel {
+                    ListElement {
+                        modelPageView: "gridView"
+                        icon: "qrc:/media/icon/gridView.svg"
+                    }
+                    ListElement {
+                        modelPageView: "listView"
+                        icon: "qrc:/media/icon/listView.svg"
                     }
                 }
-            }
-            Column{
-                width: headerId.isSearchInColumn? parent.width - searchBoxId.width - 40: parent.width - 20
-                height: 2*searchBoxId.height + 20
-                Item{
-                    width: parent.width
-                    height: searchBoxId.height +10
-
-                    ListView{
-                        id: companyList
-                        anchors.fill: parent
-                        spacing: 5
-
-                        layoutDirection: Qt.RightToLeft
-
-                        orientation: Qt.Horizontal
-                        clip: true
-
-                        model: ListModel {
-
-                            ListElement {
-                                name: "Embeddings"
-                                type: "Embeddings"
-                            }
-                            ListElement {
-                                name: "Vision"
-                                type: "Vision"
-                            }
-                            ListElement {
-                                name: "Image"
-                                type: "Image"
-                            }
-                            ListElement {
-                                name: "Chat"
-                                type: "Text Generation"
-                            }
-                            ListElement {
-                                name: "Favorite"
-                                type: "Favorite"
-                            }
-                            ListElement {
-                                name: "All"
-                                type: "All"
-                            }
-                        }
-                        delegate: MyButton {
-                            id: delegateId
-                            myText: model.name
-                            bottonType: Style.RoleEnum.BottonType.Feature
-                            iconType: Style.RoleEnum.IconType.FeatureBlue
-                            isNeedAnimation: true
-                            checkable: true
-                            clip: true
-                            checked: headerId.filtter === model.type
-                            selected: headerId.filtter === model.type
-                            onClicked:{
-                                if(model.type ==="All" || model.type ==="Favorite"){
-                                    onlineModelListFilter.filter(model.type)
-                                }else{
-                                    onlineModelListFilter.type = model.type
-                                }
-                                headerId.filtter= model.type
-                            }
-                        }
-                    }
-                }
-                Item{
-                    width: parent.width
-                    height: searchBoxId.height +10
-
-                    ListView{
-                        id: viewList
-                        anchors.fill: parent
-                        spacing: 5
-                        cacheBuffer: Math.max(0, viewList.contentWidth)
-
-                        layoutDirection: Qt.RightToLeft
-                        orientation: Qt.Horizontal
-                        snapMode: ListView.SnapToItem
-
-                        interactive: contentWidth > width
-                        boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
-                        ScrollBar.horizontal: ScrollBar {
-                            policy: ScrollBar.AsNeeded
-                        }
-                        clip: true
-
-                        model: ListModel {
-                            ListElement {
-                                modelPageView: "gridView"
-                                icon: "qrc:/media/icon/gridView.svg"
-                            }
-                            ListElement {
-                                modelPageView: "listView"
-                                icon: "qrc:/media/icon/listView.svg"
-                            }
-                        }
-                        delegate: MyButton {
-                            id: delegateViewId
-                            width: 30; height: 30
-                            myIcon: model.icon
-                            bottonType: Style.RoleEnum.BottonType.Feature
-                            iconType: Style.RoleEnum.IconType.Primary
-                            isNeedAnimation: true
-                            checkable: true
-                            checked: window.modelPageView === model.modelPageView
-                            selected: window.modelPageView === model.modelPageView
-                            onClicked:{
-                                if(window.modelPageView !== model.modelPageView){
-                                    window.modelPageView = model.modelPageView
-                                }
-                            }
+                delegate: MyButton {
+                    id: delegateViewId
+                    width: 30; height: 30
+                    myIcon: model.icon
+                    bottonType: Style.RoleEnum.BottonType.Feature
+                    iconType: Style.RoleEnum.IconType.Primary
+                    isNeedAnimation: true
+                    checkable: true
+                    checked: window.modelPageView === model.modelPageView
+                    selected: window.modelPageView === model.modelPageView
+                    onClicked:{
+                        if(window.modelPageView !== model.modelPageView){
+                            window.modelPageView = model.modelPageView
                         }
                     }
                 }
             }
-        }
-    }
+    //     }
+    // }
 }

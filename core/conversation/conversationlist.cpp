@@ -108,6 +108,7 @@ void ConversationList::addRequest(const QString &firstPrompt, const QString &fil
     if(m_modelPromptTemplate != "")
         _propmtTemplate = m_modelPromptTemplate;
 
+
     emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, true,
                     _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
 }
@@ -167,9 +168,9 @@ void ConversationList::likeMessageRequest(const int conversationId, const int me
     conversation->likeMessageRequest(messageId, like);
 }
 
-void ConversationList::setModelRequest(const int id, const QString &text,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
+void ConversationList::setModelRequest(const int id, const QString &name,  const QString &icon, const QString &promptTemplate, const QString &systemPrompt){
     setModelId(id);
-    setModelText(text);
+    setModelName(name);
     setModelIcon(icon);
     setModelPromptTemplate(promptTemplate);
     setModelSystemPrompt(systemPrompt);
@@ -211,6 +212,7 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                        const int &contextLength, const int &numberOfGPULayers, const bool selectConversation) {
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
+
     Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned,
                                                   stream, promptTemplate, systemPrompt,
                                                   temperature, topK, topP, minP, repeatPenalty,
@@ -232,9 +234,12 @@ void ConversationList::addConversation(const int id, const QString &title, const
             setPreviousConversation(m_currentConversation);
 
         setCurrentConversation(conversation);
+
         m_currentConversation->loadModel(modelId());
         m_currentConversation->prompt(description, fileName, fileInfo);
+
         setIsEmptyConversation(false);
+
     }
 }
 
@@ -350,12 +355,12 @@ void ConversationList::setModelId(int newModelId){
     emit modelIdChanged();
 }
 
-QString ConversationList::modelText() const{return m_modelText;}
-void ConversationList::setModelText(const QString &newModelText){
-    if (m_modelText == newModelText)
+QString ConversationList::modelName() const{return m_modelName;}
+void ConversationList::setModelName(const QString &newModelName){
+    if (m_modelName == newModelName)
         return;
-    m_modelText = newModelText;
-    emit modelTextChanged();
+    m_modelName = newModelName;
+    emit modelNameChanged();
 }
 
 QString ConversationList::modelIcon() const{return m_modelIcon;}

@@ -29,12 +29,12 @@ RowLayout {
             id: developerBodyId
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Connections{
-                target: developerBodyId
-                function onOpenModelList(){
-                    headerId.openModelComboBox();
-                }
-            }
+            // Connections{
+            //     target: developerBodyId
+            //     function onOpenModelList(){
+            //         headerId.openModelComboBox();
+            //     }
+            // }
         }
         ModelSettingsDeveloperDrawer{
             id: modelSettingsId

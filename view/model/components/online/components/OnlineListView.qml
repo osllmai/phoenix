@@ -21,7 +21,7 @@ ListView {
     }
     clip: true
 
-    model: onlineModelListFilter
+    model: onlineCompanyList
     delegate: Item{
        width: listView.width
        height: window.isDesktopSize? 65:90

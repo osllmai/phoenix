@@ -29,7 +29,6 @@ Database::Database(QObject* parent)
             qDebug() << "Failed to set encryption key:" << query.lastError().text();
         }
 
-
         query.exec(FOREIGN_KEYS_SQL);
 
         QStringList tables = m_db.tables();
@@ -114,11 +113,135 @@ void Database::addModel(const QString &name, const QString &key){
         else
             ramRequ = 32;
 
-        emit addOfflineModel(fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
-                             id, name, name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+        emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
+                             id, name, name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
                              icon, information, "","", QDateTime::currentDateTime(), false);
 
     }
+}
+
+void Database::addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
+                                   const QString &companyName, const QString &companyIconPath) {
+
+    // Ensure models directory exists
+    QString modelsDir = QCoreApplication::applicationDirPath() + "/models";
+    QDir dir(modelsDir);
+    if (!dir.exists())
+        dir.mkpath(".");
+
+    QString companyIcon = QFileInfo(companyIconPath).fileName();
+
+    // --- Step 1: Check if the company exists in company.json ---
+    QString companyFilePath = modelsDir + "/company.json";
+    QJsonArray companyArray;
+
+    {
+        QFile companyFile(companyFilePath);
+        if (companyFile.exists() && companyFile.open(QIODevice::ReadOnly)) {
+            QJsonDocument doc = QJsonDocument::fromJson(companyFile.readAll());
+            if (doc.isArray())
+                companyArray = doc.array();
+            companyFile.close();
+        }
+    }
+
+    bool companyExists = false;
+    for (const QJsonValue &val : companyArray) {
+        if (!val.isObject()) continue;
+        QJsonObject obj = val.toObject();
+        if (obj["name"].toString().compare(QFileInfo(companyName).fileName(), Qt::CaseInsensitive) == 0 &&
+            obj["type"].toString() == "OfflineModel") {
+            companyExists = true;
+            break;
+        }
+    }
+
+    // If company does not exist, add it
+    QString companyJsonFileName = "offline_models/" + QFileInfo(companyName).fileName().toLower() + ".json";
+    if (!companyExists) {
+        QJsonObject newCompany;
+        newCompany["name"] = QFileInfo(companyName).fileName();
+        newCompany["organizationName"] = QFileInfo(companyName).fileName();
+        newCompany["icon"] = companyIcon;
+        newCompany["file"] = companyJsonFileName;
+        newCompany["type"] = "OfflineModel";
+
+        companyArray.append(newCompany);
+
+        QFile companyFile(companyFilePath);
+        if (companyFile.open(QIODevice::WriteOnly)) {
+            companyFile.write(QJsonDocument(companyArray).toJson(QJsonDocument::Indented));
+            companyFile.close();
+        }
+    }
+
+    // --- Step 2: Add the model to the company's JSON file ---
+    QString companyModelsPath = modelsDir + "/" + companyJsonFileName;
+    QJsonArray modelsArray;
+    {
+        QFile modelFile(companyModelsPath);
+        if (modelFile.exists() && modelFile.open(QIODevice::ReadOnly)) {
+            QJsonDocument doc = QJsonDocument::fromJson(modelFile.readAll());
+            if (doc.isArray())
+                modelsArray = doc.array();
+            modelFile.close();
+        }
+    }
+
+    // Check if model already exists
+    bool modelExists = false;
+    for (const QJsonValue &val : modelsArray) {
+        if (!val.isObject()) continue;
+        QJsonObject obj = val.toObject();
+        if (obj["modelName"].toString() == name) {
+            modelExists = true;
+            break;
+        }
+    }
+
+    // If model does not exist, add it
+    if (!modelExists) {
+        QJsonObject newModel;
+
+        QString cleanName = name;
+        if (cleanName.endsWith(".gguf", Qt::CaseInsensitive)) {
+            cleanName.chop(5);
+        }
+
+        newModel["name"] = cleanName;
+        newModel["modelName"] = cleanName;
+        newModel["url"] = url;
+        newModel["filesize"] = 0.0;
+        newModel["ramrequired"] = 1;
+        newModel["filename"] = name ;
+        newModel["parameters"] = "- billion";
+        newModel["quant"] = "q4_0";
+        newModel["type"] = type;
+        newModel["description"] = "You have added this model from the HuggingFace list to your collection.";
+        newModel["promptTemplate"] = "";
+        newModel["systemPrompt"] = "";
+        newModel["recommended"] = false;
+
+        modelsArray.append(newModel);
+
+        QFile modelFile(companyModelsPath);
+        if (modelFile.open(QIODevice::WriteOnly)) {
+            modelFile.write(QJsonDocument(modelsArray).toJson(QJsonDocument::Indented));
+            modelFile.close();
+        }
+    }
+
+    // --- Step 3: Insert model into database and emit signal ---
+    int id = insertModel(name, ""); // Empty key since it's an offline model
+    if (id == -1) return;
+
+    QDateTime addDate = QDateTime::currentDateTime();
+    bool isLike = false;
+    QString information = "You have added this model from the HuggingFace list to your collection.";
+
+    emit addOfflineModel(nullptr, 0.0, 1, "", url, "- billion", "q4_0", 0.0, false, false,
+                         id, name, name, "", addDate, isLike, type, BackendType::OfflineModel,
+                         companyIcon, information, "", "", QDateTime::currentDateTime(), false);
 }
 
 void Database::deleteModel(const int id){
@@ -494,6 +617,7 @@ void Database::readModel(const QList<Company*> companys){
     for (Company* company : companys){
 
         QFile file(QCoreApplication::applicationDirPath() + "/models/" + company->filePath());
+
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
             continue;
@@ -512,7 +636,9 @@ void Database::readModel(const QList<Company*> companys){
         QJsonArray jsonArray = document.array();
 
         if(company->backend() == BackendType::OfflineModel){
+
             for (const QJsonValue &value : jsonArray) {
+
                 if (!value.isObject()) continue;
 
                 QJsonObject obj = value.toObject();
@@ -547,67 +673,24 @@ void Database::readModel(const QList<Company*> companys){
                 if(id == -1)
                     continue;
 
-                emit addOfflineModel(obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
+                emit addOfflineModel(company, obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
                                    obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
                                    obj["quant"].toString(),0.0, false, downloadFinished,
 
-                                   id, obj["modelName"].toString(), name, key, addDate, isLike, company,
+                                   id, obj["modelName"].toString(), name, key, addDate, isLike,
                                    obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool() /*, nullptr*/);
 
                 allID.append(id);
             }
-        }else{
-            for (const QJsonValue &value : jsonArray) {
-                if (!value.isObject()) continue;
-
-                QJsonObject obj = value.toObject();
-
-                int id;
-                QString name = obj["name"].toString();
-                QString key = "";
-                QDateTime addDate = QDateTime::currentDateTime();
-                bool isLike = false;
-
-                QSqlQuery query(m_db);
-                query.prepare(READ_MODEL_SQL);
-                query.addBindValue(obj["name"].toString());
-
-                if (!query.exec())
-                    continue;
-
-                bool installModel = false;
-                if (!query.next()) {
-                    id = insertModel(obj["name"].toString(),"");
-                }else{
-
-                    id = query.value(0).toInt();
-                    name = query.value(1).toString();
-                    key = query.value(2).toString();
-                    addDate = query.value(3).toDateTime();
-                    isLike = query.value(4).toBool();
-                    if(key != "")
-                        installModel = true;
-                }
-
-                if(id == -1)
-                    continue;
-
-                emit addOnlineModel(id, obj["modelName"].toString(), name, key, addDate,
-                                    isLike, company, obj["type"].toString(), BackendType::OnlineModel, company->icon(),
-                                    obj["description"].toString(), obj["promptTemplate"].toString(),
-                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(),  /*nullptr,*/
-
-                                     obj["inputPricePer1KTokens"].toDouble(),
-                                     obj["outputPricePer1KTokens"].toDouble(), obj["contextWindows"].toString(),
-                                     obj["commercial"].toBool(),
-                                     obj["pricey"].toBool(), obj["output"].toString(), obj["comments"].toString(),installModel);
-
-                allID.append(id);
-            }
         }
     }
+
+    QList<int> existId = readOnlineCompany();
+    allID.append(existId);
+
+    emit finishedReadOnlineModel();
 
     QSqlQuery query(m_db);
     query.prepare(READALL_MODEL_SQL);
@@ -628,7 +711,6 @@ void Database::readModel(const QList<Company*> companys){
                 QString key = query.value(2).toString();
                 QDateTime addDate = query.value(3).toDateTime();
                 bool isLike = query.value(4).toBool();
-
 
                 QFile file(key);
                 if (!file.exists()){
@@ -652,13 +734,15 @@ void Database::readModel(const QList<Company*> companys){
                     else
                         ramRequ = 32;
 
-                    emit addOfflineModel(fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
-                                         id, name,  name, key, addDate, isLike, nullptr, "Text Generation", BackendType::OfflineModel,
+                    emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
+                                         id, name,  name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
                                          icon, information, "","", QDateTime::currentDateTime(), false);
                 }
             }
         }
     }
+
+    emit finishedReadOfflineModel();
 }
 
 void Database::readConversation(){
@@ -693,8 +777,8 @@ void Database::readConversation(){
             );
         }
     }
+    emit finishedReadConversation();
 }
-
 
 void Database::readMessages(const int idConversation){
     QSqlQuery query(m_db);
@@ -715,4 +799,66 @@ void Database::readMessages(const int idConversation){
                 );
          }
     }
+}
+
+QList<int> Database::readOnlineCompany() {
+    QList<int> allID;
+
+    QFile file(QCoreApplication::applicationDirPath() + "/models/company.json");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Cannot open JSON file!";
+        return allID;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    if (!doc.isArray()) {
+        qWarning() << "Invalid JSON format!";
+        return allID;
+    }
+
+    int i=0;
+    QJsonArray jsonArray = doc.array();
+    for (const QJsonValue &value : jsonArray){
+        if (!value.isObject()) continue;
+        QJsonObject obj = value.toObject();
+
+        if (obj["type"].toString() == "OnlineModel"){
+            int id;
+            QString name = obj["name"].toString();
+            QString key = "";
+            QDateTime addDate = QDateTime::currentDateTime();
+            bool isLike = false;
+
+            QSqlQuery query(m_db);
+            query.prepare(READ_MODEL_SQL);
+            query.addBindValue(name);
+
+            if (!query.exec())
+                continue;
+
+            bool installModel = false;
+
+            if (!query.next()) {
+                id = insertModel(name, key);
+            }else{
+                id = query.value(0).toInt();
+                name = query.value(1).toString();
+                key = query.value(2).toString();
+                addDate = query.value(3).toDateTime();
+                isLike = query.value(4).toBool();
+                if(key != "")
+                    installModel = true;
+            }
+
+            if(id == -1)
+                continue;
+
+            emit addOnlineProvider(id, name, obj["icon"].toString(), isLike, BackendType::OnlineModel, obj["file"].toString(), key);
+
+            allID.append(id);
+        }
+    }
+    return allID;
 }
