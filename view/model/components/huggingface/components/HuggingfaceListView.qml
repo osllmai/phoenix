@@ -45,7 +45,7 @@ Flickable {
                 policy: ScrollBar.AlwaysOff
             }
 
-            model: huggingfaceModelList
+            model: huggingfaceModelListFilter
 
             delegate: Item{/*Loader {*/
                 id: delegateLoader2

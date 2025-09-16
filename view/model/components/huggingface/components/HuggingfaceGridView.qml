@@ -62,7 +62,7 @@ Flickable {
             cellHeight: 250
             clip: true
 
-            model: huggingfaceModelList
+            model: huggingfaceModelListFilter
 
             delegate: Item{/*Loader {*/
                 id: delegateLoader2

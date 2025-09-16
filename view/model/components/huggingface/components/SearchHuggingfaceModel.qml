@@ -8,7 +8,7 @@ import "./components"
 ComboBox {
     id: comboBoxId
     height: 35
-    width: 10
+    width: 200
     font.pixelSize: 12
 
     Accessible.role: Accessible.ComboBox
@@ -17,7 +17,7 @@ ComboBox {
 
     contentItem: Rectangle{
         id: control
-        width: (textArea.visible? 200: control.height); height: 32
+        width: control.width; height: 32
         color: Style.Colors.menuHoverBackground
         border.width: 0
         border.color: Style.Colors.boxBorder
@@ -25,7 +25,6 @@ ComboBox {
         clip: true
         property bool isTextAreaVisible: true
 
-        signal search(var text)
         Row{
             anchors.fill: parent
             ToolButton {
@@ -57,12 +56,12 @@ ComboBox {
                 font.pointSize: 10
                 wrapMode: TextEdit.NoWrap
                 background: null
-                onTextChanged: control.search(textArea.text)
+                onTextChanged: comboBoxId.search(textArea.text)
                 Keys.onReturnPressed: (event)=> {
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
                   }else {
-                        control.search(textArea.text)
+                        comboBoxId.search(textArea.text)
                   }
                 }
                 onEditingFinished: {
@@ -77,32 +76,11 @@ ComboBox {
         }
     }
 
-    popup: SearchTagPupup{
-        id: tagAboutSearch
-        y: control.height + 10
-        x: control.x
-        width: /*control.width*/0
-        height: /*50*/0
+    popup: Item{
+        width: parent.width
+        height: 40
     }
 
-    // contentItem: MyProgress{
-    //     id: downloading
-    //     myText: window.isDesktopSize? "Downloading": ""
-    //     myValue: offlineModelList.downloadProgress
-    //     myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
-    //     textLenght: 75
-    //     enabled: true
-    //     onHoveredChanged: comboBoxId.popup.open()
-    //     onClicked: comboBoxId.popup.open()
-    // }
-
-    // popup: Downloading{
-    //     id: downloadingPupup
-    //     x: downloading.x
-    //     y: downloading.y - downloadingPupup.height - 10
-    //     width: 270 + 20
-    //     height: Math.min(((offlineModelList.numberDownload * 48)), 250) + 20
-    // }
     indicator: Image {}
     background: null
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval

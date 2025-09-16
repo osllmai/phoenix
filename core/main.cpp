@@ -17,6 +17,7 @@
 #include "./model/offline/offlinemodellist.h"
 #include "./model/online/onlinemodellist.h"
 #include "./model/huggingface/huggingfacemodellist.h"
+#include "./model/huggingface/huggingfacemodellistfilter.h"
 
 #include "./model/offline/offlinemodellistfilter.h"
 #include "./model/online/onlinemodellistfilter.h"
@@ -107,6 +108,10 @@ int main(int argc, char *argv[])
 
         HuggingfaceModelList* huggingfaceModelList = HuggingfaceModelList::instance(&engine);
         engine.rootContext()->setContextProperty("huggingfaceModelList", huggingfaceModelList);
+
+
+        HuggingfaceModelListFilter* huggingfaceModelListFilter = new HuggingfaceModelListFilter(huggingfaceModelList, &engine);
+        engine.rootContext()->setContextProperty("huggingfaceModelListFilter", huggingfaceModelListFilter);
 
         QObject::connect(huggingfaceModelList, &HuggingfaceModelList::requestAddModel, database, &Database::addHuggingfaceModel, Qt::QueuedConnection);
 
