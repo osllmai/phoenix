@@ -6,7 +6,6 @@ ListView {
     id: listView
     visible: listView.count !== 0
     anchors.fill: parent
-    cacheBuffer: Math.max(0, listView.contentHeight)
 
     interactive: listView.contentHeight > listView.height
     boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds

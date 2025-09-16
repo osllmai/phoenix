@@ -9,7 +9,7 @@ import "../../../../../component_library/button"
 Item {
     Label {
         id: titleId
-        visible: !titleAndCopy.visible
+        // visible: !titleAndCopy.visible
         text: model.name
         color: Style.Colors.textTitle
         anchors.verticalCenter: parent.verticalCenter
@@ -21,33 +21,34 @@ Item {
     }
     MyCopyButton{
         id: copyId
-        visible: !titleAndCopy.visible
+        // visible: !titleAndCopy.visible
         myText: TextArea{text: "localModel/"+model.name;}
         anchors.verticalCenter: titleId.verticalCenter
         anchors.right: parent.right
         clip: true
     }
-    Row{
-        id: titleAndCopy
-        visible: parent.width - title2Id.implicitWidth - copy2Id.width > 0
-        width: parent.width
-        anchors.verticalCenter: parent.verticalCenter
-        clip: true
-        Label {
-            id: title2Id
-            text: model.name
-            color: Style.Colors.textTitle
-            anchors.verticalCenter: parent.verticalCenter
-            font.pixelSize: 14
-            font.styleName: "Bold"
-            clip: true
-            elide: Label.ElideRight
-        }
-        MyCopyButton{
-            id: copy2Id
-            myText: TextArea{text: "localModel/"+model.name;}
-            anchors.verticalCenter: title2Id.verticalCenter
-            clip: true
-        }
-    }
+    // Row{
+    //     id: titleAndCopy
+    //     visible: parent.width - title2Id.implicitWidth - copy2Id.width > 0
+    //     width: parent.width
+    //     anchors.verticalCenter: parent.verticalCenter
+    //     clip: true
+    //     Label {
+    //         id: title2Id
+    //         text: model.name
+    //         color: Style.Colors.textTitle
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         font.pixelSize: 14
+    //         font.styleName: "Bold"
+    //         clip: true
+    //         elide: Label.ElideRight
+    //     }
+    //     MyCopyButton{
+    //         id: copy2Id
+    //         myText: TextArea{text: "localModel/"+model.name;}
+    //         anchors.verticalCenter: title2Id.verticalCenter
+    //         clip: true
+    //     }
+    // }
+
 }

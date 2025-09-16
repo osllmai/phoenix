@@ -25,7 +25,6 @@ ComboBox {
         clip: true
         property bool isTextAreaVisible: true
 
-        signal search(var text)
         Row{
             anchors.fill: parent
             ToolButton {
@@ -57,12 +56,12 @@ ComboBox {
                 font.pointSize: 10
                 wrapMode: TextEdit.NoWrap
                 background: null
-                onTextChanged: control.search(textArea.text)
+                onTextChanged: comboBoxId.search(textArea.text)
                 Keys.onReturnPressed: (event)=> {
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
                   }else {
-                        control.search(textArea.text)
+                        comboBoxId.search(textArea.text)
                   }
                 }
                 onEditingFinished: {

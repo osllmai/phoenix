@@ -8,12 +8,18 @@ T.Button {
     id: control
 
     onClicked: {
-        if(model.installModel){
-            modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+        if (model.installModel) {
+            modelSelectViewId.setModelRequest(
+                model.id,
+                model.name,
+                "qrc:/media/image_company/" + model.icon,
+                model.promptTemplate,
+                model.systemPrompt
+            )
         }
     }
 
-    property bool checkselectItem: modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id)
+    property bool checkselectItem: modelSelectViewId.modelSelect && (modelSelectViewId.modelId === model.id)
 
     background: null
     contentItem: Rectangle {
@@ -21,12 +27,17 @@ T.Button {
         anchors.fill: parent
         radius: 8
         border.width: 1
-        border.color: control.checkselectItem? Style.Colors.buttonFeatureBorderSelected: Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered || control.checkselectItem)? Style.Colors.boxHover: "#00ffffff"
+        border.color: control.checkselectItem
+                       ? Style.Colors.buttonFeatureBorderSelected
+                       : Style.Colors.buttonFeatureBorderNormal
+        color: (control.hovered || control.checkselectItem)
+               ? Style.Colors.boxHover
+               : "#00ffffff"
 
         Row {
             id: headerId
             anchors.verticalCenter: parent.verticalCenter
+
             MyIcon {
                 id: logoModelId
                 myIcon: "qrc:/media/image_company/" + model.icon
@@ -34,60 +45,76 @@ T.Button {
                 enabled: false
                 width: 32; height: 32
             }
+
             Label {
                 id: modelNameId
                 text: onlineModelList.currentModel.name
-
                 width: backgroundId.width -
                        logoModelId.width -
                        copyId.width -
                        onlineModelListComboBox.width -
-                       (installButton.visible? installButton.width: 0) -
-                       (rejectChatButton.visible? rejectChatButton.width: 0) - 5
+                       (rejectChatButtonLoader.status === Loader.Ready ? rejectChatButtonLoader.item.width : 0) -
+                       (installButtonLoader.status === Loader.Ready ? installButtonLoader.item.width : 0) - 5
                 clip: true
                 elide: Label.ElideRight
                 color: Style.Colors.textTitle
                 font.pixelSize: 12
-                font.bold: control.checkselectItem? true: false
+                font.bold: control.checkselectItem
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
-            OnlineModelListComboBox{
+
+            OnlineModelListComboBox {
                 id: onlineModelListComboBox
-                smallComboBox:true
+                smallComboBox: true
             }
-            MyCopyButton{
+
+            MyCopyButton {
                 id: copyId
-                myText: TextArea{text: onlineModelList.currentModel.modelName}
+                myText: TextArea { text: onlineModelList.currentModel.modelName }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
-            MyButton{
-                id: rejectChatButton
-                visible: model.id === modelSelectViewId.modelId && model.installModel
-                height: 30
-                myText: "Eject"
-                bottonType: Style.RoleEnum.BottonType.Secondary
+
+            Loader {
+                id: rejectChatButtonLoader
+                active: model.id === modelSelectViewId.modelId && model.installModel
                 anchors.verticalCenter: logoModelId.verticalCenter
-                onClicked:{
-                    modelSelectViewId.setModelRequest(-1, "", "", "", "")
+                sourceComponent: MyButton {
+                    id: rejectChatButton
+                    height: 30
+                    myText: "Eject"
+                    bottonType: Style.RoleEnum.BottonType.Secondary
+                    onClicked: {
+                        modelSelectViewId.setModelRequest(-1, "", "", "", "")
+                    }
                 }
             }
-            MyButton{
-                id: installButton
-                height: 30
-                visible: !model.installModel
-                myText: "Install"
+
+            Loader {
+                id: installButtonLoader
+                active: !model.installModel
                 anchors.verticalCenter: logoModelId.verticalCenter
-                bottonType: Style.RoleEnum.BottonType.Primary
-                onClicked:{
-                    inputApikeyDialogId.open()
+                sourceComponent: MyButton {
+                    id: installButton
+                    height: 30
+                    myText: "Install"
+                    bottonType: Style.RoleEnum.BottonType.Primary
+                    onClicked: {
+                        deleteDialogLoader.active = true
+                        deleteDialogLoader.item.open()
+                    }
                 }
             }
         }
     }
-    InputApikeyDialog{
-        id: inputApikeyDialogId
+
+    Loader {
+        id: deleteDialogLoader
+        active: false
+        sourceComponent: InputApikeyDialog {
+            id: inputApikeyDialogId
+        }
     }
 }

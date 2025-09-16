@@ -81,15 +81,18 @@ Flickable {
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
-            delegate:Loader {
+            delegate: /*Loader {
                 id: delegateLoader
                 active: !flickable.showAllDownloadModels
                         ? index < flickable.calculationCellNumber(gridView.width)
                         : true
 
-                sourceComponent: Item {
+                sourceComponent: */Item {
                     width: gridView.cellWidth
                     height: 300
+                    visible: !flickable.showAllDownloadModels
+                             ? index < flickable.calculationCellNumber(gridView.width)
+                             : true
 
                     OfflineBoxDelegate {
                         anchors.fill: parent
@@ -97,7 +100,7 @@ Flickable {
                         Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                     }
                 }
-            }
+            // }
         }
 
         Row{
@@ -154,10 +157,10 @@ Flickable {
             clip: true
 
             model: offlineModelListFilter
-            delegate: Loader {
+            delegate: /*Loader {
                 id: delegateLoader2
 
-                sourceComponent: Item {
+                sourceComponent: */Item {
                     width: gridView2.cellWidth
                     height: 300
 
@@ -168,6 +171,6 @@ Flickable {
                     }
                 }
             }
-        }
+        // }
     }
 }

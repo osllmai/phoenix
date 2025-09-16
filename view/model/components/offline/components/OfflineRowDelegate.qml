@@ -118,7 +118,7 @@ T.Button {
                     }
 
                     OfflineDelegateTitleAndCopyButton {
-                        width: parent.width - logoModelId.width - likeIcon2Id.width - about2Icon.width
+                        width: parent.width - logoModel2Id.width - likeIcon2Id.width - about2Icon.width
                         height: parent.height
                     }
 

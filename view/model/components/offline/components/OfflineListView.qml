@@ -59,11 +59,11 @@ Flickable {
 
             model: offlineModelListFinishedDownloadFilter
 
-            delegate:  Loader {
+            delegate:  /*Loader {
                 id: delegateLoader
                 active: !flickable.showAllModels ? index < 3 : true
 
-                sourceComponent: Item{
+                sourceComponent:*/ Item{
                    id: delegateId
                    width: offlineFinishedDownloadModelList.width
                    height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
@@ -77,7 +77,7 @@ Flickable {
                        anchors.bottomMargin: 5
                    }
                 }
-            }
+            // }
         }
 
         Row{
@@ -132,10 +132,10 @@ Flickable {
             }
 
             model: offlineModelListFilter
-            delegate: Loader {
+            delegate: /*Loader {
                 id: delegateLoader2
 
-                sourceComponent: Item{
+                sourceComponent:*/ Item{
                    width: allModelList.width
                    height: window.isDesktopSize? 65:90
 
@@ -149,6 +149,6 @@ Flickable {
                    }
                 }
             }
-        }
+        // }
     }
 }

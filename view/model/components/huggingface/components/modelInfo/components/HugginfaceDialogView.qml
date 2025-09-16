@@ -25,7 +25,6 @@ Column {
             height: parent.height
             Label {
                 id: titleId
-                visible: !titleAndCopy.visible
                 text: huggingfaceModelList.hugginfaceInfo?huggingfaceModelList.hugginfaceInfo.name:""
                 color: Style.Colors.textTitle
                 anchors.verticalCenter: parent.verticalCenter
@@ -37,34 +36,10 @@ Column {
             }
             MyCopyButton {
                 id: copyId
-                visible: !titleAndCopy.visible
                 myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"") }
                 anchors.verticalCenter: titleId.verticalCenter
                 anchors.right: parent.right
                 clip: true
-            }
-            Row {
-                id: titleAndCopy
-                visible: parent.width - title2Id.implicitWidth - copy2Id.width > 0
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                clip: true
-                Label {
-                    id: title2Id
-                    text: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")
-                    color: Style.Colors.textTitle
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 14
-                    font.styleName: "Bold"
-                    clip: true
-                    elide: Label.ElideRight
-                }
-                MyCopyButton {
-                    id: copy2Id
-                    myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")}
-                    anchors.verticalCenter: title2Id.verticalCenter
-                    clip: true
-                }
             }
         }
 

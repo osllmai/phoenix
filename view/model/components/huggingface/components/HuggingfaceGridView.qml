@@ -100,6 +100,7 @@ Flickable {
                     }
                 }
             }
+
         }
 
         // GridView {
@@ -136,25 +137,25 @@ Flickable {
         //     }
         // }
 
-        Item{
-            id: installButton
-            width: parent.width - 40
-            height: 45
+        // Item{
+        //     id: installButton
+        //     width: parent.width - 40
+        //     height: 45
 
-            MyButton{
-                id: openHistoryId
-                myIcon: "qrc:/media/icon/add.svg"
-                myTextToolTip: "Add More"
-                myText: "Add More"
-                bottonType: Style.RoleEnum.BottonType.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-                Connections {
-                    target: openHistoryId
-                    function onClicked(){
-                        huggingfaceModelList.loadMore()
-                    }
-                }
-            }
-        }
+        //     MyButton{
+        //         id: openHistoryId
+        //         myIcon: "qrc:/media/icon/add.svg"
+        //         myTextToolTip: "Add More"
+        //         myText: "Add More"
+        //         bottonType: Style.RoleEnum.BottonType.Secondary
+        //         anchors.horizontalCenter: parent.horizontalCenter
+        //         Connections {
+        //             target: openHistoryId
+        //             function onClicked(){
+        //                 huggingfaceModelList.loadMore()
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

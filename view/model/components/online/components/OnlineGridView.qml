@@ -8,7 +8,7 @@ GridView {
     anchors.fill: parent
     cacheBuffer: Math.max(0, gridView.contentHeight)
 
-    cellWidth: control.calculationCellWidth()
+    cellWidth: gridView.calculationCellWidth()
     cellHeight: 200
 
     interactive: gridView.contentHeight > gridView.height
@@ -22,38 +22,22 @@ GridView {
                 ? ScrollBar.AlwaysOn
                 : ScrollBar.AlwaysOff
     }
+
+    function calculationCellWidth(){
+        if(gridView.width >1650)
+            return gridView.width/5;
+        else if(gridView.width >1300)
+            return gridView.width/4;
+        else if(gridView.width >950)
+            return gridView.width/3;
+        else if(gridView.width >550)
+            return gridView.width/2;
+        else
+            return Math.max(gridView.width,300);
+    }
     clip: true
 
     model: onlineCompanyList
-
-    // delegate: Loader {
-    //     id: delegateLoader
-    //     width: gridView.cellWidth
-    //     height: gridView.cellHeight
-    //     asynchronous: true
-
-    //     sourceComponent: OnlineBoxDelegate {
-    //         id: realBox
-    //         anchors.fill: parent
-    //         anchors.margins: 18
-    //     }
-
-    //     Rectangle {
-    //         anchors.fill: parent
-    //         radius: 12
-    //         color: "#00ffffff"
-    //         visible: delegateLoader.status === Loader.Loading
-    //         Column {
-    //             anchors.centerIn: parent
-    //             spacing: 12
-
-    //             BusyIndicator {
-    //                 running: true
-    //                 width: 48; height: 48
-    //             }
-    //         }
-    //     }
-    // }
 
     delegate: Item{
        width: gridView.cellWidth

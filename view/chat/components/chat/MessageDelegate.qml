@@ -38,26 +38,28 @@ T.Button {
                 id: logoModelId
                 width: 50; height: 50
 
-                MyIcon {
-                    id: companyId
-                    anchors.centerIn: parent
-                    visible: model.icon !== "qrc:/media/image_company/user.svg"
-                    myIcon: model.icon
-                    iconType: Style.RoleEnum.IconType.Image
-                    enabled: false
-                    width: 35; height: 35
+                Loader{
+                    active: model.icon !== "qrc:/media/image_company/user.svg"
+                    sourceComponent: MyIcon {
+                        anchors.centerIn: parent
+                        myIcon: model.icon
+                        iconType: Style.RoleEnum.IconType.Image
+                        enabled: false
+                        width: 35; height: 35
+                    }
                 }
 
-                ToolButton {
-                    id: fphoenixIconId
-                    anchors.centerIn: parent
-                    visible: model.icon === "qrc:/media/image_company/user.svg"
-                    width: 35; height: 35
-                    background: null
-                    icon{
-                        source: model.icon
-                        color: Style.Colors.menuHoverAndCheckedIcon
-                        width:24; height:24
+                Loader{
+                    active: model.icon === "qrc:/media/image_company/user.svg"
+                    sourceComponent: ToolButton {
+                        anchors.centerIn: parent
+                        width: 35; height: 35
+                        background: null
+                        icon{
+                            source: model.icon
+                            color: Style.Colors.menuHoverAndCheckedIcon
+                            width:24; height:24
+                        }
                     }
                 }
 

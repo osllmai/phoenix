@@ -63,7 +63,7 @@ ComboBox {
         id: popupId
         y: comboBoxId.height + 10
         width: 160
-        height: Math.min(300, myListView.contentHeight)
+        height: Math.min(300, listView.contentHeight)
 
         background: null
         contentItem: Rectangle{
@@ -74,15 +74,15 @@ ComboBox {
             radius: 8
 
             ListView {
-                id: myListView
+                id: listView
                 anchors.fill: parent
                 anchors.margins: 5
                 clip: true
-                // cacheBuffer: Math.max(0, myListView.contentHeight)
+                // cacheBuffer: Math.max(0, listView.contentHeight)
                 interactive: contentHeight > height
                 boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
                 ScrollBar.vertical: ScrollBar {
-                    policy: myListView.contentHeight > myListView.height
+                    policy: listView.contentHeight > listView.height
                             ? ScrollBar.AlwaysOn
                             : ScrollBar.AlwaysOff
                 }
@@ -91,7 +91,7 @@ ComboBox {
                 model: onlineModelList
 
                 delegate: Item{
-                    width: listView.width - 150; height: 45
+                    width: listView.width - 10; height: 45
 
                     OnlineModelDelegateComboBox {
                        id: indoxItem
@@ -102,6 +102,7 @@ ComboBox {
             }
         }
     }
+
     indicator: Image {}
     background: Rectangle {
         id: backgroundId
