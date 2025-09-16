@@ -8,7 +8,7 @@ import "./components"
 ComboBox {
     id: comboBoxId
     height: 35
-    width: 10
+    width: 200
     font.pixelSize: 12
 
     Accessible.role: Accessible.ComboBox
@@ -17,7 +17,7 @@ ComboBox {
 
     contentItem: Rectangle{
         id: control
-        width: (textArea.visible? 200: control.height); height: 32
+        width: control.width; height: 32
         color: Style.Colors.menuHoverBackground
         border.width: 0
         border.color: Style.Colors.boxBorder

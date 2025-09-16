@@ -64,43 +64,42 @@ Flickable {
 
             model: huggingfaceModelList
 
-            delegate: Loader {
+            delegate: Item{/*Loader {*/
                 id: delegateLoader2
                 width: gridView2.cellWidth
                 height: gridView2.cellHeight
-                asynchronous: true
+                /*asynchronous: true
 
-                sourceComponent: HuggingfaceBoxDelegate {
+                sourceComponent:*/ HuggingfaceBoxDelegate {
                     id: realBox
                     anchors.fill: parent
                     anchors.margins: 18
                 }
 
-                Rectangle {
-                    anchors.fill: parent
-                    radius: 12
-                    color: "#00ffffff"
-                    visible: delegateLoader2.status === Loader.Loading
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 12
+            //     Rectangle {
+            //         anchors.fill: parent
+            //         radius: 12
+            //         color: "#00ffffff"
+            //         visible: delegateLoader2.status === Loader.Loading
+            //         Column {
+            //             anchors.centerIn: parent
+            //             spacing: 12
 
-                        BusyIndicator {
-                            running: true
-                            width: 48; height: 48
-                        }
-                    }
-                }
-                onStatusChanged: {
-                    if (status === Loader.Ready) {
-                        // console.log("Delegate is ready!", realBox)
-                        huggingfaceModelList.loadMore()
-                    } else if (status === Loader.Loading) {
-                        console.log("Delegate is loading...")
-                    }
-                }
+            //             BusyIndicator {
+            //                 running: true
+            //                 width: 48; height: 48
+            //             }
+            //         }
+            //     }
+            //     onStatusChanged: {
+            //         if (status === Loader.Ready) {
+            //             // console.log("Delegate is ready!", realBox)
+            //             huggingfaceModelList.loadMore()
+            //         } else if (status === Loader.Loading) {
+            //             console.log("Delegate is loading...")
+            //         }
+            //     }
             }
-
         }
 
         // GridView {

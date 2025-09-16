@@ -47,13 +47,13 @@ Flickable {
 
             model: huggingfaceModelList
 
-            delegate: Loader {
+            delegate: Item{/*Loader {*/
                 id: delegateLoader2
                 width: allModelList.width
                 height: window.isDesktopSize? 65:90
-                asynchronous: true
+               /* asynchronous: true
 
-                sourceComponent: HuggingfaceRowDelegate {
+                sourceComponent:*/ HuggingfaceRowDelegate {
                     id: indoxItem2
                     anchors.fill: parent
                     anchors.leftMargin: 10
@@ -62,29 +62,30 @@ Flickable {
                     anchors.bottomMargin: 5
                 }
 
-                Rectangle {
-                    anchors.fill: parent
-                    radius: 12
-                    color: "#00ffffff"
-                    visible: delegateLoader2.status === Loader.Loading
-                    Column {
-                        anchors.centerIn: parent
-                        spacing: 12
+            //     Rectangle {
+            //         anchors.fill: parent
+            //         radius: 12
+            //         color: "#00ffffff"
+            //         visible: delegateLoader2.status === Loader.Loading
+            //         Column {
+            //             anchors.centerIn: parent
+            //             spacing: 12
 
-                        BusyIndicator {
-                            running: true
-                            width: 48; height: 48
-                        }
-                    }
-                }
-                onStatusChanged: {
-                    if (status === Loader.Ready) {
-                        // console.log("Delegate is ready!", realBox)
-                        huggingfaceModelList.loadMore()
-                    } else if (status === Loader.Loading) {
-                        console.log("Delegate is loading...")
-                    }
-                }
+            //             BusyIndicator {
+            //                 running: true
+            //                 width: 48; height: 48
+            //             }
+            //         }
+            //     }
+            //     onStatusChanged: {
+            //         if (status === Loader.Ready) {
+            //             // console.log("Delegate is ready!", realBox)
+            //             huggingfaceModelList.loadMore()
+            //         } else if (status === Loader.Loading) {
+            //             console.log("Delegate is loading...")
+            //         }
+            //     }
+
             }
 
 
