@@ -25,6 +25,36 @@ GridView {
     clip: true
 
     model: onlineCompanyList
+
+    // delegate: Loader {
+    //     id: delegateLoader
+    //     width: gridView.cellWidth
+    //     height: gridView.cellHeight
+    //     asynchronous: true
+
+    //     sourceComponent: OnlineBoxDelegate {
+    //         id: realBox
+    //         anchors.fill: parent
+    //         anchors.margins: 18
+    //     }
+
+    //     Rectangle {
+    //         anchors.fill: parent
+    //         radius: 12
+    //         color: "#00ffffff"
+    //         visible: delegateLoader.status === Loader.Loading
+    //         Column {
+    //             anchors.centerIn: parent
+    //             spacing: 12
+
+    //             BusyIndicator {
+    //                 running: true
+    //                 width: 48; height: 48
+    //             }
+    //         }
+    //     }
+    // }
+
     delegate: Item{
        width: gridView.cellWidth
        height: gridView.cellHeight

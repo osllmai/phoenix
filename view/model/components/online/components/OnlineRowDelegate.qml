@@ -64,20 +64,6 @@ T.Button {
             }
         }
 
-        // Rectangle{
-        //     id: informationAboutDownloadId
-        //     visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3 >20
-        //     height: 45; width: 300
-        //     anchors.verticalCenter: parent.verticalCenter
-        //     anchors.left: headerId.right
-        //     anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
-        //     radius: 10
-        //     border.color: Style.Colors.boxBorder
-        //     border.width: 1
-        //     color: "#00ffffff"
-        //     OnlineInformationModel{}
-        // }
-
         OnlineModelListComboBox{
             id: informationAboutDownloadId
             anchors.verticalCenter: parent.verticalCenter

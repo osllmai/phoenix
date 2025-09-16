@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs
 import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
@@ -23,9 +24,7 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
-    property int numberOfLineShow: 1
     property bool showAllDownloadModels: false
-
 
     function calculationCellNumber(myWidth){
         if(myWidth >1650)
@@ -82,7 +81,7 @@ Flickable {
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
-            delegate: Loader {
+            delegate:Loader {
                 id: delegateLoader
                 active: !flickable.showAllDownloadModels
                         ? index < flickable.calculationCellNumber(gridView.width)
@@ -141,7 +140,7 @@ Flickable {
             id: gridView2
             visible: gridView2.count !== 0
             width: parent.width
-            height: flickable.numberOfLineShow * 300
+            height: gridView2.contentHeight
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -157,7 +156,6 @@ Flickable {
             model: offlineModelListFilter
             delegate: Loader {
                 id: delegateLoader2
-                active: index < flickable.calculationCellNumber(gridView2.width) * flickable.numberOfLineShow
 
                 sourceComponent: Item {
                     width: gridView2.cellWidth
@@ -167,28 +165,6 @@ Flickable {
                         anchors.fill: parent
                         anchors.margins: 18
                         Behavior on anchors.margins { NumberAnimation { duration: 200 } }
-                    }
-                }
-            }
-        }
-
-        Item{
-            id: installButton2
-            visible: offlineModelListFilter.count > (flickable.numberOfLineShow * flickable.calculationCellNumber(gridView2.width))
-            width: parent.width - 40
-            height: 45
-
-            MyButton{
-                id: openHistoryId
-                myIcon: "qrc:/media/icon/add.svg"
-                myTextToolTip: "Add More"
-                myText: "Add More"
-                bottonType: Style.RoleEnum.BottonType.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-                Connections {
-                    target: openHistoryId
-                    function onClicked(){
-                        flickable.numberOfLineShow = flickable.numberOfLineShow + 1
                     }
                 }
             }

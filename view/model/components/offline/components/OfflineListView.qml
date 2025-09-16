@@ -23,7 +23,6 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
-    property int numberOfLineShow: 3
     property bool showAllModels: false
 
     Column {
@@ -135,7 +134,6 @@ Flickable {
             model: offlineModelListFilter
             delegate: Loader {
                 id: delegateLoader2
-                active: index < flickable.numberOfLineShow
 
                 sourceComponent: Item{
                    width: allModelList.width
@@ -149,28 +147,6 @@ Flickable {
                        anchors.topMargin: 5
                        anchors.bottomMargin: 5
                    }
-                }
-            }
-        }
-
-        Item{
-            id: installButton2
-            visible: offlineModelListFilter.count > flickable.numberOfLineShow
-            width: parent.width - 40
-            height: 45
-
-            MyButton{
-                id: openHistoryId
-                myIcon: "qrc:/media/icon/add.svg"
-                myTextToolTip: "Add More"
-                myText: "Add More"
-                bottonType: Style.RoleEnum.BottonType.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-                Connections {
-                    target: openHistoryId
-                    function onClicked(){
-                        flickable.numberOfLineShow = flickable.numberOfLineShow + 5
-                    }
                 }
             }
         }

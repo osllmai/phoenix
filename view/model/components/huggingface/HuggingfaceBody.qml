@@ -9,30 +9,21 @@ Item {
     id: control
     clip:true
 
-    HuggingfaceGridView {
-        id: gridView
-        visible: (gridView.count !== 0) && (window.modelPageView === "gridView")
-    }
-    HuggingfaceListView {
-        id: listView
-        visible: (gridView.count !== 0) && (window.modelPageView === "listView")
+    Loader {
+        id: modelViewLoader
+        anchors.fill: parent
+        sourceComponent: (window.modelPageView === "gridView") ? gridComponent : listComponent
     }
 
-    Item{
-        id:emptyHistory
-        visible: gridView.count === 0
-        anchors.fill: parent
-        MyIcon {
-            id: notFoundModelIconId
-            myIcon: "qrc:/media/icon/notFoundModel.svg"
-            iconType: Style.RoleEnum.IconType.Image
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            enabled: false
-            width: 120; height: 120
-        }
+    Component {
+        id: gridComponent
+        HuggingfaceGridView { id: gridView }
     }
-    HuggingfaceInfoDialog{
-        id: huggingfaceDialogId
+
+    Component {
+        id: listComponent
+        HuggingfaceListView { id: listView }
     }
+
+    HuggingfaceInfoDialog { id: huggingfaceDialogId }
 }
