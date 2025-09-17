@@ -32,7 +32,7 @@ Item{
             width: parent.width -  companyList.width - viewList.width - 20 - 10
             SearchOfflineModel{
                 id: searchBoxId
-                width: Math.min(parent.width , fillterBox.width/3)
+                width: Math.min(parent.width , 450)
                 anchors.horizontalCenter: parent.horizontalCenter
                 Connections{
                     target: searchBoxId
@@ -46,7 +46,7 @@ Item{
 
         MyComboBox {
             id: companyList
-            width: 110
+            width: parent.width<380? 35 :110
             model: [
                 "All",
                 "Favorite",

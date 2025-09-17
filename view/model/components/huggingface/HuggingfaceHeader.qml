@@ -25,7 +25,7 @@ Item{
             width: parent.width  - viewList.width - 20 - 10
             SearchHuggingfaceModel{
                 id: searchBoxId
-                width: Math.min(parent.width , fillterBox.width/3)
+                width: Math.min(parent.width , 550)
                 anchors.horizontalCenter: parent.horizontalCenter
                 Connections{
                     target: searchBoxId
