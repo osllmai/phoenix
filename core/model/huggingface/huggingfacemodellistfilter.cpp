@@ -2,7 +2,7 @@
 #include <QRegularExpression>
 
 HuggingfaceModelListFilter::HuggingfaceModelListFilter(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent), m_pipelineTag("text-to-image")
 {
     init();
 }
@@ -62,6 +62,33 @@ bool HuggingfaceModelListFilter::filterAcceptsRow(int sourceRow, const QModelInd
 int HuggingfaceModelListFilter::count() const
 {
     return rowCount();
+}
+
+void HuggingfaceModelListFilter::filter(const QString &filterStr)
+{
+    qInfo()<<filterStr;
+    if(filterStr == "All")
+        setFilterType(FilterType::All);
+    else if (filterStr == "MostDownloaded")
+        setFilterType(FilterType::MostDownloaded);
+    else if (filterStr == "MostLiked")
+        setFilterType(FilterType::MostLiked);
+    else if (filterStr == "PipelineTag")
+        setFilterType(FilterType::PipelineTag);
+}
+
+QVariantMap HuggingfaceModelListFilter::get(int index) const
+{
+    QVariantMap map;
+    if (index < 0 || index >= rowCount())
+        return map;
+
+    const QHash<int, QByteArray> roles = roleNames();
+    const QModelIndex modelIndex = this->index(index, 0);
+    for (auto it = roles.begin(); it != roles.end(); ++it) {
+        map[it.value()] = data(modelIndex, it.key());
+    }
+    return map;
 }
 
 void HuggingfaceModelListFilter::setFilterType(FilterType newFilterType)

@@ -76,9 +76,105 @@ ComboBox {
         }
     }
 
-    popup: Item{
-        width: parent.width
-        height: 40
+    popup: Popup {
+        id: popupId
+        y: comboBoxId.height + 5
+        width: comboBoxId.width
+        height: 120
+        background: null
+
+        contentItem: Loader {
+            id: popupLoader
+            anchors.fill: parent
+            active: popupId.visible
+            sourceComponent: Rectangle {
+                anchors.fill: parent
+                color: Style.Colors.background
+                border.width: 1; border.color: Style.Colors.boxBorder
+                radius: 10
+                Flow{
+                    spacing: 5
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    MyButton {
+                        id: documentId
+                        myText: "All"
+                        myIcon: "qrc:/media/icon/document.svg"
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureBlue
+                        isNeedAnimation: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                huggingfaceModelListFilter.filter("All")
+                            }
+                        }
+                    }
+
+                    MyButton {
+                        id: grammarId
+                        myText: "Most Downloaded"
+                        myIcon: "qrc:/media/icon/grammer.svg"
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureRed
+                        isNeedAnimation: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                huggingfaceModelListFilter.filter("MostLiked")
+                            }
+                        }
+                    }
+                    MyButton {
+                        id: rewriteId
+                        myText: "Most Liked"
+                        myIcon: "qrc:/media/icon/rewrite.svg"
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureOrange
+                        isNeedAnimation: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                huggingfaceModelListFilter.filter("MostLiked")
+                            }
+                        }
+                    }
+                    MyButton {
+                        id: imageEditorId
+                        myText: "Pipeline Tag"
+                        myIcon: "qrc:/media/icon/imageEditor.svg"
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureGreen
+                        isNeedAnimation: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                huggingfaceModelListFilter.filter("PipelineTag")
+                            }
+                        }
+                    }
+                    MyButton {
+                        id: imageId
+                        myText: "Image"
+                        myIcon: "qrc:/media/icon/image.svg"
+                        bottonType: Style.RoleEnum.BottonType.Feature
+                        iconType: Style.RoleEnum.IconType.FeatureYellow
+                        isNeedAnimation: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                huggingfaceModelListFilter.filter("All")
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     indicator: Image {}

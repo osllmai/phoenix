@@ -19,6 +19,9 @@ public:
     explicit HuggingfaceModelListFilter(QObject* parent = nullptr);
     explicit HuggingfaceModelListFilter(QAbstractItemModel *model, QObject *parent = nullptr);
 
+    Q_INVOKABLE void filter(const QString &filter);
+    Q_INVOKABLE QVariantMap get(int index) const;
+
     enum class FilterType {
         All,
         MostLiked,
