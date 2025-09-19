@@ -36,5 +36,19 @@
       "Works completely offline after setup (for local models)"
     ],
     "support": "support@nemati.ai"
+  },
+  {
+    "version": "0.1.7",
+    "title": "Phoenix Initial Public Release",
+    "date": "2025-09-19",
+    "notes": "The first release of Phoenix, a local-first chat interface supporting both offline and online LLMs. Phoenix includes a built-in interactive chat UI for immediate use. Alternatively, users can connect to language models via API or socket interfaces, whether running locally or hosted remotely. This version also features voice-to-text and text-to-speech modules, and supports direct chat with PDF documents. The system is developer-friendly and can operate fully offline after setup when using local models.",
+    "features": [
+      "Support for both local and online models, as well as all models available on Hugging Face.",
+      "Integrated speech-to-text functionality using local models, enabling real-time voice recording and transcription.",
+      "Flexible integration through API or socket connections, so that other applications on your system can access and use the locally loaded models.",
+      "Full customization of model configurations, giving users control to adapt performance and resources to their specific needs.",
+      "A clean and user-friendly UI that simplifies interaction with models and settings"
+    ],
+    "support": "phoenix@osllm.ai"
   }
 ]
