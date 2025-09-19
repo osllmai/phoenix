@@ -175,6 +175,11 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
         }
     }
 
+    QString cleanName = name;
+    if (cleanName.endsWith(".gguf", Qt::CaseInsensitive)) {
+        cleanName.chop(5);
+    }
+
     // --- Step 2: Add the model to the company's JSON file ---
     QString companyModelsPath = modelsDir + "/" + companyJsonFileName;
     QJsonArray modelsArray;
@@ -193,7 +198,7 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     for (const QJsonValue &val : modelsArray) {
         if (!val.isObject()) continue;
         QJsonObject obj = val.toObject();
-        if (obj["modelName"].toString() == name) {
+        if (obj["modelName"].toString() == cleanName) {
             modelExists = true;
             break;
         }
@@ -203,24 +208,20 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
     if (!modelExists) {
         QJsonObject newModel;
 
-        QString cleanName = name;
-        if (cleanName.endsWith(".gguf", Qt::CaseInsensitive)) {
-            cleanName.chop(5);
-        }
-
-        newModel["name"] = cleanName;
-        newModel["modelName"] = cleanName;
-        newModel["url"] = url;
-        newModel["filesize"] = 0.0;
-        newModel["ramrequired"] = 1;
-        newModel["filename"] = name ;
-        newModel["parameters"] = "- billion";
-        newModel["quant"] = "q4_0";
-        newModel["type"] = type;
-        newModel["description"] = "You have added this model from the HuggingFace list to your collection.";
-        newModel["promptTemplate"] = "";
-        newModel["systemPrompt"] = "";
-        newModel["recommended"] = false;
+        // ---- newModel ----
+        newModel["name"]          = cleanName;
+        newModel["modelName"]     = cleanName;
+        newModel["url"]           = url;
+        newModel["filesize"]      = 0.0;
+        newModel["ramrequired"]   = 1;
+        newModel["filename"]      = name;
+        newModel["parameters"]    = "- billion";
+        newModel["quant"]         = "q4_0";
+        newModel["type"]          = type;
+        newModel["description"]   = "You have added this model from the HuggingFace list to your collection.";
+        newModel["promptTemplate"]= "";
+        newModel["systemPrompt"]  = "";
+        newModel["recommended"]   = false;
 
         modelsArray.append(newModel);
 
@@ -229,19 +230,42 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
             modelFile.write(QJsonDocument(modelsArray).toJson(QJsonDocument::Indented));
             modelFile.close();
         }
+
+        // --- Step 3: Insert model into database and emit signal ---
+        int id = insertModel(cleanName, ""); // Empty key since it's an offline model
+        if (id == -1) return;
+
+        QDateTime addDate = QDateTime::currentDateTime();
+        bool isLike = false;
+        QString information = newModel["description"].toString();
+
+        emit addOfflineModel(
+            nullptr,                               // Company*
+            newModel["filesize"].toDouble(),       // fileSize
+            newModel["ramrequired"].toInt(),       // ramRamrequired
+            newModel["filename"].toString(),       // fileName
+            newModel["url"].toString(),            // url
+            newModel["parameters"].toString(),     // parameters
+            newModel["quant"].toString(),          // quant
+            0.0,                                   // downloadPercent
+            false,                                 // isDownloading
+            false,                                 // downloadFinished
+            id,                                    // id
+            newModel["modelName"].toString(),      // modelName
+            newModel["name"].toString(),           // name
+            "",                                    // key (empty for offline)
+            addDate,                               // addModelTime
+            isLike,                                // isLike
+            newModel["type"].toString(),           // type
+            BackendType::OfflineModel,             // backend
+            companyIcon,                           // icon
+            information,                           // information
+            newModel["promptTemplate"].toString(), // promptTemplate
+            newModel["systemPrompt"].toString(),   // systemPrompt
+            QDateTime::currentDateTime(),          // expireModelTime
+            newModel["recommended"].toBool()       // recommended
+            );
     }
-
-    // --- Step 3: Insert model into database and emit signal ---
-    int id = insertModel(name, ""); // Empty key since it's an offline model
-    if (id == -1) return;
-
-    QDateTime addDate = QDateTime::currentDateTime();
-    bool isLike = false;
-    QString information = "You have added this model from the HuggingFace list to your collection.";
-
-    emit addOfflineModel(nullptr, 0.0, 1, "", url, "- billion", "q4_0", 0.0, false, false,
-                         id, name, name, "", addDate, isLike, type, BackendType::OfflineModel,
-                         companyIcon, information, "", "", QDateTime::currentDateTime(), false);
 }
 
 void Database::deleteModel(const int id){

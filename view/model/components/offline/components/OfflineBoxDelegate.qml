@@ -88,6 +88,7 @@ T.Button {
 
             DownloadButton{
                 id: downloadButtonId
+                anchors.right: parent.right
             }
         }
 

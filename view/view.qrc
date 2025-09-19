@@ -142,5 +142,6 @@
         <file>component_library/model/components/online/OnlineModelDelegateComboBox.qml</file>
         <file>model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml</file>
         <file>model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml</file>
+        <file>model/components/huggingface/components/SearchHuggingfaceModel.qml</file>
     </qresource>
 </RCC>

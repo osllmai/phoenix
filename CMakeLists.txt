@@ -508,6 +508,8 @@ qt_add_resources(app${APP_NAME}
         media/image_company/zeabur.svg
         media/image_company/zeroone.svg
         media/image_company/zhipu.svg
+        media/image_company/pytorch.svg
+        media/image_company/tensorflow.svg
 
 
         media/fonts/DMSans-Regular.ttf
@@ -693,6 +695,7 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml
     QML_FILES view/component_library/model/components/online/OnlineModelListComboBox.qml
     QML_FILES view/component_library/model/components/online/OnlineModelDelegateComboBox.qml
+    QML_FILES view/model/components/huggingface/components/SearchHuggingfaceModel.qml
 )
 
 #for show logger-contect (file name, message line, ...)

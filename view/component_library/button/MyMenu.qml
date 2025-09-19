@@ -7,7 +7,7 @@ import '../../component_library/style' as Style
 T.Button {
     id: control
     height: 35
-    width: (control.myText !== ""? textId.width: 0 ) + (control.myIcon !== ""? iconId.width: 0 ) + 15
+    width: (control.myText !== ""? textId.width: 0 ) + (control.myIcon !== ""? iconId.width: 10 ) + 15
 
     leftPadding: 4; rightPadding: 4
     autoExclusive: false
@@ -65,8 +65,8 @@ T.Button {
                 text: control.myText
                 font.weight: 400
                 font.pixelSize: 12
-                anchors.verticalCenter: iconId.verticalCenter
-                visible: control.width>60
+                anchors.verticalCenter: control.myIcon !== ""? iconId.verticalCenter: parent.verticalCenter
+                visible: control.width>60 || (control.myIcon === "")
                 clip: true
             }
         }

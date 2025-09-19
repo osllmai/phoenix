@@ -10,7 +10,6 @@ Item{
     clip:true
 
     property bool needCloseButton: true
-
     property int currentPageNumber: 0
 
     signal search(var text)
@@ -35,7 +34,6 @@ Item{
                         pageNumber: 1
                 }
             }
-
 
             delegate: MyButton {
                 id: delegateId

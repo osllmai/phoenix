@@ -18,6 +18,7 @@
 #include <QTimer>
 
 #include "huggingfacestruct.h"
+#include "offlinemodellist.h"
 
 class HuggingfaceModelInfo: public QObject
 {

@@ -14,6 +14,11 @@ T.Button {
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
+    property bool generateProcess: (model.text === ""?true:false) &&
+                                   !conversationList.isEmptyConversation &&
+                                   conversationList.currentConversation.loadModelInProgress &&
+                                   (index === listView.count - 1)
+
     background: null
      contentItem: Item {
          id: backgroundId
@@ -38,33 +43,37 @@ T.Button {
                 id: logoModelId
                 width: 50; height: 50
 
-                MyIcon {
-                    id: companyId
+                Loader{
                     anchors.centerIn: parent
-                    visible: model.icon !== "qrc:/media/image_company/user.svg"
-                    myIcon: model.icon
-                    iconType: Style.RoleEnum.IconType.Image
-                    enabled: false
-                    width: 35; height: 35
+                    active: model.icon !== "qrc:/media/image_company/user.svg"
+                    sourceComponent: MyIcon {
+                        anchors.centerIn: parent
+                        myIcon: model.icon
+                        iconType: Style.RoleEnum.IconType.Image
+                        enabled: false
+                        width: 35; height: 35
+                    }
                 }
 
-                ToolButton {
-                    id: fphoenixIconId
+                Loader{
                     anchors.centerIn: parent
-                    visible: model.icon === "qrc:/media/image_company/user.svg"
-                    width: 35; height: 35
-                    background: null
-                    icon{
-                        source: model.icon
-                        color: Style.Colors.menuHoverAndCheckedIcon
-                        width:24; height:24
+                    active: model.icon === "qrc:/media/image_company/user.svg"
+                    sourceComponent: ToolButton {
+                        anchors.centerIn: parent
+                        width: 35; height: 35
+                        background: null
+                        icon{
+                            source: model.icon
+                            color: Style.Colors.menuHoverAndCheckedIcon
+                            width:24; height:24
+                        }
                     }
                 }
 
                 Loader {
                     id: busyLoader
                     anchors.centerIn: parent
-                    active: (model.text === ""?true:false)
+                    active: control.generateProcess
                     sourceComponent: BusyIndicator {
                         running: true
                         width: 50; height: 50
@@ -117,7 +126,7 @@ T.Button {
 
                 Item {
                     id: loadingTextItem
-                    visible: model.text === ""
+                    visible: control.generateProcess
                     width: parent.width - logoModelId.width
                     height: 30
 
@@ -143,7 +152,7 @@ T.Button {
 
                 TextArea {
                     id: textId
-                    visible: model.text !== ""
+                    visible: !control.generateProcess
                     color: Style.Colors.textTitle
                     selectionColor: Style.Colors.textSelection
                     placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
@@ -154,7 +163,7 @@ T.Button {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.PlainText
 
-                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ?
+                    cursorVisible: control.generateProcess ?
                                                                 conversationList.currentConversation.responseInProgress: false
                     cursorPosition: text.length
 

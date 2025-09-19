@@ -119,6 +119,8 @@ void HuggingfaceModelInfo::onReplyFinished(QNetworkReply *reply) {
         if (filename.endsWith(".gguf", Qt::CaseInsensitive)) {
             SiblingFile sf;
             sf.rfilename = filename;
+            sf.exist = OfflineModelList::instance(nullptr)->existModelByFileName(filename);
+            qInfo()<<"sf.exist"<<sf.exist<<"  sf.rfilename"<<sf.rfilename;
             siblings.append(sf);
         }
         else if (filename.compare("README.md", Qt::CaseInsensitive) == 0) {
@@ -300,6 +302,7 @@ QVariantList HuggingfaceModelInfo::siblingsQml() const {
     for (const auto &s : m_siblings) {
         QVariantMap map;
         map["rfilename"] = s.rfilename;
+        map["exist"] = s.exist;
         list.append(map);
     }
     return list;

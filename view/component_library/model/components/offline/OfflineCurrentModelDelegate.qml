@@ -9,12 +9,19 @@ T.Button {
     id: control
 
     onClicked: {
-        if(model.downloadFinished){
-            modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+        if (model.downloadFinished) {
+            modelSelectViewId.setModelRequest(
+                model.id,
+                model.name,
+                "qrc:/media/image_company/" + model.icon,
+                model.promptTemplate,
+                model.systemPrompt
+            )
         }
     }
 
-    property bool checkselectItem: modelSelectViewId.modelSelect &&(modelSelectViewId.modelId === model.id)
+    property bool checkselectItem: modelSelectViewId.modelSelect &&
+                                   (modelSelectViewId.modelId === model.id)
 
     background: null
     contentItem: Rectangle {
@@ -22,90 +29,112 @@ T.Button {
         anchors.fill: parent
         radius: 8
         border.width: 1
-        border.color: control.checkselectItem? Style.Colors.buttonFeatureBorderSelected: Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered || control.checkselectItem)? Style.Colors.boxHover: "#00ffffff"
+        border.color: control.checkselectItem
+                       ? Style.Colors.buttonFeatureBorderSelected
+                       : Style.Colors.buttonFeatureBorderNormal
+        color: (control.hovered || control.checkselectItem)
+               ? Style.Colors.boxHover
+               : "#00ffffff"
 
         Row {
             id: headerId
             anchors.verticalCenter: parent.verticalCenter
+
             MyIcon {
                 id: logoModelId
                 myIcon: "qrc:/media/image_company/" + model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
-                width: 32; height: 32
+                width: 32
+                height: 32
             }
+
             Label {
                 id: modelNameId
                 text: model.name
-                width: backgroundId.width -
-                            (logoModelId.width) -
-                            (copyId.width) -
-                            (rejectChatButton.visible? rejectChatButton.width: 0) -
-                            (downloadPercentButton.visible? downloadPercentButton.width: 0) -
-                            (dounloadButton.visible? dounloadButton.width: 0) - 5
+                width: backgroundId.width
+                        - logoModelId.width
+                        - copyId.width
+                        - (rejectChatLoader.active ? 60 : 0)
+                        - (downloadButtonLoader.active ? 80 : 0)
+                        - (progressButtonLoader.active ? 87 : 0)
+                        - 5
                 clip: true
                 elide: Label.ElideRight
                 color: Style.Colors.textTitle
                 font.pixelSize: 12
-                font.bold: control.checkselectItem? true: false
+                font.bold: control.checkselectItem
                 horizontalAlignment: Text.AlignJustify
                 verticalAlignment: Text.AlignTop
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
-            MyCopyButton{
+
+            MyCopyButton {
                 id: copyId
-                myText: TextArea{text: model.modelName;}
+                myText: TextArea { text: model.modelName }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
-            MyButton{
-                id: rejectChatButton
-                height: 30
-                visible: model.id === modelSelectViewId.modelId && model.downloadFinished
-                myText: "Eject"
-                bottonType: Style.RoleEnum.BottonType.Secondary
+
+            Loader {
+                id: rejectChatLoader
+                active: model.id === modelSelectViewId.modelId && model.downloadFinished
                 anchors.verticalCenter: logoModelId.verticalCenter
-                onClicked:{
-                    modelSelectViewId.setModelRequest(-1, "", "", "", "")
-                }
-            }
-            MyButton{
-                id: dounloadButton
-                height: 30
-                visible: !model.downloadFinished && !model.isDownloading
-                myText: "Download"
-                anchors.verticalCenter: logoModelId.verticalCenter
-                bottonType: Style.RoleEnum.BottonType.Primary
-                onClicked:{
-                    folderDialogId.open()
+                sourceComponent: MyButton {
+                    height: 30
+                    width: 60
+                    myText: "Eject"
+                    bottonType: Style.RoleEnum.BottonType.Secondary
+                    onClicked: {
+                        modelSelectViewId.setModelRequest(-1, "", "", "", "")
+                    }
                 }
             }
 
-            MyButton{
-                id: downloadPercentButton
-                visible: model.isDownloading
-                height: 30
-                width: 87
-                progressBarValue: model.downloadPercent
+            Loader {
+                id: downloadButtonLoader
+                active: !model.downloadFinished && !model.isDownloading
                 anchors.verticalCenter: logoModelId.verticalCenter
-                bottonType: Style.RoleEnum.BottonType.Progress
-                onClicked:{
-                    offlineModelList.cancelRequest(model.id)
+                sourceComponent: MyButton {
+                    id: dounloadButton
+                    height: 30
+                    width: 80
+                    myText: "Download"
+                    bottonType: Style.RoleEnum.BottonType.Primary
+                    onClicked: {
+                        folderDialogLoader.active = true
+                        folderDialogLoader.item.open()
+                    }
+                }
+            }
+
+            Loader {
+                id: progressButtonLoader
+                active: model.isDownloading
+                anchors.verticalCenter: logoModelId.verticalCenter
+                sourceComponent: MyButton {
+                    id: downloadPercentButton
+                    height: 30
+                    width: 87
+                    progressBarValue: model.downloadPercent
+                    bottonType: Style.RoleEnum.BottonType.Progress
+                    onClicked: {
+                        offlineModelList.cancelRequest(model.id)
+                    }
                 }
             }
         }
     }
-    FolderDialog {
-        id: folderDialogId
-        title: "Choose Folder"
 
-        onAccepted: {
-            offlineModelList.downloadRequest(model.id, currentFolder)
-            console.log(currentFolder)
-        }
-        onRejected: {
-            console.log("Rejected");
+    Loader {
+        id: folderDialogLoader
+        active: false
+        sourceComponent: FolderDialog {
+            id: folderDialogId
+            title: "Choose Folder"
+
+            onAccepted: offlineModelList.downloadRequest(model.id, currentFolder)
+            onRejected: console.log("Rejected")
         }
     }
 }

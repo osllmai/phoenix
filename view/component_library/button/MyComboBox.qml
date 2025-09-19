@@ -15,11 +15,14 @@ ComboBox {
     property var fullModel: []
     property string searchText: ""
 
+    property color backgroundColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
+    property color borderColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
+    property color textColor: choiceTextColor(Style.RoleEnum.State.Normal)
+
     onModelChanged: {
         fullModel = model
         filterModel(searchText)
     }
-
 
     function filterModel(text) {
         searchText = text
@@ -33,37 +36,67 @@ ComboBox {
         })
     }
 
-
     Component.onCompleted: {
         fullModel = comboBoxId.model
         filterModel("")
     }
 
     Accessible.role: Accessible.ComboBox
-    contentItem: Row {
-        id: contentRow
-        Label {
-            id: textId
-            text: comboBoxId.displayText
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width - iconId.width
-            color: Style.Colors.textTitle
-            verticalAlignment: Text.AlignLeft
-            elide: Text.ElideRight
-            clip: true
-        }
-        MyIcon{
-            id:iconId
-            myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea {
+    contentItem: Loader {
+        id: contentLoader
+        anchors.fill: parent
+        active: true
+        sourceComponent: comboBoxId.width > 36 ? fullContent : iconOnly
+
+        Component {
+            id: fullContent
+            Row {
+                id: contentRow
                 anchors.fill: parent
-                onClicked: {
-                    comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                anchors.leftMargin: 10
+                Label {
+                    id: textId
+                    text: comboBoxId.displayText
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - iconId.width
+                    color: comboBoxId.textColor
+                    verticalAlignment: Text.AlignLeft
+                    elide: Text.ElideRight
+                    clip: true
+                }
+                MyIcon {
+                    id: iconId
+                    myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                    anchors.verticalCenter: parent.verticalCenter
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                        }
+                    }
+                }
+            }
+        }
+
+        Component {
+            id: iconOnly
+            Item {
+                anchors.fill: parent
+                MyIcon {
+                    id: iconIdSmall
+                    anchors.centerIn: parent
+                    myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                        }
+                    }
                 }
             }
         }
     }
+
 
     delegate: ItemDelegate {
         height: 35; width: popupId.width /*- 50*/
@@ -85,7 +118,7 @@ ComboBox {
         id: popupId
         y: comboBoxId.height - 4
         x: - 10
-        width: comboBoxId.width + 20
+        width: comboBoxId.width>36?comboBoxId.width + 20 : 120
         implicitHeight: Math.min(contentItem.implicitHeight + 50, 260)
 
         background: null
@@ -95,16 +128,6 @@ ComboBox {
             color: Style.Colors.background
             border.width: 1; border.color: Style.Colors.boxBorder
             radius: 10
-            // SearchButton{
-            //     id: searchBoxId
-            //     width: parent.width
-            //     Connections{
-            //         target: searchBoxId
-            //         function onSearch(myText){
-            //             comboBoxId.filterModel(myText)
-            //         }
-            //     }
-            // }
             ListView {
                 id: myListView
                 width: parent.width
@@ -130,8 +153,9 @@ ComboBox {
     indicator: Image {}
     background: Rectangle {
         id: backgroundId
-        color: Style.Colors.background
-        border.width: 1; border.color: Style.Colors.boxBorder
+        color: comboBoxId.backgroundColor
+        border.color: comboBoxId.borderColor
+        border.width: 1
         radius: 10
     }
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
@@ -191,56 +215,40 @@ ComboBox {
             name: "normal"
             when: comboBoxId.isNormal
             PropertyChanges {
-                target: backgroundId
-                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
-                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
-                // width: comboBoxId.width-3; height: comboBoxId.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+                target: comboBoxId
+                backgroundColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
+                borderColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Normal)
+                textColor: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
             }
         },
         State {
             name: "hover"
             when: comboBoxId.isHover
             PropertyChanges {
-                target: backgroundId
-                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
-                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
-                // width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+                target: comboBoxId
+                backgroundColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
+                borderColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Hover)
+                textColor: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
             }
         },
         State {
             name: "pressed"
             when: comboBoxId.isPressed
             PropertyChanges {
-                target: backgroundId
-                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
-                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
-                // width: comboBoxId.isNeedAnimation? comboBoxId.width: parent.width-3; height: comboBoxId.isNeedAnimation? comboBoxId.height: comboBoxId.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+                target: comboBoxId
+                backgroundColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
+                borderColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Pressed)
+                textColor: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
             }
         },
         State {
             name: "disabled"
             when: comboBoxId.isDisabled
             PropertyChanges {
-                target: backgroundId
-                color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
-                border.color: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
-                // width: comboBoxId.width-3; height: comboBoxId.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
+                target: comboBoxId
+                backgroundColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
+                borderColor: comboBoxId.choiceBackgroundColor(Style.RoleEnum.State.Disabled)
+                textColor: comboBoxId.choiceTextColor(Style.RoleEnum.State.Normal)
             }
         }
     ]

@@ -14,16 +14,16 @@ Flickable {
     interactive: flickable.contentHeight > flickable.height
     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
+        interactive: true
         policy: flickable.contentHeight > flickable.height
                 ? ScrollBar.AlwaysOn
                 : ScrollBar.AlwaysOff
+        minimumSize: 0.1
     }
-
-    property int numberOfLineShow: 1
 
     function calculationCellNumber(myWidth){
         if(myWidth >1650)
@@ -47,6 +47,7 @@ Flickable {
 
     Column {
         id: column
+        visible: /*conversationList.count === 0 &&*/ gridView2.count !== 0
         width: flickable.width
         spacing: 5
 
@@ -54,57 +55,44 @@ Flickable {
             id: gridView2
             visible: gridView2.count !== 0
             width: parent.width
-            height: flickable.numberOfLineShow * 300
+            height: gridView2.contentHeight
 
-            interactive: false
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {
-                policy: ScrollBar.AlwaysOff
-            }
+            interactive: gridView2.contentHeight > gridView2.height
+            boundsBehavior: gridView2.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
             cellWidth: flickable.calculationCellWidth(gridView2.width)
-            cellHeight: 300
-
+            cellHeight: 250
             clip: true
 
-            model: huggingfaceModelList
-            delegate: Loader {
+            model: huggingfaceModelListFilter
+
+            delegate: Item{/*Loader {*/
                 id: delegateLoader2
-                active: index < flickable.calculationCellNumber(gridView2.width) * flickable.numberOfLineShow
+                width: gridView2.cellWidth
+                height: gridView2.cellHeight
+                /*asynchronous: true
 
-                sourceComponent: Item {
-                    width: gridView2.cellWidth
-                    height: 300
-
-                    HuggingfaceBoxDelegate {
-                        anchors.fill: parent
-                        anchors.margins: 18
-                        Behavior on anchors.margins { NumberAnimation { duration: 200 } }
-                    }
+                sourceComponent:*/ HuggingfaceBoxDelegate {
+                    id: realBox
+                    anchors.fill: parent
+                    anchors.margins: 18
                 }
             }
         }
-        Item{
-            id: installButton
-            visible: huggingfaceModelList.count > (flickable.numberOfLineShow * flickable.calculationCellNumber(gridView2.width))
-            width: parent.width - 40
-            height: 45
-
-            MyButton{
-                id: openHistoryId
-                myIcon: "qrc:/media/icon/add.svg"
-                myTextToolTip: "Add More"
-                myText: "Add More"
-                bottonType: Style.RoleEnum.BottonType.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-                Connections {
-                    target: openHistoryId
-                    function onClicked(){
-                        flickable.numberOfLineShow = flickable.numberOfLineShow + 1
-                        huggingfaceModelList.loadMore()
-                    }
-                }
-            }
+    }
+    Item{
+        id:searchEmptyHistory
+        visible: /*conversationList.count === 0 &&*/ gridView2.count === 0
+        width: flickable.width
+        height: flickable.height
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/search.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 60; height: 60
         }
     }
 }

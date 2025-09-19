@@ -30,7 +30,7 @@ public:
     static HuggingfaceModelList* instance(QObject* parent);
 
     Q_INVOKABLE void fetchModels();
-    Q_INVOKABLE void loadMore(int count = 5);
+    Q_INVOKABLE void loadMore(int count = 1);
     Q_INVOKABLE void openModel(const QString& id, const QString& name, const QString& icon);
     Q_INVOKABLE void closeModel(QString id);
     Q_INVOKABLE void addModel(const QString &idModel, const QString &fileName, const QString& type,

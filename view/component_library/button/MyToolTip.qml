@@ -5,7 +5,7 @@ import '../style' as Style
 
 ToolTip {
     id: toolTip
-    visible: infoMouseArea.containsMouse
+    // visible: infoMouseArea.containsMouse
 
     property string toolTipText
     property bool toolTipInCenter: false

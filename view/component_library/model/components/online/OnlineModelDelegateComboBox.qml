@@ -9,7 +9,6 @@ T.Button {
 
     onClicked: {
         onlineModelList.selectCurrentModelRequest(model.id)
-        console.log("Selected:", model.name, "id:", model.id)
     }
 
     property bool checkselectItem: (onlineModelList.currentModel.id === model.id)

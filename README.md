@@ -1,80 +1,74 @@
-# Phoenix Local Chatbot
+<h1 align="center">🔥 Phoenix 🔥</h1>
 
 <p align="center">
-  <img src="docs/image/Phoenix.png" alt="phoenix Logo" width="380" height="380" style="border: 2px solid yellow;" />
+  <img src="docs/image/Phoenix.svg" alt="Phoenix Logo" width="140" height="140"/>
 </p>
-<br/>
 
-<div style="position: relative; width: 100%; text-align: center;">
-    <a href="https://github.com/osllmai/phoenix">
-        <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=16&duration=3000&pause=500&multiline=true&width=700&height=100&lines=Phoenix+Local+Chatbot. Copyright+©️+osllm.ai" alt="Typing SVG" style="margin-top: 10px;"/>
-    </a>
-</div>
+<p align="center">
+  <b>Local Chatbot built with Qt/QML – No internet required 🚀</b>
+</p>
 
+<p align="center">
+  <a href="https://github.com/osllmai/phoenix">
+    <img src="https://img.shields.io/badge/Platform-Qt%2FQML-blue?style=for-the-badge"/>
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>
+    <img src="https://img.shields.io/github/stars/osllmai/phoenix?style=for-the-badge"/>
+  </a>
+</p>
 
-## Prerequisites
-
-On Windows and Linux, building Phoenix with full GPU support requires the [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) and the latest [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads).
-
-
-
-## Cloning the Repository and Building the Project
-
-First, clone the repository and navigate into the project directory:
-
-```bash
-git clone --recurse-submodules https://github.com/osllmai/phoenix.git
-cd phoenix 
-```
-
-## Downloading the Model File
-
-- [Download Llama 3 Instruct Model](https://gpt4all.io/models/gguf/Meta-Llama-3-8B-Instruct.Q4_0.gguf)
-- [Download Orca 2 (Medium) Model](https://gpt4all.io/models/gguf/orca-2-7b.Q4_0.gguf)
-
-_Credit: copyright to gpt4all.io_
-
-## Building the Project
-
-Create a build directory and run CMake to build the project:
-
-```bash
-mkdir build  
-cd build
-cmake ..
-cmake --build . 
-```
-
-## Running the Chatbot on Windows
-
-Navigate to the debug directory and run the chat executable:
-
-```bash
-cd build/bin/
-./chat
-```
-
-When prompted, enter the path to the model file you downloaded:
-
-```bash
-C:\LLMS\phoenix\model\Meta-Llama-3-8B-Instruct.Q4_0.gguf
-```
-
-Please consider to watch the video tutorial on how to run the chatbot on Windows on youtube:
-
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=vck-OCaiw10" target="_blank">
- <img src="http://img.youtube.com/vi/vck-OCaiw10/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
-</a>
+---
 
 
-## Running the Chatbot on Mac
+### 🔥 About Phoenix
+Phoenix is an **open-source application** built with **Qt/QML** that enables seamless interaction with **Large Language Models (LLMs)** locally, without requiring an internet connection.  
 
-Navigate to the bin directory and run the chat executable:
+The platform is designed to **automatically detect** whether your system has a GPU and load models accordingly, allowing you to use them as powerful AI assistants directly on your machine.
 
-```bash
-cd build/bin/
-./chat
-```
+---
+
+### 🚀 Features
+- ✅ Support for both **local** and **online models**, as well as all models available on **Hugging Face**.  
+- 🎤 Integrated **speech-to-text** functionality using local models, enabling **real-time voice recording and transcription**.  
+- 🔌 Flexible integration through **API** or **socket connections**, so that other applications on your system can access and use the locally loaded models.  
+- ⚙️ Full customization of **model configurations**, giving users control to adapt performance and resources to their specific needs.  
+- 🖥️ A clean and **user-friendly UI** that simplifies interaction with models and settings.  
+
+---
+
+### 📂 Source Code
+Phoenix is open-source, and the full source code is available at:  
+👉 [GitHub - osllmai/phoenix](https://github.com/osllmai/phoenix)
+
+---
+
+### 🙏 Acknowledgements
+This project would not have been possible without the contributions of other outstanding open-source projects, including:
+
+- [llama.cpp](https://github.com/ggerganov/llama.cpp)  
+- [whisper.cpp](https://github.com/ggml-org/whisper.cpp/)  
+- [Docling](https://docling-project.github.io/docling/)  
+- [MarkItDown](https://github.com/microsoft/markitdown)  
+
+We are deeply grateful to these communities for their work. 💙
+
+---
+
+### 🤝 Contributing
+Contributions are welcome!  
+
+If you are interested in improving Phoenix, adding new features, or fixing issues, feel free to:  
+- Open **pull requests**  
+- Participate in **discussions** on GitHub  
+
+We would love to collaborate with the community.  
+
+---
+
+<p align="center">
+  Made with ❤️ by the <a href="https://github.com/osllmai">osllm.ai</a> community
+</p>
+
+
 
 ```
      .----------------.  .----------------.  .----------------.  .-----------------. .----------------.  .----------------.

@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs
 import '../../../../component_library/style' as Style
 import '../../../../component_library/button'
 
@@ -14,8 +15,8 @@ Flickable {
     interactive: flickable.contentHeight > flickable.height
     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: flickable.contentHeight > flickable.height
@@ -23,9 +24,7 @@ Flickable {
                 : ScrollBar.AlwaysOff
     }
 
-    property int numberOfLineShow: 1
     property bool showAllDownloadModels: false
-
 
     function calculationCellNumber(myWidth){
         if(myWidth >1650)
@@ -50,11 +49,12 @@ Flickable {
     Column {
         id: column
         width: flickable.width
+        visible: (gridView.count !== 0) || (gridView2.count !== 0)
         spacing: 5
 
         Label {
             id: availablemodelsId
-            visible: gridView.height>30
+            visible: gridView.height>30 && gridView.count !== 0
             text: "Recent Downloaded Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
@@ -82,15 +82,18 @@ Flickable {
             clip: true
 
             model: offlineModelListFinishedDownloadFilter
-            delegate: Loader {
+            delegate: /*Loader {
                 id: delegateLoader
                 active: !flickable.showAllDownloadModels
                         ? index < flickable.calculationCellNumber(gridView.width)
                         : true
 
-                sourceComponent: Item {
+                sourceComponent: */Item {
                     width: gridView.cellWidth
                     height: 300
+                    visible: !flickable.showAllDownloadModels
+                             ? index < flickable.calculationCellNumber(gridView.width)
+                             : true
 
                     OfflineBoxDelegate {
                         anchors.fill: parent
@@ -98,12 +101,12 @@ Flickable {
                         Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                     }
                 }
-            }
+            // }
         }
 
         Row{
             id: installButton
-            visible: offlineModelListFinishedDownloadFilter.count > 3
+            visible: offlineModelListFinishedDownloadFilter.count > 3  && gridView.count !== 0
             width: parent.width - 40
             height: 30
             anchors.horizontalCenter: parent.horizontalCenter
@@ -128,6 +131,7 @@ Flickable {
 
         Label {
             id: textId
+            visible: gridView2.count !== 0
             text: "All Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
@@ -141,7 +145,7 @@ Flickable {
             id: gridView2
             visible: gridView2.count !== 0
             width: parent.width
-            height: flickable.numberOfLineShow * 300
+            height: gridView2.contentHeight
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -155,43 +159,35 @@ Flickable {
             clip: true
 
             model: offlineModelListFilter
-            delegate: Loader {
-                id: delegateLoader2
-                active: index < flickable.calculationCellNumber(gridView2.width) * flickable.numberOfLineShow
+            delegate: /*Loader {
+            id: delegateLoader2
 
-                sourceComponent: Item {
-                    width: gridView2.cellWidth
-                    height: 300
+            sourceComponent: */Item {
+                width: gridView2.cellWidth
+                height: 300
 
-                    OfflineBoxDelegate {
-                        anchors.fill: parent
-                        anchors.margins: 18
-                        Behavior on anchors.margins { NumberAnimation { duration: 200 } }
-                    }
+                OfflineBoxDelegate {
+                    anchors.fill: parent
+                    anchors.margins: 18
+                    Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }
+        // }
         }
-
-        Item{
-            id: installButton2
-            visible: offlineModelListFilter.count > (flickable.numberOfLineShow * flickable.calculationCellNumber(gridView2.width))
-            width: parent.width - 40
-            height: 45
-
-            MyButton{
-                id: openHistoryId
-                myIcon: "qrc:/media/icon/add.svg"
-                myTextToolTip: "Add More"
-                myText: "Add More"
-                bottonType: Style.RoleEnum.BottonType.Secondary
-                anchors.horizontalCenter: parent.horizontalCenter
-                Connections {
-                    target: openHistoryId
-                    function onClicked(){
-                        flickable.numberOfLineShow = flickable.numberOfLineShow + 1
-                    }
-                }
-            }
+    }
+    Item{
+        id:searchEmptyHistory
+        visible: (gridView.count === 0) && (gridView2.count === 0)
+        width: flickable.width
+        height: flickable.height
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/search.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 60; height: 60
         }
     }
 }

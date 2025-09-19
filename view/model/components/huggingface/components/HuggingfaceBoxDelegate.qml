@@ -77,23 +77,23 @@ T.Button {
                 height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - createdAtText.height - 40
                 clip: true
 
-                Flow {
-                    id: tagsFlow
-                    anchors.fill: parent
-                    anchors.topMargin: 4
-                    spacing: 4
-                    flow: Flow.LeftToRight
-                    Repeater {
-                        model: tags
-                        MyButton {
-                            myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
-                            myIcon: ""
-                            bottonType: Style.RoleEnum.BottonType.Secondary
-                            isNeedAnimation: true
-                            height: 20
-                        }
-                    }
-                }
+                // Flow {
+                //     id: tagsFlow
+                //     anchors.fill: parent
+                //     anchors.topMargin: 4
+                //     spacing: 4
+                //     flow: Flow.LeftToRight
+                //     Repeater {
+                //         model: tags
+                //         MyButton {
+                //             myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
+                //             myIcon: ""
+                //             bottonType: Style.RoleEnum.BottonType.Secondary
+                //             isNeedAnimation: true
+                //             height: 20
+                //         }
+                //     }
+                // }
             }
 
             Label {

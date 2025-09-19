@@ -170,11 +170,18 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
     if(model == nullptr) return;
     const int index = m_models.indexOf(model);
 
+    qInfo()<<model->fileName();
     directoryPath.remove("file:///");
 
     QString cleanFileName = model->fileName();
+
+    qInfo()<<cleanFileName;
     cleanFileName = cleanFileName.section('/', -1);
+
+    qInfo()<<cleanFileName;
     cleanFileName = cleanFileName.section('\\', -1);
+
+    qInfo()<<cleanFileName;
 
     model->setKey(directoryPath + "/" + cleanFileName);
     model->setIsDownloading(true);
@@ -334,6 +341,15 @@ OfflineModel* OfflineModelList::findModelByModelName(const QString modelName){
         }
     }
     return nullptr;
+}
+
+bool OfflineModelList::existModelByFileName(const QString fileName){
+    for (OfflineModel* model : m_models) {
+        if (model->fileName() == fileName) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void OfflineModelList::updateDownloadProgress(){

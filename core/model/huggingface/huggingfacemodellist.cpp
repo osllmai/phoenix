@@ -277,8 +277,8 @@ void HuggingfaceModelList::onModelsReady() {
         allModels.append(model);
     }
 
-    QList<HuggingfaceModel*> initialModels = allModels.mid(0, 6);
-    remainingModels = allModels.mid(6);
+    QList<HuggingfaceModel*> initialModels = allModels/*.mid(0, 1)*/;
+    // remainingModels = allModels.mid(1);
 
     beginResetModel();
     qDeleteAll(m_models);

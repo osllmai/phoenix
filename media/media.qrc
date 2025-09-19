@@ -340,5 +340,7 @@
         <file>image_company/zeabur.svg</file>
         <file>image_company/zeroone.svg</file>
         <file>image_company/zhipu.svg</file>
+        <file>image_company/pytorch.svg</file>
+        <file>image_company/tensorflow.svg</file>
     </qresource>
 </RCC>

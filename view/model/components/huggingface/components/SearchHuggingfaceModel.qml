@@ -8,7 +8,7 @@ import "./components"
 ComboBox {
     id: comboBoxId
     height: 35
-    width: 10
+    width: 200
     font.pixelSize: 12
 
     Accessible.role: Accessible.ComboBox
@@ -17,7 +17,7 @@ ComboBox {
 
     contentItem: Rectangle{
         id: control
-        width: (textArea.visible? 200: control.height); height: 32
+        width: control.width; height: 32
         color: Style.Colors.menuHoverBackground
         border.width: 0
         border.color: Style.Colors.boxBorder
@@ -25,7 +25,6 @@ ComboBox {
         clip: true
         property bool isTextAreaVisible: true
 
-        signal search(var text)
         Row{
             anchors.fill: parent
             ToolButton {
@@ -57,12 +56,12 @@ ComboBox {
                 font.pointSize: 10
                 wrapMode: TextEdit.NoWrap
                 background: null
-                onTextChanged: control.search(textArea.text)
+                onTextChanged: comboBoxId.search(textArea.text)
                 Keys.onReturnPressed: (event)=> {
                   if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
                     event.accepted = false;
                   }else {
-                        control.search(textArea.text)
+                        comboBoxId.search(textArea.text)
                   }
                 }
                 onEditingFinished: {
@@ -77,32 +76,480 @@ ComboBox {
         }
     }
 
-    popup: SearchTagPupup{
-        id: tagAboutSearch
-        y: control.height + 10
-        x: control.x
-        width: /*control.width*/0
-        height: /*50*/0
+    popup: Popup {
+        id: popupId
+        y: comboBoxId.height + 5
+        x: control.x - (comboBoxId.width < 200? (popupId.width - comboBoxId.width)/2 : 0)
+        width: Math.max(comboBoxId.width, 200)
+        height: 320
+        background: null
+
+        contentItem: Loader {
+            id: popupLoader
+            anchors.fill: parent
+            active: popupId.visible
+            sourceComponent: Rectangle {
+                anchors.fill: parent
+                color: Style.Colors.background
+                border.width: 1; border.color: Style.Colors.boxBorder
+                radius: 10
+                Flickable {
+                    id: flickable
+                    anchors.fill: parent
+                    anchors.margins: 12
+
+                    contentHeight: column.implicitHeight
+                    clip: true
+
+                    interactive: flickable.contentHeight > flickable.height
+                    boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+
+                    flickDeceleration: 80
+                    maximumFlickVelocity: 30000
+
+                    ScrollBar.vertical: ScrollBar {
+                        policy: flickable.contentHeight > flickable.height
+                                ? ScrollBar.AlwaysOn
+                                : ScrollBar.AlwaysOff
+                    }
+
+                    Column{
+                        id: column
+                        width: flickable.width
+                        spacing: 5
+
+                        Label {
+                            text: "Main Filtter"
+                            verticalAlignment: Text.AlignBottom
+                            color: Style.Colors.textTitle
+                            elide: Text.ElideRight
+                            font.pixelSize: 14
+                            font.styleName: "Bold"
+                            clip: true
+                        }
+                        Flow {
+                            spacing: 5
+                            width: parent.width
+
+                            MyButton {
+                                myText: "All"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureBlue
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.filterStr === "all"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.filterStr = "all"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Most Downloaded"
+                                myIcon: "qrc:/media/icon/download.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureMagenta
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.filterStr === "most-downloaded"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.filterStr = "most-downloaded"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Most Liked"
+                                myIcon: "qrc:/media/icon/favorite.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureRed
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.filterStr === "most-liked"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.filterStr = "most-liked"
+                                    }
+                                }
+                            }
+                        }
+
+                        Label {
+                            text: "Tasks"
+                            height: 30
+                            verticalAlignment: Text.AlignBottom
+                            color: Style.Colors.textTitle
+                            elide: Text.ElideRight
+                            font.pixelSize: 14
+                            font.styleName: "Bold"
+                            clip: true
+                        }
+                        Flow{
+                            spacing: 5
+                            width: parent.width
+                            MyButton {
+                                myText: "All"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureMagenta
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "all"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "all"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Text Generation"
+                                myIcon: "qrc:/media/icon/rewrite.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureRed
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "text-generation"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "text-generation"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Any-to-Any"
+                                myIcon: "qrc:/media/icon/grammer.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureGreen
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "any-to-any"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "any-to-any"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Image-Text-to-Text"
+                                myIcon: "qrc:/media/icon/imageEditor.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureBlue
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "image-text-to-text"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "image-text-to-text"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Image-to-Text"
+                                myIcon: "qrc:/media/icon/imageEditor.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureOrange
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "image-to-text"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "image-to-text"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Image-to-Image"
+                                myIcon: "qrc:/media/icon/imageEditor.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureYellow
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "image-to-image"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "image-to-image"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Text-to-Image"
+                                myIcon: "qrc:/media/icon/imageEditor.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureMagenta
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "text-to-image"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "text-to-image"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Text-to-Video"
+                                myIcon: "qrc:/media/icon/rewrite.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureRed
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "text-to-video"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "text-to-video"
+                                    }
+                                }
+                            }
+                            MyButton {
+                                myText: "Text-to-Speech"
+                                myIcon: "qrc:/media/image_company/Whisper.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.FeatureGreen
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.task === "text-to-speech"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.task = "text-to-speech"
+                                    }
+                                }
+                            }
+                        }
+                        Label {
+                            text: "Libraries"
+                            color: Style.Colors.textTitle
+                            height: 30
+                            verticalAlignment: Text.AlignBottom
+                            elide: Text.ElideRight
+                            font.pixelSize: 14
+                            font.styleName: "Bold"
+                            clip: true
+                        }
+                        Flow {
+                            spacing: 5
+                            width: parent.width
+
+                            MyButton {
+                                myText: "All"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "all"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "all"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "PyTorch"
+                                myIcon: "qrc:/media/image_company/pytorch.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.Image
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "pytorch"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "pytorch"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "TensorFlow"
+                                myIcon: "qrc:/media/image_company/tensorflow.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.Image
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "tensorflow"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "tensorflow"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "JAX"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "jax"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "jax"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Transformers"
+                                myIcon: "qrc:/media/image_company/Huggingface.svg"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                iconType: Style.RoleEnum.IconType.Image
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "transformers"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "transformers"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Diffusers"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "diffusers"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "diffusers"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Safetensors"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "safetensors"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "safetensors"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "ONNX"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "onnx"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "onnx"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "GGUF"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "gguf"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "gguf"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Transformers.js"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "transformers.js"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "transformers.js"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "MLX"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "mlx"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "mlx"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "Keras"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "keras"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "keras"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "VLLM"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "vllm"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "vllm"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "LLama.cpp"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "llama.cpp"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "llama.cpp"
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
-    // contentItem: MyProgress{
-    //     id: downloading
-    //     myText: window.isDesktopSize? "Downloading": ""
-    //     myValue: offlineModelList.downloadProgress
-    //     myIcon: downloading.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
-    //     textLenght: 75
-    //     enabled: true
-    //     onHoveredChanged: comboBoxId.popup.open()
-    //     onClicked: comboBoxId.popup.open()
-    // }
-
-    // popup: Downloading{
-    //     id: downloadingPupup
-    //     x: downloading.x
-    //     y: downloading.y - downloadingPupup.height - 10
-    //     width: 270 + 20
-    //     height: Math.min(((offlineModelList.numberDownload * 48)), 250) + 20
-    // }
     indicator: Image {}
     background: null
     ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval

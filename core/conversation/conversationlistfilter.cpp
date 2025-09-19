@@ -23,10 +23,10 @@ bool ConversationListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
         return false;
 
     QString name = sourceModel()->data(index, ConversationList::ConversationRoles::TitleRole).toString();
-    QString description = sourceModel()->data(index, ConversationList::ConversationRoles::DescriptionRole).toString();
+    // QString description = sourceModel()->data(index, ConversationList::ConversationRoles::DescriptionRole).toString();
 
     QRegularExpression filterExp = filterRegularExpression();
-    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch() || filterExp.match(description).hasMatch();
+    bool matchesFilter = filterExp.pattern().isEmpty() || filterExp.match(name).hasMatch()/* || filterExp.match(description).hasMatch()*/;
 
     return matchesFilter;
 }

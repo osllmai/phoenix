@@ -8,23 +8,37 @@ GridView {
     anchors.fill: parent
     cacheBuffer: Math.max(0, gridView.contentHeight)
 
-    cellWidth: control.calculationCellWidth()
+    cellWidth: gridView.calculationCellWidth()
     cellHeight: 200
 
     interactive: gridView.contentHeight > gridView.height
     boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: gridView.contentHeight > gridView.height
                 ? ScrollBar.AlwaysOn
                 : ScrollBar.AlwaysOff
     }
+
+    function calculationCellWidth(){
+        if(gridView.width >1650)
+            return gridView.width/5;
+        else if(gridView.width >1300)
+            return gridView.width/4;
+        else if(gridView.width >950)
+            return gridView.width/3;
+        else if(gridView.width >550)
+            return gridView.width/2;
+        else
+            return Math.max(gridView.width,300);
+    }
     clip: true
 
     model: onlineCompanyList
+
     delegate: Item{
        width: gridView.cellWidth
        height: gridView.cellHeight

@@ -9,40 +9,23 @@ Item {
     id: control
     clip:true
 
-    function calculationCellWidth(){
-        if(gridView.width >1650)
-            return gridView.width/5;
-        else if(gridView.width >1300)
-            return gridView.width/4;
-        else if(gridView.width >950)
-            return gridView.width/3;
-        else if(gridView.width >550)
-            return gridView.width/2;
-        else
-            return Math.max(gridView.width,300);
-    }
-
-    OnlineGridView {
-        id: gridView
-        visible: gridView.count !== 0 && (window.modelPageView === "gridView")
-    }
-    OnlineListView {
-        id: listView
-        visible: listView.count !== 0 && (window.modelPageView === "listView")
-    }
-
-    Item{
-        id:emptyHistory
-        visible: gridView.count === 0
+    Loader {
+        id: modelViewLoader
         anchors.fill: parent
-        MyIcon {
-            id: notFoundModelIconId
-            myIcon: "qrc:/media/icon/notFoundModel.svg"
-            iconType: Style.RoleEnum.IconType.Image
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            enabled: false
-            width: 120; height: 120
+        sourceComponent: window.modelPageView === "gridView" ? gridComponent : listComponent
+    }
+
+    Component {
+        id: gridComponent
+        OnlineGridView {
+            id: gridView
+        }
+    }
+
+    Component {
+        id: listComponent
+        OnlineListView {
+            id: listView
         }
     }
 }

@@ -25,7 +25,6 @@ Column {
             height: parent.height
             Label {
                 id: titleId
-                visible: !titleAndCopy.visible
                 text: huggingfaceModelList.hugginfaceInfo?huggingfaceModelList.hugginfaceInfo.name:""
                 color: Style.Colors.textTitle
                 anchors.verticalCenter: parent.verticalCenter
@@ -37,34 +36,10 @@ Column {
             }
             MyCopyButton {
                 id: copyId
-                visible: !titleAndCopy.visible
                 myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"") }
                 anchors.verticalCenter: titleId.verticalCenter
                 anchors.right: parent.right
                 clip: true
-            }
-            Row {
-                id: titleAndCopy
-                visible: parent.width - title2Id.implicitWidth - copy2Id.width > 0
-                width: parent.width
-                anchors.verticalCenter: parent.verticalCenter
-                clip: true
-                Label {
-                    id: title2Id
-                    text: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")
-                    color: Style.Colors.textTitle
-                    anchors.verticalCenter: parent.verticalCenter
-                    font.pixelSize: 14
-                    font.styleName: "Bold"
-                    clip: true
-                    elide: Label.ElideRight
-                }
-                MyCopyButton {
-                    id: copy2Id
-                    myText: TextArea { text: "localModel/" + (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.name:"")}
-                    anchors.verticalCenter: title2Id.verticalCenter
-                    clip: true
-                }
             }
         }
 
@@ -169,20 +144,21 @@ Column {
         model:  (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.siblings:[])
         delegate: Row {
             width: listView.width
-            height: 40
+            height: 50
             spacing: 10
 
             Label {
                 text: modelData.rfilename
                 color: Style.Colors.textInformation
-                font.pixelSize: 10
-                anchors.verticalCenter: dounloadButton.verticalCenter
+                font.pixelSize: 12
                 elide: Label.ElideRight
-                width: parent.width - dounloadButton.width - 20
+                width: parent.width - (dounloadButton.visible ? (dounloadButton.width+20) :availabel.width) - 30
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             MyButton {
                 id: dounloadButton
+                visible: !modelData.exist
                 myText: "Add Model"
                 bottonType: Style.RoleEnum.BottonType.Primary
                 height: 30
@@ -193,8 +169,20 @@ Column {
                         huggingfaceModelList.hugginfaceInfo.pipeline_tag,
                         huggingfaceModelList.hugginfaceInfo.icon
                     )
+                    availabel.visible = true
+                    dounloadButton.visible = false
                 }
+            }
+
+            Label {
+                id:  availabel
+                visible: modelData.exist
+                text: "Available in Local Models"
+                color: Style.Colors.textTagInfo
+                font.pixelSize: 11
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
+
 }

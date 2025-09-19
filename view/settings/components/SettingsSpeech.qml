@@ -84,7 +84,7 @@ Item {
             sliderValue: appSettings.speechVolume
             sliderFrom: 0.0
             sliderTo: 1.0
-            sliderStepSize: 0.2
+            sliderStepSize: 0.1
 
             onSliderValueChanged: {
                 appSettings.speechVolume = sliderValue;
@@ -99,7 +99,7 @@ Item {
             sliderValue: appSettings.speechPitch
             sliderFrom: -1.0
             sliderTo: 1.0
-            sliderStepSize: 0.5
+            sliderStepSize: 0.1
 
             onSliderValueChanged: {
                 appSettings.speechPitch = sliderValue;
@@ -114,7 +114,7 @@ Item {
             sliderValue: appSettings.speechRate
             sliderFrom: -1.0
             sliderTo: 1.0
-            sliderStepSize: 0.5
+            sliderStepSize: 0.1
 
             onSliderValueChanged: {
                 appSettings.speechRate = sliderValue;

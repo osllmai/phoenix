@@ -49,7 +49,9 @@ bool OfflineModelListFilter::filterAcceptsRow(int sourceRow, const QModelIndex &
     auto *model = modelVariant.value<OfflineModel*>();
     if (!model) return false;
 
-    const QRegularExpression filterExp = filterRegularExpression();
+    QRegularExpression filterExp(filterRegularExpression().pattern(),
+                                 QRegularExpression::CaseInsensitiveOption);
+
     const bool matchesFilter = filterExp.pattern().isEmpty()
                                || filterExp.match(name).hasMatch()
                                || filterExp.match(modelName).hasMatch()

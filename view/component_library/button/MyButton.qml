@@ -8,17 +8,37 @@ T.Button {
     id: control
     width: calculateWidthBotton()+6; height: 35
 
+    // ---------- measurements used instead of direct ids ----------
+    property real measuredTextWidth: 0
+    property real measuredTextHeight: 0
+    property real measuredPrimaryIconWidth: 0
+    property real measuredPrimaryIconHeight: 0
+    property real measuredIconWidth: 0
+    property real measuredIconHeight: 0
+
+    // ---------- visual state properties (changed by states) ----------
+    property color controlTextColor: "black"
+    property bool controlTextBold: false
+
+    property color controlProgressTextColor: "black"
+    property bool controlProgressTextBold: false
+
+    property color controlProgressGradient0: "transparent"
+    property color controlProgressGradient1: "transparent"
+    property color controlProgressBackground: "transparent"
+
+    // ---------- existing functions (kept, but using measured widths) ----------
     function calculateWidthBotton(){
         if(bottonType == Style.RoleEnum.BottonType.Progress){
             return parent.width;
         }
         switch(iconType){
         case Style.RoleEnum.IconType.Primary:
-            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (control.measuredTextWidth + (control.myIcon != ""? control.measuredPrimaryIconWidth : 0) + 16): control.height);
         case Style.RoleEnum.IconType.Image:
-            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?primaryIconId.width:0) + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (control.measuredTextWidth + (control.myIcon != ""? control.measuredPrimaryIconWidth : 0) + 16): control.height);
         default:
-            return (((control.myText != "") && (control.textIsVisible))? (textId.width + (control.myIcon != ""?iconId.width: 0) + 16): control.height);
+            return (((control.myText != "") && (control.textIsVisible))? (control.measuredTextWidth + (control.myIcon != ""? control.measuredIconWidth : 0) + 16): control.height);
         }
     }
     function calculateHeightText(){
@@ -27,11 +47,11 @@ T.Button {
         }
         switch(iconType){
         case Style.RoleEnum.IconType.Primary:
-            return primaryIconId.height;
+            return control.measuredPrimaryIconHeight;
         case Style.RoleEnum.IconType.Image:
-            return primaryIconId.height;
+            return control.measuredPrimaryIconHeight;
         default:
-            return iconId.height;
+            return control.measuredIconHeight;
         }
     }
 
@@ -67,97 +87,263 @@ T.Button {
         }
     }
 
-    MyToolTip{
-        visible: control.hovered && (control.myTextToolTip !== "") && (!control.textIsVisible || control.myText === "")
-        toolTipText: control.myTextToolTip
+    // ---------- tooltip Loader (kept) ----------
+    Loader {
+        id: tooltipLoader
+        active: control.hovered
+                && (control.myTextToolTip !== "")
+                && (!control.textIsVisible || control.myText === "")
+        sourceComponent: MyToolTip {
+            toolTipText: control.myTextToolTip
+            visible: control.hovered
+        }
     }
 
-    background: Rectangle{
+    // ---------- background always exists ----------
+    background: Rectangle {
         id: backgroundId
         width: parent.width-3; height: parent.height-3
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.centerIn: parent
         radius: control.myRadius
         border.width: 1
 
-        Behavior on width{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0}}
-        Behavior on height{ NumberAnimation{ duration: (control.isNeedAnimation && backgroundId.height >= control.height-3)? 200: 0}}
+        Behavior on width { NumberAnimation { duration: (control.isNeedAnimation && backgroundId.width >= control.width-3)? 200: 0 } }
+        Behavior on height { NumberAnimation { duration: (control.isNeedAnimation && backgroundId.height >= control.height-3)? 200: 0 } }
 
-        Item{
-            visible: control.bottonType == Style.RoleEnum.BottonType.Progress
+        // ---------- Progress Loader ----------
+        Loader {
+            id: progressLoader
             anchors.fill: parent
-            clip: true
-            Rectangle {
-                id: progressBarId
+            active: control.bottonType == Style.RoleEnum.BottonType.Progress
+            sourceComponent: Item {
                 anchors.fill: parent
-                anchors.left: parent.left
-                property color gradientColor0
-                property color gradientColor1
-                property color background
                 clip: true
-                radius: 12
 
-                gradient: Gradient {
-                    orientation: Gradient.Horizontal
-                    GradientStop { position: 0.0; color: progressBarId.gradientColor0 }
-                    GradientStop { position: control.progressBarValue; color: progressBarId.gradientColor1 }
-                    GradientStop { position: Math.min(control.progressBarValue+0.001, 1); color: progressBarId.background }
-                    GradientStop { position: 1.0; color: progressBarId.background }
+                Rectangle {
+                    id: progressBarId
+                    anchors.fill: parent
+                    anchors.left: parent.left
+                    property color gradientColor0: control.controlProgressGradient0
+                    property color gradientColor1: control.controlProgressGradient1
+                    property color background: control.controlProgressBackground
+                    clip: true
+                    radius: 12
+
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+                        GradientStop { position: 0.0; color: progressBarId.gradientColor0 }
+                        GradientStop { position: control.progressBarValue; color: progressBarId.gradientColor1 }
+                        GradientStop { position: Math.min(control.progressBarValue+0.001, 1); color: progressBarId.background }
+                        GradientStop { position: 1.0; color: progressBarId.background }
+                    }
                 }
-            }
 
-            Label {
-                id: progressBarTextId
-                height: control.calculateHeightText()
-                property double progressFixedNumber: Number(control.progressBarValue* 100).toFixed(2)
-                text: control.hovered ? "Cancel":  "%" + progressFixedNumber
-                font.pixelSize: 12
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
+                Label {
+                    id: progressBarTextId
+                    height: control.calculateHeightText()
+                    property double progressFixedNumber: Number(control.progressBarValue*100).toFixed(2)
+                    text: control.hovered ? "Cancel" : "%" + progressFixedNumber
+                    font.pixelSize: 12
+                    color: control.controlProgressTextColor
+                    font.bold: control.controlProgressTextBold
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.centerIn: parent
+                }
             }
         }
 
-        Row{
-            visible: control.bottonType != Style.RoleEnum.BottonType.Progress
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            MyIcon {
-                id: iconId
-                width: 30; height: 30
-                visible: control.myIcon != "" &&  control.iconType != Style.RoleEnum.IconType.Primary
-                myIcon: control.myIcon
-                iconType: control.iconType
-                enabled: false
-            }
-            ToolButton {
-                id: primaryIconId
-                visible: control.myIcon != "" && control.iconType == Style.RoleEnum.IconType.Primary
-                background: null
-                icon{
-                    source: control.myIcon
-                    color: textId.color
-                    width:18; height:18
-                }
-            }
-            Item{
-                id:textBoxId
-                width: textId.width + ((control.myIcon != "")? 10: 0)
-                height: textId.height
-                visible: (control.myText != "") && (control.textIsVisible)
+        // ---------- Normal content Loader (icon + optional primary icon + text) ----------
+        Loader {
+            id: normalLoader
+            anchors.centerIn: parent
+            // anchors.left: parent.left
+            active: control.bottonType != Style.RoleEnum.BottonType.Progress
+            sourceComponent: Row{
+                visible: control.bottonType != Style.RoleEnum.BottonType.Progress
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
 
-                Label {
-                    id: textId
-                    height: control.calculateHeightText()
-                    text: control.myText
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
+                MyIcon {
+                    id: iconId
+                    width: 30; height: 30
+                    visible: control.myIcon != "" &&  control.iconType != Style.RoleEnum.IconType.Primary
+                    myIcon: control.myIcon
+                    iconType: control.iconType
+                    enabled: false
+                    Component.onCompleted: {
+                        // update measured icon sizes
+                        control.measuredIconWidth = iconId.width
+                        control.measuredIconHeight = iconId.height
+                    }
+                    onWidthChanged: control.measuredIconWidth = iconId.width
+                    onHeightChanged: control.measuredIconHeight = iconId.height
+                }
+                ToolButton {
+                    id: primaryIconId
+                    visible: control.myIcon != "" && control.iconType == Style.RoleEnum.IconType.Primary
+                    background: null
+                    width: 30; height: 30
+                    icon {
+                        source: control.myIcon
+                        color: control.controlTextColor
+                        width:30; height:30
+                    }
+
+                    Component.onCompleted: {
+                        control.measuredPrimaryIconWidth = primaryIconId.width
+                        control.measuredPrimaryIconHeight = primaryIconId.height
+                    }
+                    onWidthChanged: control.measuredPrimaryIconWidth = primaryIconId.width
+                    onHeightChanged: control.measuredPrimaryIconHeight = primaryIconId.height
+                }
+                Item{
+                    id:textBoxId
+                    width: textId.width + ((control.myIcon != "")? 10: 0)
+                    height: textId.height
+                    visible: (control.myText != "") && (control.textIsVisible)
+
+                    Label {
+                        id: textId
+                        height: control.calculateHeightText()
+                        text: control.myText
+                        font.pixelSize: 12
+                        color: control.controlTextColor
+                        font.bold: control.controlTextBold
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        Component.onCompleted: {
+                            control.measuredTextWidth = textId.width
+                            control.measuredTextHeight = textId.height
+                        }
+                        onWidthChanged: control.measuredTextWidth = textId.width
+                        onHeightChanged: control.measuredTextHeight = textId.height
+                    }
                 }
             }
         }
     }
+
+    // ---------- convenience boolean properties ----------
+    property bool isNormal: !selected && ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
+    property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
+    property bool isPressed: control.pressed && control.enabled
+    property bool isDisabled: !control.enabled
+    property bool isSelected: (control.selected || (control.checked && control.checkable)) && control.enabled
+
+    // ---------- STATES: modify backgroundId (always present) and control.* properties ----------
+    states: [
+        State {
+            name: "normal"
+            when: control.isNormal
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Normal)
+                width: control.width-3; height: control.height-3
+            }
+            PropertyChanges {
+                target: control
+                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
+                controlTextBold: false
+
+                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
+                controlProgressTextBold: false
+
+                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Normal)
+                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Normal)
+                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
+            }
+        },
+        State {
+            name: "hover"
+            when: control.isHover
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Hover)
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
+            }
+            PropertyChanges {
+                target: control
+                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Hover)
+                controlTextBold: false
+
+                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Hover)
+                controlProgressTextBold: false
+
+                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Hover)
+                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Hover)
+                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
+            }
+        },
+        State {
+            name: "pressed"
+            when: control.isPressed
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Pressed)
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
+            }
+            PropertyChanges {
+                target: control
+                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Pressed)
+                controlTextBold: false
+
+                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Pressed)
+                controlProgressTextBold: false
+
+                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Pressed)
+                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Pressed)
+                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
+            }
+        },
+        State {
+            name: "selected"
+            when: control.isSelected
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
+                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
+            }
+            PropertyChanges {
+                target: control
+                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                controlTextBold: true
+
+                controlProgressTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
+                controlProgressTextBold: true
+
+                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Selected)
+                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Selected)
+                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
+            }
+        },
+        State {
+            name: "disabled"
+            when: control.isDisabled
+            PropertyChanges {
+                target: backgroundId
+                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
+                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Disabled)
+                width: control.width-3; height: control.height-3
+            }
+            PropertyChanges {
+                target: control
+                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Disabled)
+                controlTextBold: false
+
+                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Disabled)
+                controlProgressTextBold: false
+
+                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Disabled)
+                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Disabled)
+                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
+            }
+        }
+    ]
 
     function choiceBackgroundColor(buttonType, state) {
         switch (state) {
@@ -537,143 +723,4 @@ T.Button {
                     }
             }
     }
-
-    property bool isNormal: !selected && ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
-    property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
-    property bool isPressed: control.pressed && control.enabled
-    property bool isDisabled: !control.enabled
-    property bool isSelected: (control.selected || (control.checked && control.checkable)) && control.enabled
-
-    states: [
-        State {
-            name: "normal"
-            when: control.isNormal
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Normal)
-                width: control.width-3; height: control.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarId
-                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Normal)
-                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Normal)
-                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
-            }
-        },
-        State {
-            name: "hover"
-            when: control.isHover
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Hover)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarId
-                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Hover)
-                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Hover)
-                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
-            }
-        },
-        State {
-            name: "pressed"
-            when: control.isPressed
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Pressed)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarId
-                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Pressed)
-                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Pressed)
-                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
-            }
-        },
-        State {
-            name: "selected"
-            when: control.isSelected
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
-                font.bold: true
-            }
-            PropertyChanges {
-                target: progressBarTextId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
-                font.bold: true
-            }
-            PropertyChanges {
-                target: progressBarId
-                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Selected)
-                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Selected)
-                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
-            }
-        },
-        State {
-            name: "disabled"
-            when: control.isDisabled
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Disabled)
-                width: control.width-3; height: control.height-3
-            }
-            PropertyChanges {
-                target: textId
-                color: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarTextId
-                color: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
-                font.bold: false
-            }
-            PropertyChanges {
-                target: progressBarId
-                gradientColor0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Disabled)
-                gradientColor1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Disabled)
-                background: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
-            }
-        }
-    ]
 }
