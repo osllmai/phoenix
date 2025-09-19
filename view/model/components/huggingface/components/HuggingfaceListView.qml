@@ -14,8 +14,8 @@ Flickable {
     interactive: flickable.contentHeight > flickable.height
     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: flickable.contentHeight > flickable.height
@@ -28,6 +28,7 @@ Flickable {
     Column {
         id: column
         width: flickable.width
+        visible: allModelList.count !== 0
         spacing: 5
 
         ListView {
@@ -87,42 +88,21 @@ Flickable {
             //     }
 
             }
-
-
-            // delegate: Item{
-            //    width: allModelList.width
-            //    height: window.isDesktopSize? 65:90
-
-            //    HuggingfaceRowDelegate {
-            //        id: indoxItem2
-            //        anchors.fill: parent
-            //        anchors.leftMargin: 10
-            //        anchors.rightMargin: 10
-            //        anchors.topMargin: 5
-            //        anchors.bottomMargin: 5
-            //    }
-            // }
         }
-        // Item{
-        //     id: installButton
-        //     // visible: offlineModelListFinishedDownloadFilter.count > 3
-        //     width: parent.width - 40
-        //     height: 45
-        //     // anchors.horizontalCenter: parent.horizontalCenter
-        //     MyButton{
-        //         id: openHistoryId
-        //         myIcon: "qrc:/media/icon/add.svg"
-        //         myTextToolTip: "Add More"
-        //         myText: "Add More"
-        //         bottonType: Style.RoleEnum.BottonType.Secondary
-        //         anchors.horizontalCenter: parent.horizontalCenter
-        //         Connections {
-        //             target: openHistoryId
-        //             function onClicked(){
-        //                 huggingfaceModelList.loadMore()
-        //             }
-        //         }
-        //     }
-        // }
+    }
+    Item{
+        id:searchEmptyHistory
+        visible: allModelList.count === 0
+        width: flickable.width
+        height: flickable.height
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/search.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 60; height: 60
+        }
     }
 }

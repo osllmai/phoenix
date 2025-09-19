@@ -75,7 +75,6 @@ Dialog {
             }
         }
 
-        // ===== Components =====
         Component {
             id: successComponent
             HugginfaceDialogView {

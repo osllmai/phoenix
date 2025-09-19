@@ -44,7 +44,7 @@ Item {
             id: model
             ListElement {title: "Chat" ;
                             icon:"qrc:/media/icon/phoenix.svg" ;
-                            about:"Phoenix: A multi-platform, open-source application built with Qt QML. It features a chatbot interface that interacts with documents locally, eliminating the need for an internet connection or a GPU. Phoenix leverages Indox and IndoxJudge to deliver high accuracy and eliminate hallucinations, ensuring reliable results, particularly in the healthcare field." ;
+                            about:"Phoenix is an open-source application built with Qt/QML that enables seamless interaction with Large Language Models (LLMs) locally, without requiring an internet connection. The program is designed to automatically detect whether your system has a GPU and load models accordingly, allowing you to use them as powerful AI assistants directly on your machine." ;
                             gitHubLink:"" ;
                             notebookLink:"";
                             goPage: 1

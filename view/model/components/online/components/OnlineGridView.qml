@@ -14,8 +14,8 @@ GridView {
     interactive: gridView.contentHeight > gridView.height
     boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: gridView.contentHeight > gridView.height

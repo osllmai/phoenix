@@ -54,6 +54,9 @@ Item {
         id: modelFinishedComponent
         Row {
             spacing: 5
+            width: deleteButton.width +
+                   (rejectLoader.status === Loader.Ready?rejectLoader.width + 5: 0) +
+                   startChatBox.width + 5
             MyButton {
                 id: deleteButton
                 myText: "Delete"
@@ -67,6 +70,8 @@ Item {
                 id: rejectLoader
                 active: (model.type === "Text Generation" && model.id === conversationList.modelId) ||
                         (model.type === "Speech" && speechToText.modelPath === model.key)
+                visible: (model.type === "Text Generation" && model.id === conversationList.modelId) ||
+                         (model.type === "Speech" && speechToText.modelPath === model.key)
 
                 sourceComponent: MyButton {
                     id: rejectButton
@@ -83,6 +88,7 @@ Item {
                 }
             }
             MyButton {
+                id: startChatBox
                 myText: model.type === "Text Generation" ? "Start Chat" :
                         ((model.type === "Speech" && speechToText.modelPath === model.key) ? "Go to Chat" : "Set Model")
                 bottonType: Style.RoleEnum.BottonType.Primary

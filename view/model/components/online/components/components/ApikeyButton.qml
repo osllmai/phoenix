@@ -53,6 +53,9 @@ Item {
         sourceComponent: Row {
             id: installRowId
             spacing: 5
+            width: deleteButton.width +
+                   (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
+                   startChatButton.width + 5
 
             MyButton {
                 id: deleteButton
@@ -67,19 +70,21 @@ Item {
             Loader {
                 id: rejectButtonLoader
                 active: model.id === conversationList.modelId
+                visible: model.id === conversationList.modelId
                 sourceComponent: MyButton {
                     id: rejectButton
                     myText: "Eject"
                     bottonType: Style.RoleEnum.BottonType.Secondary
                     onClicked: {
-                        if (model.type === "Text Generation") {
-                            conversationList.setModelRequest(-1, "", "", "", "")
-                        } else if (model.type === "Speech") {
-                            speechToText.modelPath = ""
-                            speechToText.modelSelect = false
-                        } else {
-                            console.log(model.type)
-                        }
+                        conversationList.setModelRequest(-1, "", "", "", "")
+                        // if (model.type === "Text Generation") {
+                        //     conversationList.setModelRequest(-1, "", "", "", "")
+                        // } else if (model.type === "Speech") {
+                        //     speechToText.modelPath = ""
+                        //     speechToText.modelSelect = false
+                        // } else {
+                        //     console.log(model.type)
+                        // }
                     }
                 }
             }
@@ -89,19 +94,26 @@ Item {
                 myText: model.type === "Text Generation" ? "Start Chat" : "Set Model"
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked: {
-                    if (model.type === "Text Generation") {
-                        conversationList.setModelRequest(
-                            model.id, model.name, "qrc:/media/image_company/" + model.icon,
-                            model.promptTemplate, model.systemPrompt
-                        )
-                        conversationList.isEmptyConversation = true
-                        appBodyId.currentIndex = 1
-                    } else if (model.type === "Speech") {
-                        speechToText.modelPath = model.key
-                        speechToText.modelSelect = true
-                    } else {
-                        console.log(model.type)
-                    }
+                    conversationList.setModelRequest(model.id,
+                                                     model.name,
+                                                     "qrc:/media/image_company/" + model.icon,
+                                                     model.promptTemplate,
+                                                     model.systemPrompt)
+                    appBodyId.currentIndex = 1
+
+                    // if (model.type === "Text Generation") {
+                    //     conversationList.setModelRequest(
+                    //         model.id, model.name, "qrc:/media/image_company/" + model.icon,
+                    //         model.promptTemplate, model.systemPrompt
+                    //     )
+                    //     conversationList.isEmptyConversation = true
+                    //     appBodyId.currentIndex = 1
+                    // } else if (model.type === "Speech") {
+                    //     speechToText.modelPath = model.key
+                    //     speechToText.modelSelect = true
+                    // } else {
+                    //     console.log(model.type)
+                    // }
                 }
             }
         }

@@ -14,6 +14,11 @@ T.Button {
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
+    property bool generateProcess: (model.text === ""?true:false) &&
+                                   !conversationList.isEmptyConversation &&
+                                   conversationList.currentConversation.loadModelInProgress &&
+                                   (index === listView.count - 1)
+
     background: null
      contentItem: Item {
          id: backgroundId
@@ -39,6 +44,7 @@ T.Button {
                 width: 50; height: 50
 
                 Loader{
+                    anchors.centerIn: parent
                     active: model.icon !== "qrc:/media/image_company/user.svg"
                     sourceComponent: MyIcon {
                         anchors.centerIn: parent
@@ -50,6 +56,7 @@ T.Button {
                 }
 
                 Loader{
+                    anchors.centerIn: parent
                     active: model.icon === "qrc:/media/image_company/user.svg"
                     sourceComponent: ToolButton {
                         anchors.centerIn: parent
@@ -66,7 +73,7 @@ T.Button {
                 Loader {
                     id: busyLoader
                     anchors.centerIn: parent
-                    active: (model.text === ""?true:false)
+                    active: control.generateProcess
                     sourceComponent: BusyIndicator {
                         running: true
                         width: 50; height: 50
@@ -119,7 +126,7 @@ T.Button {
 
                 Item {
                     id: loadingTextItem
-                    visible: model.text === ""
+                    visible: control.generateProcess
                     width: parent.width - logoModelId.width
                     height: 30
 
@@ -145,7 +152,7 @@ T.Button {
 
                 TextArea {
                     id: textId
-                    visible: model.text !== ""
+                    visible: !control.generateProcess
                     color: Style.Colors.textTitle
                     selectionColor: Style.Colors.textSelection
                     placeholderTextColor: textId.text ===""? Style.Colors.menuNormalIcon: Style.Colors.textPlaceholder
@@ -156,7 +163,7 @@ T.Button {
                     wrapMode: TextEdit.WordWrap
                     textFormat: TextEdit.PlainText
 
-                    cursorVisible: (!conversationList.isEmptyConversation && conversationList.currentConversation.responseInProgress) ?
+                    cursorVisible: control.generateProcess ?
                                                                 conversationList.currentConversation.responseInProgress: false
                     cursorPosition: text.length
 

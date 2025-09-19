@@ -104,8 +104,8 @@ ComboBox {
                     interactive: flickable.contentHeight > flickable.height
                     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-                    flickDeceleration: 200
-                    maximumFlickVelocity: 12000
+                    flickDeceleration: 80
+                    maximumFlickVelocity: 30000
 
                     ScrollBar.vertical: ScrollBar {
                         policy: flickable.contentHeight > flickable.height
@@ -511,6 +511,34 @@ ComboBox {
                                     anchors.fill: parent
                                     onClicked: {
                                         huggingfaceModelListFilter.library = "keras"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "VLLM"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "vllm"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "vllm"
+                                    }
+                                }
+                            }
+
+                            MyButton {
+                                myText: "LLama.cpp"
+                                bottonType: Style.RoleEnum.BottonType.Feature
+                                isNeedAnimation: true
+                                selected: huggingfaceModelListFilter.library === "llama.cpp"
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        huggingfaceModelListFilter.library = "llama.cpp"
                                     }
                                 }
                             }

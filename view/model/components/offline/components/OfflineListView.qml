@@ -14,8 +14,8 @@ Flickable {
     interactive: flickable.contentHeight > flickable.height
     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: flickable.contentHeight > flickable.height
@@ -28,11 +28,12 @@ Flickable {
     Column {
         id: column
         width: flickable.width
+        visible: (allModelList.count !== 0) || (offlineFinishedDownloadModelList.count !== 0)
         spacing: 5
 
         Label {
             id: availablemodelsId
-            visible: offlineFinishedDownloadModelList.height>30
+            visible: offlineFinishedDownloadModelList.height>30 && offlineFinishedDownloadModelList.count !== 0
             text: "Recent Downloaded Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
@@ -82,7 +83,7 @@ Flickable {
 
         Row{
             id: installButton
-            visible: offlineModelListFinishedDownloadFilter.count > 3
+            visible: offlineModelListFinishedDownloadFilter.count > 3 && offlineFinishedDownloadModelList.count !== 0
             width: parent.width - 40
             height: 30
             anchors.horizontalCenter: parent.horizontalCenter
@@ -107,6 +108,7 @@ Flickable {
 
         Label {
             id: textId
+            visible: allModelList.count !== 0
             text: "All Model"
             color: Style.Colors.textTitle
             anchors.left: parent.left; anchors.leftMargin: 20
@@ -148,7 +150,22 @@ Flickable {
                        anchors.bottomMargin: 5
                    }
                 }
-            }
-        // }
+            // }
+        }
+    }
+    Item{
+        id:searchEmptyHistory
+        visible: (allModelList.count === 0) && (offlineFinishedDownloadModelList.count === 0)
+        width: flickable.width
+        height: flickable.height
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/search.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 60; height: 60
+        }
     }
 }

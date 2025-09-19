@@ -37,6 +37,7 @@ struct GgufData {
 
 struct SiblingFile {
     QString rfilename;
+    bool exist;
 };
 
 #endif // HUGGINGFACESTRUCT_H

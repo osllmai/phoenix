@@ -47,7 +47,7 @@ Item {
 
     Item{
         id:searchEmptyHistory
-        visible: conversationList.count === 0 && listView.count === 0
+        visible: /*conversationList.count === 0 &&*/ listView.count === 0
         anchors.fill: parent
         MyIcon {
             id: notFoundModelIconId
@@ -59,18 +59,18 @@ Item {
             width: 80; height: 80
         }
     }
-    Item{
-        id:emptyHistory
-        visible: conversationList.count !== 0 && listView.count === 0
-        anchors.fill: parent
-        MyIcon {
-            id: searchNotFoundModelIconId
-            myIcon: "qrc:/media/icon/notFoundHistory.svg"
-            iconType: Style.RoleEnum.IconType.Image
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            enabled: false
-            width: 80; height: 80
-        }
-    }
+    // Item{
+    //     id:emptyHistory
+    //     visible: conversationList.count !== 0 && listView.count === 0
+    //     anchors.fill: parent
+    //     MyIcon {
+    //         id: searchNotFoundModelIconId
+    //         myIcon: "qrc:/media/icon/notFoundHistory.svg"
+    //         iconType: Style.RoleEnum.IconType.Image
+    //         anchors.horizontalCenter: parent.horizontalCenter
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         enabled: false
+    //         width: 80; height: 80
+    //     }
+    // }
 }

@@ -10,8 +10,8 @@ ListView {
     interactive: listView.contentHeight > listView.height
     boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
         policy: listView.contentHeight > listView.height

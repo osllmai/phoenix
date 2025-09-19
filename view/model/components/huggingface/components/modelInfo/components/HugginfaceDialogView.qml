@@ -144,20 +144,21 @@ Column {
         model:  (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.siblings:[])
         delegate: Row {
             width: listView.width
-            height: 40
+            height: 50
             spacing: 10
 
             Label {
                 text: modelData.rfilename
                 color: Style.Colors.textInformation
-                font.pixelSize: 10
-                anchors.verticalCenter: dounloadButton.verticalCenter
+                font.pixelSize: 12
                 elide: Label.ElideRight
-                width: parent.width - dounloadButton.width - 20
+                width: parent.width - (dounloadButton.visible ? (dounloadButton.width+20) :availabel.width) - 30
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             MyButton {
                 id: dounloadButton
+                visible: !modelData.exist
                 myText: "Add Model"
                 bottonType: Style.RoleEnum.BottonType.Primary
                 height: 30
@@ -168,8 +169,20 @@ Column {
                         huggingfaceModelList.hugginfaceInfo.pipeline_tag,
                         huggingfaceModelList.hugginfaceInfo.icon
                     )
+                    availabel.visible = true
+                    dounloadButton.visible = false
                 }
+            }
+
+            Label {
+                id:  availabel
+                visible: modelData.exist
+                text: "Available in Local Models"
+                color: Style.Colors.textTagInfo
+                font.pixelSize: 11
+                anchors.verticalCenter: parent.verticalCenter
             }
         }
     }
+
 }

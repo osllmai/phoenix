@@ -14,13 +14,15 @@ Flickable {
     interactive: flickable.contentHeight > flickable.height
     boundsBehavior: flickable.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    flickDeceleration: 200
-    maximumFlickVelocity: 12000
+    flickDeceleration: 80
+    maximumFlickVelocity: 30000
 
     ScrollBar.vertical: ScrollBar {
+        interactive: true
         policy: flickable.contentHeight > flickable.height
                 ? ScrollBar.AlwaysOn
                 : ScrollBar.AlwaysOff
+        minimumSize: 0.1
     }
 
     function calculationCellNumber(myWidth){
@@ -45,6 +47,7 @@ Flickable {
 
     Column {
         id: column
+        visible: /*conversationList.count === 0 &&*/ gridView2.count !== 0
         width: flickable.width
         spacing: 5
 
@@ -54,9 +57,8 @@ Flickable {
             width: parent.width
             height: gridView2.contentHeight
 
-            interactive: false
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar { policy: ScrollBar.AlwaysOff }
+            interactive: gridView2.contentHeight > gridView2.height
+            boundsBehavior: gridView2.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
             cellWidth: flickable.calculationCellWidth(gridView2.width)
             cellHeight: 250
@@ -75,86 +77,22 @@ Flickable {
                     anchors.fill: parent
                     anchors.margins: 18
                 }
-
-            //     Rectangle {
-            //         anchors.fill: parent
-            //         radius: 12
-            //         color: "#00ffffff"
-            //         visible: delegateLoader2.status === Loader.Loading
-            //         Column {
-            //             anchors.centerIn: parent
-            //             spacing: 12
-
-            //             BusyIndicator {
-            //                 running: true
-            //                 width: 48; height: 48
-            //             }
-            //         }
-            //     }
-            //     onStatusChanged: {
-            //         if (status === Loader.Ready) {
-            //             // console.log("Delegate is ready!", realBox)
-            //             huggingfaceModelList.loadMore()
-            //         } else if (status === Loader.Loading) {
-            //             console.log("Delegate is loading...")
-            //         }
-            //     }
             }
         }
-
-        // GridView {
-        //     id: gridView2
-        //     visible: gridView2.count !== 0
-        //     width: parent.width
-        //     height: gridView2.contentHeight
-
-        //     interactive: false
-        //     boundsBehavior: Flickable.StopAtBounds
-        //     ScrollBar.vertical: ScrollBar {
-        //         policy: ScrollBar.AlwaysOff
-        //     }
-
-        //     cellWidth: flickable.calculationCellWidth(gridView2.width)
-        //     cellHeight: 300
-
-        //     clip: true
-
-        //     model: huggingfaceModelList
-        //     delegate: Loader {
-        //         id: delegateLoader2
-
-        //         sourceComponent: Item {
-        //             width: gridView2.cellWidth
-        //             height: 300
-
-        //             HuggingfaceBoxDelegate {
-        //                 anchors.fill: parent
-        //                 anchors.margins: 18
-        //                 Behavior on anchors.margins { NumberAnimation { duration: 200 } }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // Item{
-        //     id: installButton
-        //     width: parent.width - 40
-        //     height: 45
-
-        //     MyButton{
-        //         id: openHistoryId
-        //         myIcon: "qrc:/media/icon/add.svg"
-        //         myTextToolTip: "Add More"
-        //         myText: "Add More"
-        //         bottonType: Style.RoleEnum.BottonType.Secondary
-        //         anchors.horizontalCenter: parent.horizontalCenter
-        //         Connections {
-        //             target: openHistoryId
-        //             function onClicked(){
-        //                 huggingfaceModelList.loadMore()
-        //             }
-        //         }
-        //     }
-        // }
+    }
+    Item{
+        id:searchEmptyHistory
+        visible: /*conversationList.count === 0 &&*/ gridView2.count === 0
+        width: flickable.width
+        height: flickable.height
+        MyIcon {
+            id: notFoundModelIconId
+            myIcon: "qrc:/media/icon/search.svg"
+            iconType: Style.RoleEnum.IconType.Primary
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            enabled: false
+            width: 60; height: 60
+        }
     }
 }
