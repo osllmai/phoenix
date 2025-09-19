@@ -18,7 +18,6 @@
 
 ---
 
-
 ### 🔥 About Phoenix
 Phoenix is an **open-source application** built with **Qt/QML** that enables seamless interaction with **Large Language Models (LLMs)** locally, without requiring an internet connection.  
 
@@ -38,6 +37,12 @@ The platform is designed to **automatically detect** whether your system has a G
 ### 📂 Source Code
 Phoenix is open-source, and the full source code is available at:  
 👉 [GitHub - osllmai/phoenix](https://github.com/osllmai/phoenix)
+
+---
+
+### 📥 Download
+You can download the latest Windows release here:  
+👉 [Download Phoenix v0.1.7 (Windows 64-bit)](https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/Phoenix_v0_1_7_beta_win64.exe)
 
 ---
 
@@ -67,6 +72,7 @@ We would love to collaborate with the community.
 <p align="center">
   Made with ❤️ by the <a href="https://github.com/osllmai">osllm.ai</a> community
 </p>
+
 
 
 
