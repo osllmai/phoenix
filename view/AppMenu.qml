@@ -130,7 +130,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v" + updateChecker.currentVersion + "-2025.09.10"
+            text: "v" + updateChecker.currentVersion + "-2025.09.20"
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"

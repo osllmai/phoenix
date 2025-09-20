@@ -8,7 +8,7 @@ import './component_library/button'
 
 T.Button{
     id: backgroundId
-    width: 330
+    width: buttonBoxId.width + 70
     height:  titleBoxId.height + (informationNotesId.visible?  (informationNotesId.height+20): 10) + buttonBoxId.height + 32
 
     visible: false
@@ -140,6 +140,7 @@ T.Button{
                  id: buttonBoxId
                  spacing: 5
                  height: 35
+                 anchors.right: parent.right
 
                  MyButton {
                      id: botton1

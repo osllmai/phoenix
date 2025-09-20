@@ -21,7 +21,7 @@ Column {
         }
 
         Item {
-            width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
+            width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width - closeBox.width
             height: parent.height
             Label {
                 id: titleId
@@ -67,6 +67,14 @@ Column {
                 clip: true
                 elide: Label.ElideRight
             }
+        }
+        MyIcon{
+            id: closeBox
+            width: 30; height: 30
+            myIcon: "qrc:/media/icon/close.svg"
+            myTextToolTip: "Close"
+            isNeedAnimation: true
+            onClicked: settingsDialogId.close()
         }
     }
 
