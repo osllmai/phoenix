@@ -43,6 +43,25 @@
     "date": "2025-09-19",
     "notes": "Phoenix is an open-source application built with Qt/QML that enables seamless interaction with Large Language Models (LLMs) locally, without requiring an internet connection. The platform is designed to automatically detect whether your system has a GPU and load models accordingly, allowing you to use them as powerful AI assistants directly on your machine.",
     "features": [
+      "Support for both offline (local) and online (API/socket) language models",
+      "Integrated chat UI with real-time interaction",
+      "Prompt editor with multi-line and template support",
+      "Conversation history viewer",
+      "Model configuration panel (select model, device, temperature, etc.)",
+      "Voice-to-text (speech recognition) and text-to-speech synthesis",
+      "Chat with PDF files using embedded document reader",
+      "Basic plugin system for model providers",
+      "Socket and API server support for both local and remote models",
+      "Works completely offline after setup (for local models)"
+    ],
+    "support": "phoenix@osllm.ai"
+  },
+  {
+    "version": "0.1.8",
+    "title": "Phoenix Initial Public Release",
+    "date": "2025-09-20",
+    "notes": "Phoenix is an open-source application built with Qt/QML that enables seamless interaction with Large Language Models (LLMs) locally, without requiring an internet connection. The platform is designed to automatically detect whether your system has a GPU and load models accordingly, allowing you to use them as powerful AI assistants directly on your machine.",
+    "features": [
       "Support for both local and online models, as well as all models available on Hugging Face.",
       "Integrated speech-to-text functionality using local models, enabling real-time voice recording and transcription.",
       "Flexible integration through API or socket connections, so that other applications on your system can access and use the locally loaded models.",

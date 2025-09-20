@@ -42,7 +42,7 @@ Phoenix is open-source, and the full source code is available at:
 
 ### 📥 Download
 You can download the latest Windows release here:  
-👉 [Download Phoenix v0.1.7 (Windows 64-bit)](https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/Phoenix_v0_1_7_beta_win64.exe)
+👉 [Download Phoenix v0.1.8 (Windows 64-bit)](https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/Phoenix_win64.exe)
 
 ---
 
@@ -64,6 +64,7 @@ Contributions are welcome!
 If you are interested in improving Phoenix, adding new features, or fixing issues, feel free to:  
 - Open **pull requests**  
 - Participate in **discussions** on GitHub  
+- Contact us via email: [phoenix@osllm.ai](mailto:phoenix@osllm.ai)  
 
 We would love to collaborate with the community.  
 

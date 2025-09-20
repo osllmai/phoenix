@@ -60,7 +60,7 @@ Dialog {
         Loader {
             id: contentLoader
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: 10
             active: true
             sourceComponent: {
                 if (huggingfaceModelList.hugginfaceInfo) {
@@ -79,7 +79,7 @@ Dialog {
             id: successComponent
             HugginfaceDialogView {
                 anchors.fill: parent
-                anchors.margins: 24
+                anchors.margins: 12
             }
         }
 

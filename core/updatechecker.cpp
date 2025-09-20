@@ -42,6 +42,8 @@ void UpdateChecker::onUpdatesXmlFinished(QNetworkReply *reply) {
         return;
     }
 
+    // qDebug().noquote() << "Updates.xml content:\n" << data;
+
     QDomNodeList versionNodes = doc.elementsByTagName("Version");
     if (versionNodes.isEmpty()) {
         qWarning() << "No <Version> tag found in Updates.xml";
@@ -89,9 +91,25 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
         for (const QJsonValue &val : releases) {
             QJsonObject obj = val.toObject();
             if (obj.value("version").toString() == version) {
-                setNotes(obj.value("notes").toString());
-                // setCommitHash(obj.value("commit").toString());
-                // setCommitDate(obj.value("date").toString());
+                QString title = obj.value("title").toString();
+                QString date = obj.value("date").toString();
+                QString notes = obj.value("notes").toString();
+
+                QString featuresText;
+                if (obj.contains("features") && obj.value("features").isArray()) {
+                    QJsonArray features = obj.value("features").toArray();
+                    if (!features.isEmpty()) {
+                        featuresText = "\n\nKey Features:\n";
+                        for (const QJsonValue &f : features) {
+                            featuresText += "- " + f.toString() + "\n";
+                        }
+                    }
+                }
+
+                QString finalNotes = QString("%1 (v%2)\nRelease Date: %3\n\n%4%5")
+                                         .arg(title, version, date, notes, featuresText);
+
+                setNotes(finalNotes.trimmed());
                 found = true;
                 break;
             }
@@ -105,7 +123,6 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
         reply->deleteLater();
     });
 }
-
 
 bool UpdateChecker::checkForUpdates() const {
     QString tool;
