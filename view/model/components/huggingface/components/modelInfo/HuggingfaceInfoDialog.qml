@@ -80,6 +80,7 @@ Dialog {
             HugginfaceDialogView {
                 anchors.fill: parent
                 anchors.margins: 12
+                clip: true
             }
         }
 

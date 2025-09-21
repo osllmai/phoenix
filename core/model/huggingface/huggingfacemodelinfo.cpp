@@ -117,11 +117,15 @@ void HuggingfaceModelInfo::onReplyFinished(QNetworkReply *reply) {
         QString filename = sobj["rfilename"].toString();
 
         if (filename.endsWith(".gguf", Qt::CaseInsensitive)) {
-            SiblingFile sf;
-            sf.rfilename = filename;
-            sf.exist = OfflineModelList::instance(nullptr)->existModelByFileName(filename);
-            qInfo()<<"sf.exist"<<sf.exist<<"  sf.rfilename"<<sf.rfilename;
-            siblings.append(sf);
+            SiblingFile sibling;
+            sibling.rfilename = filename;
+            sibling.offlineModel = OfflineModelList::instance(nullptr)->existModelByFileName(filename);
+            if(sibling.offlineModel==nullptr)
+                sibling.exist = false;
+            else
+                sibling.exist = true;
+            qInfo()<<"sibling.exist"<<sibling.exist<<"  sibling.rfilename"<<sibling.rfilename;
+            siblings.append(sibling);
         }
         else if (filename.compare("README.md", Qt::CaseInsensitive) == 0) {
             readmeText = sobj["content"].toString();
@@ -297,17 +301,30 @@ void HuggingfaceModelInfo::setSiblings(const QList<SiblingFile>& newSiblings){
     emit siblingsChanged();
 }
 
+void HuggingfaceModelInfo::updateSiblings(const QString &fileName){
+    for (auto &sibling : m_siblings) {
+        if(sibling.rfilename == fileName){
+            sibling.offlineModel = OfflineModelList::instance(nullptr)->existModelByFileName(fileName);
+            if(sibling.offlineModel==nullptr)
+                sibling.exist = false;
+            else
+                sibling.exist = true;
+        }
+    }
+    emit siblingsChanged();
+}
+
 QVariantList HuggingfaceModelInfo::siblingsQml() const {
     QVariantList list;
-    for (const auto &s : m_siblings) {
+    for (const auto &siblings : m_siblings) {
         QVariantMap map;
-        map["rfilename"] = s.rfilename;
-        map["exist"] = s.exist;
+        map["rfilename"] = siblings.rfilename;
+        map["exist"] = siblings.exist;
+        map["offlineModel"] = QVariant::fromValue(static_cast<QObject*>(siblings.offlineModel));
         list.append(map);
     }
     return list;
 }
-
 
 QStringList HuggingfaceModelInfo::spaces() const{return m_spaces;}
 void HuggingfaceModelInfo::setSpaces(const QStringList& newSpaces){

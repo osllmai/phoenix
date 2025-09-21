@@ -34,7 +34,7 @@ public slots:
     void updateIsLikeModel(const int id, const bool isLike);
     void addModel(const QString &name, const QString &key);
     void addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
-                            const QString &companyName, const QString &companyIcon);
+                            const QString &companyName, const QString &companyIcon, const QString &currentFolder);
 
     void readConversation();
     void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
@@ -69,7 +69,7 @@ signals:
                          const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                          const bool isLike, const QString& type, const BackendType backend,
                          const QString& icon , const QString& information , const QString& promptTemplate ,
-                         const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
+                         const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, const QString &currentFolder);
 
     void addConversation(const int id, const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
                            const QDateTime date, const QString &icon,
@@ -83,6 +83,7 @@ signals:
     void finishedReadOnlineModel();
     void finishedReadOfflineModel();
     void finishedReadConversation();
+    void finishedAddModel(const QString &fileName);
 
 private:
     static Database* m_instance;

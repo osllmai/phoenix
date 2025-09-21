@@ -2,6 +2,7 @@
 #define HUGGINGFACESTRUCT_H
 
 #include <QString>
+#include <offlinemodel.h>
 
 struct WidgetData {
     QString text;
@@ -38,6 +39,7 @@ struct GgufData {
 struct SiblingFile {
     QString rfilename;
     bool exist;
+    OfflineModel* offlineModel;
 };
 
 #endif // HUGGINGFACESTRUCT_H

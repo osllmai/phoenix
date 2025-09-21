@@ -134,7 +134,7 @@ void HuggingfaceModelList::closeModel(QString id){
 }
 
 void HuggingfaceModelList::addModel(const QString &idModel, const QString &fileName, const QString& type,
-                                const QString &companyIcon)
+                                const QString &companyIcon, const QString &currentFolder)
 {
     // 0. Validate the file extension (only accept .gguf files)
     if (!fileName.endsWith(".gguf", Qt::CaseInsensitive)) {
@@ -156,7 +156,12 @@ void HuggingfaceModelList::addModel(const QString &idModel, const QString &fileN
     QString name = fileName;
 
     // 4. Emit the signal with the collected information
-    emit requestAddModel(name, url, type, companyName, companyIcon);
+    emit requestAddModel(name, url, type, companyName, companyIcon, currentFolder);
+}
+
+void HuggingfaceModelList::readyModel(const QString &fileName){
+    if(hugginfaceInfo() != nullptr)
+        hugginfaceInfo()->updateSiblings(fileName);
 }
 
 void HuggingfaceModelList::onReplyFinished(QNetworkReply *reply) {

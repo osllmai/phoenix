@@ -3,6 +3,7 @@ import QtQuick.Controls
 import '../../../../../../component_library/style' as Style
 import "../../../../../../component_library/button"
 import "../../components"
+import "./../../../../offline/components/components"
 
 Column {
     spacing: 10
@@ -73,6 +74,7 @@ Column {
             width: 30; height: 30
             myIcon: "qrc:/media/icon/close.svg"
             myTextToolTip: "Close"
+            anchors.verticalCenter: logoModelId.verticalCenter
             isNeedAnimation: true
             onClicked: settingsDialogId.close()
         }
@@ -104,36 +106,10 @@ Column {
         }
     }
 
-    Item {
-        id: tagsContainer
-        width: parent.width
-        height: 38 + 25
-        clip: true
-
-        Flow {
-            id: tagsFlow
-            anchors.fill: parent
-            anchors.topMargin: 15
-            anchors.bottomMargin: 10
-            spacing: 4
-            flow: Flow.LeftToRight
-            Repeater {
-                model: (huggingfaceModelList.hugginfaceInfo? huggingfaceModelList.hugginfaceInfo.tags:"")
-                MyButton {
-                    myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
-                    myIcon: ""
-                    bottonType: Style.RoleEnum.BottonType.Secondary
-                    isNeedAnimation: true
-                    height: 20
-                }
-            }
-        }
-    }
-
     ListView {
         id: listView
         width:  parent.width
-        height: parent.height - tagsContainer.height - tagsContainer.height - headerId.height
+        height: parent.height - headerId.height
 
         clip: true
 
@@ -160,37 +136,25 @@ Column {
                 color: Style.Colors.textInformation
                 font.pixelSize: 12
                 elide: Label.ElideRight
-                width: parent.width - (dounloadButton.visible ? (dounloadButton.width+20) :availabel.width) - 30
+                width: parent.width - dounloadButton.width - 20
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            MyButton {
+            DownloadButton{
                 id: dounloadButton
-                visible: !modelData.exist
-                myText: "Add Model"
-                bottonType: Style.RoleEnum.BottonType.Primary
-                height: 30
-                onClicked: {
-                    huggingfaceModelList.addModel(
-                        huggingfaceModelList.hugginfaceInfo.id,
-                        modelData.rfilename,
-                        huggingfaceModelList.hugginfaceInfo.pipeline_tag,
-                        huggingfaceModelList.hugginfaceInfo.icon
-                    )
-                    availabel.visible = true
-                    dounloadButton.visible = false
-                }
-            }
 
-            Label {
-                id:  availabel
-                visible: modelData.exist
-                text: "Available in Local Models"
-                color: Style.Colors.textTagInfo
-                font.pixelSize: 11
-                anchors.verticalCenter: parent.verticalCenter
+                modelId: modelData.exist? modelData.offlineModel.id: -1
+                modelName: modelData.exist? modelData.offlineModel.modelName: ""
+                modelKey: modelData.exist? modelData.offlineModel.key: ""
+                modelType: modelData.exist? modelData.offlineModel.type: ""
+                modelIcon: modelData.exist? modelData.offlineModel.icon: ""
+                modelPromptTemplate: ""
+                modelSystemPrompt: ""
+                modelIsDownloading: modelData.exist? modelData.offlineModel.isDownloading: false
+                modelDownloadFinished: modelData.exist? modelData.offlineModel.downloadFinished: false
+                modelDownloadPercent: modelData.exist? modelData.offlineModel.downloadPercent: 0
+                needAddModel: !modelData.exist
             }
         }
     }
-
 }

@@ -19,6 +19,7 @@
 
 #include "huggingfacestruct.h"
 #include "offlinemodellist.h"
+#include "offlinemodel.h"
 
 class HuggingfaceModelInfo: public QObject
 {
@@ -118,6 +119,7 @@ public:
 
     QList<SiblingFile> siblings() const;
     void setSiblings(const QList<SiblingFile>& newSiblings);
+    void updateSiblings(const QString &fileName);
 
     QVariantList siblingsQml() const;
 

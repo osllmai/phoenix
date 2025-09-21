@@ -34,7 +34,7 @@ public:
     Q_INVOKABLE void openModel(const QString& id, const QString& name, const QString& icon);
     Q_INVOKABLE void closeModel(QString id);
     Q_INVOKABLE void addModel(const QString &idModel, const QString &fileName, const QString& type,
-                                     const QString &companyIcon);
+                                     const QString &companyIcon, const QString &currentFolder);
 
     enum HuggingfaceModelRoles {
         IdRole = Qt::UserRole + 1,
@@ -66,7 +66,10 @@ signals:
     void hugginfaceInfoChanged();
     void noMoreModelsChanged();
     void requestAddModel(const QString &name, const QString &url, const QString& type,
-                  const QString &companyName, const QString &companyIcon);
+                  const QString &companyName, const QString &companyIcon, const QString &currentFolder);
+
+public slots:
+    void readyModel(const QString &fileName);
 
 private slots:
     void onReplyFinished(QNetworkReply *reply);
