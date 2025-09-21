@@ -11,6 +11,19 @@ Item {
     height: 35
     width: 200
 
+    property int modelId: model.id || ""
+    property string modelName: model.name || ""
+    property string modelKey: model.key || ""
+    property string modelType: model.type || ""
+    property string modelIcon: model.icon || ""
+    property string modelPromptTemplate: model.promptTemplate || ""
+    property string modelSystemPrompt: model.systemPrompt || ""
+    property bool modelIsDownloading: model.isDownloading || false
+    property bool modelDownloadFinished: model.downloadFinished || false
+    property double modelDownloadPercent: model.downloadPercent || 0
+
+    property bool needAddModel: false
+
     Loader {
         id: modelButtonLoader
         anchors.right: parent.right
@@ -18,11 +31,11 @@ Item {
     }
 
     function getSourceComponent() {
-        if(!model.downloadFinished && !model.isDownloading) {
+        if (!modelDownloadFinished && !modelIsDownloading) {
             return downloadComponent
-        } else if(model.isDownloading) {
+        } else if (modelIsDownloading) {
             return downloadProgressComponent
-        } else if(model.downloadFinished) {
+        } else if (modelDownloadFinished) {
             return modelFinishedComponent
         }
         return null
@@ -44,9 +57,9 @@ Item {
         id: downloadProgressComponent
         MyButton {
             width: 100
-            progressBarValue: model.downloadPercent
+            progressBarValue: modelDownloadPercent
             bottonType: Style.RoleEnum.BottonType.Progress
-            onClicked: offlineModelList.cancelRequest(model.id)
+            onClicked: offlineModelList.cancelRequest(modelId)
         }
     }
 
@@ -55,7 +68,7 @@ Item {
         Row {
             spacing: 5
             width: deleteButton.width +
-                   (rejectLoader.status === Loader.Ready?rejectLoader.width + 5: 0) +
+                   (rejectLoader.status === Loader.Ready ? rejectLoader.width + 5 : 0) +
                    startChatBox.width + 5
             MyButton {
                 id: deleteButton
@@ -68,19 +81,19 @@ Item {
             }
             Loader {
                 id: rejectLoader
-                active: (model.type === "Text Generation" && model.id === conversationList.modelId) ||
-                        (model.type === "Speech" && speechToText.modelPath === model.key)
-                visible: (model.type === "Text Generation" && model.id === conversationList.modelId) ||
-                         (model.type === "Speech" && speechToText.modelPath === model.key)
+                active: (modelType === "Text Generation" && modelId === conversationList.modelId) ||
+                        (modelType === "Speech" && speechToText.modelPath === modelKey)
+                visible: (modelType === "Text Generation" && modelId === conversationList.modelId) ||
+                         (modelType === "Speech" && speechToText.modelPath === modelKey)
 
                 sourceComponent: MyButton {
                     id: rejectButton
                     myText: "Eject"
                     bottonType: Style.RoleEnum.BottonType.Secondary
                     onClicked: {
-                        if(model.type === "Text Generation") {
+                        if (modelType === "Text Generation") {
                             conversationList.setModelRequest(-1, "", "", "", "")
-                        } else if(model.type === "Speech") {
+                        } else if (modelType === "Speech") {
                             speechToText.modelPath = ""
                             speechToText.modelSelect = false
                         }
@@ -89,19 +102,19 @@ Item {
             }
             MyButton {
                 id: startChatBox
-                myText: model.type === "Text Generation" ? "Start Chat" :
-                        ((model.type === "Speech" && speechToText.modelPath === model.key) ? "Go to Chat" : "Set Model")
+                myText: modelType === "Text Generation" ? "Start Chat" :
+                        ((modelType === "Speech" && speechToText.modelPath === modelKey) ? "Go to Chat" : "Set Model")
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked: {
-                    if(model.type === "Text Generation") {
-                        conversationList.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+                    if (modelType === "Text Generation") {
+                        conversationList.setModelRequest(modelId, modelName, "qrc:/media/image_company/" + modelIcon, modelPromptTemplate, modelSystemPrompt)
                         conversationList.isEmptyConversation = true
                         appBodyId.currentIndex = 1
-                    } else if(model.type === "Speech") {
-                        if(speechToText.modelPath === model.key) {
+                    } else if (modelType === "Speech") {
+                        if (speechToText.modelPath === modelKey) {
                             appBodyId.currentIndex = 1
                         } else {
-                            speechToText.modelPath = model.key
+                            speechToText.modelPath = modelKey
                             speechToText.modelSelect = true
                         }
                     }
@@ -123,11 +136,11 @@ Item {
                 target: deleteModelVerificationId
                 function onButtonAction1() { deleteModelVerificationId.close() }
                 function onButtonAction2() {
-                    if (model.type === "Speech" && speechToText.modelPath === model.key) {
+                    if (modelType === "Speech" && speechToText.modelPath === modelKey) {
                         speechToText.modelPath = ""
                         speechToText.modelSelect = false
                     }
-                    offlineModelList.deleteRequest(model.id)
+                    offlineModelList.deleteRequest(modelId)
                     deleteModelVerificationId.close()
                 }
             }
@@ -140,7 +153,19 @@ Item {
         sourceComponent: FolderDialog {
             id: folderDialogId
             title: "Choose Folder"
-            onAccepted: offlineModelList.downloadRequest(model.id, currentFolder)
+            onAccepted: {
+                if(needAddModel){
+                    huggingfaceModelList.addModel(
+                        huggingfaceModelList.hugginfaceInfo.id,
+                        modelData.rfilename,
+                        huggingfaceModelList.hugginfaceInfo.pipeline_tag,
+                        huggingfaceModelList.hugginfaceInfo.icon,
+                        currentFolder
+                    )
+                }else{
+                    offlineModelList.downloadRequest(control.modelId, currentFolder)
+                }
+            }
             onRejected: console.log("Rejected")
         }
     }

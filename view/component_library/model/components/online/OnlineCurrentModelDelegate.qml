@@ -51,7 +51,7 @@ T.Button {
                 text: onlineModelList.currentModel.name
                 width: backgroundId.width -
                        logoModelId.width -
-                       copyId.width -
+                       (copyId.visible? copyId.width: 0) -
                        onlineModelListComboBox.width -
                        (rejectChatButtonLoader.status === Loader.Ready ? rejectChatButtonLoader.item.width : 0) -
                        (installButtonLoader.status === Loader.Ready ? installButtonLoader.item.width : 0) - 5
@@ -73,6 +73,7 @@ T.Button {
 
             MyCopyButton {
                 id: copyId
+                visible: model.installModel
                 myText: TextArea { text: onlineModelList.currentModel.modelName }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
@@ -96,11 +97,13 @@ T.Button {
                 id: installButtonLoader
                 active: !model.installModel
                 anchors.verticalCenter: logoModelId.verticalCenter
-                sourceComponent: MyButton {
+                sourceComponent: MyIcon {
                     id: installButton
-                    height: 30
-                    myText: "Install"
-                    bottonType: Style.RoleEnum.BottonType.Primary
+                    height: copyId.width
+                    width: copyId.width
+                    // myText: "Install"
+                    myIcon: "qrc:/media/icon/key.svg"
+                    iconType: Style.RoleEnum.BottonType.Primary
                     onClicked: {
                         deleteDialogLoader.active = true
                         deleteDialogLoader.item.open()

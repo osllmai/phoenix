@@ -26,7 +26,7 @@ public:
     static OfflineModelList* instance(QObject* parent );
     OfflineModel* findModelById(const int id);
     OfflineModel* findModelByModelName(const QString modelName);
-    bool existModelByFileName(const QString fileName);
+    OfflineModel* existModelByFileName(const QString fileName);
     void loadFromJsonAsync(const QList<Company*> companys);
 
     enum OfflineModelRoles {
@@ -79,7 +79,8 @@ public slots:
                   const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                   const bool isLike, const QString& type, const BackendType backend,
                   const QString& icon , const QString& information , const QString& promptTemplate ,
-                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended);
+                  const QString& systemPrompt, QDateTime expireModelTime, const bool recommended ,
+                  const QString &currentFolder);
 
     void handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal);
     void handleDownloadFinished(const int id);

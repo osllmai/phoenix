@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 8)
+set(APP_VERSION_PATCH 9)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -240,6 +240,7 @@ qt_add_resources(app${APP_NAME}
         media/icon/listView.svg
         media/icon/gridView.svg
         media/icon/selectFile.svg
+        media/icon/key.svg
 
         media/icon/fileCsv.svg
         media/icon/fileDocx.svg

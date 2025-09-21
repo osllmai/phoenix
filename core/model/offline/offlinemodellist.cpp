@@ -306,7 +306,8 @@ void OfflineModelList::addModel(Company* company, const double fileSize, const i
                                 const int id, const QString& modelName, const QString& name, const QString& key, QDateTime addModelTime,
                                 const bool isLike, const QString& type, const BackendType backend,
                                 const QString& icon , const QString& information , const QString& promptTemplate ,
-                                const QString& systemPrompt, QDateTime expireModelTime, const bool recommended)
+                                const QString& systemPrompt, QDateTime expireModelTime, const bool recommended ,
+                                const QString &currentFolder)
 {
     if(finishedSetup()){
         const int index = m_models.size();
@@ -323,6 +324,10 @@ void OfflineModelList::addModel(Company* company, const double fileSize, const i
     if(finishedSetup()){
         endInsertRows();
         emit countChanged();
+
+        if(currentFolder != ""){
+            downloadRequest(id, currentFolder);
+        }
     }
 }
 
@@ -343,13 +348,13 @@ OfflineModel* OfflineModelList::findModelByModelName(const QString modelName){
     return nullptr;
 }
 
-bool OfflineModelList::existModelByFileName(const QString fileName){
+OfflineModel* OfflineModelList::existModelByFileName(const QString fileName){
     for (OfflineModel* model : m_models) {
         if (model->fileName() == fileName) {
-            return true;
+            return model;
         }
     }
-    return false;
+    return nullptr;
 }
 
 void OfflineModelList::updateDownloadProgress(){

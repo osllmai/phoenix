@@ -115,13 +115,13 @@ void Database::addModel(const QString &name, const QString &key){
 
         emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
                              id, name, name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
-                             icon, information, "","", QDateTime::currentDateTime(), false);
+                             icon, information, "","", QDateTime::currentDateTime(), false, "");
 
     }
 }
 
 void Database::addHuggingfaceModel(const QString &name, const QString &url, const QString& type,
-                                   const QString &companyName, const QString &companyIconPath) {
+                                   const QString &companyName, const QString &companyIconPath, const QString &currentFolder) {
 
     // Ensure models directory exists
     QString modelsDir = QCoreApplication::applicationDirPath() + "/models";
@@ -263,8 +263,10 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
             newModel["promptTemplate"].toString(), // promptTemplate
             newModel["systemPrompt"].toString(),   // systemPrompt
             QDateTime::currentDateTime(),          // expireModelTime
-            newModel["recommended"].toBool()       // recommended
+            newModel["recommended"].toBool(),       // recommended
+            currentFolder
             );
+        emit finishedAddModel(newModel["filename"].toString());
     }
 }
 
@@ -704,7 +706,7 @@ void Database::readModel(const QList<Company*> companys){
                                    id, obj["modelName"].toString(), name, key, addDate, isLike,
                                    obj["type"].toString(), BackendType::OfflineModel,
                                    company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
-                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool() /*, nullptr*/);
+                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(), "");
 
                 allID.append(id);
             }
@@ -760,7 +762,7 @@ void Database::readModel(const QList<Company*> companys){
 
                     emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- billion", "q4_0",0.0, false, true,
                                          id, name,  name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
-                                         icon, information, "","", QDateTime::currentDateTime(), false);
+                                         icon, information, "","", QDateTime::currentDateTime(), false, "");
                 }
             }
         }
