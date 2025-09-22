@@ -10,14 +10,14 @@ Dialog {
     width: 300
     height: 180
 
-    property var titleText
-    property var about
+    property string titleText
+    property string about
 
     signal buttonAction1()
     signal buttonAction2()
 
-    property var textBotton1
-    property var textBotton2
+    property string textBotton1: ""
+    property string textBotton2: ""
 
     property int typeBotton1: Style.RoleEnum.BottonType.Secondary
     property int typeBotton2: Style.RoleEnum.BottonType.Danger
@@ -88,6 +88,7 @@ Dialog {
 
                 MyButton{
                     id: botton1
+                    visible: dialogId.textBotton1 !== ""
                     myText: dialogId.textBotton1
                     bottonType: dialogId.typeBotton1
                     onClicked:{
@@ -96,6 +97,7 @@ Dialog {
                 }
                 MyButton{
                     id: botton2
+                    visible: dialogId.textBotton2 !== ""
                     myText: dialogId.textBotton2
                     bottonType: dialogId.typeBotton2
                     onClicked:{

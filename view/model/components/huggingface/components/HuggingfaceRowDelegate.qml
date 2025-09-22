@@ -151,7 +151,7 @@ T.Button {
 
                 MyButton {
                     id: downloadButtonId2
-                    myText: "More Information"
+                    myText: "Model List"
                     bottonType: Style.RoleEnum.BottonType.Primary
                     anchors.right: parent.right
                     anchors.rightMargin: 5

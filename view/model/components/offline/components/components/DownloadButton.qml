@@ -153,7 +153,16 @@ Item {
         sourceComponent: FolderDialog {
             id: folderDialogId
             title: "Choose Folder"
+            currentFolder: window.lastFolder
             onAccepted: {
+                if (folderDialogId.currentFolder.toString().startsWith("file:///C:/")) {
+                    errorLoader.active = true
+                    errorLoader.item.open()
+                    return
+                }
+
+                window.lastFolder = folderDialogId.currentFolder
+
                 if(needAddModel){
                     huggingfaceModelList.addModel(
                         huggingfaceModelList.hugginfaceInfo.id,
@@ -167,6 +176,21 @@ Item {
                 }
             }
             onRejected: console.log("Rejected")
+        }
+    }
+    Loader {
+        id: errorLoader
+        active: false
+        sourceComponent: VerificationDialog {
+            id: driveC
+            titleText: "Invalid Location"
+            about: "You cannot store models on drive C. Please select another drive to save your downloaded models."
+            textBotton1: "OK"
+            typeBotton1: Style.RoleEnum.BottonType.Primary
+            Connections {
+                target: driveC
+                function onButtonAction1() { driveC.close() }
+            }
         }
     }
 }

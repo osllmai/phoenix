@@ -53,7 +53,9 @@ Item {
             title: "Choose file"
             nameFilters: ["Text files (*.gguf)"]
             fileMode: FileDialog.OpenFiles
+            currentFolder: window.lastFolder
             onAccepted: function(){
+                window.lastFolder = fileDialogId.currentFolder
                 offlineModelList.addRequest(currentFile)
             }
         }

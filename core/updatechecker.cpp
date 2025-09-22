@@ -99,7 +99,7 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
                 if (obj.contains("features") && obj.value("features").isArray()) {
                     QJsonArray features = obj.value("features").toArray();
                     if (!features.isEmpty()) {
-                        featuresText = "\n\nKey Features:\n";
+                        featuresText = "\n\nFeatures:\n";
                         for (const QJsonValue &f : features) {
                             featuresText += "- " + f.toString() + "\n";
                         }

@@ -71,9 +71,9 @@
     "support": "phoenix@osllm.ai"
   },
   {
-    "version": "0.1.9",
+    "version": "0.1.10",
     "title": "Phoenix Public Release",
-    "date": "2025-09-21",
+    "date": "2025-09-23",
     "notes": "Phoenix is an open-source application built with Qt/QML that enables seamless interaction with Large Language Models (LLMs) locally, without requiring an internet connection. The platform is designed to automatically detect whether your system has a GPU and load models accordingly, allowing you to use them as powerful AI assistants directly on your machine.",
     "features": [
       "Support for both local and online models, as well as all models available on Hugging Face.",
