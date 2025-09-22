@@ -3,6 +3,7 @@ import QtCore
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import QtTextToSpeech
+import QtQuick.Dialogs
 import './component_library/style' as Style
 import './component_library/button'
 
@@ -38,6 +39,8 @@ ApplicationWindow {
     property int prevY: 0
     property int prevW: 0
     property int prevH: 0
+
+    property string lastFolder: "file:///" + Logger.logDir
 
     property string theme: "Defualt"
     onThemeChanged: {
@@ -98,6 +101,8 @@ ApplicationWindow {
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)
         property real speechRate: value("speechRate", 0.0)
+
+        property alias lastFolder: window.lastFolder
     }
 
     TextToSpeech {
@@ -184,7 +189,7 @@ ApplicationWindow {
         titleText: "Phoenix"
         about: "Version: "  + updateChecker.currentVersion + " (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.09.21
+Date: 2025.09.23
 OS: Windows x64
 "
         textBotton1: "Copy"
@@ -217,5 +222,4 @@ OS: Windows x64
         id: updateDialog
         visible: false
     }
-
 }

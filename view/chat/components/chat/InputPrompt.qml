@@ -122,6 +122,7 @@ Rectangle{
                     id: fileDialogId
                     title: "Choose file"
                     fileMode: FileDialog.OpenFiles
+                    currentFolder: window.lastFolder
 
                     nameFilters: [
                         "Supported files (*.docx *.pptx *.html *.htm *.jpg *.jpeg *.png *.pdf *.md *.csv *.xlsx *.xml *.json *.mp3 *.wav)",
@@ -141,6 +142,7 @@ Rectangle{
                     ]
 
                     onAccepted: function() {
+                        window.lastFolder = fileDialogId.currentFolder
                         convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
                         convertToMD.startConvert()
                     }

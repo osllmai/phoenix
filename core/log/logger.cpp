@@ -166,6 +166,8 @@ void Logger::writeSessionHeader(QFile* file) {
     out.flush();
 }
 
+QString Logger::logDir() const{return m_logDir;}
+
 void Logger::writeLog(const QString& category, QtMsgType type, const QString& message, const QMessageLogContext& context) {
 
     QString levelStr;

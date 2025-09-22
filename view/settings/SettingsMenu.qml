@@ -127,6 +127,29 @@ Rectangle {
         }
     }
 
+    Item{
+        id: asettingsAndNameId
+        anchors.left: parent.left; anchors.leftMargin: 10
+        anchors.right: parent.right; anchors.rightMargin: 10
+        anchors.bottom: parent.bottom; anchors.bottomMargin: 10
+
+        height: 40
+        MyIcon {
+            id: settingsIcon
+            width: 30; height: 30
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            myIcon: "qrc:/media/icon/log.svg"
+            myTextToolTip: "Log"
+            myWidthToolTip: 60
+            toolTipInCenter: true
+            iconType: Style.RoleEnum.IconType.Primary
+            onClicked: {
+                Qt.openUrlExternally("file:///" + Logger.logDir)
+            }
+        }
+    }
+
     Rectangle{
         id:line
         width: 1; height: parent.height

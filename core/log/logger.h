@@ -16,6 +16,7 @@ class Logger : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString developerLogs READ developerLogs NOTIFY developerLogsChanged)
+    Q_PROPERTY(QString logDir READ logDir NOTIFY logDirChanged FINAL)
 
 public:
     static Logger& instance();
@@ -25,8 +26,11 @@ public:
 
     QString developerLogs() const;
 
+    QString logDir() const;
+
 signals:
     void developerLogsChanged();
+    void logDirChanged();
 
 private:
     Logger();

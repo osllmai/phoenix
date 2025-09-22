@@ -71,31 +71,6 @@ T.Button {
                 }
             }
 
-            Item {
-                id: tagsContainer
-                width: parent.width
-                height: parent.height - headerId.height - downloadButtonId.height - informationAboutDownloadId.height - createdAtText.height - 40
-                clip: true
-
-                // Flow {
-                //     id: tagsFlow
-                //     anchors.fill: parent
-                //     anchors.topMargin: 4
-                //     spacing: 4
-                //     flow: Flow.LeftToRight
-                //     Repeater {
-                //         model: tags
-                //         MyButton {
-                //             myText: modelData !== undefined && modelData !== null ? modelData.toString() : ""
-                //             myIcon: ""
-                //             bottonType: Style.RoleEnum.BottonType.Secondary
-                //             isNeedAnimation: true
-                //             height: 20
-                //         }
-                //     }
-                // }
-            }
-
             Label {
                 id: createdAtText
                 text: "Created at: " + model.createdAt
@@ -120,7 +95,7 @@ T.Button {
 
             MyButton{
                 id: downloadButtonId
-                myText: "More Information"
+                myText: "Model List"
                 bottonType: Style.RoleEnum.BottonType.Primary
                 anchors.right: parent.right
                 onClicked:{
