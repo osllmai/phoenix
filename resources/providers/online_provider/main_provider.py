@@ -37,7 +37,12 @@ if __name__ == "__main__":
     number_of_gpu_layers = int(sys.argv[16])
 
     stop = False
-    client = Provider()
+
+    byok_api_key = None
+    if len(sys.argv) > 17:
+        byok_api_key = sys.argv[17] if sys.argv[17] != "none" else None
+
+    client = Provider(byok_api_key=byok_api_key)
     client.load_model(model=model, api_key=api_key)
 
     if stream:
@@ -54,7 +59,7 @@ if __name__ == "__main__":
             for chunk in chat_response:
                 # Check for stop signal
                 if stdin_has_data():
-                    stop_str = sys.stdin.read(1).strip()  #  Read only one character
+                    stop_str = sys.stdin.read(1).strip()
                     if stop_str in ["true", "false"]:
                         stop = str_to_bool(stop_str)
                         print(f"Python received stop flag: {stop}", file=sys.stderr)
@@ -70,7 +75,7 @@ if __name__ == "__main__":
 
                 sys.stdout.write(chunk)
                 sys.stdout.flush()
-                time.sleep(0.1)  # Simulate streaming delay
+                time.sleep(0.1)
 
         except Exception as e:
             print(f"Error: {str(e)}", file=sys.stderr)

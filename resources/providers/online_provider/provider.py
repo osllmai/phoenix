@@ -1,146 +1,118 @@
-import json
-import os
-import sys
 from typing import Dict, List, Optional, Union, Generator, Any, AsyncGenerator
 import asyncio
 
-from openai_provider import OpenAIProvider
-from mistral_provider import MistralProvider
-from deepseek_provider import DeepseekProvider
+from indoxrouter_provider import IndoxRouterProvider
 
 
 class Provider:
-    """A unified interface for interacting with various language model providers.
+    """A unified interface for interacting with various language model providers through IndoxRouter.
 
     This class provides a consistent interface for working with different language model
-    providers (e.g., OpenAI, Mistral). It handles model loading, message formatting,
-    and both synchronous and asynchronous generation of responses.
+    providers through IndoxRouter gateway. It handles model loading, message formatting,
+    streaming responses, and BYOK (Bring Your Own Key) support.
 
     Attributes:
         provider (str): The name of the current provider (e.g., "openai", "mistral")
         model_name (str): The name of the loaded model
-        api_key (str): The API key for the current provider
-        provider_instance: The specific provider instance (OpenAI or Mistral)
+        api_key (str): The IndoxRouter API key
+        byok_api_key (str): Optional BYOK API key for direct provider access
+        provider_instance: The IndoxRouter provider instance
         stop_generation (bool): Flag to control stopping of generation
         providers_config (dict): Configuration settings for supported providers
     """
 
-    def __init__(self):
-        """Initialize a new Provider instance with default values."""
+    def __init__(self, byok_api_key: Optional[str] = None):
+        """Initialize a new Provider instance with default values.
+
+        Args:
+            byok_api_key (str, optional): Your own API key for direct provider access
+        """
         self.provider = None
         self.model_name = None
         self.api_key = None
+        self.byok_api_key = byok_api_key
         self.provider_instance = None
         self.stop_generation = False
         self._load_providers_config()
 
-    def get_runtime_path(self, *path_parts):
-        """
-        Returns the correct absolute path for a given file based on execution context.
-
-        :param path_parts: One or more path components (e.g., "models", "online_models", "mistral.json")
-        :return: Absolute path to the file
-        """
-        if getattr(sys, "frozen", False):  # PyInstaller executable
-            base_path = sys._MEIPASS
-        else:  # Normal Python script
-            base_path = os.path.dirname(os.path.abspath(__file__))
-
-        return os.path.join(base_path, *path_parts)
-
-
     def _load_providers_config(self):
-        """Load provider configurations from the company.json file.
+        """Initialize provider configuration.
 
-        The configuration file contains information about supported models and
-        parameters for each provider.
-
-        Raises:
-            FileNotFoundError: If company.json is not found
-            json.JSONDecodeError: If company.json is not valid JSON
+        With IndoxRouter, we don't need local JSON configuration files.
+        IndoxRouter handles all provider and model validation.
         """
-        config_path = self.get_runtime_path("models", "company.json")
-
-        with open(config_path, "r") as f:
-            self.companies_config = json.load(f)
-
-    def _validate_model(self, provider, model_name):
-        """Validate that the requested model is supported by the provider.
-
-        Args:
-            provider (str): The name of the provider to validate
-            model_name (str): The name of the model to validate
-
-        Raises:
-            ValueError: If the provider is not supported or the model is not
-                supported by the provider
-        """
-        # Find the provider in the companies list
-        provider_config = next(
-            (comp for comp in self.companies_config if comp["name"] == provider), None
-        )
-
-        if not provider_config:
-            raise ValueError(f"Unsupported provider: {provider}")
-
-        # Only validate for online models
-        if provider_config["type"] != "OnlineModel":
-            raise ValueError(f"Provider {provider} is not an online model provider")
-
-        # Load the models file for this provider
-        models_file_path = self.get_runtime_path("models", provider_config["file"])
-
-        try:
-            with open(models_file_path, "r") as f:
-                models_data = json.load(f)
-
-            # Check if the model exists in the models list
-            supported_models = [
-                model["modelName"] for model in models_data if model.get("modelName")
-            ]
-            if model_name not in supported_models:
-                raise ValueError(f"Model {model_name} is not supported by {provider}")
-
-        except FileNotFoundError:
-            raise ValueError(f"Models file not found for provider: {provider}")
-        except json.JSONDecodeError:
-            raise ValueError(f"Invalid models file for provider: {provider}")
+        self.companies_config = []
 
     def load_model(self, model: str, api_key: str):
-        """Initialize the appropriate client based on the provider and model.
+        """Initialize IndoxRouter client with the specified model.
 
         Args:
             model (str): Provider and model in the format "provider/model_name"
-            api_key (str): API key for the provider
+                        (e.g., "openai/gpt-4", "anthropic/claude-3-sonnet")
+            api_key (str): IndoxRouter API key
 
         Returns:
             Provider: The current Provider instance for method chaining
 
         Raises:
-            ValueError: If the provider is not supported
+            ValueError: If the model format is invalid
         """
-        self.provider, self.model_name = model.split("/")
+        if "/" not in model:
+            raise ValueError(
+                "Model must be in format 'provider/model_name' (e.g., 'openai/gpt-4')"
+            )
+
+        self.provider, self.model_name = model.split("/", 1)
         self.api_key = api_key
 
-        # Validate the model
-        self._validate_model(self.provider, self.model_name)
-
-        if self.provider == "Openai":
-            self.provider_instance = OpenAIProvider(
-                api_key=self.api_key, model_name=self.model_name
-            )
-        elif self.provider == "Mistral":
-            self.provider_instance = MistralProvider(
-                api_key=self.api_key, model_name=self.model_name
-            )
-        elif self.provider == "Deepseek":
-            self.provider_instance = DeepseekProvider(
-                api_key=self.api_key, model_name=self.model_name
-            )
-        else:
-            raise ValueError(f"Unsupported provider: {self.provider}")
+        # Create IndoxRouter provider instance
+        self.provider_instance = IndoxRouterProvider(
+            api_key=self.api_key,
+            model_name=model,  # Pass full model name to IndoxRouter
+            byok_api_key=self.byok_api_key,
+        )
 
         return self
+
+    def validate_model(self, model: str, api_key: str) -> bool:
+        """Validate if a model is available through IndoxRouter.
+
+        Args:
+            model (str): Provider and model in the format "provider/model_name"
+            api_key (str): IndoxRouter API key
+
+        Returns:
+            bool: True if model is valid and available
+
+        Raises:
+            ValueError: If model format is invalid
+        """
+        if "/" not in model:
+            raise ValueError(
+                "Model must be in format 'provider/model_name' (e.g., 'openai/gpt-4')"
+            )
+
+        provider, model_name = model.split("/", 1)
+
+        try:
+            from indoxrouter import Client
+
+            client = Client(api_key=api_key)
+            model_info = client.get_model_info(provider=provider, model=model_name)
+            return model_info is not None
+        except Exception as e:
+            print(f"Model validation failed: {str(e)}")
+            return False
+
+    def set_byok_api_key(self, byok_api_key: str):
+        """Set the BYOK API key for direct provider access.
+
+        Args:
+            byok_api_key (str): Your own API key for the provider
+        """
+        self.byok_api_key = byok_api_key
+        if self.provider_instance:
+            self.provider_instance.byok_api_key = byok_api_key
 
     def stop(self):
         """Stop the ongoing generation process."""
@@ -149,7 +121,7 @@ class Provider:
             self.provider_instance.stop()
 
     def _filter_parameters(self, kwargs: Dict) -> Dict:
-        """Filter kwargs to only include supported parameters for the current provider.
+        """Filter kwargs to only include supported parameters.
 
         Args:
             kwargs (Dict): Dictionary of parameter names and values
@@ -157,17 +129,23 @@ class Provider:
         Returns:
             Dict: Filtered dictionary containing only supported parameters
         """
-        # Find the provider in the companies list
-        provider_config = next(
-            (comp for comp in self.companies_config if comp["name"] == self.provider),
-            None,
-        )
+        # With IndoxRouter, we let the gateway handle parameter filtering
+        # Just pass through common LLM parameters
+        common_params = {
+            "temperature",
+            "max_tokens",
+            "top_p",
+            "top_k",
+            "frequency_penalty",
+            "presence_penalty",
+            "stop",
+            "stream",
+            "min_p",
+            "repeat_penalty",
+        }
 
-        if provider_config and "supported_parameters" in provider_config:
-            supported_params = provider_config["supported_parameters"].keys()
-            return {k: v for k, v in kwargs.items() if k in supported_params}
-
-        return kwargs
+        # Filter to common parameters to avoid passing unsupported ones
+        return {k: v for k, v in kwargs.items() if k in common_params}
 
     def prompt(
         self,
