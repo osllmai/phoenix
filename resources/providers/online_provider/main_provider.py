@@ -20,7 +20,9 @@ if __name__ == "__main__":
 
     # Read arguments from C++ process
     model = sys.argv[1]
-    api_key = sys.argv[2]
+    api_key = sys.argv[
+        2
+    ]  # indoxrouter api key if none use shared api key else use user indoxrouter api key
     user_prompt = sys.argv[3]
     stream = bool(int(sys.argv[4]))
     prompt_template = sys.argv[5]
@@ -38,7 +40,7 @@ if __name__ == "__main__":
 
     stop = False
 
-    byok_api_key = None
+    byok_api_key = None  # by your own api key
     if len(sys.argv) > 17:
         byok_api_key = sys.argv[17] if sys.argv[17] != "none" else None
 
