@@ -58,3 +58,4 @@ ggml-*
 *.ggml
 ggml-*
 
+_pycache_/
