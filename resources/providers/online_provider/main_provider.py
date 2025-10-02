@@ -74,10 +74,12 @@ if __name__ == "__main__":
                 if client.stop_generation:
                     sys.stdout.flush()
                     break
+
                 if isinstance(chunk, dict) and "data" in chunk:
                     content = chunk["data"]
                 else:
                     content = chunk
+
                 sys.stdout.write(content)
                 sys.stdout.flush()
                 time.sleep(0.1)
