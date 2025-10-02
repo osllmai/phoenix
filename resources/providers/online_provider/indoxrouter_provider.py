@@ -115,13 +115,8 @@ class IndoxRouterProvider(BaseProvider):
             for chunk in stream:
                 if self.stop_generation:
                     break
-
-                # Extract content from the chunk
-                if hasattr(chunk, "choices") and len(chunk.choices) > 0:
-                    delta = chunk.choices[0].delta
-                    if hasattr(delta, "content") and delta.content:
-                        yield delta.content
-
+                if isinstance(chunk, dict) and "data" in chunk:
+                    yield chunk["data"]
         except Exception as e:
             print(f"Streaming error: {str(e)}")
 
