@@ -41,7 +41,7 @@ T.Button {
 
                     MyIcon {
                         id: logoModelId
-                        myIcon: "qrc:/media/image_company/" + model.icon
+                        myIcon: model.icon
                         iconType: Style.RoleEnum.IconType.Image
                         enabled: false
                         width: 32; height: 32
@@ -106,7 +106,7 @@ T.Button {
 
                     MyIcon {
                         id: logoModel2Id
-                        myIcon: "qrc:/media/image_company/" + model.icon
+                        myIcon: model.icon
                         iconType: Style.RoleEnum.IconType.Image
                         enabled: false
                         width: 30; height: 30

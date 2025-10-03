@@ -15,6 +15,11 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QEventLoop>
+
 #include "./model/offline/offlinemodel.h"
 #include "./model/online/onlinemodel.h"
 #include "./model/BackendType.h"

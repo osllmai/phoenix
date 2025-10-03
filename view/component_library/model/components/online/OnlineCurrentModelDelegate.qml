@@ -12,7 +12,7 @@ T.Button {
             modelSelectViewId.setModelRequest(
                 model.id,
                 model.name,
-                "qrc:/media/image_company/" + model.icon,
+                model.icon,
                 model.promptTemplate,
                 model.systemPrompt
             )
@@ -40,7 +40,7 @@ T.Button {
 
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/" + model.icon
+                myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32

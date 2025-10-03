@@ -9,20 +9,29 @@ Item {
     id: control
     property bool isFillWidthDownloadButton: true
 
+    property string modelId: ""
+    property string modelName: ""
+    // property string modelType: ""
+    property string modelIcon: ""
+    // property string modelPromptTemplate: ""
+    property string modelSystemPrompt: ""
+    property string modelKey: ""
+    property bool installModel: false
+
     height: 35
     width: control.isFillWidthDownloadButton ? parent.width : 200
 
     // InputApikey (Fill Width)
     Loader {
         id: inputApikeyFillLoader
-        active: isFillWidthDownloadButton && !model.installModel
+        active: isFillWidthDownloadButton && !installModel
         sourceComponent: InputApikey {
             id: inputApikeyFill
             width: control.width
             Connections {
                 target: inputApikeyFill
                 function onSaveAPIKey(apiKey) {
-                    onlineCompanyList.saveAPIKey(model.id, apiKey)
+                    onlineCompanyList.saveAPIKey(modelId, apiKey)
                 }
             }
         }
@@ -31,14 +40,14 @@ Item {
     // InputApikey (Fixed Width)
     Loader {
         id: inputApikeyLoader
-        active: !isFillWidthDownloadButton && !model.installModel
+        active: !isFillWidthDownloadButton && !installModel
         sourceComponent: InputApikey {
             id: inputApikey
             width: control.width
             Connections {
                 target: inputApikey
                 function onSaveAPIKey(apiKey) {
-                    onlineCompanyList.saveAPIKey(model.id, apiKey)
+                    onlineCompanyList.saveAPIKey(modelId, apiKey)
                 }
             }
         }
@@ -47,7 +56,7 @@ Item {
     // Row for Installed Model
     Loader {
         id: installRowLoader
-        active: model.installModel
+        active: installModel
         anchors.right: parent.right
 
         sourceComponent: Row {
@@ -69,51 +78,29 @@ Item {
 
             Loader {
                 id: rejectButtonLoader
-                active: model.id === conversationList.modelId
-                visible: model.id === conversationList.modelId
+                active: modelId === conversationList.modelId
+                visible: modelId === conversationList.modelId
                 sourceComponent: MyButton {
                     id: rejectButton
                     myText: "Eject"
                     bottonType: Style.RoleEnum.BottonType.Secondary
                     onClicked: {
                         conversationList.setModelRequest(-1, "", "", "", "")
-                        // if (model.type === "Text Generation") {
-                        //     conversationList.setModelRequest(-1, "", "", "", "")
-                        // } else if (model.type === "Speech") {
-                        //     speechToText.modelPath = ""
-                        //     speechToText.modelSelect = false
-                        // } else {
-                        //     console.log(model.type)
-                        // }
                     }
                 }
             }
 
             MyButton {
                 id: startChatButton
-                myText: model.type === "Text Generation" ? "Start Chat" : "Set Model"
+                myText: /*modelType === "Text Generation" ? */"Start Chat"/* : "Set Model"*/
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked: {
-                    conversationList.setModelRequest(model.id,
-                                                     model.name,
-                                                     "qrc:/media/image_company/" + model.icon,
-                                                     model.promptTemplate,
-                                                     model.systemPrompt)
+                    conversationList.setModelRequest(modelId,
+                                                     modelName,
+                                                     modelIcon,
+                                                     modelPromptTemplate,
+                                                     modelSystemPrompt)
                     appBodyId.currentIndex = 1
-
-                    // if (model.type === "Text Generation") {
-                    //     conversationList.setModelRequest(
-                    //         model.id, model.name, "qrc:/media/image_company/" + model.icon,
-                    //         model.promptTemplate, model.systemPrompt
-                    //     )
-                    //     conversationList.isEmptyConversation = true
-                    //     appBodyId.currentIndex = 1
-                    // } else if (model.type === "Speech") {
-                    //     speechToText.modelPath = model.key
-                    //     speechToText.modelSelect = true
-                    // } else {
-                    //     console.log(model.type)
-                    // }
                 }
             }
         }
@@ -132,11 +119,11 @@ Item {
                 target: deleteApikeylVerificationId
                 function onButtonAction1() { deleteApikeylVerificationId.close() }
                 function onButtonAction2() {
-                    if ((model.type === "Speech") && (speechToText.modelPath === model.key)) {
-                        speechToText.modelPath = ""
-                        speechToText.modelSelect = false
-                    }
-                    onlineCompanyList.deleteRequest(model.id)
+                    // if ((modelType === "Speech") && (speechToText.modelPath === modelKey)) {
+                    //     speechToText.modelPath = ""
+                    //     speechToText.modelSelect = false
+                    // }
+                    onlineCompanyList.deleteRequest(modelId)
                     deleteApikeylVerificationId.close()
                 }
             }
