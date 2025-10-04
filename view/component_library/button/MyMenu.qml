@@ -11,7 +11,7 @@ T.Button {
     property int iconImplicitWidth: 0
     property int textImplicitWidth: 0
 
-    width: (control.myText !== "" ? control.textImplicitWidth : 0)
+    width: (control.myText !== "" ? Math.max(control.textImplicitWidth, 45) : 0)
          + ((control.myIcon !== "" && control.rowView) ? control.iconImplicitWidth : 10)
          + 20
 

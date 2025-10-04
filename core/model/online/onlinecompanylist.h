@@ -30,6 +30,7 @@ public:
         IconRole,
         IsLikeRole,
         InstallModelRole,
+        KeyRole,
         BackendRole,
         CompanyObjectRole,
         OnlineModelListRole

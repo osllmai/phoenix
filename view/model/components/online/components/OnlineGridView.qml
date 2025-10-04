@@ -11,7 +11,6 @@ Column{
         width: listView.contentWidth
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 5
-        // cacheBuffer: Math.max(0, listView.contentWidth)
 
         layoutDirection: Qt.LeftToRight
         orientation: Qt.Horizontal
@@ -29,41 +28,37 @@ Column{
 
         model: onlineCompanyList
 
-        header:MyMenu {
-            id: indoxrouter
-            myText: window.isDesktopSize? "Indox Router": ""
-            myIcon: "qrc:/media/image_company/indoxRoter.png"
-            iconType: Style.RoleEnum.IconType.Image
-            rowView: false
-            Connections {
-                target: indoxrouter
-                function onClicked(){
-                    gridView.model = onlineCompanyList
-                }
-            }
-        }
-
         delegate:MyMenu {
             id: offlineModel
             myText: window.isDesktopSize? model.name: ""
             myIcon: model.icon
             iconType: Style.RoleEnum.IconType.Image
             rowView: false
+            autoExclusive: false
+            checked: onlineBodyId.onlineModelPage === model.name
             Connections {
                 target: offlineModel
                 function onClicked() {
-                    gridView.model = onlineModelList
+                    if(model.name === "Indox Router"){
+                        gridView.model = onlineCompanyListFilter
+                    }else{
+                        gridView.model = onlineModelList
+                    }
+                    onlineBodyId.onlineModelPage = model.name
 
                     apikeyButton.modelId = model.id
                     apikeyButton.modelName = model.name
-                    // apikeyButton.modelType = model.type
                     apikeyButton.modelIcon = model.icon
-                    // apikeyButton.modelPromptTemplate = model.promptTemplate
-                    // apikeyButton.modelSystemPrompt = model.systemPrompt
                     apikeyButton.modelKey = model.key
                     apikeyButton.installModel = model.installModel
                 }
+            }
 
+            property string installModel: model.installModel
+            onInstallModelChanged: {
+                if(onlineBodyId.onlineModelPage === model.name){
+                    apikeyButton.installModel = model.installModel
+                }
             }
         }
     }
@@ -71,6 +66,8 @@ Column{
     ApikeyButton{
         id: apikeyButton
         width: 300
+        anchors.left: parent.left
+        anchors.leftMargin: 20
     }
 
     GridView {
@@ -81,7 +78,7 @@ Column{
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: gridView.calculationCellWidth()
-        cellHeight: gridView.model === onlineCompanyList? 160: 250
+        cellHeight: gridView.model === onlineCompanyListFilter? 160: 200
 
         interactive: gridView.contentHeight > gridView.height
         boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
@@ -109,18 +106,20 @@ Column{
         }
         clip: true
 
-        model: onlineCompanyList
+        model: onlineCompanyListFilter
 
         delegate: Item {
-            width: gridView.cellWidth
-            height: gridView.cellHeight
+            width: model.name !== "Indox Router"? gridView.cellWidth: 0
+            height: model.name !== "Indox Router"? gridView.cellHeight: 0
+            visible: model.name !== "Indox Router"
 
             Loader {
-                anchors.fill: parent
-                sourceComponent: gridView.model === onlineCompanyList
-                                ? companyDelegate
-                                : boxDelegate
-            }
+                    anchors.fill: parent
+                    active: model.name !== "Indox Router"
+                    sourceComponent: gridView.model === onlineCompanyListFilter
+                                    ? companyDelegate
+                                    : boxDelegate
+                }
 
             Component {
                 id: companyDelegate

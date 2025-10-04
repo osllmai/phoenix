@@ -48,6 +48,8 @@ QVariant OnlineCompanyList::data(const QModelIndex &index, int role) const{
         return company->isLike();
     case InstallModelRole:
         return company->installModel();
+    case KeyRole:
+        return company->key();
     case BackendRole:
         return static_cast<int>(company->backend());
     case CompanyObjectRole:
@@ -66,6 +68,7 @@ QHash<int, QByteArray> OnlineCompanyList::roleNames() const{
     roles[IconRole] = "icon";
     roles[IsLikeRole] = "isLike";
     roles[InstallModelRole] = "installModel";
+    roles[KeyRole] = "key";
     roles[BackendRole] = "backend";
     roles[CompanyObjectRole] = "companyObject";
     roles[OnlineModelListRole] = "onlineModelList";

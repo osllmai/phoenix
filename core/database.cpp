@@ -828,6 +828,30 @@ void Database::readMessages(const int idConversation){
 }
 
 QList<int> Database::readOnlineCompany() {
+
+    int indoxRouterId;
+    QString indoxRouterName = "Indox Router";
+    QString indoxRouterKey = "";
+    QDateTime indoxRouterAddDate = QDateTime::currentDateTime();
+    bool indoxRouterIsLike = false;
+
+    QSqlQuery query(m_db);
+    query.prepare(READ_MODEL_SQL);
+    query.addBindValue(indoxRouterName);
+
+    if (!query.next()) {
+        indoxRouterId = insertModel(indoxRouterName, indoxRouterKey);
+    } else {
+        indoxRouterId = query.value(0).toInt();
+        indoxRouterName = query.value(1).toString();
+        indoxRouterKey = query.value(2).toString();
+        indoxRouterAddDate = query.value(3).toDateTime();
+        indoxRouterIsLike = query.value(4).toBool();
+    }
+
+    emit addOnlineProvider(indoxRouterId, indoxRouterName, "qrc:/media/image_company/indoxRoter.png", indoxRouterIsLike,
+                           BackendType::OnlineModel, "", indoxRouterKey);
+
     QList<int> allID;
 
     QString filePath = QCoreApplication::applicationDirPath() + "/models/online_models/online_models.json";

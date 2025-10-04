@@ -13,10 +13,10 @@ Rectangle{
     radius: 8
 
     function selectIcon(){
-        if(control.check === false){
-            return iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
-        }else{
+        if((control.check === true)){
             return iconId.hovered? "qrc:/media/icon/okFill.svg": "qrc:/media/icon/okFill.svg"
+        }else{
+            return iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
         }
     }
 

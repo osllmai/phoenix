@@ -13,6 +13,9 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
                              const BackendType backend, const QString& filePath, QString key, bool installModel, QObject* parent)
     : Company(id, name, icon, backend, filePath, parent), m_key(key), m_isLike(isLike), m_installModel(installModel)
 {
+    if(name == "Indox Router")
+        return;
+
     m_onlineModelList = new OnlineModelList(this);
 
     qInfo()<<name;

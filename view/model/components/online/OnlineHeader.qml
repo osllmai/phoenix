@@ -22,87 +22,64 @@ Item{
 
     signal search(var text)
 
-    // Row{
-    //     id: fillterBox
-    //     width: parent.width
-    //     spacing: 10
-    //     SearchButton{
-    //         id: searchBoxId
-    //         width: parent.width - companyList.width - viewList.width - 20 - 10
-    //         Connections{
-    //             target: searchBoxId
-    //             function onSearch(myText){
-    //                 onlineModelListFilter.setFilterFixedString(myText)
-    //             }
-    //         }
-    //     }
-    //     Row{
-    //         height: searchBoxId.height
-    //         spacing: 10
+    Row{
+        anchors.right: parent.right
+        width: viewList.width + botton.width +10
+        height: parent.height
+        spacing: 10
 
-    //         MyComboBox {
-    //             id: companyList
-    //             width: 110
-    //             model: [
-    //                 "All",
-    //                 "Favorite",
-    //                 "Text Generation",
-    //                 "Image",
-    //                 "Vision",
-    //                 "Embeddings"
-    //             ]
-    //             displayText: headerId.filtter
-    //             onActivated: {
-    //                 var selectedType = model[currentIndex]
-    //                 if(selectedType ==="All" || selectedType ==="Favorite"){
-    //                     onlineModelListFilter.filter(selectedType)
-    //                 }else{
-    //                     onlineModelListFilter.type = selectedType
-    //                 }
-    //                 headerId.filtter= selectedType
-    //             }
-    //         }
+        MyButton {
+            id: botton
+            height: 30
+            myText: "Buy API Key"
+            myIcon: "qrc:/media/image_company/indoxRoter.png"
+            iconType: Style.RoleEnum.IconType.Image
+            bottonType: Style.RoleEnum.BottonType.Primary
+            anchors.verticalCenter: viewList.verticalCenter
+            onClicked: {
+                Qt.openUrlExternally("https://indoxrouter.com/en-US/keys")
+            }
+        }
 
-            ListView{
-                id: viewList
-                anchors.right: parent.right
-                width: parent.width
-                height: parent.height
-                spacing: 5
+        ListView{
+            id: viewList
+            width: viewList.contentWidth
+            height: parent.height
 
-                layoutDirection: Qt.RightToLeft
-                orientation: Qt.Horizontal
-                snapMode: ListView.SnapToItem
+            spacing: 5
 
-                clip: true
+            layoutDirection: Qt.RightToLeft
+            orientation: Qt.Horizontal
+            snapMode: ListView.SnapToItem
 
-                model: ListModel {
-                    ListElement {
-                        modelPageView: "gridView"
-                        icon: "qrc:/media/icon/gridView.svg"
-                    }
-                    ListElement {
-                        modelPageView: "listView"
-                        icon: "qrc:/media/icon/listView.svg"
-                    }
+            clip: true
+
+            model: ListModel {
+                ListElement {
+                    modelPageView: "gridView"
+                    icon: "qrc:/media/icon/gridView.svg"
                 }
-                delegate: MyButton {
-                    id: delegateViewId
-                    width: 30; height: 30
-                    myIcon: model.icon
-                    bottonType: Style.RoleEnum.BottonType.Feature
-                    iconType: Style.RoleEnum.IconType.Primary
-                    isNeedAnimation: true
-                    checkable: true
-                    checked: window.modelPageView === model.modelPageView
-                    selected: window.modelPageView === model.modelPageView
-                    onClicked:{
-                        if(window.modelPageView !== model.modelPageView){
-                            window.modelPageView = model.modelPageView
-                        }
+                ListElement {
+                    modelPageView: "listView"
+                    icon: "qrc:/media/icon/listView.svg"
+                }
+            }
+            delegate: MyButton {
+                id: delegateViewId
+                width: 30; height: 30
+                myIcon: model.icon
+                bottonType: Style.RoleEnum.BottonType.Feature
+                iconType: Style.RoleEnum.IconType.Primary
+                isNeedAnimation: true
+                checkable: true
+                checked: window.modelPageView === model.modelPageView
+                selected: window.modelPageView === model.modelPageView
+                onClicked:{
+                    if(window.modelPageView !== model.modelPageView){
+                        window.modelPageView = model.modelPageView
                     }
                 }
             }
-    //     }
-    // }
+        }
+    }
 }

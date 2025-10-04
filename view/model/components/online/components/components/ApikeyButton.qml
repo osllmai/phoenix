@@ -57,7 +57,7 @@ Item {
     Loader {
         id: installRowLoader
         active: installModel
-        anchors.right: parent.right
+        anchors.left: parent.left
 
         sourceComponent: Row {
             id: installRowId

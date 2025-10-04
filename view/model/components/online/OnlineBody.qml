@@ -6,8 +6,10 @@ import '../../../component_library/button'
 import './components'
 
 Item {
-    id: control
+    id: onlineBodyId
     clip:true
+
+    property string onlineModelPage:"Indox Router"
 
     Loader {
         id: modelViewLoader
