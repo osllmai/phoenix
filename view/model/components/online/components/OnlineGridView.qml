@@ -40,9 +40,9 @@ Column{
                 target: offlineModel
                 function onClicked() {
                     if(model.name === "Indox Router"){
-                        gridView.model = onlineCompanyListFilter
+                        onlineBodyId.currentModel = onlineCompanyListFilter
                     }else{
-                        gridView.model = onlineModelList
+                        onlineBodyId.currentModel = onlineModelList
                     }
                     onlineBodyId.onlineModelPage = model.name
 
@@ -73,7 +73,7 @@ Column{
     GridView {
         id: gridView
         visible: gridView.count !== 0
-        height: parent.height - listView.height
+        height: parent.height - listView.height  - apikeyButton.height
         width: parent.width
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
@@ -106,7 +106,7 @@ Column{
         }
         clip: true
 
-        model: onlineCompanyListFilter
+        model: onlineBodyId.currentModel
 
         delegate: Item {
             width: model.name !== "Indox Router"? gridView.cellWidth: 0

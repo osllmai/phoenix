@@ -10,6 +10,7 @@ Item {
     clip:true
 
     property string onlineModelPage:"Indox Router"
+    property var currentModel: onlineCompanyListFilter
 
     Loader {
         id: modelViewLoader

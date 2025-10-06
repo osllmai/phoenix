@@ -48,11 +48,12 @@ T.Button {
 
             Label {
                 id: modelNameId
-                text: onlineModelList.currentModel.name
+                text: /*onlineModelList.currentModel.name*/ model.name
                 width: backgroundId.width -
                        logoModelId.width -
                        (copyId.visible? copyId.width: 0) -
-                       onlineModelListComboBox.width -
+                       // onlineModelListComboBox.width -
+                       // (model.name === "Indox Router" ? onlineModelListComboBox.width : 0) -
                        (rejectChatButtonLoader.status === Loader.Ready ? rejectChatButtonLoader.item.width : 0) -
                        (installButtonLoader.status === Loader.Ready ? installButtonLoader.item.width : 0) - 5
                 clip: true
@@ -66,15 +67,28 @@ T.Button {
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
 
-            OnlineModelListComboBox {
-                id: onlineModelListComboBox
-                smallComboBox: true
-            }
+            // Loader {
+            //     id:c0mpanyLouder
+            //     active: model.name === "Indox Router"
+            //     visible: model.name === "Indox Router"
+
+            //     sourceComponent: OnlineModelListComboBox {
+            //         id: onlineCompanyListComboBox
+            //         smallComboBox: true
+            //         myModel: onlineCompanyListFilter
+            //     }
+            // }
+
+            // OnlineModelListComboBox {
+            //     id: onlineModelListComboBox
+            //     smallComboBox: true
+            //     myModel: (c0mpanyLouder.active ? onlineCompanyList.currentCompany.onlineModelList : onlineModelList)
+            // }
 
             MyCopyButton {
                 id: copyId
                 visible: model.installModel
-                myText: TextArea { text: onlineModelList.currentModel.modelName }
+                myText: TextArea { text: model.name/*((model.name === "Indox Router")? (onlineCompanyList.currentCompany.onlineModelList.currentModel.modelName) : onlineModelList.currentModel.modelName)*/ }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
 

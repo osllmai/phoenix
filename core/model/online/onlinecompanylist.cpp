@@ -135,7 +135,11 @@ void OnlineCompanyList::addProvider(const int id, const QString& name, const QSt
     bool isInstall =  true;
     if(key == "")
         isInstall = false;
-    m_companys.append(new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this));
+    OnlineCompany* onlineCompany = new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this);
+    m_companys.append(onlineCompany);
+    if(index == 0){
+        setCurrentCompany(onlineCompany);
+    }
     endInsertRows();
     emit countChanged();
 }
@@ -184,4 +188,12 @@ OnlineCompany* OnlineCompanyList::findCompanyByName(const QString name){
         }
     }
     return nullptr;
+}
+
+OnlineCompany *OnlineCompanyList::currentCompany() const{return m_currentCompany;}
+void OnlineCompanyList::setCurrentCompany(OnlineCompany *newCurrentCompany){
+    if (m_currentCompany == newCurrentCompany)
+        return;
+    m_currentCompany = newCurrentCompany;
+    emit currentCompanyChanged();
 }

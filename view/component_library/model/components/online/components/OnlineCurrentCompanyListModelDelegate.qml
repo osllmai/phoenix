@@ -1,21 +1,17 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Templates 2.1 as T
-import '../../../style' as Style
-import '../../../button'
+import '../../../../../component_library/style' as Style
+import "../../../../../component_library/button"
 
 T.Button {
     id: control
 
-    onClicked: {
-        onlineModelList.selectCurrentModelRequest(model.id)
-    }
+    property bool checkselectItem
 
     property color backgroundColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
     property color borderColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
     property color textColor: choiceTextColor(Style.RoleEnum.State.Normal)
-
-    property bool checkselectItem: (onlineModelList.currentModel.name === model.name)?true:false
 
     contentItem: Label{
         text: "   " + model.name

@@ -3,25 +3,24 @@ import QtQuick.Controls
 import Qt5Compat.GraphicalEffects
 import '../../../../../component_library/style' as Style
 import "../../../../../component_library/button"
-import "../../../../../component_library/model/components/online"
 
 ComboBox {
     id: comboBoxId
-    height: 35
-    width: 160
+    height: comboBoxId.smallComboBox? 30: 35
+    width: comboBoxId.smallComboBox? 30: 160
     font.pixelSize: 12
 
+    property bool smallComboBox: false
+    property var myModel: onlineModelList
+
     Accessible.role: Accessible.ComboBox
-    contentItem: Row {
-        id: contentRow
-        height: comboBoxId.height
-        width: comboBoxId.width
+    contentItem: Item{
         MyIcon{
-            id:iconId
-            width: 33; height: 33
-            myIcon: comboBoxId.modelIcon
-            anchors.topMargin: 0
-            iconType: Style.RoleEnum.IconType.Image
+            id: iconOpenId2
+            visible: comboBoxId.smallComboBox
+            myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
@@ -29,24 +28,33 @@ ComboBox {
                 }
             }
         }
-        Label {
-            id: textId
-            text: comboBoxId.modelName
-            anchors.verticalCenter: iconId.verticalCenter
-            width: parent.width - iconId.width - iconId.width
-            color: Style.Colors.textTitle
-            verticalAlignment: Text.AlignLeft
-            elide: Text.ElideRight
-            clip: true
-        }
-        MyIcon{
-            id: iconOpenId
-            myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
-            anchors.verticalCenter: parent.verticalCenter
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+
+        Row {
+            id: contentRow
+            visible: !comboBoxId.smallComboBox
+            height: comboBoxId.height
+            width: comboBoxId.width
+
+            Label {
+                id: textId
+                text: "   " +(comboBoxId.myModel.currentModel? comboBoxId.myModel.currentModel.name: "")
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width - iconOpenId.width /*- iconId.width*/
+                color: Style.Colors.textTitle
+                verticalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
+                clip: true
+            }
+
+            MyIcon{
+                id: iconOpenId
+                myIcon: popupId.visible ? "qrc:/media/icon/up.svg" : "qrc:/media/icon/down.svg"
+                anchors.verticalCenter: parent.verticalCenter
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        comboBoxId.popup.visible ? comboBoxId.popup.close() : comboBoxId.popup.open()
+                    }
                 }
             }
         }
@@ -55,8 +63,8 @@ ComboBox {
     popup: Popup {
         id: popupId
         y: comboBoxId.height + 10
-        width: 280
-        height: 360
+        width: 160
+        height: Math.min(300, listView.contentHeight)
 
         background: null
         contentItem: Rectangle{
@@ -64,41 +72,44 @@ ComboBox {
             anchors.fill: parent
             border.width: 1
             border.color: Style.Colors.boxBorder
+            radius: 8
+
             ListView {
                 id: listView
+                anchors.fill: parent
+                anchors.margins: 5
+                clip: true
+                interactive: contentHeight > height
+                boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
+                ScrollBar.vertical: ScrollBar {
+                    policy: listView.contentHeight > listView.height
+                            ? ScrollBar.AlwaysOn
+                            : ScrollBar.AlwaysOff
+                }
+                ScrollIndicator.vertical: ScrollIndicator { }
+                implicitHeight: Math.min(contentHeight, 240)
+                model: comboBoxId.myModel
 
-                height: listView.contentHeight
-                width: parent.width
-
-                interactive: listView.contentHeight > listView.height
-                boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
-                model: onlineModelList
                 delegate: Item{
-                    width: listView.width; height: 45
+                    width: listView.width - 10; height: 45
 
-                    OnlineCurrentModelDelegate {
-                        id: indoxItem
+                    OnlineModelDelegateComboBox {
+                       id: indoxItem
                        anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
                        Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-                       onHoveredChanged:{
-                           if(indoxItem.hovered && (appBodyId.width> onlineModelInformation.width + indoxItem.width + 225))
-                               onlineModelInformation.open()
-                           else
-                               onlineModelInformation.close()
+                       MouseArea {
+                           anchors.fill: parent
+                           onClicked: {
+                               comboBoxId.myModel.selectCurrentModelRequest(model.id)
+                           }
                        }
-
-                       OnlineCurrentModelinformation{
-                           id: onlineModelInformation
-                           visible: window.isDesktopSize
-                           x: indoxItem.width + 20
-                           y: -onlineModelInformation.height/2 + indoxItem.height
-                       }
+                       checkselectItem: (comboBoxId.myModel.currentModel.name === model.name)?true:false
                    }
                 }
             }
         }
     }
+
     indicator: Image {}
     background: Rectangle {
         id: backgroundId

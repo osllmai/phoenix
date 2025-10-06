@@ -5,7 +5,7 @@ import QtQuick.Templates 2.1 as T
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
-import "../../../../component_library/model/components/online"
+// import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control

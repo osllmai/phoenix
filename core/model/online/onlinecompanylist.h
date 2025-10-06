@@ -13,6 +13,7 @@ class OnlineCompanyList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
+    Q_PROPERTY(OnlineCompany *currentCompany READ currentCompany NOTIFY currentCompanyChanged FINAL)
 
 public:
     static OnlineCompanyList* instance(QObject* parent);
@@ -42,11 +43,16 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override ;
 
+    OnlineCompany *currentCompany() const;
+    void setCurrentCompany(OnlineCompany *newCurrentCompany);
+
 signals:
     void countChanged();
     void sortingFinished();
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
+
+    void currentCompanyChanged();
 
 public slots:
     void finalizeSetup();
@@ -62,6 +68,8 @@ private:
 
     QList<OnlineCompany*> m_companys;
     QFutureWatcher<QList<OnlineCompany*>> m_sortWatcher;
+
+    OnlineCompany *m_currentCompany;
 };
 
 #endif // ONLINECOMPANYLIST_H
