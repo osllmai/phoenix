@@ -5,63 +5,70 @@ import '../../../../component_library/button'
 import "./components"
 
 Column{
-    ListView{
+    spacing: 5
+    ListView {
         id: listView
         height: 90
-        width: listView.contentWidth
+        width: Math.min(parent.width - 40, listView.contentWidth)
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 5
 
         layoutDirection: Qt.LeftToRight
-        orientation: Qt.Horizontal
+        orientation: ListView.Horizontal
         snapMode: ListView.SnapToItem
 
         interactive: contentWidth > width
         boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-        ScrollBar.vertical: ScrollBar {
-            policy: listView.contentHeight > listView.height
+        clip: true
+
+        ScrollBar.horizontal: ScrollBar {
+            policy: listView.contentWidth > listView.width
                     ? ScrollBar.AlwaysOn
                     : ScrollBar.AlwaysOff
         }
-        clip: true
 
         model: onlineCompanyList
 
-        delegate:MyMenu {
+        delegate: MyMenu {
             id: offlineModel
-            myText: window.isDesktopSize? model.name: ""
+            myText: model.name
             myIcon: model.icon
             iconType: Style.RoleEnum.IconType.Image
             rowView: false
             autoExclusive: false
             checked: onlineBodyId.onlineModelPage === model.name
+
+
             Connections {
                 target: offlineModel
                 function onClicked() {
-                    if(model.name === "Indox Router"){
+                    if (model.name === "Indox Router") {
                         onlineBodyId.currentModel = onlineCompanyListFilter
-                    }else{
+                    } else {
                         onlineBodyId.currentModel = onlineModelList
                     }
                     onlineBodyId.onlineModelPage = model.name
+                    onlineBodyId.installModel = model.installModel
 
                     apikeyButton.modelId = model.id
                     apikeyButton.modelName = model.name
                     apikeyButton.modelIcon = model.icon
                     apikeyButton.modelKey = model.key
                     apikeyButton.installModel = model.installModel
+                    apikeyButton.check = false
                 }
             }
 
             property string installModel: model.installModel
             onInstallModelChanged: {
-                if(onlineBodyId.onlineModelPage === model.name){
+                if (onlineBodyId.onlineModelPage === model.name) {
                     apikeyButton.installModel = model.installModel
                 }
             }
         }
     }
+
 
     ApikeyButton{
         id: apikeyButton
@@ -78,7 +85,7 @@ Column{
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: gridView.calculationCellWidth()
-        cellHeight: gridView.model === onlineCompanyListFilter? 160: 200
+        cellHeight: gridView.model === onlineCompanyListFilter? 150: 180
 
         interactive: gridView.contentHeight > gridView.height
         boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
@@ -125,7 +132,8 @@ Column{
                 id: companyDelegate
                 OnlineCompanyBoxDelegate {
                     anchors.fill: parent
-                    anchors.margins: 18
+                    anchors.margins: 12
+                    installModel: onlineBodyId.installModel
                     Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }
@@ -134,7 +142,8 @@ Column{
                 id: boxDelegate
                 OnlineBoxDelegate {
                     anchors.fill: parent
-                    anchors.margins: 18
+                    anchors.margins: 12
+                    installModel: onlineBodyId.installModel
                     Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }

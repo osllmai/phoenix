@@ -137,11 +137,18 @@ void OnlineCompanyList::addProvider(const int id, const QString& name, const QSt
         isInstall = false;
     OnlineCompany* onlineCompany = new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this);
     m_companys.append(onlineCompany);
-    if(index == 0){
+    if(index == 1){
         setCurrentCompany(onlineCompany);
     }
     endInsertRows();
     emit countChanged();
+}
+
+void OnlineCompanyList::selectCurrentCompanyRequest(const int id){
+    OnlineCompany* company = findCompanyById(id);
+    if(company == nullptr) return;
+
+    setCurrentCompany(company);
 }
 
 void OnlineCompanyList::likeRequest(const int id, const bool isLike){

@@ -24,7 +24,7 @@ T.Button {
 
         Column{
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: 16
             spacing: 10
             Row{
                 id: headerId

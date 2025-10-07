@@ -4,54 +4,75 @@ import Qt5Compat.GraphicalEffects
 import '../../../../../component_library/style' as Style
 import '../../../../../component_library/button'
 
-Rectangle{
+Rectangle {
     id: control
-    height: 32; width: parent.width
+    height: 32
+    width: parent.width
     color: Style.Colors.boxNormalGradient0
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8
 
-    function selectIcon(){
-        if((control.check === true)){
-            return iconId.hovered? "qrc:/media/icon/okFill.svg": "qrc:/media/icon/okFill.svg"
-        }else{
-            return iconId.hovered? "qrc:/media/icon/sendFill.svg": "qrc:/media/icon/send.svg"
+    signal saveAPIKey(var text)
+
+    property bool check: false
+    property bool installModel: false
+    property bool isPasswordMode: true
+    property string modelKey: ""
+
+    function selectIcon() {
+        if (control.installModel === true) {
+            return iconId.hovered ? "qrc:/media/icon/deleteFill.svg" : "qrc:/media/icon/delete.svg"
+        } else if (control.check === true) {
+            return iconId.hovered ? "qrc:/media/icon/okFill.svg" : "qrc:/media/icon/okFill.svg"
+        } else {
+            return iconId.hovered ? "qrc:/media/icon/sendFill.svg" : "qrc:/media/icon/send.svg"
         }
     }
 
-    function sendAPIKey(){
+    function sendAPIKey() {
         control.check = true
         successTimer.start()
     }
 
-    signal saveAPIKey(var text)
-
-    property bool check: false
-
-    Row{
+    Row {
         anchors.fill: parent
-        TextArea {
-            id: textArea
-            text: ""
-            width: parent.width - iconId.width - 5
+
+        TextField {
+            id: apiKeyField
+            width: parent.width - iconId.width - (seeId.visible? seeId.width:0) - 5
             anchors.verticalCenter: iconId.verticalCenter
-            hoverEnabled: true
-            selectionColor: Style.Colors.boxNormalGradient1
-            cursorVisible: false
-            persistentSelection: true
+            text: control.modelKey
+
             placeholderText: qsTr("Enter API Key")
             placeholderTextColor: Style.Colors.menuNormalIcon
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10
-            wrapMode: TextEdit.NoWrap
             background: null
-            Keys.onReturnPressed: (event)=> {
-              if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier){
+
+            echoMode: control.isPasswordMode ? TextInput.Password : TextInput.Normal
+
+            Keys.onReturnPressed: (event) => {
+                if (event.modifiers & Qt.ControlModifier || event.modifiers & Qt.ShiftModifier || (apiKeyField.text === "")) {
                     event.accepted = false;
-              }else {
+                } else {
                     control.sendAPIKey()
-              }
+                }
+            }
+        }
+
+        MyIcon {
+            id: seeId
+            visible: control.installModel || apiKeyField.text !== ""
+            anchors.verticalCenter: parent.verticalCenter
+            myIcon: control.isPasswordMode? "qrc:/media/icon/visiblePassword.svg" : "qrc:/media/icon/eyePassword.svg"
+            width: 28
+            height: 28
+
+            onClicked: {
+                if(apiKeyField.text !== ""){
+                    control.isPasswordMode = !control.isPasswordMode
+                }
             }
         }
 
@@ -59,9 +80,16 @@ Rectangle{
             id: iconId
             anchors.verticalCenter: parent.verticalCenter
             myIcon: control.selectIcon()
-            width: 28; height: 28
+            width: 28
+            height: 28
+
             onClicked: {
-                control.sendAPIKey()
+                if(control.installModel === true){
+                    deleteDialogLoader.active = true
+                    deleteDialogLoader.item.open()
+                }else{
+                    control.sendAPIKey()
+                }
             }
         }
     }
@@ -71,15 +99,38 @@ Rectangle{
         interval: 1000
         repeat: false
         onTriggered: {
-            control.saveAPIKey(textArea.text)
+            control.saveAPIKey(apiKeyField.text)
+            control.check = false
         }
     }
 
     layer.enabled: false
     layer.effect: Glow {
-         samples: 40
-         color:  Style.Colors.boxBorder
-         spread: 0.1
-         transparentBorder: true
-     }
+        samples: 40
+        color: Style.Colors.boxBorder
+        spread: 0.1
+        transparentBorder: true
+    }
+
+
+    Loader {
+        id: deleteDialogLoader
+        active: false
+        sourceComponent: VerificationDialog {
+            id: deleteApikeylVerificationId
+            titleText: "Delete"
+            about: "Do you really want to delete these Api Key?"
+            textBotton1: "Cancel"
+            textBotton2: "Delete"
+            Connections {
+                target: deleteApikeylVerificationId
+                function onButtonAction1() { deleteApikeylVerificationId.close() }
+                function onButtonAction2() {
+                    onlineCompanyList.deleteRequest(modelId)
+                    deleteApikeylVerificationId.close()
+                    apiKeyField.text = ""
+                }
+            }
+        }
+    }
 }

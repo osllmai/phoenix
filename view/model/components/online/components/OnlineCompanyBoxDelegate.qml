@@ -12,6 +12,8 @@ T.Button {
     width: 250
     height: 250
 
+    property bool installModel: false
+
     background: null
     contentItem: Rectangle{
         id: backgroundId
@@ -23,7 +25,7 @@ T.Button {
 
         Column{
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: 16
             spacing: 10
 
             Row{
@@ -40,6 +42,7 @@ T.Button {
 
                 OnlineDelegateTitleAndCopyButton{
                     width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
+                                         - (installRowLoader.active?installRowLoader.height:0)
                     height: parent.height
                 }
 
@@ -65,9 +68,47 @@ T.Button {
 
             OnlineModelListComboBox{}
 
-            // ApikeyButton{
-            //     id: apikeyButton
-            // }
+            // Row for Installed Model
+            Loader {
+                id: installRowLoader
+                active: installModel
+                anchors.left: parent.left
+
+                sourceComponent: Row {
+                    id: installRowId
+                    spacing: 5
+                    width: (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
+                           startChatButton.width + 5
+
+                    Loader {
+                        id: rejectButtonLoader
+                        // active: model.id === conversationList.modelId
+                        // visible: model.id === conversationList.modelId
+                        sourceComponent: MyButton {
+                            id: rejectButton
+                            myText: "Eject"
+                            bottonType: Style.RoleEnum.BottonType.Secondary
+                            onClicked: {
+                                conversationList.setModelRequest(-1, "", "", "", "")
+                            }
+                        }
+                    }
+
+                    MyButton {
+                        id: startChatButton
+                        myText:"Start Chat"
+                        bottonType: Style.RoleEnum.BottonType.Primary
+                        onClicked: {
+                            conversationList.setModelRequest(model.id,
+                                                             modelName,
+                                                             modelIcon,
+                                                             modelPromptTemplate,
+                                                             modelSystemPrompt)
+                            appBodyId.currentIndex = 1
+                        }
+                    }
+                }
+            }
         }
 
         layer.enabled: control.hovered? true: false

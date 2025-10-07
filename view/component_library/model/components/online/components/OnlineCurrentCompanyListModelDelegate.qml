@@ -8,17 +8,31 @@ T.Button {
     id: control
 
     property bool checkselectItem
+    property bool selected:  false
 
     property color backgroundColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
     property color borderColor: choiceBackgroundColor(Style.RoleEnum.State.Normal)
     property color textColor: choiceTextColor(Style.RoleEnum.State.Normal)
 
-    contentItem: Label{
-        text: "   " + model.name
-        color: control.textColor
-        elide: Text.ElideRight
-        verticalAlignment: Text.AlignVCenter
+    contentItem: Row{
+        MyIcon {
+            id: logoModelId
+            myIcon: model.icon
+            iconType: Style.RoleEnum.IconType.Image
+            enabled: false
+            width: 32; height: 32
+        }
+        Label{
+            text: model.name
+            color: control.textColor
+            width: control.width - logoModelId.width
+            clip: true
+            elide: Text.ElideRight
+            verticalAlignment: Text.AlignVCenter
+            anchors.verticalCenter: logoModelId.verticalCenter
+        }
     }
+
 
     background: Rectangle {
         id: backgroundId
@@ -71,9 +85,9 @@ T.Button {
             }
     }
 
-    property bool isNormal: !control.hovered && !control.pressed && control.enabled && !control.checkselectItem
-    property bool isHover: control.hovered && !control.pressed && control.enabled
-    property bool isPressed: control.pressed && control.enabled
+    property bool isNormal: !control.hovered && !control.pressed && !control.selected && control.enabled && !control.checkselectItem
+    property bool isHover: (control.hovered ||control.selected) && !control.pressed && control.enabled
+    property bool isPressed: (control.pressed) && control.enabled
     property bool isDisabled: !control.enabled
     property bool isSelected: control.checkselectItem
 

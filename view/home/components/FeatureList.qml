@@ -25,7 +25,7 @@ Item {
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: control.calculationCellWidth()
-        cellHeight: 300
+        cellHeight: 280
 
         interactive: gridView.contentHeight > gridView.height
         boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
@@ -86,7 +86,7 @@ Item {
            FeatureDelegate {
                id: indoxItem
                anchors.fill: parent
-               anchors.margins:/* indoxItem.hovered? 18: 20*/ 18
+               anchors.margins:/* indoxItem.hovered? 18: 20*/ 12
                myText: model.title
                myIcon: model.icon
                about: model.about

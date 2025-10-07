@@ -148,6 +148,5 @@
         <file>component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml</file>
 	<file>component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml</file>
 	<file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml</file>
-	<file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyDelegate.qml</file>
     </qresource>
 </RCC>

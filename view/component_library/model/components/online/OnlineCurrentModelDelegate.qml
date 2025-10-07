@@ -20,6 +20,7 @@ T.Button {
     }
 
     property bool checkselectItem: modelSelectViewId.modelSelect && (modelSelectViewId.modelId === model.id)
+    property bool selected:  false
 
     background: null
     contentItem: Rectangle {
@@ -30,7 +31,7 @@ T.Button {
         border.color: control.checkselectItem
                        ? Style.Colors.buttonFeatureBorderSelected
                        : Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered || control.checkselectItem)
+        color: (control.hovered || control.selected || control.checkselectItem)
                ? Style.Colors.boxHover
                : "#00ffffff"
 
@@ -66,24 +67,6 @@ T.Button {
                 wrapMode: Text.NoWrap
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
-
-            // Loader {
-            //     id:c0mpanyLouder
-            //     active: model.name === "Indox Router"
-            //     visible: model.name === "Indox Router"
-
-            //     sourceComponent: OnlineModelListComboBox {
-            //         id: onlineCompanyListComboBox
-            //         smallComboBox: true
-            //         myModel: onlineCompanyListFilter
-            //     }
-            // }
-
-            // OnlineModelListComboBox {
-            //     id: onlineModelListComboBox
-            //     smallComboBox: true
-            //     myModel: (c0mpanyLouder.active ? onlineCompanyList.currentCompany.onlineModelList : onlineModelList)
-            // }
 
             MyCopyButton {
                 id: copyId

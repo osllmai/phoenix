@@ -24,6 +24,7 @@ public:
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
     Q_INVOKABLE void saveAPIKey(const int id, QString key);
     Q_INVOKABLE void deleteRequest(const int id);
+    Q_INVOKABLE void selectCurrentCompanyRequest(const int id);
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,

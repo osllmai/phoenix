@@ -10,7 +10,7 @@ import './component_library/button'
 ApplicationWindow {
     id: window
     width: 1700; height: 900
-    minimumWidth: 400; minimumHeight: 600
+    minimumWidth: 700; minimumHeight: 700
 
     // flags: Qt.FramelessWindowHint | Qt.Window
 
@@ -116,7 +116,7 @@ ApplicationWindow {
     // visible: true
     title: qsTr("Phoenix v" + updateChecker.currentVersion + " Beta")
 
-    property bool isDesktopSize: width >= 750;
+    property bool isDesktopSize: width >= 850;
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){

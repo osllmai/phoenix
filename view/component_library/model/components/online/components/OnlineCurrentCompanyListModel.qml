@@ -7,10 +7,12 @@ import "../../../../button"
 
 T.Popup {
     id: control
-    width: 300
-    height: 250
+    width: 150
+    height: listView.implicitHeight + 10
 
     property var myModel
+
+    signal setComanyForIndoxRouter()
 
     background:null
     contentItem: Rectangle{
@@ -33,11 +35,11 @@ T.Popup {
                         : ScrollBar.AlwaysOff
             }
             ScrollIndicator.vertical: ScrollIndicator { }
-            implicitHeight: Math.min(contentHeight, 240)
+            implicitHeight: Math.min(listView.contentHeight, 240)
             model: control.myModel
 
             delegate: Item{
-                width: listView.width - 10; height: 45
+                width: listView.width - 10; height: 40
 
                 OnlineCurrentCompanyListModelDelegate {
                    id: indoxItem
@@ -47,6 +49,7 @@ T.Popup {
                        anchors.fill: parent
                        onClicked: {
                            control.myModel.selectCurrentModelRequest(model.id)
+                           control.setComanyForIndoxRouter()
                        }
                    }
                    checkselectItem: (control.myModel.currentModel.name === model.name)?true:false

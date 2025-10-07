@@ -11,6 +11,7 @@ Item {
 
     property string onlineModelPage:"Indox Router"
     property var currentModel: onlineCompanyListFilter
+    property bool installModel: false
 
     Loader {
         id: modelViewLoader

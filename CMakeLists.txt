@@ -267,6 +267,8 @@ qt_add_resources(app${APP_NAME}
 
         media/icon/twitter.svg
         media/icon/linkedin.svg
+        media/icon/visiblePassword.svg
+        media/icon/eyePassword.svg
 
 
         media/image_company/adobe.svg
@@ -512,6 +514,7 @@ qt_add_resources(app${APP_NAME}
         media/image_company/zhipu.svg
         media/image_company/pytorch.svg
         media/image_company/tensorflow.svg
+        media/image_company/indoxRoter.png
 
 
         media/fonts/DMSans-Regular.ttf
@@ -583,7 +586,9 @@ qt_add_qml_module(app${APP_NAME}
         view/model/components/online/components/OnlineGridView.qml
         view/model/components/online/components/OnlineListView.qml
         view/model/components/online/components/OnlineBoxDelegate.qml
+        view/model/components/online/components/OnlineCompanyBoxDelegate.qml
         view/model/components/online/components/OnlineRowDelegate.qml
+        view/model/components/online/components/OnlineCompanyRowDelegate.qml
         view/model/components/online/components/components/InputApikey.qml
         view/model/components/online/components/components/ApikeyButton.qml
         view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml
@@ -695,9 +700,13 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml
     SOURCES core/model/huggingface/huggingfacestruct.h
     QML_FILES view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml
-    QML_FILES view/component_library/model/components/online/OnlineModelListComboBox.qml
-    QML_FILES view/component_library/model/components/online/OnlineModelDelegateComboBox.qml
+    QML_FILES view/model/components/online/components/components/OnlineModelListComboBox.qml
+    QML_FILES view/model/components/online/components/components/OnlineModelDelegateComboBox.qml
     QML_FILES view/model/components/huggingface/components/SearchHuggingfaceModel.qml
+    SOURCES core/model/online/onlinecompanylistfilter.h core/model/online/onlinecompanylistfilter.cpp
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -773,9 +782,9 @@ endforeach()
 
 #copy python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/main_provider.exe ${BIN_DIR}/providers/online_provider/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/online_provider.exe ${BIN_DIR}/providers/online_provider/online_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/main_provider.py ${BIN_DIR}/providers/online_provider/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/online_provider.py ${BIN_DIR}/providers/online_provider/online_provider.py COPYONLY)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
 endif()
 

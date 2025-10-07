@@ -11,7 +11,7 @@ Item {
 
     OfflineHeader{
         id: headerId
-        width: parent.width - (window.isDesktopSize? 375: 215)
+        width: parent.width - (window.isDesktopSize? 385: 225)
         anchors.top: parent.top; anchors.topMargin: 12
         anchors.right: parent.right; anchors.rightMargin:12
     }

@@ -64,7 +64,7 @@ ComboBox {
         id: popupId
         y: comboBoxId.height + 10
         width: 160
-        height: Math.min(300, listView.contentHeight)
+        height: Math.min(300, listView.contentHeight+ 16)
 
         background: null
         contentItem: Rectangle{

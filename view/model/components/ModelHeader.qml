@@ -5,7 +5,7 @@ import "../../menu"
 
 Item{
     id:headerId
-    width: window.isDesktopSize? 375: 210; height: 60
+    width: window.isDesktopSize? 385: 220; height: 60
     clip:true
 
     function setModelPages(page){

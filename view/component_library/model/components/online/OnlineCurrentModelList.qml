@@ -8,41 +8,55 @@ ListView {
     height: listView.contentHeight
     width: parent.width
 
+    property int currentId: -1
+
     interactive: listView.contentHeight > listView.height
     boundsBehavior: listView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
-    delegate: Item{
-        width: listView.width; height: 45
+    delegate: Item {
+        width: listView.width
+        height: 45
 
         OnlineCurrentModelDelegate {
             id: indoxItem
-           anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
-           Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
-           onHoveredChanged:{
-               if(indoxItem.hovered){
-                      offlineModelInformation.close()
-                      if(model.name !== "Indox Router"){
-                            offlineModelInformation.open()
-                      }else
-                            onlineIndoxRouter.open()
-                      offlineModelInformation.myModel = onlineModelList
-                      offlineModelInformation.x = indoxItem.width + 20
-                      offlineModelInformation.y = /*-offlineModelInformation.height/2 +*/ indoxItem.y
-               }/*else{
-                      if(model.name !== "Indox Router")
-                            offlineModelInformation.close()
-                      else
-                            onlineIndoxRouter.close()
-               }*/
-           }
-       }
+            anchors.fill: parent
+            anchors.margins: hovered ? 2 : 4
+            Behavior on anchors.margins { NumberAnimation { duration: 200 } }
+            selected: (model.id === listView.currentId) && (offlineModelInformation.opened)
+
+            onHoveredChanged: {
+                if (hovered) {
+                    offlineModelInformation.close()
+                    onlineIndoxRouter.close()
+
+                    var globalPos = indoxItem.mapToItem(listView, 0, 0)
+
+                    if (model.name !== "Indox Router") {
+                        offlineModelInformation.myModel = onlineModelList
+                        offlineModelInformation.x = listView.width + 20
+                        offlineModelInformation.y = globalPos.y
+                        offlineModelInformation.open()
+                    } else {
+                        onlineIndoxRouter.myModel = onlineCompanyListFilter
+                        onlineIndoxRouter.x = listView.width + 20
+                        onlineIndoxRouter.y = globalPos.y
+                        onlineIndoxRouter.open()
+                    }
+                    listView.currentId = model.id
+                }
+            }
+        }
     }
-    OnlineCurrentCompanyListModel{
+
+    OnlineCurrentCompanyListModel {
         id: offlineModelInformation
+        modal: false
+        focus: true
     }
-    OnlineCurrentIndoxRouterCompanyyList{
+
+    OnlineCurrentIndoxRouterCompanyyList {
         id: onlineIndoxRouter
-        x: listView.width + 20
-        y: -onlineIndoxRouter.height/2 + listView.height
+        modal: false
+        focus: true
     }
 }

@@ -104,6 +104,9 @@
         <file>icon/twitter.svg</file>
         <file>icon/linkedin.svg</file>
         <file>icon/log.svg</file>
+	<file>icon/visiblePassword.svg</file>
+        <file>icon/eyePassword.svg</file>
+
 
         <file>image_company/adobe.svg</file>
         <file>image_company/adobefirefly.svg</file>
@@ -343,5 +346,6 @@
         <file>image_company/zhipu.svg</file>
         <file>image_company/pytorch.svg</file>
         <file>image_company/tensorflow.svg</file>
+	<file>image_company/indoxRoter.png</file>
     </qresource>
 </RCC>

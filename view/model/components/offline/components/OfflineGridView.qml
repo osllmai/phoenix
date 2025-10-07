@@ -43,7 +43,7 @@ Flickable {
         if(myWidth >550)
             return myWidth/calculationCellNumber(myWidth);
         else
-            return Math.max(myWidth,300);
+            return Math.max(myWidth,250);
     }
 
     Column {
@@ -68,7 +68,7 @@ Flickable {
             id: gridView
             visible: gridView.count !== 0
             width: parent.width
-            height: flickable.showAllDownloadModels? gridView.contentHeight: 300
+            height: flickable.showAllDownloadModels? gridView.contentHeight: 250
 
             interactive: false
             boundsBehavior: Flickable.StopAtBounds
@@ -77,7 +77,7 @@ Flickable {
             }
 
             cellWidth: flickable.calculationCellWidth(gridView.width)
-            cellHeight: 300
+            cellHeight: 250
 
             clip: true
 
@@ -90,14 +90,14 @@ Flickable {
 
                 sourceComponent: */Item {
                     width: gridView.cellWidth
-                    height: 300
+                    height: gridView.cellHeight
                     visible: !flickable.showAllDownloadModels
                              ? index < flickable.calculationCellNumber(gridView.width)
                              : true
 
                     OfflineBoxDelegate {
                         anchors.fill: parent
-                        anchors.margins: 18
+                        anchors.margins: 12
                         Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                     }
                 }
@@ -154,7 +154,7 @@ Flickable {
             }
 
             cellWidth: flickable.calculationCellWidth(gridView2.width)
-            cellHeight: 300
+            cellHeight: 250
 
             clip: true
 
@@ -164,11 +164,11 @@ Flickable {
 
             sourceComponent: */Item {
                 width: gridView2.cellWidth
-                height: 300
+                height: gridView2.cellHeight
 
                 OfflineBoxDelegate {
                     anchors.fill: parent
-                    anchors.margins: 18
+                    anchors.margins: 12
                     Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }
