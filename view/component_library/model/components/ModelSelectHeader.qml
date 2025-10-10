@@ -24,28 +24,28 @@ Item{
 
         Repeater {
             model: ListModel {
-                id: model
-                ListElement {
-                        name: "Local";
-                        icon: "qrc:/media/icon/offline.svg";
-                        pageNumber: 0
-                }
-                ListElement {
-                        name: "Online";
-                        icon: "qrc:/media/icon/online.svg";
-                        pageNumber: 1
-                }
+                ListElement { name: "Local";  icon: "qrc:/media/icon/offline.svg";  pageNumber: 0 }
+                ListElement { name: "Online"; icon: "qrc:/media/icon/online.svg";   pageNumber: 1 }
             }
 
             delegate: MyMenu {
                 id: delegateId
                 myIcon: model.icon
                 myText: model.name
-                autoExclusive: false
+                autoExclusive: true
                 checked: control.currentPageNumber === model.pageNumber
+
                 onClicked: {
-                    control.currentPageNumber = model.pageNumber;
-                    control.currentPage(model.pageNumber);
+                    control.currentPageNumber = model.pageNumber
+                    control.currentPage(model.pageNumber)
+                }
+
+                Component.onCompleted: {
+                    if (index === 0) {
+                        checked = true
+                        control.currentPageNumber = model.pageNumber
+                        control.currentPage(model.pageNumber)
+                    }
                 }
             }
         }

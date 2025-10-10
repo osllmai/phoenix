@@ -22,7 +22,7 @@ Rectangle {
     }
 
     property bool check: false
-    property bool isPasswordMode: true
+    property bool isPasswordMode: false
 
     function selectIcon() {
         if (onlineBodyId.installProvider === true) {
@@ -50,6 +50,8 @@ Rectangle {
 
             placeholderText: qsTr("Enter API Key")
             placeholderTextColor: Style.Colors.menuNormalIcon
+            persistentSelection: true
+            selectionColor: Style.Colors.textSelection
             color: Style.Colors.menuNormalIcon
             font.pointSize: 10
             background: null

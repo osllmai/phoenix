@@ -47,7 +47,7 @@ Flickable {
             id: offlineFinishedDownloadModelList
             visible: offlineFinishedDownloadModelList.count !== 0
 
-            height: flickable.showAllModels? offlineFinishedDownloadModelList.contentHeight: (3*(window.isDesktopSize ? 65 : 90))
+            height: flickable.showAllModels? offlineFinishedDownloadModelList.contentHeight: (Math.min(3,offlineModelListFinishedDownloadFilter.count)*(window.isDesktopSize ? 65 : 90))
             width: parent.width
 
             clip: true
@@ -60,25 +60,20 @@ Flickable {
 
             model: offlineModelListFinishedDownloadFilter
 
-            delegate:  /*Loader {
-                id: delegateLoader
-                active: !flickable.showAllModels ? index < 3 : true
+            delegate: Item{
+               id: delegateId
+               width: offlineFinishedDownloadModelList.width
+               height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
 
-                sourceComponent:*/ Item{
-                   id: delegateId
-                   width: offlineFinishedDownloadModelList.width
-                   height: delegateId.visible ? (window.isDesktopSize ? 65 : 90) : 0
-
-                   OfflineRowDelegate {
-                       id: indoxItem
-                       anchors.fill: parent
-                       anchors.leftMargin: 10
-                       anchors.rightMargin: 10
-                       anchors.topMargin: 5
-                       anchors.bottomMargin: 5
-                   }
-                }
-            // }
+               OfflineRowDelegate {
+                   id: indoxItem
+                   anchors.fill: parent
+                   anchors.leftMargin: 10
+                   anchors.rightMargin: 10
+                   anchors.topMargin: 5
+                   anchors.bottomMargin: 5
+               }
+            }
         }
 
         Row{

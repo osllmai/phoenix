@@ -186,15 +186,22 @@ OnlineModel* OnlineModelList::findModelById(int id) {
     return (it != m_models.end()) ? *it : nullptr;
 }
 
-OnlineModel* OnlineModelList::findModelByModelName(const QString modelName) {
+OnlineModel* OnlineModelList::findModelByModelName(const QString& modelName) {
     for (OnlineModel* model : m_models) {
-        QString suffix = "/" + model->modelName();
-        if (modelName.contains(suffix)) {
+
+        if (model->modelName().startsWith("IndoxRouter/")) {
+            QString newName = model->modelName();
+            newName.remove(0, QString("IndoxRouter/").length());
+            model->setModelName(newName);
+        }
+
+        if (modelName.contains(model->modelName())) {
             return model;
         }
     }
     return nullptr;
 }
+
 
 OnlineModel *OnlineModelList::currentModel() const{return m_currentModel;}
 void OnlineModelList::setCurrentModel(OnlineModel *newCurrentModel){

@@ -12,14 +12,11 @@ Column{
         width: Math.min(parent.width - 40, listView.contentWidth)
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 5
-
         layoutDirection: Qt.LeftToRight
         orientation: ListView.Horizontal
         snapMode: ListView.SnapToItem
-
         interactive: contentWidth > width
         boundsBehavior: interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
-
         clip: true
 
         ScrollBar.horizontal: ScrollBar {
@@ -31,38 +28,35 @@ Column{
         model: onlineCompanyList
 
         delegate: MyMenu {
-            id: offlineModel
+            id: companyMenu
             myText: model.name
             myIcon: model.icon
             iconType: Style.RoleEnum.IconType.Image
             rowView: false
-            autoExclusive: false
+            autoExclusive: true
             checked: onlineBodyId.onlineModelPage === model.name
 
-            Connections {
-                target: offlineModel
-                function onClicked() {
-                    if (model.name === "Indox Router") {
-                        onlineBodyId.currentProvider = onlineCompanyListFilter
-                    } else {
-                        onlineBodyId.currentProvider = onlineModelList
-                    }
-                    onlineBodyId.onlineModelPage = model.name
-                    onlineBodyId.installProvider = model.installModel
+            onClicked: {
+                onlineBodyId.currentProvider = model.name === "Indox Router"
+                                                ? onlineCompanyListFilter
+                                                : onlineModelList
+                onlineBodyId.onlineModelPage = model.name
+                onlineBodyId.installProvider = model.installModel
 
-                    onlineBodyId.providerName = model.name
-                    onlineBodyId.providerIcon = model.icon
-                    onlineBodyId.providerKey = model.key
-                    onlineBodyId.providerId = model.id
-                }
+                onlineBodyId.providerName = model.name
+                onlineBodyId.providerIcon = model.icon
+                onlineBodyId.providerKey = model.key
+                onlineBodyId.providerId = model.id
             }
 
             Component.onCompleted: {
-                if (model.name === "Indox Router") {
-                    onlineBodyId.currentProvider = onlineCompanyListFilter
+                if (model.name === "Indox Router" && onlineBodyId.onlineModelPage === "Indox Router") {
+                    companyMenu.checked = true
+                    onlineBodyId.currentProvider = model.name === "Indox Router"
+                                                   ? onlineCompanyListFilter
+                                                   : onlineModelList
                     onlineBodyId.onlineModelPage = model.name
                     onlineBodyId.installProvider = model.installModel
-
                     onlineBodyId.providerName = model.name
                     onlineBodyId.providerIcon = model.icon
                     onlineBodyId.providerKey = model.key
@@ -78,7 +72,6 @@ Column{
             }
         }
     }
-
 
     ApikeyButton{
         id: apikeyButton

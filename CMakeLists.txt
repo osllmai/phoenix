@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 10)
+set(APP_VERSION_PATCH 30)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -711,6 +711,8 @@ qt_add_qml_module(app${APP_NAME}
     SOURCES core/provider/worker/onlineworker.h core/provider/worker/onlineworker.cpp
     SOURCES core/provider/worker/offlineworker.h core/provider/worker/offlineworker.cpp
     SOURCES core/provider/worker/apikey.h
+    SOURCES core/library/convert/convertworker.h core/library/convert/convertworker.cpp
+    SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
 )
 
 #for show logger-contect (file name, message line, ...)

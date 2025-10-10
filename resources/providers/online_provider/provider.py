@@ -68,41 +68,41 @@ class Provider:
         # Create IndoxRouter provider instance
         self.provider_instance = IndoxRouterProvider(
             api_key=self.api_key,
-            model_name=model,
+            model_name=model,  # Pass full model name to IndoxRouter
             byok_api_key=self.byok_api_key,
         )
 
         return self
 
-    # def validate_model(self, model: str, api_key: str) -> bool:
-    #     """Validate if a model is available through IndoxRouter.
+    def validate_model(self, model: str, api_key: str) -> bool:
+        """Validate if a model is available through IndoxRouter.
 
-    #     Args:
-    #         model (str): Provider and model in the format "provider/model_name"
-    #         api_key (str): IndoxRouter API key
+        Args:
+            model (str): Provider and model in the format "provider/model_name"
+            api_key (str): IndoxRouter API key
 
-    #     Returns:
-    #         bool: True if model is valid and available
+        Returns:
+            bool: True if model is valid and available
 
-    #     Raises:
-    #         ValueError: If model format is invalid
-    #     """
-    #     if "/" not in model:
-    #         raise ValueError(
-    #             "Model must be in format 'provider/model_name' (e.g., 'openai/gpt-4')"
-    #         )
+        Raises:
+            ValueError: If model format is invalid
+        """
+        if "/" not in model:
+            raise ValueError(
+                "Model must be in format 'provider/model_name' (e.g., 'openai/gpt-4')"
+            )
 
-    #     provider, model_name = model.split("/", 1)
+        provider, model_name = model.split("/", 1)
 
-    #     try:
-    #         from indoxrouter import Client
+        try:
+            from indoxrouter import Client
 
-    #         client = Client(api_key=api_key)
-    #         model_info = client.get_model_info(provider=provider, model=model_name)
-    #         return model_info is not None
-    #     except Exception as e:
-    #         print(f"Model validation failed: {str(e)}")
-    #         return False
+            client = Client(api_key=api_key)
+            model_info = client.get_model_info(provider=provider, model=model_name)
+            return model_info is not None
+        except Exception as e:
+            print(f"Model validation failed: {str(e)}")
+            return False
 
     def set_byok_api_key(self, byok_api_key: str):
         """Set the BYOK API key for direct provider access.

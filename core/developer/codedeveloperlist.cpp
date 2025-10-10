@@ -121,19 +121,6 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
     else{
         setModelSelect(true);
 
-        // OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
-        // if(offlineModel != nullptr){
-        //     getCurrentProgramLanguage()->getCodeGenerator()->setModelName(offlineModel->modelName());
-        // }
-
-        // OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
-        // if (company) {
-        //     OnlineModel* onlineModel = company->onlineModelList()->currentModel();
-        //     if (onlineModel) {
-        //         getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel->modelName());
-        //     }
-        // }
-
         OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
         if(offlineModel != nullptr){
             getCurrentProgramLanguage()->getCodeGenerator()->setModelName(offlineModel->modelName());

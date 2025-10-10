@@ -213,11 +213,36 @@ bool ChatServer::loadModel(QString modelName){
         } else {
             return false;
         }
-    } else {
-        OnlineModel* onlineModel = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->onlineModelList()->findModelByModelName(modelName);
-        if(OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)->installModel() && onlineModel){
-            setModel(onlineModel);
-        } else {
+    } else if (modelName.startsWith("IndoxRouter/")){
+        if(OnlineCompany* indoxRouter = OnlineCompanyList::instance(nullptr)->findCompanyByName("Indox Router")){
+            modelName.remove(0, QString("IndoxRouter/").length());
+            if(OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)){
+                if(OnlineModel* onlineModel = company->onlineModelList()->findModelByModelName(modelName)){
+                    if (!modelName.startsWith("IndoxRouter/")) {
+                        onlineModel->setModelName("IndoxRouter/" + modelName);
+                    }
+                    onlineModel->setKey(indoxRouter->key());
+
+                    setModel(onlineModel);
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+
+    }else{
+        if(OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyByName(modelName)){
+            if(OnlineModel* onlineModel = company->onlineModelList()->findModelByModelName(modelName)){
+                onlineModel->setKey(company->key());
+                setModel(onlineModel);
+            }else{
+                return false;
+            }
+        }else{
             return false;
         }
     }
@@ -227,8 +252,25 @@ bool ChatServer::loadModel(QString modelName){
 bool ChatServer::loadModel(int id){
     if (OfflineModel *offline = OfflineModelList::instance(nullptr)->findModelById(id)) {
         setModel(offline);
-    } else if (OnlineModel* online = OnlineCompanyList::instance(nullptr)->findCompanyById(id)->onlineModelList()->currentModel()) {
-        setModel(online);
+    } else if (OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id)) {
+        OnlineModel* onlineModel;
+        if (company->name() == "Indox Router") {
+            OnlineCompany* currentCompanyIndoxRouter = OnlineCompanyList::instance(nullptr)->currentIndoxRouterCompany();
+            onlineModel = currentCompanyIndoxRouter->onlineModelList()->currentModel();
+            QString modelName = onlineModel->modelName();
+            if (!modelName.startsWith("IndoxRouter/")) {
+                onlineModel->setModelName("IndoxRouter/" + modelName);
+            }
+        }else{
+            onlineModel = company->onlineModelList()->currentModel();
+        }
+
+        if (onlineModel) {
+            onlineModel->setKey(company->key());
+            setModel(onlineModel);
+        }else{
+            return false;
+        }
     } else {
         return false;
     }
