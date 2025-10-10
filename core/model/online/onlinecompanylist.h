@@ -13,7 +13,7 @@ class OnlineCompanyList: public QAbstractListModel
     Q_OBJECT
     QML_SINGLETON
     Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
-    Q_PROPERTY(OnlineCompany *currentCompany READ currentCompany NOTIFY currentCompanyChanged FINAL)
+    Q_PROPERTY(OnlineCompany *currentIndoxRouterCompany READ currentIndoxRouterCompany NOTIFY currentIndoxRouterCompanyChanged FINAL)
 
 public:
     static OnlineCompanyList* instance(QObject* parent);
@@ -24,7 +24,7 @@ public:
     Q_INVOKABLE void likeRequest(const int id, const bool isLike);
     Q_INVOKABLE void saveAPIKey(const int id, QString key);
     Q_INVOKABLE void deleteRequest(const int id);
-    Q_INVOKABLE void selectCurrentCompanyRequest(const int id);
+    Q_INVOKABLE void selectCurrentIndoxRouterCompanyRequest(const int id);
 
     enum CompanyRoles {
         IDRole = Qt::UserRole + 1,
@@ -44,16 +44,15 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override ;
 
-    OnlineCompany *currentCompany() const;
-    void setCurrentCompany(OnlineCompany *newCurrentCompany);
+    OnlineCompany *currentIndoxRouterCompany() const;
+    void setCurrentIndoxRouterCompany(OnlineCompany *newCurrentIndoxRouterCompany);
 
 signals:
     void countChanged();
     void sortingFinished();
     void requestUpdateKeyModel(const int id, const QString &key);
     void requestUpdateIsLikeModel(const int id, const bool isLike);
-
-    void currentCompanyChanged();
+    void currentIndoxRouterCompanyChanged();
 
 public slots:
     void finalizeSetup();
@@ -70,7 +69,7 @@ private:
     QList<OnlineCompany*> m_companys;
     QFutureWatcher<QList<OnlineCompany*>> m_sortWatcher;
 
-    OnlineCompany *m_currentCompany;
+    OnlineCompany *m_currentIndoxRouterCompany;
 };
 
 #endif // ONLINECOMPANYLIST_H

@@ -15,13 +15,17 @@ Rectangle {
 
     signal saveAPIKey(var text)
 
+    property string providerId: onlineBodyId.providerId
+    onProviderIdChanged: {
+        apiKeyField.text = onlineBodyId.providerKey
+        control.check = false
+    }
+
     property bool check: false
-    property bool installModel: false
     property bool isPasswordMode: true
-    property string modelKey: ""
 
     function selectIcon() {
-        if (control.installModel === true) {
+        if (onlineBodyId.installProvider === true) {
             return iconId.hovered ? "qrc:/media/icon/deleteFill.svg" : "qrc:/media/icon/delete.svg"
         } else if (control.check === true) {
             return iconId.hovered ? "qrc:/media/icon/okFill.svg" : "qrc:/media/icon/okFill.svg"
@@ -42,7 +46,7 @@ Rectangle {
             id: apiKeyField
             width: parent.width - iconId.width - (seeId.visible? seeId.width:0) - 5
             anchors.verticalCenter: iconId.verticalCenter
-            text: control.modelKey
+            text: onlineBodyId.providerKey
 
             placeholderText: qsTr("Enter API Key")
             placeholderTextColor: Style.Colors.menuNormalIcon
@@ -63,7 +67,7 @@ Rectangle {
 
         MyIcon {
             id: seeId
-            visible: control.installModel || apiKeyField.text !== ""
+            visible: onlineBodyId.installProvider || apiKeyField.text !== ""
             anchors.verticalCenter: parent.verticalCenter
             myIcon: control.isPasswordMode? "qrc:/media/icon/visiblePassword.svg" : "qrc:/media/icon/eyePassword.svg"
             width: 28
@@ -84,7 +88,7 @@ Rectangle {
             height: 28
 
             onClicked: {
-                if(control.installModel === true){
+                if(onlineBodyId.installProvider === true){
                     deleteDialogLoader.active = true
                     deleteDialogLoader.item.open()
                 }else{
@@ -126,7 +130,7 @@ Rectangle {
                 target: deleteApikeylVerificationId
                 function onButtonAction1() { deleteApikeylVerificationId.close() }
                 function onButtonAction2() {
-                    onlineCompanyList.deleteRequest(modelId)
+                    onlineCompanyList.deleteRequest(onlineBodyId.providerId)
                     deleteApikeylVerificationId.close()
                     apiKeyField.text = ""
                 }

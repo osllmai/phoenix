@@ -12,8 +12,6 @@ T.Button {
     width: 250
     height: 250
 
-    property bool installModel: false
-
     background: null
     contentItem: Rectangle{
         id: backgroundId
@@ -60,7 +58,7 @@ T.Button {
                     anchors.verticalCenter: logoModelId.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
                     onClicked: {
-                        onlineCompanyList.likeRequest(model.id, !model.isLike)
+                        // onlineCompanyList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }
@@ -71,8 +69,8 @@ T.Button {
             // Row for Installed Model
             Loader {
                 id: installRowLoader
-                active: installModel
-                anchors.left: parent.left
+                active: onlineBodyId.installProvider
+                anchors.right: parent.right
 
                 sourceComponent: Row {
                     id: installRowId
@@ -82,8 +80,10 @@ T.Button {
 
                     Loader {
                         id: rejectButtonLoader
-                        // active: model.id === conversationList.modelId
-                        // visible: model.id === conversationList.modelId
+                        active: (onlineBodyId.providerId === conversationList.modelId) &&
+                                (onlineCompanyList.currentIndoxRouterCompany.id === model.id)
+                        visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                                 (onlineCompanyList.currentIndoxRouterCompany.id === model.id)
                         sourceComponent: MyButton {
                             id: rejectButton
                             myText: "Eject"
@@ -99,12 +99,17 @@ T.Button {
                         myText:"Start Chat"
                         bottonType: Style.RoleEnum.BottonType.Primary
                         onClicked: {
-                            conversationList.setModelRequest(model.id,
-                                                             modelName,
-                                                             modelIcon,
-                                                             modelPromptTemplate,
-                                                             modelSystemPrompt)
+                            onlineCompanyList.selectCurrentIndoxRouterCompanyRequest(model.id)
+                            conversationList.setModelRequest(onlineBodyId.providerId,
+                                                             onlineBodyId.providerName,
+                                                             onlineBodyId.providerIcon,
+                                                             onlineBodyId.providerPromptTemplate,
+                                                             onlineBodyId.providerSystemPrompt)
                             appBodyId.currentIndex = 1
+                            console.log(model.id)
+                            console.log(onlineCompanyList.currentIndoxRouterCompany.id)
+                            console.log(onlineBodyId.providerId)
+                            console.log(conversationList.modelId)
                         }
                     }
                 }

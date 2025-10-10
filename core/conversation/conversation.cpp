@@ -114,6 +114,7 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
         if(m_model->backend() == BackendType::OfflineModel){
             m_provider = new OfflineProvider(this);
         }else if(m_model->backend() == BackendType::OnlineModel){
+            qInfo()<<m_model->modelName()<<"  "<<m_model->key();
             m_provider = new OnlineProvider(this, m_model->modelName(),m_model->key());
         }
 
@@ -137,7 +138,9 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
     }
 
     emit requestInsertMessage(m_id, input, fileName, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(m_id, "", "", "qrc:/media/image_company/" + m_model->icon(),  false, 0);
+    emit requestInsertMessage(m_id, "", "", m_model->icon(),  false, 0);
+
+    qInfo()<<m_model->icon();
 
     QString finalInput = "";
 
@@ -176,6 +179,7 @@ void Conversation::prompt(const QString &input, const QString &fileName, const Q
         finalInput.replace("{{input}}", input);
     }
 
+    qInfo()<<"call promp";
     m_provider->prompt(finalInput, m_modelSettings->stream(), m_modelSettings->promptTemplate(),
                        m_modelSettings->systemPrompt(),m_modelSettings->temperature(),m_modelSettings->topK(),
                        m_modelSettings->topP(),m_modelSettings->minP(),m_modelSettings->repeatPenalty(),
@@ -200,8 +204,21 @@ void Conversation::loadModel(const int id){
 
     OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
     if (company) {
-        OnlineModel* onlineModel = company->onlineModelList()->currentModel();
+        OnlineModel* onlineModel;
+
+        if (company->name() == "Indox Router") {
+            OnlineCompany* currentCompanyIndoxRouter = OnlineCompanyList::instance(nullptr)->currentIndoxRouterCompany();
+            onlineModel = currentCompanyIndoxRouter->onlineModelList()->currentModel();
+            QString modelName = onlineModel->modelName();
+            if (!modelName.startsWith("IndoxRouter/")) {
+                onlineModel->setModelName("IndoxRouter/" + modelName);
+            }
+        }else{
+            onlineModel = company->onlineModelList()->currentModel();
+        }
+
         if (onlineModel) {
+            onlineModel->setKey(company->key());
             setModel(onlineModel);
         }
     }

@@ -32,7 +32,7 @@ T.Button {
                 height: Math.max(logoModelId.height, likeIconId.height)
                 MyIcon {
                     id: logoModelId
-                    myIcon: "qrc:/media/image_company/" + model.icon
+                    myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 40; height: 40

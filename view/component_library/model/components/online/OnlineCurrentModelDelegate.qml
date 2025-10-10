@@ -71,7 +71,7 @@ T.Button {
             MyCopyButton {
                 id: copyId
                 visible: model.installModel
-                myText: TextArea { text: model.name/*((model.name === "Indox Router")? (onlineCompanyList.currentCompany.onlineModelList.currentModel.modelName) : onlineModelList.currentModel.modelName)*/ }
+                myText: TextArea { text: model.name/*((model.name === "Indox Router")? (onlineCompanyList.currentIndoxRouterCompany.onlineModelList.currentModel.modelName) : onlineModelList.currentModel.modelName)*/ }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
 

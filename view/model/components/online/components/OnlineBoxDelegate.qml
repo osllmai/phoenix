@@ -11,8 +11,6 @@ T.Button {
     width: 250
     height: 250
 
-    property bool installModel: false
-
     background:null
     contentItem:Rectangle{
         id: backgroundId
@@ -58,14 +56,14 @@ T.Button {
                     iconType: Style.RoleEnum.IconType.Like
                     isNeedAnimation: true
                     onClicked: {
-                        onlineModelList.likeRequest(model.id, !model.isLike)
+                        // onlineModelList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }
             }
             Label {
                 id:informationId
-                height: parent.height - headerId.height - (installRowLoader.active?installRowLoader.height:0) - 30
+                height: parent.height - headerId.height - (installRowLoader.active?installRowLoader.height:0) - 20
                 width: parent.width
                 text: model.information
                 color: Style.Colors.textInformation
@@ -81,19 +79,22 @@ T.Button {
             // Row for Installed Model
             Loader {
                 id: installRowLoader
-                active: installModel
-                anchors.left: parent.left
+                active: onlineBodyId.installProvider
+                anchors.right: parent.right
 
                 sourceComponent: Row {
                     id: installRowId
                     spacing: 5
+                    anchors.right: parent.right
                     width: (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
                            startChatButton.width + 5
 
                     Loader {
                         id: rejectButtonLoader
-                        // active: model.id === conversationList.modelId
-                        // visible: model.id === conversationList.modelId
+                        active: (onlineBodyId.providerId === conversationList.modelId) &&
+                                (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                                 (onlineBodyId.currentProvider.currentModel.id === model.id)
                         sourceComponent: MyButton {
                             id: rejectButton
                             myText: "Eject"
@@ -109,12 +110,17 @@ T.Button {
                         myText:"Start Chat"
                         bottonType: Style.RoleEnum.BottonType.Primary
                         onClicked: {
-                            conversationList.setModelRequest(model.id,
-                                                             modelName,
-                                                             modelIcon,
-                                                             modelPromptTemplate,
-                                                             modelSystemPrompt)
+                            onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                            conversationList.setModelRequest(onlineBodyId.providerId,
+                                                             onlineBodyId.providerName,
+                                                             onlineBodyId.providerIcon,
+                                                             onlineBodyId.providerPromptTemplate,
+                                                             onlineBodyId.providerSystemPrompt)
                             appBodyId.currentIndex = 1
+                            console.log(model.id)
+                            console.log(onlineBodyId.currentProvider.currentModel.id)
+                            console.log(onlineBodyId.providerId)
+                            console.log(conversationList.modelId)
                         }
                     }
                 }

@@ -60,10 +60,11 @@ ComboBox {
     popup: Popup {
         id: popupId
         y: comboBoxId.height + 10
-        width: 280
+        closePolicy: Popup.NoAutoClose
+        width: 260
         height: 360
         background: null
-
+/////////////////////////////////////////
         contentItem: Loader {
             id: popupLoader
             anchors.fill: parent

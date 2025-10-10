@@ -44,25 +44,36 @@ Column{
                 target: offlineModel
                 function onClicked() {
                     if (model.name === "Indox Router") {
-                        onlineBodyId.currentModel = onlineCompanyListFilter
+                        onlineBodyId.currentProvider = onlineCompanyListFilter
                     } else {
-                        onlineBodyId.currentModel = onlineModelList
+                        onlineBodyId.currentProvider = onlineModelList
                     }
                     onlineBodyId.onlineModelPage = model.name
+                    onlineBodyId.installProvider = model.installModel
 
-                    apikeyButton.modelId = model.id
-                    apikeyButton.modelName = model.name
-                    apikeyButton.modelIcon = model.icon
-                    apikeyButton.modelKey = model.key
-                    apikeyButton.installModel = model.installModel
-                    apikeyButton.check = false
+                    onlineBodyId.providerName = model.name
+                    onlineBodyId.providerIcon = model.icon
+                    onlineBodyId.providerKey = model.key
+                    onlineBodyId.providerId = model.id
+                }
+            }
+            Component.onCompleted: {
+                if (model.name === "Indox Router") {
+                    onlineBodyId.currentProvider = onlineCompanyListFilter
+                    onlineBodyId.onlineModelPage = model.name
+                    onlineBodyId.installProvider = model.installModel
+
+                    onlineBodyId.providerName = model.name
+                    onlineBodyId.providerIcon = model.icon
+                    onlineBodyId.providerKey = model.key
+                    onlineBodyId.providerId = model.id
                 }
             }
 
             property string installModel: model.installModel
             onInstallModelChanged: {
                 if (onlineBodyId.onlineModelPage === model.name) {
-                    apikeyButton.installModel = model.installModel
+                    onlineBodyId.installProvider = model.installModel
                 }
             }
         }
@@ -70,7 +81,7 @@ Column{
 
     ApikeyButton{
         id: apikeyButton
-        width: 300
+        width: 380
         anchors.left: parent.left
         anchors.leftMargin: 20
     }
@@ -94,12 +105,12 @@ Column{
         }
         clip: true
 
-        model: onlineBodyId.currentModel
+        model: onlineBodyId.currentProvider
 
         delegate: Item {
             visible: model.name !== "Indox Router"
             width: gridView.width
-            height: window.isDesktopSize? 65:90
+            height: window.isDesktopSize? 65:95
 
             Loader {
                     anchors.fill: parent

@@ -32,7 +32,7 @@ Dialog {
                 onlineCompanyList.saveAPIKey(model.id, apiKey)
                 inputApikeyDialogId.close()
                 if(model.installModel){
-                    modelSelectViewId.setModelRequest(model.id, model.name, "qrc:/media/image_company/" + model.icon, model.promptTemplate, model.systemPrompt)
+                    modelSelectViewId.setModelRequest(model.id, model.name, model.icon, model.promptTemplate, model.systemPrompt)
                 }
             }
         }

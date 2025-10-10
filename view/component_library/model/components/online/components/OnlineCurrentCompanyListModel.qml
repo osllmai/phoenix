@@ -7,7 +7,7 @@ import "../../../../button"
 
 T.Popup {
     id: control
-    width: 150
+    width: 190
     height: listView.implicitHeight + 10
 
     property var myModel
@@ -50,6 +50,16 @@ T.Popup {
                        onClicked: {
                            control.myModel.selectCurrentModelRequest(model.id)
                            control.setComanyForIndoxRouter()
+
+                           if (modelSelectViewId.modelSelect) {
+                               modelSelectViewId.setModelRequest(
+                                   modelSelectViewId.modelId,
+                                   modelSelectViewId.modelName,
+                                   modelSelectViewId.modelIcon,
+                                   "",
+                                   ""
+                               )
+                           }
                        }
                    }
                    checkselectItem: (control.myModel.currentModel.name === model.name)?true:false

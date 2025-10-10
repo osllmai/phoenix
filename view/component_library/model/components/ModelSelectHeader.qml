@@ -26,24 +26,23 @@ Item{
             model: ListModel {
                 id: model
                 ListElement {
-                        name: "Offline Model";
+                        name: "Local";
+                        icon: "qrc:/media/icon/offline.svg";
                         pageNumber: 0
                 }
                 ListElement {
-                        name: "Online Model";
+                        name: "Online";
+                        icon: "qrc:/media/icon/online.svg";
                         pageNumber: 1
                 }
             }
 
-            delegate: MyButton {
+            delegate: MyMenu {
                 id: delegateId
+                myIcon: model.icon
                 myText: model.name
-                bottonType: Style.RoleEnum.BottonType.Feature
-                iconType: Style.RoleEnum.IconType.FeatureBlue
-                isNeedAnimation: true
-                checkable: true
+                autoExclusive: false
                 checked: control.currentPageNumber === model.pageNumber
-                selected: control.currentPageNumber === model.pageNumber
                 onClicked: {
                     control.currentPageNumber = model.pageNumber;
                     control.currentPage(model.pageNumber);

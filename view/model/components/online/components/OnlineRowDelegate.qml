@@ -23,59 +23,110 @@ T.Button {
         color: Style.Colors.boxHover
 
         Row{
-            id: headerId
             visible: window.isDesktopSize
-            width: 300
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            MyIcon {
-                id: logoModelId
-                myIcon: model.icon
-                iconType: Style.RoleEnum.IconType.Image
-                enabled: false
-                width: 32; height: 32
-            }
+            anchors.fill: parent
+            anchors.margins: 10
+            spacing: parent.width - headerId.width - installRowId.width - 20
+            Row{
+                id: headerId
+                width: 300
+                anchors.verticalCenter: parent.verticalCenter
+                MyIcon {
+                    id: logoModelId
+                    myIcon: model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 32; height: 32
+                }
 
-            OnlineDelegateTitleAndCopyButton{
-                width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
-                height: parent.height
-            }
+                OnlineDelegateTitleAndCopyButton{
 
-            MyIcon{
-                id: aboutIcon
-                width: 29; height: 29
-                myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
-                anchors.verticalCenter: logoModelId.verticalCenter
-                myTextToolTip:model.information
-            }
+                    width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
+                    height: parent.height
+                }
 
-            MyIcon{
-                id: likeIconId
-                width: 32; height: 32
-                myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
-                anchors.verticalCenter: logoModelId.verticalCenter
-                iconType: Style.RoleEnum.IconType.Like
-                onClicked: {
-                    offlineModelList.likeRequest(model.id, !model.isLike)
-                    model.isLike = !model.isLike
+                MyIcon{
+                    id: aboutIcon
+                    width: 29; height: 29
+                    myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    myTextToolTip:model.information
+                }
+
+                MyIcon{
+                    id: likeIconId
+                    width: 32; height: 32
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    onClicked: {
+                        // onlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
+                    }
                 }
             }
+
+            Row {
+                id: installRowId
+                spacing: 5
+                visible: onlineBodyId.installProvider
+                anchors.verticalCenter: parent.verticalCenter
+
+                width: (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
+                       startChatButton.width + 5
+
+                Loader {
+                    id: rejectButtonLoader
+                    active: (onlineBodyId.providerId === conversationList.modelId) &&
+                            (onlineBodyId.currentProvider.currentModel.id === model.id)
+                    visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                             (onlineBodyId.currentProvider.currentModel.id === model.id)
+                    sourceComponent: MyButton {
+                        id: rejectButton
+                        myText: "Eject"
+                        bottonType: Style.RoleEnum.BottonType.Secondary
+                        onClicked: {
+                            conversationList.setModelRequest(-1, "", "", "", "")
+                        }
+                    }
+                }
+
+                MyButton {
+                    id: startChatButton
+                    myText:"Start Chat"
+                    bottonType: Style.RoleEnum.BottonType.Primary
+                    onClicked: {
+                        onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                        conversationList.setModelRequest(onlineBodyId.providerId,
+                                                         onlineBodyId.providerName,
+                                                         onlineBodyId.providerIcon,
+                                                         onlineBodyId.providerPromptTemplate,
+                                                         onlineBodyId.providerSystemPrompt)
+                        appBodyId.currentIndex = 1
+                        console.log(model.id)
+                        console.log(onlineBodyId.currentProvider.currentModel.id)
+                        console.log(onlineBodyId.providerId)
+                        console.log(conversationList.modelId)
+                    }
+                }
+            }
+
         }
 
-        Rectangle{
-            id: informationAboutDownloadId
-            visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3 >20
-            height: 45; width: 300
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: headerId.right
-            anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3
-            radius: 10
-            border.color: Style.Colors.boxBorder
-            border.width: 1
-            color: "#00ffffff"
-            OnlineInformationModel{}
-        }
+        // Rectangle{
+        //     id: informationAboutDownloadId
+        //     visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3 >20
+        //     height: 45; width: 300
+        //     anchors.verticalCenter: parent.verticalCenter
+        //     anchors.left: headerId.right
+        //     anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3
+        //     radius: 10
+        //     border.color: Style.Colors.boxBorder
+        //     border.width: 1
+        //     color: "#00ffffff"
+        //     OnlineInformationModel{}
+        // }
+
 
         Column{
             visible: !window.isDesktopSize
@@ -94,7 +145,7 @@ T.Button {
                 }
 
                 OnlineDelegateTitleAndCopyButton{
-                    width: parent.width - logoModelId.width - likeIcon2Id.width - about2Icon.width
+                    width: parent.width - logoModel2Id.width - likeIcon2Id.width - about2Icon.width
                     height: parent.height
                 }
 
@@ -115,6 +166,54 @@ T.Button {
                     onClicked: {
                         offlineModelList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
+                    }
+                }
+            }
+            Loader {
+                id: installRowLoader2
+                active: onlineBodyId.installProvider
+                anchors.right: parent.right
+
+                sourceComponent: Row {
+                    id: installRowId2
+                    spacing: 5
+                    anchors.right: parent.right
+                    width: (rejectButtonLoader2.status === Loader.Ready?rejectButtonLoader2.width + 5: 0) +
+                           startChatButton2.width + 5
+
+                    Loader {
+                        id: rejectButtonLoader2
+                        active: (onlineBodyId.providerId === conversationList.modelId) &&
+                                (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                                 (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        sourceComponent: MyButton {
+                            id: rejectButton2
+                            myText: "Eject"
+                            bottonType: Style.RoleEnum.BottonType.Secondary
+                            onClicked: {
+                                conversationList.setModelRequest(-1, "", "", "", "")
+                            }
+                        }
+                    }
+
+                    MyButton {
+                        id: startChatButton2
+                        myText:"Start Chat"
+                        bottonType: Style.RoleEnum.BottonType.Primary
+                        onClicked: {
+                            onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                            conversationList.setModelRequest(onlineBodyId.providerId,
+                                                             onlineBodyId.providerName,
+                                                             onlineBodyId.providerIcon,
+                                                             onlineBodyId.providerPromptTemplate,
+                                                             onlineBodyId.providerSystemPrompt)
+                            appBodyId.currentIndex = 1
+                            console.log(model.id)
+                            console.log(onlineBodyId.currentProvider.currentModel.id)
+                            console.log(onlineBodyId.providerId)
+                            console.log(conversationList.modelId)
+                        }
                     }
                 }
             }

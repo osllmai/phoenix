@@ -121,6 +121,19 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
     else{
         setModelSelect(true);
 
+        // OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
+        // if(offlineModel != nullptr){
+        //     getCurrentProgramLanguage()->getCodeGenerator()->setModelName(offlineModel->modelName());
+        // }
+
+        // OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
+        // if (company) {
+        //     OnlineModel* onlineModel = company->onlineModelList()->currentModel();
+        //     if (onlineModel) {
+        //         getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel->modelName());
+        //     }
+        // }
+
         OfflineModel* offlineModel = OfflineModelList::instance(nullptr)->findModelById(id);
         if(offlineModel != nullptr){
             getCurrentProgramLanguage()->getCodeGenerator()->setModelName(offlineModel->modelName());
@@ -128,8 +141,21 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
 
         OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
         if (company) {
-            OnlineModel* onlineModel = company->onlineModelList()->currentModel();
+            OnlineModel* onlineModel;
+
+            if (company->name() == "Indox Router") {
+                OnlineCompany* currentCompanyIndoxRouter = OnlineCompanyList::instance(nullptr)->currentIndoxRouterCompany();
+                onlineModel = currentCompanyIndoxRouter->onlineModelList()->currentModel();
+                QString modelName = onlineModel->modelName();
+                if (!modelName.startsWith("IndoxRouter/")) {
+                    onlineModel->setModelName("IndoxRouter/" + modelName);
+                }
+            }else{
+                onlineModel = company->onlineModelList()->currentModel();
+            }
+
             if (onlineModel) {
+                onlineModel->setKey(company->key());
                 getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel->modelName());
             }
         }

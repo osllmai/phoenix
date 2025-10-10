@@ -1,7 +1,7 @@
 #ifndef OFFLINEPROVIDER_H
 #define OFFLINEPROVIDER_H
 
-#include "provider.h"
+#include "worker/offlineworker.h"
 #include <QThread>
 #include <QDebug>
 #include <QProcess>

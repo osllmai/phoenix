@@ -69,8 +69,9 @@ int Database::insertModel(const QString &name, const QString &key){
     query.addBindValue(key);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(false);
-    if (!query.exec())
+    if (!query.exec()){
         return -1;
+    }
 
     return query.lastInsertId().toInt();
 }
@@ -115,7 +116,7 @@ void Database::addModel(const QString &name, const QString &key){
 
         emit addOfflineModel(nullptr, fileSize, ramRequ, "", "", "- bilion", "q4_0",0.0, false, true,
                              id, name, name, key, addDate, isLike, "Text Generation", BackendType::OfflineModel,
-                             icon, information, "","", QDateTime::currentDateTime(), false, "");
+                             "qrc:/media/image_company/"+icon, information, "","", QDateTime::currentDateTime(), false, "");
 
     }
 }
@@ -258,7 +259,7 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
             isLike,                                // isLike
             newModel["type"].toString(),           // type
             BackendType::OfflineModel,             // backend
-            companyIcon,                           // icon
+            "qrc:/media/image_company/"+companyIcon,                           // icon
             information,                           // information
             newModel["promptTemplate"].toString(), // promptTemplate
             newModel["systemPrompt"].toString(),   // systemPrompt
@@ -705,7 +706,7 @@ void Database::readModel(const QList<Company*> companys){
 
                                    id, obj["modelName"].toString(), name, key, addDate, isLike,
                                    obj["type"].toString(), BackendType::OfflineModel,
-                                   company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
+                                   "qrc:/media/image_company/"+company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
                                    obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(), "");
 
                 allID.append(id);
@@ -739,11 +740,11 @@ void Database::readModel(const QList<Company*> companys){
                 bool isLike = query.value(4).toBool();
 
                 QFile file(key);
-                if (!file.exists()){
+                if (!file.exists() && (name !="Indox Router")){
                     deleteModel(id);
-                }else{
+                }else if(name !="Indox Router"){
                     QFileInfo fileInfo(key);
-                    QString icon = "Phoenix.svg";
+                    QString icon = "qrc:/media/image_company/Phoenix.svg";
                     QString information = "This model has been successfully added to the application by you.";
                     double fileSize = (fileInfo.size()/10000000)*0.01;
                     int ramRequ;
@@ -838,15 +839,18 @@ QList<int> Database::readOnlineCompany() {
     query.prepare(READ_MODEL_SQL);
     query.addBindValue(indoxRouterName);
 
-    if (!query.next()) {
-        indoxRouterId = insertModel(indoxRouterName, indoxRouterKey);
-    } else {
-        indoxRouterId = query.value(0).toInt();
-        indoxRouterName = query.value(1).toString();
-        indoxRouterKey = query.value(2).toString();
-        indoxRouterAddDate = query.value(3).toDateTime();
-        indoxRouterIsLike = query.value(4).toBool();
+    if (query.exec()){
+        if (!query.next()) {
+            indoxRouterId = insertModel(indoxRouterName, indoxRouterKey);
+        } else {
+            indoxRouterId = query.value(0).toInt();
+            indoxRouterName = query.value(1).toString();
+            indoxRouterKey = query.value(2).toString();
+            indoxRouterAddDate = query.value(3).toDateTime();
+            indoxRouterIsLike = query.value(4).toBool();
+        }
     }
+
 
     emit addOnlineProvider(indoxRouterId, indoxRouterName,
                            "qrc:/media/image_company/indoxRoter.png",
@@ -859,7 +863,6 @@ QList<int> Database::readOnlineCompany() {
     bool fileExists = QFile::exists(filePath);
 
     if (fileExists) {
-        qInfo() << "Using cached online models file:" << filePath;
 
         QNetworkAccessManager *manager = new QNetworkAccessManager(this);
         QNetworkRequest request(QUrl("https://api.indoxrouter.com/api/v1/models/"));
@@ -873,7 +876,6 @@ QList<int> Database::readOnlineCompany() {
                 if (file.open(QIODevice::WriteOnly)) {
                     file.write(data);
                     file.close();
-                    qInfo() << "Online models updated successfully.";
                 }
             } else {
                 qWarning() << "Cannot fetch updated online models:" << reply->errorString();
@@ -927,7 +929,6 @@ QList<int> Database::readOnlineCompany() {
 
         QJsonArray modelsArray = obj["text_completions"].toArray();
         if (modelsArray.isEmpty()) {
-            qInfo() << "Skip company with no models:" << obj["name"].toString();
             continue;
         }
 

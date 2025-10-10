@@ -39,31 +39,41 @@ Column{
             autoExclusive: false
             checked: onlineBodyId.onlineModelPage === model.name
 
-
             Connections {
                 target: offlineModel
                 function onClicked() {
                     if (model.name === "Indox Router") {
-                        onlineBodyId.currentModel = onlineCompanyListFilter
+                        onlineBodyId.currentProvider = onlineCompanyListFilter
                     } else {
-                        onlineBodyId.currentModel = onlineModelList
+                        onlineBodyId.currentProvider = onlineModelList
                     }
                     onlineBodyId.onlineModelPage = model.name
-                    onlineBodyId.installModel = model.installModel
+                    onlineBodyId.installProvider = model.installModel
 
-                    apikeyButton.modelId = model.id
-                    apikeyButton.modelName = model.name
-                    apikeyButton.modelIcon = model.icon
-                    apikeyButton.modelKey = model.key
-                    apikeyButton.installModel = model.installModel
-                    apikeyButton.check = false
+                    onlineBodyId.providerName = model.name
+                    onlineBodyId.providerIcon = model.icon
+                    onlineBodyId.providerKey = model.key
+                    onlineBodyId.providerId = model.id
                 }
             }
 
-            property string installModel: model.installModel
-            onInstallModelChanged: {
+            Component.onCompleted: {
+                if (model.name === "Indox Router") {
+                    onlineBodyId.currentProvider = onlineCompanyListFilter
+                    onlineBodyId.onlineModelPage = model.name
+                    onlineBodyId.installProvider = model.installModel
+
+                    onlineBodyId.providerName = model.name
+                    onlineBodyId.providerIcon = model.icon
+                    onlineBodyId.providerKey = model.key
+                    onlineBodyId.providerId = model.id
+                }
+            }
+
+            property string installProvider: model.installModel
+            onInstallProviderChanged: {
                 if (onlineBodyId.onlineModelPage === model.name) {
-                    apikeyButton.installModel = model.installModel
+                    onlineBodyId.installProvider = model.installModel
                 }
             }
         }
@@ -72,7 +82,7 @@ Column{
 
     ApikeyButton{
         id: apikeyButton
-        width: 300
+        width: 380
         anchors.left: parent.left
         anchors.leftMargin: 20
     }
@@ -85,7 +95,7 @@ Column{
         cacheBuffer: Math.max(0, gridView.contentHeight)
 
         cellWidth: gridView.calculationCellWidth()
-        cellHeight: gridView.model === onlineCompanyListFilter? 150: 180
+        cellHeight: (gridView.model === onlineCompanyListFilter? 150: 180) + (onlineBodyId.installProvider?30:0)
 
         interactive: gridView.contentHeight > gridView.height
         boundsBehavior: gridView.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
@@ -113,7 +123,7 @@ Column{
         }
         clip: true
 
-        model: onlineBodyId.currentModel
+        model: onlineBodyId.currentProvider
 
         delegate: Item {
             width: model.name !== "Indox Router"? gridView.cellWidth: 0
@@ -133,7 +143,6 @@ Column{
                 OnlineCompanyBoxDelegate {
                     anchors.fill: parent
                     anchors.margins: 12
-                    installModel: onlineBodyId.installModel
                     Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }
@@ -143,7 +152,6 @@ Column{
                 OnlineBoxDelegate {
                     anchors.fill: parent
                     anchors.margins: 12
-                    installModel: onlineBodyId.installModel
                     Behavior on anchors.margins { NumberAnimation { duration: 200 } }
                 }
             }

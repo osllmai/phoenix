@@ -135,20 +135,21 @@ void OnlineCompanyList::addProvider(const int id, const QString& name, const QSt
     bool isInstall =  true;
     if(key == "")
         isInstall = false;
+
     OnlineCompany* onlineCompany = new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this);
     m_companys.append(onlineCompany);
     if(index == 1){
-        setCurrentCompany(onlineCompany);
+        setCurrentIndoxRouterCompany(onlineCompany);
     }
     endInsertRows();
     emit countChanged();
 }
 
-void OnlineCompanyList::selectCurrentCompanyRequest(const int id){
+void OnlineCompanyList::selectCurrentIndoxRouterCompanyRequest(const int id){
     OnlineCompany* company = findCompanyById(id);
     if(company == nullptr) return;
 
-    setCurrentCompany(company);
+    setCurrentIndoxRouterCompany(company);
 }
 
 void OnlineCompanyList::likeRequest(const int id, const bool isLike){
@@ -158,6 +159,7 @@ void OnlineCompanyList::likeRequest(const int id, const bool isLike){
 void OnlineCompanyList::saveAPIKey(const int id, QString key){
     OnlineCompany* model = findCompanyById(id);
     if(model == nullptr) return;
+
     const int index = m_companys.indexOf(model);
     model->setKey(key);
     model->setInstallModel(true);
@@ -197,10 +199,10 @@ OnlineCompany* OnlineCompanyList::findCompanyByName(const QString name){
     return nullptr;
 }
 
-OnlineCompany *OnlineCompanyList::currentCompany() const{return m_currentCompany;}
-void OnlineCompanyList::setCurrentCompany(OnlineCompany *newCurrentCompany){
-    if (m_currentCompany == newCurrentCompany)
+OnlineCompany *OnlineCompanyList::currentIndoxRouterCompany() const{return m_currentIndoxRouterCompany;}
+void OnlineCompanyList::setCurrentIndoxRouterCompany(OnlineCompany *newCurrentIndoxRouterCompany){
+    if (m_currentIndoxRouterCompany == newCurrentIndoxRouterCompany)
         return;
-    m_currentCompany = newCurrentCompany;
-    emit currentCompanyChanged();
+    m_currentIndoxRouterCompany = newCurrentIndoxRouterCompany;
+    emit currentIndoxRouterCompanyChanged();
 }

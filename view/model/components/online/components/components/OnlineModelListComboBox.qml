@@ -7,7 +7,7 @@ import "../../../../../component_library/button"
 ComboBox {
     id: comboBoxId
     height: comboBoxId.smallComboBox? 30: 35
-    width: comboBoxId.smallComboBox? 30: 160
+    width: comboBoxId.smallComboBox? 30: 180
     font.pixelSize: 12
 
     property bool smallComboBox: false

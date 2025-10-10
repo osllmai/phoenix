@@ -7,7 +7,7 @@ import "../../../../button"
 
 T.Popup {
     id: control
-    width: 150
+    width: 140
     height: listView.implicitHeight + 10
 
     property var myModel
@@ -50,7 +50,7 @@ T.Popup {
                    anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
                    Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
 
-                   checkselectItem: (onlineCompanyList.currentCompany.name === model.name)?true:false
+                   checkselectItem: (onlineCompanyList.currentIndoxRouterCompany.name === model.name)?true:false
                    selected: (model.id === control.currentId) && (offlineModelInformation.opened)
 
                    onHoveredChanged: {
@@ -69,6 +69,15 @@ T.Popup {
                    }
                    onClicked: {
                        offlineModelInformation.setComanyForIndoxRouter()
+                       if (modelSelectViewId.modelSelect) {
+                           modelSelectViewId.setModelRequest(
+                               modelSelectViewId.modelId,
+                               modelSelectViewId.modelName,
+                               modelSelectViewId.modelIcon,
+                               "",
+                               ""
+                           )
+                       }
                    }
                }
             }
@@ -79,7 +88,7 @@ T.Popup {
                 Connections {
                     target: offlineModelInformation
                     function onSetComanyForIndoxRouter() {
-                        onlineCompanyList.selectCurrentCompanyRequest(control.currentId)
+                        onlineCompanyList.selectCurrentIndoxRouterCompanyRequest(control.currentId)
                     }
                 }
             }

@@ -13,7 +13,7 @@ T.Button {
             modelSelectViewId.setModelRequest(
                 model.id,
                 model.name,
-                "qrc:/media/image_company/" + model.icon,
+                model.icon,
                 model.promptTemplate,
                 model.systemPrompt
             )
@@ -42,7 +42,7 @@ T.Button {
 
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/" + model.icon
+                myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32
@@ -55,9 +55,9 @@ T.Button {
                 width: backgroundId.width
                         - logoModelId.width
                         - copyId.width
-                        - (rejectChatLoader.active ? 60 : 0)
-                        - (downloadButtonLoader.active ? 80 : 0)
-                        - (progressButtonLoader.active ? 87 : 0)
+                        - (rejectChatLoader.visible ? 60 : 0)
+                        - (downloadButtonLoader.visible ? 80 : 0)
+                        - (progressButtonLoader.visible ? 87 : 0)
                         - 5
                 clip: true
                 elide: Label.ElideRight
@@ -79,6 +79,7 @@ T.Button {
             Loader {
                 id: rejectChatLoader
                 active: model.id === modelSelectViewId.modelId && model.downloadFinished
+                visible: model.id === modelSelectViewId.modelId && model.downloadFinished
                 anchors.verticalCenter: logoModelId.verticalCenter
                 sourceComponent: MyButton {
                     height: 30
@@ -94,6 +95,7 @@ T.Button {
             Loader {
                 id: downloadButtonLoader
                 active: !model.downloadFinished && !model.isDownloading
+                visible: !model.downloadFinished && !model.isDownloading
                 anchors.verticalCenter: logoModelId.verticalCenter
                 sourceComponent: MyButton {
                     id: dounloadButton
@@ -111,6 +113,7 @@ T.Button {
             Loader {
                 id: progressButtonLoader
                 active: model.isDownloading
+                visible: model.isDownloading
                 anchors.verticalCenter: logoModelId.verticalCenter
                 sourceComponent: MyButton {
                     id: downloadPercentButton

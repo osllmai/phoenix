@@ -30,6 +30,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/conversation
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
+    ${CMAKE_SOURCE_DIR}/core/conversation/provider/worker
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight/languageHighlightingRules
@@ -707,6 +708,9 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml
     QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml
     QML_FILES view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml
+    SOURCES core/provider/worker/onlineworker.h core/provider/worker/onlineworker.cpp
+    SOURCES core/provider/worker/offlineworker.h core/provider/worker/offlineworker.cpp
+    SOURCES core/provider/worker/apikey.h
 )
 
 #for show logger-contect (file name, message line, ...)

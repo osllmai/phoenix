@@ -18,7 +18,6 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
 
     m_onlineModelList = new OnlineModelList(this);
 
-    qInfo()<<name;
 
     connect(&m_futureWatcher, &QFutureWatcher<QList<QVariantMap>>::finished,
             this, &OnlineCompany::onModelsLoaded);
@@ -66,7 +65,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
                 QVariantMap m;
                 m["id"] = models.size();
                 m["name"] = obj["name"].toString();
-                m["modelName"] = obj["modelName"].toString();
+                m["modelName"] = name + "/" + obj["modelName"].toString();
                 m["icon"] = companyIcon;
                 m["description"] = obj["description"].toString();
                 m["type"] = "Text Generation";
