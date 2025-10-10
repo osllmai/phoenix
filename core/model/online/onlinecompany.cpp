@@ -13,7 +13,11 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
                              const BackendType backend, const QString& filePath, QString key, bool installModel, QObject* parent)
     : Company(id, name, icon, backend, filePath, parent), m_key(key), m_isLike(isLike), m_installModel(installModel)
 {
+    if(name == "Indox Router")
+        return;
+
     m_onlineModelList = new OnlineModelList(this);
+
 
     connect(&m_futureWatcher, &QFutureWatcher<QList<QVariantMap>>::finished,
             this, &OnlineCompany::onModelsLoaded);
@@ -23,9 +27,15 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
     auto future = QtConcurrent::run([filePath, companyIcon, name]() -> QList<QVariantMap> {
         QList<QVariantMap> models;
 
-        QFile file(QCoreApplication::applicationDirPath() + "/models/" + filePath);
+        QString fullPath = QCoreApplication::applicationDirPath() + "/models/online_models/online_models.json";
+        QFile file(fullPath);
+        if (!file.exists()) {
+            qWarning() << "No local JSON file found for:" << fullPath;
+            return models;
+        }
+
         if (!file.open(QIODevice::ReadOnly)) {
-            qWarning() << "Cannot open JSON file:" << filePath;
+            qWarning() << "Cannot open JSON file:" << fullPath;
             return models;
         }
 
@@ -39,31 +49,39 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
             return models;
         }
 
-        QJsonArray jsonArray = document.array();
-        for (const QJsonValue &value : jsonArray) {
-            if (!value.isObject()) continue;
-            QJsonObject obj = value.toObject();
+        QJsonArray companiesArray = document.array();
+        for (const QJsonValue &companyVal : companiesArray) {
+            if (!companyVal.isObject()) continue;
+            QJsonObject companyObj = companyVal.toObject();
 
-            QVariantMap m;
-            m["id"] = models.size();
-            m["name"] = obj["name"].toString();
-            m["modelName"] = name +  "/" + obj["modelName"].toString();
-            m["icon"] = companyIcon;
-            m["description"] = obj["description"].toString();
-            m["type"] = obj["type"].toString();
-            m["promptTemplate"] = obj["promptTemplate"].toString();
-            m["systemPrompt"] = obj["systemPrompt"].toString();
-            m["recommended"] = obj["recommended"].toBool();
-            m["inputPricePer1KTokens"] = obj["inputPricePer1KTokens"].toDouble();
-            m["outputPricePer1KTokens"] = obj["outputPricePer1KTokens"].toDouble();
-            m["contextWindows"] = obj["contextWindows"].toString();
-            m["commercial"] = obj["commercial"].toBool();
-            m["pricey"] = obj["pricey"].toBool();
-            m["output"] = obj["output"].toString();
-            m["comments"] = obj["comments"].toString();
+            if (companyObj["name"].toString().compare(name, Qt::CaseInsensitive) != 0)
+                continue;
 
-            models.append(m);
+            QJsonArray modelArray = companyObj["text_completions"].toArray();
+            for (const QJsonValue &modelVal : modelArray) {
+                if (!modelVal.isObject()) continue;
+                QJsonObject obj = modelVal.toObject();
+
+                QVariantMap m;
+                m["id"] = models.size();
+                m["name"] = obj["name"].toString();
+                m["modelName"] = name + "/" + obj["modelName"].toString();
+                m["icon"] = companyIcon;
+                m["description"] = obj["description"].toString();
+                m["type"] = "Text Generation";
+                m["promptTemplate"] = "<s>[INST] %1 [/INST] %2 </s>";
+                m["systemPrompt"]   = "";
+
+                QJsonObject meta = obj["metadata"].toObject();
+                m["comments"] = meta["comments"].toString();
+                m["pricey"]   = obj["pricing"].toObject()["pricey"].toBool();
+
+                m["contextWindows"] = "";
+
+                models.append(m);
+            }
         }
+
         return models;
     });
 

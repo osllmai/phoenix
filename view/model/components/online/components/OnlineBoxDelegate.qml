@@ -5,15 +5,14 @@ import QtQuick.Templates 2.1 as T
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
-import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
     width: 250
     height: 250
 
-    background: null
-    contentItem: Rectangle{
+    background:null
+    contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent
         radius: 10
@@ -23,7 +22,7 @@ T.Button {
 
         Column{
             anchors.fill: parent
-            anchors.margins: 20
+            anchors.margins: 16
             spacing: 10
             Row{
                 id: headerId
@@ -31,7 +30,7 @@ T.Button {
 
                 MyIcon {
                     id: logoModelId
-                    myIcon: "qrc:/media/image_company/" + model.icon
+                    myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
                     width: 40; height: 40
@@ -47,7 +46,7 @@ T.Button {
                     width: 29; height: 29
                     myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
-                    myTextToolTip:model.name
+                    myTextToolTip:model.information
                 }
 
                 MyIcon{
@@ -55,17 +54,76 @@ T.Button {
                     myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
                     anchors.verticalCenter: logoModelId.verticalCenter
                     iconType: Style.RoleEnum.IconType.Like
+                    isNeedAnimation: true
                     onClicked: {
-                        onlineCompanyList.likeRequest(model.id, !model.isLike)
+                        // onlineModelList.likeRequest(model.id, !model.isLike)
                         model.isLike = !model.isLike
                     }
                 }
             }
+            Label {
+                id:informationId
+                height: parent.height - headerId.height - (installRowLoader.active?installRowLoader.height:0) - 20
+                width: parent.width
+                text: model.information
+                color: Style.Colors.textInformation
+                anchors.left: parent.left; anchors.right: parent.right
+                font.pixelSize: 10
+                horizontalAlignment: Text.AlignJustify
+                verticalAlignment: Text.AlignTop
+                wrapMode: Text.Wrap
+                elide: Label.ElideRight
+                clip: true
+            }
 
-            OnlineModelListComboBox{}
+            // Row for Installed Model
+            Loader {
+                id: installRowLoader
+                active: onlineBodyId.installProvider
+                anchors.right: parent.right
 
-            ApikeyButton{
-                id: apikeyButton
+                sourceComponent: Row {
+                    id: installRowId
+                    spacing: 5
+                    anchors.right: parent.right
+                    width: (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
+                           startChatButton.width + 5
+
+                    Loader {
+                        id: rejectButtonLoader
+                        active: (onlineBodyId.providerId === conversationList.modelId) &&
+                                (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                                 (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        sourceComponent: MyButton {
+                            id: rejectButton
+                            myText: "Eject"
+                            bottonType: Style.RoleEnum.BottonType.Secondary
+                            onClicked: {
+                                conversationList.setModelRequest(-1, "", "", "", "")
+                            }
+                        }
+                    }
+
+                    MyButton {
+                        id: startChatButton
+                        myText:"Start Chat"
+                        bottonType: Style.RoleEnum.BottonType.Primary
+                        onClicked: {
+                            onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                            conversationList.setModelRequest(onlineBodyId.providerId,
+                                                             onlineBodyId.providerName,
+                                                             onlineBodyId.providerIcon,
+                                                             onlineBodyId.providerPromptTemplate,
+                                                             onlineBodyId.providerSystemPrompt)
+                            appBodyId.currentIndex = 1
+                            console.log(model.id)
+                            console.log(onlineBodyId.currentProvider.currentModel.id)
+                            console.log(onlineBodyId.providerId)
+                            console.log(conversationList.modelId)
+                        }
+                    }
+                }
             }
         }
 

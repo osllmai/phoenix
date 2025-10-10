@@ -58,3 +58,7 @@ ggml-*
 *.ggml
 ggml-*
 
+_pycache_/
+
+# === API key header ===
+**/apikey.h

@@ -48,6 +48,8 @@ QVariant OnlineCompanyList::data(const QModelIndex &index, int role) const{
         return company->isLike();
     case InstallModelRole:
         return company->installModel();
+    case KeyRole:
+        return company->key();
     case BackendRole:
         return static_cast<int>(company->backend());
     case CompanyObjectRole:
@@ -66,6 +68,7 @@ QHash<int, QByteArray> OnlineCompanyList::roleNames() const{
     roles[IconRole] = "icon";
     roles[IsLikeRole] = "isLike";
     roles[InstallModelRole] = "installModel";
+    roles[KeyRole] = "key";
     roles[BackendRole] = "backend";
     roles[CompanyObjectRole] = "companyObject";
     roles[OnlineModelListRole] = "onlineModelList";
@@ -132,9 +135,21 @@ void OnlineCompanyList::addProvider(const int id, const QString& name, const QSt
     bool isInstall =  true;
     if(key == "")
         isInstall = false;
-    m_companys.append(new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this));
+
+    OnlineCompany* onlineCompany = new OnlineCompany(id,name,icon,isLike,backend,filePath,key, isInstall, this);
+    m_companys.append(onlineCompany);
+    if(index == 1){
+        setCurrentIndoxRouterCompany(onlineCompany);
+    }
     endInsertRows();
     emit countChanged();
+}
+
+void OnlineCompanyList::selectCurrentIndoxRouterCompanyRequest(const int id){
+    OnlineCompany* company = findCompanyById(id);
+    if(company == nullptr) return;
+
+    setCurrentIndoxRouterCompany(company);
 }
 
 void OnlineCompanyList::likeRequest(const int id, const bool isLike){
@@ -144,6 +159,7 @@ void OnlineCompanyList::likeRequest(const int id, const bool isLike){
 void OnlineCompanyList::saveAPIKey(const int id, QString key){
     OnlineCompany* model = findCompanyById(id);
     if(model == nullptr) return;
+
     const int index = m_companys.indexOf(model);
     model->setKey(key);
     model->setInstallModel(true);
@@ -181,4 +197,12 @@ OnlineCompany* OnlineCompanyList::findCompanyByName(const QString name){
         }
     }
     return nullptr;
+}
+
+OnlineCompany *OnlineCompanyList::currentIndoxRouterCompany() const{return m_currentIndoxRouterCompany;}
+void OnlineCompanyList::setCurrentIndoxRouterCompany(OnlineCompany *newCurrentIndoxRouterCompany){
+    if (m_currentIndoxRouterCompany == newCurrentIndoxRouterCompany)
+        return;
+    m_currentIndoxRouterCompany = newCurrentIndoxRouterCompany;
+    emit currentIndoxRouterCompanyChanged();
 }

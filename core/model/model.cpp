@@ -20,6 +20,12 @@ const int Model::id() const{return m_id;}
 const QString &Model::name() const{return m_name;}
 
 const QString Model::modelName() const{return m_modelName;}
+void Model::setModelName(const QString &modelName){
+    if(m_modelName == modelName)
+        return;
+    m_modelName = modelName;
+    emit modelNameChanged();
+}
 
 const QString &Model::icon() const{return m_icon;}
 

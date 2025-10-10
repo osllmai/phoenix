@@ -2,8 +2,9 @@ build:
 pyinstaller --onefile --add-data "provider.py;." --add-data "main_provider.py;." --add-data "../file/company.json;." --add-data "../file/mistral_models.json;." --add-data "../file/openai_models.json;." main_provider.py
  
 
+pyinstaller --onefile --add-data "provider.py;." --add-data "online_provider.py;." online_provider.py
 
  
 
-pip install tzdata
+pip install indoxrouter
 ...

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 10)
+set(APP_VERSION_PATCH 30)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -30,6 +30,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/conversation
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
+    ${CMAKE_SOURCE_DIR}/core/conversation/provider/worker
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor/highlight/languageHighlightingRules
@@ -267,6 +268,8 @@ qt_add_resources(app${APP_NAME}
 
         media/icon/twitter.svg
         media/icon/linkedin.svg
+        media/icon/visiblePassword.svg
+        media/icon/eyePassword.svg
 
 
         media/image_company/adobe.svg
@@ -512,6 +515,7 @@ qt_add_resources(app${APP_NAME}
         media/image_company/zhipu.svg
         media/image_company/pytorch.svg
         media/image_company/tensorflow.svg
+        media/image_company/indoxRoter.png
 
 
         media/fonts/DMSans-Regular.ttf
@@ -583,7 +587,9 @@ qt_add_qml_module(app${APP_NAME}
         view/model/components/online/components/OnlineGridView.qml
         view/model/components/online/components/OnlineListView.qml
         view/model/components/online/components/OnlineBoxDelegate.qml
+        view/model/components/online/components/OnlineCompanyBoxDelegate.qml
         view/model/components/online/components/OnlineRowDelegate.qml
+        view/model/components/online/components/OnlineCompanyRowDelegate.qml
         view/model/components/online/components/components/InputApikey.qml
         view/model/components/online/components/components/ApikeyButton.qml
         view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml
@@ -695,9 +701,18 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml
     SOURCES core/model/huggingface/huggingfacestruct.h
     QML_FILES view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml
-    QML_FILES view/component_library/model/components/online/OnlineModelListComboBox.qml
-    QML_FILES view/component_library/model/components/online/OnlineModelDelegateComboBox.qml
+    QML_FILES view/model/components/online/components/components/OnlineModelListComboBox.qml
+    QML_FILES view/model/components/online/components/components/OnlineModelDelegateComboBox.qml
     QML_FILES view/model/components/huggingface/components/SearchHuggingfaceModel.qml
+    SOURCES core/model/online/onlinecompanylistfilter.h core/model/online/onlinecompanylistfilter.cpp
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml
+    QML_FILES view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml
+    SOURCES core/provider/worker/onlineworker.h core/provider/worker/onlineworker.cpp
+    SOURCES core/provider/worker/offlineworker.h core/provider/worker/offlineworker.cpp
+    SOURCES core/provider/worker/apikey.h
+    SOURCES core/library/convert/convertworker.h core/library/convert/convertworker.cpp
+    SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -773,9 +788,9 @@ endforeach()
 
 #copy python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/main_provider.exe ${BIN_DIR}/providers/online_provider/main_provider.exe COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/online_provider.exe ${BIN_DIR}/providers/online_provider/online_provider.exe COPYONLY)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/main_provider.py ${BIN_DIR}/providers/online_provider/main_provider.py COPYONLY)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/online_provider.py ${BIN_DIR}/providers/online_provider/online_provider.py COPYONLY)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
 endif()
 

@@ -10,7 +10,7 @@ import './component_library/button'
 ApplicationWindow {
     id: window
     width: 1700; height: 900
-    minimumWidth: 400; minimumHeight: 600
+    minimumWidth: 700; minimumHeight: 700
 
     // flags: Qt.FramelessWindowHint | Qt.Window
 
@@ -116,7 +116,7 @@ ApplicationWindow {
     // visible: true
     title: qsTr("Phoenix v" + updateChecker.currentVersion + " Beta")
 
-    property bool isDesktopSize: width >= 750;
+    property bool isDesktopSize: width >= 850;
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){
@@ -189,7 +189,7 @@ ApplicationWindow {
         titleText: "Phoenix"
         about: "Version: "  + updateChecker.currentVersion + " (user setup)
 Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.09.23
+Date: 2025.10.10
 OS: Windows x64
 "
         textBotton1: "Copy"

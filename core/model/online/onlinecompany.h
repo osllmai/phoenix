@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
 
 #include "company.h"

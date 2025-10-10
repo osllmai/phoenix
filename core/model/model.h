@@ -13,7 +13,7 @@ class Model : public QObject
     QML_ELEMENT
     Q_PROPERTY(int id READ id CONSTANT FINAL)
     Q_PROPERTY(QString name READ name CONSTANT FINAL)
-    Q_PROPERTY(QString modelName READ modelName CONSTANT FINAL)
+    Q_PROPERTY(QString modelName READ modelName NOTIFY modelNameChanged FINAL)
     Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
     Q_PROPERTY(QString information READ information CONSTANT FINAL)
     Q_PROPERTY(QString promptTemplate READ promptTemplate CONSTANT FINAL)
@@ -40,6 +40,7 @@ public:
     const QString &name() const;
 
     const QString modelName() const;
+    void setModelName(const QString &modelName);
 
     const QString &icon() const;
 
@@ -65,6 +66,7 @@ public:
 
 signals:
     void keyChanged();
+    void modelNameChanged();
     void addModelTimeChanged();
 
 private:

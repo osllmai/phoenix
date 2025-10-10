@@ -12,6 +12,7 @@
 
 #include "offlinecompanylist.h"
 #include "onlinecompanylist.h"
+#include "onlinecompanylistfilter.h"
 #include "./model/BackendType.h"
 
 #include "./model/offline/offlinemodellist.h"
@@ -101,6 +102,10 @@ int main(int argc, char *argv[])
 
         OnlineCompanyList* onlineCompanyList = OnlineCompanyList::instance(&engine);
         engine.rootContext()->setContextProperty("onlineCompanyList", onlineCompanyList);
+
+        OnlineCompanyListFilter* onlineCompanyListFilter = new OnlineCompanyListFilter(onlineCompanyList, &engine);
+        engine.rootContext()->setContextProperty("onlineCompanyListFilter", onlineCompanyListFilter);
+
 
         OfflineModelList* offlineModelList = OfflineModelList::instance(&engine);
         engine.rootContext()->setContextProperty("offlineModelList", offlineModelList);

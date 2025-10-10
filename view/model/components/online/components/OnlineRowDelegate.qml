@@ -6,16 +6,15 @@ import QtQuick.Layouts
 import '../../../../component_library/style' as Style
 import "../../../../component_library/button"
 import "./components"
-import "../../../../component_library/model/components/online"
 
 T.Button {
     id: control
     width: 250
     height: 250
 
-    background: null
+    background:null
 
-    contentItem: Rectangle {
+    contentItem:Rectangle{
         id: backgroundId
         anchors.fill: parent
         radius: 10
@@ -23,137 +22,209 @@ T.Button {
         border.color: Style.Colors.boxBorder
         color: Style.Colors.boxHover
 
-        // -------------------- Desktop Loader --------------------
-        Loader {
-            id: desktopLoader
-            active: window.isDesktopSize
+        Row{
+            visible: window.isDesktopSize
             anchors.fill: parent
+            anchors.margins: 10
+            spacing: parent.width - headerId.width - installRowId.width - 20
+            Row{
+                id: headerId
+                width: 300
+                anchors.verticalCenter: parent.verticalCenter
+                MyIcon {
+                    id: logoModelId
+                    myIcon: model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 32; height: 32
+                }
 
-            sourceComponent: Item {
-                anchors.fill: parent
+                OnlineDelegateTitleAndCopyButton{
 
-                Row {
-                    id: headerId
-                    width: 150
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
+                    width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
+                    height: parent.height
+                }
 
-                    MyIcon {
-                        id: logoModelId
-                        myIcon: "qrc:/media/image_company/" + model.icon
-                        iconType: Style.RoleEnum.IconType.Image
-                        enabled: false
-                        width: 32; height: 32
+                MyIcon{
+                    id: aboutIcon
+                    width: 29; height: 29
+                    myIcon: aboutIcon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    myTextToolTip:model.information
+                }
+
+                MyIcon{
+                    id: likeIconId
+                    width: 32; height: 32
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModelId.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    onClicked: {
+                        // onlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
                     }
+                }
+            }
 
-                    OnlineDelegateTitleAndCopyButton {
-                        width: parent.width - logoModelId.width - likeIconId.width - aboutIcon.width
-                        height: parent.height
-                    }
+            Row {
+                id: installRowId
+                spacing: 5
+                visible: onlineBodyId.installProvider
+                anchors.verticalCenter: parent.verticalCenter
 
-                    MyIcon {
-                        id: aboutIcon
-                        width: 29; height: 29
-                        myIcon: aboutIcon.hovered ? "qrc:/media/icon/aboutFill.svg" : "qrc:/media/icon/about.svg"
-                        anchors.verticalCenter: logoModelId.verticalCenter
-                        myTextToolTip: model.name
-                    }
+                width: (rejectButtonLoader.status === Loader.Ready?rejectButtonLoader.width + 5: 0) +
+                       startChatButton.width + 5
 
-                    MyIcon {
-                        id: likeIconId
-                        width: 32; height: 32
-                        myIcon: model.isLike ? "qrc:/media/icon/favorite.svg" : "qrc:/media/icon/disFavorite.svg"
-                        anchors.verticalCenter: logoModelId.verticalCenter
-                        iconType: Style.RoleEnum.IconType.Like
+                Loader {
+                    id: rejectButtonLoader
+                    active: (onlineBodyId.providerId === conversationList.modelId) &&
+                            (onlineBodyId.currentProvider.currentModel.id === model.id)
+                    visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                             (onlineBodyId.currentProvider.currentModel.id === model.id)
+                    sourceComponent: MyButton {
+                        id: rejectButton
+                        myText: "Eject"
+                        bottonType: Style.RoleEnum.BottonType.Secondary
                         onClicked: {
-                            onlineCompanyList.likeRequest(model.id, !model.isLike)
-                            model.isLike = !model.isLike
+                            conversationList.setModelRequest(-1, "", "", "", "")
                         }
                     }
                 }
 
-                OnlineModelListComboBox {
-                    id: informationAboutDownloadId
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: headerId.right
-                    anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - downloadButtonId.width - 20))/3
-                }
-
-                ApikeyButton {
-                    id: downloadButtonId
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    isFillWidthDownloadButton: false
+                MyButton {
+                    id: startChatButton
+                    myText:"Start Chat"
+                    bottonType: Style.RoleEnum.BottonType.Primary
+                    onClicked: {
+                        onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                        conversationList.setModelRequest(onlineBodyId.providerId,
+                                                         onlineBodyId.providerName,
+                                                         onlineBodyId.providerIcon,
+                                                         onlineBodyId.providerPromptTemplate,
+                                                         onlineBodyId.providerSystemPrompt)
+                        appBodyId.currentIndex = 1
+                        console.log(model.id)
+                        console.log(onlineBodyId.currentProvider.currentModel.id)
+                        console.log(onlineBodyId.providerId)
+                        console.log(conversationList.modelId)
+                    }
                 }
             }
+
         }
 
-        // -------------------- Mobile Loader --------------------
-        Loader {
-            id: mobileLoader
-            active: !window.isDesktopSize
+        // Rectangle{
+        //     id: informationAboutDownloadId
+        //     visible: window.isDesktopSize && (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3 >20
+        //     height: 45; width: 300
+        //     anchors.verticalCenter: parent.verticalCenter
+        //     anchors.left: headerId.right
+        //     anchors.leftMargin: (2*(parent.width - informationAboutDownloadId.width - headerId.width - 20))/3
+        //     radius: 10
+        //     border.color: Style.Colors.boxBorder
+        //     border.width: 1
+        //     color: "#00ffffff"
+        //     OnlineInformationModel{}
+        // }
+
+
+        Column{
+            visible: !window.isDesktopSize
             anchors.fill: parent
+            anchors.margins: 10
+            Row{
+                id: header2Id
+                width: parent.width
 
-            sourceComponent: Column {
-                anchors.fill: parent
-                anchors.margins: 10
+                MyIcon {
+                    id: logoModel2Id
+                    myIcon: model.icon
+                    iconType: Style.RoleEnum.IconType.Image
+                    enabled: false
+                    width: 30; height: 30
+                }
 
-                Row {
-                    id: header2Id
-                    width: parent.width
+                OnlineDelegateTitleAndCopyButton{
+                    width: parent.width - logoModel2Id.width - likeIcon2Id.width - about2Icon.width
+                    height: parent.height
+                }
 
-                    MyIcon {
-                        id: logoModel2Id
-                        myIcon: "qrc:/media/image_company/" + model.icon
-                        iconType: Style.RoleEnum.IconType.Image
-                        enabled: false
-                        width: 30; height: 30
+                MyIcon{
+                    id: about2Icon
+                    width: 32; height: 32
+                    myIcon: about2Icon.hovered? "qrc:/media/icon/aboutFill.svg": "qrc:/media/icon/about.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    myTextToolTip:model.information
+                }
+
+                MyIcon{
+                    id: likeIcon2Id
+                    width: 32; height: 32
+                    myIcon: model.isLike? "qrc:/media/icon/favorite.svg": "qrc:/media/icon/disFavorite.svg"
+                    anchors.verticalCenter: logoModel2Id.verticalCenter
+                    iconType: Style.RoleEnum.IconType.Like
+                    onClicked: {
+                        offlineModelList.likeRequest(model.id, !model.isLike)
+                        model.isLike = !model.isLike
+                    }
+                }
+            }
+            Loader {
+                id: installRowLoader2
+                active: onlineBodyId.installProvider
+                anchors.right: parent.right
+
+                sourceComponent: Row {
+                    id: installRowId2
+                    spacing: 5
+                    anchors.right: parent.right
+                    width: (rejectButtonLoader2.status === Loader.Ready?rejectButtonLoader2.width + 5: 0) +
+                           startChatButton2.width + 5
+
+                    Loader {
+                        id: rejectButtonLoader2
+                        active: (onlineBodyId.providerId === conversationList.modelId) &&
+                                (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        visible: (onlineBodyId.providerId === conversationList.modelId) &&
+                                 (onlineBodyId.currentProvider.currentModel.id === model.id)
+                        sourceComponent: MyButton {
+                            id: rejectButton2
+                            myText: "Eject"
+                            bottonType: Style.RoleEnum.BottonType.Secondary
+                            onClicked: {
+                                conversationList.setModelRequest(-1, "", "", "", "")
+                            }
+                        }
                     }
 
-                    OnlineDelegateTitleAndCopyButton {
-                        width: parent.width - logoModel2Id.width - likeIcon2Id.width - about2Icon.width
-                        height: parent.height
-                    }
-
-                    MyIcon {
-                        id: about2Icon
-                        width: 32; height: 32
-                        myIcon: about2Icon.hovered ? "qrc:/media/icon/aboutFill.svg" : "qrc:/media/icon/about.svg"
-                        anchors.verticalCenter: logoModel2Id.verticalCenter
-                        myTextToolTip: model.name
-                    }
-
-                    MyIcon {
-                        id: likeIcon2Id
-                        width: 32; height: 32
-                        myIcon: model.isLike ? "qrc:/media/icon/favorite.svg" : "qrc:/media/icon/disFavorite.svg"
-                        anchors.verticalCenter: logoModel2Id.verticalCenter
-                        iconType: Style.RoleEnum.IconType.Like
+                    MyButton {
+                        id: startChatButton2
+                        myText:"Start Chat"
+                        bottonType: Style.RoleEnum.BottonType.Primary
                         onClicked: {
-                            onlineCompanyList.likeRequest(model.id, !model.isLike)
-                            model.isLike = !model.isLike
+                            onlineBodyId.currentProvider.selectCurrentModelRequest(model.id)
+                            conversationList.setModelRequest(onlineBodyId.providerId,
+                                                             onlineBodyId.providerName,
+                                                             onlineBodyId.providerIcon,
+                                                             onlineBodyId.providerPromptTemplate,
+                                                             onlineBodyId.providerSystemPrompt)
+                            appBodyId.currentIndex = 1
+                            console.log(model.id)
+                            console.log(onlineBodyId.currentProvider.currentModel.id)
+                            console.log(onlineBodyId.providerId)
+                            console.log(conversationList.modelId)
                         }
                     }
                 }
-
-                ApikeyButton {
-                    id: downloadButton2Id
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                    isFillWidthDownloadButton: false
-                }
             }
         }
 
-        // -------------------- Hover Effect --------------------
-        layer.enabled: control.hovered ? true : false
+        layer.enabled: control.hovered? true: false
         layer.effect: Glow {
-            samples: 40
-            color: Style.Colors.boxBorder
-            spread: 0.1
-            transparentBorder: true
-        }
+             samples: 40
+             color:  Style.Colors.boxBorder
+             spread: 0.1
+             transparentBorder: true
+         }
     }
 }

@@ -6,8 +6,17 @@ import '../../../component_library/button'
 import './components'
 
 Item {
-    id: control
+    id: onlineBodyId
     clip:true
+
+    property string onlineModelPage:"Indox Router"
+    property var currentProvider: onlineCompanyListFilter
+    property int providerId
+    property string providerName: ""
+    property string providerIcon: ""
+    property string providerSystemPrompt: ""
+    property string providerKey: ""
+    property bool installProvider: false
 
     Loader {
         id: modelViewLoader

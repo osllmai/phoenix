@@ -12,7 +12,7 @@ T.Button {
             modelSelectViewId.setModelRequest(
                 model.id,
                 model.name,
-                "qrc:/media/image_company/" + model.icon,
+                model.icon,
                 model.promptTemplate,
                 model.systemPrompt
             )
@@ -20,6 +20,7 @@ T.Button {
     }
 
     property bool checkselectItem: modelSelectViewId.modelSelect && (modelSelectViewId.modelId === model.id)
+    property bool selected:  false
 
     background: null
     contentItem: Rectangle {
@@ -30,7 +31,7 @@ T.Button {
         border.color: control.checkselectItem
                        ? Style.Colors.buttonFeatureBorderSelected
                        : Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered || control.checkselectItem)
+        color: (control.hovered || control.selected || control.checkselectItem)
                ? Style.Colors.boxHover
                : "#00ffffff"
 
@@ -40,7 +41,7 @@ T.Button {
 
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/" + model.icon
+                myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32
@@ -48,11 +49,12 @@ T.Button {
 
             Label {
                 id: modelNameId
-                text: onlineModelList.currentModel.name
+                text: /*onlineModelList.currentModel.name*/ model.name
                 width: backgroundId.width -
                        logoModelId.width -
                        (copyId.visible? copyId.width: 0) -
-                       onlineModelListComboBox.width -
+                       // onlineModelListComboBox.width -
+                       // (model.name === "Indox Router" ? onlineModelListComboBox.width : 0) -
                        (rejectChatButtonLoader.status === Loader.Ready ? rejectChatButtonLoader.item.width : 0) -
                        (installButtonLoader.status === Loader.Ready ? installButtonLoader.item.width : 0) - 5
                 clip: true
@@ -66,15 +68,10 @@ T.Button {
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
 
-            OnlineModelListComboBox {
-                id: onlineModelListComboBox
-                smallComboBox: true
-            }
-
             MyCopyButton {
                 id: copyId
                 visible: model.installModel
-                myText: TextArea { text: onlineModelList.currentModel.modelName }
+                myText: TextArea { text: model.name/*((model.name === "Indox Router")? (onlineCompanyList.currentIndoxRouterCompany.onlineModelList.currentModel.modelName) : onlineModelList.currentModel.modelName)*/ }
                 anchors.verticalCenter: logoModelId.verticalCenter
             }
 

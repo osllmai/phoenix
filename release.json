@@ -83,5 +83,20 @@
       "A clean and user-friendly UI that simplifies interaction with models and settings"
     ],
     "support": "phoenix@osllm.ai"
-  }
+  },
+  {
+  "version": "0.1.30",
+  "title": "Phoenix Update — IndoxRouter Integration and Enhanced Online Models",
+  "date": "2025-10-10",
+  "notes": "This update introduces full integration with IndoxRouter models, expanding Phoenix’s ability to connect with powerful online and hybrid AI engines. Several issues affecting model loading and interaction from the previous release have been resolved. In addition, this version brings broader support for online models, improved reliability, and smoother performance across all components.",
+  "features": [
+    "Added full support for IndoxRouter models with optimized routing and communication handling.",
+    "Fixed multiple bugs related to model initialization and response management from the previous version.",
+    "Introduced more online models with enhanced stability and faster connection times.",
+    "Improved overall system reliability and performance during multi-model operation.",
+    "Updated internal APIs to ensure better compatibility with future model expansions."
+  ],
+  "support": "phoenix@osllm.ai"
+}
+
 ]

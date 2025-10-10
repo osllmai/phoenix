@@ -45,12 +45,16 @@
         <file>model/components/online/components/OnlineGridView.qml</file>
         <file>model/components/online/components/OnlineListView.qml</file>
         <file>model/components/online/components/OnlineBoxDelegate.qml</file>
+        <file>model/components/online/components/OnlineCompanyBoxDelegate.qml</file>
         <file>model/components/online/components/OnlineRowDelegate.qml</file>
+        <file>model/components/online/components/OnlineCompanyRowDelegate.qml</file>
         <file>model/components/online/components/components/InputApikey.qml</file>
         <file>model/components/online/components/components/ApikeyButton.qml</file>
         <file>model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml</file>
         <file>model/components/online/components/components/OnlineDelegateInfoBox.qml</file>
         <file>model/components/online/components/components/OnlineInformationModel.qml</file>
+	<file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
+	<file>model/components/online/components/components/OnlineModelDelegateComboBox.qml</file>
         <file>model/components/huggingface/HuggingfaceModelView.qml</file>
         <file>model/components/huggingface/HuggingfaceHeader.qml</file>
         <file>model/components/huggingface/HuggingfaceBody.qml</file>
@@ -138,10 +142,11 @@
         <file>footer/DownloadingDelegate.qml</file>
         <file>model/components/offline/components/SearchOfflineModel.qml</file>
         <file>model/components/offline/components/components/SearchTagPupup.qml</file>
-        <file>component_library/model/components/online/OnlineModelListComboBox.qml</file>
-        <file>component_library/model/components/online/OnlineModelDelegateComboBox.qml</file>
         <file>model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml</file>
         <file>model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml</file>
         <file>model/components/huggingface/components/SearchHuggingfaceModel.qml</file>
+        <file>component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml</file>
+	<file>component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml</file>
+	<file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml</file>
     </qresource>
 </RCC>

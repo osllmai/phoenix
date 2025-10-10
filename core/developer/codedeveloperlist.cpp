@@ -128,8 +128,21 @@ void CodeDeveloperList::setModelRequest(const int id, const QString &text,  cons
 
         OnlineCompany* company = OnlineCompanyList::instance(nullptr)->findCompanyById(id);
         if (company) {
-            OnlineModel* onlineModel = company->onlineModelList()->currentModel();
+            OnlineModel* onlineModel;
+
+            if (company->name() == "Indox Router") {
+                OnlineCompany* currentCompanyIndoxRouter = OnlineCompanyList::instance(nullptr)->currentIndoxRouterCompany();
+                onlineModel = currentCompanyIndoxRouter->onlineModelList()->currentModel();
+                QString modelName = onlineModel->modelName();
+                if (!modelName.startsWith("IndoxRouter/")) {
+                    onlineModel->setModelName("IndoxRouter/" + modelName);
+                }
+            }else{
+                onlineModel = company->onlineModelList()->currentModel();
+            }
+
             if (onlineModel) {
+                onlineModel->setKey(company->key());
                 getCurrentProgramLanguage()->getCodeGenerator()->setModelName(onlineModel->modelName());
             }
         }

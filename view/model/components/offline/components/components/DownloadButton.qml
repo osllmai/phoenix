@@ -82,9 +82,9 @@ Item {
             Loader {
                 id: rejectLoader
                 active: (modelType === "Text Generation" && modelId === conversationList.modelId) ||
-                        (modelType === "Speech" && speechToText.modelPath === modelKey)
+                        (modelType === "Speech" && speechToText.modelSelect && speechToText.modelPath === modelKey)
                 visible: (modelType === "Text Generation" && modelId === conversationList.modelId) ||
-                         (modelType === "Speech" && speechToText.modelPath === modelKey)
+                         (modelType === "Speech" && speechToText.modelSelect && speechToText.modelPath === modelKey)
 
                 sourceComponent: MyButton {
                     id: rejectButton
@@ -103,7 +103,7 @@ Item {
             MyButton {
                 id: startChatBox
                 myText: modelType === "Text Generation" ? "Start Chat" :
-                        ((modelType === "Speech" && speechToText.modelPath === modelKey) ? "Go to Chat" : "Set Model")
+                        ((modelType === "Speech" && speechToText.modelSelect && speechToText.modelPath === modelKey) ? "Go to Chat" : "Set Model")
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked: {
                     if (modelType === "Text Generation") {
@@ -111,10 +111,11 @@ Item {
                         conversationList.isEmptyConversation = true
                         appBodyId.currentIndex = 1
                     } else if (modelType === "Speech") {
-                        if (speechToText.modelPath === modelKey) {
+                        if (speechToText.modelSelect && speechToText.modelPath === modelKey) {
                             appBodyId.currentIndex = 1
                         } else {
                             speechToText.modelPath = modelKey
+                            console.log(modelKey)
                             speechToText.modelSelect = true
                         }
                     }

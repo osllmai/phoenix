@@ -63,17 +63,6 @@ Item {
                     }
                 }
 
-                // function onSendPrompt(prompt){
-                //     if((conversationList.modelSelect) && (prompt !== "")){
-                //         myMessageView.goToEnd()
-                //         conversationList.currentConversation.prompt(prompt)
-                //         chatBodyBoxId.requestEmptyTheInput()
-                //     }else if((prompt !== "")){
-                //         notificationDialogId.open()
-                //         chatBodyBoxId.openModelList()
-                //     }
-                // }
-
                 function onOpenModelIsLoaded(){
                     modelIsloadedDialogId.open()
                 }
@@ -132,17 +121,6 @@ Item {
                         chatBodyBoxId.openModelList();
                     }
                 }
-
-
-                // function onSendPrompt(prompt){
-                //     if((conversationList.modelSelect) && (prompt !== "")){
-                //         conversationList.addRequest(prompt)
-                //         chatBodyBoxId.requestEmptyTheInput()
-                //     }else if((prompt !== "")){
-                //         notificationDialogId.open()
-                //         chatBodyBoxId.openModelList()
-                //     }
-                // }
             }
         }
         // Flow{

@@ -61,7 +61,7 @@ Flickable {
             boundsBehavior: gridView2.interactive ? Flickable.StopAtBounds : Flickable.DragOverBounds
 
             cellWidth: flickable.calculationCellWidth(gridView2.width)
-            cellHeight: 250
+            cellHeight: 220
             clip: true
 
             model: huggingfaceModelListFilter
@@ -75,7 +75,7 @@ Flickable {
                 sourceComponent:*/ HuggingfaceBoxDelegate {
                     id: realBox
                     anchors.fill: parent
-                    anchors.margins: 18
+                    anchors.margins: 12
                 }
             }
         }
