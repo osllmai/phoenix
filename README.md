@@ -42,7 +42,7 @@ Phoenix is open-source, and the full source code is available at:
 
 ### 📥 Download
 You can download the latest Windows release here:  
-👉 [Download Phoenix v0.1.10 (Windows 64-bit)](https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/Phoenix_win64.exe)
+👉 [Download Phoenix v0.1.30 (Windows 64-bit)](https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/Phoenix_win64.exe)
 
 ---
 
