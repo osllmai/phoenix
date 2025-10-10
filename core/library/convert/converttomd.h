@@ -3,11 +3,11 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QCoreApplication>
 #include <QProcess>
-#include <QThread>
 #include <QDebug>
 #include <QFileInfo>
+#include "convertworker.h"
+#include <QThread>
 
 class ConvertToMD : public QObject
 {

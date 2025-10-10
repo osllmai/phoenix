@@ -27,13 +27,13 @@ void OnlineWorker::run() {
     QStringList args;
 
     QString modelName = m_model;
-    QString keyIndox = "";
+    QString keyIndox = API_KEY_INDOXROUTER;
     QString myKey = m_key;
 
     if (m_model.startsWith("IndoxRouter/")) {
         modelName = m_model.mid(QString("IndoxRouter/").length());
         keyIndox = m_key;
-        myKey = API_KEY_INDOXROUTER;
+        myKey = "";
     }
 
     args << modelName
