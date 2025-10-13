@@ -28,19 +28,16 @@ public slots:
     // void unLoadModel() override;
 
 signals:
-    void sendPromptToProcess(const QString &promptText, const QString &paramBlock);
+    void sendPrompt(const QString &input, const bool &stream, const QString &promptTemplate,
+                const QString &systemPrompt, const double &temperature, const int &topK, const double &topP,
+                const double &minP, const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                const int &repeatPenaltyTokens, const int &contextLength, const int &numberOfGPULayers);
 
 private:
-    QThread chatLLMThread;
+    QThread *m_thread = nullptr;
     std::atomic<bool> _stopFlag;
 
     QString m_model;
-
-    QProcess* m_process = nullptr;
-    ProviderState state = ProviderState::LoadingModel;
-
-    PromptRequest m_pendingPrompt;
-    bool m_hasPendingPrompt = false;
 };
 
 #endif // OFFLINEPROVIDER_H
