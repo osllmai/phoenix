@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import "./chat"
 import '../../component_library/style' as Style
 import '../../component_library/button'
-
+import "./chat/components"
 Item {
     id: chatBodyBoxId
     width: parent.width
@@ -32,6 +32,32 @@ Item {
         else if(!conversationList.isEmptyConversation)
             inputBoxId.textInput  = chatBodyBoxId.textInput
     }
+
+    property var suggestions
+    function fetchGoogleSuggestions(query) {
+        if (query.trim() === "")
+            return;
+
+        const url = "http://suggestqueries.google.com/complete/search?client=firefox&q=" + encodeURIComponent(query);
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                try {
+                    var json = JSON.parse(xhr.responseText);
+                    var list = json[1];
+
+                    list = list.filter(s => s.length > 20);
+
+                    chatBodyBoxId.suggestions = list.slice(0, 5);
+                } catch (e) {
+                    console.log("JSON parse error:", e);
+                }
+            }
+        }
+        xhr.send();
+    }
+
 
     Column{
         spacing: 10
@@ -83,6 +109,7 @@ Item {
     }
 
     Column{
+        id: columnId
         spacing: 8
         width: Math.min(700, parent.width - 48)
         anchors.horizontalCenter: parent.horizontalCenter
@@ -123,6 +150,8 @@ Item {
                 }
             }
         }
+
+
         // Flow{
         //     spacing: 5
         //     width: Math.min(parent.width, documentId.width + grammarId.width + rewriteId.width + imageEditorId.width + imageId.width + 20)
@@ -168,5 +197,58 @@ Item {
         //         isNeedAnimation: true
         //     }
         // }
+    }
+
+    ListView {
+        id: suggestionListView
+        width: columnId.width - 40
+        height: 35*5 + 16
+        clip: true
+        interactive: true
+        spacing: 4
+        model: chatBodyBoxId.suggestions
+        visible: conversationList.isEmptyConversation
+        anchors.top: columnId.bottom
+        anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        delegate: SuggestionsButton{
+            height: 35
+            width: parent.width
+            onClicked: {
+                inputBoxId2.textInput = modelData
+                chatBodyBoxId.suggestions = []
+            }
+        }
+
+        //     Rectangle {
+        //     width: parent.width
+        //     height: Math.max(30, textItem.contentHeight + 10)
+        //     radius: 6
+        //     color: "#282828"
+
+        //     Text {
+        //         id: textItem
+        //         text: modelData
+        //         color: "white"
+        //         wrapMode: Text.WordWrap
+        //         anchors.fill: parent
+        //         anchors.margins: 8
+        //         font.pixelSize: 12
+        //     }
+
+        //     MouseArea {
+        //         anchors.fill: parent
+        //         onClicked: {
+        //             inputBoxId2.textInput = modelData
+        //             chatBodyBoxId.suggestions = []
+        //         }
+        //         hoverEnabled: true
+        //         onEntered: parent.color = "#3a3a3a"
+        //         onExited: parent.color = "#282828"
+        //     }
+        // }
+
+        // visible: chatBodyBoxId.suggestions.length > 0
     }
 }

@@ -55,7 +55,7 @@ Item {
 
                 <ul>
                     <li><b>Country:</b> United States</li>
-                    <li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+                    <li><b>Company:</b> Osllm AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
                     <li><b>Address:</b> Milwaukee, WI 53209, United States</li>
                     <li><b>Phone:</b> +19718135163</li>
                     <li><strong>Website:</strong> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>osllm.ai</a></li>

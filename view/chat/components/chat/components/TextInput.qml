@@ -49,6 +49,7 @@ Item {
                 root.inputValue = inputTextBox.text
                 control.layer.enabled = true
                 adjustHeight()
+                chatBodyBoxId.fetchGoogleSuggestions(inputTextBox.text)
             }
 
             onContentHeightChanged: {
