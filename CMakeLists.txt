@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 30)
+set(APP_VERSION_PATCH 32)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -623,6 +623,7 @@ qt_add_qml_module(app${APP_NAME}
         view/chat/components/history/HistoryBody.qml
         view/chat/components/history/HistoryList.qml
         view/chat/components/history/HistoryDelegate.qml
+        view/chat/components/chat/components/SuggestionsButton.qml
 
 
         view/component_library/model_settings/ModelSettingsView.qml
@@ -709,7 +710,6 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml
     QML_FILES view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml
     SOURCES core/provider/worker/onlineworker.h core/provider/worker/onlineworker.cpp
-    SOURCES core/provider/worker/offlineworker.h core/provider/worker/offlineworker.cpp
     SOURCES core/provider/worker/apikey.h
     SOURCES core/library/convert/convertworker.h core/library/convert/convertworker.cpp
     SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
