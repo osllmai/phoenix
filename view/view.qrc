@@ -53,8 +53,8 @@
         <file>model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml</file>
         <file>model/components/online/components/components/OnlineDelegateInfoBox.qml</file>
         <file>model/components/online/components/components/OnlineInformationModel.qml</file>
-	<file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
-	<file>model/components/online/components/components/OnlineModelDelegateComboBox.qml</file>
+        <file>model/components/online/components/components/OnlineModelListComboBox.qml</file>
+        <file>model/components/online/components/components/OnlineModelDelegateComboBox.qml</file>
         <file>model/components/huggingface/HuggingfaceModelView.qml</file>
         <file>model/components/huggingface/HuggingfaceHeader.qml</file>
         <file>model/components/huggingface/HuggingfaceBody.qml</file>
@@ -77,6 +77,7 @@
         <file>chat/components/chat/components/FileConverteInputPrompt.qml</file>
         <file>chat/components/chat/components/AudioRecoderInput.qml</file>
         <file>chat/components/chat/components/TextInput.qml</file>
+        <file>chat/components/chat/components/SuggestionsButton.qml</file>
         <file>chat/components/history/HistoryHeader.qml</file>
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
@@ -146,7 +147,7 @@
         <file>model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml</file>
         <file>model/components/huggingface/components/SearchHuggingfaceModel.qml</file>
         <file>component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml</file>
-	<file>component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml</file>
-	<file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml</file>
+        <file>component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml</file>
+        <file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml</file>
     </qresource>
 </RCC>

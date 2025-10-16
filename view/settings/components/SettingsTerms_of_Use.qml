@@ -28,11 +28,11 @@ Item {
 
             text: "<h1>Terms of Use:</h1>
 <p><b>Established &amp; Effective Date:</b> January 01, 2024<br><b>Update:</b> August 04, 2025</p>
-<p>Please read these terms of use (agreement) carefully before using the services offered by Nemati AI (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
+<p>Please read these terms of use (agreement) carefully before using the services offered by Osllm AI (Company). By visiting the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a> and/or using the services in any manner, you agree that you have read, understood, and accept to be bound by these terms and conditions. If the terms of this agreement are considered an offer, acceptance is expressly limited to such terms. If you do not unconditionally agree to all the terms and conditions of this agreement, you have no right to use the website <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;'>https://osllm.ai</a>, applications, extensions, or services provided by OS LLM. Use of the Company's services is expressly conditioned upon your acceptance of these terms.</p>
 <ul>
 <li><b>Country refers to:</b> United States</li>
 <li><b>Country:</b> United States</li>
-<li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+<li><b>Company:</b> Osllm AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
 <li><b>Address:</b> Milwaukee, WI 53209, United States</li>
 <li><b>Phone:</b> +19718135163</li>
 <li><b>Website:</b> <a href='https://osllm.ai' style='color:" + Style.Colors.textInformation + "; text-decoration:none;' >osllm.ai</a></li>
@@ -416,8 +416,8 @@ Item {
 <ul>
     <li><b>Contact Us</b>: If you have any questions about these Terms and Conditions, you can</li>
     <li>contact us at</li>
-    <li><b>Company:</b> Nemati AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
-    <li><b>refers to:</b> Nemati AI</li>
+    <li><b>Company:</b> Osllm AI (referred to as \"the Company\",\"We\", \"Us\", or \"Our\")</li>
+    <li><b>refers to:</b> Osllm AI</li>
     <li><b>Address:</b> Milwaukee, WI 53209, United States</li>
     <li><b>Phone:</b> +19718135163</li>
     <li><b>Website</b>: <a href=\"https://osllm.ai\" style=\"color: " + Style.Colors.textInformation + "; text-decoration:none;\">https://osllm.ai</a></li>
