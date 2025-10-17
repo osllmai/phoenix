@@ -8,7 +8,7 @@ import './component_library/button'
 
 T.Button{
     id: backgroundId
-    width: buttonBoxId.width + 70
+    width: Math.max(buttonBoxId.width + 70, 400)
     height:  titleBoxId.height + (informationNotesId.visible?  (informationNotesId.height+20): 10) + buttonBoxId.height + 32
 
     visible: false
@@ -23,9 +23,10 @@ T.Button{
         }
     }
 
-    property bool isUpdateAvailable: updateChecker.isUpdateAvailable
-    onIsUpdateAvailableChanged: {
-        if (updateChecker.isUpdateAvailable) {
+    property bool isAvailable: updateChecker.isUpdateAvailable || (updateChecker.notesCurrentVersion !== "")
+    property bool isCurrentVersion: !updateChecker.isUpdateAvailable && (updateChecker.notesCurrentVersion !== "")
+    onIsAvailableChanged: {
+        if (backgroundId.isAvailable) {
             backgroundId.visible = true
             backgroundId.x = window.width
             backgroundId.showAnimatedFunction()
@@ -83,24 +84,30 @@ T.Button{
              anchors.margins: 16
              spacing: 10
 
-             Row{
+             Row {
                  id: titleBoxId
                  height: titleId.height + infoId.height
                  width: parent.width
                  spacing: 3
 
-                 MyIcon{
+                 MyIcon {
                      id: closeBox
-                     width: 30; height: 30
-                     myIcon: backgroundId.hovered? "qrc:/media/icon/downloadFill.svg":"qrc:/media/icon/download.svg"
+                     width: 30
+                     height: 30
+                     myIcon: backgroundId.hovered
+                             ? "qrc:/media/icon/downloadFill.svg"
+                             : "qrc:/media/icon/download.svg"
                      isNeedAnimation: true
                  }
 
-                 Column{
+                 Column {
                      width: parent.width - closeBox.width
+
                      Label {
                          id: titleId
-                         text: "New Version: Phoenix " + updateChecker.latestVersion
+                         text: !backgroundId.isCurrentVersion
+                               ? "New Version: Phoenix " + updateChecker.latestVersion
+                               : "You’re using the latest version — Phoenix " + updateChecker.currentVersion
                          height: 20
                          verticalAlignment: Text.AlignVCenter
                          color: Style.Colors.textTitle
@@ -108,9 +115,12 @@ T.Button{
                          font.styleName: "Bold"
                          clip: true
                      }
+
                      Label {
                          id: infoId
-                         text: "A newer version of Phoenix is available"
+                         text: !backgroundId.isCurrentVersion
+                               ? "A newer version of Phoenix is available. Click to update."
+                               : "No updates available at the moment."
                          color: Style.Colors.textInformation
                          width: parent.width
                          font.pixelSize: 12
@@ -122,9 +132,10 @@ T.Button{
                  }
              }
 
+
              Label {
                  id: informationNotesId
-                 text: updateChecker.notes
+                 text: (backgroundId.isCurrentVersion)? updateChecker.notesCurrentVersion: updateChecker.notesLatestVersion
                  color: Style.Colors.textTitle
                  lineHeight: 1.4
                  visible: false
@@ -153,13 +164,14 @@ T.Button{
 
                  MyButton {
                      id: botton2
-                     myText: "Remind me later"
+                     myText: !backgroundId.isCurrentVersion?"Remind me later": "OK"
                      bottonType: Style.RoleEnum.BottonType.Secondary
                      onClicked: backgroundId.hideAnimatedFunction()
                  }
 
                  MyButton {
                      id: botton3
+                     visible: !backgroundId.isCurrentVersion
                      myText: "Update Now"
                      bottonType: Style.RoleEnum.BottonType.Primary
                      onClicked: {

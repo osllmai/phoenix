@@ -289,7 +289,7 @@ Rectangle{
                                  conversationList.isEmptyConversation)
                             {
                                 control.sendPrompt(textInputId.inputValue)
-                                textInputId.setText("")
+                                // textInputId.setText("")
 
                                 if (conversationList.modelSelect)
                                     textInputId.inputValue = ""

@@ -18,6 +18,7 @@ bool UpdateChecker::isNewerVersion(const QString &newVersion) {
 }
 
 void UpdateChecker::checkForUpdatesAsync() {
+
     const QString updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/update/Updates.xml";
 
     QNetworkRequest request(updatesXmlUrl);
@@ -57,7 +58,9 @@ void UpdateChecker::onUpdatesXmlFinished(QNetworkReply *reply) {
     if (isNewerVersion(latestVersion)) {
         qInfo() << "Newer version found:" << latestVersion;
         fetchReleaseJson(latestVersion);
+        setIsUpdateAvailable(true);
     } else {
+        fetchReleaseJson(m_currentVersion);
         setIsUpdateAvailable(false);
     }
 
@@ -72,7 +75,6 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
     connect(reply, &QNetworkReply::finished, this, [this, reply, version]() {
         if (reply->error() != QNetworkReply::NoError) {
             qWarning() << "Failed to download release.json:" << reply->errorString();
-            setIsUpdateAvailable(true);
             reply->deleteLater();
             return;
         }
@@ -81,7 +83,6 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
         QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
         if (!jsonDoc.isArray()) {
             qWarning() << "Invalid JSON format in release.json";
-            setIsUpdateAvailable(true);
             reply->deleteLater();
             return;
         }
@@ -93,29 +94,32 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
             if (obj.value("version").toString() == version) {
                 QString title = obj.value("title").toString();
                 QString date = obj.value("date").toString();
-                QString notes = obj.value("notes").toString();
+                QString notesLatestVersion = obj.value("notesLatestVersion").toString();
 
                 QString featuresText;
                 if (obj.contains("features") && obj.value("features").isArray()) {
                     QJsonArray features = obj.value("features").toArray();
                     if (!features.isEmpty()) {
-                        featuresText = "\n\nFeatures:\n";
+                        featuresText = "Features:\n";
                         for (const QJsonValue &f : features) {
                             featuresText += "- " + f.toString() + "\n";
                         }
                     }
                 }
 
-                QString finalNotes = QString("%1 (v%2)\nRelease Date: %3\n\n%4%5")
-                                         .arg(title, version, date, notes, featuresText);
+                QString finalNotesLatestVersion = QString("%1 (v%2)\nRelease Date: %3\n%4%5")
+                                         .arg(title, version, date, notesLatestVersion, featuresText);
 
-                setNotes(finalNotes.trimmed());
+                if (isNewerVersion(version)) {
+                    setNotesLatestVersion(finalNotesLatestVersion.trimmed());
+                } else {
+                    setNotesCurrentVersion(finalNotesLatestVersion.trimmed());
+                }
                 found = true;
                 break;
             }
         }
 
-        setIsUpdateAvailable(true);
         if (!found) {
             qWarning() << "Version" << version << "not found in release.json details";
         }
@@ -146,6 +150,14 @@ bool UpdateChecker::checkForUpdates() const {
 
 QString UpdateChecker::currentVersion() const{return m_currentVersion;}
 
+QString UpdateChecker::notesCurrentVersion() const{return m_notesCurrentVersion;}
+void UpdateChecker::setNotesCurrentVersion(const QString &newNotesCurrentVersion){
+    if (m_notesCurrentVersion == newNotesCurrentVersion)
+        return;
+    m_notesCurrentVersion = newNotesCurrentVersion;
+    emit notesCurrentVersionChanged();
+}
+
 bool UpdateChecker::isUpdateAvailable() const{return m_isUpdateAvailable;}
 void UpdateChecker::setIsUpdateAvailable(bool newIsUpdateAvailable){
     if (m_isUpdateAvailable == newIsUpdateAvailable)
@@ -154,12 +166,12 @@ void UpdateChecker::setIsUpdateAvailable(bool newIsUpdateAvailable){
     emit isUpdateAvailableChanged();
 }
 
-QString UpdateChecker::getNotes() const{return m_notes;}
-void UpdateChecker::setNotes(const QString &newNotes){
-    if (m_notes == newNotes)
+QString UpdateChecker::getNotesLatestVersion() const{return m_notesLatestVersion;}
+void UpdateChecker::setNotesLatestVersion(const QString &newNotesLatestVersion){
+    if (m_notesLatestVersion == newNotesLatestVersion)
         return;
-    m_notes = newNotes;
-    emit notesChanged();
+    m_notesLatestVersion = newNotesLatestVersion;
+    emit notesLatestVersionChanged();
 }
 
 QString UpdateChecker::getLatestVersion() const{return m_latestVersion;}

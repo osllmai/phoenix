@@ -6,6 +6,8 @@ import '../../../../component_library/button'
 
 T.Button {
     id: control
+    height: 35
+    width: parent.width
 
     property bool selected:  false
 
