@@ -110,5 +110,18 @@
       "Updated internal APIs for better future compatibility"
     ],
     "support": "phoenix@osllm.ai"
+  },
+  {
+    "version": "0.1.33",
+    "title": "UI Enhancements & Bug Fixes",
+    "date": "2025-10-17",
+    "notes": "This version focuses on fixing previously reported bugs and enhancing the overall user interface for a smoother experience. Several minor optimizations have also been applied to improve responsiveness and stability.",
+    "features": [
+      "Fixed multiple bugs to enhance reliability",
+      "Improved user interface design and interactions",
+      "Optimized overall responsiveness and performance",
+      "Minor UI animations and layout refinements"
+    ],
+    "support": "phoenix@osllm.ai"
   }
 ]
