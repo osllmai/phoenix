@@ -19,6 +19,7 @@ Item {
     function requestEmptyTheInput(){
         inputBoxId.textInput = ""
         inputBoxId2.textInput = ""
+        chatBodyBoxId.suggestions = []
     }
 
     function goToEnd(){
@@ -150,53 +151,6 @@ Item {
                 }
             }
         }
-
-
-        // Flow{
-        //     spacing: 5
-        //     width: Math.min(parent.width, documentId.width + grammarId.width + rewriteId.width + imageEditorId.width + imageId.width + 20)
-        //     anchors.horizontalCenter: parent.horizontalCenter
-        //     MyButton {
-        //         id: documentId
-        //         myText: "Document"
-        //         myIcon: "qrc:/media/icon/document.svg"
-        //         bottonType: Style.RoleEnum.BottonType.Feature
-        //         iconType: Style.RoleEnum.IconType.FeatureBlue
-        //         isNeedAnimation: true
-        //     }
-        //     MyButton {
-        //         id: grammarId
-        //         myText: "Grammer"
-        //         myIcon: "qrc:/media/icon/grammer.svg"
-        //         bottonType: Style.RoleEnum.BottonType.Feature
-        //         iconType: Style.RoleEnum.IconType.FeatureRed
-        //         isNeedAnimation: true
-        //     }
-        //     MyButton {
-        //         id: rewriteId
-        //         myText: "Rewrite"
-        //         myIcon: "qrc:/media/icon/rewrite.svg"
-        //         bottonType: Style.RoleEnum.BottonType.Feature
-        //         iconType: Style.RoleEnum.IconType.FeatureOrange
-        //         isNeedAnimation: true
-        //     }
-        //     MyButton {
-        //         id: imageEditorId
-        //         myText: "Image Editor"
-        //         myIcon: "qrc:/media/icon/imageEditor.svg"
-        //         bottonType: Style.RoleEnum.BottonType.Feature
-        //         iconType: Style.RoleEnum.IconType.FeatureGreen
-        //         isNeedAnimation: true
-        //     }
-        //     MyButton {
-        //         id: imageId
-        //         myText: "Image"
-        //         myIcon: "qrc:/media/icon/image.svg"
-        //         bottonType: Style.RoleEnum.BottonType.Feature
-        //         iconType: Style.RoleEnum.IconType.FeatureYellow
-        //         isNeedAnimation: true
-        //     }
-        // }
     }
 
     ListView {
@@ -212,43 +166,15 @@ Item {
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
 
-        delegate: SuggestionsButton{
-            height: 35
-            width: parent.width
-            onClicked: {
-                inputBoxId2.textInput = modelData
-                chatBodyBoxId.suggestions = []
-            }
+        delegate: SuggestionsButton {
+            onClicked: suggestionListView.suggestionClicked(modelData)
+        }
+        signal suggestionClicked(string text)
+        onSuggestionClicked: function(text) {
+            inputBoxId2.textInput = text
+            chatBodyBoxId.suggestions = []
+            chatBodyBoxId.sendMessage()
         }
 
-        //     Rectangle {
-        //     width: parent.width
-        //     height: Math.max(30, textItem.contentHeight + 10)
-        //     radius: 6
-        //     color: "#282828"
-
-        //     Text {
-        //         id: textItem
-        //         text: modelData
-        //         color: "white"
-        //         wrapMode: Text.WordWrap
-        //         anchors.fill: parent
-        //         anchors.margins: 8
-        //         font.pixelSize: 12
-        //     }
-
-        //     MouseArea {
-        //         anchors.fill: parent
-        //         onClicked: {
-        //             inputBoxId2.textInput = modelData
-        //             chatBodyBoxId.suggestions = []
-        //         }
-        //         hoverEnabled: true
-        //         onEntered: parent.color = "#3a3a3a"
-        //         onExited: parent.color = "#282828"
-        //     }
-        // }
-
-        // visible: chatBodyBoxId.suggestions.length > 0
     }
 }
