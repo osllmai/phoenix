@@ -1,9 +1,74 @@
+Windows 64-bit / 32-bit
+
 build:
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release -DLLAMA_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=89 ..
+cmake --build . --config Release --parallel 16
+cmake --build . --config Release --parallel
 cmake --build . --config Release --parallel 32
+
 
  run:
 ./bin/applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
 applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
  
+
+-------------------------new----------------------------
+mkdir build && cd build
+
+#64-bit use CPU
+cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release ..
+
+#32-bit
+cmake -G "Visual Studio 17 2022" -A Win32 -DCMAKE_BUILD_TYPE=Release ..
+
+# 64bit use cuda
+cmake -G "Visual Studio 17 2022" -A x64 -DLLAMA_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=89 ..
+
+cmake --build . --config Release --parallel 16
+
+# run
+./bin/Release/applocal_provider.exe --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
+
+
+
+
+
+Linux (x86_64 / ARM)
+
+mkdir build && cd build
+
+# CPU only
+cmake -DCMAKE_BUILD_TYPE=Release ..
+
+# CUDA
+cmake -DCMAKE_BUILD_TYPE=Release -DLLAMA_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=89 ..
+
+cmake --build . --config Release --parallel $(nproc)
+
+# run
+./bin/applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
+
+
+
+
+macOS (Intel or  Apple Silicon)
+
+
+mkdir build && cd build
+
+mkdir build && cd build
+
+# Normal build (for current system)
+cmake -DCMAKE_BUILD_TYPE=Release ..
+
+# Universal binary build (for both Intel and Apple Silicon)
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIVERSAL=ON ..
+
+# Build the project using 8 parallel jobs
+cmake --build . --config Release --parallel 8
+
+# Run the executable
+./bin/applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
+

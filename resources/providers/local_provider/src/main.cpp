@@ -7,6 +7,25 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+#include <atomic>
+#include <cmath>
+
+#if __has_include(<span>)
+#include <span>
+#else
+namespace std {
+    template <typename T>
+    class span {
+    public:
+        span(const T* data, size_t size) : data_(data), size_(size) {}
+        const T* data() const { return data_; }
+        size_t size() const { return size_; }
+    private:
+        const T* data_;
+        size_t size_;
+    };
+}
+#endif
 
 #include <gpt4all-backend/llmodel.h>
 #include "llm_params.h"
@@ -27,21 +46,18 @@ bool handleResponse(int32_t token, std::string_view response) {
 
     if (!response.empty()) {
         if (params.stream) {
-            std::cout << response <<std::flush;
+            std::cout << response << std::flush;
         }
         answer += std::string(response);
     }
     return true;
 }
 
-
 // --------- Generate Full Prompt and Process Request ----------------
 void processPrompt(const std::string& input) {
-    // Create full prompt by combining system prompt and user input
     std::string full_prompt = params.system_prompt;
     std::string user_prompt = params.prompt_template;
 
-    // Replace "%1" in the template with the user's input
     size_t pos = user_prompt.find("%1");
     if (pos != std::string::npos) {
         user_prompt.replace(pos, 2, input);
@@ -49,18 +65,14 @@ void processPrompt(const std::string& input) {
 
     full_prompt += user_prompt;
 
-    // Callback for the prompt (this is a basic implementation)
     auto prompt_callback = [](std::span<const LLModel::Token> batch, bool cached) -> bool {
-        // Optionally handle the batch here
         return true;
-    };
+        };
 
-    // Callback for receiving the response from the model
     auto response_callback = [](int32_t token_id, std::string_view response) -> bool {
         return handleResponse(token_id, response);
-    };
+        };
 
-    // Create and set prompt context
     LLModel::PromptContext promptContext;
     promptContext.n_predict = params.max_tokens;
     promptContext.top_k = params.top_k;
@@ -72,17 +84,16 @@ void processPrompt(const std::string& input) {
     promptContext.repeat_last_n = params.repeat_penalty_tokens;
     promptContext.contextErase = 0.5f;
 
-    // Call the prompt method on the model
     model->prompt(full_prompt, prompt_callback, response_callback, promptContext);
 
-    if(!params.stream){
+    if (!params.stream) {
         std::cout << answer << std::flush;
     }
 
     std::cout << "__DONE_PROMPTPROCESS__" << std::flush;
 }
 
-float approxDeviceMemGB(const LLModel::GPUDevice *dev) {
+float approxDeviceMemGB(const LLModel::GPUDevice* dev) {
     float memGB = dev->heapSize / float(1024 * 1024 * 1024);
     return std::floor(memGB * 10.f) / 10.f;
 }
@@ -97,11 +108,17 @@ int main(int argc, char* argv[]) {
     }
 
     std::string backend = "auto";
+
 #if defined(__APPLE__) && defined(__aarch64__)
     if (params.device == "CPU") {
         backend = "cpu";
-    } else if (params.force_metal) {
+    }
+    else if (params.force_metal) {
         backend = "metal";
+    }
+#elif defined(_WIN32) || defined(_WIN64)
+    if (params.device.rfind("CUDA", 0) == 0) {
+        backend = "cuda";
     }
 #else
     if (params.device.rfind("CUDA", 0) == 0) {
@@ -110,41 +127,44 @@ int main(int argc, char* argv[]) {
 #endif
 
     std::cout << "Using backend: " << backend << std::flush;
+
     try {
         model = LLModel::Implementation::construct(params.model, backend, params.context_length);
-    } catch (const LLModel::MissingImplementationError &e) {
+    }
+    catch (const LLModel::MissingImplementationError& e) {
         std::cerr << "Missing implementation: " << e.what() << std::flush;
         return 1;
-    } catch (const LLModel::UnsupportedModelError &e) {
+    }
+    catch (const LLModel::UnsupportedModelError& e) {
         std::cerr << "Unsupported model: " << e.what() << std::flush;
         return 1;
-    } catch (const LLModel::BadArchError &e) {
-        std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n"<<std::flush;
+    }
+    catch (const LLModel::BadArchError& e) {
+        std::cerr << "Bad architecture: " << e.what() << " (arch: " << e.arch() << ")\n" << std::flush;
         return 1;
     }
 
     if (!model) {
-        std::cerr << "Model construction failed.\n"<<std::flush;
+        std::cerr << "Model construction failed.\n" << std::flush;
         return 1;
     }
 
     const size_t requiredMemory = model->requiredMem(params.model, params.context_length, params.number_of_gpu_layers);
     auto availableDevices = model->availableGPUDevices(requiredMemory);
 
-    std::cout << "\n--- Available GPU Devices ---\n"<<std::flush;
+    std::cout << "\n--- Available GPU Devices ---\n" << std::flush;
     if (availableDevices.empty()) {
-        std::cout << "No GPU devices available.\n"<<std::flush;
-    } else {
+        std::cout << "No GPU devices available.\n" << std::flush;
+    }
+    else {
         for (const auto& device : availableDevices) {
-            std::cout << "Index: " << device.index << std::flush;
-            std::cout << "Name: " << device.name << std::flush;
-            std::cout << "Backend: " << device.backendName() << std::flush;
-            std::cout << "Selection Name: " << device.selectionName() << std::flush;
-            std::cout << "Total Memory (approx. GB): " << approxDeviceMemGB(&device) << std::flush;
+            std::cout << "Index: " << device.index << "\n";
+            std::cout << "Name: " << device.name << "\n";
+            std::cout << "Backend: " << device.backendName() << "\n";
+            std::cout << "Selection Name: " << device.selectionName() << "\n";
+            std::cout << "Total Memory (approx. GB): " << approxDeviceMemGB(&device) << "\n" << std::flush;
         }
     }
-
-
 
     const LLModel::GPUDevice* selectedDevice = nullptr;
     bool usingCPU = true;
@@ -155,16 +175,15 @@ int main(int argc, char* argv[]) {
     }
 #else
     if (params.device != "CPU") {
-
         for (const auto& device : availableDevices) {
-
             if (params.device == "Auto" || device.selectionName() == params.device) {
                 std::string reason;
                 if (model->initializeGPUDevice(device.index, &reason)) {
                     selectedDevice = &device;
                     usingCPU = false;
                     break;
-                } else {
+                }
+                else {
                     std::cerr << "GPU init failed: " << reason << std::flush;
                 }
             }
@@ -175,16 +194,16 @@ int main(int argc, char* argv[]) {
     bool success = model->loadModel(params.model, params.context_length, params.number_of_gpu_layers);
 
     if (!success && !usingCPU) {
-        std::cerr << "GPU loading failed, retrying on CPU...\n";
+        std::cerr << "GPU loading failed, retrying on CPU...\n" << std::flush;
         success = model->loadModel(params.model, params.context_length, 0);
         if (!success) {
-            std::cerr << "Fallback to CPU also failed.\n";
+            std::cerr << "Fallback to CPU also failed.\n" << std::flush;
             return 1;
         }
     }
 
     if (!success) {
-        std::cerr << "Model load failed completely.\n";
+        std::cerr << "Model load failed completely.\n" << std::flush;
         return 1;
     }
 
@@ -192,15 +211,14 @@ int main(int argc, char* argv[]) {
     std::chrono::duration<double> elapsedSeconds = endTime - startTime;
     std::cout << "Model loaded successfully on " << (usingCPU ? "CPU" : "GPU") << std::flush;
     if (selectedDevice) {
-        std::cout << "Device name: " << selectedDevice->name << std::flush;
-        std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << std::flush;
-        std::cout << "Backend: " << selectedDevice->backendName() << std::flush;
+        std::cout << "Device name: " << selectedDevice->name << "\n";
+        std::cout << "Memory (GB): " << approxDeviceMemGB(selectedDevice) << "\n";
+        std::cout << "Backend: " << selectedDevice->backendName() << "\n";
     }
-    std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n"<<std::flush;;
+    std::cout << "Model loading duration: " << elapsedSeconds.count() << " seconds\n" << std::flush;
 
-    std::cout << "__LoadingModel__Finished__"<<std::flush;;
+    std::cout << "__LoadingModel__Finished__" << std::flush;
 
-    // Command loop
     while (true) {
         std::string command;
         std::getline(std::cin, command);
@@ -251,7 +269,6 @@ int main(int argc, char* argv[]) {
                     else if (key == "repeat_last_n") {
                         params.repeat_penalty_tokens = std::stoi(val);
                     }
-
                 }
             }
             continue;
@@ -268,7 +285,7 @@ int main(int argc, char* argv[]) {
             answer.clear();
 
             if (promptRunning) {
-                std::cout << "A prompt is already running. Please wait or stop it.\n"<<std::flush;
+                std::cout << "A prompt is already running. Please wait or stop it.\n" << std::flush;
                 continue;
             }
 
@@ -281,7 +298,7 @@ int main(int argc, char* argv[]) {
                 std::lock_guard<std::mutex> lock(promptMutex);
                 processPrompt(input);
                 promptRunning = false;
-            });
+                });
         }
 
         if (command == "__STOP__") {
@@ -290,7 +307,8 @@ int main(int argc, char* argv[]) {
             if (promptThread.joinable()) {
                 try {
                     promptThread.join();
-                } catch (const std::system_error& e) {
+                }
+                catch (const std::system_error& e) {
                     std::cerr << "Thread join error: " << e.what() << std::endl;
                 }
             }
@@ -301,6 +319,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    std::cout << "Exiting.\n"<<std::flush;;
+    std::cout << "Exiting.\n" << std::flush;
     return 0;
 }
