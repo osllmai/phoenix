@@ -54,9 +54,17 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+if(WIN32)
+    set(APP_ICON_RESOURCE media/image_company/appIcon.rc)
+elseif(APPLE)
+    set(APP_ICON_RESOURCE media/image_company/appIcon.icns)
+else()
+    set(APP_ICON_RESOURCE "")
+endif()
+
 qt_add_executable(app${APP_NAME}
     core/main.cpp
-    media/image_company/appIcon.rc
+    ${APP_ICON_RESOURCE}
 
     core/database.h core/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
@@ -742,80 +750,97 @@ target_link_libraries(app${APP_NAME}
         Qt::Qml
         Qt::Gui
 )
-
 include(GNUInstallDirs)
+
 install(TARGETS app${APP_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+# configure config.h
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
-#copy company.json
+# Copy company.json
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)
 
-
-#copy online-models
+# Copy online models
 set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/online_models)
 set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/models/online_models)
-
 file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
-
 foreach(json_file ${ONLINE_JSON_FILES})
     get_filename_component(json_filename ${json_file} NAME)
     configure_file(${json_file} ${ONLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
-
-#copy offline-model
+# Copy offline models
 set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/offline_models)
 set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/models/offline_models)
-
 file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
-
 foreach(json_file ${OFFLINE_JSON_FILES})
     get_filename_component(json_filename ${json_file} NAME)
     configure_file(${json_file} ${OFFLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
-
-#copy python provider for online-model
+# Copy Python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/online_provider.exe ${BIN_DIR}/providers/online_provider/online_provider.exe COPYONLY)
+    set(ONLINE_PROVIDER_FILE online_provider.exe)
+elseif(APPLE)
+    set(ONLINE_PROVIDER_FILE online_provider)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/online_provider.py ${BIN_DIR}/providers/online_provider/online_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
+    set(ONLINE_PROVIDER_FILE online_provider)
 endif()
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/${ONLINE_PROVIDER_FILE}
+    ${BIN_DIR}/providers/online_provider/${ONLINE_PROVIDER_FILE}
+    COPYONLY
+)
 
-#copy whisper
+# Copy whisper resources
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
 file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
 
-#copy ConvertToMD
-configure_file(${CMAKE_SOURCE_DIR}/resources/markitdown/markitdown.exe ${BIN_DIR}/markitdown/markitdown.exe COPYONLY)
-
-#copy exe provider for offline-model
+# Copy ConvertToMD / markitdown
 if(WIN32)
-    # Gather EXE files
-    file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.exe")
-    foreach(exe_file ${exe_files})
-        get_filename_component(exe_filename ${exe_file} NAME)
-        configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
-    endforeach()
-
-    # Gather DLL files
-    file(GLOB dll_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.dll")
-    foreach(dll_file ${dll_files})
-        get_filename_component(dll_filename ${dll_file} NAME)
-        configure_file(${dll_file} ${BIN_DIR}/${dll_filename} COPYONLY)
-    endforeach()
+    set(MARKITDOWN_FILE markitdown.exe)
+else()
+    set(MARKITDOWN_FILE markitdown)  # macOS/Linux
 endif()
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/resources/markitdown/${MARKITDOWN_FILE}
+    ${BIN_DIR}/markitdown/${MARKITDOWN_FILE}
+    COPYONLY
+)
+
+# Copy offline provider executables and libraries
+if(WIN32)
+    set(EXE_EXT .exe)
+    set(LIB_EXT .dll)
+elseif(APPLE)
+    set(EXE_EXT "")       # macOS executable usually has no extension
+    set(LIB_EXT .dylib)
+else()
+    set(EXE_EXT "")       # Linux executable
+    set(LIB_EXT .so)
+endif()
+
+# Copy executables
+file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${EXE_EXT}")
+foreach(exe_file ${exe_files})
+    get_filename_component(exe_filename ${exe_file} NAME)
+    configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
+endforeach()
+
+# Copy dynamic libraries
+file(GLOB lib_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${LIB_EXT}")
+foreach(lib_file ${lib_files})
+    get_filename_component(lib_filename ${lib_file} NAME)
+    configure_file(${lib_file} ${BIN_DIR}/${lib_filename} COPYONLY)
+endforeach()
