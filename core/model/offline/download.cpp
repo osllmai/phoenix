@@ -1,76 +1,85 @@
 #include "download.h"
 
-Download::Download(const int id, const QString &url, const QString &modelPath, QObject *parent)
-    : QObject{parent}
+Download::Download(int id, const QString &url, const QString &modelPath, QObject *parent)
+    : QObject(parent), m_id(id), m_url(url), m_modelPath(modelPath)
 {
-    m_id =id;
-    this->url = url;
-    this->modelPath = modelPath;
 }
 
-Download::~Download(){
-    // delete reply;
+Download::~Download() {
+    if (m_reply) {
+        m_reply->abort();
+        m_reply->deleteLater();
+    }
 }
 
-int Download::id() const{
+int Download::id() const {
     return m_id;
 }
 
-void Download::downloadModel(){
-    QNetworkRequest request(url);
-    reply = m_manager.get(request);
-    // Save the file path for when the download is complete
-    reply->setProperty("modelPath", modelPath);
-    connect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
-    connect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
+void Download::downloadModel() {
+    if (m_reply) {
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
 
-    connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){
-        Q_UNUSED(code);
-        emit downloadFailed(m_id, reply->errorString());
+    QNetworkRequest request(m_url);
+    m_reply = m_manager.get(request);
+    m_reply->setProperty("modelPath", m_modelPath);
+
+    connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
+    connect(m_reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
+
+    connect(m_reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError){
+        emit downloadFailed(m_id, m_reply->errorString());
     });
 }
 
-void Download::cancelDownload(){
-    // Disconnect the signals
-    disconnect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress);
-    disconnect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished);
-
-    reply->deleteLater();
+void Download::cancelDownload() {
+    if (m_reply) {
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
 }
 
-void Download::removeModel(){
-    QFile file(modelPath);
-    if (file.exists()){
+void Download::removeModel() {
+    QFile file(m_modelPath);
+    if (file.exists()) {
         file.remove();
     }
 }
 
 void Download::onDownloadFinished() {
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    if (!reply) return;
+    if (!m_reply)
+        return;
 
-    if (reply->error() == QNetworkReply::NoError) {
-        QString modelPath = reply->property("modelPath").toString();
-        QFile file(modelPath);
+    QString path = m_reply->property("modelPath").toString();
+    QFile file(path);
+
+    QFileInfo fi(file);
+    QDir().mkpath(fi.path());
+
+    if (m_reply->error() == QNetworkReply::NoError) {
         if (file.open(QIODevice::WriteOnly)) {
-            qint64 written = file.write(reply->readAll());
+            qint64 written = file.write(m_reply->readAll());
             file.close();
 
-            if (written <= 0)
-                emit downloadFailed(m_id, "Failed to write data to file");
-            else
+            if (written > 0)
                 emit downloadFinished(m_id);
-
+            else
+                emit downloadFailed(m_id, "Failed to write data to file");
         } else {
-            emit downloadFailed(m_id, QStringLiteral("Cannot write to file: %1").arg(modelPath));
+            emit downloadFailed(m_id, QStringLiteral("Cannot write to file: %1").arg(path));
         }
     } else {
-        emit downloadFailed(m_id, reply->errorString());
+        emit downloadFailed(m_id, m_reply->errorString());
     }
-    reply->deleteLater();
-    // this->reply = nullptr;
+
+    m_reply->deleteLater();
+    m_reply = nullptr;
 }
 
-void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
+void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
     emit downloadProgress(m_id, bytesReceived, bytesTotal);
 }

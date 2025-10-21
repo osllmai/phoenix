@@ -3,6 +3,7 @@
 #include <QRegularExpression>
 #include <QDebug>
 #include <regex>
+#include <QFileInfo>
 
 SpeechToTextWorker::SpeechToTextWorker(const QString &modelPath, const QString &audioPath, bool cuda, QObject *parent)
     : QObject(parent), m_modelPath(modelPath), m_audioPath(audioPath), m_cuda(cuda), m_stopFlag(false)
@@ -20,9 +21,22 @@ void SpeechToTextWorker::process()
     process.setProcessChannelMode(QProcess::MergedChannels);
     process.setReadChannel(QProcess::StandardOutput);
 
-    QString exePath = m_cuda
-                          ? QCoreApplication::applicationDirPath() + "/whisper/cuda-device/whisper-cli.exe"
-                          : QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-cli.exe";
+    QString exeFileName;
+#if defined(Q_OS_WIN)
+    exeFileName = "whisper-cli.exe";
+#else
+    exeFileName = "whisper-cli";  // macOS و Linux
+#endif
+
+    QString deviceFolder = m_cuda ? "cuda-device" : "cpu-device";
+    QString exePath = QCoreApplication::applicationDirPath()
+                      + "/whisper/" + deviceFolder + "/" + exeFileName;
+
+    if (!QFileInfo::exists(exePath)) {
+        emit errorOccurred("Whisper executable not found: " + exePath);
+        emit finished();
+        return;
+    }
 
     QStringList arguments;
     arguments << "-m" << m_modelPath

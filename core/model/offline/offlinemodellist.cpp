@@ -164,29 +164,31 @@ void OfflineModelList::likeRequest(const int id, const bool isLike){
 }
 
 void OfflineModelList::downloadRequest(const int id, QString directoryPath){
-    setNumberDownload(m_numberDownload+1);
+    setNumberDownload(m_numberDownload + 1);
 
     OfflineModel* model = findModelById(id);
-    if(model == nullptr) return;
+    if(!model) return;
     const int index = m_models.indexOf(model);
 
-    qInfo()<<model->fileName();
-    directoryPath.remove("file:///");
+    qInfo() << model->fileName();
 
-    QString cleanFileName = model->fileName();
+    directoryPath = QUrl(directoryPath).toLocalFile();
+    QDir dir(directoryPath);
+    if(!dir.exists()){
+        dir.mkpath(".");
+    }
 
-    qInfo()<<cleanFileName;
-    cleanFileName = cleanFileName.section('/', -1);
+    QFileInfo fi(model->fileName());
+    QString cleanFileName = fi.fileName();
 
-    qInfo()<<cleanFileName;
-    cleanFileName = cleanFileName.section('\\', -1);
+    qInfo() << cleanFileName;
 
-    qInfo()<<cleanFileName;
+    QString fullPath = dir.filePath(cleanFileName);
 
-    model->setKey(directoryPath + "/" + cleanFileName);
+    model->setKey(fullPath);
     model->setIsDownloading(true);
 
-    qInfo()<<model->key();
+    qInfo() << model->key();
 
     Download *download = new Download(id, model->url(), model->key(), this);
     if(downloads.size() < 3){
@@ -199,8 +201,6 @@ void OfflineModelList::downloadRequest(const int id, QString directoryPath){
 
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {IsDownloadingRole});
 }
-
-
 
 void OfflineModelList::handleDownloadProgress(const int id, const qint64 bytesReceived, const qint64 bytesTotal){
 

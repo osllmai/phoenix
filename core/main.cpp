@@ -52,11 +52,13 @@ int main(int argc, char *argv[])
         QCoreApplication::setApplicationName(APP_NAME);
         QCoreApplication::setApplicationVersion(APP_VERSION);
 
-    #ifdef Q_OS_WINDOWS
+#ifdef Q_OS_MAC
+        app.setWindowIcon(QIcon(":/media/image_company/Phoenix.icns"));
+#elif defined(Q_OS_WINDOWS)
         app.setWindowIcon(QIcon(":/media/image_company/Phoenix.ico"));
-    #else
+#else
         app.setWindowIcon(QIcon(":/media/image_company/Phoenix.png"));
-    #endif
+#endif
 
         int fontId = QFontDatabase::addApplicationFont(":/fonts/DMSans-Regular.ttf");
         if (fontId == -1) {

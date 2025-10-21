@@ -22,7 +22,15 @@ void OnlineWorker::run() {
     QProcess process;
     process.setProcessChannelMode(QProcess::MergedChannels);
 
-    QString exePath = QCoreApplication::applicationDirPath() + "/providers/online_provider/online_provider.exe";
+#ifdef Q_OS_WIN
+    QString exeName = "online_provider.exe";
+#elif defined(Q_OS_MAC)
+    QString exeName = "online_provider";
+#else // Linux
+    QString exeName = "online_provider";
+#endif
+
+    QString exePath = QCoreApplication::applicationDirPath() + "/providers/online_provider/" + exeName;
 
     QStringList args;
 
@@ -54,11 +62,10 @@ void OnlineWorker::run() {
          << QString::number(m_numberOfGPULayers)
          << myKey;
 
-
     process.start(exePath, args);
 
     if (!process.waitForStarted()) {
-        qCritical() << "Failed to start process:" << process.errorString();
+        qCritical() << "Failed to start process:" << exePath << process.errorString();
         emit finished();
         return;
     }
@@ -66,9 +73,9 @@ void OnlineWorker::run() {
     while (process.state() == QProcess::Running && !m_stopFlag->load()) {
         if (process.waitForReadyRead(300)) {
             QString output = QString::fromUtf8(process.readAllStandardOutput());
-            if (!output.isEmpty()){
+            if (!output.isEmpty()) {
                 emit tokenReady(output);
-                qInfo()<<output;
+                qInfo() << output;
             }
         }
     }

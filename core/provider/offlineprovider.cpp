@@ -29,19 +29,25 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
     qCInfo(logOfflineProvider) << "Loading model with key:" << key;
 
     QThread::create([this, key]() {
-
         m_process = new QProcess;
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/applocal_provider.exe";
+#if defined(Q_OS_WIN)
+        QString exeFile = "applocal_provider.exe";
+#elif defined(Q_OS_MAC)
+        QString exeFile = "applocal_provider";
+#else
+        QString exeFile = "applocal_provider";
+#endif
+
+        QString exePath = QCoreApplication::applicationDirPath() + "/" + exeFile;
         QStringList arguments{ "--model", key };
 
         state = ProviderState::LoadingModel;
         qCInfo(logOfflineProvider) << "Starting process at:" << exePath << "with arguments:" << arguments;
 
         connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText, const QString &paramBlock) {
-
             qCInfo(logOfflineProvider) << "Sending prompt to process. State:" << static_cast<int>(state);
             if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
                 m_process->write(paramBlock.toUtf8());
