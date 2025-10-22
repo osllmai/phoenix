@@ -1,3 +1,8 @@
 pip install markitdown
 
 pyinstaller --onefile convert_pdf.py
+
+
+
+---------------------Linux
+pip3 install markitdown
