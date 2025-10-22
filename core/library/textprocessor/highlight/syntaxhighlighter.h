@@ -12,9 +12,9 @@
 #include <QTextObjectInterface>
 #include <QVector>
 
-#include "highlightingrule.h"
+#include "HighlightingRule.h"
 #include "highlighting.h"
-#include "highlightingcategory.h"
+#include "HighlightingCategory.h"
 #include "language.h"
 #include "codecolors.h"
 

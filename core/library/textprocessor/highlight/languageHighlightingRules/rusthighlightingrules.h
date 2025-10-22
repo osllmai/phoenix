@@ -1,7 +1,7 @@
 #ifndef RUSTHIGHLIGHTINGRULES_H
 #define RUSTHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> rustHighlightingRules();

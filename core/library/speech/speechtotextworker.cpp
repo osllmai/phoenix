@@ -1,4 +1,4 @@
-#include "SpeechToTextWorker.h"
+#include "speechtotextworker.h"
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include <QDebug>
@@ -37,6 +37,15 @@ void SpeechToTextWorker::process()
         emit finished();
         return;
     }
+
+#if defined(Q_OS_LINUX)
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString currentPath = env.value("LD_LIBRARY_PATH");
+    env.insert("LD_LIBRARY_PATH",
+               QCoreApplication::applicationDirPath() +
+                   (currentPath.isEmpty() ? "" : ":" + currentPath));
+    process.setProcessEnvironment(env);
+#endif
 
     QStringList arguments;
     arguments << "-m" << m_modelPath

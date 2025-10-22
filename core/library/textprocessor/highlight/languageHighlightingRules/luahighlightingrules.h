@@ -1,7 +1,7 @@
 #ifndef LUAHIGHLIGHTINGRULES_H
 #define LUAHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> luaHighlightingRules();

@@ -1,5 +1,5 @@
 #include "csvhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> csvHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

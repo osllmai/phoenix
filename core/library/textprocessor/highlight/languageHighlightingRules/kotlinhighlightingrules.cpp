@@ -1,5 +1,5 @@
 #include "kotlinhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> kotlinHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

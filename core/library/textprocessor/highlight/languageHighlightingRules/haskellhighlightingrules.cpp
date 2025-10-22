@@ -1,5 +1,5 @@
 #include "haskellhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> haskellHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

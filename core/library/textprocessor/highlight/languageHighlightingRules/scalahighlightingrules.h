@@ -1,7 +1,7 @@
 #ifndef SCALAHIGHLIGHTINGRULES_H
 #define SCALAHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> scalaHighlightingRules();

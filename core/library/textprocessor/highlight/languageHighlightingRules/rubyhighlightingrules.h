@@ -1,7 +1,7 @@
 #ifndef RUBYHIGHLIGHTINGRULES_H
 #define RUBYHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> rubyHighlightingRules();

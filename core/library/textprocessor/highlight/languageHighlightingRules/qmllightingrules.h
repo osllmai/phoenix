@@ -1,7 +1,7 @@
 #ifndef QMLLIGHTINGRULES_H
 #define QMLLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> qmlHighlightingRules();

@@ -1,7 +1,7 @@
 #ifndef JAVASCRIPTHIGHLIGHTINGRULES_H
 #define JAVASCRIPTHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> javascriptHighlightingRules();

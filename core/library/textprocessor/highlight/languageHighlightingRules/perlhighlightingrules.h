@@ -1,7 +1,7 @@
 #ifndef PERLHIGHLIGHTINGRULES_H
 #define PERLHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> perlHighlightingRules();

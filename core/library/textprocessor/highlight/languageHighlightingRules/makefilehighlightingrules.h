@@ -1,7 +1,7 @@
 #ifndef MAKEFILEHIGHLIGHTINGRULES_H
 #define MAKEFILEHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> makefileHighlightingRules();

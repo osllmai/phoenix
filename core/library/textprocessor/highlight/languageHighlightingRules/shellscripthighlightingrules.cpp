@@ -1,5 +1,5 @@
 #include "shellscripthighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> shellScriptHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

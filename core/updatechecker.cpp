@@ -1,4 +1,4 @@
-#include "UpdateChecker.h"
+#include "updatechecker.h"
 
 UpdateChecker* UpdateChecker::m_instance = nullptr;
 

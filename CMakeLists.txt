@@ -49,17 +49,21 @@ include_directories(
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
+
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
+
+# Set the target and icon resources
 if(WIN32)
-    set(APP_ICON_RESOURCE media/image_company/phoenix.svg)
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phonicICOLink.rc")
 elseif(APPLE)
-    set(APP_ICON_RESOURCE media/image_company/phoenix.icns)
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.icns")
 else()
-    set(APP_ICON_RESOURCE media/image_company/phoenix.png)
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.png")
 endif()
+
 
 
 qt_add_executable(app${APP_NAME}
@@ -121,9 +125,9 @@ qt_add_executable(app${APP_NAME}
     core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
     core/library/textprocessor/codecolors.h core/library/textprocessor/codecolors.cpp
     core/library/textprocessor/highlight/syntaxhighlighter.h core/library/textprocessor/highlight/syntaxhighlighter.cpp
-    core/library/textprocessor/highlight/highlightingcategory.h
+    core/library/textprocessor/highlight/HighlightingCategory.h
     core/library/textprocessor/highlight/language.h
-    core/library/textprocessor/highlight/highlightingrule.h
+    core/library/textprocessor/highlight/HighlightingRule.h
     core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
     core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
     core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp
@@ -165,7 +169,7 @@ qt_add_executable(app${APP_NAME}
 )
 
 qt_add_resources(app${APP_NAME}
-    PREFIX /
+    PREFIX "/"
     FILES
         media/icon/add.svg
         media/icon/alignLeftFill.svg
@@ -529,7 +533,7 @@ qt_add_resources(app${APP_NAME}
         view/view.qrc
 )
 
-qt_policy(SET QTP0004 NEW)
+# qt_policy(SET QTP0004 NEW)
 
 qt_add_qml_module(app${APP_NAME}
     URI ${APP_NAME}
@@ -749,11 +753,52 @@ target_link_libraries(app${APP_NAME}
 )
 include(GNUInstallDirs)
 
+
+# ---- Linux desktop entry installation ----
+if(UNIX AND NOT APPLE)
+    # Set paths
+    set(DESKTOP_FILE "${CMAKE_BINARY_DIR}/phoenix.desktop")
+    set(ICON_FILE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.png")
+
+    # Generate .desktop file dynamically
+    file(WRITE ${DESKTOP_FILE}
+        "[Desktop Entry]\n"
+        "Version=1.0\n"
+        "Name=Phoenix\n"
+        "Comment=Phoenix AI App\n"
+        "Exec=${CMAKE_INSTALL_PREFIX}/bin/appphoenix\n"
+        "Icon=${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps/phoenix.png\n"
+        "Terminal=false\n"
+        "Type=Application\n"
+        "Categories=Utility;Development;\n"
+    )
+
+    # Install desktop entry and icon
+    install(FILES ${DESKTOP_FILE}
+        DESTINATION share/applications
+    )
+    install(FILES ${ICON_FILE}
+        DESTINATION share/icons/hicolor/256x256/apps
+        RENAME phoenix.png
+    )
+endif()
+
+# ---- macOS bundle settings ----
+if(APPLE)
+    set_target_properties(appphoenix PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/Info.plist"
+        RESOURCE "${APP_ICON_RESOURCE}"
+    )
+endif()
+
+# ---- Install the executable and resources ----
 install(TARGETS app${APP_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
 
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -828,16 +873,22 @@ else()
     set(LIB_EXT .so)
 endif()
 
-# Copy executables
-file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${EXE_EXT}")
-foreach(exe_file ${exe_files})
-    get_filename_component(exe_filename ${exe_file} NAME)
-    configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
-endforeach()
+file(GLOB exe_files RELATIVE "${CMAKE_SOURCE_DIR}/resources/providers/local_provider"
+     "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${EXE_EXT}")
+ foreach(exe_file ${exe_files})
+     set(full_path "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/${exe_file}")
+     if(EXISTS "${full_path}" AND NOT IS_DIRECTORY "${full_path}")
+         configure_file("${full_path}" "${BIN_DIR}/${exe_file}" COPYONLY)
+     endif()
+ endforeach()
 
-# Copy dynamic libraries
-file(GLOB lib_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${LIB_EXT}")
-foreach(lib_file ${lib_files})
-    get_filename_component(lib_filename ${lib_file} NAME)
-    configure_file(${lib_file} ${BIN_DIR}/${lib_filename} COPYONLY)
-endforeach()
+
+file(GLOB lib_files RELATIVE "${CMAKE_SOURCE_DIR}/resources/providers/local_provider"
+     "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${LIB_EXT}")
+ foreach(lib_file ${lib_files})
+     set(full_path "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/${lib_file}")
+     if(EXISTS "${full_path}" AND NOT IS_DIRECTORY "${full_path}")
+         configure_file("${full_path}" "${BIN_DIR}/${lib_file}" COPYONLY)
+     endif()
+ endforeach()
+

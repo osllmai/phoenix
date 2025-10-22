@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> cppHighlightingRules();

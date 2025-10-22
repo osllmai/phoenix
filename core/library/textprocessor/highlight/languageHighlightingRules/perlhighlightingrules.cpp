@@ -1,5 +1,5 @@
 #include "perlhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> perlHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

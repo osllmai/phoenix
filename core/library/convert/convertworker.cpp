@@ -1,4 +1,4 @@
-#include "ConvertWorker.h"
+#include "convertworker.h"
 #include <QCoreApplication>
 #include <QFileInfo>
 

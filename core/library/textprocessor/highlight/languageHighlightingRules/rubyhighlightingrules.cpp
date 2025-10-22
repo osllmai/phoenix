@@ -1,5 +1,5 @@
 #include "rubyhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> rubyHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

@@ -1,4 +1,4 @@
-#include "LogCategories.h"
+#include "logcategories.h"
 
 Q_LOGGING_CATEGORY(logCore, "phoenix.core")
 Q_LOGGING_CATEGORY(logModel, "phoenix.model")

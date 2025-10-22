@@ -1,7 +1,7 @@
 #ifndef SWIFTHIGHLIGHTINGRULES_H
 #define SWIFTHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> swiftHighlightingRules();

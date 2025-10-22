@@ -1,5 +1,5 @@
 #include "typescripthighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> typescriptHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

@@ -1,5 +1,5 @@
 #include "dockerfilehighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> dockerfileHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

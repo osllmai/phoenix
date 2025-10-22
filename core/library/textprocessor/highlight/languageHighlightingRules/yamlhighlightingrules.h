@@ -1,7 +1,7 @@
 #ifndef YAMLHIGHLIGHTINGRULES_H
 #define YAMLHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> yamlHighlightingRules();

@@ -88,7 +88,7 @@ void SystemMonitor::getMemoryInfo(){
 #elif defined(Q_OS_LINUX)
     struct sysinfo info;
     if (sysinfo(&info) == 0) {
-        m_memoryInfo = static_cast<double>info.freeram/info.totalram;
+        m_memoryInfo = static_cast<double>(info.freeram) / info.totalram;
     }
 #endif
 }

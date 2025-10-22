@@ -1,5 +1,5 @@
 #include "powershellhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> powershellHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;
