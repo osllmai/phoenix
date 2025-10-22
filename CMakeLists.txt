@@ -850,9 +850,9 @@ file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DI
 
 # Copy ConvertToMD / markitdown
 if(WIN32)
-    set(MARKITDOWN_FILE markitdown.exe)
+    set(MARKITDOWN_FILE convert_pdf.exe)
 else()
-    set(MARKITDOWN_FILE markitdown)  # macOS/Linux
+    set(MARKITDOWN_FILE convert_pdf)  # macOS/Linux
 endif()
 
 configure_file(

@@ -292,12 +292,22 @@ void OfflineModelList::deleteRequest(const int id){
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DownloadFinishedRole, IsDownloadingRole});
 }
 
-void OfflineModelList::addRequest(QString directoryPath){
-    directoryPath.remove("file:///");
-    QFileInfo fileInfo(directoryPath);
+void OfflineModelList::addRequest(const QString directoryPath) {
+    QUrl url(directoryPath);
+    QString localPath;
+
+    if (url.isLocalFile()) {
+        localPath = url.toLocalFile();
+    } else {
+        localPath = directoryPath;
+    }
+
+    QFileInfo fileInfo(localPath);
     QString fileName = fileInfo.baseName();
-    emit requestAddModel(fileName, directoryPath);
+
+    emit requestAddModel(fileName, localPath);
 }
+
 
 void OfflineModelList::addModel(Company* company, const double fileSize, const int ramRamrequired, const QString& fileName, const QString& url,
                                 const QString& parameters, const QString& quant, const double downloadPercent,

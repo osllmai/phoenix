@@ -60,7 +60,7 @@ public:
     Q_INVOKABLE void downloadRequest(const int id, QString directoryPath);
     Q_INVOKABLE void cancelRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
-    Q_INVOKABLE void addRequest(QString directoryPath);
+    Q_INVOKABLE void addRequest(const QString directoryPath);
     Q_INVOKABLE void sortAsync(int role, Qt::SortOrder order = Qt::AscendingOrder);
 
     double downloadProgress() const;

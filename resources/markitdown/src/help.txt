@@ -1,8 +1,22 @@
-pip install markitdown
+pip install markitdown[all]
+
+-----linux
+sudo apt update
+sudo apt install ffmpeg
+
+-----window
+
+
 
 pyinstaller --onefile convert_pdf.py
 
+python convert_pdf.py /home/nemati-usa/Documents/Zeinab/phoenix/README.md
 
 
----------------------Linux
-pip3 install markitdown
+pyinstaller --onefile \
+  --add-data "/home/nemati-usa/Documents/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
+  --add-data "/home/nemati-usa/Documents/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/config:magika/config" \
+  convert_pdf.py
+
+
+

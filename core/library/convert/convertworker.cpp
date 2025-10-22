@@ -21,11 +21,11 @@ void ConvertWorker::process()
     // --- Cross-platform executable path ---
     QString exeName;
 #if defined(Q_OS_WIN)
-    exeName = "markitdown.exe";
+    exeName = "convert_pdf.exe";
 #elif defined(Q_OS_MAC)
-    exeName = "markitdown";
+    exeName = "convert_pdf";
 #elif defined(Q_OS_LINUX)
-    exeName = "markitdown";
+    exeName = "convert_pdf";
 #else
     emit error("Unsupported platform");
     emit finished("");
