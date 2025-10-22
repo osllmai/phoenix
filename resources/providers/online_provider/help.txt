@@ -1,10 +1,55 @@
 build:
+
+-----------------------------window--------------------------------
 pyinstaller --onefile --add-data "provider.py;." --add-data "main_provider.py;." --add-data "../file/company.json;." --add-data "../file/mistral_models.json;." --add-data "../file/openai_models.json;." main_provider.py
  
-
 pyinstaller --onefile --add-data "provider.py;." --add-data "online_provider.py;." online_provider.py
 
  
-
 pip install indoxrouter
 ...
+
+
+
+
+
+--------------------------Linux------------------------------------
+
+                   ----------install python
+python3 --version
+sudo apt install python3 python3-pip python3-venv
+
+
+
+                ---------------create inviroment
+cd ~/myproject
+
+python3 -m venv venv
+
+
+                 -------------active inviroment
+source venv/bin/activate
+deactivate
+
+ls venv/
+rm -rf venv
+pip freeze > requirements.txt
+pip install -r requirements.txt
+
+
+
+pip install indoxrouter pyinstaller
+
+
+
+
+--add-data "provider.py:."
+
+
+pyinstaller --onefile \
+  --add-data "provider.py:." \
+  --add-data "online_provider.py:." \
+  online_provider.py
+
+
+

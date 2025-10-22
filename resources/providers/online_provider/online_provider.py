@@ -1,8 +1,13 @@
 import os
 import sys
 import time
-import msvcrt  #  Windows-only library
+import platform
 from provider import Provider
+
+if os.name == "nt":
+    import msvcrt
+else:
+    import select
 
 
 def str_to_bool(value):
@@ -11,8 +16,14 @@ def str_to_bool(value):
 
 
 def stdin_has_data():
-    """Check if there is input in stdin on Windows."""
-    return msvcrt.kbhit()  #  Works only on Windows
+    """Check if there is input in stdin (cross-platform)."""
+    if os.name == "nt":
+        # Windows
+        return msvcrt.kbhit()
+    else:
+        # Linux / macOS
+        rlist, _, _ = select.select([sys.stdin], [], [], 0)
+        return bool(rlist)
 
 
 if __name__ == "__main__":
@@ -20,9 +31,7 @@ if __name__ == "__main__":
 
     # Read arguments from C++ process
     model = sys.argv[1]
-    api_key = sys.argv[
-        2
-    ]  # indoxrouter api key if none use shared api key else use user indoxrouter api key
+    api_key = sys.argv[2]
     user_prompt = sys.argv[3]
     stream = bool(int(sys.argv[4]))
     prompt_template = sys.argv[5]
@@ -38,11 +47,11 @@ if __name__ == "__main__":
     context_length = int(sys.argv[15])
     number_of_gpu_layers = int(sys.argv[16])
 
-    stop = False
-
-    byok_api_key = None  # by your own api key
+    byok_api_key = None
     if len(sys.argv) > 17:
         byok_api_key = sys.argv[17] if sys.argv[17] != "none" else None
+
+    stop = False
 
     client = Provider(byok_api_key=byok_api_key)
     client.load_model(model=model, api_key=api_key)
@@ -59,7 +68,7 @@ if __name__ == "__main__":
             )
 
             for chunk in chat_response:
-                # Check for stop signal
+                # Check for stop signal (cross-platform)
                 if stdin_has_data():
                     stop_str = sys.stdin.read(1).strip()
                     if stop_str in ["true", "false"]:
@@ -74,10 +83,12 @@ if __name__ == "__main__":
                 if client.stop_generation:
                     sys.stdout.flush()
                     break
+
                 if isinstance(chunk, dict) and "data" in chunk:
                     content = chunk["data"]
                 else:
                     content = chunk
+
                 sys.stdout.write(content)
                 sys.stdout.flush()
                 time.sleep(0.1)
