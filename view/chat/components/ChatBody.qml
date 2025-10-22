@@ -118,7 +118,7 @@ Item {
         visible: conversationList.isEmptyConversation
         MyIcon {
             id: phoenixIconId
-            myIcon: "qrc:/media/image_company/Phoenix.svg"
+            myIcon: "qrc:/media/image_company/phoenix.svg"
             iconType: Style.RoleEnum.IconType.Image
             anchors.horizontalCenter: parent.horizontalCenter
             enabled: false

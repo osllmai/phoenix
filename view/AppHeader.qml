@@ -26,7 +26,7 @@ T.Button {
              anchors.verticalCenter: parent.verticalCenter
              MyIcon {
                  id: logoId
-                 myIcon:  "qrc:/media/image_company/Phoenix.svg"
+                 myIcon:  "qrc:/media/image_company/phoenix.svg"
                  iconType: Style.RoleEnum.IconType.Primary
                  enabled: false
                  width:30; height:30

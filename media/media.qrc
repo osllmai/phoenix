@@ -17,7 +17,7 @@
         <file>icon/offline.svg</file>
         <file>icon/online.svg</file>
         <file>icon/phoenixCli.svg</file>
-        <file>icon/Phoenix.svg</file>
+        <file>icon/phoenix.svg</file>
         <file>icon/like.svg</file>
         <file>icon/disLike.svg</file>
         <file>icon/favorite.svg</file>
@@ -272,7 +272,9 @@
         <file>image_company/perplexity.svg</file>
         <file>image_company/phidata.svg</file>
         <file>image_company/phind.svg</file>
-        <file>image_company/Phoenix.svg</file>
+        <file>image_company/phoenix.svg</file>
+	<file>image_company/phoenix.png</file>
+	<file>image_company/phoenix.icns</file>
         <file>image_company/pika.svg</file>
         <file>image_company/pixverse.svg</file>
         <file>image_company/player2.svg</file>

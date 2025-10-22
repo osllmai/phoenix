@@ -1,0 +1,3 @@
+pip install markitdown
+
+pyinstaller --onefile convert_pdf.py

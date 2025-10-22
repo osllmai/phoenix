@@ -744,7 +744,7 @@ void Database::readModel(const QList<Company*> companys){
                     deleteModel(id);
                 }else if(name !="Indox Router"){
                     QFileInfo fileInfo(key);
-                    QString icon = "qrc:/media/image_company/Phoenix.svg";
+                    QString icon = "qrc:/media/image_company/phoenix.svg";
                     QString information = "This model has been successfully added to the application by you.";
                     double fileSize = (fileInfo.size()/10000000)*0.01;
                     int ramRequ;
@@ -1125,7 +1125,7 @@ QList<int> Database::readOnlineCompany() {
             {"perplexity", "perplexity.svg"},
             {"phidata", "phidata.svg"},
             {"phind", "phind.svg"},
-            {"phoenix", "Phoenix.svg"},
+            {"phoenix", "phoenix.svg"},
             {"pika", "pika.svg"},
             {"pixverse", "pixverse.svg"},
             {"player2", "player2.svg"},

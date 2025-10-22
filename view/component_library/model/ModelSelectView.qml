@@ -13,7 +13,7 @@ Rectangle {
     property bool modelSelect: false
     property int modelId: -1
     property string modelName: "Phoenix"
-    property string modelIcon: "qrc:/media/image_company/Phoenix.png"
+    property string modelIcon: "qrc:/media/image_company/phoenix.svg"
     signal setModelRequest(int id, string name, string icon, string promptTemplate, string systemPrompt)
 
     color: Style.Colors.background

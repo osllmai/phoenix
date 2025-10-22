@@ -49,18 +49,18 @@ include_directories(
 # Include the binary directory for the generated header file
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 if(WIN32)
-    set(APP_ICON_RESOURCE media/image_company/appIcon.rc)
+    set(APP_ICON_RESOURCE media/image_company/phoenix.svg)
 elseif(APPLE)
-    set(APP_ICON_RESOURCE media/image_company/appIcon.icns)
+    set(APP_ICON_RESOURCE media/image_company/phoenix.icns)
 else()
-    set(APP_ICON_RESOURCE "")
+    set(APP_ICON_RESOURCE media/image_company/phoenix.png)
 endif()
+
 
 qt_add_executable(app${APP_NAME}
     core/main.cpp
@@ -295,8 +295,6 @@ qt_add_resources(app${APP_NAME}
         media/image_company/alibabacloud.svg
         media/image_company/antgroup.svg
         media/image_company/anthropic.svg
-        media/image_company/appIcon.aps
-        media/image_company/appIcon.rc
         media/image_company/aya.svg
         media/image_company/azure.svg
         media/image_company/azureai.svg
@@ -446,10 +444,9 @@ qt_add_resources(app${APP_NAME}
         media/image_company/perplexity.svg
         media/image_company/phidata.svg
         media/image_company/phind.svg
-        media/image_company/Phoenix.ico
-        media/image_company/Phoenix.jpg
-        media/image_company/Phoenix.png
-        media/image_company/Phoenix.svg
+        media/image_company/phoenix.icns
+        media/image_company/phoenix.png
+        media/image_company/phoenix.svg
         media/image_company/pika.svg
         media/image_company/pixverse.svg
         media/image_company/player2.svg
