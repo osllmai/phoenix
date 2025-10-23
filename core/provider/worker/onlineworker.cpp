@@ -30,7 +30,7 @@ void OnlineWorker::run() {
     QString exeName = "online_provider";
 #endif
 
-    QString exePath = QCoreApplication::applicationDirPath() + "/providers/online_provider/" + exeName;
+    QString exePath = QString::fromUtf8(APP_PATH) + "/providers/online_provider/" + exeName;
 
     QStringList args;
 

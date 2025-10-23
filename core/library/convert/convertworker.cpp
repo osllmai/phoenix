@@ -32,7 +32,7 @@ void ConvertWorker::process()
     return;
 #endif
 
-    QString exePath = QCoreApplication::applicationDirPath() + "/markitdown/" + exeName;
+    QString exePath = QString::fromUtf8(APP_PATH) + "/markitdown/" + exeName;
     QFileInfo exeInfo(exePath);
     if (!exeInfo.exists() || !exeInfo.isExecutable()) {
         emit error("Executable not found or not executable: " + exePath);

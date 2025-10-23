@@ -845,8 +845,12 @@ configure_file(
 )
 
 # Copy whisper resources
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
+if(APPLE)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR}/whisper)
+else()
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
+endif()
 
 # Copy ConvertToMD / markitdown
 if(WIN32)

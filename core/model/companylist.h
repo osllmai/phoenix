@@ -5,6 +5,7 @@
 #include <QAbstractListModel>
 #include <QFutureWatcher>
 #include <QtConcurrent>
+#include "config.h"
 
 #include "company.h"
 

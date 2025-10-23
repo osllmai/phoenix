@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QProcess>
 #include <QDebug>
+#include "config.h"
+
 
 class ConvertWorker : public QObject
 {

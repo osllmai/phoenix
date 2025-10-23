@@ -41,14 +41,14 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         QString exeFile = "applocal_provider";
 #endif
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/" + exeFile;
+        QString exePath = QString::fromUtf8(APP_PATH) + "/" + exeFile;
         QStringList arguments{ "--model", key };
 
 #if defined(Q_OS_LINUX)
         QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
         QString currentPath = env.value("LD_LIBRARY_PATH");
         env.insert("LD_LIBRARY_PATH",
-                   QCoreApplication::applicationDirPath() +
+                   QString::fromUtf8(APP_PATH) +
                        (currentPath.isEmpty() ? "" : ":" + currentPath));
         m_process->setProcessEnvironment(env);
 #endif

@@ -12,7 +12,7 @@ Database::Database(QObject* parent)
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QDir().mkpath(appDataPath);
 
-    QString sourceDb = QCoreApplication::applicationDirPath() + "/db_phoenix.db";
+    QString sourceDb = QString::fromUtf8(APP_PATH) + "/db_phoenix.db";
     QString targetDb = appDataPath + "/db_phoenix.db";
 
     if (!QFile::exists(targetDb)) {
@@ -125,7 +125,7 @@ void Database::addHuggingfaceModel(const QString &name, const QString &url, cons
                                    const QString &companyName, const QString &companyIconPath, const QString &currentFolder) {
 
     // Ensure models directory exists
-    QString modelsDir = QCoreApplication::applicationDirPath() + "/models";
+    QString modelsDir = QString::fromUtf8(APP_PATH) + "/models";
     QDir dir(modelsDir);
     if (!dir.exists())
         dir.mkpath(".");
@@ -643,7 +643,7 @@ void Database::readModel(const QList<Company*> companys){
 
     for (Company* company : companys){
 
-        QFile file(QCoreApplication::applicationDirPath() + "/models/" + company->filePath());
+        QFile file(QString::fromUtf8(APP_PATH) + "/models/" + company->filePath());
 
         if (!file.open(QIODevice::ReadOnly)) {
             qWarning() << "Cannot open JSON file!";
@@ -858,7 +858,7 @@ QList<int> Database::readOnlineCompany() {
                            indoxRouterKey);
 
     QList<int> allID;
-    QString filePath = QCoreApplication::applicationDirPath() + "/models/online_models/online_models.json";
+    QString filePath = QString::fromUtf8(APP_PATH) + "/models/online_models/online_models.json";
 
     bool fileExists = QFile::exists(filePath);
 

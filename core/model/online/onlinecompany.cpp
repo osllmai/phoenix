@@ -27,7 +27,7 @@ OnlineCompany::OnlineCompany(const int id, const QString& name, const QString& i
     auto future = QtConcurrent::run([filePath, companyIcon, name]() -> QList<QVariantMap> {
         QList<QVariantMap> models;
 
-        QString fullPath = QCoreApplication::applicationDirPath() + "/models/online_models/online_models.json";
+        QString fullPath = QString::fromUtf8(APP_PATH) + "/models/online_models/online_models.json";
         QFile file(fullPath);
         if (!file.exists()) {
             qWarning() << "No local JSON file found for:" << fullPath;

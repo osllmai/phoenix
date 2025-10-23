@@ -24,6 +24,7 @@
 #include "./model/online/onlinemodel.h"
 #include "./model/BackendType.h"
 #include "./model/company.h"
+#include "config.h"
 
 class Database: public QObject
 {

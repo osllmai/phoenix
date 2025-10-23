@@ -29,7 +29,7 @@ void SpeechToTextWorker::process()
 #endif
 
     QString deviceFolder = m_cuda ? "cuda-device" : "cpu-device";
-    QString exePath = QCoreApplication::applicationDirPath()
+    QString exePath = QString::fromUtf8(APP_PATH)
                       + "/whisper/" + deviceFolder + "/" + exeFileName;
 
     if (!QFileInfo::exists(exePath)) {
@@ -42,7 +42,7 @@ void SpeechToTextWorker::process()
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     QString currentPath = env.value("LD_LIBRARY_PATH");
     env.insert("LD_LIBRARY_PATH",
-               QCoreApplication::applicationDirPath() +
+               QString::fromUtf8(APP_PATH) +
                    (currentPath.isEmpty() ? "" : ":" + currentPath));
     process.setProcessEnvironment(env);
 #endif

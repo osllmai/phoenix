@@ -5,6 +5,7 @@
 #include <QString>
 #include <QProcess>
 #include <atomic>
+#include "config.h"
 
 class SpeechToTextWorker : public QObject
 {
