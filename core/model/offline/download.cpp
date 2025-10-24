@@ -97,28 +97,33 @@ void Download::onDownloadFinished() {
         return;
     }
 
-    QFileInfo fi(path);
-    QDir().mkpath(fi.path());
-    QFile file(path);
+    qCDebug(logDownloadModel) << "Successfully to: " << path;
+    emit downloadFinished(m_id);
 
-    if (!file.open(QIODevice::WriteOnly)) {
-        QString err = QStringLiteral("Cannot write to file: %1 (%2)").arg(path, file.errorString());
-        qCWarning(logDownloadModel) << err;
-        emit downloadFailed(m_id, err);
-    } else {
-        QByteArray data = m_reply->readAll();
-        qint64 written = file.write(data);
-        file.close();
+    // QFileInfo fi(path);
+    // QDir().mkpath(fi.path());
+    // QFile file(path);
 
-        if (written == data.size()) {
-            qCDebug(logDownloadModel) << "Successfully wrote" << written << "bytes to" << path;
-            emit downloadFinished(m_id);
-        } else {
-            QString err = QStringLiteral("Incomplete write: %1/%2 bytes").arg(written).arg(data.size());
-            qCWarning(logDownloadModel) << err;
-            emit downloadFailed(m_id, err);
-        }
-    }
+    // if (!file.open(QIODevice::WriteOnly)) {
+    //     QString err = QStringLiteral("Cannot write to file: %1 (%2)").arg(path, file.errorString());
+    //     qCWarning(logDownloadModel) << err;
+    //     emit downloadFailed(m_id, err);
+    // } else {
+    //     QByteArray data = m_reply->readAll();
+    //     qint64 written = file.write(data);
+    //     qCDebug(logDownloadModel) << "Successfully wrote" << written << "bytes to" << path;
+    //     emit downloadFinished(m_id);
+    //     file.close();
+
+    //     // if (written == data.size()) {
+    //     //     qCDebug(logDownloadModel) << "Successfully wrote" << written << "bytes to" << path;
+    //     //     emit downloadFinished(m_id);
+    //     // } else {
+    //     //     QString err = QStringLiteral("Incomplete write: %1/%2 bytes").arg(written).arg(data.size());
+    //     //     qCWarning(logDownloadModel) << err;
+    //     //     emit downloadFailed(m_id, err);
+    //     // }
+    // }
 
     m_reply->deleteLater();
     m_reply = nullptr;
