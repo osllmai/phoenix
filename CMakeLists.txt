@@ -54,19 +54,21 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-
-# Set the target and icon resources
 if(WIN32)
     set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phonicICOLink.rc")
 elseif(APPLE)
     set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.icns")
+
+    set(MACOSX_BUNDLE_ICON_FILE phoenix.icns)
+
+    set_source_files_properties(${APP_ICON_RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 else()
     set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.png")
 endif()
 
 
-
 qt_add_executable(app${APP_NAME}
+    MACOSX_BUNDLE
     core/main.cpp
     ${APP_ICON_RESOURCE}
 
@@ -785,12 +787,17 @@ endif()
 
 # ---- macOS bundle settings ----
 if(APPLE)
-    set_target_properties(appphoenix PROPERTIES
+    set_target_properties(app${APP_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/Info.plist"
-        RESOURCE "${APP_ICON_RESOURCE}"
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/media/image_company/Info.plist.in"
+        MACOSX_BUNDLE_ICON_FILE phoenix.icns
+    )
+    set_source_files_properties(
+        "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.icns"
+        PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
     )
 endif()
+
 
 # ---- Install the executable and resources ----
 install(TARGETS app${APP_NAME}
@@ -807,6 +814,7 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
+
 
 # Copy company.json
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)

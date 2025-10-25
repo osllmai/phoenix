@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Phoenix</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>Phoenix</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>ai.osllm.phoenix</string>
+
+    <key>CFBundleVersion</key>
+    <string>0.1.33</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.33</string>
+
+    <key>CFBundleExecutable</key>
+    <string>appPhoenix</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleSignature</key>
+    <string>????</string>
+
+    <key>LSMinimumSystemVersion</key>
+    <string>11.0</string> <!-- macOS Big Sur or later -->
+
+    <key>CFBundleIconFile</key>
+    <string>phoenix.icns</string>
+
+    <key>NSHumanReadableCopyright</key>
+    <string>© 2025 Osllm AI. All rights reserved.</string>
+
+    <key>CFBundleGetInfoString</key>
+    <string>Phoenix — Local AI Chatbot built with Qt/QML. Developed by Osllm AI.</string>
+
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.developer-tools</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Phoenix uses the microphone for real-time speech recognition and voice input.</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>Phoenix may use the camera for vision-based AI features or user identification (if enabled).</string>
+
+    <key>NSDocumentsFolderUsageDescription</key>
+    <string>Phoenix needs access to your documents folder to save chat histories and AI model data.</string>
+
+    <key>NSDownloadsFolderUsageDescription</key>
+    <string>Phoenix may download local models or updates from secure sources.</string>
+
+    <key>NSNetworkVolumesUsageDescription</key>
+    <string>Phoenix can read and write models from network drives when configured by the user.</string>
+
+    <key>NSRemovableVolumesUsageDescription</key>
+    <string>Phoenix may use external drives to load or store AI model files.</string>
+
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Phoenix can communicate with local APIs or socket servers for LLM interaction.</string>
+
+    <key>NSUserTrackingUsageDescription</key>
+    <string>Phoenix does not track users; local usage data remains on your device.</string>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+
+    <key>NSHighResolutionCapable</key>
+    <true/>
+
+    <key>LSUIElement</key>
+    <false/>
+
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>phoenix</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>phoenix</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>

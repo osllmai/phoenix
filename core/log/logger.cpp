@@ -166,7 +166,13 @@ void Logger::writeSessionHeader(QFile* file) {
     out.flush();
 }
 
-QString Logger::logDir() const{return m_logDir;}
+QString Logger::logDir() const{
+#if defined(Q_OS_WIN)
+    return "file:///" + m_logDir;
+#else
+    return "file://" + m_logDir;
+#endif
+}
 
 void Logger::writeLog(const QString& category, QtMsgType type, const QString& message, const QMessageLogContext& context) {
 
