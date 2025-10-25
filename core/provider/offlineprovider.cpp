@@ -51,7 +51,91 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                    QString::fromUtf8(APP_PATH) +
                        (currentPath.isEmpty() ? "" : ":" + currentPath));
         m_process->setProcessEnvironment(env);
+
+#elif defined(Q_OS_MAC)
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+        QString defaultPath =
+            "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:"
+            "/Library/Apple/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin";
+        QString defaultLibPath =
+            "/usr/local/lib:/opt/homebrew/lib:/System/Library/Frameworks:/Library/Frameworks";
+
+        QString appPath = QString::fromUtf8(APP_PATH);
+        QString currentPath = env.value("PATH");
+        QString currentLibPath = env.value("DYLD_LIBRARY_PATH");
+
+        env.insert("PATH",
+                   QString("%1:%2:%3")
+                       .arg(appPath)
+                       .arg(defaultPath)
+                       .arg(currentPath));
+
+        env.insert("DYLD_LIBRARY_PATH",
+                   QString("%1:%2:%3")
+                       .arg(appPath)
+                       .arg(defaultLibPath)
+                       .arg(currentLibPath));
+
+        env.insert("HOME", QDir::homePath());
+        env.insert("PWD", QDir::currentPath());
+        env.insert("TMPDIR", QDir::tempPath());
+        env.insert("LANG", "en_US.UTF-8");
+        env.insert("LC_ALL", "en_US.UTF-8");
+        env.insert("SHELL", "/bin/zsh");
+        env.insert("USER", qEnvironmentVariable("USER"));
+        env.insert("LOGNAME", qEnvironmentVariable("LOGNAME"));
+        env.insert("TERM", "xterm-256color");
+        env.insert("TERM_PROGRAM", "Apple_Terminal");
+        env.insert("TERM_SESSION_ID", "qt_simulated_session");
+
+        env.insert("GGML_METAL_PATH_RESOURCES", appPath);
+        env.insert("GGML_METAL_DEVICE", "auto");
+        env.insert("GGML_METAL_TUNER_PATH", QDir::tempPath() + "/ggml-metal-tuners");
+        env.insert("GGML_METAL_ENABLE_LOGGING", "1");
+
+        env.insert("XPC_FLAGS", "0x0");
+        env.insert("XPC_SERVICE_NAME", "0");
+        env.insert("__CFBundleIdentifier", "com.qt.offlineprovider");
+        env.insert("CFPROCESS_PATH", appPath);
+        env.insert("CFLOG_FORCE_STDERR", "YES");
+
+        {
+            QProcess sysInfo;
+            sysInfo.start("/usr/sbin/system_profiler", {"SPHardwareDataType"});
+            sysInfo.waitForFinished(2000);
+            QString hw = QString::fromUtf8(sysInfo.readAllStandardOutput()).trimmed();
+            env.insert("SYSTEM_HARDWARE_INFO", hw);
+        }
+
+        {
+            QProcess gpuInfo;
+            gpuInfo.start("/usr/sbin/system_profiler", {"SPDisplaysDataType"});
+            gpuInfo.waitForFinished(2000);
+            QString gpu = QString::fromUtf8(gpuInfo.readAllStandardOutput()).trimmed();
+            env.insert("SYSTEM_GPU_INFO", gpu);
+        }
+
+        {
+            QProcess cpuInfo;
+            cpuInfo.start("sysctl", {"-n", "machdep.cpu.brand_string"});
+            cpuInfo.waitForFinished(1000);
+            QString cpu = QString::fromUtf8(cpuInfo.readAllStandardOutput()).trimmed();
+            env.insert("SYSTEM_CPU_BRAND", cpu);
+        }
+
+        env.insert("DISPLAY", "/private/tmp/com.apple.launchd.display");
+        env.insert("QT_MAC_WANTS_LAYER", "1");
+
+        m_process->setProcessEnvironment(env);
+
+        qCInfo(logOfflineProvider) << "macOS PATH:" << env.value("PATH");
+        qCInfo(logOfflineProvider) << "macOS DYLD_LIBRARY_PATH:" << env.value("DYLD_LIBRARY_PATH");
+        qCInfo(logOfflineProvider) << "CPU:" << env.value("SYSTEM_CPU_BRAND");
+        qCInfo(logOfflineProvider) << "GPU info length:" << env.value("SYSTEM_GPU_INFO").length();
 #endif
+
+
 
         state = ProviderState::LoadingModel;
         qCInfo(logOfflineProvider) << "Starting process at:" << exePath << "with arguments:" << arguments;
@@ -87,6 +171,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
             if (m_process->waitForReadyRead(400)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
+                qInfo()<< outputString.trimmed();
 
                 if (outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")) {
                     QString cleanedOutput = outputString.trimmed();

@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QProcess>
+#include <QDir>
 #include "config.h"
 
 #include <QLoggingCategory>
