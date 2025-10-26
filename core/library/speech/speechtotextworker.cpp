@@ -28,9 +28,15 @@ void SpeechToTextWorker::process()
     exeFileName = "whisper-cli";  // macOS و Linux
 #endif
 
-    QString deviceFolder = m_cuda ? "cuda-device" : "cpu-device";
+    QString deviceFolder;
+#if defined(Q_OS_MAC)
+    deviceFolder = "whisper/";
+#else
+    deviceFolder = m_cuda ? "cuda-device/" : "cpu-device/";
+#endif
+
     QString exePath = QString::fromUtf8(APP_PATH)
-                      + "/whisper/" + deviceFolder + "/" + exeFileName;
+                      + "/whisper/" + deviceFolder + exeFileName;
 
     if (!QFileInfo::exists(exePath)) {
         emit errorOccurred("Whisper executable not found: " + exePath);

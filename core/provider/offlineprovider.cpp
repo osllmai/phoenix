@@ -25,6 +25,7 @@ void OfflineProvider::stop() {
     _stopFlag = true;
 }
 
+
 void OfflineProvider::loadModel(const QString &model, const QString &key) {
     qCInfo(logOfflineProvider) << "Loading model with key:" << key;
 
@@ -53,15 +54,31 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         m_process->setProcessEnvironment(env);
 
 #elif defined(Q_OS_MAC)
-        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        // --- Step 1: Load the full environment from interactive shell ---
+        QProcessEnvironment env;
+        QProcess getEnvProc;
+        getEnvProc.start("/bin/zsh", QStringList() << "-i" << "-c" << "printenv");
+        getEnvProc.waitForFinished();
 
+        QString envOutput = QString::fromUtf8(getEnvProc.readAllStandardOutput());
+        QStringList lines = envOutput.split("\n", Qt::SkipEmptyParts);
+
+        for (const QString &line : lines) {
+            int idx = line.indexOf('=');
+            if (idx > 0) {
+                QString keyName = line.left(idx);
+                QString value = line.mid(idx + 1);
+                env.insert(keyName, value);
+            }
+        }
+
+        // --- Step 2: Add APP_PATH and default paths ---
+        QString appPath = QString::fromUtf8(APP_PATH);
         QString defaultPath =
-            "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:"
-            "/Library/Apple/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin";
+            "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin";
         QString defaultLibPath =
             "/usr/local/lib:/opt/homebrew/lib:/System/Library/Frameworks:/Library/Frameworks";
 
-        QString appPath = QString::fromUtf8(APP_PATH);
         QString currentPath = env.value("PATH");
         QString currentLibPath = env.value("DYLD_LIBRARY_PATH");
 
@@ -77,6 +94,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                        .arg(defaultLibPath)
                        .arg(currentLibPath));
 
+        // --- Step 3: Add critical environment values ---
         env.insert("HOME", QDir::homePath());
         env.insert("PWD", QDir::currentPath());
         env.insert("TMPDIR", QDir::tempPath());
@@ -89,17 +107,13 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         env.insert("TERM_PROGRAM", "Apple_Terminal");
         env.insert("TERM_SESSION_ID", "qt_simulated_session");
 
+        // --- Step 4: Add GGML Metal-related variables ---
         env.insert("GGML_METAL_PATH_RESOURCES", appPath);
         env.insert("GGML_METAL_DEVICE", "auto");
         env.insert("GGML_METAL_TUNER_PATH", QDir::tempPath() + "/ggml-metal-tuners");
         env.insert("GGML_METAL_ENABLE_LOGGING", "1");
 
-        env.insert("XPC_FLAGS", "0x0");
-        env.insert("XPC_SERVICE_NAME", "0");
-        env.insert("__CFBundleIdentifier", "com.qt.offlineprovider");
-        env.insert("CFPROCESS_PATH", appPath);
-        env.insert("CFLOG_FORCE_STDERR", "YES");
-
+        // --- Step 5: Get system info for debugging ---
         {
             QProcess sysInfo;
             sysInfo.start("/usr/sbin/system_profiler", {"SPHardwareDataType"});
@@ -127,6 +141,12 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         env.insert("DISPLAY", "/private/tmp/com.apple.launchd.display");
         env.insert("QT_MAC_WANTS_LAYER", "1");
 
+        // --- Step 6: Debug - print all environment variables ---
+        for (auto key : env.keys()) {
+            qDebug() << key << "=" << env.value(key);
+        }
+
+        // --- Step 7: Apply environment to QProcess ---
         m_process->setProcessEnvironment(env);
 
         qCInfo(logOfflineProvider) << "macOS PATH:" << env.value("PATH");
@@ -135,11 +155,10 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         qCInfo(logOfflineProvider) << "GPU info length:" << env.value("SYSTEM_GPU_INFO").length();
 #endif
 
-
-
         state = ProviderState::LoadingModel;
         qCInfo(logOfflineProvider) << "Starting process at:" << exePath << "with arguments:" << arguments;
 
+        // --- Handle sending prompts ---
         connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText, const QString &paramBlock) {
             qCInfo(logOfflineProvider) << "Sending prompt to process. State:" << static_cast<int>(state);
             if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
@@ -158,6 +177,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
             }
         });
 
+        // --- Start process ---
         m_process->start(exePath, arguments);
         if (!m_process->waitForStarted()) {
             qCCritical(logOfflineProvider) << "Failed to start process:" << m_process->errorString();
@@ -167,11 +187,12 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 
         qCInfo(logOfflineProvider) << "Process started successfully.";
 
+        // --- Main reading loop ---
         while (m_process->state() == QProcess::Running) {
             if (m_process->waitForReadyRead(400)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
-                qInfo()<< outputString.trimmed();
+                qInfo() << outputString.trimmed();
 
                 if (outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")) {
                     QString cleanedOutput = outputString.trimmed();
@@ -185,7 +206,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 }
 
                 switch (state) {
-                case ProviderState::LoadingModel: {
+                case ProviderState::LoadingModel:
                     if (outputString.trimmed().endsWith("__LoadingModel__Finished__")) {
                         qCInfo(logOfflineProvider) << "Model loaded successfully.";
                         state = ProviderState::WaitingForPrompt;
@@ -214,7 +235,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                         }
                     }
                     break;
-                }
 
                 case ProviderState::SendingPrompt:
                     qCInfo(logOfflineProvider) << "Prompt sent. Returning to WaitingForPrompt.";

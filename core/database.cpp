@@ -662,7 +662,7 @@ void Database::readModel(const QList<Company*> companys){
 
         QJsonArray jsonArray = document.array();
 
-        if(company->backend() == BackendType::OfflineModel){
+        if (company->backend() == BackendType::OfflineModel) {
 
             for (const QJsonValue &value : jsonArray) {
 
@@ -685,33 +685,37 @@ void Database::readModel(const QList<Company*> companys){
 
                 bool downloadFinished = false;
                 if (!query.next()) {
-                    id = insertModel(obj["name"].toString(),"");
-                }else{
-
+                    id = insertModel(obj["name"].toString(), "");
+                } else {
                     id = query.value(0).toInt();
                     name = query.value(1).toString();
                     key = query.value(2).toString();
                     addDate = query.value(3).toDateTime();
                     isLike = query.value(4).toBool();
-                    if(key != "")
+
+                    if (!key.isEmpty() && QFile::exists(key))
                         downloadFinished = true;
                 }
 
-                if(id == -1)
+                if (id == -1)
                     continue;
 
                 emit addOfflineModel(company, obj["filesize"].toDouble(), obj["ramrequired"].toInt(),
-                                   obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
-                                   obj["quant"].toString(),0.0, false, downloadFinished,
-
-                                   id, obj["modelName"].toString(), name, key, addDate, isLike,
-                                   obj["type"].toString(), BackendType::OfflineModel,
-                                   "qrc:/media/image_company/"+company->icon(), obj["description"].toString(), obj["promptTemplate"].toString(),
-                                   obj["systemPrompt"].toString(), QDateTime::currentDateTime(), obj["recommended"].toBool(), "");
+                                     obj["filename"].toString(), obj["url"].toString(), obj["parameters"].toString(),
+                                     obj["quant"].toString(), 0.0, false, downloadFinished,
+                                     id, obj["modelName"].toString(), name, key, addDate, isLike,
+                                     obj["type"].toString(), BackendType::OfflineModel,
+                                     "qrc:/media/image_company/" + company->icon(),
+                                     obj["description"].toString(),
+                                     obj["promptTemplate"].toString(),
+                                     obj["systemPrompt"].toString(),
+                                     QDateTime::currentDateTime(),
+                                     obj["recommended"].toBool(), "");
 
                 allID.append(id);
             }
         }
+
     }
 
     QList<int> existId = readOnlineCompany();

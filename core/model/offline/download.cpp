@@ -97,37 +97,26 @@ void Download::onDownloadFinished() {
         return;
     }
 
-    qCDebug(logDownloadModel) << "Successfully to: " << path;
-    emit downloadFinished(m_id);
+    QFileInfo fi(path);
+    QDir dir;
+    if (!dir.exists(fi.path())) {
+        dir.mkpath(fi.path());
+    }
 
-    // QFileInfo fi(path);
-    // QDir().mkpath(fi.path());
-    // QFile file(path);
+    bool fileExists = QFile::exists(path);
 
-    // if (!file.open(QIODevice::WriteOnly)) {
-    //     QString err = QStringLiteral("Cannot write to file: %1 (%2)").arg(path, file.errorString());
-    //     qCWarning(logDownloadModel) << err;
-    //     emit downloadFailed(m_id, err);
-    // } else {
-    //     QByteArray data = m_reply->readAll();
-    //     qint64 written = file.write(data);
-    //     qCDebug(logDownloadModel) << "Successfully wrote" << written << "bytes to" << path;
-    //     emit downloadFinished(m_id);
-    //     file.close();
-
-    //     // if (written == data.size()) {
-    //     //     qCDebug(logDownloadModel) << "Successfully wrote" << written << "bytes to" << path;
-    //     //     emit downloadFinished(m_id);
-    //     // } else {
-    //     //     QString err = QStringLiteral("Incomplete write: %1/%2 bytes").arg(written).arg(data.size());
-    //     //     qCWarning(logDownloadModel) << err;
-    //     //     emit downloadFailed(m_id, err);
-    //     // }
-    // }
+    if (fileExists) {
+        qCDebug(logDownloadModel) << "Verified file exists at:" << path;
+        emit downloadFinished(m_id);
+    } else {
+        qCWarning(logDownloadModel) << "File not found after download:" << path;
+        emit downloadFailed(m_id, "File not found after download");
+    }
 
     m_reply->deleteLater();
     m_reply = nullptr;
 }
+
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
     if (bytesTotal <= 0)

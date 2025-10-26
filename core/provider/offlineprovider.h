@@ -11,6 +11,15 @@
 #include <QLoggingCategory>
 #include "logcategories.h"
 
+#include <QProcessEnvironment>
+#include <QLoggingCategory>
+
+#if defined(Q_OS_MAC)
+#include <QFile>
+#include <QTextStream>
+#include <QStandardPaths>
+#endif
+
 class OfflineProvider : public Provider
 {
     Q_OBJECT
