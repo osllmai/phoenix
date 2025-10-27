@@ -693,8 +693,12 @@ void Database::readModel(const QList<Company*> companys){
                     addDate = query.value(3).toDateTime();
                     isLike = query.value(4).toBool();
 
-                    if (!key.isEmpty() && QFile::exists(key))
+                    if (!key.isEmpty() && !QFile::exists(key)){
+                        updateKeyModel(id,"");
+                        key = "";
+                    }else if (!key.isEmpty() && QFile::exists(key)){
                         downloadFinished = true;
+                    }
                 }
 
                 if (id == -1)
