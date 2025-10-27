@@ -4,8 +4,8 @@ Download::Download(int id, const QString &url, const QString &modelPath, QObject
     : QObject(parent), m_id(id), m_url(url), m_modelPath(QDir::toNativeSeparators(modelPath))
 {
     qCDebug(logDownloadModel) << "Initialized Download object with ID:" << m_id
-                         << "URL:" << m_url
-                         << "Path:" << m_modelPath;
+                              << "URL:" << m_url
+                              << "Path:" << m_modelPath;
 }
 
 Download::~Download() {
@@ -13,6 +13,10 @@ Download::~Download() {
         qCDebug(logDownloadModel) << "Destructor: Aborting unfinished download ID:" << m_id;
         m_reply->abort();
         m_reply->deleteLater();
+    }
+    if (m_file && m_file->isOpen()) {
+        m_file->close();
+        delete m_file;
     }
 }
 
@@ -37,13 +41,29 @@ void Download::downloadModel() {
         return;
     }
 
+    QFileInfo fi(m_modelPath);
+    QDir dir;
+    if (!dir.exists(fi.path())) {
+        dir.mkpath(fi.path());
+    }
+
+    m_file = new QFile(m_modelPath);
+    if (!m_file->open(QIODevice::WriteOnly)) {
+        QString err = QStringLiteral("Cannot open file for writing: %1").arg(m_file->errorString());
+        qCWarning(logDownloadModel) << err;
+        emit downloadFailed(m_id, err);
+        delete m_file;
+        m_file = nullptr;
+        return;
+    }
+
     QNetworkRequest request(url);
     request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
 
     m_reply = m_manager.get(request);
-    m_reply->setProperty("modelPath", m_modelPath);
 
     connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
+    connect(m_reply, &QNetworkReply::readyRead, this, &Download::onReadyRead, Qt::QueuedConnection);
     connect(m_reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
 
     connect(m_reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){
@@ -63,12 +83,25 @@ void Download::downloadModel() {
 #endif
 }
 
+void Download::onReadyRead() {
+    if (m_file && m_reply) {
+        QByteArray data = m_reply->readAll();
+        m_file->write(data);
+    }
+}
+
 void Download::cancelDownload() {
     if (m_reply) {
         qCDebug(logDownloadModel) << "Cancelling download ID:" << m_id;
         m_reply->abort();
         m_reply->deleteLater();
         m_reply = nullptr;
+    }
+
+    if (m_file) {
+        m_file->close();
+        delete m_file;
+        m_file = nullptr;
     }
 }
 
@@ -86,47 +119,31 @@ void Download::onDownloadFinished() {
     if (!m_reply)
         return;
 
-    QString path = m_reply->property("modelPath").toString();
-    qCDebug(logDownloadModel) << "Download finished for ID:" << m_id << "Saving to:" << path;
+    qCDebug(logDownloadModel) << "Download finished for ID:" << m_id;
 
     if (m_reply->error() != QNetworkReply::NoError) {
         qCWarning(logDownloadModel) << "Download failed with error:" << m_reply->errorString();
         emit downloadFailed(m_id, m_reply->errorString());
-        m_reply->deleteLater();
-        m_reply = nullptr;
-        return;
-    }
-
-    QFileInfo fi(path);
-    QDir dir;
-    if (!dir.exists(fi.path())) {
-        dir.mkpath(fi.path());
-    }
-
-    bool fileExists = QFile::exists(path);
-
-    if (fileExists) {
-        qCDebug(logDownloadModel) << "Verified file exists at:" << path;
-        emit downloadFinished(m_id);
     } else {
-        qCWarning(logDownloadModel) << "File not found after download:" << path;
-        emit downloadFailed(m_id, "File not found after download");
+        if (m_file) {
+            m_file->flush();
+            m_file->close();
+        }
+        qCDebug(logDownloadModel) << "File saved successfully at:" << m_modelPath;
+        emit downloadFinished(m_id);
     }
 
     m_reply->deleteLater();
     m_reply = nullptr;
-}
 
+    if (m_file) {
+        delete m_file;
+        m_file = nullptr;
+    }
+}
 
 void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
     if (bytesTotal <= 0)
         return;
-
-    double percent = (bytesReceived * 100.0) / bytesTotal;
-
-    if (percent > 99.9 && bytesReceived < bytesTotal) {
-        qCDebug(logDownloadModel) << "Preventing artificial delay near completion...";
-    }
-
     emit downloadProgress(m_id, bytesReceived, bytesTotal);
 }

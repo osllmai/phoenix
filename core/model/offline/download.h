@@ -22,6 +22,7 @@ public:
     ~Download() override;
 
     void downloadModel();
+    void onReadyRead();
     void cancelDownload();
     void removeModel();
 
@@ -40,6 +41,7 @@ private:
     int m_id;
     QNetworkAccessManager m_manager;
     QNetworkReply *m_reply = nullptr;
+    QFile *m_file = nullptr;
     QString m_url;
     QString m_modelPath;
 };
