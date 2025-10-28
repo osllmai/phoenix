@@ -54,106 +54,24 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
         m_process->setProcessEnvironment(env);
 
 #elif defined(Q_OS_MAC)
-        // --- Step 1: Load the full environment from interactive shell ---
-        QProcessEnvironment env;
-        QProcess getEnvProc;
-        getEnvProc.start("/bin/zsh", QStringList() << "-i" << "-c" << "printenv");
-        getEnvProc.waitForFinished();
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-        QString envOutput = QString::fromUtf8(getEnvProc.readAllStandardOutput());
-        QStringList lines = envOutput.split("\n", Qt::SkipEmptyParts);
+        QString path = env.value("PATH");
+        QString libPath = env.value("DYLD_LIBRARY_PATH");
 
-        for (const QString &line : lines) {
-            int idx = line.indexOf('=');
-            if (idx > 0) {
-                QString keyName = line.left(idx);
-                QString value = line.mid(idx + 1);
-                env.insert(keyName, value);
-            }
-        }
-
-        // --- Step 2: Add APP_PATH and default paths ---
         QString appPath = QString::fromUtf8(APP_PATH);
-        QString defaultPath =
-            "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin";
-        QString defaultLibPath =
-            "/usr/local/lib:/opt/homebrew/lib:/System/Library/Frameworks:/Library/Frameworks";
 
-        QString currentPath = env.value("PATH");
-        QString currentLibPath = env.value("DYLD_LIBRARY_PATH");
+        env.insert("PATH", appPath + (path.isEmpty() ? "" : ":" + path));
+        env.insert("DYLD_LIBRARY_PATH", appPath + (libPath.isEmpty() ? "" : ":" + libPath));
 
-        env.insert("PATH",
-                   QString("%1:%2:%3")
-                       .arg(appPath)
-                       .arg(defaultPath)
-                       .arg(currentPath));
-
-        env.insert("DYLD_LIBRARY_PATH",
-                   QString("%1:%2:%3")
-                       .arg(appPath)
-                       .arg(defaultLibPath)
-                       .arg(currentLibPath));
-
-        // --- Step 3: Add critical environment values ---
-        env.insert("HOME", QDir::homePath());
-        env.insert("PWD", QDir::currentPath());
-        env.insert("TMPDIR", QDir::tempPath());
-        env.insert("LANG", "en_US.UTF-8");
-        env.insert("LC_ALL", "en_US.UTF-8");
-        env.insert("SHELL", "/bin/zsh");
-        env.insert("USER", qEnvironmentVariable("USER"));
-        env.insert("LOGNAME", qEnvironmentVariable("LOGNAME"));
-        env.insert("TERM", "xterm-256color");
-        env.insert("TERM_PROGRAM", "Apple_Terminal");
-        env.insert("TERM_SESSION_ID", "qt_simulated_session");
-
-        // --- Step 4: Add GGML Metal-related variables ---
         env.insert("GGML_METAL_PATH_RESOURCES", appPath);
-        env.insert("GGML_METAL_DEVICE", "auto");
-        env.insert("GGML_METAL_TUNER_PATH", QDir::tempPath() + "/ggml-metal-tuners");
-        env.insert("GGML_METAL_ENABLE_LOGGING", "1");
 
-        // --- Step 5: Get system info for debugging ---
-        {
-            QProcess sysInfo;
-            sysInfo.start("/usr/sbin/system_profiler", {"SPHardwareDataType"});
-            sysInfo.waitForFinished(2000);
-            QString hw = QString::fromUtf8(sysInfo.readAllStandardOutput()).trimmed();
-            env.insert("SYSTEM_HARDWARE_INFO", hw);
-        }
-
-        {
-            QProcess gpuInfo;
-            gpuInfo.start("/usr/sbin/system_profiler", {"SPDisplaysDataType"});
-            gpuInfo.waitForFinished(2000);
-            QString gpu = QString::fromUtf8(gpuInfo.readAllStandardOutput()).trimmed();
-            env.insert("SYSTEM_GPU_INFO", gpu);
-        }
-
-        {
-            QProcess cpuInfo;
-            cpuInfo.start("sysctl", {"-n", "machdep.cpu.brand_string"});
-            cpuInfo.waitForFinished(1000);
-            QString cpu = QString::fromUtf8(cpuInfo.readAllStandardOutput()).trimmed();
-            env.insert("SYSTEM_CPU_BRAND", cpu);
-        }
-
-        env.insert("DISPLAY", "/private/tmp/com.apple.launchd.display");
-        env.insert("QT_MAC_WANTS_LAYER", "1");
-
-        // --- Step 6: Debug - print all environment variables ---
-        for (auto key : env.keys()) {
-            qDebug() << key << "=" << env.value(key);
-        }
-
-        // --- Step 7: Apply environment to QProcess ---
         m_process->setProcessEnvironment(env);
-
-        qCInfo(logOfflineProvider) << "macOS PATH:" << env.value("PATH");
-        qCInfo(logOfflineProvider) << "macOS DYLD_LIBRARY_PATH:" << env.value("DYLD_LIBRARY_PATH");
-        qCInfo(logOfflineProvider) << "CPU:" << env.value("SYSTEM_CPU_BRAND");
-        qCInfo(logOfflineProvider) << "GPU info length:" << env.value("SYSTEM_GPU_INFO").length();
 #endif
+
+        m_process->setWorkingDirectory(QString::fromUtf8(APP_PATH));
+        qCInfo(logOfflineProvider) << "Working directory set to:" << m_process->workingDirectory();
+
 
         state = ProviderState::LoadingModel;
         qCInfo(logOfflineProvider) << "Starting process at:" << exePath << "with arguments:" << arguments;

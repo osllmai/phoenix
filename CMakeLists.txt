@@ -903,4 +903,3 @@ file(GLOB lib_files RELATIVE "${CMAKE_SOURCE_DIR}/resources/providers/local_prov
          configure_file("${full_path}" "${BIN_DIR}/${lib_file}" COPYONLY)
      endif()
  endforeach()
-
