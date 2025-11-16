@@ -19,7 +19,14 @@ bool UpdateChecker::isNewerVersion(const QString &newVersion) {
 
 void UpdateChecker::checkForUpdatesAsync() {
 
-    const QString updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/update/Updates.xml";
+    QString updatesXmlUrl;
+#if defined(Q_OS_LINUX)
+    updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_linux/update/Updates.xml";
+#elif defined(Q_OS_WINDOWS)
+    updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/update/Updates.xml";
+#elif defined(Q_OS_MAC)
+    updatesXmlUrl = "https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_mac/update/Updates.xml";
+#endif
 
     QNetworkRequest request(updatesXmlUrl);
     QNetworkReply *reply = manager->get(request);
@@ -113,6 +120,7 @@ void UpdateChecker::fetchReleaseJson(const QString &version) {
                 if (isNewerVersion(version)) {
                     setNotesLatestVersion(finalNotesLatestVersion.trimmed());
                 } else {
+                    setCurrentDate(date);
                     setNotesCurrentVersion(finalNotesLatestVersion.trimmed());
                 }
                 found = true;
@@ -180,4 +188,12 @@ void UpdateChecker::setLatestVersion(const QString &newLatestVersion){
         return;
     m_latestVersion = newLatestVersion;
     emit latestVersionChanged();
+}
+
+QString UpdateChecker::currentDate() const{return m_currentDate;}
+void UpdateChecker::setCurrentDate(const QString &newCurrentDate){
+    if (m_currentDate == newCurrentDate)
+        return;
+    m_currentDate = newCurrentDate;
+    emit currentDateChanged();
 }

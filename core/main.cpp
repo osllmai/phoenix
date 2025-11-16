@@ -41,24 +41,50 @@
 
 #include "./converttomd.h"
 #include "./updatechecker.h"'
+#include "arxivarticlelist.h"
+
+
+////////////////////////////////////
+#include <QtCore/QUrl>
+#include <QtCore/QCommandLineOption>
+#include <QtCore/QCommandLineParser>
+#include <QStyleHints>
+#include <QScreen>
+#include <QQmlApplicationEngine>
+#include <QtQml/QQmlContext>
+#include <QtWebView/QtWebView>
+
+using namespace Qt::StringLiterals;
+
+#include "./utils.h"
 
 int main(int argc, char *argv[])
 {
     try {
+//////////////////////////////////////////////
+        QtWebView::initialize();
+/////////////////////////////////////////////
         QGuiApplication app(argc, argv);
 
-        QCoreApplication::setOrganizationName("nemati.ai");
+        QCoreApplication::setOrganizationName("osllm.ai");
         QCoreApplication::setOrganizationDomain("indox.io");
         QCoreApplication::setApplicationName(APP_NAME);
         QCoreApplication::setApplicationVersion(APP_VERSION);
 
 #ifdef Q_OS_MAC
-        app.setWindowIcon(QIcon("qrc:/media/image_company/phoenix.icns"));
+        app.setWindowIcon(QIcon(":/image_company/phoenix.icns"));
 #elif defined(Q_OS_WINDOWS)
-        app.setWindowIcon(QIcon("qrc:/media/image_company/phoenix.ico"));
+        app.setWindowIcon(QIcon(":/image_company/phoenix.ico"));
 #else
-        app.setWindowIcon(QIcon("qrc:/media/image_company/phoenix.svg"));
+        app.setWindowIcon(QIcon(":/image_company/phoenix.svg"));
 #endif
+
+
+
+
+
+
+
 
         int fontId = QFontDatabase::addApplicationFont(":/fonts/DMSans-Regular.ttf");
         if (fontId == -1) {
@@ -71,16 +97,75 @@ int main(int argc, char *argv[])
         Logger::instance().setMinLogLevel(QtDebugMsg);
         Logger::instance().installMessageHandler();
 
+
+
+
+
+
+        ///////////////////////////
+        QCommandLineParser parser;
+        QCoreApplication::setApplicationVersion(QT_VERSION_STR);
+        parser.setApplicationDescription(QGuiApplication::applicationDisplayName());
+        parser.addHelpOption();
+        parser.addVersionOption();
+        parser.addPositionalArgument("url"_L1, "The initial URL to open."_L1);
+        parser.process(QCoreApplication::arguments());
+        const QString initialUrl = parser.positionalArguments().value(0, "https://www.google.com/"_L1);
+        /////////////////////////////
+
+
+
+
+
         QQmlApplicationEngine engine;
         engine.rootContext()->setContextProperty("QmlEngine", &engine);
 
         engine.rootContext()->setContextProperty("Logger", &Logger::instance());
+
+
+
+        //////////////////////////////////////
+        QQmlContext *context = engine.rootContext();
+        context->setContextProperty("utils"_L1, new Utils(&engine));
+        context->setContextProperty("initialUrl"_L1,
+                                    Utils::fromUserInput(initialUrl));
+
+        QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
+        if (!QGuiApplication::styleHints()->showIsFullScreen()) {
+            const QSize size = geometry.size() * 4 / 5;
+            const QSize offset = (geometry.size() - size) / 2;
+            const QPoint pos = geometry.topLeft() + QPoint(offset.width(), offset.height());
+            geometry = QRect(pos, size);
+        }
+
+        engine.setInitialProperties(QVariantMap{{"x"_L1, geometry.x()},
+                                                {"y"_L1, geometry.y()},
+                                                {"width"_L1, geometry.width()},
+                                                {"height"_L1, geometry.height()}});
+        /////////////////////////////////////////
+
+
+
+
+        ArxivArticleList arxivModel;
+        engine.rootContext()->setContextProperty("arxivModel", &arxivModel);
+        arxivModel.setSearchQuery("testCase");
+
+
 
         QStringList fontFamilies = QFontDatabase::families();
         engine.rootContext()->setContextProperty("availableFonts", fontFamilies);
 
         bool isDarkTheme = app.palette().color(QPalette::Window).value() < 128;
         engine.rootContext()->setContextProperty("isDarkTheme", isDarkTheme);
+
+#ifdef Q_OS_MAC
+        engine.rootContext()->setContextProperty("systemType", "MAC");
+#elif defined(Q_OS_WINDOWS)
+        engine.rootContext()->setContextProperty("systemType", "Windows");
+#else
+        engine.rootContext()->setContextProperty("systemType", "Mac");
+#endif
 
         SpeechToText* speechToText = SpeechToText::instance(&engine);
         engine.rootContext()->setContextProperty("speechToText", speechToText);

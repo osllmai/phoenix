@@ -64,6 +64,14 @@ public slots:
     void updateTextMessage(const int idConversation, const int messageId, const QString &text);
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
+    // void readSQLConversation();
+    // void insertSQLConversation(const QString &title, const QString &description, const QDateTime date, const QString &icon,
+    //                         const bool isPinned, const bool selectConversation);
+    // void deleteSQLConversation(const int id);
+    // void updateDateSQLConversation(const int id, const QString &description, const QString &icon);
+    // void updateTitleSQLConversation(const int id, const QString &title);
+    // void updateIsPinnedSQLConversation(const int id, const bool isPinned);
+
 signals:
     void addOnlineProvider(const int id, const QString& name, const QString& icon, const bool isLike,
                            const BackendType backend, const QString& filePath, QString key);

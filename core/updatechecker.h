@@ -21,6 +21,7 @@ class UpdateChecker : public QObject
     Q_OBJECT
     Q_PROPERTY(QString currentVersion READ currentVersion CONSTANT FINAL)
     Q_PROPERTY(QString notesCurrentVersion READ notesCurrentVersion NOTIFY notesCurrentVersionChanged FINAL)
+    Q_PROPERTY(QString currentDate READ currentDate NOTIFY currentDateChanged FINAL)
     Q_PROPERTY(bool isUpdateAvailable READ isUpdateAvailable NOTIFY isUpdateAvailableChanged FINAL)
     Q_PROPERTY(QString latestVersion READ getLatestVersion NOTIFY latestVersionChanged FINAL)
     Q_PROPERTY(QString notesLatestVersion READ getNotesLatestVersion NOTIFY notesLatestVersionChanged FINAL)
@@ -44,11 +45,15 @@ public:
     QString getNotesLatestVersion() const;
     void setNotesLatestVersion(const QString &newNotesLatestVersion);
 
+    QString currentDate() const;
+    void setCurrentDate(const QString &newCurrentDate);
+
 signals:
     void isUpdateAvailableChanged();
     void latestVersionChanged();
     void notesLatestVersionChanged();
     void notesCurrentVersionChanged();
+    void currentDateChanged();
 
 private slots:
     void onUpdatesXmlFinished(QNetworkReply *reply);
@@ -59,6 +64,7 @@ private:
 
     QNetworkAccessManager *manager;
     const QString m_currentVersion = APP_VERSION;
+    QString m_currentDate = "";
     QString m_notesCurrentVersion = "";
     const QString m_updateUrl = "https://raw.githubusercontent.com/osllmai/phoenix/master/release.json";
     QString m_latestVersion = APP_VERSION;
