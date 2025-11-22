@@ -70,6 +70,12 @@ ApplicationWindow {
     }
 
     font.family: "DM Sans"
+    property string currentDate: updateChecker.currentDate
+     onCurrentDateChanged: {
+         if(window.currentDate !== "")
+            updateChecker.currentDate =  window.currentDate
+     }
+
 
     Settings {
         id: appSettings
@@ -83,6 +89,7 @@ ApplicationWindow {
         property alias fontFamily: window.font.family
         property alias modelPageView: window.modelPageView
         property alias isOpenMenu: window.isOpenMenu
+        property alias currentDate: window.currentDate
 
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)

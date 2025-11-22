@@ -46,17 +46,17 @@ StackLayout {
         sourceComponent: DeveloperView { }
     }
 
-    Loader {
-        id: sqlLoader
-        active: page.currentIndex === 4 || item !== null
-        visible: page.currentIndex === 4
-        sourceComponent: SQLView { }
-    }
+    // Loader {
+    //     id: sqlLoader
+    //     active: page.currentIndex === 4 || item !== null
+    //     visible: page.currentIndex === 4
+    //     sourceComponent: SQLView { }
+    // }
 
-    Loader {
-        id: pdfLoader
-        active: page.currentIndex === 5 || item !== null
-        visible: page.currentIndex === 5
-        sourceComponent: DeepSearchView { }
-    }
+    // Loader {
+    //     id: pdfLoader
+    //     active: page.currentIndex === 5 || item !== null
+    //     visible: page.currentIndex === 5
+    //     sourceComponent: DeepSearchView { }
+    // }
 }

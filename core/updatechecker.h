@@ -21,7 +21,7 @@ class UpdateChecker : public QObject
     Q_OBJECT
     Q_PROPERTY(QString currentVersion READ currentVersion CONSTANT FINAL)
     Q_PROPERTY(QString notesCurrentVersion READ notesCurrentVersion NOTIFY notesCurrentVersionChanged FINAL)
-    Q_PROPERTY(QString currentDate READ currentDate NOTIFY currentDateChanged FINAL)
+    Q_PROPERTY(QString currentDate READ currentDate WRITE setCurrentDate NOTIFY currentDateChanged FINAL)
     Q_PROPERTY(bool isUpdateAvailable READ isUpdateAvailable NOTIFY isUpdateAvailableChanged FINAL)
     Q_PROPERTY(QString latestVersion READ getLatestVersion NOTIFY latestVersionChanged FINAL)
     Q_PROPERTY(QString notesLatestVersion READ getNotesLatestVersion NOTIFY notesLatestVersionChanged FINAL)

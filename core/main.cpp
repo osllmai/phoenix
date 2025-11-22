@@ -41,28 +41,28 @@
 
 #include "./converttomd.h"
 #include "./updatechecker.h"'
-#include "arxivarticlelist.h"
+// #include "arxivarticlelist.h"
 
 
-////////////////////////////////////
-#include <QtCore/QUrl>
-#include <QtCore/QCommandLineOption>
-#include <QtCore/QCommandLineParser>
-#include <QStyleHints>
-#include <QScreen>
-#include <QQmlApplicationEngine>
-#include <QtQml/QQmlContext>
-#include <QtWebView/QtWebView>
+// ////////////////////////////////////
+// #include <QtCore/QUrl>
+// #include <QtCore/QCommandLineOption>
+// #include <QtCore/QCommandLineParser>
+// #include <QStyleHints>
+// #include <QScreen>
+// #include <QQmlApplicationEngine>
+// #include <QtQml/QQmlContext>
+// #include <QtWebView/QtWebView>
 
-using namespace Qt::StringLiterals;
+// using namespace Qt::StringLiterals;
 
-#include "./utils.h"
+// #include "./utils.h"
 
 int main(int argc, char *argv[])
 {
     try {
 //////////////////////////////////////////////
-        QtWebView::initialize();
+        // QtWebView::initialize();
 /////////////////////////////////////////////
         QGuiApplication app(argc, argv);
 
@@ -102,16 +102,16 @@ int main(int argc, char *argv[])
 
 
 
-        ///////////////////////////
-        QCommandLineParser parser;
-        QCoreApplication::setApplicationVersion(QT_VERSION_STR);
-        parser.setApplicationDescription(QGuiApplication::applicationDisplayName());
-        parser.addHelpOption();
-        parser.addVersionOption();
-        parser.addPositionalArgument("url"_L1, "The initial URL to open."_L1);
-        parser.process(QCoreApplication::arguments());
-        const QString initialUrl = parser.positionalArguments().value(0, "https://www.google.com/"_L1);
-        /////////////////////////////
+        // ///////////////////////////
+        // QCommandLineParser parser;
+        // QCoreApplication::setApplicationVersion(QT_VERSION_STR);
+        // parser.setApplicationDescription(QGuiApplication::applicationDisplayName());
+        // parser.addHelpOption();
+        // parser.addVersionOption();
+        // parser.addPositionalArgument("url"_L1, "The initial URL to open."_L1);
+        // parser.process(QCoreApplication::arguments());
+        // const QString initialUrl = parser.positionalArguments().value(0, "https://www.google.com/"_L1);
+        // /////////////////////////////
 
 
 
@@ -124,32 +124,32 @@ int main(int argc, char *argv[])
 
 
 
-        //////////////////////////////////////
-        QQmlContext *context = engine.rootContext();
-        context->setContextProperty("utils"_L1, new Utils(&engine));
-        context->setContextProperty("initialUrl"_L1,
-                                    Utils::fromUserInput(initialUrl));
+        // //////////////////////////////////////
+        // QQmlContext *context = engine.rootContext();
+        // context->setContextProperty("utils"_L1, new Utils(&engine));
+        // context->setContextProperty("initialUrl"_L1,
+        //                             Utils::fromUserInput(initialUrl));
 
-        QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
-        if (!QGuiApplication::styleHints()->showIsFullScreen()) {
-            const QSize size = geometry.size() * 4 / 5;
-            const QSize offset = (geometry.size() - size) / 2;
-            const QPoint pos = geometry.topLeft() + QPoint(offset.width(), offset.height());
-            geometry = QRect(pos, size);
-        }
+        // QRect geometry = QGuiApplication::primaryScreen()->availableGeometry();
+        // if (!QGuiApplication::styleHints()->showIsFullScreen()) {
+        //     const QSize size = geometry.size() * 4 / 5;
+        //     const QSize offset = (geometry.size() - size) / 2;
+        //     const QPoint pos = geometry.topLeft() + QPoint(offset.width(), offset.height());
+        //     geometry = QRect(pos, size);
+        // }
 
-        engine.setInitialProperties(QVariantMap{{"x"_L1, geometry.x()},
-                                                {"y"_L1, geometry.y()},
-                                                {"width"_L1, geometry.width()},
-                                                {"height"_L1, geometry.height()}});
-        /////////////////////////////////////////
-
-
+        // engine.setInitialProperties(QVariantMap{{"x"_L1, geometry.x()},
+        //                                         {"y"_L1, geometry.y()},
+        //                                         {"width"_L1, geometry.width()},
+        //                                         {"height"_L1, geometry.height()}});
+        // /////////////////////////////////////////
 
 
-        ArxivArticleList arxivModel;
-        engine.rootContext()->setContextProperty("arxivModel", &arxivModel);
-        arxivModel.setSearchQuery("testCase");
+
+
+        // ArxivArticleList arxivModel;
+        // engine.rootContext()->setContextProperty("arxivModel", &arxivModel);
+        // arxivModel.setSearchQuery("testCase");
 
 
 

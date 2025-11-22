@@ -102,45 +102,45 @@ Rectangle{
                 }
             }
         }
-        MyMenuButton {
-            id: sqlItemMenu
-            myText: "Browser"
-            myToolTipText: "Browser"
-            myIcon: "qrc:/media/icon/developer.svg"
-            myFillIcon: "qrc:/media/icon/developerFill.svg"
-            autoExclusive: true
-            numberPage:4
+        // MyMenuButton {
+        //     id: sqlItemMenu
+        //     myText: "Browser"
+        //     myToolTipText: "Browser"
+        //     myIcon: "qrc:/media/icon/developer.svg"
+        //     myFillIcon: "qrc:/media/icon/developerFill.svg"
+        //     autoExclusive: true
+        //     numberPage:4
 
-            Connections {
-                target: sqlItemMenu
-                function onClicked(){
-                    if(isDrawer && appBodyId.currentIndex !== 4){
-                        drawerId.close()
-                    }
-                    appBodyId.currentIndex = 4
-                }
-            }
-        }
+        //     Connections {
+        //         target: sqlItemMenu
+        //         function onClicked(){
+        //             if(isDrawer && appBodyId.currentIndex !== 4){
+        //                 drawerId.close()
+        //             }
+        //             appBodyId.currentIndex = 4
+        //         }
+        //     }
+        // }
 
-        MyMenuButton {
-            id: pdfItemMenu
-            myText: "Deep Search"
-            myToolTipText: "Deep Search"
-            myIcon: "qrc:/media/icon/developer.svg"
-            myFillIcon: "qrc:/media/icon/developerFill.svg"
-            autoExclusive: true
-            numberPage:5
+        // MyMenuButton {
+        //     id: pdfItemMenu
+        //     myText: "Deep Search"
+        //     myToolTipText: "Deep Search"
+        //     myIcon: "qrc:/media/icon/developer.svg"
+        //     myFillIcon: "qrc:/media/icon/developerFill.svg"
+        //     autoExclusive: true
+        //     numberPage:5
 
-            Connections {
-                target: pdfItemMenu
-                function onClicked(){
-                    if(isDrawer && appBodyId.currentIndex !== 5){
-                        drawerId.close()
-                    }
-                    appBodyId.currentIndex = 5
-                }
-            }
-        }
+        //     Connections {
+        //         target: pdfItemMenu
+        //         function onClicked(){
+        //             if(isDrawer && appBodyId.currentIndex !== 5){
+        //                 drawerId.close()
+        //             }
+        //             appBodyId.currentIndex = 5
+        //         }
+        //     }
+        // }
     }
 
     Item{
