@@ -56,6 +56,7 @@ ComboBox {
             id: listView
             width: parent.width
             implicitHeight: Math.min(contentHeight, 220)
+            anchors.margins: 10
             clip: true
 
             model: ListModel {
@@ -68,33 +69,14 @@ ComboBox {
                 ListElement { title: "Canvas"; icon:"qrc:/media/icon/developer.svg" }
             }
 
-            delegate: ItemDelegate {
-                width: listView.width
-                height: 38
+            delegate: Item{
+                width: listView.width - 10; height: 45
 
-                Row {
-                    anchors.fill: parent
-                    anchors.margins: 8
-                    spacing: 10
-
-                    MyIcon {
-                        width: 32; height: 32
-                        myIcon: model.icon
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Label {
-                        text: model.title
-                        verticalAlignment: Text.AlignVCenter
-                        color: comboBoxId.textColor
-                    }
-                }
-                background: Rectangle {
-                    radius: 10
-                    width: popupId.width /*- 50*/; height: 35
-                    color: highlighted ? Style.Colors.boxHover : Style.Colors.background
-                }
-                highlighted: /*comboBoxId.highlightedIndex === index*/true
+                MyComboBoxDelegate {
+                   id: indoxItem
+                   anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
+                   Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+               }
             }
         }
     }

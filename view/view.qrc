@@ -7,6 +7,7 @@
         <file>component_library/style/qmldir</file>
         <file>component_library/button/MyButton.qml</file>
         <file>component_library/button/MyComboBox.qml</file>
+        <file>component_library/button/MyComboBoxDelegate.qml</file>
         <file>component_library/button/MyIcon.qml</file>
         <file>component_library/button/SearchButton.qml</file>
         <file>component_library/button/MySlider.qml</file>
