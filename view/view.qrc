@@ -82,6 +82,7 @@
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
         <file>chat/components/history/HistoryDelegate.qml</file>
+        <file>chat/components/chat/components/AddFileAndMore.qml</file>
         <file>component_library/model_settings/ModelSettingsView.qml</file>
         <file>component_library/model_settings/ModelSettingsHeader.qml</file>
         <file>component_library/model_settings/ModelSettingsBody.qml</file>

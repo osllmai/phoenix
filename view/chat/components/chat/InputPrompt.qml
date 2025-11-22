@@ -105,50 +105,55 @@ Rectangle{
             width: parent.width
             height: 32
 
-            Row {
+            AddFileAndMore{
                 anchors.left: parent.left
-                spacing: 10
-
-                MyIcon {
-                    id: selectFileIconId
-                    width: 32; height: 32
-                    myIcon: "qrc:/media/icon/selectFile.svg"
-                    iconType: Style.RoleEnum.IconType.Primary
-                    onClicked: {
-                        fileDialogId.open();
-                    }
-                }
-                FileDialog {
-                    id: fileDialogId
-                    title: "Choose file"
-                    fileMode: FileDialog.OpenFiles
-                    currentFolder: window.lastFolder
-
-                    nameFilters: [
-                        "Supported files (*.docx *.pptx *.html *.htm *.jpg *.jpeg *.png *.pdf *.md *.csv *.xlsx *.xml *.json *.mp3 *.wav)",
-                        "Word files (*.docx)",
-                        "PowerPoint files (*.pptx)",
-                        "HTML files (*.html *.htm)",
-                        "Image files (*.jpg *.jpeg *.png)",
-                        "PDF files (*.pdf)",
-                        "AsciiDoc files (*.adoc *.asciidoc)",
-                        "Markdown files (*.md)",
-                        "CSV files (*.csv)",
-                        "Excel files (*.xlsx)",
-                        "XML files (*.xml)",
-                        "JSON files (*.json)",
-                        "Audio files (*.mp3 *.wav)",
-                        "All files (*)"
-                    ]
-
-                    onAccepted: function() {
-                        window.lastFolder = fileDialogId.currentFolder
-                        convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
-                        convertToMD.startConvert()
-                    }
-                }
-
             }
+
+            // Row {
+            //     anchors.left: parent.left
+            //     spacing: 10
+
+            //     MyIcon {
+            //         id: selectFileIconId
+            //         width: 32; height: 32
+            //         myIcon: "qrc:/media/icon/selectFile.svg"
+            //         iconType: Style.RoleEnum.IconType.Primary
+            //         onClicked: {
+            //             fileDialogId.open();
+            //         }
+            //     }
+
+            //     FileDialog {
+            //         id: fileDialogId
+            //         title: "Choose file"
+            //         fileMode: FileDialog.OpenFiles
+            //         currentFolder: window.lastFolder
+
+            //         nameFilters: [
+            //             "Supported files (*.docx *.pptx *.html *.htm *.jpg *.jpeg *.png *.pdf *.md *.csv *.xlsx *.xml *.json *.mp3 *.wav)",
+            //             "Word files (*.docx)",
+            //             "PowerPoint files (*.pptx)",
+            //             "HTML files (*.html *.htm)",
+            //             "Image files (*.jpg *.jpeg *.png)",
+            //             "PDF files (*.pdf)",
+            //             "AsciiDoc files (*.adoc *.asciidoc)",
+            //             "Markdown files (*.md)",
+            //             "CSV files (*.csv)",
+            //             "Excel files (*.xlsx)",
+            //             "XML files (*.xml)",
+            //             "JSON files (*.json)",
+            //             "Audio files (*.mp3 *.wav)",
+            //             "All files (*)"
+            //         ]
+
+            //         onAccepted: function() {
+            //             window.lastFolder = fileDialogId.currentFolder
+            //             convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
+            //             convertToMD.startConvert()
+            //         }
+            //     }
+
+            // }
 
             Row {
                 anchors.right: parent.right
@@ -203,6 +208,7 @@ Rectangle{
                             }
                         }
                     }
+
                     MyIcon {
                         visible: !speechToText.modelInProcess
                         anchors.fill: parent
