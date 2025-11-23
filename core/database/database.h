@@ -26,6 +26,10 @@
 #include "./model/company.h"
 #include "config.h"
 
+#include "modelmanager.h"
+#include "conversationmanager.h"
+#include "messagemanager.h"
+
 class Database: public QObject
 {
     Q_OBJECT
@@ -100,35 +104,18 @@ private:
     QSqlDatabase m_db;
     QThread m_dbThread;
 
-    static const QString MODEL_SQL;
     static const QString FOREIGN_KEYS_SQL;
-    static const QString INSERT_MODEL_SQL;
-    static const QString READALL_MODEL_SQL;
-    static const QString READ_MODEL_SQL;
-    static const QString READ_MODEL_ID_SQL;
-    static const QString UPDATE_KEYMODEL_SQL;
-    static const QString UPDATE_ISLIKE_SQL;
-    static const QString DELETE_MODEL_SQL;
 
-    static const QString CONVERSATION_SQL;
-    static const QString INSERT_CONVERSATION_SQL;
-    static const QString READ_CONVERSATION_SQL;
-    static const QString UPDATE_DATE_CONVERSATION_SQL;
-    static const QString UPDATE_TITLE_CONVERSATION_SQL;
-    static const QString UPDATE_ISPINNED_CONVERSATION_SQL;
-    static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
-    static const QString DELETE_CONVERSATION_SQL;
+    static const QString MODELSETTINGS_SQL;
+    static const QString INSERT_MODELSETTINGS_SQL;
+    static const QString READ_MODELSETTINGS_SQL;
+    static const QString UPDATE_TITLE_MODELSETTINGS_SQL;
+    static const QString UPDATE_ISPINNED_MODELSETTINGS_SQL;
+    static const QString DELETE_MODELSETTINGS_SQL;
 
-    static const QString MESSAGE_SQL;
-    static const QString INSERT_MESSAGE_SQL;
-    static const QString READ_MESSAGE_ID_SQL;
-    static const QString DELETE_MESSAGE_SQL;
-    static const QString UPDATE_LIKE_MESSAGE_SQL;
-    static const QString UPDATE_TEXT_MESSAGE_SQL;
-    static const QString READ_ICON_MESSAGE_SQL;
-
-    int insertModel(const QString &name, const QString &key);
-    QList<int> readOnlineCompany();
+    ModelManager *modelManager;
+    ConversationManager *conversationManager;
+    MessageManager *messageManager;
 };
 
 #endif // DATABASE_H
