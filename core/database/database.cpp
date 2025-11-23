@@ -305,7 +305,11 @@ void Database::updateIsLikeModel(const int id, const bool isLike){
 }
 
 void Database::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                                 const QDateTime date, const QString &icon, const bool isPinned, const bool selectConversation){
+                                  const QDateTime date, const QString &icon,
+                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                  const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
@@ -315,12 +319,26 @@ void Database::insertConversation(const QString &title, const QString &descripti
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPinned);
+    query.addBindValue(stream);
+    query.addBindValue(promptTemplate);
+    query.addBindValue(systemPrompt);
+    query.addBindValue(temperature);
+    query.addBindValue(topK);
+    query.addBindValue(topP);
+    query.addBindValue(minP);
+    query.addBindValue(repeatPenalty);
+    query.addBindValue(promptBatchSize);
+    query.addBindValue(maxTokens);
+    query.addBindValue(repeatPenaltyTokens);
+    query.addBindValue(contextLength);
+    query.addBindValue(numberOfGPULayers);
     if (!query.exec())
         return;
 
     int id = query.lastInsertId().toInt();
 
-    emit addConversation(id, title, description, fileName, fileInfo, date, icon, isPinned, selectConversation);
+    emit addConversation(id, title, description, fileName, fileInfo, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
+                         repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers, selectConversation);
 }
 
 void Database::deleteConversation(const int id){
@@ -375,36 +393,36 @@ void Database::updateIsPinnedConversation(const int id, const bool isPinned){
         return;
 }
 
-// void Database::updateModelSettingsConversation(const int id, const bool stream,
-//                                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-//                                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-//                                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-//                                                     const int &contextLength, const int &numberOfGPULayers){
-//     QSqlQuery query(m_db);
+void Database::updateModelSettingsConversation(const int id, const bool stream,
+                                               const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                               const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                               const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                               const int &contextLength, const int &numberOfGPULayers){
+    QSqlQuery query(m_db);
 
-//     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
-//         qInfo()<<query.lastError().text();
-//         return;
-//     }
-//     query.addBindValue(stream);
-//     query.addBindValue(promptTemplate);
-//     query.addBindValue(systemPrompt);
-//     query.addBindValue(temperature);
-//     query.addBindValue(topK);
-//     query.addBindValue(topP);
-//     query.addBindValue(minP);
-//     query.addBindValue(repeatPenalty);
-//     query.addBindValue(promptBatchSize);
-//     query.addBindValue(maxTokens);
-//     query.addBindValue(repeatPenaltyTokens);
-//     query.addBindValue(contextLength);
-//     query.addBindValue(numberOfGPULayers);
-//     query.addBindValue(id);
-//     if (!query.exec()){
-//         qInfo()<<query.lastError().text();
-//         return;
-//     }
-// }
+    if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
+        qInfo()<<query.lastError().text();
+        return;
+    }
+    query.addBindValue(stream);
+    query.addBindValue(promptTemplate);
+    query.addBindValue(systemPrompt);
+    query.addBindValue(temperature);
+    query.addBindValue(topK);
+    query.addBindValue(topP);
+    query.addBindValue(minP);
+    query.addBindValue(repeatPenalty);
+    query.addBindValue(promptBatchSize);
+    query.addBindValue(maxTokens);
+    query.addBindValue(repeatPenaltyTokens);
+    query.addBindValue(contextLength);
+    query.addBindValue(numberOfGPULayers);
+    query.addBindValue(id);
+    if (!query.exec()){
+        qInfo()<<query.lastError().text();
+        return;
+    }
+}
 
 void Database::insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
     QDateTime date = QDateTime::currentDateTime();
@@ -520,17 +538,36 @@ const QString Database::CONVERSATION_SQL = QLatin1String(R"(
         date DATE NOT NULL,
         icon TEXT NOT NULL,
         isPinned BOOL NOT NULL,
+        stream BOOL NOT NULL,
+        promptTemplate TEXT NOT NULL,
+        systemPrompt TEXT NOT NULL,
+        temperature REAL NOT NULL,
+        topK INTEGER NOT NULL,
+        topP REAL NOT NULL,
+        minP REAL NOT NULL,
+        repeatPenalty REAL NOT NULL,
+        promptBatchSize INTEGER NOT NULL,
+        maxTokens INTEGER NOT NULL,
+        repeatPenaltyTokens INTEGER NOT NULL,
+        contextLength INTEGER NOT NULL,
+        numberOfGPULayers INTEGER NOT NULL,
         PRIMARY KEY(id AUTOINCREMENT)
     )
 )");
 
 const QString Database::INSERT_CONVERSATION_SQL = QLatin1String(R"(
-    INSERT INTO conversation(title, description, date, icon, isPinned)
+    INSERT INTO conversation(title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
+            temperature, topK, topP, minP, repeatPenalty,
+            promptBatchSize, maxTokens, repeatPenaltyTokens,
+            contextLength, numberOfGPULayers)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString Database::READ_CONVERSATION_SQL = QLatin1String(R"(
-    SELECT id, title, description, date, icon, isPinned
+    SELECT id, title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
+                    temperature, topK, topP, minP, repeatPenalty,
+                    promptBatchSize, maxTokens, repeatPenaltyTokens,
+                    contextLength, numberOfGPULayers
     FROM conversation
     ORDER BY date ASC
 )");
@@ -560,30 +597,6 @@ const QString Database::DELETE_CONVERSATION_SQL = QLatin1String(R"(
     DELETE FROM conversation where id = ?
 )");
 
-const QString Database::MODEL_SETTINGS_SQL = QLatin1String(R"(
-    CREATE TABLE conversation(
-        id INTEGER NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        date DATE NOT NULL,
-        icon TEXT NOT NULL,
-        isPinned BOOL NOT NULL,
-        stream BOOL NOT NULL,
-        promptTemplate TEXT NOT NULL,
-        systemPrompt TEXT NOT NULL,
-        temperature REAL NOT NULL,
-        topK INTEGER NOT NULL,
-        topP REAL NOT NULL,
-        minP REAL NOT NULL,
-        repeatPenalty REAL NOT NULL,
-        promptBatchSize INTEGER NOT NULL,
-        maxTokens INTEGER NOT NULL,
-        repeatPenaltyTokens INTEGER NOT NULL,
-        contextLength INTEGER NOT NULL,
-        numberOfGPULayers INTEGER NOT NULL,
-        PRIMARY KEY(id AUTOINCREMENT)
-    )
-)");
 
 const QString Database::MESSAGE_SQL = QLatin1String(R"(
     CREATE TABLE message(
@@ -774,16 +787,29 @@ void Database::readConversation(){
     if (query.exec()){
         while(query.next()) {
             emit addConversation(
-                    query.value(0).toInt(),
-                    query.value(1).toString(),
-                    query.value(2).toString(),
-                    "",
-                    "",
-                    query.value(3).toDateTime(),
-                    query.value(4).toString(),
-                    query.value(5).toBool(),
-                    false
-            );
+                query.value(0).toInt(),
+                query.value(1).toString(),
+                query.value(2).toString(),
+                "",
+                "",
+                query.value(3).toDateTime(),
+                query.value(4).toString(),
+                query.value(5).toBool(),
+                query.value(6).toBool(),
+                query.value(7).toString(),
+                query.value(8).toString(),
+                query.value(9).toDouble(),
+                query.value(10).toInt(),
+                query.value(11).toDouble(),
+                query.value(12).toDouble(),
+                query.value(13).toDouble(),
+                query.value(14).toInt(),
+                query.value(15).toInt(),
+                query.value(16).toInt(),
+                query.value(17).toInt(),
+                query.value(18).toInt(),
+                false
+                );
         }
     }
     emit finishedReadConversation();
@@ -795,7 +821,7 @@ void Database::readMessages(const int idConversation){
 
     query.addBindValue(idConversation);
     if (query.exec()){
-         while(query.next()){
+        while(query.next()){
             emit addMessage(
                 idConversation,
                 query.value(0).toInt(),
@@ -806,7 +832,7 @@ void Database::readMessages(const int idConversation){
                 query.value(5).toBool(),
                 query.value(6).toInt()
                 );
-         }
+        }
     }
 }
 
@@ -1200,4 +1226,3 @@ QList<int> Database::readOnlineCompany() {
     }
     return allID;
 }
-

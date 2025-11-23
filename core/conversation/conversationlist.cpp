@@ -109,7 +109,8 @@ void ConversationList::addRequest(const QString &firstPrompt, const QString &fil
         _propmtTemplate = m_modelPromptTemplate;
 
 
-    emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, true);
+    emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, true,
+                                   _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -192,23 +193,31 @@ void ConversationList::setModelRequest(const int id, const QString &name,  const
         !previousConversation()->responseInProgress() &&
         previousConversation()->isLoadModel()){
 
-                previousConversation()->unloadModel();
+        previousConversation()->unloadModel();
     }
     if(!m_isEmptyConversation &&
         !currentConversation()->loadModelInProgress() &&
         !currentConversation()->responseInProgress() &&
         currentConversation()->isLoadModel()){
 
-                currentConversation()->unloadModel();
+        currentConversation()->unloadModel();
     }
 }
 
 void ConversationList::addConversation(const int id, const QString &title, const QString &description, const QString &fileName,
-                                       const QString &fileInfo, const QDateTime date, const QString &icon, const bool isPinned, const bool selectConversation) {
+                                       const QString &fileInfo, const QDateTime date, const QString &icon,
+                                       const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                                       const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                       const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                       const int &contextLength, const int &numberOfGPULayers, const bool selectConversation) {
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
 
-    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned, this);
+    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned,
+                                                  stream, promptTemplate, systemPrompt,
+                                                  temperature, topK, topP, minP, repeatPenalty,
+                                                  promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                                  contextLength, numberOfGPULayers, this);
 
     m_conversations.append(conversation);
     connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
@@ -264,7 +273,7 @@ void ConversationList::selectCurrentConversationRequest(const int id){
         !previousConversation()->responseInProgress() &&
         previousConversation()->isLoadModel()){
 
-            previousConversation()->unloadModel();
+        previousConversation()->unloadModel();
     }
 
     if((m_currentConversation != nullptr) && m_currentConversation->isLoadModel())
@@ -305,10 +314,10 @@ void ConversationList::updateDateConversation(const int id, const QString &descr
 }
 
 void ConversationList::updateModelSettingsConversation(const int id, const bool &stream,
-                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                     const int &contextLength, const int &numberOfGPULayers)
+                                                       const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                       const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                       const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                       const int &contextLength, const int &numberOfGPULayers)
 {
     emit requestUpdateModelSettingsConversation(id, stream, promptTemplate, systemPrompt, temperature,
                                                 topK, topP, minP, repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens,
