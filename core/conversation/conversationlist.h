@@ -88,11 +88,7 @@ public:
 
 public slots:
     void addConversation(const int id, const QString &title, const QString &description, const QString &fileName,
-                                     const QString &fileInfo, const QDateTime date, const QString &icon,
-                                     const bool isPinned, const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
-                                     const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                     const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
+                                     const QString &fileInfo, const QDateTime date, const QString &icon, const bool isPinned, const bool selectConversation);
 
     void addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
     void readMessages(const int conversationId);
@@ -120,10 +116,7 @@ signals:
 
     void requestInsertConversation(const QString &title, const QString &description, const QString &fileName,
                             const QString &fileInfo, const QDateTime date, const QString &icon,
-                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
-                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
+                            const bool isPinned, const bool selectConversation);
     void requestDeleteConversation(const int id);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateTitleConversation(const int id, const QString &title);

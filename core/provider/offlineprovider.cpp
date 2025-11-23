@@ -25,7 +25,6 @@ void OfflineProvider::stop() {
     _stopFlag = true;
 }
 
-
 void OfflineProvider::loadModel(const QString &model, const QString &key) {
     qCInfo(logOfflineProvider) << "Loading model with key:" << key;
 
