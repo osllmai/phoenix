@@ -1,6 +1,8 @@
-#include "conversationmanager.h"
+#include "pdfmanager.h"
 
-ConversationManager::ConversationManager(QSqlDatabase db, QObject* parent)
+
+
+PdfManager::PdfManager(QSqlDatabase db, QObject* parent)
     : QObject{nullptr}, m_db(db)
 {
     if (m_db.isOpen()) {
@@ -15,85 +17,38 @@ ConversationManager::ConversationManager(QSqlDatabase db, QObject* parent)
     }
 }
 
-ConversationManager::~ConversationManager(){}
+PdfManager::~PdfManager(){}
 
-const QString ConversationManager::CONVERSATION_SQL = QLatin1String(R"(
-    CREATE TABLE conversation(
+const QString PdfManager::CONVERSATION_SQL = QLatin1String(R"(
+    CREATE TABLE pdf(
+        conversation_id INTEGER NOT NULL,
         id INTEGER NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        date DATE NOT NULL,
-        icon TEXT NOT NULL,
-        isPinned BOOL NOT NULL,
-        stream BOOL NOT NULL,
-        promptTemplate TEXT NOT NULL,
-        systemPrompt TEXT NOT NULL,
-        temperature REAL NOT NULL,
-        topK INTEGER NOT NULL,
-        topP REAL NOT NULL,
-        minP REAL NOT NULL,
-        repeatPenalty REAL NOT NULL,
-        promptBatchSize INTEGER NOT NULL,
-        maxTokens INTEGER NOT NULL,
-        repeatPenaltyTokens INTEGER NOT NULL,
-        contextLength INTEGER NOT NULL,
-        numberOfGPULayers INTEGER NOT NULL,
+        file_Path TEXT NOT NULL,
         PRIMARY KEY(id AUTOINCREMENT)
     )
 )");
 
-const QString ConversationManager::INSERT_CONVERSATION_SQL = QLatin1String(R"(
-    INSERT INTO conversation(title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
-            temperature, topK, topP, minP, repeatPenalty,
-            promptBatchSize, maxTokens, repeatPenaltyTokens,
-            contextLength, numberOfGPULayers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+const QString PdfManager::INSERT_CONVERSATION_SQL = QLatin1String(R"(
+    INSERT INTO pdf(title, description, file_Path)
+    VALUES (?, ?, ?)
 )");
 
-const QString ConversationManager::READ_CONVERSATION_SQL = QLatin1String(R"(
-    SELECT id, title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
-                    temperature, topK, topP, minP, repeatPenalty,
-                    promptBatchSize, maxTokens, repeatPenaltyTokens,
-                    contextLength, numberOfGPULayers
-    FROM conversation
+const QString PdfManager::READ_CONVERSATION_SQL = QLatin1String(R"(
+    SELECT id, title, file_Path
+    FROM pdf
     ORDER BY date ASC
 )");
 
-const QString ConversationManager::UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET description=?, icon=?, date=? WHERE id=?
-)");
-
-const QString ConversationManager::UPDATE_TITLE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET title=? Where id=?
-)");
-
-const QString ConversationManager::UPDATE_ISPINNED_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET isPinned=? Where id=?
-)");
-
-const QString ConversationManager::UPDATE_MODEL_SETTINGS_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation
-    SET stream=?, promptTemplate=?, systemPrompt=?,
-            temperature=?, topK=?, topP=?, minP=?, repeatPenalty=?,
-            promptBatchSize=?, maxTokens=?, repeatPenaltyTokens=?,
-            contextLength=?, numberOfGPULayers=?
-    Where id=?
-)");
-
-const QString ConversationManager::DELETE_CONVERSATION_SQL = QLatin1String(R"(
-    DELETE FROM conversation where id = ?
-)");
-
-const QString ConversationManager::DELETE_MESSAGE_SQL = QLatin1String(R"(
+const QString PdfManager::DELETE_PDF_SQL = QLatin1String(R"(
     DELETE FROM message WHERE conversation_id=?
 )");
 
-void ConversationManager::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                                  const QDateTime date, const QString &icon,
-                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
-                                  const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                  const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                  const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
+void PdfManager::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
+                                             const QDateTime date, const QString &icon,
+                                             const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                             const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_CONVERSATION_SQL))
@@ -125,7 +80,7 @@ void ConversationManager::insertConversation(const QString &title, const QString
                          repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers, selectConversation);
 }
 
-void ConversationManager::deleteConversation(const int id){
+void PdfManager::deleteConversation(const int id){
     QSqlQuery query(m_db);
 
     if (!query.prepare(DELETE_CONVERSATION_SQL))
@@ -141,7 +96,7 @@ void ConversationManager::deleteConversation(const int id){
         return;
 }
 
-void ConversationManager::updateDateConversation(const int id, const QString &description, const QString &icon){
+void PdfManager::updateDateConversation(const int id, const QString &description, const QString &icon){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
@@ -155,7 +110,7 @@ void ConversationManager::updateDateConversation(const int id, const QString &de
         return;
 }
 
-void ConversationManager::updateTitleConversation(const int id, const QString &title){
+void PdfManager::updateTitleConversation(const int id, const QString &title){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_TITLE_CONVERSATION_SQL))
@@ -166,7 +121,7 @@ void ConversationManager::updateTitleConversation(const int id, const QString &t
         return;
 }
 
-void ConversationManager::updateIsPinnedConversation(const int id, const bool isPinned){
+void PdfManager::updateIsPinnedConversation(const int id, const bool isPinned){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_ISPINNED_CONVERSATION_SQL))
@@ -177,11 +132,11 @@ void ConversationManager::updateIsPinnedConversation(const int id, const bool is
         return;
 }
 
-void ConversationManager::updateModelSettingsConversation(const int id, const bool stream,
-                                               const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                               const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                               const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                               const int &contextLength, const int &numberOfGPULayers){
+void PdfManager::updateModelSettingsConversation(const int id, const bool stream,
+                                                          const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                          const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                          const int &contextLength, const int &numberOfGPULayers){
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_MODEL_SETTINGS_CONVERSATION_SQL)){
@@ -208,7 +163,7 @@ void ConversationManager::updateModelSettingsConversation(const int id, const bo
     }
 }
 
-void ConversationManager::readConversation(){
+void PdfManager::readConversation(){
     QSqlQuery query(m_db);
     query.prepare(READ_CONVERSATION_SQL);
 

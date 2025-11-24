@@ -159,7 +159,6 @@ void Database::readMessages(const int idConversation){
     messageManager->readMessages(idConversation);
 }
 
-
 const QString Database::FOREIGN_KEYS_SQL = QLatin1String(R"(
     PRAGMA foreign_keys = ON;
 )");
