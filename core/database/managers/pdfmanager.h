@@ -34,23 +34,12 @@ public:
     explicit PdfManager(QSqlDatabase db, QObject* parent = nullptr);
     virtual ~PdfManager();
 
-    void readConversation();
-    void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                            const QDateTime date, const QString &icon,
-                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
-                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                            const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
-    void deletePDF(const int id);
+    void readPdf(const int idConversation);
+    void insertPdf(const int conversation_id, const QString &file_Path);
 
 signals:
-    void addConversation(const int id, const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                         const QDateTime date, const QString &icon,
-                         const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
-                         const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                         const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                         const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
-    void finishedReadConversation();
+    void addPdf(const int conversation_id, const int id, const QString &file_Path);
+    void finishedReadPdf();
 
 private:
     QSqlDatabase m_db;
@@ -58,7 +47,6 @@ private:
     static const QString PDF_SQL;
     static const QString INSERT_PDF_SQL;
     static const QString READ_PDF_SQL;
-    static const QString DELETE_PDF_SQL;
 };
 
 #endif // PDFMANAGER_H

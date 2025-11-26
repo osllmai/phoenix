@@ -127,6 +127,10 @@ void DeepSearchConversation::prompt(const QString &input, const QString &fileNam
                        modelSettings()->numberOfGPULayers());
 }
 
+// void DeepSearchConversation::thinking(){
+
+// }
+
 void DeepSearchConversation::stop(){
     if(stopRequest())
         return;

@@ -2,8 +2,16 @@
 
 #include <QCoreApplication>
 
+#include "database.h"
+#include <QCoreApplication>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+#include <QDebug>
+#include <QSqlError>
+
 Database::Database(QObject* parent)
-    : QObject{nullptr}
+    : QObject(parent)
 {
     moveToThread(&m_dbThread);
     m_dbThread.setObjectName("database");
@@ -22,33 +30,40 @@ Database::Database(QObject* parent)
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName(targetDb);
 
-    if (m_db.open()) {
-        QSqlQuery query(m_db);
-
-        if (!query.exec("PRAGMA key = 'Phoenix1234';")) {
-            qDebug() << "Failed to set encryption key:" << query.lastError().text();
-        }
-
-        query.exec(FOREIGN_KEYS_SQL);
-
-        modelManager = new ModelManager(m_db, this);
-        connect(modelManager, &ModelManager::addOnlineProvider, this, &Database::addOnlineProvider, Qt::QueuedConnection);
-        connect(modelManager, &ModelManager::addOnlineProvider, this, &Database::addOnlineProvider, Qt::QueuedConnection);
-        connect(modelManager, &ModelManager::addOfflineModel, this, &Database::addOfflineModel, Qt::QueuedConnection);
-        connect(modelManager, &ModelManager::finishedReadOnlineModel, this, &Database::finishedReadOnlineModel, Qt::QueuedConnection);
-        connect(modelManager, &ModelManager::finishedReadOfflineModel, this, &Database::finishedReadOfflineModel, Qt::QueuedConnection);
-        connect(modelManager, &ModelManager::finishedAddModel, this, &Database::finishedAddModel, Qt::QueuedConnection);
-
-        conversationManager = new ConversationManager(m_db, this);
-        connect(conversationManager, &ConversationManager::addConversation, this, &Database::addConversation, Qt::QueuedConnection);
-        connect(conversationManager, &ConversationManager::finishedReadConversation, this, &Database::finishedReadConversation, Qt::QueuedConnection);
-
-        messageManager = new MessageManager(m_db, this);
-        connect(messageManager, &MessageManager::addMessage, this, &Database::addMessage, Qt::QueuedConnection);
-
-    } else {
+    if (!m_db.open()) {
         qDebug() << "Failed to open database:" << m_db.lastError().text();
+        return;
     }
+
+    QSqlQuery query(m_db);
+
+    // enable foreign keys BEFORE creating any tables
+    if (!query.exec("PRAGMA foreign_keys = ON;")) {
+        qDebug() << "Failed to enable FK:" << query.lastError().text();
+    }
+
+    // managers
+    modelManager = new ModelManager(m_db, this);
+    connect(modelManager, &ModelManager::addOnlineProvider, this, &Database::addOnlineProvider);
+    connect(modelManager, &ModelManager::addOfflineModel, this, &Database::addOfflineModel);
+    connect(modelManager, &ModelManager::finishedReadOnlineModel, this, &Database::finishedReadOnlineModel);
+    connect(modelManager, &ModelManager::finishedReadOfflineModel, this, &Database::finishedReadOfflineModel);
+    connect(modelManager, &ModelManager::finishedAddModel, this, &Database::finishedAddModel);
+
+    conversationManager = new ConversationManager(m_db, this);
+    connect(conversationManager, &ConversationManager::addConversation, this, &Database::addConversation);
+    connect(conversationManager, &ConversationManager::finishedReadConversation, this, &Database::finishedReadConversation);
+
+    messageManager = new MessageManager(m_db, this);
+    connect(messageManager, &MessageManager::addMessage, this, &Database::addMessage);
+
+    pdfManager = new PdfManager(m_db, this);
+    connect(pdfManager, &PdfManager::addPdf, this, &Database::addPdf);
+    connect(pdfManager, &PdfManager::finishedReadPdf, this, &Database::finishedReadPdf);
+
+    pdfEmbeddingManeger = new PdfEmbeddingManeger(m_db, this);
+    connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::addPdfEmbedding, this, &Database::addPdfEmbedding);
+    connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::finishedReadPdfEmbedding, this, &Database::finishedReadPdfEmbedding);
 }
 
 Database::~Database(){
@@ -92,8 +107,8 @@ void Database::readModel(const QList<Company*> companys){
 }
 
 void Database::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                                  const QDateTime date, const QString &icon,
-                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                                  const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                                  const QString &promptTemplate, const QString &systemPrompt,
                                   const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                   const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
@@ -101,7 +116,7 @@ void Database::insertConversation(const QString &title, const QString &descripti
     conversationManager->insertConversation(
         title, description, fileName, fileInfo,
         date, icon,
-        isPinned, stream, promptTemplate, systemPrompt,
+        isPinned, type, stream, promptTemplate, systemPrompt,
         temperature, topK, topP, minP, repeatPenalty,
         promptBatchSize, maxTokens, repeatPenaltyTokens,
         contextLength, numberOfGPULayers, selectConversation
@@ -157,6 +172,22 @@ void Database::updateTextMessage(const int conversationId, const int messageId, 
 
 void Database::readMessages(const int idConversation){
     messageManager->readMessages(idConversation);
+}
+
+void Database::readPdf(const int idConversation){
+    pdfManager->readPdf(idConversation);
+}
+
+void Database::insertPdf(const int conversation_id, const QString &file_Path){
+    pdfManager->insertPdf(conversation_id, file_Path);
+}
+
+void Database::readPdfEmbedding(const int idConversation){
+    pdfEmbeddingManeger->readPdfEmbedding(idConversation);
+}
+
+void Database::insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding){
+    pdfEmbeddingManeger->insertPdfEmbedding(pdf_id, text, text_embedding);
 }
 
 const QString Database::FOREIGN_KEYS_SQL = QLatin1String(R"(

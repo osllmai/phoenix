@@ -29,6 +29,8 @@
 #include "modelmanager.h"
 #include "conversationmanager.h"
 #include "messagemanager.h"
+#include "pdfmanager.h"
+#include "pdfembeddingmaneger.h"
 
 class Database: public QObject
 {
@@ -48,8 +50,8 @@ public slots:
 
     void readConversation();
     void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                            const QDateTime date, const QString &icon,
-                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                            const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                            const QString &promptTemplate, const QString &systemPrompt,
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                             const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
@@ -68,6 +70,12 @@ public slots:
     void updateTextMessage(const int idConversation, const int messageId, const QString &text);
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
+    void readPdf(const int idConversation);
+    void insertPdf(const int conversation_id, const QString &file_Path);
+
+    void readPdfEmbedding(const int idConversation);
+    void insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding);
+
 signals:
     void addOnlineProvider(const int id, const QString& name, const QString& icon, const bool isLike,
                            const BackendType backend, const QString& filePath, QString key);
@@ -82,8 +90,8 @@ signals:
                          const QString& systemPrompt, QDateTime expireModelTime, const bool recommended, const QString &currentFolder);
 
     void addConversation(const int id, const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                         const QDateTime date, const QString &icon,
-                         const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                         const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                         const QString &promptTemplate, const QString &systemPrompt,
                          const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                          const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
@@ -94,6 +102,12 @@ signals:
     void finishedReadOfflineModel();
     void finishedReadConversation();
     void finishedAddModel(const QString &fileName);
+
+    void addPdf(const int conversation_id, const int id, const QString &file_Path);
+    void finishedReadPdf();
+
+    void addPdfEmbedding(const int pdf_id, const int id, const QString &text, const QString &text_embedding);
+    void finishedReadPdfEmbedding();
 
 private:
     static Database* m_instance;
@@ -116,6 +130,8 @@ private:
     ModelManager *modelManager;
     ConversationManager *conversationManager;
     MessageManager *messageManager;
+    PdfManager *pdfManager;
+    PdfEmbeddingManeger *pdfEmbeddingManeger;
 };
 
 #endif // DATABASE_H

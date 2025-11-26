@@ -38,8 +38,8 @@ public:
 
     void readConversation();
     void insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                            const QDateTime date, const QString &icon,
-                            const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                            const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                            const QString &promptTemplate, const QString &systemPrompt,
                             const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                             const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                             const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
@@ -55,8 +55,8 @@ public:
 
 signals:
     void addConversation(const int id, const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                         const QDateTime date, const QString &icon,
-                         const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                         const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                         const QString &promptTemplate, const QString &systemPrompt,
                          const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                          const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
@@ -73,7 +73,9 @@ private:
     static const QString UPDATE_ISPINNED_CONVERSATION_SQL;
     static const QString UPDATE_MODEL_SETTINGS_CONVERSATION_SQL;
     static const QString DELETE_CONVERSATION_SQL;
-    static const QString DELETE_MESSAGE_SQL;
+    // static const QString DELETE_MESSAGE_SQL;
+    // static const QString DELETE_PDF_SQL;
+    // static const QString DELETE_PDFEMBRDDING_SQL;
 };
 
 #endif // CONVERSATIONMANAGER_H

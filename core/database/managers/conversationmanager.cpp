@@ -25,6 +25,7 @@ const QString ConversationManager::CONVERSATION_SQL = QLatin1String(R"(
         date DATE NOT NULL,
         icon TEXT NOT NULL,
         isPinned BOOL NOT NULL,
+        type TEXT NOT NULL,
         stream BOOL NOT NULL,
         promptTemplate TEXT NOT NULL,
         systemPrompt TEXT NOT NULL,
@@ -43,7 +44,7 @@ const QString ConversationManager::CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString ConversationManager::INSERT_CONVERSATION_SQL = QLatin1String(R"(
-    INSERT INTO conversation(title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
+    INSERT INTO conversation(title, description, date, icon, isPinned, type, stream, promptTemplate,systemPrompt,
             temperature, topK, topP, minP, repeatPenalty,
             promptBatchSize, maxTokens, repeatPenaltyTokens,
             contextLength, numberOfGPULayers)
@@ -51,7 +52,7 @@ const QString ConversationManager::INSERT_CONVERSATION_SQL = QLatin1String(R"(
 )");
 
 const QString ConversationManager::READ_CONVERSATION_SQL = QLatin1String(R"(
-    SELECT id, title, description, date, icon, isPinned, stream, promptTemplate,systemPrompt,
+    SELECT id, title, description, date, icon, isPinned, type, stream, promptTemplate,systemPrompt,
                     temperature, topK, topP, minP, repeatPenalty,
                     promptBatchSize, maxTokens, repeatPenaltyTokens,
                     contextLength, numberOfGPULayers
@@ -84,13 +85,9 @@ const QString ConversationManager::DELETE_CONVERSATION_SQL = QLatin1String(R"(
     DELETE FROM conversation where id = ?
 )");
 
-const QString ConversationManager::DELETE_MESSAGE_SQL = QLatin1String(R"(
-    DELETE FROM message WHERE conversation_id=?
-)");
-
 void ConversationManager::insertConversation(const QString &title, const QString &description, const QString &fileName, const QString &fileInfo,
-                                  const QDateTime date, const QString &icon,
-                                  const bool isPinned, const bool stream, const QString &promptTemplate, const QString &systemPrompt,
+                                  const QDateTime date, const QString &icon, const bool isPinned, const QString &type, const bool stream,
+                                  const QString &promptTemplate, const QString &systemPrompt,
                                   const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                   const int &contextLength, const int &numberOfGPULayers, const bool selectConversation){
@@ -103,6 +100,7 @@ void ConversationManager::insertConversation(const QString &title, const QString
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPinned);
+    query.addBindValue(type);
     query.addBindValue(stream);
     query.addBindValue(promptTemplate);
     query.addBindValue(systemPrompt);
@@ -121,7 +119,7 @@ void ConversationManager::insertConversation(const QString &title, const QString
 
     int id = query.lastInsertId().toInt();
 
-    emit addConversation(id, title, description, fileName, fileInfo, date, icon, isPinned, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
+    emit addConversation(id, title, description, fileName, fileInfo, date, icon, isPinned, type, stream, promptTemplate, systemPrompt, temperature, topK, topP, minP,
                          repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens, contextLength, numberOfGPULayers, selectConversation);
 }
 
@@ -134,11 +132,11 @@ void ConversationManager::deleteConversation(const int id){
     if (!query.exec())
         return;
 
-    if (!query.prepare(DELETE_MESSAGE_SQL))
-        return;
-    query.addBindValue(id);
-    if (!query.exec())
-        return;
+    // if (!query.prepare(DELETE_MESSAGE_SQL))
+    //     return;
+    // query.addBindValue(id);
+    // if (!query.exec())
+    //     return;
 }
 
 void ConversationManager::updateDateConversation(const int id, const QString &description, const QString &icon){
@@ -223,19 +221,20 @@ void ConversationManager::readConversation(){
                 query.value(3).toDateTime(),
                 query.value(4).toString(),
                 query.value(5).toBool(),
-                query.value(6).toBool(),
-                query.value(7).toString(),
+                query.value(6).toString(),
+                query.value(7).toBool(),
                 query.value(8).toString(),
-                query.value(9).toDouble(),
-                query.value(10).toInt(),
-                query.value(11).toDouble(),
+                query.value(9).toString(),
+                query.value(10).toDouble(),
+                query.value(11).toInt(),
                 query.value(12).toDouble(),
                 query.value(13).toDouble(),
-                query.value(14).toInt(),
+                query.value(14).toDouble(),
                 query.value(15).toInt(),
                 query.value(16).toInt(),
                 query.value(17).toInt(),
                 query.value(18).toInt(),
+                query.value(19).toInt(),
                 false
                 );
         }

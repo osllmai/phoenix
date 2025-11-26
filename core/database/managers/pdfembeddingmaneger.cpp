@@ -8,8 +8,8 @@ PdfEmbeddingManeger::PdfEmbeddingManeger(QSqlDatabase db, QObject* parent)
         QSqlQuery query(m_db);
 
         QStringList tables = m_db.tables();
-        if (!tables.contains("message", Qt::CaseInsensitive)) {
-            query.exec(MESSAGE_SQL);
+        if (!tables.contains("pdf_embedding", Qt::CaseInsensitive)) {
+            query.exec(PdfEmbedding_SQL);
         }
     } else {
         qDebug() << "Failed to open ModelManager:" << m_db.lastError().text();
@@ -18,142 +18,58 @@ PdfEmbeddingManeger::PdfEmbeddingManeger(QSqlDatabase db, QObject* parent)
 
 PdfEmbeddingManeger::~PdfEmbeddingManeger(){}
 
-const QString PdfEmbeddingManeger::MESSAGE_SQL = QLatin1String(R"(
-    CREATE TABLE message(
-            conversation_id INTEGER NOT NULL,
-            id INTEGER NOT NULL UNIQUE,
-            text TEXT,
-            fileName TEXT,
-            date DATE NOT NULL,
-            icon TEXT NOT NULL,
-            isPrompt BOOL NOT NULL,
-            like INTEGER NOT NULL,
-            PRIMARY KEY(id AUTOINCREMENT),
-            foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
+const QString PdfEmbeddingManeger::PdfEmbedding_SQL = QLatin1String(R"(
+    CREATE TABLE IF NOT EXISTS pdf_embedding(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pdf_id INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        text_embedding TEXT NOT NULL,
+        FOREIGN KEY(pdf_id)
+        REFERENCES pdf(id)
+        ON DELETE CASCADE
     )
 )");
 
-const QString PdfEmbeddingManeger::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, fileName, date, icon, isPrompt, like FROM message WHERE conversation_id=?
+const QString PdfEmbeddingManeger::INSERT_PdfEmbedding_SQL = QLatin1String(R"(
+    INSERT INTO pdf_embedding(pdf_id, text, text_embedding) VALUES (?, ?, ?)
 )");
 
-const QString PdfEmbeddingManeger::INSERT_MESSAGE_SQL = QLatin1String(R"(
-    INSERT INTO message(conversation_id, text, fileName, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?, ?)
+const QString PdfEmbeddingManeger::READ_PdfEmbedding_SQL = QLatin1String(R"(
+    SELECT id, text, text_embedding
+    FROM pdf_embedding
+    WHERE pdf_id=?
 )");
 
-const QString PdfEmbeddingManeger::UPDATE_LIKE_MESSAGE_SQL = QLatin1String(R"(
-    UPDATE message SET like=? Where conversation_id=? AND id=?
-)");
-
-const QString PdfEmbeddingManeger::UPDATE_TEXT_MESSAGE_SQL = QLatin1String(R"(
-    UPDATE message SET text=? Where conversation_id=? AND id=?
-)");
-
-const QString PdfEmbeddingManeger::READ_ICON_MESSAGE_SQL = QLatin1String(R"(
-    SELECT icon FROM message WHERE conversation_id=? AND id=?
-)");
-
-const QString PdfEmbeddingManeger::UPDATE_DATE_CONVERSATION_SQL = QLatin1String(R"(
-    UPDATE conversation SET description=?, icon=?, date=? WHERE id=?
-)");
-
-const QString PdfEmbeddingManeger::DELETE_MESSAGE_SQL = QLatin1String(R"(
-    DELETE FROM message WHERE conversation_id=?
-)");
-
-void PdfEmbeddingManeger::insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
-    QDateTime date = QDateTime::currentDateTime();
-
+void PdfEmbeddingManeger::insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding){
     QSqlQuery query(m_db);
 
-    if (!query.prepare(INSERT_MESSAGE_SQL))
+    if (!query.prepare(INSERT_PdfEmbedding_SQL))
         return;
-    query.addBindValue(idConversation);
+    query.addBindValue(pdf_id);
     query.addBindValue(text);
-    query.addBindValue(fileName);
-    query.addBindValue(date);
-    query.addBindValue(icon);
-    query.addBindValue(isPrompt);
-    query.addBindValue(like);
+    query.addBindValue(text_embedding);
     if (!query.exec())
         return;
 
     int id = query.lastInsertId().toInt();
 
-    emit addMessage(idConversation, id, text, fileName, date, icon, isPrompt, like);
-
-    updateDateConversation(idConversation, text, icon);
+    emit addPdfEmbedding(pdf_id, id, text, text_embedding);
 }
 
-void PdfEmbeddingManeger::updateLikeMessage(const int conversationId, const int messageId, const int like){
+void PdfEmbeddingManeger::readPdfEmbedding(const int pdf_id){
     QSqlQuery query(m_db);
+    query.prepare(READ_PdfEmbedding_SQL);
 
-    if (!query.prepare(UPDATE_LIKE_MESSAGE_SQL))
-        return;
-    query.addBindValue(like);
-    query.addBindValue(conversationId);
-    query.addBindValue(messageId);
-    if (!query.exec())
-        return;
-}
-
-void PdfEmbeddingManeger::updateTextMessage(const int conversationId, const int messageId, const QString &text){
-    QSqlQuery query(m_db);
-
-    if (!query.prepare(UPDATE_TEXT_MESSAGE_SQL))
-        return;
-
-    query.addBindValue(text);
-    query.addBindValue(conversationId);
-    query.addBindValue(messageId);
-    if (!query.exec())
-        return;
-
-    //Find icon for update Conversation in DB
-    if (!query.prepare(READ_ICON_MESSAGE_SQL))
-        return ;
-
-    query.addBindValue(conversationId);
-    query.addBindValue(messageId);
-
-    if (!query.exec())
-        return ;
-
-    if (query.next())
-        updateDateConversation(conversationId, text, query.value(0).toString());
-}
-
-void PdfEmbeddingManeger::readMessages(const int idConversation){
-    QSqlQuery query(m_db);
-    query.prepare(READ_MESSAGE_ID_SQL);
-
-    query.addBindValue(idConversation);
+    query.addBindValue(pdf_id);
     if (query.exec()){
         while(query.next()){
-            emit addMessage(
-                idConversation,
+            emit addPdfEmbedding(
+                pdf_id,
                 query.value(0).toInt(),
                 query.value(1).toString(),
-                query.value(2).toString(),
-                query.value(3).toDateTime(),
-                query.value(4).toString(),
-                query.value(5).toBool(),
-                query.value(6).toInt()
+                query.value(2).toString()
                 );
         }
     }
-}
-
-void PdfEmbeddingManeger::updateDateConversation(const int id, const QString &description, const QString &icon){
-    QSqlQuery query(m_db);
-
-    if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
-        return;
-
-    query.addBindValue(description);
-    query.addBindValue(icon);
-    query.addBindValue(QDateTime::currentDateTime());
-    query.addBindValue(id);
-    if (!query.exec())
-        return;
+    emit finishedReadPdfEmbedding();
 }

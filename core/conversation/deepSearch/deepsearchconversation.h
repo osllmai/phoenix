@@ -43,6 +43,15 @@ public:
 
     virtual ~DeepSearchConversation();
 
+    enum class DeepSearchState {
+        StartThinking,
+        SearchInArxiv,
+        PdfTokenizer,
+        TopK,
+        SendModel,
+        Finished
+    };
+
     Q_INVOKABLE void readMessages();
     Q_INVOKABLE void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
     Q_INVOKABLE void stop();
@@ -61,7 +70,10 @@ public slots:
     void updateModelSettingsConversation();
 
 private:
-
+    // void thinking();
+    // void downloadRequest(const int id, QString directoryPath);
+    // void tokenizer();
+    // void sendPrompt();
 };
 
 #endif // DEEPSEARCHCONVERSATION_H

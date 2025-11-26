@@ -19,17 +19,18 @@ MessageManager::MessageManager(QSqlDatabase db, QObject* parent)
 MessageManager::~MessageManager(){}
 
 const QString MessageManager::MESSAGE_SQL = QLatin1String(R"(
-    CREATE TABLE message(
-            conversation_id INTEGER NOT NULL,
-            id INTEGER NOT NULL UNIQUE,
-            text TEXT,
-            fileName TEXT,
-            date DATE NOT NULL,
-            icon TEXT NOT NULL,
-            isPrompt BOOL NOT NULL,
-            like INTEGER NOT NULL,
-            PRIMARY KEY(id AUTOINCREMENT),
-            foreign key(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
+    CREATE TABLE IF NOT EXISTS message(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        conversation_id INTEGER NOT NULL,
+        text TEXT,
+        fileName TEXT,
+        date TEXT NOT NULL,
+        icon TEXT NOT NULL,
+        isPrompt INTEGER NOT NULL,
+        like INTEGER NOT NULL,
+        FOREIGN KEY(conversation_id)
+        REFERENCES conversation(id)
+        ON DELETE CASCADE
     )
 )");
 
