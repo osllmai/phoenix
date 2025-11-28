@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 33)
+set(APP_VERSION_PATCH 34)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -17,18 +17,22 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network Xml TextToSpeech HttpServer)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Gui WebView Concurrent Qml Sql Network Xml TextToSpeech HttpServer )
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/core
     ${CMAKE_SOURCE_DIR}/core/model/
+    ${CMAKE_SOURCE_DIR}/core/database
+    ${CMAKE_SOURCE_DIR}/core/database/managers
     ${CMAKE_SOURCE_DIR}/core/model/offline
     ${CMAKE_SOURCE_DIR}/core/model/online
     ${CMAKE_SOURCE_DIR}/core/model/huggingface
     ${CMAKE_SOURCE_DIR}/core/conversation
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
+    ${CMAKE_SOURCE_DIR}/core/conversation/text
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
     ${CMAKE_SOURCE_DIR}/core/conversation/provider/worker
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
@@ -72,7 +76,7 @@ qt_add_executable(app${APP_NAME}
     core/main.cpp
     ${APP_ICON_RESOURCE}
 
-    core/database.h core/database.cpp
+    core/database/database.h core/database/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
     core/clipboard.h core/clipboard.cpp
 
@@ -284,6 +288,7 @@ qt_add_resources(app${APP_NAME}
         media/icon/linkedin.svg
         media/icon/visiblePassword.svg
         media/icon/eyePassword.svg
+        media/icon/deepSearch.svg
 
 
         media/image_company/adobe.svg
@@ -724,6 +729,28 @@ qt_add_qml_module(app${APP_NAME}
     SOURCES core/provider/worker/apikey.h
     SOURCES core/library/convert/convertworker.h core/library/convert/convertworker.cpp
     SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
+    QML_FILES view/sql/SQLView.qml
+    SOURCES core/database/managers/modelmanager.h core/database/managers/modelmanager.cpp
+    SOURCES core/database/managers/conversationmanager.h core/database/managers/conversationmanager.cpp
+    SOURCES core/database/managers/messagemanager.h core/database/managers/messagemanager.cpp
+    QML_FILES view/pdf/PDFView.qml
+    SOURCES core/utils.h core/utils.cpp
+    QML_FILES view/deepsearch/DeepSearchView.qml
+    QML_FILES view/deepsearch/components/DeepSearchBody.qml
+    QML_FILES view/deepsearch/components/DeepSearchHeader.qml
+    SOURCES core/arxivfetcher.h core/arxivfetcher.cpp
+    SOURCES core/arxivarticlelist.h core/arxivarticlelist.cpp
+    QML_FILES view/chat/components/chat/components/AddFileAndMore.qml
+    QML_FILES view/component_library/button/MyComboBoxDelegate.qml
+    SOURCES core/conversation/text/textconversation.h core/conversation/text/textconversation.cpp
+    SOURCES core/conversation/deepSearch/deepsearchconversation.h core/conversation/deepSearch/deepsearchconversation.cpp
+    SOURCES core/database/managers/pdfmanager.h core/database/managers/pdfmanager.cpp
+    SOURCES core/database/managers/pdfembeddingmaneger.h core/database/managers/pdfembeddingmaneger.cpp
+    SOURCES core/conversation/deepSearch/tokenizer/tokenizer.h core/conversation/deepSearch/tokenizer/tokenizer.cpp
+    SOURCES core/conversation/deepSearch/tokenizer/tokenizerworker.h core/conversation/deepSearch/tokenizer/tokenizerworker.cpp
+    SOURCES core/conversation/deepSearch/download/downloadpdf.h core/conversation/deepSearch/download/downloadpdf.cpp
+    QML_FILES view/chat/components/deepSearchLog/DeepSearchLogList.qml
+    QML_FILES view/chat/components/DeepSearchThinking.qml
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -750,40 +777,11 @@ target_link_libraries(app${APP_NAME}
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt${QT_VERSION_MAJOR}::HttpServer
         Qt${QT_VERSION_MAJOR}::Xml
+        Qt${QT_VERSION_MAJOR}::WebView
         Qt::Qml
         Qt::Gui
 )
 include(GNUInstallDirs)
-
-
-# ---- Linux desktop entry installation ----
-if(UNIX AND NOT APPLE)
-    # Set paths
-    set(DESKTOP_FILE "${CMAKE_BINARY_DIR}/phoenix.desktop")
-    set(ICON_FILE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.png")
-
-    # Generate .desktop file dynamically
-    file(WRITE ${DESKTOP_FILE}
-        "[Desktop Entry]\n"
-        "Version=1.0\n"
-        "Name=Phoenix\n"
-        "Comment=Phoenix AI App\n"
-        "Exec=${CMAKE_INSTALL_PREFIX}/bin/appphoenix\n"
-        "Icon=${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps/phoenix.png\n"
-        "Terminal=false\n"
-        "Type=Application\n"
-        "Categories=Utility;Development;\n"
-    )
-
-    # Install desktop entry and icon
-    install(FILES ${DESKTOP_FILE}
-        DESTINATION share/applications
-    )
-    install(FILES ${ICON_FILE}
-        DESTINATION share/icons/hicolor/256x256/apps
-        RENAME phoenix.png
-    )
-endif()
 
 # ---- macOS bundle settings ----
 if(APPLE)
@@ -870,6 +868,19 @@ endif()
 configure_file(
     ${CMAKE_SOURCE_DIR}/resources/markitdown/${MARKITDOWN_FILE}
     ${BIN_DIR}/markitdown/${MARKITDOWN_FILE}
+    COPYONLY
+)
+
+# Copy
+if(WIN32)
+    set(TOKENIZER_FILE pdf_to_embedding.exe)
+else()
+    set(TOKENIZER_FILE pdf_to_embedding)  # macOS/Linux
+endif()
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE}
+    ${BIN_DIR}/tokenizer/${TOKENIZER_FILE}
     COPYONLY
 )
 

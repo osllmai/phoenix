@@ -26,6 +26,7 @@ class Conversation : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(QDateTime date READ date NOTIFY dateChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QString type READ type CONSTANT FINAL)
     Q_PROPERTY(bool isPinned READ isPinned WRITE setIsPinned NOTIFY isPinnedChanged)
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged)
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
@@ -37,9 +38,9 @@ class Conversation : public QObject
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
         m_responseInProgress(false) {}
-    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
-    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                           const QDateTime &date, const bool isPinned,
                           const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
@@ -99,6 +100,8 @@ public:
     bool isModelChanged() const;
     void setIsModelChanged(bool newIsModelChanged);
 
+    QString type() const;
+
 public slots:
     virtual void loadModelResult(const bool result, const QString &warning);
     virtual void tokenResponse(const QString &token);
@@ -139,6 +142,7 @@ private:
     QString m_description;
     QDateTime m_date;
     QString m_icon;
+    QString m_type;
     bool m_isPinned;
     bool m_isLoadModel;
     bool m_loadModelInProgress;

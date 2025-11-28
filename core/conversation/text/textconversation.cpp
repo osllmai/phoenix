@@ -8,17 +8,17 @@
 #include "./conversationlist.h"
 
 TextConversation::TextConversation(int id, const QString &title, const QString &description, const QString &icon,
-                           const QDateTime &date, const bool isPinned, QObject *parent)
-    : Conversation(id, title, description, icon, date, isPinned, parent)
+                            const QString type, const QDateTime &date, const bool isPinned, QObject *parent)
+    : Conversation(id, title, description, icon, type, date, isPinned, parent)
 {}
 
 TextConversation::TextConversation(int id, const QString &title, const QString &description, const QString &icon,
-                           const QDateTime &date, const bool isPinned,
+                            const QString type, const QDateTime &date, const bool isPinned,
                            const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                            const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                            const int &contextLength, const int &numberOfGPULayers , QObject *parent)
-    : Conversation(id, title, description, icon, date, isPinned, stream, promptTemplate, systemPrompt,
+    : Conversation(id, title, description, icon, type, date, isPinned, stream, promptTemplate, systemPrompt,
                    temperature, topK, topP, minP, repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens,
                    contextLength, numberOfGPULayers, parent)
 {}

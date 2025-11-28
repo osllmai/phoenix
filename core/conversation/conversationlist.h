@@ -6,7 +6,8 @@
 #include <QAbstractListModel>
 #include <QRegularExpression>
 
-#include "conversation.h"
+#include "textconversation.h"
+#include "deepsearchconversation.h"
 #include "model/model.h"
 
 class ConversationList: public QAbstractListModel
@@ -51,7 +52,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo);
+    Q_INVOKABLE void addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo, const QString &converstationType);
     Q_INVOKABLE void selectCurrentConversationRequest(const int id);
     Q_INVOKABLE void deleteRequest(const int id);
     Q_INVOKABLE void pinnedRequest(const int id, const bool isPinned);

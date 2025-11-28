@@ -43,7 +43,7 @@ ComboBox {
         y: comboBoxId.height + 4
         modal: false
         focus: true
-        padding: 0
+        padding: 10
 
         background: Rectangle {
             radius: 10
@@ -56,7 +56,6 @@ ComboBox {
             id: listView
             width: parent.width
             implicitHeight: Math.min(contentHeight, 220)
-            anchors.margins: 10
             clip: true
 
             model: ListModel {
@@ -70,14 +69,20 @@ ComboBox {
             }
 
             delegate: Item{
-                width: listView.width - 10; height: 45
+                width: listView.width ; height: 45
 
                 MyComboBoxDelegate {
                    id: indoxItem
+                   checkselectItem: control.currentTextConverstation === model.title? true: false
                    anchors.fill: parent; anchors.margins: indoxItem.hovered? 2: 4
                    Behavior on anchors.margins{ NumberAnimation{ duration: 200}}
+                   onClicked: {
+                       control.currentTextConverstation = model.title
+                       control.currentIconConverstation = model.icon
+                   }
                }
             }
+
         }
     }
 

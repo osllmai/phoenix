@@ -7,13 +7,14 @@
 
 #include "./conversationlist.h"
 
-Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
+Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                            const QDateTime &date, const bool isPinned, QObject *parent)
     : QObject(parent),
     m_id(id),
     m_title(title),
     m_description(description),
     m_icon(icon),
+    m_type(type),
     m_date(date),
     m_isPinned(isPinned),
     m_isLoadModel(false),
@@ -40,7 +41,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     connect(m_modelSettings, &ModelSettings::numberOfGPULayersChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
 }
 
-Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon,
+Conversation::Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                            const QDateTime &date, const bool isPinned,
                            const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                            const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
@@ -51,6 +52,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_title(title),
     m_description(description),
     m_icon(icon),
+    m_type(type),
     m_date(date),
     m_isPinned(isPinned),
     m_isLoadModel(false),
@@ -179,6 +181,8 @@ void Conversation::setIcon(const QString &icon) {
         emit iconChanged();
     }
 }
+
+QString Conversation::type() const{return m_type;}
 
 const bool Conversation::isPinned() const{return m_isPinned;}
 void Conversation::setIsPinned(bool isPinned){

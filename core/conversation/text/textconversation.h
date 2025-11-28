@@ -28,11 +28,11 @@ public:
         : Conversation(parent) {}
 
     explicit TextConversation(int id, const QString &title, const QString &description,
-                              const QString &icon, const QDateTime &date, const bool isPinned,
+                              const QString &icon, const QString type,  const QDateTime &date, const bool isPinned,
                               QObject *parent = nullptr);
 
     explicit TextConversation(int id, const QString &title, const QString &description,
-                              const QString &icon, const QDateTime &date, const bool isPinned,
+                              const QString &icon, const QString type,  const QDateTime &date, const bool isPinned,
                               const bool &stream, const QString &promptTemplate,
                               const QString &systemPrompt, const double &temperature,
                               const int &topK, const double &topP, const double &minP,

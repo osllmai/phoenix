@@ -151,11 +151,10 @@
         <file>component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml</file>
         <file>component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml</file>
         <file>component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml</file>
-	<file>sql/SQLView.qml</file>
-	<file>pdf/PDFView.qml</file>
-	<file>deepsearch/DeepSearchView.qml</file>
-	<file>deepsearch/components/DeepSearchBody.qml</file>
-	<file>deepsearch/components/DeepSearchHeader.qml</file>
-
+        <file>sql/SQLView.qml</file>
+        <file>pdf/PDFView.qml</file>
+        <file>deepsearch/DeepSearchView.qml</file>
+        <file>deepsearch/components/DeepSearchBody.qml</file>
+        <file>deepsearch/components/DeepSearchHeader.qml</file>
     </qresource>
 </RCC>

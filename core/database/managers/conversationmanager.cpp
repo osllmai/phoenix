@@ -48,7 +48,7 @@ const QString ConversationManager::INSERT_CONVERSATION_SQL = QLatin1String(R"(
             temperature, topK, topP, minP, repeatPenalty,
             promptBatchSize, maxTokens, repeatPenaltyTokens,
             contextLength, numberOfGPULayers)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString ConversationManager::READ_CONVERSATION_SQL = QLatin1String(R"(

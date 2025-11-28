@@ -87,7 +87,7 @@ QHash<int, QByteArray> ConversationList::roleNames() const {
     return roles;
 }
 
-void ConversationList::addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo){
+void ConversationList::addRequest(const QString &firstPrompt, const QString &fileName, const QString &fileInfo, const QString &converstationType){
     QStringList words = firstPrompt.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
 
     QStringList selectedWords;
@@ -109,8 +109,10 @@ void ConversationList::addRequest(const QString &firstPrompt, const QString &fil
         _propmtTemplate = m_modelPromptTemplate;
 
 
-    emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, "text", true,
+    emit requestInsertConversation(title, firstPrompt, fileName, fileInfo, QDateTime::currentDateTime(), m_modelIcon, false, converstationType, true,
                                    _propmtTemplate, _systemPrompt, 0.7, 40, 0.4,0.0,1.18,128,4096,64,4096,80, true);
+
+    qInfo()<<"HI Dear";
 }
 
 void ConversationList::deleteRequest(const int id){
@@ -213,19 +215,34 @@ void ConversationList::addConversation(const int id, const QString &title, const
     const int index = m_conversations.size();
     beginInsertRows(QModelIndex(), index, index);
 
-    Conversation* conversation = new Conversation(id, title, description, icon, date, isPinned,
-                                                  stream, promptTemplate, systemPrompt,
-                                                  temperature, topK, topP, minP, repeatPenalty,
-                                                  promptBatchSize, maxTokens, repeatPenaltyTokens,
-                                                  contextLength, numberOfGPULayers, this);
-
-    m_conversations.append(conversation);
-    connect(conversation, &Conversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
-    connect(conversation, &Conversation::requestUpdateDescriptionText, this, &ConversationList::updateDescriptionText, Qt::QueuedConnection);
+    Conversation* conversation;
+    if(type == "Deep research"){
+        conversation = new DeepSearchConversation(id, title, description, icon, type, date, isPinned,
+                                        stream, promptTemplate, systemPrompt,
+                                        temperature, topK, topP, minP, repeatPenalty,
+                                        promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                        contextLength, numberOfGPULayers, this);
+        m_conversations.append(conversation);
+        connect(conversation, &DeepSearchConversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestUpdateDescriptionText, this, &ConversationList::updateDescriptionText, Qt::QueuedConnection);
+    }else {
+        conversation = new TextConversation(id, title, description, icon, type, date, isPinned,
+                                                      stream, promptTemplate, systemPrompt,
+                                                      temperature, topK, topP, minP, repeatPenalty,
+                                                      promptBatchSize, maxTokens, repeatPenaltyTokens,
+                                                      contextLength, numberOfGPULayers, this);
+        m_conversations.append(conversation);
+        connect(conversation, &TextConversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestUpdateDescriptionText, this, &ConversationList::updateDescriptionText, Qt::QueuedConnection);
+    }
     endInsertRows();
     emit countChanged();
 
@@ -239,7 +256,6 @@ void ConversationList::addConversation(const int id, const QString &title, const
         m_currentConversation->prompt(description, fileName, fileInfo);
 
         setIsEmptyConversation(false);
-
     }
 }
 

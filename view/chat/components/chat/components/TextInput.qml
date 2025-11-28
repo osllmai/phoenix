@@ -72,7 +72,7 @@ Item {
                                             !conversationList.currentConversation.responseInProgress &&
                                             !conversationList.currentConversation.loadModelInProgress) ||
                                             conversationList.isEmptyConversation){
-                      sendPrompt(inputTextBox.text)
+                      sendPrompt(inputTextBox.text, control.currentTextConverstation)
                       if(conversationList.modelSelect)
                             inputTextBox.text = ""
 
