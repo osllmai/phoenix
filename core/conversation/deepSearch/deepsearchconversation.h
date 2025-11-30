@@ -44,12 +44,23 @@ public:
     virtual ~DeepSearchConversation();
 
     enum class DeepSearchState {
-        StartThinking,
-        SearchInArxiv,
-        PdfTokenizer,
-        TopK,
-        SendModel,
-        Finished
+        WaitingPrompt,       // Waiting for user prompt
+        LoadModel,           // Loading local model
+        ClassifyQuery,       // Classify user's query: local answer or external search needed?
+        // DecideSources,       // Decide which external sources should be used (arXiv, Web, Local Docs)
+        SearchInSources,     // Perform search in selected sources
+        DownloadDocuments,   // Download necessary documents (e.g., PDFs from results)
+        PdfTokenizer,        // Extract text / tokenize downloaded documents
+        RAGPreparation,      // Retrieve relevant chunks & prepare context prompt for LLM (RAG)
+        SendForTextModel,    // Send final combined prompt to language model
+        Finished             // Final response completed and conversation state reset
+    };
+
+    enum class DataSource {
+        None,
+        LocalDocs,
+        Arxiv,
+        Web
     };
 
     Q_INVOKABLE void readMessages();
@@ -70,10 +81,17 @@ public slots:
     void updateModelSettingsConversation();
 
 private:
-    // void thinking();
-    // void downloadRequest(const int id, QString directoryPath);
-    // void tokenizer();
-    // void sendPrompt();
+    void handleState();
+    void classifyQuery();
+    void finalPrompt();
+    void sendPromptForModel(const QString &input, const bool &stream);
+
+    DeepSearchState m_state = DeepSearchState::WaitingPrompt;
+    QString m_userQuery;
+    QString m_userFileName;
+    QString m_userFileInfo;
+
+    DataSource m_selectedSources = DataSource::Arxiv;
 };
 
 #endif // DEEPSEARCHCONVERSATION_H
