@@ -129,7 +129,6 @@ void MessageList::updateAllTextMessage() {
     emit dataChanged(createIndex(0, 0), createIndex(m_messages.size() - 1, 0), {TextRole});
 }
 
-
 QVariantMap MessageList::lastMessageInfo() const {
     QVariantMap result;
     if (m_messages.isEmpty()) {

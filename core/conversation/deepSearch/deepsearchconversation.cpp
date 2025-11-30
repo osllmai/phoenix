@@ -34,14 +34,23 @@ void DeepSearchConversation::readMessages(){
 
 
 void DeepSearchConversation::prompt(const QString &input, const QString &fileName, const QString &fileInfo){
-        if(m_state != DeepSearchState::WaitingPrompt)
-            return;
 
+    switch (m_state) {
+    case DeepSearchState::WaitingPrompt:
         m_state = DeepSearchState::ClassifyQuery;
+        break;
 
-        m_userQuery = input;
-        m_userFileName = fileName;
-        m_userFileInfo = fileInfo;
+    case DeepSearchState::WaitingUserClarifications:
+        m_state = DeepSearchState::GenerateSearchKeywords;
+        break;
+
+    default:
+        return;
+    }
+
+    m_userQuery = input;
+    m_userFileName = fileName;
+    m_userFileInfo = fileInfo;
 
     emit requestInsertMessage(id(), input, fileName, "qrc:/media/image_company/user.svg", true, 0);
     emit requestInsertMessage(id(), "", "", model()->icon(),  false, 0);
@@ -57,8 +66,23 @@ void DeepSearchConversation::handleState() {
         classifyQuery();
         break;
 
+    case DeepSearchState::GenerateClarificationQuestions:
+        qCInfo(logDeepSearch) << "GenerateClarificationQuestions.";
+        generateClarificationQuestions();
+        break;
+
+    case DeepSearchState::WaitingUserClarifications:
+        qCInfo(logDeepSearch) << "CWaitingUserClarifications.";
+        break;
+
+    case DeepSearchState::GenerateSearchKeywords:
+        qCInfo(logDeepSearch) << "GenerateSearchKeywords.";
+        generateSearchKeywords();
+        break;
+
     case DeepSearchState::SearchInSources:
         qCInfo(logDeepSearch) << "Searching in selected sources.";
+        startSearchInSources();
         break;
 
     case DeepSearchState::DownloadDocuments:
@@ -170,10 +194,6 @@ void DeepSearchConversation::tokenResponse(const QString &token){
         qInfo() << "State: WaitingPrompt - Still waiting for user input";
         break;
 
-    case DeepSearchState::LoadModel:
-        qInfo() << "State: LoadModel - Loading model...";
-        break;
-
     case DeepSearchState::ClassifyQuery:
         qInfo() << "State: ClassifyQuery" << token;
         if (token.contains("Yes", Qt::CaseInsensitive)) {
@@ -183,6 +203,19 @@ void DeepSearchConversation::tokenResponse(const QString &token){
             m_selectedSources = DataSource::None;
             qInfo() << "Classified as Local Response → Sending to LLM";
         }
+        break;
+
+    case DeepSearchState::GenerateClarificationQuestions:
+        qCInfo(logDeepSearch) << "GenerateClarificationQuestions.";
+        lastMessage = messageList()->lastMessageInfo();
+        lastText = lastMessage["text"].toString();
+        emit requestUpdateDescriptionText(id(), lastText);
+        messageList()->updateLastMessage(token);
+        break;
+
+    case DeepSearchState::GenerateSearchKeywords:
+        qInfo() << "Search Keywords: " << token;
+        m_searchKeywords = token;
         break;
 
     case DeepSearchState::SearchInSources:
@@ -228,10 +261,6 @@ void DeepSearchConversation::finishedResponse(const QString &warning){
         qInfo() << "State: WaitingPrompt - Still waiting for user input";
         break;
 
-    case DeepSearchState::LoadModel:
-        qInfo() << "State: LoadModel - Loading model...";
-        break;
-
     case DeepSearchState::ClassifyQuery:
         switch (m_selectedSources) {
         case DataSource::None:
@@ -239,12 +268,37 @@ void DeepSearchConversation::finishedResponse(const QString &warning){
             break;
 
         case DataSource::Arxiv:
-            m_state = DeepSearchState::SearchInSources;
+            m_state = DeepSearchState::GenerateClarificationQuestions;
             break;
         default:
             qCWarning(logDeepSearch) << "Unhandled state in handleState.";
             break;
         }
+        break;
+
+    case DeepSearchState::GenerateClarificationQuestions:
+        qCInfo(logDeepSearch) << "GenerateClarificationQuestions.";
+        lastMessage = messageList()->lastMessageInfo();
+        if (!lastMessage.isEmpty()) {
+            int lastId = lastMessage["id"].toInt();
+            QString lastText = lastMessage["text"].toString();
+
+            emit requestUpdateTextMessage(id(), lastId, lastText);
+        }
+        setResponseInProgress(false);
+        setLoadModelInProgress(false);
+        setStopRequest(false);
+
+        if(isModelChanged()){
+            unloadModel();
+            setIsModelChanged(false);
+        }
+
+        m_state = DeepSearchState::WaitingUserClarifications;
+        break;
+
+    case DeepSearchState::GenerateSearchKeywords:
+        m_state = DeepSearchState::SearchInSources;
         break;
 
     case DeepSearchState::SearchInSources:
@@ -360,7 +414,6 @@ void DeepSearchConversation::sendPromptForModel(const QString &input, const bool
                        modelSettings()->numberOfGPULayers());
 }
 
-
 void DeepSearchConversation::classifyQuery() {
 
     QString classifyPrompt = R"(
@@ -385,6 +438,145 @@ void DeepSearchConversation::classifyQuery() {
 
     sendPromptForModel(text_prompt, false);
 }
+
+void DeepSearchConversation::generateClarificationQuestions() {
+
+    QString clarifyPrompt = R"(
+        You are an AI assistant specialized in scientific information retrieval.
+        Your task is to ask the user clarifying questions ONLY if necessary to perform
+        a more accurate scientific deep search.
+
+        Rules:
+        - If the user query is unclear, ambiguous, or too broad → ask 2 to 4 clarifying questions
+        - If the query is already specific enough → respond with "NO_QUESTIONS_NEEDED"
+        - Do NOT answer the original question here
+        - Do NOT add explanations
+        - Keep questions short and focused
+
+        Output format:
+        - If questions needed: each question as a bullet using "-"
+        - If not needed: output exactly "NO_QUESTIONS_NEEDED"
+
+        User Query:
+        {{query}}
+
+        Response:
+    )";
+
+    QString text_prompt = clarifyPrompt;
+    text_prompt.replace("{{query}}", m_userQuery);
+
+    sendPromptForModel(text_prompt, modelSettings()->stream());
+}
+
+void DeepSearchConversation::generateSearchKeywords() {
+
+    QString keywordPrompt = R"(
+        You are an AI assistant specialized in scientific paper search and academic indexing.
+        Your goal is to generate multiple high-quality search keywords or query phrases
+        for finding the most relevant research papers on arXiv.
+
+        Context to Consider:
+        - The user's latest query: {{query}}
+        - The previous messages in conversation: {{history_2}}
+
+        Requirements:
+        • Provide at least 5 optimized keywords
+        • Each keyword must reflect precise scientific terminology used in arXiv publications
+        • Avoid generic or trivial keywords
+        • Include the most likely arXiv subject category for each keyword (e.g., cs.CL, cs.LG, math.IT)
+
+        Output Rules:
+        • Respond ONLY with valid JSON object
+        • Do NOT add bullet points, explanations, or extra comments outside JSON
+        • JSON must include exactly this structure:
+
+        {
+            "keywords": [
+                {
+                    "term": "keyword or phrase",
+                    "category": "arXiv subject class",
+                    "confidence": 0.0-1.0
+                }
+            ]
+        }
+
+        Response:
+    )";
+
+    keywordPrompt.replace("{{query}}", m_userQuery);
+
+    QString history = messageList()->history(2);
+    keywordPrompt.replace("{{history_2}}", history);
+
+    sendPromptForModel(keywordPrompt, false);
+}
+
+void DeepSearchConversation::startSearchInSources() {
+
+    QThread *thread = new QThread;
+    ArxivSearchWorker *worker = new ArxivSearchWorker(m_searchKeywords);
+
+    worker->moveToThread(thread);
+
+    connect(thread, &QThread::started, worker, &ArxivSearchWorker::process);
+    connect(worker, &ArxivSearchWorker::searchFinished,
+            this, &DeepSearchConversation::onSearchResultsReady);
+    connect(worker, &ArxivSearchWorker::searchFinished,
+            thread, &QThread::quit);
+    connect(worker, &ArxivSearchWorker::searchFinished,
+            worker, &QObject::deleteLater);
+    connect(thread, &QThread::finished,
+            thread, &QObject::deleteLater);
+
+    thread->start();
+}
+
+// void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
+//     for (const auto &item : results) {
+//         m_arxivModel->appendArticle(item); // Your model insert method
+//     }
+
+//     qCInfo(logDeepSearch) << "Search completed. Found:" << results.size();
+// }
+
+void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
+
+    if (results.isEmpty()) {
+        qCWarning(logDeepSearch) << " No search results retrieved.";
+        return;
+    }
+
+    qCInfo(logDeepSearch) << " Search completed. Results count:" << results.size();
+
+    int index = 0;
+    for (const auto &item : results) {
+        QString title = item.value("title").toString();
+        QString authors = item.value("authors").toString();
+        QString link = item.value("link").toString();
+
+        qCInfo(logDeepSearch)
+            << QString(" [%1] Title: %2").arg(index).arg(title);
+
+        qCInfo(logDeepSearch)
+            << QString(" Authors: %1").arg(authors);
+
+        qCInfo(logDeepSearch)
+            << QString(" Link: %1").arg(link);
+
+        qCInfo(logDeepSearch) << "----------------------------------";
+
+        m_arxivModel->appendArticle(item);
+        index++;
+    }
+
+    qCInfo(logDeepSearch) << " All results added to model for UI display.";
+
+    m_state = DeepSearchState::DownloadDocuments;
+    handleState();
+}
+
+
 
 void DeepSearchConversation::finalPrompt(){
     switch (m_selectedSources) {

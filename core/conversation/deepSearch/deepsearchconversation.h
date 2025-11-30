@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QDateTime>
+#include <QThread>
 
 #include "../../model/modelsettings.h"
 #include "../chat/messagelist.h"
@@ -14,9 +15,11 @@
 #include "../../model/online/onlinecompany.h"
 #include "../../provider/provider.h"
 #include "../conversation.h"
+#include "./arxiv/arxivsearchworker.h"
 
 #include <QLoggingCategory>
 #include "logcategories.h"
+#include "arxivarticlelist.h"
 
 class DeepSearchConversation : public Conversation
 {
@@ -44,16 +47,22 @@ public:
     virtual ~DeepSearchConversation();
 
     enum class DeepSearchState {
-        WaitingPrompt,       // Waiting for user prompt
-        LoadModel,           // Loading local model
-        ClassifyQuery,       // Classify user's query: local answer or external search needed?
-        // DecideSources,       // Decide which external sources should be used (arXiv, Web, Local Docs)
-        SearchInSources,     // Perform search in selected sources
-        DownloadDocuments,   // Download necessary documents (e.g., PDFs from results)
-        PdfTokenizer,        // Extract text / tokenize downloaded documents
-        RAGPreparation,      // Retrieve relevant chunks & prepare context prompt for LLM (RAG)
-        SendForTextModel,    // Send final combined prompt to language model
-        Finished             // Final response completed and conversation state reset
+        WaitingPrompt,           // Waiting for initial user input
+
+        ClassifyQuery,           // Decide: local answer or deep/external search required?
+
+        GenerateClarificationQuestions, // Model generates clarifying questions if needed
+        WaitingUserClarifications,      // Waiting for user's answers to those questions
+
+        GenerateSearchKeywords,  // Use model to generate optimized keywords for search
+
+        SearchInSources,         // Search in external sources (arXiv, Web, Local Docs)
+        DownloadDocuments,       // Download relevant documents
+        PdfTokenizer,            // Extract text from documents
+        RAGPreparation,          // Retrieve relevant chunks for RAG context
+        SendForTextModel,        // Send final constructed prompt to LLM
+
+        Finished                 // Response is done & reset conversation state
     };
 
     enum class DataSource {
@@ -83,6 +92,10 @@ public slots:
 private:
     void handleState();
     void classifyQuery();
+    void generateClarificationQuestions();
+    void generateSearchKeywords();
+    void onSearchResultsReady(QList<QVariantMap> results);
+    void startSearchInSources();
     void finalPrompt();
     void sendPromptForModel(const QString &input, const bool &stream);
 
@@ -90,8 +103,11 @@ private:
     QString m_userQuery;
     QString m_userFileName;
     QString m_userFileInfo;
+    QString m_searchKeywords;
 
     DataSource m_selectedSources = DataSource::Arxiv;
+    ArxivArticleList *m_arxivModel;
+
 };
 
 #endif // DEEPSEARCHCONVERSATION_H
