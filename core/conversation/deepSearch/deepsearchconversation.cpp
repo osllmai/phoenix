@@ -587,8 +587,6 @@ void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
         qCInfo(logDeepSearch)
             << QString(" published: %1").arg(item.value("published").toString());
 
-        qCInfo(logDeepSearch) << "----------------------------------";
-
         m_arxivModel->appendArticle(item);
         index++;
     }

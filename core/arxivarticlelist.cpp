@@ -29,6 +29,9 @@ QVariant ArxivArticleList::data(const QModelIndex &index, int role) const {
         return article.value("pdf");
     case PublishedRole:
         return article.value("published");
+    case HasEmbeddingRole:
+        return article.value("hasEmbedding", false);
+
     }
     return QVariant();
 }
@@ -40,7 +43,8 @@ QHash<int, QByteArray> ArxivArticleList::roleNames() const {
         {SummaryRole, "summary"},
         {LinkRole, "link"},
         {PdfRole, "pdf"},
-        {PublishedRole, "published"}
+        {PublishedRole, "published"},
+        {HasEmbeddingRole, "hasEmbedding"}
     };
 }
 
@@ -56,116 +60,80 @@ void ArxivArticleList::clearList() {
     endResetModel();
 }
 
+void ArxivArticleList::processEmbeddings() {
 
+    QtConcurrent::run([this]() {
 
-// #include "arxivarticlelist.h"
-// #include <QNetworkRequest>
-// #include <QUrl>
-// #include <QDebug>
+        QNetworkAccessManager manager;
+        QJsonObject rootObj;
+        QJsonObject settingsObj;
+        QJsonArray filesArray;
 
-// ArxivArticleList::ArxivArticleList(QObject *parent)
-//     : QAbstractListModel(parent)
-// {
-//     m_manager = new QNetworkAccessManager(this);
-// }
+        settingsObj.insert("chunk_words", 1000);
+        settingsObj.insert("chunk_overlap", 200);
+        settingsObj.insert("min_chunk_length", 100);
+        settingsObj.insert("model_path",
+                           "E:/llama.cpp/build/bin/Release/multi-qa-mpnet-base-cos-v1");
+        settingsObj.insert("use_gpu", true);
+        settingsObj.insert("language", "en");
+        settingsObj.insert("lowercase", true);
+        settingsObj.insert("remove_newlines", true);
+        settingsObj.insert("save_embeddings_only", false);
+        settingsObj.insert("pdf_password", QJsonValue::Null);
 
-// int ArxivArticleList::rowCount(const QModelIndex &parent) const
-// {
-//     if(parent.isValid()) return 0;
-//     return m_articles.count();
-// }
+        rootObj.insert("settings", settingsObj);
 
-// QVariant ArxivArticleList::data(const QModelIndex &index, int role) const
-// {
-//     if(!index.isValid() || index.row() >= m_articles.count())
-//         return QVariant();
+        QString tempDir = QDir::tempPath() + "/arxiv_embeddings/";
+        QDir().mkpath(tempDir);
 
-//     const QVariantMap &article = m_articles.at(index.row());
-//     switch(role) {
-//     case TitleRole: return article.value("title");
-//     case AuthorsRole: return article.value("authors");
-//     case SummaryRole: return article.value("summary");
-//     case LinkRole: return article.value("link");
-//     case PdfRole: return article.value("pdf");
-//     default: return QVariant();
-//     }
-// }
+        for (int i = 0; i < m_articles.size(); i++) {
 
-// QHash<int, QByteArray> ArxivArticleList::roleNames() const
-// {
-//     return {
-//         {TitleRole, "title"},
-//         {AuthorsRole, "authors"},
-//         {SummaryRole, "summary"},
-//         {LinkRole, "link"},
-//         {PdfRole, "pdf"}
-//     };
-// }
+            QVariantMap &article = m_articles[i];
+            if (article.value("hasEmbedding", false).toBool())
+                continue;
 
-// void ArxivArticleList::setSearchQuery(const QString &query)
-// {
-//     if(query == m_searchQuery) return;
-//     m_searchQuery = query;
-//     emit searchQueryChanged();
-//     fetchArticles();
-// }
+            QString pdfUrl = article.value("pdf").toString();
+            QString tempPdfPath = tempDir + QString("file_%1.pdf").arg(i);
+            QString tempJsonPath = tempDir + QString("file_%1.json").arg(i);
 
-// void ArxivArticleList::fetchArticles()
-// {
-//     if(m_searchQuery.isEmpty()) return;
+            QNetworkReply *reply = manager.get(QNetworkRequest(QUrl(pdfUrl)));
 
-//     QString urlStr = QString("https://export.arxiv.org/api/query?search_query=all:%1&start=0&max_results=5")
-//                          .arg(m_searchQuery);
-//     QNetworkRequest request(urlStr);
-//     QNetworkReply *reply = m_manager->get(request);
-//     connect(reply, &QNetworkReply::finished, [this, reply](){ onReplyFinished(reply); });
-// }
+            QEventLoop loop;
+            connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+            loop.exec();
 
-// void ArxivArticleList::onReplyFinished(QNetworkReply* reply)
-// {
-//     if(reply->error() != QNetworkReply::NoError) {
-//         emit fetchError(reply->errorString());
-//         reply->deleteLater();
-//         return;
-//     }
+            QFile file(tempPdfPath);
+            file.open(QIODevice::WriteOnly);
+            file.write(reply->readAll());
+            file.close();
+            reply->deleteLater();
 
-//     QByteArray data = reply->readAll();
-//     QDomDocument doc;
-//     if(!doc.setContent(data)) {
-//         emit fetchError("Failed to parse XML");
-//         reply->deleteLater();
-//         return;
-//     }
+            QJsonObject fileObj;
+            fileObj.insert("pdf", tempPdfPath);
+            fileObj.insert("output", tempJsonPath);
+            filesArray.append(fileObj);
+        }
 
-//     beginResetModel();
-//     m_articles.clear();
+        rootObj.insert("files", filesArray);
 
-//     QDomNodeList entries = doc.elementsByTagName("entry");
-//     for(int i=0; i<entries.count(); ++i) {
-//         QDomElement entry = entries.at(i).toElement();
-//         QVariantMap map;
-//         map["title"] = entry.firstChildElement("title").text();
-//         map["summary"] = entry.firstChildElement("summary").text();
+        QString configPath = tempDir + "config.json";
+        QFile configFile(configPath);
+        configFile.open(QIODevice::WriteOnly);
+        configFile.write(QJsonDocument(rootObj).toJson(QJsonDocument::Indented));
+        configFile.close();
 
-//         QDomNodeList links = entry.elementsByTagName("link");
-//         for(int j=0; j<links.count(); ++j) {
-//             QDomElement l = links.at(j).toElement();
-//             if(l.attribute("title") == "pdf") map["pdf"] = l.attribute("href");
-//             else if(l.attribute("rel") == "alternate") map["link"] = l.attribute("href");
-//         }
+        QProcess process;
+        process.start("pdf_to_embedding.exe", QStringList() << configPath);
+        process.waitForFinished(-1);
 
-//         QDomNodeList authors = entry.elementsByTagName("author");
-//         QStringList authorList;
-//         for(int j=0; j<authors.count(); ++j) {
-//             QDomElement a = authors.at(j).toElement();
-//             authorList.append(a.firstChildElement("name").text());
-//         }
-//         map["authors"] = authorList.join(", ");
+        for (int i = 0; i < m_articles.size(); i++) {
+            QVariantMap &a = m_articles[i];
+            if (!a.value("hasEmbedding", false).toBool()) {
+                a["hasEmbedding"] = true;
+                emit dataChanged(index(i), index(i), {HasEmbeddingRole});
+            }
+        }
 
-//         m_articles.append(map);
-//     }
-//     endResetModel();
-
-//     emit fetchFinished();
-//     reply->deleteLater();
-// }
+        emit embeddingsDone();
+    });
+}
