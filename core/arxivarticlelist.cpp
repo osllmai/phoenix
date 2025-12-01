@@ -27,6 +27,8 @@ QVariant ArxivArticleList::data(const QModelIndex &index, int role) const {
         return article.value("link");
     case PdfRole:
         return article.value("pdf");
+    case PublishedRole:
+        return article.value("published");
     }
     return QVariant();
 }
@@ -37,7 +39,8 @@ QHash<int, QByteArray> ArxivArticleList::roleNames() const {
         {AuthorsRole, "authors"},
         {SummaryRole, "summary"},
         {LinkRole, "link"},
-        {PdfRole, "pdf"}
+        {PdfRole, "pdf"},
+        {PublishedRole, "published"}
     };
 }
 

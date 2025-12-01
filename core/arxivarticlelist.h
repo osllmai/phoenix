@@ -13,7 +13,8 @@ public:
         AuthorsRole,
         SummaryRole,
         LinkRole,
-        PdfRole
+        PdfRole,
+        PublishedRole
     };
 
     explicit ArxivArticleList(QObject *parent = nullptr);

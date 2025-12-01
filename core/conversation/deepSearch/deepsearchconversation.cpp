@@ -5,24 +5,36 @@
 #include "../../provider/provider.h"
 
 #include "./conversationlist.h"
+#include <QQmlEngine>
 
 DeepSearchConversation::DeepSearchConversation(int id, const QString &title, const QString &description, const QString &icon,
-                                    const QString type, const QDateTime &date, const bool isPinned, QObject *parent)
+                                               const QString type, const QDateTime &date, const bool isPinned, QObject *parent)
     : Conversation(id, title, description, icon, type, date, isPinned, parent)
-{}
+{
+    m_arxivModel = new ArxivArticleList(this);
+    QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
+}
 
 DeepSearchConversation::DeepSearchConversation(int id, const QString &title, const QString &description, const QString &icon,
-                                    const QString type, const QDateTime &date, const bool isPinned,
-                                   const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
-                                   const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                   const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                   const int &contextLength, const int &numberOfGPULayers , QObject *parent)
+                                               const QString type, const QDateTime &date, const bool isPinned,
+                                               const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
+                                               const double &temperature, const int &topK, const double &topP, const double &minP,
+                                               const double &repeatPenalty, const int &promptBatchSize, const int &maxTokens,
+                                               const int &repeatPenaltyTokens, const int &contextLength,
+                                               const int &numberOfGPULayers , QObject *parent)
     : Conversation(id, title, description, icon, type, date, isPinned, stream, promptTemplate, systemPrompt,
-                   temperature, topK, topP, minP, repeatPenalty, promptBatchSize, maxTokens, repeatPenaltyTokens,
-                   contextLength, numberOfGPULayers, parent)
-{}
+                   temperature, topK, topP, minP, repeatPenalty, promptBatchSize, maxTokens,
+                   repeatPenaltyTokens, contextLength, numberOfGPULayers, parent)
+{
+    m_arxivModel = new ArxivArticleList(this);
+    QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
+}
 
-DeepSearchConversation::~DeepSearchConversation() {}
+DeepSearchConversation::~DeepSearchConversation() {
+    if (m_arxivModel) {
+        m_arxivModel->clearList();
+    }
+}
 
 void DeepSearchConversation::addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
     messageList()->addMessage(id, text, fileName, date, icon, isPrompt, like);
@@ -31,7 +43,6 @@ void DeepSearchConversation::addMessage(const int id, const QString &text, const
 void DeepSearchConversation::readMessages(){
     emit requestReadMessages(id());
 }
-
 
 void DeepSearchConversation::prompt(const QString &input, const QString &fileName, const QString &fileInfo){
 
@@ -472,37 +483,44 @@ void DeepSearchConversation::generateClarificationQuestions() {
 void DeepSearchConversation::generateSearchKeywords() {
 
     QString keywordPrompt = R"(
-        You are an AI assistant specialized in scientific paper search and academic indexing.
-        Your goal is to generate multiple high-quality search keywords or query phrases
-        for finding the most relevant research papers on arXiv.
+        You are an AI system that generates optimized search queries for arXiv.
 
-        Context to Consider:
-        - The user's latest query: {{query}}
-        - The previous messages in conversation: {{history_2}}
+        Goal:
+        Produce short, precise, high-signal scientific keywords suitable for arXiv API search.
 
-        Requirements:
-        • Provide at least 5 optimized keywords
-        • Each keyword must reflect precise scientific terminology used in arXiv publications
-        • Avoid generic or trivial keywords
-        • Include the most likely arXiv subject category for each keyword (e.g., cs.CL, cs.LG, math.IT)
+        Input Context:
+        - User query: {{query}}
+        - Recent conversation: {{history_2}}
 
-        Output Rules:
-        • Respond ONLY with valid JSON object
-        • Do NOT add bullet points, explanations, or extra comments outside JSON
-        • JSON must include exactly this structure:
+        Strict Rules:
+        • Return EXACTLY 5–8 high-value keyword items
+        • Each keyword MUST:
+          – Use official terminology widely used in arXiv literature
+          – Contain max 2–4 words
+          – Avoid stop-words such as: methods, techniques, frameworks, applications, introduction, approach, strategy
+          – Avoid natural language filler (e.g., “in”, “for”, “based on”)
+          – Be stable concepts, models, or fields (not full questions)
 
+        • Each item MUST include:
+          "term": Short keyword phrase ONLY
+          "category": Valid arXiv subject class such as:
+              cs.CL, cs.LG, cs.IR, cs.AI, math.IT, stat.ML, eess.AS, etc.
+          "confidence": A float between 0.50 and 1.0
+
+        • Respond ONLY with valid JSON:
         {
-            "keywords": [
-                {
-                    "term": "keyword or phrase",
-                    "category": "arXiv subject class",
-                    "confidence": 0.0-1.0
-                }
-            ]
+          "keywords": [
+            {
+              "term": "keyword phrase",
+              "category": "arXiv class",
+              "confidence": 0.0
+            }
+          ]
         }
 
-        Response:
-    )";
+        No comments, no extra text outside the JSON.
+        )";
+
 
     keywordPrompt.replace("{{query}}", m_userQuery);
 
@@ -520,14 +538,10 @@ void DeepSearchConversation::startSearchInSources() {
     worker->moveToThread(thread);
 
     connect(thread, &QThread::started, worker, &ArxivSearchWorker::process);
-    connect(worker, &ArxivSearchWorker::searchFinished,
-            this, &DeepSearchConversation::onSearchResultsReady);
-    connect(worker, &ArxivSearchWorker::searchFinished,
-            thread, &QThread::quit);
-    connect(worker, &ArxivSearchWorker::searchFinished,
-            worker, &QObject::deleteLater);
-    connect(thread, &QThread::finished,
-            thread, &QObject::deleteLater);
+    connect(worker, &ArxivSearchWorker::searchFinished, this, &DeepSearchConversation::onSearchResultsReady);
+    // connect(worker, &ArxivSearchWorker::searchFinished, thread, &QThread::quit);
+    // connect(worker, &ArxivSearchWorker::searchFinished, worker, &QObject::deleteLater);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
 
     thread->start();
 }
@@ -562,7 +576,16 @@ void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
             << QString(" Authors: %1").arg(authors);
 
         qCInfo(logDeepSearch)
+            << QString(" summary: %1").arg(item.value("summary").toString());
+
+        qCInfo(logDeepSearch)
             << QString(" Link: %1").arg(link);
+
+        qCInfo(logDeepSearch)
+            << QString(" pdf: %1").arg(item.value("pdf").toString());
+
+        qCInfo(logDeepSearch)
+            << QString(" published: %1").arg(item.value("published").toString());
 
         qCInfo(logDeepSearch) << "----------------------------------";
 
@@ -575,8 +598,6 @@ void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
     m_state = DeepSearchState::DownloadDocuments;
     handleState();
 }
-
-
 
 void DeepSearchConversation::finalPrompt(){
     switch (m_selectedSources) {
