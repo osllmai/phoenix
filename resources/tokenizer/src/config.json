@@ -1,21 +1,19 @@
 {
   "settings": {
-    "chunk_words": 200,
-    "chunk_overlap": 40,
+    "chunk_words": 300,
+    "chunk_overlap": 0,
     "min_chunk_length": 80,
-    "semantic_threshold": 0.95,
-
+    "semantic_threshold": 0.70,
     "embedding_model": "E:/all-mpnet-base-v2",
-
     "use_gpu": true,
     "language": "en",
     "lowercase": true,
     "remove_newlines": true,
     "save_embeddings_only": false,
-
     "pdf_password": null,
     "chunking_mode": "semantic",
-
+    "min_paragraph_similarity": 0.70,
+    "query_text": "Automated Test Case Repair Using Language Models",
     "filter_sections": [
       "abstract",
       "introduction",
@@ -31,7 +29,6 @@
       "conclusions",
       "summary"
     ],
-
     "output_dir_auto_create": true
   },
 
