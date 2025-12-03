@@ -38,7 +38,7 @@ void ArxivSearchWorker::process() {
 
         QString encoded = QUrl::toPercentEncoding(term);
         QString url =
-            QString("https://export.arxiv.org/api/query?search_query=all:%1&start=0&max_results=20")
+            QString("https://export.arxiv.org/api/query?search_query=all:%1&start=0&max_results=50")
                 .arg(encoded);
 
 

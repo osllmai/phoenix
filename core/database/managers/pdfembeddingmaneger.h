@@ -19,7 +19,7 @@ public:
     explicit PdfEmbeddingManeger(QSqlDatabase db, QObject* parent = nullptr);
     virtual ~PdfEmbeddingManeger();
 
-    void readPdfEmbedding(const int idConversation);
+    // void readPdfEmbedding(const int idConversation);
     void insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding);
 
     QVector<QString> topMatches(

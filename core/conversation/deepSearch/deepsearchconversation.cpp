@@ -96,9 +96,17 @@ void DeepSearchConversation::handleState() {
         startSearchInSources();
         break;
 
+    case DeepSearchState::generateUserIntentSummary:
+        generateUserIntentSummary();
+        break;
+
+    case DeepSearchState::SelectesPdfs:
+        qCInfo(logDeepSearch) << "Searching in selected sources.";
+        m_arxivModel->processSelectedPdfs(m_userSummery);
+        break;
+
     case DeepSearchState::DownloadAndPdfTokenizer:
         qCInfo(logDeepSearch) << "Downloading documents.";
-        m_arxivModel->processEmbeddings();
         break;
 
     case DeepSearchState::RAGPreparation:
@@ -229,6 +237,11 @@ void DeepSearchConversation::tokenResponse(const QString &token){
         qInfo() << "State: SearchInSources - Searching... Token:" << token;
         break;
 
+    case DeepSearchState::generateUserIntentSummary:
+        qCInfo(logDeepSearch) << "Searching in selected sources." << token;;
+        m_userSummery = token;
+        break;
+
     case DeepSearchState::DownloadAndPdfTokenizer:
         qInfo() << "State: DownloadDocuments - Downloading documents";
         break;
@@ -306,6 +319,10 @@ void DeepSearchConversation::finishedResponse(const QString &warning){
 
     case DeepSearchState::SearchInSources:
         qInfo() << "State: SearchInSources - Searching... Token:";
+        break;
+
+    case DeepSearchState::generateUserIntentSummary:
+        m_state = DeepSearchState::SelectesPdfs;
         break;
 
     case DeepSearchState::DownloadAndPdfTokenizer:
@@ -471,43 +488,57 @@ void DeepSearchConversation::generateClarificationQuestions() {
 void DeepSearchConversation::generateSearchKeywords() {
 
     QString keywordPrompt = R"(
-        You are an AI system that generates optimized search queries for arXiv.
+        You are an AI system specialized in scientific information retrieval, trained on arXiv structure.
 
-        Goal:
-        Produce short, precise, high-signal scientific keywords suitable for arXiv API search.
+        Your task:
+        Generate 5–8 **high-precision scientific search keywords** optimized for arXiv API queries.
 
-        Input Context:
-        - User query: {{query}}
-        - Recent conversation: {{history_2}}
+        You must deeply analyze:
+        • User query
+        • Recent dialog context
+        • True scientific intent and subfield
+        • Relevant arXiv subject-class taxonomy
 
-        Strict Rules:
-        • Return EXACTLY 5–8 high-value keyword items
-        • Each keyword MUST:
-          – Use official terminology widely used in arXiv literature
-          – Contain max 2–4 words
-          – Avoid stop-words such as: methods, techniques, frameworks, applications, introduction, approach, strategy
-          – Avoid natural language filler (e.g., “in”, “for”, “based on”)
-          – Be stable concepts, models, or fields (not full questions)
+        === STRICT OUTPUT REQUIREMENTS ===
+        Each keyword MUST:
+        • Be a real scientific concept, model, architecture, method family, dataset, or mathematical construct
+        • Use EXACT terminology found in arXiv papers (NO natural language)
+        • Be 1–4 words ONLY
+        • Avoid filler words:
+          (“methods”, “techniques”, “approach”, “system”, “application”, “introduction”, “study”, “analysis”, “framework”, “performance”)
+        • Avoid question patterns (“how to”, “why”, “which”)
+        • Avoid vague or generic words (“deep learning”, “machine learning”, “neural network”)
+        • Be highly discriminative
 
-        • Each item MUST include:
-          "term": Short keyword phrase ONLY
-          "category": Valid arXiv subject class such as:
-              cs.CL, cs.LG, cs.IR, cs.AI, math.IT, stat.ML, eess.AS, etc.
-          "confidence": A float between 0.50 and 1.0
+        === CATEGORY REQUIREMENTS ===
+        Each keyword MUST be assigned a valid arXiv subject class that best matches it:
+        Examples:
+          cs.CL, cs.LG, cs.CV, cs.IR, cs.AI, stat.ML, math.IT, eess.AS, physics.optics, etc.
 
-        • Respond ONLY with valid JSON:
+        === CONFIDENCE REQUIREMENTS ===
+        • confidence ∈ [0.50, 1.00], representing concept relevance
+
+        === INPUT CONTEXT ===
+        User Query:
+        {{query}}
+
+        Conversation Context (last 2 messages):
+        {{history_2}}
+
+        === OUTPUT FORMAT (MANDATORY JSON ONLY) ===
         {
           "keywords": [
             {
-              "term": "keyword phrase",
-              "category": "arXiv class",
+              "term": "precise scientific keyword",
+              "category": "arXivClass",
               "confidence": 0.0
             }
           ]
         }
 
-        No comments, no extra text outside the JSON.
-        )";
+        NO extra text. NO comments. NO explanations. JSON ONLY.
+    )";
+
 
 
     keywordPrompt.replace("{{query}}", m_userQuery);
@@ -533,6 +564,45 @@ void DeepSearchConversation::startSearchInSources() {
 
     thread->start();
 }
+
+void DeepSearchConversation::generateUserIntentSummary()
+{
+    QString prompt = R"(
+        You are an AI assistant specialized in scientific information extraction.
+
+        Your task:
+        - Read the user's original query.
+        - Read the user's answers to clarification questions (the last few messages).
+        - Understand the true intent behind the user's scientific search.
+        - Produce a **single, short, precise paragraph** that summarizes the user's actual goal.
+
+        Rules:
+        - The output MUST be 1 paragraph only.
+        - No bullet points.
+        - No explanations.
+        - No greetings.
+        - Scientific style, concise, embedding-friendly.
+        - Focus on key concepts, constraints, domain, and purpose.
+        - Avoid unnecessary filler text.
+
+        Input:
+        User Query:
+        {{query}}
+
+        Recent Conversation:
+        {{history}}
+
+        Output:
+        (One short paragraph describing the user's exact information need)
+    )";
+
+    QString textPrompt = prompt;
+    textPrompt.replace("{{query}}", m_userQuery);
+    textPrompt.replace("{{history}}", messageList()->history(6));
+
+    sendPromptForModel(textPrompt, false);
+}
+
 
 // void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
 //     for (const auto &item : results) {
@@ -581,7 +651,7 @@ void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
 
     qCInfo(logDeepSearch) << " All results added to model for UI display.";
 
-    m_state = DeepSearchState::DownloadAndPdfTokenizer;
+    m_state = DeepSearchState::generateUserIntentSummary;
     handleState();
 }
 

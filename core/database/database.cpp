@@ -62,8 +62,8 @@ Database::Database(QObject* parent)
     connect(pdfManager, &PdfManager::finishedReadPdf, this, &Database::finishedReadPdf);
 
     pdfEmbeddingManeger = new PdfEmbeddingManeger(m_db, this);
-    connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::addPdfEmbedding, this, &Database::addPdfEmbedding);
-    connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::finishedReadPdfEmbedding, this, &Database::finishedReadPdfEmbedding);
+    // connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::addPdfEmbedding, this, &Database::addPdfEmbedding);
+    // connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::finishedReadPdfEmbedding, this, &Database::finishedReadPdfEmbedding);
 }
 
 Database::~Database(){
@@ -183,7 +183,7 @@ void Database::insertPdf(const int conversation_id, const QString &file_Path){
 }
 
 void Database::readPdfEmbedding(const int idConversation){
-    pdfEmbeddingManeger->readPdfEmbedding(idConversation);
+    // pdfEmbeddingManeger->readPdfEmbedding(idConversation);
 }
 
 void Database::insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding){

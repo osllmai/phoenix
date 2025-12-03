@@ -41,14 +41,17 @@ public:
     Q_INVOKABLE void clearList();
     Q_INVOKABLE void downloadPdfs();
     Q_INVOKABLE void generateEmbeddings();
+    Q_INVOKABLE void processSelectedPdfs(const QString &query);
 
 signals:
     void downloadsDone();
     void embeddingsDone();
+    void arxivDone();
 
 private:
     QVector<QVariantMap> m_articles;
     QString m_tempFolder;
 
     void cleanupTempFolder();
+    void downloadNextPdf(int index);
 };

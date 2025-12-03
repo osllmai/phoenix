@@ -57,6 +57,10 @@ public:
         GenerateSearchKeywords,  // Use model to generate optimized keywords for search
 
         SearchInSources,         // Search in external sources (arXiv, Web, Local Docs)
+
+        generateUserIntentSummary,
+        SelectesPdfs,
+
         DownloadAndPdfTokenizer,       // Download relevant documents and Extract text from documents
         RAGPreparation,          // Retrieve relevant chunks for RAG context
         SendForTextModel,        // Send final constructed prompt to LLM
@@ -92,6 +96,7 @@ private:
     void handleState();
     void classifyQuery();
     void generateClarificationQuestions();
+    void generateUserIntentSummary();
     void generateSearchKeywords();
     void onSearchResultsReady(QList<QVariantMap> results);
     void startSearchInSources();
@@ -100,6 +105,7 @@ private:
 
     DeepSearchState m_state = DeepSearchState::WaitingPrompt;
     QString m_userQuery;
+    QString m_userSummery;
     QString m_userFileName;
     QString m_userFileInfo;
     QString m_searchKeywords;
