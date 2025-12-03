@@ -57,8 +57,7 @@ public:
         GenerateSearchKeywords,  // Use model to generate optimized keywords for search
 
         SearchInSources,         // Search in external sources (arXiv, Web, Local Docs)
-        DownloadDocuments,       // Download relevant documents
-        PdfTokenizer,            // Extract text from documents
+        DownloadAndPdfTokenizer,       // Download relevant documents and Extract text from documents
         RAGPreparation,          // Retrieve relevant chunks for RAG context
         SendForTextModel,        // Send final constructed prompt to LLM
 

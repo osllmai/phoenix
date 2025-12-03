@@ -3,28 +3,13 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QDateTime>
-#include <QSqlError>
+#include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QThread>
-#include <QStandardPaths>
-#include <QFile>
-#include <QJsonParseError>
-#include <QFileInfo>
-#include <QDir>
-#include <QJsonArray>
-#include <QJsonObject>
-
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QEventLoop>
-
-#include "./model/offline/offlinemodel.h"
-#include "./model/online/onlinemodel.h"
-#include "./model/BackendType.h"
-#include "./model/company.h"
-#include "config.h"
+#include <QSqlError>
+#include <QVector>
+#include <QPair>
+#include <algorithm>
+#include <cmath>
 
 class PdfEmbeddingManeger : public QObject
 {
@@ -37,16 +22,21 @@ public:
     void readPdfEmbedding(const int idConversation);
     void insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding);
 
-signals:
-    void addPdfEmbedding(const int pdf_id, const int id, const QString &text, const QString &text_embedding);
-    void finishedReadPdfEmbedding();
+    QVector<QString> topMatches(
+        const QVector<double>& targetEmbedding,
+        const QList<int>& pdfIds,
+        int topK = 10
+        );
 
 private:
     QSqlDatabase m_db;
 
     static const QString PdfEmbedding_SQL;
     static const QString INSERT_PdfEmbedding_SQL;
-    static const QString READ_PdfEmbedding_SQL;
+    static const QString READ_PdfEmbedding_BY_PDF_LIST_SQL;
+
+    double cosine(const QVector<double>& a, const QVector<double>& b);
+    QVector<double> parseEmbedding(const QString& jsonArray);
 };
 
 #endif // PDFEMBEDDINGMANEGER_H

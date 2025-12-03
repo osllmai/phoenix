@@ -1,8 +1,19 @@
 #include "ArxivArticleList.h"
+#include <QDebug>
 
 ArxivArticleList::ArxivArticleList(QObject *parent)
     : QAbstractListModel(parent)
 {
+    QString timestamp = QString::number(QDateTime::currentSecsSinceEpoch());
+    m_tempFolder = QDir::tempPath() + "/arxiv_embeddings/" + timestamp + "/";
+
+    QDir().mkpath(m_tempFolder);
+    qDebug() << "[Init] Temp folder created:" << m_tempFolder;
+}
+
+ArxivArticleList::~ArxivArticleList()
+{
+    cleanupTempFolder();
 }
 
 int ArxivArticleList::rowCount(const QModelIndex &parent) const {
@@ -12,28 +23,20 @@ int ArxivArticleList::rowCount(const QModelIndex &parent) const {
 
 QVariant ArxivArticleList::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() >= m_articles.size())
-        return QVariant();
+        return {};
 
     const QVariantMap &article = m_articles[index.row()];
 
     switch (role) {
-    case TitleRole:
-        return article.value("title");
-    case AuthorsRole:
-        return article.value("authors");
-    case SummaryRole:
-        return article.value("summary");
-    case LinkRole:
-        return article.value("link");
-    case PdfRole:
-        return article.value("pdf");
-    case PublishedRole:
-        return article.value("published");
-    case HasEmbeddingRole:
-        return article.value("hasEmbedding", false);
-
+    case TitleRole: return article.value("title");
+    case AuthorsRole: return article.value("authors");
+    case SummaryRole: return article.value("summary");
+    case LinkRole: return article.value("link");
+    case PdfRole: return article.value("pdf");
+    case PublishedRole: return article.value("published");
+    case HasEmbeddingRole: return article.value("hasEmbedding", false);
     }
-    return QVariant();
+    return {};
 }
 
 QHash<int, QByteArray> ArxivArticleList::roleNames() const {
@@ -58,82 +61,108 @@ void ArxivArticleList::clearList() {
     beginResetModel();
     m_articles.clear();
     endResetModel();
+    cleanupTempFolder();
 }
 
-void ArxivArticleList::processEmbeddings() {
+/* ------------------- DOWNLOAD PDFs ONLY ------------------- */
+void ArxivArticleList::downloadPdfs() {
 
     QtConcurrent::run([this]() {
 
         QNetworkAccessManager manager;
-        QJsonObject rootObj;
-        QJsonObject settingsObj;
-        QJsonArray filesArray;
-
-        settingsObj.insert("chunk_words", 1000);
-        settingsObj.insert("chunk_overlap", 200);
-        settingsObj.insert("min_chunk_length", 100);
-        settingsObj.insert("model_path",
-                           "E:/llama.cpp/build/bin/Release/multi-qa-mpnet-base-cos-v1");
-        settingsObj.insert("use_gpu", true);
-        settingsObj.insert("language", "en");
-        settingsObj.insert("lowercase", true);
-        settingsObj.insert("remove_newlines", true);
-        settingsObj.insert("save_embeddings_only", false);
-        settingsObj.insert("pdf_password", QJsonValue::Null);
-
-        rootObj.insert("settings", settingsObj);
-
-        QString tempDir = QDir::tempPath() + "/arxiv_embeddings/";
-        QDir().mkpath(tempDir);
 
         for (int i = 0; i < m_articles.size(); i++) {
 
             QVariantMap &article = m_articles[i];
-            if (article.value("hasEmbedding", false).toBool())
-                continue;
 
             QString pdfUrl = article.value("pdf").toString();
-            QString tempPdfPath = tempDir + QString("file_%1.pdf").arg(i);
-            QString tempJsonPath = tempDir + QString("file_%1.json").arg(i);
+            QString localPath = m_tempFolder + QString("file_%1.pdf").arg(i);
 
             QNetworkReply *reply = manager.get(QNetworkRequest(QUrl(pdfUrl)));
 
             QEventLoop loop;
-            connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+            QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
             loop.exec();
 
-            QFile file(tempPdfPath);
-            file.open(QIODevice::WriteOnly);
-            file.write(reply->readAll());
-            file.close();
-            reply->deleteLater();
+            if (reply->error() != QNetworkReply::NoError) {
+                reply->deleteLater();
+                continue;
+            }
 
-            QJsonObject fileObj;
-            fileObj.insert("pdf", tempPdfPath);
-            fileObj.insert("output", tempJsonPath);
-            filesArray.append(fileObj);
+            QFile file(localPath);
+            if (file.open(QIODevice::WriteOnly)) {
+                file.write(reply->readAll());
+                file.close();
+                article["localPdf"] = localPath;
+            }
+
+            reply->deleteLater();
+            emit dataChanged(index(i), index(i), {PdfRole});
+        }
+
+        emit downloadsDone();
+    });
+}
+
+/* ------------------- GENERATE EMBEDDINGS ONLY ------------------- */
+void ArxivArticleList::generateEmbeddings() {
+
+    QtConcurrent::run([this]() {
+
+        QJsonObject rootObj, settingsObj;
+        QJsonArray filesArray;
+
+        settingsObj.insert("chunk_words", 1000);
+        settingsObj.insert("chunk_overlap", 200);
+        settingsObj.insert("model_path", "E:/llama.cpp/build/bin/Release/multi-qa-mpnet-base-cos-v1");
+        rootObj.insert("settings", settingsObj);
+
+        for (int i = 0; i < m_articles.size(); ++i) {
+            QVariantMap &a = m_articles[i];
+
+            QString localPdf = a.value("localPdf").toString();
+            if (localPdf.isEmpty()) continue;
+
+            QString outJson = m_tempFolder + QString("file_%1.json").arg(i);
+
+            QJsonObject fObj;
+            fObj.insert("pdf", localPdf);
+            fObj.insert("output", outJson);
+
+            filesArray.append(fObj);
         }
 
         rootObj.insert("files", filesArray);
 
-        QString configPath = tempDir + "config.json";
+        QString configPath = m_tempFolder + "config.json";
         QFile configFile(configPath);
         configFile.open(QIODevice::WriteOnly);
-        configFile.write(QJsonDocument(rootObj).toJson(QJsonDocument::Indented));
+        configFile.write(QJsonDocument(rootObj).toJson());
         configFile.close();
 
         QProcess process;
-        process.start("pdf_to_embedding.exe", QStringList() << configPath);
+        process.setProgram("tokenizer/tokenizer.exe");
+        process.setArguments({configPath});
+        process.start();
         process.waitForFinished(-1);
 
-        for (int i = 0; i < m_articles.size(); i++) {
-            QVariantMap &a = m_articles[i];
-            if (!a.value("hasEmbedding", false).toBool()) {
-                a["hasEmbedding"] = true;
-                emit dataChanged(index(i), index(i), {HasEmbeddingRole});
-            }
+        for (int i = 0; i < m_articles.size(); ++i) {
+            m_articles[i]["hasEmbedding"] = true;
+            emit dataChanged(index(i), index(i), {HasEmbeddingRole});
         }
 
         emit embeddingsDone();
     });
+}
+
+/* --------- Folder Cleanup --------*/
+void ArxivArticleList::cleanupTempFolder()
+{
+    if (!m_tempFolder.isEmpty()) {
+        QDir dir(m_tempFolder);
+        if (dir.exists()) {
+            dir.removeRecursively();
+            qDebug() << "[Cleanup] Deleted temp folder:" << m_tempFolder;
+        }
+    }
 }

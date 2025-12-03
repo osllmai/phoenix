@@ -38,7 +38,7 @@ void ArxivSearchWorker::process() {
 
         QString encoded = QUrl::toPercentEncoding(term);
         QString url =
-            QString("https://export.arxiv.org/api/query?search_query=all:%1&start=0&max_results=5")
+            QString("https://export.arxiv.org/api/query?search_query=all:%1&start=0&max_results=20")
                 .arg(encoded);
 
 
@@ -50,7 +50,7 @@ void ArxivSearchWorker::process() {
         connect(reply, &QNetworkReply::finished, this, [this, reply, term]() {
 
             if (reply->error() != QNetworkReply::NoError) {
-                qWarning() << " network error:" << reply->errorString();
+                qWarning() << "network error:" << reply->errorString();
                 m_completedRequests++;
                 reply->deleteLater();
                 return;
@@ -119,6 +119,9 @@ QList<QVariantMap> ArxivSearchWorker::parseArxivXml(const QByteArray &data)
         }
         else if (xml.isEndElement() && xml.name() == "entry") {
             entry["authors"] = authors.join(", ");
+            entry["localPdf"] = "";
+            entry["hasEmbedding"] = false;
+
             results.append(entry);
         }
     }

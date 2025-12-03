@@ -96,12 +96,9 @@ void DeepSearchConversation::handleState() {
         startSearchInSources();
         break;
 
-    case DeepSearchState::DownloadDocuments:
+    case DeepSearchState::DownloadAndPdfTokenizer:
         qCInfo(logDeepSearch) << "Downloading documents.";
-        break;
-
-    case DeepSearchState::PdfTokenizer:
-        qCInfo(logDeepSearch) << "Tokenizing PDF: ";
+        m_arxivModel->processEmbeddings();
         break;
 
     case DeepSearchState::RAGPreparation:
@@ -198,7 +195,6 @@ void DeepSearchConversation::tokenResponse(const QString &token){
     QVariantMap lastMessage;
     QString lastText;
 
-
     switch (m_state) {
 
     case DeepSearchState::WaitingPrompt:
@@ -233,12 +229,8 @@ void DeepSearchConversation::tokenResponse(const QString &token){
         qInfo() << "State: SearchInSources - Searching... Token:" << token;
         break;
 
-    case DeepSearchState::DownloadDocuments:
+    case DeepSearchState::DownloadAndPdfTokenizer:
         qInfo() << "State: DownloadDocuments - Downloading documents";
-        break;
-
-    case DeepSearchState::PdfTokenizer:
-        qInfo() << "State: PdfTokenizer - Tokenizing PDF";
         break;
 
     case DeepSearchState::RAGPreparation:
@@ -316,12 +308,8 @@ void DeepSearchConversation::finishedResponse(const QString &warning){
         qInfo() << "State: SearchInSources - Searching... Token:";
         break;
 
-    case DeepSearchState::DownloadDocuments:
+    case DeepSearchState::DownloadAndPdfTokenizer:
         qInfo() << "State: DownloadDocuments - Downloading documents";
-        break;
-
-    case DeepSearchState::PdfTokenizer:
-        qInfo() << "State: PdfTokenizer - Tokenizing PDF";
         break;
 
     case DeepSearchState::RAGPreparation:
@@ -593,7 +581,7 @@ void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
 
     qCInfo(logDeepSearch) << " All results added to model for UI display.";
 
-    m_state = DeepSearchState::DownloadDocuments;
+    m_state = DeepSearchState::DownloadAndPdfTokenizer;
     handleState();
 }
 
