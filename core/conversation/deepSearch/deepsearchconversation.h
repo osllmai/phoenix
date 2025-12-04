@@ -93,9 +93,10 @@ public slots:
     void tokenResponse(const QString &token);
     void finishedResponse(const QString &warning);
     void updateModelSettingsConversation();
-    void selectesPdfs();
-    void downloadPdfs();
-    void embeddingPdfs();
+    void selectesPdfsDone();
+    void downloadPdfsDone();
+    void embeddingPdfsDone();
+    void similarityTextDone(const QVariantList &results);
 
 private:
     void handleState();
@@ -107,6 +108,7 @@ private:
     void startSearchInSources();
     void finalPrompt();
     void sendPromptForModel(const QString &input, const bool &stream);
+    void generateDeepSearchAnswer();
 
     DeepSearchState m_state = DeepSearchState::WaitingPrompt;
     QString m_userQuery;
@@ -117,7 +119,7 @@ private:
 
     DataSource m_selectedSources = DataSource::Arxiv;
     ArxivArticleList *m_arxivModel;
-
+    QVariantList m_results;
 };
 
 #endif // DEEPSEARCHCONVERSATION_H

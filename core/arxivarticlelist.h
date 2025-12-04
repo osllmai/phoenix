@@ -42,11 +42,13 @@ public:
     Q_INVOKABLE void processSelectedPdfs(const QString &query);
     Q_INVOKABLE void downloadPdfs();
     Q_INVOKABLE void generateEmbeddings(const QString &query);
+    Q_INVOKABLE void topSimilarChunksAsync(int topK = 5);
 
 signals:
     void arxivDone();
     void downloadsDone();
     void embeddingsDone();
+    void similarityReady(const QVariantList &results);
 
 private:
     QVector<QVariantMap> m_articles;

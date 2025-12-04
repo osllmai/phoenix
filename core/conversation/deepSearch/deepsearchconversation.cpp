@@ -12,9 +12,10 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     : Conversation(id, title, description, icon, type, date, isPinned, parent)
 {
     m_arxivModel = new ArxivArticleList(this);
-    connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfs);
-    connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfs);
-    connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfs);
+    connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
 }
 
@@ -30,6 +31,10 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
                    repeatPenaltyTokens, contextLength, numberOfGPULayers, parent)
 {
     m_arxivModel = new ArxivArticleList(this);
+    connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
+    connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
 }
 
@@ -120,6 +125,7 @@ void DeepSearchConversation::handleState() {
 
     case DeepSearchState::RAGPreparation:
         qCInfo(logDeepSearch) << "Preparing RAG context.";
+        m_arxivModel->topSimilarChunksAsync(10);
         break;
 
     case DeepSearchState::SendForTextModel:
@@ -620,6 +626,67 @@ void DeepSearchConversation::generateUserIntentSummary()
     sendPromptForModel(textPrompt, false);
 }
 
+void DeepSearchConversation::generateDeepSearchAnswer()
+{
+    QStringList docBlocks;
+
+    for (const QVariant &v : m_results) {
+        QVariantMap m = v.toMap();
+
+        QString block = QString(
+                            "Title: %1\n"
+                            "Link: %2\n"
+                            "Similarity: %3\n"
+                            "Extracted Text:\n%4\n"
+                            ).arg(
+                                m.value("title").toString(),
+                                m.value("link").toString(),
+                                QString::number(m.value("similarity").toDouble(), 'f', 2),
+                                m.value("text").toString()
+                                );
+
+        docBlocks << block;
+    }
+
+    QString documentsSection = docBlocks.join("\n-------------------------\n");
+
+    QString prompt = R"(You are an advanced scientific reasoning AI specialized in retrieval-augmented generation (RAG).
+        Your task:
+        - Read the user's query.
+        - Carefully analyze the extracted high-similarity text chunks from scientific papers.
+        - Based ONLY on these documents, generate the **best, most complete scientific answer** possible.
+        - Your answer MUST be grounded in the provided documents, not general knowledge.
+        - When referencing information, rely strictly on the provided text chunks.
+
+        Output format (VERY IMPORTANT):
+
+        Answer:
+        A complete, detailed, high-quality scientific explanation answering the user's question.
+
+        Sources:
+        A numbered list of the papers used, each with:
+        - Title
+        - PDF link
+
+        If a paper was not used, do not list it.
+
+        #########################
+        USER QUERY:
+        {{query}}
+
+        #########################
+        DOCUMENT EXCERPTS:
+        {{documents}}
+    )";
+
+    prompt.replace("{{query}}", m_userQuery);
+    prompt.replace("{{documents}}", documentsSection);
+
+    qCInfo(logDeepSearch) << "Sending DeepSearch RAG prompt to model.";
+
+    sendPromptForModel(prompt, modelSettings()->stream());
+}
+
 
 // void DeepSearchConversation::onSearchResultsReady(QList<QVariantMap> results) {
 //     for (const auto &item : results) {
@@ -679,6 +746,7 @@ void DeepSearchConversation::finalPrompt(){
         break;
 
     case DataSource::Arxiv:
+        generateDeepSearchAnswer();
         break;
     default:
         qCWarning(logDeepSearch) << "Unhandled state in handleState.";
@@ -686,17 +754,24 @@ void DeepSearchConversation::finalPrompt(){
     }
 }
 
-void DeepSearchConversation::selectesPdfs(){
+void DeepSearchConversation::selectesPdfsDone(){
+    qCInfo(logDeepSearch) << "Searching in selected sources.";
     m_state = DeepSearchState::DownloadPdfs;
     handleState();
 }
 
-void DeepSearchConversation::downloadPdfs(){
+void DeepSearchConversation::downloadPdfsDone(){
     m_state = DeepSearchState::EmbeddingPdfs;
     handleState();
 }
 
-void DeepSearchConversation::embeddingPdfs(){
-    // m_state = DeepSearchState::SendForTextModel;
-    // handleState();
+void DeepSearchConversation::embeddingPdfsDone(){
+    m_state = DeepSearchState::RAGPreparation;
+    handleState();
+}
+
+void DeepSearchConversation::similarityTextDone(const QVariantList &results){
+    m_results = results;
+    m_state = DeepSearchState::SendForTextModel;
+    handleState();
 }
