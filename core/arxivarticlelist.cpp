@@ -64,120 +64,6 @@ void ArxivArticleList::clearList() {
     cleanupTempFolder();
 }
 
-/* ------------------- DOWNLOAD PDFs ------------------- */
-void ArxivArticleList::downloadPdfs()
-{
-    if (m_articles.isEmpty()) {
-        emit downloadsDone();
-        return;
-    }
-
-    qInfo() << "[Download] Starting controlled PDF downloads...";
-
-    // Start from index 0
-    downloadNextPdf(0);
-}
-
-void ArxivArticleList::downloadNextPdf(int index)
-{
-    if (index >= m_articles.size()) {
-        qInfo() << "[Download] All PDFs downloaded.";
-        emit downloadsDone();
-        return;
-    }
-
-    QVariantMap &article = m_articles[index];
-    QString pdfUrl = article.value("pdf").toString();
-    QString localPath = m_tempFolder + QString("file_%1.pdf").arg(index);
-
-    qInfo() << "[Download] Requesting PDF:" << pdfUrl;
-
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl(pdfUrl)));
-
-    connect(reply, &QNetworkReply::finished, this, [=]() {
-
-        if (reply->error() == QNetworkReply::NoError) {
-
-            qInfo() << "[Download] Success:" << pdfUrl;
-
-            QFile file(localPath);
-            if (file.open(QIODevice::WriteOnly)) {
-                file.write(reply->readAll());
-                file.close();
-                m_articles[index]["localPdf"] = localPath;
-
-                // Update QML
-                emit dataChanged(this->index(index), this->index(index), {PdfRole});
-            }
-
-        } else {
-            qWarning() << "[Download] Error downloading" << pdfUrl
-                       << reply->errorString();
-        }
-
-        reply->deleteLater();
-        manager->deleteLater();
-
-        //  Delay 1500ms before next request (for arxiv anti-block)
-        QTimer::singleShot(1500, this, [=]() {
-            downloadNextPdf(index + 1);
-        });
-    });
-}
-
-
-/* ------------------- GENERATE EMBEDDINGS ------------------- */
-void ArxivArticleList::generateEmbeddings() {
-
-    QtConcurrent::run([this]() {
-
-        QJsonObject rootObj, settingsObj;
-        QJsonArray filesArray;
-
-        settingsObj.insert("chunk_words", 1000);
-        settingsObj.insert("chunk_overlap", 200);
-        settingsObj.insert("model_path", "E:/llama.cpp/build/bin/Release/multi-qa-mpnet-base-cos-v1");
-        rootObj.insert("settings", settingsObj);
-
-        for (int i = 0; i < m_articles.size(); ++i) {
-            QVariantMap &a = m_articles[i];
-
-            QString localPdf = a.value("localPdf").toString();
-            if (localPdf.isEmpty()) continue;
-
-            QString outJson = m_tempFolder + QString("file_%1.json").arg(i);
-
-            QJsonObject fObj;
-            fObj.insert("pdf", localPdf);
-            fObj.insert("output", outJson);
-
-            filesArray.append(fObj);
-        }
-
-        rootObj.insert("files", filesArray);
-
-        QString configPath = m_tempFolder + "config.json";
-        QFile configFile(configPath);
-        configFile.open(QIODevice::WriteOnly);
-        configFile.write(QJsonDocument(rootObj).toJson());
-        configFile.close();
-
-        QProcess process;
-        process.setProgram("tokenizer/tokenizer.exe");
-        process.setArguments({configPath});
-        process.start();
-        process.waitForFinished(-1);
-
-        for (int i = 0; i < m_articles.size(); ++i) {
-            m_articles[i]["hasEmbedding"] = true;
-            emit dataChanged(index(i), index(i), {HasEmbeddingRole});
-        }
-
-        emit embeddingsDone();
-    });
-}
-
 /* -------------------  Process PDFs + ARXIV Summaries ------------------- */
 void ArxivArticleList::processSelectedPdfs(const QString &query)
 {
@@ -332,6 +218,198 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
 
         qInfo() << "[Arxiv] Processing completed.";
 
+    });
+}
+
+/* ------------------- DOWNLOAD PDFs ------------------- */
+void ArxivArticleList::downloadPdfs()
+{
+    if (m_articles.isEmpty()) {
+        emit downloadsDone();
+        return;
+    }
+
+    qInfo() << "[Download] Starting controlled PDF downloads...";
+
+    // Start from index 0
+    downloadNextPdf(0);
+}
+
+void ArxivArticleList::downloadNextPdf(int index)
+{
+    if (index >= m_articles.size()) {
+        qInfo() << "[Download] All PDFs downloaded.";
+        emit downloadsDone();
+        return;
+    }
+
+    QVariantMap &article = m_articles[index];
+    QString pdfUrl = article.value("pdf").toString();
+    QString localPath = m_tempFolder + QString("file_%1.pdf").arg(index);
+
+    qInfo() << "[Download] Requesting PDF:" << pdfUrl;
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl(pdfUrl)));
+
+    connect(reply, &QNetworkReply::finished, this, [=]() {
+
+        if (reply->error() == QNetworkReply::NoError) {
+
+            qInfo() << "[Download] Success:" << pdfUrl;
+
+            QFile file(localPath);
+            if (file.open(QIODevice::WriteOnly)) {
+                file.write(reply->readAll());
+                file.close();
+                m_articles[index]["localPdf"] = localPath;
+
+                // Update QML
+                emit dataChanged(this->index(index), this->index(index), {PdfRole});
+            }
+
+        } else {
+            qWarning() << "[Download] Error downloading" << pdfUrl
+                       << reply->errorString();
+        }
+
+        reply->deleteLater();
+        manager->deleteLater();
+
+        //  Delay 1500ms before next request (for arxiv anti-block)
+        QTimer::singleShot(1500, this, [=]() {
+            downloadNextPdf(index + 1);
+        });
+    });
+}
+
+/* ------------------- GENERATE EMBEDDINGS ------------------- */
+void ArxivArticleList::generateEmbeddings(const QString &query) {
+
+    QtConcurrent::run([this, query]() {
+
+        qDebug() << "[Embeddings] Starting embedding generation…";
+        qDebug() << "[Embeddings] Query Text =" << query;
+
+        QJsonObject rootObj, settingsObj;
+        QJsonArray filesArray;
+
+        // ---------------- SETTINGS ----------------
+        qDebug() << "[Settings] Building settings JSON…";
+
+        settingsObj.insert("chunk_words", 300);
+        settingsObj.insert("chunk_overlap", 0);
+        settingsObj.insert("min_chunk_length", 80);
+        settingsObj.insert("semantic_threshold", 0.70);
+        settingsObj.insert("embedding_model", "E:/all-mpnet-base-v2");
+        settingsObj.insert("use_gpu", true);
+        settingsObj.insert("language", "en");
+        settingsObj.insert("lowercase", true);
+        settingsObj.insert("remove_newlines", true);
+        settingsObj.insert("save_embeddings_only", false);
+        settingsObj.insert("pdf_password", QJsonValue::Null);
+        settingsObj.insert("chunking_mode", "semantic");
+        settingsObj.insert("min_paragraph_similarity", 0.70);
+        settingsObj.insert("query_text", query);
+        settingsObj.insert("output_dir_auto_create", true);
+
+        // filter_sections array
+        QJsonArray filters;
+        QStringList filterList = {
+            "abstract","introduction","methods","materials and methods","methodology",
+            "results","findings","evaluation","discussion","results and discussion",
+            "conclusion","conclusions","summary"
+        };
+
+        for (const QString &f : filterList)
+            filters.append(f);
+
+        settingsObj.insert("filter_sections", filters);
+        rootObj.insert("settings", settingsObj);
+
+        qDebug() << "[Settings] Settings JSON created.";
+
+        // ------------------- FILES SECTION -------------------
+        qDebug() << "[Files] Scanning articles for local PDF files…";
+
+        for (int i = 0; i < m_articles.size(); ++i) {
+
+            QVariantMap &a = m_articles[i];
+            QString localPdf = a.value("localPdf").toString();
+
+            if (localPdf.isEmpty()) {
+                qWarning() << "[Files] Article index" << i << "does NOT have a PDF. Skipping.";
+                continue;
+            }
+
+            QString outJson = m_tempFolder + QString("file_%1.json").arg(i);
+
+            qDebug() << "[Files] Added:" << localPdf << "=>" << outJson;
+
+            QJsonObject fObj;
+            fObj.insert("pdf", localPdf);
+            fObj.insert("output", outJson);
+
+            filesArray.append(fObj);
+        }
+
+        rootObj.insert("files", filesArray);
+
+        // ------------------- ARXIV (EMPTY) -------------------
+        qDebug() << "[Arxiv] Using empty arxiv_files list.";
+        rootObj.insert("arxiv_files", QJsonArray());
+        rootObj.insert("arxiv_output", m_tempFolder + "arxiv_summaries.json");
+
+        // ------------------- WRITE CONFIG.JSON -------------------
+        QString configPath = m_tempFolder + "config.json";
+        qDebug() << "[Config] Writing config to:" << configPath;
+
+        QFile configFile(configPath);
+        if (!configFile.open(QIODevice::WriteOnly)) {
+            qWarning() << "[Config] ERROR: Unable to write config.json!";
+            return;
+        }
+
+        configFile.write(QJsonDocument(rootObj).toJson(QJsonDocument::Indented));
+        configFile.close();
+
+        qDebug() << "[Config] config.json written successfully.";
+
+        // ------------------- RUN TOKENIZER -------------------
+        qDebug() << "[Tokenizer] Starting tokenizer.exe…";
+
+        QProcess process;
+        process.setProgram("tokenizer/tokenizer.exe");
+        process.setArguments({configPath});
+        process.start();
+
+        if (!process.waitForStarted()) {
+            qWarning() << "[Tokenizer] ERROR: tokenizer.exe failed to start!";
+            return;
+        }
+
+        qDebug() << "[Tokenizer] Running… waiting for finish.";
+
+        process.waitForFinished(-1);
+
+        QByteArray stdOut = process.readAllStandardOutput();
+        QByteArray stdErr = process.readAllStandardError();
+
+        qDebug() << "[Tokenizer] Finished with exit code:" << process.exitCode();
+        qDebug() << "[Tokenizer] STDOUT:\n" << stdOut;
+        if (!stdErr.isEmpty())
+            qWarning() << "[Tokenizer] STDERR:\n" << stdErr;
+
+        // ------------------- UPDATE MODEL -------------------
+        qDebug() << "[UI] Updating embedding flags…";
+
+        for (int i = 0; i < m_articles.size(); ++i) {
+            m_articles[i]["hasEmbedding"] = true;
+            emit dataChanged(index(i), index(i), {HasEmbeddingRole});
+        }
+
+        qDebug() << "[Embeddings] All embeddings completed!";
+        emit embeddingsDone();
     });
 }
 

@@ -39,14 +39,14 @@ public:
     void appendArticle(const QVariantMap &article);
 
     Q_INVOKABLE void clearList();
-    Q_INVOKABLE void downloadPdfs();
-    Q_INVOKABLE void generateEmbeddings();
     Q_INVOKABLE void processSelectedPdfs(const QString &query);
+    Q_INVOKABLE void downloadPdfs();
+    Q_INVOKABLE void generateEmbeddings(const QString &query);
 
 signals:
+    void arxivDone();
     void downloadsDone();
     void embeddingsDone();
-    void arxivDone();
 
 private:
     QVector<QVariantMap> m_articles;

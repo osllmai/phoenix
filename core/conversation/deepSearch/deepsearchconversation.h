@@ -61,7 +61,9 @@ public:
         generateUserIntentSummary,
         SelectesPdfs,
 
-        DownloadAndPdfTokenizer,       // Download relevant documents and Extract text from documents
+        DownloadPdfs,       // Download documents
+        EmbeddingPdfs,       // Extract text from documents
+
         RAGPreparation,          // Retrieve relevant chunks for RAG context
         SendForTextModel,        // Send final constructed prompt to LLM
 
@@ -91,6 +93,9 @@ public slots:
     void tokenResponse(const QString &token);
     void finishedResponse(const QString &warning);
     void updateModelSettingsConversation();
+    void selectesPdfs();
+    void downloadPdfs();
+    void embeddingPdfs();
 
 private:
     void handleState();
