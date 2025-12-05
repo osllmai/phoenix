@@ -123,5 +123,18 @@
       "Minor UI animations and layout refinements"
     ],
     "support": "phoenix@osllm.ai"
+  },
+  {
+    "version": "0.2.0",
+    "title": "DeepSearch Integration & Feature Expansion",
+    "date": "2025-12-05",
+    "notes": "This release introduces the new DeepSearch module, enabling advanced information retrieval through direct querying of arXiv.org. The update significantly enhances research capabilities, improves data accessibility, and includes various refinements for overall system stability and performance.",
+    "features": [
+      "Added DeepSearch with arXiv.org search integration",
+      "Enhanced query processing for more accurate research results",
+      "Improved system performance and background task handling",
+      "Refined UI elements to support new search functionalities"
+    ],
+    "support": "phoenix@osllm.ai"
   }
 ]
