@@ -1,5 +1,5 @@
 #include "bashhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> bashHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

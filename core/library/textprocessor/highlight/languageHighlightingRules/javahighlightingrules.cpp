@@ -1,5 +1,5 @@
 #include "javahighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> javaHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

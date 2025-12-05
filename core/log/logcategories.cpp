@@ -1,4 +1,4 @@
-#include "LogCategories.h"
+#include "logcategories.h"
 
 Q_LOGGING_CATEGORY(logCore, "phoenix.core")
 Q_LOGGING_CATEGORY(logModel, "phoenix.model")
@@ -11,3 +11,4 @@ Q_LOGGING_CATEGORY(logDeveloper, "phoenix.developer")
 Q_LOGGING_CATEGORY(logDeveloperView, "phoenix.developerView")
 Q_LOGGING_CATEGORY(logSpeechToText, "phoenix.speechToText")
 Q_LOGGING_CATEGORY(logUI, "phoenix.ui")
+Q_LOGGING_CATEGORY(logDeepSearch, "phoenix.deepSearch")

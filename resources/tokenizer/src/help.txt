@@ -1,0 +1,28 @@
+cd E:\llama_project
+python -m venv venv
+
+venv\Scripts\activate
+
+
+pip install --upgrade pip
+pip install torch transformers sentence-transformers PyPDF2 rich
+pip install pymupdf layoutparser[ocr] sentence-transformers transformers torch torchvision torchaudio rich opencv-python numpy
+
+only cpu: 
+	pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+gpu:
+	pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+
+pip install pyinstaller
+
+git clone https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+
+pyinstaller tokenizer.py --onefile 
+
+cd E:\tokenizer\dist
+
+tokenizer.exe ../config.json
+
+tokenizer.py ./config.json

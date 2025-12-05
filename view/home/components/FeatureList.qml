@@ -49,13 +49,6 @@ Item {
                             notebookLink:"";
                             goPage: 1
             }
-            // ListElement {title: "Phoenix cli" ;
-            //                 icon:"qrc:/media/icon/phoenixCli.svg" ;
-            //                 about:"Phoenix_cli is a command-line interface (CLI) tool developed by osllm.ai for running Large Language Models ( LLMs) on your local machine. Built on top of the Phoenix library, a C++ library designed for executing large language models, Phoenix_cli allows you to: Run models locally without relying on a server or cloud-based service." ;
-            //                 gitHubLink:"https://github.com/osllmai/phoenix_cli" ;
-            //                 notebookLink:"";
-            //                 goPage:-1
-            // }
             ListElement {title: "InDox" ;
                             icon:"qrc:/media/icon/inDox.svg" ;
                             about:"Indox is an advanced search and retrieval technique that efficiently extracts data from diverse document types, including PDFs and HTML, using online or offline large language models such as Openai, Hugging Face , etc." ;

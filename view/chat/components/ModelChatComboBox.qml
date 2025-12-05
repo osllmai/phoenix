@@ -6,7 +6,7 @@ ModelSelectComboBox{
     modelSelect: conversationList.modelSelect
     modelId: conversationList.modelSelect? conversationList.modelId: -1
     modelName: conversationList.modelSelect? conversationList.modelName:"Phoenix"
-    modelIcon: conversationList.modelSelect? conversationList.modelIcon:"qrc:/media/image_company/Phoenix.png"
+    modelIcon: conversationList.modelSelect? conversationList.modelIcon:"qrc:/media/image_company/phoenix.png"
     signal sendMessage()
     Connections{
         target: modelComboBoxId

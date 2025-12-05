@@ -145,7 +145,7 @@ Rectangle {
             toolTipInCenter: true
             iconType: Style.RoleEnum.IconType.Primary
             onClicked: {
-                Qt.openUrlExternally("file:///" + Logger.logDir)
+                Qt.openUrlExternally(Logger.logDir)
             }
         }
     }

@@ -1,5 +1,5 @@
 #include "luahighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> luaHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

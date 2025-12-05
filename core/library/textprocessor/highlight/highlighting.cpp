@@ -1,6 +1,7 @@
 #include "highlighting.h"
 
-#include "highlightingcategory.h"
+#include "HighlightingCategory.h"
+
 #include "languageHighlightingRules/pythonhighlightingrules.h"
 #include "languageHighlightingRules/csharphighlightingrules.h"
 #include "languageHighlightingRules/cpphighlightingrules.h"

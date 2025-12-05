@@ -19,13 +19,38 @@ Rectangle{
         sendIconId.clicked()
     }
 
-    signal sendPrompt(var prompt)
+    signal sendPrompt(var prompt, string converstationType)
     signal openModelIsLoaded()
 
     property string textInput: ""
     onTextInputChanged: {
         textInputId.setText(control.textInput)
         textInputId.inputValue = control.textInput
+    }
+
+    property string currentTextConverstation: !conversationList.isEmptyConversation ?
+                                             conversationList.currentConversation.type : ""
+
+    property string currentIconConverstation: getIconForText(currentTextConverstation)
+
+    ListModel {
+        id: modeList
+        ListElement { title: "Add photos & files"; icon:"qrc:/media/icon/selectFile.svg" }
+        ListElement { title: "Create image"; icon:"qrc:/media/icon/imageEditor.svg" }
+        ListElement { title: "Thinking"; icon:"qrc:/media/icon/indoxJudge.svg" }
+        ListElement { title: "Deep research"; icon:"qrc:/media/icon/deepSearch.svg" }
+        ListElement { title: "Study and Learn"; icon:"qrc:/media/icon/indoxJudge.svg" }
+        ListElement { title: "Web Search"; icon:"qrc:/media/icon/indoxGen.svg" }
+        ListElement { title: "Canvas"; icon:"qrc:/media/icon/developer.svg" }
+    }
+
+    function getIconForText(text) {
+        for (var i = 0; i < modeList.count; ++i) {
+            if (modeList.get(i).title === text) {
+                return modeList.get(i).icon
+            }
+        }
+        return ""
     }
 
     function selectSendIcon(){
@@ -105,49 +130,23 @@ Rectangle{
             width: parent.width
             height: 32
 
-            Row {
+            Row{
                 anchors.left: parent.left
                 spacing: 10
-
-                MyIcon {
-                    id: selectFileIconId
-                    width: 32; height: 32
-                    myIcon: "qrc:/media/icon/selectFile.svg"
-                    iconType: Style.RoleEnum.IconType.Primary
+                AddFileAndMore{}
+                MyButton{
+                    id: currentChatMode
+                    visible: control.currentTextConverstation === ""? false: true
+                    bottonType: Style.RoleEnum.BottonType.Secondary
+                    myText: control.currentTextConverstation
+                    myIcon: (conversationList.isEmptyConversation && currentChatMode.hovered )? "qrc:/media/icon/close.svg": control.currentIconConverstation
                     onClicked: {
-                        fileDialogId.open();
+                        if(conversationList.isEmptyConversation){
+                            control.currentTextConverstation = ""
+                            control.currentIconConverstation = ""
+                        }
                     }
                 }
-                FileDialog {
-                    id: fileDialogId
-                    title: "Choose file"
-                    fileMode: FileDialog.OpenFiles
-                    currentFolder: window.lastFolder
-
-                    nameFilters: [
-                        "Supported files (*.docx *.pptx *.html *.htm *.jpg *.jpeg *.png *.pdf *.md *.csv *.xlsx *.xml *.json *.mp3 *.wav)",
-                        "Word files (*.docx)",
-                        "PowerPoint files (*.pptx)",
-                        "HTML files (*.html *.htm)",
-                        "Image files (*.jpg *.jpeg *.png)",
-                        "PDF files (*.pdf)",
-                        "AsciiDoc files (*.adoc *.asciidoc)",
-                        "Markdown files (*.md)",
-                        "CSV files (*.csv)",
-                        "Excel files (*.xlsx)",
-                        "XML files (*.xml)",
-                        "JSON files (*.json)",
-                        "Audio files (*.mp3 *.wav)",
-                        "All files (*)"
-                    ]
-
-                    onAccepted: function() {
-                        window.lastFolder = fileDialogId.currentFolder
-                        convertToMD.filePath = currentFile /*currentFile.toLocalFile();*/
-                        convertToMD.startConvert()
-                    }
-                }
-
             }
 
             Row {
@@ -203,6 +202,7 @@ Rectangle{
                             }
                         }
                     }
+
                     MyIcon {
                         visible: !speechToText.modelInProcess
                         anchors.fill: parent
@@ -288,7 +288,7 @@ Rectangle{
                                  !conversationList.currentConversation.loadModelInProgress) ||
                                  conversationList.isEmptyConversation)
                             {
-                                control.sendPrompt(textInputId.inputValue)
+                                control.sendPrompt(textInputId.inputValue, control.currentTextConverstation)
                                 // textInputId.setText("")
 
                                 if (conversationList.modelSelect)

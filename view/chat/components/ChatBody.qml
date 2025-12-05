@@ -59,7 +59,6 @@ Item {
         xhr.send();
     }
 
-
     Column{
         spacing: 10
         anchors.fill: parent
@@ -75,7 +74,7 @@ Item {
             id: inputBoxId
             Connections{
                 target: inputBoxId
-                function onSendPrompt(prompt) {
+                function onSendPrompt(prompt, converstationType) {
                     const hasPrompt = prompt !== "";
                     if (conversationList.modelSelect && hasPrompt) {
                         myMessageView.goToEnd()
@@ -118,7 +117,7 @@ Item {
         visible: conversationList.isEmptyConversation
         MyIcon {
             id: phoenixIconId
-            myIcon: "qrc:/media/image_company/Phoenix.svg"
+            myIcon: "qrc:/media/image_company/phoenix.svg"
             iconType: Style.RoleEnum.IconType.Image
             anchors.horizontalCenter: parent.horizontalCenter
             enabled: false
@@ -136,12 +135,13 @@ Item {
             id:inputBoxId2
             Connections{
                 target: inputBoxId2
-                function onSendPrompt(prompt) {
+                function onSendPrompt(prompt, converstationType) {
                     const hasPrompt = prompt !== "";
                     if (conversationList.modelSelect && hasPrompt) {
                         conversationList.addRequest(prompt,
                                                     (convertToMD.fileIsSelect? convertToMD.filePath:""),
-                                                    (convertToMD.fileIsSelect? convertToMD.textMD:""))
+                                                    (convertToMD.fileIsSelect? convertToMD.textMD:""),
+                                                    converstationType)
                         convertToMD.fileIsSelect = false;
                         chatBodyBoxId.requestEmptyTheInput()
                     } else if (hasPrompt) {

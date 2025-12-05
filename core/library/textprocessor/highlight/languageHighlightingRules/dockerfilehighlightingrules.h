@@ -1,7 +1,7 @@
 #ifndef DOCKERFILEHIGHLIGHTINGRULES_H
 #define DOCKERFILEHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> dockerfileHighlightingRules();

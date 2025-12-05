@@ -1,5 +1,5 @@
 #include "makefilehighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> makefileHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

@@ -8,7 +8,6 @@
 #include "../model/modelsettings.h"
 #include "./chat/messagelist.h"
 #include "../model/model.h"
-#include "./chat/responselist.h"
 #include "../model/offline/offlinemodellist.h"
 #include "../model/online/onlinemodellist.h"
 #include "../model/online/onlinecompanylist.h"
@@ -27,6 +26,7 @@ class Conversation : public QObject
     Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
     Q_PROPERTY(QDateTime date READ date NOTIFY dateChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QString type READ type CONSTANT FINAL)
     Q_PROPERTY(bool isPinned READ isPinned WRITE setIsPinned NOTIFY isPinnedChanged)
     Q_PROPERTY(bool isLoadModel READ isLoadModel WRITE setIsLoadModel NOTIFY isLoadModelChanged)
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
@@ -34,14 +34,14 @@ class Conversation : public QObject
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
-    Q_PROPERTY(ResponseList *responseList READ responseList NOTIFY responseListChanged)
+    Q_PROPERTY(QString logState READ getLogState NOTIFY logStateChanged  FINAL)
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
-        m_responseList(new ResponseList(this)), m_responseInProgress(false) {}
-    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+        m_responseInProgress(false) {}
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                           const QDateTime &date, const bool isPinned, QObject *parent = nullptr);
-    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon,
+    explicit Conversation(int id, const QString &title, const QString &description, const QString &icon, const QString type,
                           const QDateTime &date, const bool isPinned,
                           const bool &stream, const QString &promptTemplate, const QString &systemPrompt,
                           const double &temperature, const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
@@ -50,10 +50,10 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
-    Q_INVOKABLE void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
-    Q_INVOKABLE void stop();
-    Q_INVOKABLE void loadModel(const int id);
-    Q_INVOKABLE void unloadModel();
+    Q_INVOKABLE virtual void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
+    Q_INVOKABLE virtual void stop();
+    Q_INVOKABLE virtual void loadModel(const int id);
+    Q_INVOKABLE virtual void unloadModel();
 
     void likeMessageRequest( const int messageId, const int like);
 
@@ -92,12 +92,24 @@ public:
 
     ModelSettings *modelSettings();
 
-    ResponseList *responseList() const;
+    Provider *provider() const;
+    void setProvider(Provider *newProvider);
+
+    bool stopRequest() const;
+    void setStopRequest(bool newStopRequest);
+
+    bool isModelChanged() const;
+    void setIsModelChanged(bool newIsModelChanged);
+
+    QString type() const;
+
+    QString getLogState() const;
+    void setLogState(const QString &newLogState);
 
 public slots:
-    void loadModelResult(const bool result, const QString &warning);
-    void tokenResponse(const QString &token);
-    void finishedResponse(const QString &warning);
+    virtual void loadModelResult(const bool result, const QString &warning);
+    virtual void tokenResponse(const QString &token);
+    virtual void finishedResponse(const QString &warning);
     void updateModelSettingsConversation();
 
 signals:
@@ -112,8 +124,8 @@ signals:
     void messageListChanged();
     void modelChanged();
     void modelSettingsChanged();
-    void responseListChanged();
     void conversationChange();
+    void logStateChanged();
 
     void requestReadMessages(const int conversationId);
     void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
@@ -121,10 +133,10 @@ signals:
     void requestUpdateDescriptionText(const int conversationId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);
     void requestUpdateModelSettingsConversation(const int id, const bool &stream,
-                                     const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
-                                     const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
-                                     const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
-                                     const int &contextLength, const int &numberOfGPULayers);
+                                                const QString &promptTemplate, const QString &systemPrompt, const double &temperature,
+                                                const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
+                                                const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
+                                                const int &contextLength, const int &numberOfGPULayers);
     void requestLoadModel(const QString &model, const QString &key);
     // void requestUnLoadModel();
     void requestStop();
@@ -135,6 +147,7 @@ private:
     QString m_description;
     QDateTime m_date;
     QString m_icon;
+    QString m_type;
     bool m_isPinned;
     bool m_isLoadModel;
     bool m_loadModelInProgress;
@@ -142,11 +155,11 @@ private:
     MessageList *m_messageList;
     Model *m_model;
     ModelSettings *m_modelSettings;
-    ResponseList *m_responseList;
     Provider *m_provider;
 
     bool m_stopRequest;
     bool m_isModelChanged;
+    QString m_logState;
 };
 
 #endif // CONVERSATION_H

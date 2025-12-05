@@ -1,5 +1,5 @@
 #include "swifthighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> swiftHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

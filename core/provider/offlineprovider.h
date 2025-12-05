@@ -5,9 +5,20 @@
 #include <QThread>
 #include <QDebug>
 #include <QProcess>
+#include <QDir>
+#include "config.h"
 
 #include <QLoggingCategory>
 #include "logcategories.h"
+
+#include <QProcessEnvironment>
+#include <QLoggingCategory>
+
+#if defined(Q_OS_MAC)
+#include <QFile>
+#include <QTextStream>
+#include <QStandardPaths>
+#endif
 
 class OfflineProvider : public Provider
 {

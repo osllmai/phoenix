@@ -102,6 +102,45 @@ Rectangle{
                 }
             }
         }
+        // MyMenuButton {
+        //     id: sqlItemMenu
+        //     myText: "Browser"
+        //     myToolTipText: "Browser"
+        //     myIcon: "qrc:/media/icon/developer.svg"
+        //     myFillIcon: "qrc:/media/icon/developerFill.svg"
+        //     autoExclusive: true
+        //     numberPage:4
+
+        //     Connections {
+        //         target: sqlItemMenu
+        //         function onClicked(){
+        //             if(isDrawer && appBodyId.currentIndex !== 4){
+        //                 drawerId.close()
+        //             }
+        //             appBodyId.currentIndex = 4
+        //         }
+        //     }
+        // }
+
+        // MyMenuButton {
+        //     id: pdfItemMenu
+        //     myText: "Deep Search"
+        //     myToolTipText: "Deep Search"
+        //     myIcon: "qrc:/media/icon/developer.svg"
+        //     myFillIcon: "qrc:/media/icon/developerFill.svg"
+        //     autoExclusive: true
+        //     numberPage:5
+
+        //     Connections {
+        //         target: pdfItemMenu
+        //         function onClicked(){
+        //             if(isDrawer && appBodyId.currentIndex !== 5){
+        //                 drawerId.close()
+        //             }
+        //             appBodyId.currentIndex = 5
+        //         }
+        //     }
+        // }
     }
 
     Item{
@@ -130,7 +169,7 @@ Rectangle{
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: settingsIcon.right
             anchors.leftMargin: 2
-            text: "v" + updateChecker.currentVersion + "-2025.10.17"
+            text: "v" + updateChecker.currentVersion + "-"+ updateChecker.currentDate
             font.weight: 400
             font.pixelSize: 10
             font.styleName: "Bold"
@@ -151,6 +190,10 @@ Rectangle{
             return modelsItemMenu.y + 10 + 2
         if(appBodyId.currentIndex === 3)
             return devloperItemMenu.y + 10 + 2
+        if(appBodyId.currentIndex === 4)
+            return sqlItemMenu.y + 10 + 2
+        if(appBodyId.currentIndex === 5)
+            return pdfItemMenu.y + 10 + 2
         return homeItemMenu.y + 10 + 2
     }
 

@@ -1,7 +1,7 @@
 #ifndef HASKELLHIGHLIGHTINGRULES_H
 #define HASKELLHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> haskellHighlightingRules();

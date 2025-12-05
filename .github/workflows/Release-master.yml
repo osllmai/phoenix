@@ -42,7 +42,7 @@ jobs:
           LATEST_TAG=$(git tag -l "v*-${LABEL}" --sort=-v:refname | head -n 1 | tr -d '\r')
 
           if [[ -z "$LATEST_TAG" ]]; then
-            NEW_TAG="v0.1.0-${LABEL}"
+            NEW_TAG="v0.2.0-${LABEL}"
           else
             if [[ "$LATEST_TAG" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-${LABEL}$ ]]; then
               MAJOR="${BASH_REMATCH[1]}"

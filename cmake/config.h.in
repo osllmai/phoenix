@@ -2,6 +2,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define APP_PATH "@BIN_DIR@"
 #define APP_VERSION "@APP_VERSION@"
 #define APP_NAME "@APP_NAME@"
 

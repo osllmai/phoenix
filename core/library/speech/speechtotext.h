@@ -16,7 +16,7 @@
 #include <sstream>
 #include <iostream>
 #include <filesystem>
-#include "SpeechToTextWorker.h"
+#include "speechtotextworker.h"
 
 class SpeechToText : public QObject
 {

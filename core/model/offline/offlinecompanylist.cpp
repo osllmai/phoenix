@@ -33,7 +33,7 @@ void OfflineCompanyList::readDB(){
         sortAsync(NameRole , Qt::AscendingOrder);
     });
 
-    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson, QCoreApplication::applicationDirPath() + "/models/company.json");
+    QFuture<QList<Company*>> future = QtConcurrent::run(parseJson, QString::fromUtf8(APP_PATH) + "/models/company.json");
     futureWatcher.setFuture(future);
 }
 

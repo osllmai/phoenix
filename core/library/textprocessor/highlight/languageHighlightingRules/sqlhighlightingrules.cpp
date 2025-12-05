@@ -1,5 +1,5 @@
 #include "sqlhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> sqlHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

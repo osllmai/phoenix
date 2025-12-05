@@ -15,6 +15,28 @@ Item {
 
         Row {
             Label {
+                text: "Microphone:"
+                width: 100
+                color: Style.Colors.textTitle
+                font.pixelSize: 14
+                anchors.verticalCenter: parent.verticalCenter
+            }
+            MyComboBox {
+                id: microphoneComboBox
+                model: audioRecorder.inputDevices
+
+                onActivated: {
+                    if (audioRecorder.isRecording) {
+                        audioRecorder.stopRecording()
+                    }
+                    audioRecorder.selectedDevice = textAt(currentIndex)
+
+                }
+            }
+        }
+
+        Row {
+            Label {
                 text: "Engine:"
                 width: 100
                 color: Style.Colors.textTitle

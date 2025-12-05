@@ -4,7 +4,7 @@
 #include <QRegularExpression>
 #include <QTextCharFormat>
 #include <QVector>
-#include "highlightingrule.h"
+#include "HighlightingRule.h"
 
 namespace Highlighting {
 

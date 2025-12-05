@@ -1,7 +1,7 @@
 #ifndef PYTHONHIGHLIGHTINGRULES_H
 #define PYTHONHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> pythonHighlightingRules();

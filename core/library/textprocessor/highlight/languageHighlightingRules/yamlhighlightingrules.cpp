@@ -1,5 +1,5 @@
 #include "yamlhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> yamlHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

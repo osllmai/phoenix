@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include "convertworker.h"
 #include <QThread>
+#include <QUrl>
 
 class ConvertToMD : public QObject
 {

@@ -1,5 +1,5 @@
 #include "qmllightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> qmlHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

@@ -1,7 +1,7 @@
 #ifndef PHPHIGHLIGHTINGRULES_H
 #define PHPHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> phpHighlightingRules();

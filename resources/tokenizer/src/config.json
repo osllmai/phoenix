@@ -1,0 +1,64 @@
+{
+  "settings": {
+    "chunk_words": 300,
+    "chunk_overlap": 0,
+    "min_chunk_length": 80,
+    "semantic_threshold": 0.70,
+    "embedding_model": "E:/all-mpnet-base-v2",
+    "use_gpu": true,
+    "language": "en",
+    "lowercase": true,
+    "remove_newlines": true,
+    "save_embeddings_only": false,
+    "pdf_password": null,
+    "chunking_mode": "semantic",
+    "min_paragraph_similarity": 0.70,
+    "query_text": "Automated Test Case Repair Using Language Models",
+    "filter_sections": [
+      "abstract",
+      "introduction",
+      "methods",
+      "materials and methods",
+      "methodology",
+      "results",
+      "findings",
+      "evaluation",
+      "discussion",
+      "results and discussion",
+      "conclusion",
+      "conclusions",
+      "summary"
+    ],
+    "output_dir_auto_create": true
+  },
+
+  "files": [
+    { "pdf": "E:/tokenizer/Automated_Test_Case_Repair.pdf", "output": "E:/tokenizer/Automated_Test_Case_Repair.json" },
+    { "pdf": "E:/tokenizer/240mjkmk.pdf", "output": "E:/tokenizer/240mjkmk.json" },
+    { "pdf": "E:/tokenizer/2408mik.pdf", "output": "E:/tokenizer/2408mik.json" },
+    { "pdf": "E:/tokenizer/2411kiik.pdf", "output": "E:/tokenizer/2411kiik.json" },
+    { "pdf": "E:/tokenizer/24565.pdf", "output": "E:/tokenizer/24565.json" },
+    { "pdf": "E:/tokenizer/AMulti_Year_Grey_Literature_Review.pdf", "output": "E:/tokenizer/AMulti_Year_Grey_Literature_Review.json" },
+    { "pdf": "E:/tokenizer/phishing_training.pdf", "output": "E:/tokenizer/phishing_training.json" }
+  ],
+
+  "arxiv_files": [
+    {
+      "title": "Large Language Models for Code Repair",
+      "pdf": null,
+      "summary": "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks."
+    },
+    {
+      "title": "Neural Methods in Software Engineering",
+      "pdf": null,
+      "summary": "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis."
+    },
+    {
+      "title": "Improving Cybersecurity Training",
+      "pdf": null,
+      "summary": "This work proposes an improved training system for cybersecurity awareness using interactive simulations and reinforcement learning."
+    }
+  ],
+
+  "arxiv_output": "E:/tokenizer/arxiv_summaries.json"
+}

@@ -1,5 +1,5 @@
 #include "latexhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> latexHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

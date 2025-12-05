@@ -4,6 +4,9 @@ import "./home"
 import "./model"
 import "./chat"
 import "./developer"
+import "./sql"
+import "./pdf"
+import "./deepsearch"
 
 StackLayout {
     id: page
@@ -42,4 +45,18 @@ StackLayout {
         visible: page.currentIndex === 3
         sourceComponent: DeveloperView { }
     }
+
+    // Loader {
+    //     id: sqlLoader
+    //     active: page.currentIndex === 4 || item !== null
+    //     visible: page.currentIndex === 4
+    //     sourceComponent: SQLView { }
+    // }
+
+    // Loader {
+    //     id: pdfLoader
+    //     active: page.currentIndex === 5 || item !== null
+    //     visible: page.currentIndex === 5
+    //     sourceComponent: DeepSearchView { }
+    // }
 }

@@ -1,5 +1,5 @@
 #include "phphighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> phpHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

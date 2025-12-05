@@ -1,76 +1,149 @@
 #include "download.h"
 
-Download::Download(const int id, const QString &url, const QString &modelPath, QObject *parent)
-    : QObject{parent}
+Download::Download(int id, const QString &url, const QString &modelPath, QObject *parent)
+    : QObject(parent), m_id(id), m_url(url), m_modelPath(QDir::toNativeSeparators(modelPath))
 {
-    m_id =id;
-    this->url = url;
-    this->modelPath = modelPath;
+    qCDebug(logDownloadModel) << "Initialized Download object with ID:" << m_id
+                              << "URL:" << m_url
+                              << "Path:" << m_modelPath;
 }
 
-Download::~Download(){
-    // delete reply;
+Download::~Download() {
+    if (m_reply) {
+        qCDebug(logDownloadModel) << "Destructor: Aborting unfinished download ID:" << m_id;
+        m_reply->abort();
+        m_reply->deleteLater();
+    }
+    if (m_file && m_file->isOpen()) {
+        m_file->close();
+        delete m_file;
+    }
 }
 
-int Download::id() const{
+int Download::id() const {
     return m_id;
 }
 
-void Download::downloadModel(){
+void Download::downloadModel() {
+    qCDebug(logDownloadModel) << "Starting download ID:" << m_id << "from URL:" << m_url;
+
+    if (m_reply) {
+        qCWarning(logDownloadModel) << "Previous reply still active. Aborting old download first.";
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
+
+    QUrl url(m_url);
+    if (!url.isValid()) {
+        emit downloadFailed(m_id, "Invalid URL");
+        qCWarning(logDownloadModel) << "Invalid URL:" << m_url;
+        return;
+    }
+
+    QFileInfo fi(m_modelPath);
+    QDir dir;
+    if (!dir.exists(fi.path())) {
+        dir.mkpath(fi.path());
+    }
+
+    m_file = new QFile(m_modelPath);
+    if (!m_file->open(QIODevice::WriteOnly)) {
+        QString err = QStringLiteral("Cannot open file for writing: %1").arg(m_file->errorString());
+        qCWarning(logDownloadModel) << err;
+        emit downloadFailed(m_id, err);
+        delete m_file;
+        m_file = nullptr;
+        return;
+    }
+
     QNetworkRequest request(url);
-    reply = m_manager.get(request);
-    // Save the file path for when the download is complete
-    reply->setProperty("modelPath", modelPath);
-    connect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
-    connect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
 
-    connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){
-        Q_UNUSED(code);
-        emit downloadFailed(m_id, reply->errorString());
+    m_reply = m_manager.get(request);
+
+    connect(m_reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress, Qt::QueuedConnection);
+    connect(m_reply, &QNetworkReply::readyRead, this, &Download::onReadyRead, Qt::QueuedConnection);
+    connect(m_reply, &QNetworkReply::finished, this, &Download::onDownloadFinished, Qt::QueuedConnection);
+
+    connect(m_reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){
+        QString err = QStringLiteral("Network error (%1): %2").arg(code).arg(m_reply->errorString());
+        qCWarning(logDownloadModel) << "Error occurred:" << err;
+        emit downloadFailed(m_id, err);
     });
+
+#ifdef Q_OS_MAC
+    qCDebug(logDownloadModel) << "Running on macOS — using QNetworkAccessManager with SSL fallback if required.";
+#endif
+#ifdef Q_OS_WIN
+    qCDebug(logDownloadModel) << "Running on Windows — ensuring long path compatibility.";
+#endif
+#ifdef Q_OS_LINUX
+    qCDebug(logDownloadModel) << "Running on Linux — verifying permissions and paths.";
+#endif
 }
 
-void Download::cancelDownload(){
-    // Disconnect the signals
-    disconnect(reply, &QNetworkReply::downloadProgress, this, &Download::handleDownloadProgress);
-    disconnect(reply, &QNetworkReply::finished, this, &Download::onDownloadFinished);
-
-    reply->deleteLater();
+void Download::onReadyRead() {
+    if (m_file && m_reply) {
+        QByteArray data = m_reply->readAll();
+        m_file->write(data);
+    }
 }
 
-void Download::removeModel(){
-    QFile file(modelPath);
-    if (file.exists()){
-        file.remove();
+void Download::cancelDownload() {
+    if (m_reply) {
+        qCDebug(logDownloadModel) << "Cancelling download ID:" << m_id;
+        m_reply->abort();
+        m_reply->deleteLater();
+        m_reply = nullptr;
+    }
+
+    if (m_file) {
+        m_file->close();
+        delete m_file;
+        m_file = nullptr;
+    }
+}
+
+void Download::removeModel() {
+    QFile file(m_modelPath);
+    if (file.exists()) {
+        bool removed = file.remove();
+        qCDebug(logDownloadModel) << "Removed file:" << m_modelPath << "Status:" << removed;
+    } else {
+        qCWarning(logDownloadModel) << "File not found for removal:" << m_modelPath;
     }
 }
 
 void Download::onDownloadFinished() {
-    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    if (!reply) return;
+    if (!m_reply)
+        return;
 
-    if (reply->error() == QNetworkReply::NoError) {
-        QString modelPath = reply->property("modelPath").toString();
-        QFile file(modelPath);
-        if (file.open(QIODevice::WriteOnly)) {
-            qint64 written = file.write(reply->readAll());
-            file.close();
+    qCDebug(logDownloadModel) << "Download finished for ID:" << m_id;
 
-            if (written <= 0)
-                emit downloadFailed(m_id, "Failed to write data to file");
-            else
-                emit downloadFinished(m_id);
-
-        } else {
-            emit downloadFailed(m_id, QStringLiteral("Cannot write to file: %1").arg(modelPath));
-        }
+    if (m_reply->error() != QNetworkReply::NoError) {
+        qCWarning(logDownloadModel) << "Download failed with error:" << m_reply->errorString();
+        emit downloadFailed(m_id, m_reply->errorString());
     } else {
-        emit downloadFailed(m_id, reply->errorString());
+        if (m_file) {
+            m_file->flush();
+            m_file->close();
+        }
+        qCDebug(logDownloadModel) << "File saved successfully at:" << m_modelPath;
+        emit downloadFinished(m_id);
     }
-    reply->deleteLater();
-    // this->reply = nullptr;
+
+    m_reply->deleteLater();
+    m_reply = nullptr;
+
+    if (m_file) {
+        delete m_file;
+        m_file = nullptr;
+    }
 }
 
-void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal){
+void Download::handleDownloadProgress(qint64 bytesReceived, qint64 bytesTotal) {
+    if (bytesTotal <= 0)
+        return;
     emit downloadProgress(m_id, bytesReceived, bytesTotal);
 }

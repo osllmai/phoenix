@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QProcess>
 #include "apikey.h"
+#include "config.h"
 
 class OnlineWorker : public QObject {
     Q_OBJECT

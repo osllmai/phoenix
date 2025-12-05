@@ -29,19 +29,54 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
     qCInfo(logOfflineProvider) << "Loading model with key:" << key;
 
     QThread::create([this, key]() {
-
         m_process = new QProcess;
         m_process->setProcessChannelMode(QProcess::MergedChannels);
         m_process->setReadChannel(QProcess::StandardOutput);
 
-        QString exePath = QCoreApplication::applicationDirPath() + "/applocal_provider.exe";
+#if defined(Q_OS_WIN)
+        QString exeFile = "applocal_provider.exe";
+#elif defined(Q_OS_MAC)
+        QString exeFile = "applocal_provider";
+#else
+        QString exeFile = "applocal_provider";
+#endif
+
+        QString exePath = QString::fromUtf8(APP_PATH) + "/" + exeFile;
         QStringList arguments{ "--model", key };
+
+#if defined(Q_OS_LINUX)
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        QString currentPath = env.value("LD_LIBRARY_PATH");
+        env.insert("LD_LIBRARY_PATH",
+                   QString::fromUtf8(APP_PATH) +
+                       (currentPath.isEmpty() ? "" : ":" + currentPath));
+        m_process->setProcessEnvironment(env);
+
+#elif defined(Q_OS_MAC)
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+        QString path = env.value("PATH");
+        QString libPath = env.value("DYLD_LIBRARY_PATH");
+
+        QString appPath = QString::fromUtf8(APP_PATH);
+
+        env.insert("PATH", appPath + (path.isEmpty() ? "" : ":" + path));
+        env.insert("DYLD_LIBRARY_PATH", appPath + (libPath.isEmpty() ? "" : ":" + libPath));
+
+        env.insert("GGML_METAL_PATH_RESOURCES", appPath);
+
+        m_process->setProcessEnvironment(env);
+#endif
+
+        m_process->setWorkingDirectory(QString::fromUtf8(APP_PATH));
+        qCInfo(logOfflineProvider) << "Working directory set to:" << m_process->workingDirectory();
+
 
         state = ProviderState::LoadingModel;
         qCInfo(logOfflineProvider) << "Starting process at:" << exePath << "with arguments:" << arguments;
 
+        // --- Handle sending prompts ---
         connect(this, &OfflineProvider::sendPromptToProcess, this, [this](const QString &promptText, const QString &paramBlock) {
-
             qCInfo(logOfflineProvider) << "Sending prompt to process. State:" << static_cast<int>(state);
             if (state == ProviderState::WaitingForPrompt || state == ProviderState::SendingPrompt) {
                 m_process->write(paramBlock.toUtf8());
@@ -59,6 +94,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
             }
         });
 
+        // --- Start process ---
         m_process->start(exePath, arguments);
         if (!m_process->waitForStarted()) {
             qCCritical(logOfflineProvider) << "Failed to start process:" << m_process->errorString();
@@ -68,10 +104,12 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
 
         qCInfo(logOfflineProvider) << "Process started successfully.";
 
+        // --- Main reading loop ---
         while (m_process->state() == QProcess::Running) {
             if (m_process->waitForReadyRead(400)) {
                 QByteArray output = m_process->readAllStandardOutput();
                 QString outputString = QString::fromUtf8(output);
+                qInfo() << outputString.trimmed();
 
                 if (outputString.trimmed().endsWith("__DONE_PROMPTPROCESS__")) {
                     QString cleanedOutput = outputString.trimmed();
@@ -85,7 +123,7 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                 }
 
                 switch (state) {
-                case ProviderState::LoadingModel: {
+                case ProviderState::LoadingModel:
                     if (outputString.trimmed().endsWith("__LoadingModel__Finished__")) {
                         qCInfo(logOfflineProvider) << "Model loaded successfully.";
                         state = ProviderState::WaitingForPrompt;
@@ -114,7 +152,6 @@ void OfflineProvider::loadModel(const QString &model, const QString &key) {
                         }
                     }
                     break;
-                }
 
                 case ProviderState::SendingPrompt:
                     qCInfo(logOfflineProvider) << "Prompt sent. Returning to WaitingForPrompt.";

@@ -5,6 +5,7 @@
 #include <QQmlEngine>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
+#include "config.h"
 
 #include "company.h"
 #include "onlinemodellist.h"

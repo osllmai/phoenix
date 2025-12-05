@@ -1,5 +1,4 @@
-#include "AudioRecorder.h"
-
+#include "audiorecorder.h"
 #include <QCoreApplication>
 
 AudioRecorder* AudioRecorder::m_instance = nullptr;
@@ -16,6 +15,32 @@ AudioRecorder::~AudioRecorder(){}
 AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent) {
     m_recorder = new QMediaRecorder(this);
 
+    const QList<QAudioDevice> devices = QMediaDevices::audioInputs();
+    for (const QAudioDevice &device : devices){
+        qInfo()<<device.description();
+        m_inputDevices << device.description();
+    }
+
+    if (!m_inputDevices.isEmpty())
+        m_selectedDevice = m_inputDevices.first();
+
+    connect(new QMediaDevices(this), &QMediaDevices::audioInputsChanged, this, [this]() {
+        QStringList newList;
+        const QList<QAudioDevice> devices = QMediaDevices::audioInputs();
+
+        for (const QAudioDevice &device : devices){
+            qInfo()<<device.description();
+            newList << device.description();
+        }
+
+        if (newList != m_inputDevices) {
+            m_inputDevices = newList;
+            emit inputDevicesChanged();
+        }
+    });
+
+
+
     QAudioFormat format;
     format.setSampleRate(44100);
     format.setChannelCount(1);
@@ -23,7 +48,6 @@ AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent) {
 
     QAudioDevice micDevice = QMediaDevices::defaultAudioInput();
     m_audioSource = new QAudioSource(micDevice, format, this);
-
     m_audioInput = new QAudioInput(this);
 
     m_session.setAudioInput(m_audioInput);
@@ -61,6 +85,45 @@ AudioRecorder::AudioRecorder(QObject *parent) : QObject(parent) {
     });
 }
 
+// Device selection logic
+QStringList AudioRecorder::inputDevices() const {
+    return m_inputDevices;
+}
+
+void AudioRecorder::setInputDevices(const QStringList &newInputDevices) {
+    if (m_inputDevices == newInputDevices)
+        return;
+    m_inputDevices = newInputDevices;
+    emit inputDevicesChanged();
+}
+
+QString AudioRecorder::selectedDevice() const {
+    return m_selectedDevice;
+}
+
+void AudioRecorder::setSelectedDevice(const QString &newSelectedDevice) {
+    if (m_selectedDevice == newSelectedDevice)
+        return;
+    m_selectedDevice = newSelectedDevice;
+    emit selectedDeviceChanged();
+
+    const QList<QAudioDevice> devices = QMediaDevices::audioInputs();
+    for (const QAudioDevice &device : devices) {
+        if (device.description() == m_selectedDevice) {
+            if (m_audioSource) {
+                delete m_audioSource;
+                m_audioSource = nullptr;
+            }
+            QAudioFormat format;
+            format.setSampleRate(44100);
+            format.setChannelCount(1);
+            format.setSampleFormat(QAudioFormat::Int16);
+            m_audioSource = new QAudioSource(device, format, this);
+            break;
+        }
+    }
+}
+
 void AudioRecorder::startRecording() {
     if (m_inputDevice) {
         m_inputDevice->close();
@@ -77,13 +140,22 @@ void AudioRecorder::startRecording() {
     format.setChannelCount(1);
     format.setSampleFormat(QAudioFormat::Int16);
 
-    QAudioDevice micDevice = QMediaDevices::defaultAudioInput();
-    m_audioSource = new QAudioSource(micDevice, format, this);
+    // 🎯 Use selected device
+    QAudioDevice micDevice;
+    for (const QAudioDevice &device : QMediaDevices::audioInputs()) {
+        if (device.description() == m_selectedDevice) {
+            micDevice = device;
+            break;
+        }
+    }
+    if (!micDevice.isNull())
+        m_audioSource = new QAudioSource(micDevice, format, this);
+    else
+        m_audioSource = new QAudioSource(QMediaDevices::defaultAudioInput(), format, this);
 
     QString dir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QDir().mkpath(dir);
-    // QString timestamp = QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
-    m_outputFile = dir + "/recording" /*+ timestamp*/ + ".wav";
+    m_outputFile = dir + "/recording.wav";
 
     QMediaFormat mediaFormat;
     mediaFormat.setFileFormat(QMediaFormat::Wave);
@@ -101,7 +173,6 @@ void AudioRecorder::startRecording() {
 
     m_levelTimer.start(50);
 }
-
 
 void AudioRecorder::stopRecording() {
     m_recorder->stop();

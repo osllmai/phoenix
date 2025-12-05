@@ -1,8 +1,9 @@
-#include "SpeechToTextWorker.h"
+#include "speechtotextworker.h"
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include <QDebug>
 #include <regex>
+#include <QFileInfo>
 
 SpeechToTextWorker::SpeechToTextWorker(const QString &modelPath, const QString &audioPath, bool cuda, QObject *parent)
     : QObject(parent), m_modelPath(modelPath), m_audioPath(audioPath), m_cuda(cuda), m_stopFlag(false)
@@ -20,9 +21,37 @@ void SpeechToTextWorker::process()
     process.setProcessChannelMode(QProcess::MergedChannels);
     process.setReadChannel(QProcess::StandardOutput);
 
-    QString exePath = m_cuda
-                          ? QCoreApplication::applicationDirPath() + "/whisper/cuda-device/whisper-cli.exe"
-                          : QCoreApplication::applicationDirPath() + "/whisper/cpu-device/whisper-cli.exe";
+    QString exeFileName;
+#if defined(Q_OS_WIN)
+    exeFileName = "whisper-cli.exe";
+#else
+    exeFileName = "whisper-cli";  // macOS و Linux
+#endif
+
+    QString deviceFolder;
+#if defined(Q_OS_MAC)
+    deviceFolder = "whisper/";
+#else
+    deviceFolder = m_cuda ? "cuda-device/" : "cpu-device/";
+#endif
+
+    QString exePath = QString::fromUtf8(APP_PATH)
+                      + "/whisper/" + deviceFolder + exeFileName;
+
+    if (!QFileInfo::exists(exePath)) {
+        emit errorOccurred("Whisper executable not found: " + exePath);
+        emit finished();
+        return;
+    }
+
+#if defined(Q_OS_LINUX)
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QString currentPath = env.value("LD_LIBRARY_PATH");
+    env.insert("LD_LIBRARY_PATH",
+               QString::fromUtf8(APP_PATH) +
+                   (currentPath.isEmpty() ? "" : ":" + currentPath));
+    process.setProcessEnvironment(env);
+#endif
 
     QStringList arguments;
     arguments << "-m" << m_modelPath

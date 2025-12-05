@@ -22,7 +22,7 @@ T.Button {
             anchors.verticalCenter: parent.verticalCenter
             MyIcon {
                 id: logoModelId
-                myIcon: "qrc:/media/image_company/" + model.icon
+                myIcon: model.icon
                 iconType: Style.RoleEnum.IconType.Image
                 enabled: false
                 width: 32; height: 32

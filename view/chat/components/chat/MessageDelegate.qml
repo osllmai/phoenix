@@ -16,7 +16,7 @@ T.Button {
 
     property bool generateProcess: (model.text === ""?true:false) &&
                                    !conversationList.isEmptyConversation &&
-                                   conversationList.currentConversation.loadModelInProgress &&
+                                   (conversationList.currentConversation.loadModelInProgress || (conversationList.currentConversation.responseInProgress && model.text === "")) &&
                                    (index === listView.count - 1)
 
     background: null
@@ -146,7 +146,7 @@ T.Button {
                         anchors.verticalCenter: parent.verticalCenter
                         font.pixelSize: 12
                         color: Style.Colors.textInformation
-                        text: "Processing your text " + ".".repeat(loadingTextItem.dotCount)
+                        text: conversationList.currentConversation.logState + ".".repeat(loadingTextItem.dotCount)
                     }
                 }
 

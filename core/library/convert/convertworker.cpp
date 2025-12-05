@@ -1,4 +1,4 @@
-#include "ConvertWorker.h"
+#include "convertworker.h"
 #include <QCoreApplication>
 #include <QFileInfo>
 
@@ -18,34 +18,51 @@ void ConvertWorker::process()
     process.setProcessChannelMode(QProcess::MergedChannels);
     process.setReadChannel(QProcess::StandardOutput);
 
-    QString exePath = QCoreApplication::applicationDirPath() + "/markitdown/markitdown.exe";
+    // --- Cross-platform executable path ---
+    QString exeName;
+#if defined(Q_OS_WIN)
+    exeName = "convert_pdf.exe";
+#elif defined(Q_OS_MAC)
+    exeName = "convert_pdf";
+#elif defined(Q_OS_LINUX)
+    exeName = "convert_pdf";
+#else
+    emit error("Unsupported platform");
+    emit finished("");
+    return;
+#endif
+
+    QString exePath = QString::fromUtf8(APP_PATH) + "/markitdown/" + exeName;
+    QFileInfo exeInfo(exePath);
+    if (!exeInfo.exists() || !exeInfo.isExecutable()) {
+        emit error("Executable not found or not executable: " + exePath);
+        emit finished("");
+        return;
+    }
+
     QStringList arguments;
     arguments << m_filePath;
 
     process.start(exePath, arguments);
-    if (!process.waitForStarted()) {
+    if (!process.waitForStarted(3000)) {
         emit error("Failed to start process: " + process.errorString());
         emit finished("");
         return;
     }
 
     QString collectedOutput;
-
     while (process.state() == QProcess::Running) {
         if (process.waitForReadyRead(500)) {
-            QByteArray output = process.readAllStandardOutput();
-            QString outputString = QString::fromUtf8(output);
+            QString outputString = QString::fromUtf8(process.readAllStandardOutput());
             qInfo() << outputString;
             collectedOutput += outputString;
         }
     }
 
-    if (process.state() != QProcess::NotRunning) {
-        process.terminate();
-        if (!process.waitForFinished(1000)) {
-            process.kill();
-            process.waitForFinished();
-        }
+    process.waitForFinished();
+
+    if (process.exitStatus() != QProcess::NormalExit) {
+        emit error("Process crashed or did not exit normally.");
     }
 
     emit finished(collectedOutput.trimmed());

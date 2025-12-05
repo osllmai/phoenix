@@ -1,0 +1,486 @@
+Last login: Wed Oct 22 00:03:24 on console
+parsanemati@Parsas-MacBook-Pro ~ % cd /Users/parsanemati/Zeinab      
+parsanemati@Parsas-MacBook-Pro Zeinab % git clone --branch phoenix_v0.1.2 --single-branch https://github.com/osllmai/phoenix.git
+Cloning into 'phoenix'...
+remote: Enumerating objects: 10111, done.
+remote: Counting objects: 100% (1229/1229), done.
+remote: Compressing objects: 100% (777/777), done.
+remote: Total 10111 (delta 663), reused 658 (delta 450), pack-reused 8882 (from 1)
+Receiving objects: 100% (10111/10111), 64.48 MiB | 39.66 MiB/s, done.
+Resolving deltas: 100% (6131/6131), done.
+parsanemati@Parsas-MacBook-Pro Zeinab % git clone --recurse-submodules https://github.com/nomic-ai/gpt4all
+Cloning into 'gpt4all'...
+remote: Enumerating objects: 16368, done.
+remote: Counting objects: 100% (13/13), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 16368 (delta 5), reused 5 (delta 5), pack-reused 16355 (from 2)
+Receiving objects: 100% (16368/16368), 43.59 MiB | 47.64 MiB/s, done.
+Resolving deltas: 100% (11266/11266), done.
+Submodule 'llama.cpp-mainline' (https://github.com/nomic-ai/llama.cpp.git) registered for path 'gpt4all-backend/deps/llama.cpp-mainline'
+Submodule 'gpt4all-chat/deps/DuckX' (https://github.com/nomic-ai/DuckX.git) registered for path 'gpt4all-chat/deps/DuckX'
+Submodule 'gpt4all-chat/deps/QXlsx' (https://github.com/nomic-ai/QXlsx.git) registered for path 'gpt4all-chat/deps/QXlsx'
+Submodule 'gpt4all-chat/deps/SingleApplication' (https://github.com/nomic-ai/SingleApplication.git) registered for path 'gpt4all-chat/deps/SingleApplication'
+Submodule 'gpt4all-chat/deps/fmt' (https://github.com/fmtlib/fmt.git) registered for path 'gpt4all-chat/deps/fmt'
+Submodule 'gpt4all-chat/deps/json' (https://github.com/nlohmann/json.git) registered for path 'gpt4all-chat/deps/json'
+Submodule 'gpt4all-chat/deps/minja' (https://github.com/nomic-ai/minja.git) registered for path 'gpt4all-chat/deps/minja'
+Submodule 'gpt4all-chat/usearch' (https://github.com/nomic-ai/usearch.git) registered for path 'gpt4all-chat/deps/usearch'
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-backend/deps/llama.cpp-mainline'...
+remote: Enumerating objects: 34009, done.        
+remote: Counting objects: 100% (3/3), done.        
+remote: Compressing objects: 100% (2/2), done.        
+remote: Total 34009 (delta 1), reused 1 (delta 1), pack-reused 34006 (from 1)        
+Receiving objects: 100% (34009/34009), 72.64 MiB | 25.75 MiB/s, done.
+Resolving deltas: 100% (23946/23946), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/DuckX'...
+remote: Enumerating objects: 587, done.        
+remote: Counting objects: 100% (230/230), done.        
+remote: Compressing objects: 100% (52/52), done.        
+remote: Total 587 (delta 188), reused 190 (delta 173), pack-reused 357 (from 1)        
+Receiving objects: 100% (587/587), 800.15 KiB | 1.99 MiB/s, done.
+Resolving deltas: 100% (319/319), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/QXlsx'...
+remote: Enumerating objects: 5257, done.        
+remote: Counting objects: 100% (1410/1410), done.        
+remote: Compressing objects: 100% (357/357), done.        
+remote: Total 5257 (delta 1140), reused 1053 (delta 1053), pack-reused 3847 (from 1)        
+Receiving objects: 100% (5257/5257), 8.72 MiB | 19.08 MiB/s, done.
+Resolving deltas: 100% (3683/3683), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/SingleApplication'...
+remote: Enumerating objects: 1252, done.        
+remote: Counting objects: 100% (498/498), done.        
+remote: Compressing objects: 100% (114/114), done.        
+remote: Total 1252 (delta 428), reused 384 (delta 384), pack-reused 754 (from 1)        
+Receiving objects: 100% (1252/1252), 356.37 KiB | 3.13 MiB/s, done.
+Resolving deltas: 100% (681/681), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/fmt'...
+remote: Enumerating objects: 40411, done.        
+remote: Counting objects: 100% (171/171), done.        
+remote: Compressing objects: 100% (95/95), done.        
+remote: Total 40411 (delta 107), reused 80 (delta 73), pack-reused 40240 (from 6)        
+Receiving objects: 100% (40411/40411), 16.96 MiB | 34.12 MiB/s, done.
+Resolving deltas: 100% (27203/27203), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/json'...
+remote: Enumerating objects: 67868, done.        
+remote: Counting objects: 100% (723/723), done.        
+remote: Compressing objects: 100% (342/342), done.        
+remote: Total 67868 (delta 301), reused 438 (delta 151), pack-reused 67145 (from 2)        
+Receiving objects: 100% (67868/67868), 225.69 MiB | 41.49 MiB/s, done.
+Resolving deltas: 100% (38991/38991), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/minja'...
+remote: Enumerating objects: 1319, done.        
+remote: Counting objects: 100% (626/626), done.        
+remote: Compressing objects: 100% (139/139), done.        
+remote: Total 1319 (delta 515), reused 487 (delta 487), pack-reused 693 (from 1)        
+Receiving objects: 100% (1319/1319), 291.42 KiB | 3.64 MiB/s, done.
+Resolving deltas: 100% (723/723), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/usearch'...
+remote: Enumerating objects: 9844, done.        
+remote: Counting objects: 100% (2274/2274), done.        
+remote: Compressing objects: 100% (220/220), done.        
+remote: Total 9844 (delta 2112), reused 2054 (delta 2054), pack-reused 7570 (from 1)        
+Receiving objects: 100% (9844/9844), 3.68 MiB | 15.69 MiB/s, done.
+Resolving deltas: 100% (5756/5756), done.
+Submodule path 'gpt4all-backend/deps/llama.cpp-mainline': checked out '11f734c3b0334dbae4823b4a7467764e447fc6d6'
+Submodule 'kompute' (https://github.com/nomic-ai/kompute.git) registered for path 'gpt4all-backend/deps/llama.cpp-mainline/ggml/src/kompute'
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-backend/deps/llama.cpp-mainline/ggml/src/kompute'...
+remote: Enumerating objects: 9122, done.        
+remote: Counting objects: 100% (155/155), done.        
+remote: Compressing objects: 100% (69/69), done.        
+remote: Total 9122 (delta 109), reused 86 (delta 86), pack-reused 8967 (from 3)        
+Receiving objects: 100% (9122/9122), 17.59 MiB | 8.84 MiB/s, done.
+Resolving deltas: 100% (5728/5728), done.
+Submodule path 'gpt4all-backend/deps/llama.cpp-mainline/ggml/src/kompute': checked out '7c20efa30bb53d08bf04f84e510275766ebe9923'
+Submodule path 'gpt4all-chat/deps/DuckX': checked out '6e31dfb280e2107fbf4f6a15098c38b014f1bbcc'
+Submodule path 'gpt4all-chat/deps/QXlsx': checked out '29e81b369128525749dcb6516195b6b062eda955'
+Submodule path 'gpt4all-chat/deps/SingleApplication': checked out '21bdef01eddcbd78044eea1d50b9dee08d218ff2'
+Submodule path 'gpt4all-chat/deps/fmt': checked out '0c9fce2ffefecfdce794e1859584e25877b7b592'
+Submodule path 'gpt4all-chat/deps/json': checked out '606b6347edf0758c531abb6c36743e09a4c48a84'
+Submodule path 'gpt4all-chat/deps/minja': checked out 'e97bb2442cd6ab3d5bb5f5a3e8a1f7d6081d613b'
+Submodule path 'gpt4all-chat/deps/usearch': checked out '9e59f1036657303b29eaf709945f339e403e5f2f'
+Submodule 'fp16' (https://github.com/maratyszcza/fp16) registered for path 'gpt4all-chat/deps/usearch/fp16'
+Submodule 'simsimd' (https://github.com/ashvardanian/simsimd) registered for path 'gpt4all-chat/deps/usearch/simsimd'
+Submodule 'stringzilla' (https://github.com/ashvardanian/stringzilla) registered for path 'gpt4all-chat/deps/usearch/stringzilla'
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/usearch/fp16'...
+remote: Enumerating objects: 468, done.        
+remote: Counting objects: 100% (93/93), done.        
+remote: Compressing objects: 100% (40/40), done.        
+remote: Total 468 (delta 61), reused 59 (delta 51), pack-reused 375 (from 1)        
+Receiving objects: 100% (468/468), 148.58 KiB | 3.23 MiB/s, done.
+Resolving deltas: 100% (255/255), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/usearch/simsimd'...
+remote: Enumerating objects: 7983, done.        
+remote: Counting objects: 100% (1213/1213), done.        
+remote: Compressing objects: 100% (342/342), done.        
+remote: Total 7983 (delta 957), reused 924 (delta 864), pack-reused 6770 (from 2)        
+Receiving objects: 100% (7983/7983), 2.49 MiB | 13.30 MiB/s, done.
+Resolving deltas: 100% (4826/4826), done.
+Cloning into '/Users/parsanemati/Zeinab/gpt4all/gpt4all-chat/deps/usearch/stringzilla'...
+remote: Enumerating objects: 11243, done.        
+remote: Counting objects: 100% (291/291), done.        
+remote: Compressing objects: 100% (136/136), done.        
+remote: Total 11243 (delta 180), reused 195 (delta 154), pack-reused 10952 (from 3)        
+Receiving objects: 100% (11243/11243), 11.07 MiB | 12.11 MiB/s, done.
+Resolving deltas: 100% (6977/6977), done.
+Submodule path 'gpt4all-chat/deps/usearch/fp16': checked out '0a92994d729ff76a58f692d3028ca1b64b145d91'
+Submodule path 'gpt4all-chat/deps/usearch/simsimd': checked out '18d17686124ddebd9fe55eee56b2e0273a613d4b'
+Submodule path 'gpt4all-chat/deps/usearch/stringzilla': checked out '91d0a1a02faae90a41c60a30855d5935eb3eaef1'
+parsanemati@Parsas-MacBook-Pro Zeinab % git clone --recurse-submodules https://github.com/ggml-org/whisper.cpp.git
+Cloning into 'whisper.cpp'...
+remote: Enumerating objects: 26094, done.
+remote: Counting objects: 100% (59/59), done.
+remote: Compressing objects: 100% (31/31), done.
+remote: Total 26094 (delta 30), reused 28 (delta 28), pack-reused 26035 (from 2
+Receiving objects: 100% (26094/26094), 27.22 MiB | 39.26 MiB/s, done.
+Resolving deltas: 100% (18812/18812), done.
+parsanemati@Parsas-MacBook-Pro Zeinab % cd /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src
+parsanemati@Parsas-MacBook-Pro src % cd /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider
+parsanemati@Parsas-MacBook-Pro online_provider % python3 --version 
+Python 3.11.0
+parsanemati@Parsas-MacBook-Pro online_provider % python3 --version 
+
+Python 3.11.0
+parsanemati@Parsas-MacBook-Pro online_provider % python3 -m venv venv
+parsanemati@Parsas-MacBook-Pro online_provider % source venv/bin/active
+source: no such file or directory: venv/bin/active
+parsanemati@Parsas-MacBook-Pro online_provider % source venv/bin/activate
+(venv) parsanemati@Parsas-MacBook-Pro online_provider % pip install indoxrouter pyinstaller
+Collecting indoxrouter
+  Downloading indoxrouter-0.1.35-py3-none-any.whl (25 kB)
+Collecting pyinstaller
+  Downloading pyinstaller-6.16.0-py3-none-macosx_10_13_universal2.whl (1.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 11.8 MB/s eta 0:00:00
+Collecting requests>=2.25.0
+  Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.7/64.7 kB 8.8 MB/s eta 0:00:00
+Collecting python-dotenv>=1.0.0
+  Downloading python_dotenv-1.1.1-py3-none-any.whl (20 kB)
+Collecting altgraph
+  Downloading altgraph-0.17.4-py2.py3-none-any.whl (21 kB)
+Collecting macholib>=1.8
+  Downloading macholib-1.16.3-py2.py3-none-any.whl (38 kB)
+Collecting packaging>=22.0
+  Using cached packaging-25.0-py3-none-any.whl (66 kB)
+Collecting pyinstaller-hooks-contrib>=2025.8
+  Downloading pyinstaller_hooks_contrib-2025.9-py3-none-any.whl (444 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━ 444.3/444.3 kB 31.5 MB/s eta 0:00:00
+Requirement already satisfied: setuptools>=42.0.0 in ./venv/lib/python3.11/site-packages (from pyinstaller) (65.5.0)
+Collecting charset_normalizer<4,>=2
+  Downloading charset_normalizer-3.4.4-cp311-cp311-macosx_10_9_universal2.whl (206 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━ 207.0/207.0 kB 14.6 MB/s eta 0:00:00
+Collecting idna<4,>=2.5
+  Downloading idna-3.11-py3-none-any.whl (71 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━ 71.0/71.0 kB 10.1 MB/s eta 0:00:00
+Collecting urllib3<3,>=1.21.1
+  Using cached urllib3-2.5.0-py3-none-any.whl (129 kB)
+Collecting certifi>=2017.4.17
+  Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━ 163.3/163.3 kB 13.5 MB/s eta 0:00:00
+Installing collected packages: altgraph, urllib3, python-dotenv, packaging, macholib, idna, charset_normalizer, certifi, requests, pyinstaller-hooks-contrib, pyinstaller, indoxrouter
+Successfully installed altgraph-0.17.4 certifi-2025.10.5 charset_normalizer-3.4.4 idna-3.11 indoxrouter-0.1.35 macholib-1.16.3 packaging-25.0 pyinstaller-6.16.0 pyinstaller-hooks-contrib-2025.9 python-dotenv-1.1.1 requests-2.32.5 urllib3-2.5.0
+
+[notice] A new release of pip available: 22.3 -> 25.2
+[notice] To update, run: pip install --upgrade pip
+(venv) parsanemati@Parsas-MacBook-Pro online_provider % --add-data "provider.py:."
+zsh: command not found: --add-data
+(venv) parsanemati@Parsas-MacBook-Pro online_provider % pyinstaller --onefile --add-data "provider.py;." --add-data "online_provider.py;." online_provider.py
+
+usage: pyinstaller [-h] [-v] [-D] [-F] [--specpath DIR]
+                   [-n NAME]
+                   [--contents-directory CONTENTS_DIRECTORY]
+                   [--add-data SOURCE:DEST]
+                   [--add-binary SOURCE:DEST] [-p DIR]
+                   [--hidden-import MODULENAME]
+                   [--collect-submodules MODULENAME]
+                   [--collect-data MODULENAME]
+                   [--collect-binaries MODULENAME]
+                   [--collect-all MODULENAME]
+                   [--copy-metadata PACKAGENAME]
+                   [--recursive-copy-metadata PACKAGENAME]
+                   [--additional-hooks-dir HOOKSPATH]
+                   [--runtime-hook RUNTIME_HOOKS]
+                   [--exclude-module EXCLUDES]
+                   [--splash IMAGE_FILE]
+                   [-d {all,imports,bootloader,noarchive}]
+                   [--optimize LEVEL]
+                   [--python-option PYTHON_OPTION] [-s]
+                   [--noupx] [--upx-exclude FILE] [-c] [-w]
+                   [--hide-console {hide-late,minimize-late,hide-early,minimize-early}]
+                   [-i <FILE.ico or FILE.exe,ID or FILE.icns or Image or "NONE">]
+                   [--disable-windowed-traceback]
+                   [--version-file FILE]
+                   [--manifest <FILE or XML>] [-m <FILE or XML>]
+                   [-r RESOURCE] [--uac-admin] [--uac-uiaccess]
+                   [--argv-emulation]
+                   [--osx-bundle-identifier BUNDLE_IDENTIFIER]
+                   [--target-architecture ARCH]
+                   [--codesign-identity IDENTITY]
+                   [--osx-entitlements-file FILENAME]
+                   [--runtime-tmpdir PATH]
+                   [--bootloader-ignore-signals]
+                   [--distpath DIR] [--workpath WORKPATH] [-y]
+                   [--upx-dir UPX_DIR] [--clean]
+                   [--log-level LEVEL]
+                   scriptname [scriptname ...]
+pyinstaller: error: argument --add-data: Wrong syntax, should be --add-data=SOURCE:DEST
+(venv) parsanemati@Parsas-MacBook-Pro online_provider % pyinstaller --onefile \
+  --add-data "provider.py:." \
+  --add-data "online_provider.py:." \
+  online_provider.py
+67 INFO: PyInstaller: 6.16.0, contrib hooks: 2025.9
+67 INFO: Python: 3.11.0
+80 INFO: Platform: macOS-26.0.1-arm64-arm-64bit
+80 INFO: Python environment: /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv
+80 INFO: wrote /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/online_provider.spec
+85 INFO: Module search paths (PYTHONPATH):
+['/Library/Frameworks/Python.framework/Versions/3.11/lib/python311.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/lib-dynload',
+ '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages',
+ '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider']
+232 INFO: Appending 'datas' from .spec
+232 INFO: checking Analysis
+232 INFO: Building Analysis because Analysis-00.toc is non existent
+232 INFO: Looking for Python shared library...
+237 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.11/Python
+237 INFO: Running Analysis Analysis-00.toc
+237 INFO: Target bytecode optimization level: 0
+238 INFO: Initializing module dependency graph...
+238 INFO: Initializing module graph hook caches...
+244 INFO: Analyzing modules for base_library.zip ...
+650 INFO: Processing standard module hook 'hook-heapq.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+653 INFO: Processing standard module hook 'hook-encodings.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+1627 INFO: Processing standard module hook 'hook-pickle.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+2456 INFO: Caching module dependency graph...
+2477 INFO: Analyzing /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/online_provider.py
+2492 INFO: Processing standard module hook 'hook-platform.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+2509 INFO: Processing standard module hook 'hook-xml.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+2593 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+2903 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+3127 INFO: Processing standard module hook 'hook-urllib3.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+3195 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+3196 INFO: SetuptoolsInfo: initializing cached setuptools info...
+3833 INFO: Processing standard module hook 'hook-charset_normalizer.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+3906 INFO: Processing standard module hook 'hook-certifi.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+3977 INFO: Processing module hooks (post-graph stage)...
+4004 INFO: Performing binary vs. data reclassification (6 entries)
+4010 INFO: Looking for ctypes DLLs
+4017 INFO: Analyzing run-time hooks ...
+4018 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+4020 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+4021 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+4024 INFO: Creating base_library.zip...
+4034 INFO: Looking for dynamic libraries
+4182 INFO: Warnings written to /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/build/online_provider/warn-online_provider.txt
+4192 INFO: Graph cross-reference written to /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/build/online_provider/xref-online_provider.html
+4259 INFO: checking PYZ
+4259 INFO: Building PYZ because PYZ-00.toc is non existent
+4259 INFO: Building PYZ (ZlibArchive) /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/build/online_provider/PYZ-00.pyz
+4495 INFO: Building PYZ (ZlibArchive) /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/build/online_provider/PYZ-00.pyz completed successfully.
+4498 INFO: EXE target arch: arm64
+4498 INFO: Code signing identity: None
+4500 INFO: checking PKG
+4500 INFO: Building PKG because PKG-00.toc is non existent
+4500 INFO: Building PKG (CArchive) online_provider.pkg
+10636 INFO: Building PKG (CArchive) online_provider.pkg completed successfully.
+10638 INFO: Bootloader /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/bootloader/Darwin-64bit/run
+10638 INFO: checking EXE
+10638 INFO: Building EXE because EXE-00.toc is non existent
+10638 INFO: Building EXE from EXE-00.toc
+10638 INFO: Copying bootloader EXE to /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/dist/online_provider
+10639 INFO: Converting EXE to target arch (arm64)
+10665 INFO: Removing signature(s) from EXE
+10679 INFO: Modifying Mach-O image UUID(s) in EXE
+10686 INFO: Appending PKG archive to EXE
+10703 INFO: Fixing EXE headers for code signing
+10708 INFO: Rewriting the executable's macOS SDK version (15.5.0) to match the SDK version of the Python library (12.1.0) in order to avoid inconsistent behavior and potential UI issues in the frozen application.
+10709 INFO: Re-signing the EXE
+10774 INFO: Building EXE from EXE-00.toc completed successfully.
+10776 INFO: Build complete! The results are available in: /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/dist
+(venv) parsanemati@Parsas-MacBook-Pro online_provider % cd /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src 
+(venv) parsanemati@Parsas-MacBook-Pro src % pip install markitdown[all]
+zsh: no matches found: markitdown[all]
+(venv) parsanemati@Parsas-MacBook-Pro src % pip install markitdown[all]
+
+zsh: no matches found: markitdown[all]
+(venv) parsanemati@Parsas-MacBook-Pro src % pip install markitdown 
+
+Collecting markitdown
+  Downloading markitdown-0.1.3-py3-none-any.whl (58 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.4/58.4 kB 2.0 MB/s eta 0:00:00
+Collecting beautifulsoup4
+  Downloading beautifulsoup4-4.14.2-py3-none-any.whl (106 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━ 106.4/106.4 kB 5.1 MB/s eta 0:00:00
+Requirement already satisfied: charset-normalizer in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from markitdown) (3.4.4)
+Collecting defusedxml
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Collecting magika~=0.6.1
+  Downloading magika-0.6.2-py3-none-macosx_11_0_arm64.whl (12.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.4/12.4 MB 43.9 MB/s eta 0:00:00
+Collecting markdownify
+  Downloading markdownify-1.2.0-py3-none-any.whl (15 kB)
+Requirement already satisfied: requests in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from markitdown) (2.32.5)
+Collecting click>=8.1.7
+  Downloading click-8.3.0-py3-none-any.whl (107 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━ 107.3/107.3 kB 9.9 MB/s eta 0:00:00
+Collecting onnxruntime>=1.17.0
+  Downloading onnxruntime-1.23.2-cp311-cp311-macosx_13_0_arm64.whl (17.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.2/17.2 MB 43.1 MB/s eta 0:00:00
+Collecting numpy>=1.24
+  Downloading numpy-2.3.4-cp311-cp311-macosx_14_0_arm64.whl (5.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 46.7 MB/s eta 0:00:00
+Requirement already satisfied: python-dotenv>=1.0.1 in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from magika~=0.6.1->markitdown) (1.1.1)
+Collecting soupsieve>1.2
+  Downloading soupsieve-2.8-py3-none-any.whl (36 kB)
+Collecting typing-extensions>=4.0.0
+  Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 6.1 MB/s eta 0:00:00
+Collecting six<2,>=1.15
+  Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Requirement already satisfied: idna<4,>=2.5 in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from requests->markitdown) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from requests->markitdown) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from requests->markitdown) (2025.10.5)
+Collecting coloredlogs
+  Downloading coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.0/46.0 kB 7.4 MB/s eta 0:00:00
+Collecting flatbuffers
+  Downloading flatbuffers-25.9.23-py2.py3-none-any.whl (30 kB)
+Requirement already satisfied: packaging in /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages (from onnxruntime>=1.17.0->magika~=0.6.1->markitdown) (25.0)
+Collecting protobuf
+  Downloading protobuf-6.33.0-cp39-abi3-macosx_10_9_universal2.whl (427 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━ 427.5/427.5 kB 28.0 MB/s eta 0:00:00
+Collecting sympy
+  Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 43.1 MB/s eta 0:00:00
+Collecting humanfriendly>=9.1
+  Downloading humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.8/86.8 kB 11.7 MB/s eta 0:00:00
+Collecting mpmath<1.4,>=1.1.0
+  Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 33.7 MB/s eta 0:00:00
+Installing collected packages: mpmath, flatbuffers, typing-extensions, sympy, soupsieve, six, protobuf, numpy, humanfriendly, defusedxml, click, coloredlogs, beautifulsoup4, onnxruntime, markdownify, magika, markitdown
+Successfully installed beautifulsoup4-4.14.2 click-8.3.0 coloredlogs-15.0.1 defusedxml-0.7.1 flatbuffers-25.9.23 humanfriendly-10.0 magika-0.6.2 markdownify-1.2.0 markitdown-0.1.3 mpmath-1.3.0 numpy-2.3.4 onnxruntime-1.23.2 protobuf-6.33.0 six-1.17.0 soupsieve-2.8 sympy-1.14.0 typing-extensions-4.15.0
+
+[notice] A new release of pip available: 22.3 -> 25.2
+[notice] To update, run: pip install --upgrade pip
+(venv) parsanemati@Parsas-MacBook-Pro src % pyinstaller --onefile \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venvlib/python3.12/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/config:magika/config" \
+  convert_pdf.py
+97 INFO: PyInstaller: 6.16.0, contrib hooks: 2025.9
+97 INFO: Python: 3.11.0
+110 INFO: Platform: macOS-26.0.1-arm64-arm-64bit
+110 INFO: Python environment: /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv
+110 INFO: wrote /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/convert_pdf.spec
+114 INFO: Module search paths (PYTHONPATH):
+['/Library/Frameworks/Python.framework/Versions/3.11/lib/python311.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/lib-dynload',
+ '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages',
+ '/Users/parsanemati/Zeinab/phoenix/resources/markitdown/src']
+347 INFO: Appending 'datas' from .spec
+ERROR: Unable to find '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venvlib/python3.12/site-packages/magika/models/standard_v3_3' when adding binary and data files.
+(venv) parsanemati@Parsas-MacBook-Pro src % pyinstaller --onefile \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/config:magika/config" \
+  convert_pdf.py
+
+69 INFO: PyInstaller: 6.16.0, contrib hooks: 2025.9
+69 INFO: Python: 3.11.0
+79 INFO: Platform: macOS-26.0.1-arm64-arm-64bit
+79 INFO: Python environment: /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv
+80 INFO: wrote /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/convert_pdf.spec
+84 INFO: Module search paths (PYTHONPATH):
+['/Library/Frameworks/Python.framework/Versions/3.11/lib/python311.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/lib-dynload',
+ '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages',
+ '/Users/parsanemati/Zeinab/phoenix/resources/markitdown/src']
+281 INFO: Appending 'datas' from .spec
+ERROR: Unable to find '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/models/standard_v3_3' when adding binary and data files.
+(venv) parsanemati@Parsas-MacBook-Pro src % pyinstaller --onefile \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/magika/config:magika/config" \
+  convert_pdf.py
+98 INFO: PyInstaller: 6.16.0, contrib hooks: 2025.9
+98 INFO: Python: 3.11.0
+107 INFO: Platform: macOS-26.0.1-arm64-arm-64bit
+107 INFO: Python environment: /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv
+108 INFO: wrote /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/convert_pdf.spec
+111 INFO: Module search paths (PYTHONPATH):
+['/Library/Frameworks/Python.framework/Versions/3.11/lib/python311.zip',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11',
+ '/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/lib-dynload',
+ '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages',
+ '/Users/parsanemati/Zeinab/phoenix/resources/markitdown/src']
+328 INFO: Appending 'datas' from .spec
+328 INFO: checking Analysis
+328 INFO: Building Analysis because Analysis-00.toc is non existent
+328 INFO: Looking for Python shared library...
+334 INFO: Using Python shared library: /Library/Frameworks/Python.framework/Versions/3.11/Python
+334 INFO: Running Analysis Analysis-00.toc
+334 INFO: Target bytecode optimization level: 0
+334 INFO: Initializing module dependency graph...
+335 INFO: Initializing module graph hook caches...
+341 INFO: Analyzing modules for base_library.zip ...
+754 INFO: Processing standard module hook 'hook-encodings.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+987 INFO: Processing standard module hook 'hook-heapq.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+1734 INFO: Processing standard module hook 'hook-pickle.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+2549 INFO: Caching module dependency graph...
+2570 INFO: Analyzing /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/convert_pdf.py
+2593 INFO: Processing standard module hook 'hook-urllib3.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+2717 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+2718 INFO: SetuptoolsInfo: initializing cached setuptools info...
+3081 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+3126 INFO: Processing standard module hook 'hook-xml.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+3275 INFO: Processing standard module hook 'hook-_ctypes.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+3912 INFO: Processing standard module hook 'hook-charset_normalizer.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+3987 INFO: Processing standard module hook 'hook-certifi.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+4088 INFO: Processing standard module hook 'hook-numpy.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+4365 INFO: Processing standard module hook 'hook-difflib.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+4616 INFO: Processing standard module hook 'hook-sysconfig.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+4623 INFO: Processing standard module hook 'hook-_osx_support.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+4688 INFO: Processing standard module hook 'hook-platform.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+5588 INFO: Processing standard module hook 'hook-onnxruntime.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/stdhooks'
+5670 INFO: Processing standard module hook 'hook-pkg_resources.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+6110 INFO: Processing pre-safe-import-module hook 'hook-tensorflow.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/pre_safe_import_module'
+6443 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+6489 INFO: Processing standard module hook 'hook-xml.dom.domreg.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks'
+6673 INFO: Processing module hooks (post-graph stage)...
+6683 INFO: Processing pre-safe-import-module hook 'hook-win32com.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/_pyinstaller_hooks_contrib/pre_safe_import_module'
+6953 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/pre_safe_import_module'
+7060 INFO: Performing binary vs. data reclassification (10 entries)
+7073 INFO: Looking for ctypes DLLs
+7116 INFO: Analyzing run-time hooks ...
+7118 INFO: Including run-time hook 'pyi_rth_inspect.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+7120 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+7121 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+7122 INFO: Including run-time hook 'pyi_rth_pkgres.py' from '/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/hooks/rthooks'
+7130 INFO: Creating base_library.zip...
+7141 INFO: Looking for dynamic libraries
+7351 INFO: Warnings written to /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/build/convert_pdf/warn-convert_pdf.txt
+7375 INFO: Graph cross-reference written to /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/build/convert_pdf/xref-convert_pdf.html
+7474 INFO: checking PYZ
+7474 INFO: Building PYZ because PYZ-00.toc is non existent
+7474 INFO: Building PYZ (ZlibArchive) /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/build/convert_pdf/PYZ-00.pyz
+7988 INFO: Building PYZ (ZlibArchive) /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/build/convert_pdf/PYZ-00.pyz completed successfully.
+7995 INFO: EXE target arch: arm64
+7995 INFO: Code signing identity: None
+7997 INFO: checking PKG
+7997 INFO: Building PKG because PKG-00.toc is non existent
+7997 INFO: Building PKG (CArchive) convert_pdf.pkg
+16165 INFO: Building PKG (CArchive) convert_pdf.pkg completed successfully.
+16167 INFO: Bootloader /Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/PyInstaller/bootloader/Darwin-64bit/run
+16167 INFO: checking EXE
+16168 INFO: Building EXE because EXE-00.toc is non existent
+16168 INFO: Building EXE from EXE-00.toc
+16168 INFO: Copying bootloader EXE to /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/dist/convert_pdf
+16168 INFO: Converting EXE to target arch (arm64)
+16185 INFO: Removing signature(s) from EXE
+16203 INFO: Modifying Mach-O image UUID(s) in EXE
+16227 INFO: Appending PKG archive to EXE
+16242 INFO: Fixing EXE headers for code signing
+16247 INFO: Rewriting the executable's macOS SDK version (15.5.0) to match the SDK version of the Python library (12.1.0) in order to avoid inconsistent behavior and potential UI issues in the frozen application.
+16247 INFO: Re-signing the EXE
+16315 INFO: Building EXE from EXE-00.toc completed successfully.
+16317 INFO: Build complete! The results are available in: /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/dist
+(venv) parsanemati@Parsas-MacBook-Pro src % /Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/dist/convert_pdf /Users/parsanemati/Downloads/bitcoin (1).docx

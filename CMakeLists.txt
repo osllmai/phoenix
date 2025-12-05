@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 set(APP_VERSION_MAJOR 0)
 set(APP_VERSION_MINOR 1)
-set(APP_VERSION_PATCH 33)
+set(APP_VERSION_PATCH 34)
 set(APP_VERSION_BASE "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}")
 set(APP_VERSION "${APP_VERSION_BASE}")
 
@@ -17,18 +17,22 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Network)
-find_package(Qt6 REQUIRED COMPONENTS Core Quick Concurrent Gui Qml Sql Network Xml TextToSpeech HttpServer)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick Gui WebView Concurrent Qml Sql Network Xml TextToSpeech HttpServer )
 
 qt_standard_project_setup(REQUIRES 6.5)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/core
     ${CMAKE_SOURCE_DIR}/core/model/
+    ${CMAKE_SOURCE_DIR}/core/database
+    ${CMAKE_SOURCE_DIR}/core/database/managers
     ${CMAKE_SOURCE_DIR}/core/model/offline
     ${CMAKE_SOURCE_DIR}/core/model/online
     ${CMAKE_SOURCE_DIR}/core/model/huggingface
     ${CMAKE_SOURCE_DIR}/core/conversation
     ${CMAKE_SOURCE_DIR}/core/conversation/chat
+    ${CMAKE_SOURCE_DIR}/core/conversation/text
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
     ${CMAKE_SOURCE_DIR}/core/conversation/provider/worker
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
@@ -54,11 +58,25 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-qt_add_executable(app${APP_NAME}
-    core/main.cpp
-    media/image_company/appIcon.rc
+if(WIN32)
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phonicICOLink.rc")
+elseif(APPLE)
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.icns")
 
-    core/database.h core/database.cpp
+    set(MACOSX_BUNDLE_ICON_FILE phoenix.icns)
+
+    set_source_files_properties(${APP_ICON_RESOURCE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+else()
+    set(APP_ICON_RESOURCE "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.png")
+endif()
+
+
+qt_add_executable(app${APP_NAME}
+    MACOSX_BUNDLE
+    core/main.cpp
+    ${APP_ICON_RESOURCE}
+
+    core/database/database.h core/database/database.cpp
     core/systemmonitor.h core/systemmonitor.cpp
     core/clipboard.h core/clipboard.cpp
 
@@ -113,9 +131,9 @@ qt_add_executable(app${APP_NAME}
     core/library/textprocessor/messagetextprocessor.h core/library/textprocessor/messagetextprocessor.cpp
     core/library/textprocessor/codecolors.h core/library/textprocessor/codecolors.cpp
     core/library/textprocessor/highlight/syntaxhighlighter.h core/library/textprocessor/highlight/syntaxhighlighter.cpp
-    core/library/textprocessor/highlight/highlightingcategory.h
+    core/library/textprocessor/highlight/HighlightingCategory.h
     core/library/textprocessor/highlight/language.h
-    core/library/textprocessor/highlight/highlightingrule.h
+    core/library/textprocessor/highlight/HighlightingRule.h
     core/library/textprocessor/highlight/highlighting.h core/library/textprocessor/highlight/highlighting.cpp
     core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp
     core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp
@@ -157,7 +175,7 @@ qt_add_executable(app${APP_NAME}
 )
 
 qt_add_resources(app${APP_NAME}
-    PREFIX /
+    PREFIX "/"
     FILES
         media/icon/add.svg
         media/icon/alignLeftFill.svg
@@ -270,6 +288,7 @@ qt_add_resources(app${APP_NAME}
         media/icon/linkedin.svg
         media/icon/visiblePassword.svg
         media/icon/eyePassword.svg
+        media/icon/deepSearch.svg
 
 
         media/image_company/adobe.svg
@@ -287,8 +306,6 @@ qt_add_resources(app${APP_NAME}
         media/image_company/alibabacloud.svg
         media/image_company/antgroup.svg
         media/image_company/anthropic.svg
-        media/image_company/appIcon.aps
-        media/image_company/appIcon.rc
         media/image_company/aya.svg
         media/image_company/azure.svg
         media/image_company/azureai.svg
@@ -438,10 +455,9 @@ qt_add_resources(app${APP_NAME}
         media/image_company/perplexity.svg
         media/image_company/phidata.svg
         media/image_company/phind.svg
-        media/image_company/Phoenix.ico
-        media/image_company/Phoenix.jpg
-        media/image_company/Phoenix.png
-        media/image_company/Phoenix.svg
+        media/image_company/phoenix.icns
+        media/image_company/phoenix.png
+        media/image_company/phoenix.svg
         media/image_company/pika.svg
         media/image_company/pixverse.svg
         media/image_company/player2.svg
@@ -524,7 +540,7 @@ qt_add_resources(app${APP_NAME}
         view/view.qrc
 )
 
-qt_policy(SET QTP0004 NEW)
+# qt_policy(SET QTP0004 NEW)
 
 qt_add_qml_module(app${APP_NAME}
     URI ${APP_NAME}
@@ -713,6 +729,29 @@ qt_add_qml_module(app${APP_NAME}
     SOURCES core/provider/worker/apikey.h
     SOURCES core/library/convert/convertworker.h core/library/convert/convertworker.cpp
     SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
+    QML_FILES view/sql/SQLView.qml
+    SOURCES core/database/managers/modelmanager.h core/database/managers/modelmanager.cpp
+    SOURCES core/database/managers/conversationmanager.h core/database/managers/conversationmanager.cpp
+    SOURCES core/database/managers/messagemanager.h core/database/managers/messagemanager.cpp
+    QML_FILES view/pdf/PDFView.qml
+    SOURCES core/utils.h core/utils.cpp
+    QML_FILES view/deepsearch/DeepSearchView.qml
+    QML_FILES view/deepsearch/components/DeepSearchBody.qml
+    QML_FILES view/deepsearch/components/DeepSearchHeader.qml
+    SOURCES core/arxivfetcher.h core/arxivfetcher.cpp
+    SOURCES core/arxivarticlelist.h core/arxivarticlelist.cpp
+    QML_FILES view/chat/components/chat/components/AddFileAndMore.qml
+    QML_FILES view/component_library/button/MyComboBoxDelegate.qml
+    SOURCES core/conversation/text/textconversation.h core/conversation/text/textconversation.cpp
+    SOURCES core/conversation/deepSearch/deepsearchconversation.h core/conversation/deepSearch/deepsearchconversation.cpp
+    SOURCES core/database/managers/pdfmanager.h core/database/managers/pdfmanager.cpp
+    SOURCES core/database/managers/pdfembeddingmaneger.h core/database/managers/pdfembeddingmaneger.cpp
+    SOURCES core/conversation/deepSearch/tokenizer/tokenizer.h core/conversation/deepSearch/tokenizer/tokenizer.cpp
+    SOURCES core/conversation/deepSearch/tokenizer/tokenizerworker.h core/conversation/deepSearch/tokenizer/tokenizerworker.cpp
+    SOURCES core/conversation/deepSearch/download/downloadpdf.h core/conversation/deepSearch/download/downloadpdf.cpp
+    QML_FILES view/chat/components/deepSearchLog/DeepSearchLogList.qml
+    QML_FILES view/chat/components/DeepSearchThinking.qml
+    SOURCES core/conversation/deepSearch/arxiv/arxivsearchworker.h core/conversation/deepSearch/arxiv/arxivsearchworker.cpp
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -739,83 +778,148 @@ target_link_libraries(app${APP_NAME}
         Qt${QT_VERSION_MAJOR}::TextToSpeech
         Qt${QT_VERSION_MAJOR}::HttpServer
         Qt${QT_VERSION_MAJOR}::Xml
+        Qt${QT_VERSION_MAJOR}::WebView
         Qt::Qml
         Qt::Gui
 )
-
 include(GNUInstallDirs)
+
+# ---- macOS bundle settings ----
+if(APPLE)
+    set_target_properties(app${APP_NAME} PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_SOURCE_DIR}/media/image_company/Info.plist.in"
+        MACOSX_BUNDLE_ICON_FILE phoenix.icns
+    )
+    set_source_files_properties(
+        "${CMAKE_SOURCE_DIR}/media/image_company/phoenix.icns"
+        PROPERTIES MACOSX_PACKAGE_LOCATION "Resources"
+    )
+endif()
+
+
+# ---- Install the executable and resources ----
 install(TARGETS app${APP_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
 set(BIN_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+# configure config.h
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
 )
 
-#copy company.json
+
+# Copy company.json
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/models/company.json ${BIN_DIR}/models/company.json COPYONLY)
 
-
-#copy online-models
+# Copy online models
 set(ONLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/online_models)
 set(ONLINE_JSON_DEST_DIR ${BIN_DIR}/models/online_models)
-
 file(GLOB ONLINE_JSON_FILES "${ONLINE_JSON_SOURCE_DIR}/*.json")
-
 foreach(json_file ${ONLINE_JSON_FILES})
     get_filename_component(json_filename ${json_file} NAME)
     configure_file(${json_file} ${ONLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
-
-#copy offline-model
+# Copy offline models
 set(OFFLINE_JSON_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/models/offline_models)
 set(OFFLINE_JSON_DEST_DIR ${BIN_DIR}/models/offline_models)
-
 file(GLOB OFFLINE_JSON_FILES "${OFFLINE_JSON_SOURCE_DIR}/*.json")
-
 foreach(json_file ${OFFLINE_JSON_FILES})
     get_filename_component(json_filename ${json_file} NAME)
     configure_file(${json_file} ${OFFLINE_JSON_DEST_DIR}/${json_filename} COPYONLY)
 endforeach()
 
-
-#copy python provider for online-model
+# Copy Python provider for online-model
 if(WIN32)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/online_provider.exe ${BIN_DIR}/providers/online_provider/online_provider.exe COPYONLY)
+    set(ONLINE_PROVIDER_FILE online_provider.exe)
+elseif(APPLE)
+    set(ONLINE_PROVIDER_FILE online_provider)
 else()
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/online_provider.py ${BIN_DIR}/providers/online_provider/online_provider.py COPYONLY)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/provider.py ${BIN_DIR}/providers/online_provider/provider.py COPYONLY)
+    set(ONLINE_PROVIDER_FILE online_provider)
 endif()
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources/providers/online_provider/dist/${ONLINE_PROVIDER_FILE}
+    ${BIN_DIR}/providers/online_provider/${ONLINE_PROVIDER_FILE}
+    COPYONLY
+)
 
-#copy whisper
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
-file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
+# Copy whisper resources
+if(APPLE)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper DESTINATION ${BIN_DIR}/whisper)
+else()
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cpu-device DESTINATION ${BIN_DIR}/whisper)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
+endif()
 
-#copy ConvertToMD
-configure_file(${CMAKE_SOURCE_DIR}/resources/markitdown/markitdown.exe ${BIN_DIR}/markitdown/markitdown.exe COPYONLY)
+# Copy all_mpnet_base_v2 resources
+if(APPLE)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+else()
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+endif()
 
-#copy exe provider for offline-model
+# Copy ConvertToMD / markitdown
 if(WIN32)
-    # Gather EXE files
-    file(GLOB exe_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.exe")
-    foreach(exe_file ${exe_files})
-        get_filename_component(exe_filename ${exe_file} NAME)
-        configure_file(${exe_file} ${BIN_DIR}/${exe_filename} COPYONLY)
-    endforeach()
-
-    # Gather DLL files
-    file(GLOB dll_files "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*.dll")
-    foreach(dll_file ${dll_files})
-        get_filename_component(dll_filename ${dll_file} NAME)
-        configure_file(${dll_file} ${BIN_DIR}/${dll_filename} COPYONLY)
-    endforeach()
+    set(MARKITDOWN_FILE convert_pdf.exe)
+else()
+    set(MARKITDOWN_FILE convert_pdf)  # macOS/Linux
 endif()
 
+configure_file(
+    ${CMAKE_SOURCE_DIR}/resources/markitdown/${MARKITDOWN_FILE}
+    ${BIN_DIR}/markitdown/${MARKITDOWN_FILE}
+    COPYONLY
+)
+
+# Copy tokenizer
+if(WIN32)
+    set(TOKENIZER_FILE tokenizer.exe)
+else()
+    set(TOKENIZER_FILE tokenizer)  # macOS/Linux
+endif()
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE}
+    ${BIN_DIR}/tokenizer/${TOKENIZER_FILE}
+    COPYONLY
+)
+
+# Copy offline provider executables and libraries
+if(WIN32)
+    set(EXE_EXT .exe)
+    set(LIB_EXT .dll)
+elseif(APPLE)
+    set(EXE_EXT "")       # macOS executable usually has no extension
+    set(LIB_EXT .dylib)
+else()
+    set(EXE_EXT "")       # Linux executable
+    set(LIB_EXT .so)
+endif()
+
+file(GLOB exe_files RELATIVE "${CMAKE_SOURCE_DIR}/resources/providers/local_provider"
+     "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${EXE_EXT}")
+ foreach(exe_file ${exe_files})
+     set(full_path "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/${exe_file}")
+     if(EXISTS "${full_path}" AND NOT IS_DIRECTORY "${full_path}")
+         configure_file("${full_path}" "${BIN_DIR}/${exe_file}" COPYONLY)
+     endif()
+ endforeach()
+
+
+file(GLOB lib_files RELATIVE "${CMAKE_SOURCE_DIR}/resources/providers/local_provider"
+     "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/*${LIB_EXT}")
+ foreach(lib_file ${lib_files})
+     set(full_path "${CMAKE_SOURCE_DIR}/resources/providers/local_provider/${lib_file}")
+     if(EXISTS "${full_path}" AND NOT IS_DIRECTORY "${full_path}")
+         configure_file("${full_path}" "${BIN_DIR}/${lib_file}" COPYONLY)
+     endif()
+ endforeach()

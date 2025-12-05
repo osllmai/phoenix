@@ -107,7 +107,7 @@ Item {
                 bottonType: Style.RoleEnum.BottonType.Primary
                 onClicked: {
                     if (modelType === "Text Generation") {
-                        conversationList.setModelRequest(modelId, modelName, "qrc:/media/image_company/" + modelIcon, modelPromptTemplate, modelSystemPrompt)
+                        conversationList.setModelRequest(modelId, modelName, modelIcon, modelPromptTemplate, modelSystemPrompt)
                         conversationList.isEmptyConversation = true
                         appBodyId.currentIndex = 1
                     } else if (modelType === "Speech") {

@@ -1,5 +1,5 @@
 #include "tomlhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> tomlHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

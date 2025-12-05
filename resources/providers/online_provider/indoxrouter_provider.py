@@ -1,7 +1,7 @@
 import os
 from typing import Dict, List, Optional, Union, Generator, Any, AsyncGenerator
 import asyncio
-from indoxrouter import Client
+from indoxhub import Client
 from base_provider import BaseProvider
 
 

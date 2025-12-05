@@ -1,5 +1,5 @@
 #include "scalahighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> scalaHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

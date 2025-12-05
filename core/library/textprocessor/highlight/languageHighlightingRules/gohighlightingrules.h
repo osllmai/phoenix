@@ -1,7 +1,7 @@
 #ifndef GOHIGHLIGHTINGRULES_H
 #define GOHIGHLIGHTINGRULES_H
 
-#include "../highlightingrule.h"
+#include "../HighlightingRule.h"
 #include <QVector>
 
 QVector<HighlightingRule> goHighlightingRules();

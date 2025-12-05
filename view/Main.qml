@@ -2,6 +2,7 @@ import QtQuick
 import QtCore
 import QtQuick.Controls.Basic
 import QtQuick.Layouts
+import Qt.labs.platform
 import QtTextToSpeech
 import QtQuick.Dialogs
 import './component_library/style' as Style
@@ -9,31 +10,16 @@ import './component_library/button'
 
 ApplicationWindow {
     id: window
-    width: 1700; height: 900
+    width: 1200; height: 800
     minimumWidth: 700; minimumHeight: 700
-
-    // flags: Qt.FramelessWindowHint | Qt.Window
 
     color: Style.Colors.background
     visible: true
-    // id: window
-    // width: 1700; height: 900
-    // minimumWidth: 400; minimumHeight: 600
-    // color: Style.Colors.background
-
-    // flags: Qt.Window | Qt.FramelessWindowHint
     flags: Qt.Window |
            Qt.CustomizeWindowHint |
            Qt.WindowMinimizeButtonHint |
            Qt.WindowMaximizeButtonHint |
            Qt.WindowContextHelpButtonHint
-           // Qt.WindowStaysOnTopHint |
-           // Qt.WindowTitleHint |
-           // Qt.WindowActive |
-           // Qt.WindowNoState |
-           // Qt.CustomDashLine |
-            // Qt.FramelessWindowHint
-           // Qt.ElideLeft
 
     property int prevX: 0
     property int prevY: 0
@@ -42,7 +28,7 @@ ApplicationWindow {
 
     property string lastFolder: "file:///" + Logger.logDir
 
-    property string theme: "Defualt"
+    property string theme: "Default"
     onThemeChanged: {
         if ((window.theme === "Dark") || (window.theme === "Light"))
             Style.Colors.theme = window.theme
@@ -84,6 +70,12 @@ ApplicationWindow {
     }
 
     font.family: "DM Sans"
+    property string currentDate: updateChecker.currentDate
+     onCurrentDateChanged: {
+         if(window.currentDate !== "")
+            updateChecker.currentDate =  window.currentDate
+     }
+
 
     Settings {
         id: appSettings
@@ -97,6 +89,7 @@ ApplicationWindow {
         property alias fontFamily: window.font.family
         property alias modelPageView: window.modelPageView
         property alias isOpenMenu: window.isOpenMenu
+        property alias currentDate: window.currentDate
 
         property real speechVolume: value("speechVolume", 0.8)
         property real speechPitch: value("speechPitch", 0.0)
@@ -105,6 +98,43 @@ ApplicationWindow {
         property alias lastFolder: window.lastFolder
     }
 
+    // ------------------ System Tray ------------------
+    SystemTrayIcon {
+        id: systemTrayIcon
+        property bool shouldClose: false
+        visible: !shouldClose
+        icon.source: "qrc:/media/image_company/phoenix.svg"
+
+        function restore() {
+            window.show()
+            window.raise()
+            window.requestActivate()
+        }
+
+        onActivated: function(reason) {
+            if (reason === SystemTrayIcon.Context && Qt.platform.os !== "osx")
+                menu.open()
+            else if (reason === SystemTrayIcon.Trigger)
+                restore()
+        }
+
+        menu: Menu {
+            MenuItem {
+                text: qsTr("Restore")
+                onTriggered: systemTrayIcon.restore()
+            }
+            MenuItem {
+                text: qsTr("Quit")
+                onTriggered: {
+                    systemTrayIcon.restore()
+                    systemTrayIcon.shouldClose = true
+                    window.shouldClose = true
+                }
+            }
+        }
+    }
+
+    // ------------------ TextToSpeech ------------------
     TextToSpeech {
         id: textToSpeechId
         volume: appSettings.speechVolume
@@ -113,10 +143,9 @@ ApplicationWindow {
         property int messageId: -1
     }
 
-    // visible: true
     title: qsTr("Phoenix v" + updateChecker.currentVersion + " Beta")
 
-    property bool isDesktopSize: width >= 850;
+    property bool isDesktopSize: width >= 850
     onIsDesktopSizeChanged: {
         appMenuApplicationId.close()
         if(window.isDesktopSize){
@@ -145,6 +174,7 @@ ApplicationWindow {
         }
     }
 
+    // ------------------ Main Layout ------------------
     Column{
         anchors.fill: parent
         anchors.margins: 0
@@ -182,16 +212,13 @@ ApplicationWindow {
         }
     }
 
+    // ------------------ About Version Dialog ------------------
     VerificationDialog {
         id: aboutVersion
         height: 230
         width: 365
         titleText: "Phoenix"
-        about: "Version: "  + updateChecker.currentVersion + " (user setup)
-Commit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba
-Date: 2025.10.17
-OS: Windows x64
-"
+        about: "Version: "  + updateChecker.currentVersion + " (user setup)\nCommit: 5ab0775a1b6ff560452f041b2043c3d7d70fe1ba\nDate: "+ updateChecker.currentDate +"\nOS: "+ systemType
         textBotton1: "Copy"
         textBotton2: "OK"
         typeBotton1: Style.RoleEnum.BottonType.Secondary
@@ -208,9 +235,10 @@ OS: Windows x64
         }
     }
 
+    // ------------------ Update Checker ------------------
     Timer {
         id: updateTimer
-        interval: 3000 // 2 minutes
+        interval: 3000
         running: true
         repeat: false
         onTriggered: {
@@ -221,5 +249,22 @@ OS: Windows x64
     UpdateAvailable{
         id: updateDialog
         visible: false
+    }
+
+    // ------------------ Window Closing Logic ------------------
+    property bool shouldClose: false
+
+    onClosing: function(close) {
+        if (systemTrayIcon.visible) {
+            window.visible = false
+            close.accepted = false
+            return
+        }
+
+        if (window.shouldClose)
+            return
+
+        window.shouldClose = true
+        close.accepted = false
     }
 }

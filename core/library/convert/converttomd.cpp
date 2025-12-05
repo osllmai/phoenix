@@ -56,11 +56,17 @@ void ConvertToMD::startConvert() {
 }
 
 QString ConvertToMD::filePath() const{return m_filePath;}
-void ConvertToMD::setFilePath(const QString &newFilePath){
+void ConvertToMD::setFilePath(const QString &newFilePath) {
     if (m_filePath == newFilePath)
         return;
-    m_filePath = newFilePath;
-    m_filePath.remove("file:///");
+
+    QUrl url(newFilePath);
+    if (url.isLocalFile()) {
+        m_filePath = url.toLocalFile();
+    } else {
+        m_filePath = newFilePath;
+    }
+
     emit filePathChanged();
 }
 

@@ -1,6 +1,5 @@
 #include "csharphighlightingrules.h"
-
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> csharpHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

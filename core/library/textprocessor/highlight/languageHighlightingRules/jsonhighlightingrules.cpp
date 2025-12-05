@@ -1,5 +1,5 @@
 #include "jsonhighlightingrules.h"
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> jsonHighlightingRules() {
     static QVector<HighlightingRule> highlightingRules;

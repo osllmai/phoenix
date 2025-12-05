@@ -1,6 +1,5 @@
 #include "pythonhighlightingrules.h"
-
-#include "../highlightingcategory.h"
+#include "../HighlightingCategory.h"
 
 QVector<HighlightingRule> pythonHighlightingRules(){
     static QVector<HighlightingRule> highlightingRules;
