@@ -4,6 +4,10 @@ pip install markitdown[all]
 sudo apt update
 sudo apt install ffmpeg
 
+-----mac 
+pip install "markitdown[all]"
+
+
 -----window
 
 
@@ -13,10 +17,28 @@ pyinstaller --onefile convert_pdf.py
 python convert_pdf.py /home/nemati-usa/Documents/Zeinab/phoenix/README.md
 
 
+
+----linux
+
 pyinstaller --onefile \
   --add-data "/home/nemati-usa/Documents/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
   --add-data "/home/nemati-usa/Documents/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.12/site-packages/magika/config:magika/config" \
   convert_pdf.py
 
 
+
+--mac
+
+pyinstaller --onefile \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/magika/models/standard_v3_3:magika/models/standard_v3_3" \
+  --add-data "/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv/lib/python3.11/site-packages/magika/config:magika/config" \
+  convert_pdf.py
+
+
+/Users/parsanemati/Zeinab/phoenix/resources/providers/online_provider/venv
+
+
+
+----mac run
+/Users/parsanemati/Zeinab/phoenix/resources/markitdown/src/dist/convert_pdf /Users/parsanemati/Downloads/bitcoin.docx
 

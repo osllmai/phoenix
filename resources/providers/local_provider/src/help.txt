@@ -70,5 +70,4 @@ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_UNIVERSAL=ON ..
 cmake --build . --config Release --parallel 8
 
 # Run the executable
-./bin/applocal_provider --model ./models/Llama-3.2-3B-Instruct-Q4_0.gguf
-
+./applocal_provider --model /Users/parsanemati/Downloads/Nous-Hermes-2-Mistral-7B-DPO.Q4_0.gguf

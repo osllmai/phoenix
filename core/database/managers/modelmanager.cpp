@@ -499,7 +499,7 @@ QList<int> ModelManager::readOnlineCompany() {
         });
     } else {
         QNetworkAccessManager manager;
-        QNetworkRequest request(QUrl("https://api.indoxrouter.com/api/v1/models/"));
+        QNetworkRequest request(QUrl("https://api.indoxhub.com/api/v1/models/"));
         QNetworkReply *reply = manager.get(request);
 
         QEventLoop loop;

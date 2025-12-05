@@ -3,29 +3,44 @@ git clone https://github.com/ggml-org/whisper.cpp.git
 
 git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
+bootstrap-vcpkg.bat
+.\vcpkg.exe install sdl2
+vcpkg versioncd 
+cdcd
 vcpkg install sdl2
 
 
 cd E:/cpp_doing/phoenix/sweechToText/whisper.cpp
 
 
+
+
 -----------------------------------cpu-----------------------------------
-cmake -B build -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/cpp_doing/phoenix/sweechToText/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+cmake -B build -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
  ./build/bin/Release/whisper-cli -m ./models/ggml-base.en.bin -f ./models/recording.wav -t 6 -otxt -pp -l auto
 
 
 
 ------------------------------NVIDIA gpu-----------------------------
-cmake -B build -DGGML_CUDA=1 -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=D:/Zeinab/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
- cmake --build build -j --config Release
+cmake -B build_gpu -DGGML_CUDA=1 -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+ cmake --build build_gpu -j --config Release
 ./build/bin/Release/whisper-stream -m ./models/ggml-base.en.bin -t 6 --step 0 --length 30000 -vth 0.6
 
 whisper-cli -m D:/Zeinab/ggml-large-v2.bin -f C:\Users\llmserver\AppData\Local\nemati.ai\PHOENIX\recording.wav -t 6 -otxt -pp -l auto   
+
 
 ------------------------------VULKAN gpu-----------------------------
 cmake -B build -DGGML_VULKAN=1 -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=E:/cpp_doing/phoenix/sweechToText/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
  cmake --build build -j --config Release
 ./build/bin/Release/whisper-stream -m ./models/ggml-base.en.bin -t 6 --step 0 --length 30000 -vth 0.6
+
+
+
+-----------------------------------MAC-----------------------------------
+cmake -B build -DWHISPER_SDL2=ON -DCMAKE_TOOLCHAIN_FILE=/Users/parsanemati/Zeinab/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+ ./build/bin/Release/whisper-cli -m ./models/ggml-base.en.bin -f ./models/recording.wav -t 6 -otxt -pp -l auto
+
 
 

@@ -13,6 +13,7 @@
 #include <QProcess>
 #include <QtConcurrent>
 #include <QDateTime>
+#include "config.h"
 
 class ArxivArticleList : public QAbstractListModel
 {

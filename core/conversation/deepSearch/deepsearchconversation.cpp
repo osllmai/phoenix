@@ -77,68 +77,70 @@ void DeepSearchConversation::prompt(const QString &input, const QString &fileNam
     handleState();
 }
 
-
 void DeepSearchConversation::handleState() {
     switch (m_state) {
+
     case DeepSearchState::ClassifyQuery:
-        qCInfo(logDeepSearch) << "Classifying query to decide if external search is needed.";
+        setLogState("Analyzing your question to understand what type of information is needed.");
         classifyQuery();
         break;
 
     case DeepSearchState::GenerateClarificationQuestions:
-        qCInfo(logDeepSearch) << "GenerateClarificationQuestions.";
+        setLogState("Preparing a few short questions to better understand your request.");
         generateClarificationQuestions();
         break;
 
     case DeepSearchState::WaitingUserClarifications:
-        qCInfo(logDeepSearch) << "CWaitingUserClarifications.";
+        setLogState("Waiting for your answers so we can continue.");
         break;
 
     case DeepSearchState::GenerateSearchKeywords:
-        qCInfo(logDeepSearch) << "GenerateSearchKeywords.";
+        setLogState("Extracting important keywords from your request to search more effectively.");
         generateSearchKeywords();
         break;
 
     case DeepSearchState::SearchInSources:
-        qCInfo(logDeepSearch) << "Searching in selected sources.";
+        setLogState("Searching through available sources to collect useful information.");
         startSearchInSources();
         break;
 
     case DeepSearchState::generateUserIntentSummary:
+        setLogState("Summarizing your request to ensure we fully understand your goal.");
         generateUserIntentSummary();
         break;
 
     case DeepSearchState::SelectesPdfs:
-        qCInfo(logDeepSearch) << "Searching in selected sources.";
+        setLogState("Processing selected documents to prepare them for analysis.");
         m_arxivModel->processSelectedPdfs(m_userSummery);
         break;
 
     case DeepSearchState::DownloadPdfs:
-        qCInfo(logDeepSearch) << "Downloading documents.";
+        setLogState("Downloading the required documents.");
         m_arxivModel->downloadPdfs();
         break;
 
     case DeepSearchState::EmbeddingPdfs:
-        qCInfo(logDeepSearch) << "Downloading documents.";
+        setLogState("Analyzing the downloaded documents and preparing them for deeper understanding.");
         m_arxivModel->generateEmbeddings(m_userSummery);
         break;
 
     case DeepSearchState::RAGPreparation:
-        qCInfo(logDeepSearch) << "Preparing RAG context.";
+        setLogState("Preparing the most relevant information from documents to answer your request.");
         m_arxivModel->topSimilarChunksAsync(10);
         break;
 
     case DeepSearchState::SendForTextModel:
+        setLogState("Generating a final response based on all gathered information.");
         finalPrompt();
         break;
 
     case DeepSearchState::Finished:
-        qCInfo(logDeepSearch) << "DeepSearch finished.";
+        setLogState("Search and analysis completed.");
         m_state = DeepSearchState::WaitingPrompt;
         break;
 
     default:
-        qCWarning(logDeepSearch) << "Unhandled state in handleState.";
+        setLogState("An unexpected state occurred.");
         break;
     }
 }
@@ -147,6 +149,7 @@ void DeepSearchConversation::stop(){
     if(stopRequest())
         return;
     setStopRequest(true);
+    m_state = DeepSearchState::Finished;
     provider()->stop();
 }
 

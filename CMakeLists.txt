@@ -751,6 +751,7 @@ qt_add_qml_module(app${APP_NAME}
     SOURCES core/conversation/deepSearch/download/downloadpdf.h core/conversation/deepSearch/download/downloadpdf.cpp
     QML_FILES view/chat/components/deepSearchLog/DeepSearchLogList.qml
     QML_FILES view/chat/components/DeepSearchThinking.qml
+    SOURCES core/conversation/deepSearch/arxiv/arxivsearchworker.h core/conversation/deepSearch/arxiv/arxivsearchworker.cpp
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -858,6 +859,14 @@ else()
     file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
 endif()
 
+# Copy all_mpnet_base_v2 resources
+if(APPLE)
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+else()
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+endif()
+
 # Copy ConvertToMD / markitdown
 if(WIN32)
     set(MARKITDOWN_FILE convert_pdf.exe)
@@ -871,11 +880,11 @@ configure_file(
     COPYONLY
 )
 
-# Copy
+# Copy tokenizer
 if(WIN32)
-    set(TOKENIZER_FILE pdf_to_embedding.exe)
+    set(TOKENIZER_FILE tokenizer.exe)
 else()
-    set(TOKENIZER_FILE pdf_to_embedding)  # macOS/Linux
+    set(TOKENIZER_FILE tokenizer)  # macOS/Linux
 endif()
 
 configure_file(

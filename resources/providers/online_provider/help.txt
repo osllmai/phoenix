@@ -5,6 +5,7 @@ pyinstaller --onefile --add-data "provider.py;." --add-data "main_provider.py;."
  
 pyinstaller --onefile --add-data "provider.py;." --add-data "online_provider.py;." online_provider.py
 
+pip install indoxhub -U
  
 pip install indoxrouter
 ...

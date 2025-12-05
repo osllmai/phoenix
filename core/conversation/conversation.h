@@ -34,6 +34,7 @@ class Conversation : public QObject
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
+    Q_PROPERTY(QString logState READ getLogState NOTIFY logStateChanged  FINAL)
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
@@ -102,6 +103,9 @@ public:
 
     QString type() const;
 
+    QString getLogState() const;
+    void setLogState(const QString &newLogState);
+
 public slots:
     virtual void loadModelResult(const bool result, const QString &warning);
     virtual void tokenResponse(const QString &token);
@@ -121,6 +125,7 @@ signals:
     void modelChanged();
     void modelSettingsChanged();
     void conversationChange();
+    void logStateChanged();
 
     void requestReadMessages(const int conversationId);
     void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
@@ -154,6 +159,7 @@ private:
 
     bool m_stopRequest;
     bool m_isModelChanged;
+    QString m_logState;
 };
 
 #endif // CONVERSATION_H

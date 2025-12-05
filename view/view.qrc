@@ -156,5 +156,7 @@
         <file>deepsearch/DeepSearchView.qml</file>
         <file>deepsearch/components/DeepSearchBody.qml</file>
         <file>deepsearch/components/DeepSearchHeader.qml</file>
+        <file>chat/components/deepSearchLog/DeepSearchLogList.qml</file>
+        <file>chat/components/DeepSearchThinking.qml</file>
     </qresource>
 </RCC>

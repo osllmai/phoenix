@@ -141,8 +141,10 @@ Rectangle{
                     myText: control.currentTextConverstation
                     myIcon: (conversationList.isEmptyConversation && currentChatMode.hovered )? "qrc:/media/icon/close.svg": control.currentIconConverstation
                     onClicked: {
-                        control.currentTextConverstation = ""
-                        control.currentIconConverstation = ""
+                        if(conversationList.isEmptyConversation){
+                            control.currentTextConverstation = ""
+                            control.currentIconConverstation = ""
+                        }
                     }
                 }
             }

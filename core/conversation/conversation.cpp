@@ -24,7 +24,8 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_modelSettings(new ModelSettings(id,this)),
     m_messageList(new MessageList(this)),
     m_provider(nullptr),
-    m_stopRequest(false)
+    m_stopRequest(false),
+    m_logState("Processing your text ")
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -64,7 +65,8 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
                                       promptBatchSize, maxTokens, repeatPenaltyTokens,
                                       contextLength, numberOfGPULayers, this)),
     m_messageList(new MessageList(this)),
-    m_provider(nullptr), m_stopRequest(false)
+    m_provider(nullptr), m_stopRequest(false),
+    m_logState("Processing your text ")
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -127,6 +129,14 @@ void Conversation::updateModelSettingsConversation(){
                                                 m_modelSettings->repeatPenalty(), m_modelSettings->promptBatchSize(),
                                                 m_modelSettings->maxTokens(), m_modelSettings->repeatPenaltyTokens(),
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
+}
+
+QString Conversation::getLogState() const{return m_logState;}
+void Conversation::setLogState(const QString &newLogState){
+    if (m_logState != newLogState) {
+        m_logState = newLogState;
+        emit logStateChanged();
+    }
 }
 
 bool Conversation::isModelChanged() const{return m_isModelChanged;}

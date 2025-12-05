@@ -80,7 +80,7 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         settingsObj.insert("chunk_overlap", 0);
         settingsObj.insert("min_chunk_length", 80);
         settingsObj.insert("semantic_threshold", 0.50);
-        settingsObj.insert("embedding_model", "E:/all-mpnet-base-v2");
+        settingsObj.insert("embedding_model", QString::fromUtf8(APP_PATH) + "/all_mpnet_base_v2");
         settingsObj.insert("use_gpu", true);
         settingsObj.insert("language", "en");
         settingsObj.insert("lowercase", true);
@@ -298,7 +298,7 @@ void ArxivArticleList::generateEmbeddings(const QString &query) {
         settingsObj.insert("chunk_overlap", 0);
         settingsObj.insert("min_chunk_length", 80);
         settingsObj.insert("semantic_threshold", 0.50);
-        settingsObj.insert("embedding_model", "E:/all-mpnet-base-v2");
+        settingsObj.insert("embedding_model", QString::fromUtf8(APP_PATH) + "/all_mpnet_base_v2");
         settingsObj.insert("use_gpu", true);
         settingsObj.insert("language", "en");
         settingsObj.insert("lowercase", true);
