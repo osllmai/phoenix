@@ -1,0 +1,121 @@
+{
+    "ids": [
+        [
+            "summary_1_0",
+            "summary_1_2",
+            "summary_1_4",
+            "summary_1_8",
+            "summary_1_6",
+            "summary_1_9",
+            "summary_1_1",
+            "summary_1_5",
+            "summary_1_7",
+            "summary_1_3"
+        ]
+    ],
+    "distances": [
+        [
+            0.21898047401948784,
+            0.21898047401948784,
+            0.21898047401948784,
+            0.21898047401948784,
+            0.21898047401948784,
+            0.5285738680664747,
+            0.5285738680664747,
+            0.5285738680664747,
+            0.5285738680664747,
+            0.5285738680664747
+        ]
+    ],
+    "metadatas": [
+        [
+            {
+                "conversation_id": 1,
+                "hash": "9fbdb0084ae2253b365dd27c4d933bd04e3e3efc489db612967ca071ff45b525",
+                "pdf_file": "",
+                "title": "Large Language Models for Code Repair",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "9fbdb0084ae2253b365dd27c4d933bd04e3e3efc489db612967ca071ff45b525",
+                "pdf_file": "",
+                "title": "Large Langugdgage Models for Code Repair",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "9fbdb0084ae2253b365dd27c4d933bd04e3e3efc489db612967ca071ff45b525",
+                "pdf_file": "",
+                "title": "Large Language Modferels for Code Repair",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "9fbdb0084ae2253b365dd27c4d933bd04e3e3efc489db612967ca071ff45b525",
+                "pdf_file": "",
+                "title": "Large Language Models for Codwere Repair",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "9fbdb0084ae2253b365dd27c4d933bd04e3e3efc489db612967ca071ff45b525",
+                "pdf_file": "",
+                "title": "Large Language Models fwrwor Code Repair",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "048dc8cdf0aee6ed795295c2edb6b658f9519504aaca2c0e975be2cb89b7179a",
+                "pdf_file": "",
+                "title": "Neural Methods in Software Enginwreering",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "048dc8cdf0aee6ed795295c2edb6b658f9519504aaca2c0e975be2cb89b7179a",
+                "pdf_file": "",
+                "title": "Neural Methods in Software Engineering",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "048dc8cdf0aee6ed795295c2edb6b658f9519504aaca2c0e975be2cb89b7179a",
+                "pdf_file": "",
+                "title": "Neural Methods in Sofretware Engineering",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "048dc8cdf0aee6ed795295c2edb6b658f9519504aaca2c0e975be2cb89b7179a",
+                "pdf_file": "",
+                "title": "Neural Methods in Softwarerer Engineering",
+                "type": "summary"
+            },
+            {
+                "conversation_id": 1,
+                "hash": "048dc8cdf0aee6ed795295c2edb6b658f9519504aaca2c0e975be2cb89b7179a",
+                "pdf_file": "",
+                "title": "Neural Methodsfer in Software Engineering",
+                "type": "summary"
+            }
+        ]
+    ],
+    "embeddings": null,
+    "documents": [
+        [
+            "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks.",
+            "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks.",
+            "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks.",
+            "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks.",
+            "This paper explores the application of large language models for automated code repair. The authors analyze various prompt engineering strategies and evaluate their performance across multiple benchmarks.",
+            "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis.",
+            "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis.",
+            "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis.",
+            "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis.",
+            "A survey on neural-network-driven approaches in software engineering, covering code generation, bug detection, and program synthesis."
+        ]
+    ],
+    "uris": null,
+    "data": null
+}

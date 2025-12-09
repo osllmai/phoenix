@@ -1,0 +1,5 @@
+indoxArcg
+sentence-transformers
+pymupdf
+chromadb==0.4.22
+numpy==1.26.2
