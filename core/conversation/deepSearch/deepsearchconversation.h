@@ -7,7 +7,7 @@
 #include <QThread>
 
 #include "../../model/modelsettings.h"
-#include "../chat/messagelist.h"
+#include "messagelist.h"
 #include "../../model/model.h"
 #include "../../model/offline/offlinemodellist.h"
 #include "../../model/online/onlinemodellist.h"

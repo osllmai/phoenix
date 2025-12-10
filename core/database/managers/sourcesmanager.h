@@ -21,17 +21,19 @@ public:
     void read(const int idConversation, const int idMessage);
     void insert(const int idConversation,
                 const int idMessage,
-                const QString &titel,
+                const QString &title,
                 const QString &text,
-                const QString &icon);
+                const QString &icon,
+                const QString &link);
 
 signals:
     void add(const int id,
              const int idConversation,
              const int idMessage,
-             const QString &titel,
+             const QString &title,
              const QString &text,
-             const QString &icon);
+             const QString &icon,
+             const QString &link);
 
 private:
     QSqlDatabase m_db;

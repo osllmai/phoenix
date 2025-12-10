@@ -3,7 +3,7 @@
 #include "./provider/onlineprovider.h"
 #include "./provider/offlineprovider.h"
 #include "./provider/provider.h"
-#include "./chat/message.h"
+#include "messagelist.h"
 
 #include "./conversationlist.h"
 

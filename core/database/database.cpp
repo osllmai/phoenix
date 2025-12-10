@@ -176,8 +176,9 @@ void Database::insertSources(const int idConversation,
                              const int idMessage,
                              const QString &titel,
                              const QString &text,
-                             const QString &icon){
-    sourcesManager->insert(idConversation, idMessage, titel, text, icon);
+                             const QString &icon,
+                             const QString &link){
+    sourcesManager->insert(idConversation, idMessage, titel, text, icon, link);
 }
 
 void Database::readSources(const int idConversation, const int idMessage){

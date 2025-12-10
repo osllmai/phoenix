@@ -71,10 +71,11 @@ public slots:
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
     void insertSources(const int idConversation,
-                                 const int idMessage,
-                                 const QString &titel,
-                                 const QString &text,
-                                 const QString &icon);
+                                const int idMessage,
+                                const QString &titel,
+                                const QString &text,
+                                const QString &icon,
+                                const QString &link);
     void readSources(const int idConversation, const int idMessage);
     void insertActivity(const int idConversation,
                                   const int idMessage,
@@ -103,11 +104,13 @@ signals:
                          const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
     void addMessage(const int idConversation, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
-    void addSources(const int idConversation,
+    void addSources(const int id,
+                    const int idConversation,
                     const int idMessage,
                     const QString &titel,
                     const QString &text,
-                    const QString &icon);
+                    const QString &icon,
+                    const QString &link);
     void addActivity(const int id,
                      const int idConversation,
                      const int idMessage,

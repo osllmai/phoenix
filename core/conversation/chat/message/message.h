@@ -15,6 +15,7 @@ class Message : public QObject
     Q_PROPERTY(QString icon READ icon CONSTANT FINAL)
     Q_PROPERTY(bool isPrompt READ isPrompt CONSTANT FINAL)
     Q_PROPERTY(int like READ like WRITE setLike NOTIFY likeChanged FINAL)
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged FINAL)
 
 public:
     explicit Message(QObject* parent = nullptr) : QObject(parent) {}
@@ -51,7 +52,6 @@ private:
     QString m_icon;
     bool m_isPrompt;
     int m_like;
-    Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged FINAL)
 };
 
 #endif // MESSAGE_H

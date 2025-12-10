@@ -1,4 +1,5 @@
 #include "sourcesmanager.h"
+#include <QDebug>
 
 SourcesManager::SourcesManager(QSqlDatabase db, QObject* parent)
     : QObject{parent}, m_db(db)
@@ -28,20 +29,21 @@ const QString SourcesManager::SOURCES_SQL = QLatin1String(R"(
         title TEXT NOT NULL,
         text TEXT NOT NULL,
         icon TEXT NOT NULL,
+        link TEXT,
         FOREIGN KEY(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE,
         FOREIGN KEY(message_id) REFERENCES message(id)
     )
 )");
 
 const QString SourcesManager::READ_CONVERSATION_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, title, text, icon
+    SELECT id, title, text, icon, link
     FROM source
     WHERE conversation_id=? AND message_id=?
 )");
 
 const QString SourcesManager::INSERT_SOURCES_SQL = QLatin1String(R"(
-    INSERT INTO source(conversation_id, message_id, title, text, icon)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO source(conversation_id, message_id, title, text, icon, link)
+    VALUES (?, ?, ?, ?, ?, ?)
 )");
 
 
@@ -60,8 +62,9 @@ void SourcesManager::read(const int idConversation, const int idMessage)
             QString title = query.value(1).toString();
             QString text = query.value(2).toString();
             QString icon = query.value(3).toString();
+            QString link = query.value(4).toString();
 
-            emit add(id, idConversation, idMessage, title, text, icon);
+            emit add(id, idConversation, idMessage, title, text, icon, link);
         }
     } else {
         qDebug() << "READ source error:" << query.lastError().text();
@@ -74,7 +77,8 @@ void SourcesManager::insert(const int idConversation,
                             const int idMessage,
                             const QString &title,
                             const QString &text,
-                            const QString &icon)
+                            const QString &icon,
+                            const QString &link)
 {
     QSqlQuery query(m_db);
 
@@ -88,6 +92,7 @@ void SourcesManager::insert(const int idConversation,
     query.addBindValue(title);
     query.addBindValue(text);
     query.addBindValue(icon);
+    query.addBindValue(link);
 
     if (!query.exec()) {
         qDebug() << "INSERT source error:" << query.lastError().text();
@@ -96,5 +101,5 @@ void SourcesManager::insert(const int idConversation,
 
     int id = query.lastInsertId().toInt();
 
-    emit add(id, idConversation, idMessage, title, text, icon);
+    emit add(id, idConversation, idMessage, title, text, icon, link);
 }
