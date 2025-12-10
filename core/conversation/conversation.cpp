@@ -25,7 +25,7 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_messageList(new MessageList(this)),
     m_provider(nullptr),
     m_stopRequest(false),
-    m_logState("Processing your text ")
+    m_logState("Processing your text")
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);

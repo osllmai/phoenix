@@ -57,13 +57,11 @@ Database::Database(QObject* parent)
     messageManager = new MessageManager(m_db, this);
     connect(messageManager, &MessageManager::addMessage, this, &Database::addMessage);
 
-    pdfManager = new PdfManager(m_db, this);
-    connect(pdfManager, &PdfManager::addPdf, this, &Database::addPdf);
-    connect(pdfManager, &PdfManager::finishedReadPdf, this, &Database::finishedReadPdf);
+    sourcesManager = new SourcesManager(m_db, this);
+    connect(sourcesManager, &SourcesManager::add, this, &Database::addSources);
 
-    pdfEmbeddingManeger = new PdfEmbeddingManeger(m_db, this);
-    // connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::addPdfEmbedding, this, &Database::addPdfEmbedding);
-    // connect(pdfEmbeddingManeger, &PdfEmbeddingManeger::finishedReadPdfEmbedding, this, &Database::finishedReadPdfEmbedding);
+    activityManager = new ActivityManager(m_db, this);
+    connect(activityManager, &ActivityManager::add, this, &Database::addActivity);
 }
 
 Database::~Database(){
@@ -174,20 +172,27 @@ void Database::readMessages(const int idConversation){
     messageManager->readMessages(idConversation);
 }
 
-void Database::readPdf(const int idConversation){
-    pdfManager->readPdf(idConversation);
+void Database::insertSources(const int idConversation,
+                             const int idMessage,
+                             const QString &titel,
+                             const QString &text,
+                             const QString &icon){
+    sourcesManager->insert(idConversation, idMessage, titel, text, icon);
 }
 
-void Database::insertPdf(const int conversation_id, const QString &file_Path){
-    pdfManager->insertPdf(conversation_id, file_Path);
+void Database::readSources(const int idConversation, const int idMessage){
+    sourcesManager->read(idConversation, idMessage);
 }
 
-void Database::readPdfEmbedding(const int idConversation){
-    // pdfEmbeddingManeger->readPdfEmbedding(idConversation);
+void Database::insertActivity(const int idConversation,
+                              const int idMessage,
+                              const QString &text,
+                              const QString &icon){
+    activityManager->insert(idConversation, idMessage, text, icon);
 }
 
-void Database::insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding){
-    pdfEmbeddingManeger->insertPdfEmbedding(pdf_id, text, text_embedding);
+void Database::readActivity(const int idConversation, const int idMessage){
+    activityManager->read(idConversation, idMessage);
 }
 
 const QString Database::FOREIGN_KEYS_SQL = QLatin1String(R"(

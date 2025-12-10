@@ -29,8 +29,8 @@
 #include "modelmanager.h"
 #include "conversationmanager.h"
 #include "messagemanager.h"
-#include "pdfmanager.h"
-#include "pdfembeddingmaneger.h"
+#include "activitymanager.h"
+#include "sourcesmanager.h"
 
 class Database: public QObject
 {
@@ -70,11 +70,17 @@ public slots:
     void updateTextMessage(const int idConversation, const int messageId, const QString &text);
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
-    void readPdf(const int idConversation);
-    void insertPdf(const int conversation_id, const QString &file_Path);
-
-    void readPdfEmbedding(const int idConversation);
-    void insertPdfEmbedding(const int pdf_id, const QString &text, const QString &text_embedding);
+    void insertSources(const int idConversation,
+                                 const int idMessage,
+                                 const QString &titel,
+                                 const QString &text,
+                                 const QString &icon);
+    void readSources(const int idConversation, const int idMessage);
+    void insertActivity(const int idConversation,
+                                  const int idMessage,
+                                  const QString &text,
+                                  const QString &icon);
+    void readActivity(const int idConversation, const int idMessage);
 
 signals:
     void addOnlineProvider(const int id, const QString& name, const QString& icon, const bool isLike,
@@ -97,17 +103,21 @@ signals:
                          const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
     void addMessage(const int idConversation, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addSources(const int idConversation,
+                    const int idMessage,
+                    const QString &titel,
+                    const QString &text,
+                    const QString &icon);
+    void addActivity(const int id,
+                     const int idConversation,
+                     const int idMessage,
+                     const QString &text,
+                     const QString &icon);
 
     void finishedReadOnlineModel();
     void finishedReadOfflineModel();
     void finishedReadConversation();
     void finishedAddModel(const QString &fileName);
-
-    void addPdf(const int conversation_id, const int id, const QString &file_Path);
-    void finishedReadPdf();
-
-    void addPdfEmbedding(const int pdf_id, const int id, const QString &text, const QString &text_embedding);
-    void finishedReadPdfEmbedding();
 
 private:
     static Database* m_instance;
@@ -130,8 +140,8 @@ private:
     ModelManager *modelManager;
     ConversationManager *conversationManager;
     MessageManager *messageManager;
-    PdfManager *pdfManager;
-    PdfEmbeddingManeger *pdfEmbeddingManeger;
+    SourcesManager *sourcesManager;
+    ActivityManager *activityManager;
 };
 
 #endif // DATABASE_H

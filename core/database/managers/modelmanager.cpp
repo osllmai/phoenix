@@ -480,7 +480,7 @@ QList<int> ModelManager::readOnlineCompany() {
     if (fileExists) {
 
         QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-        QNetworkRequest request(QUrl("https://api.indoxrouter.com/api/v1/models/"));
+        QNetworkRequest request(QUrl("https://api.indoxhub.com/api/v1/models/"));
         QNetworkReply *reply = manager->get(request);
 
         QObject::connect(reply, &QNetworkReply::finished, [reply, filePath]() {
