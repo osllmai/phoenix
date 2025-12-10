@@ -13,6 +13,8 @@
 #include "../model/online/onlinecompanylist.h"
 #include "../model/online/onlinecompany.h"
 #include "../provider/provider.h"
+#include "sourselist.h"
+#include "activitylist.h"
 
 #include <QLoggingCategory>
 #include "logcategories.h"
@@ -32,9 +34,13 @@ class Conversation : public QObject
     Q_PROPERTY(bool loadModelInProgress READ loadModelInProgress WRITE setLoadModelInProgress NOTIFY loadModelInProgressChanged)
     Q_PROPERTY(bool responseInProgress READ responseInProgress WRITE setResponseInProgress NOTIFY responseInProgressChanged)
     Q_PROPERTY(MessageList *messageList READ messageList NOTIFY messageListChanged)
+    Q_PROPERTY(ActivityList *activityList READ activityList NOTIFY activityListChanged)
+    Q_PROPERTY(SourseList *sourseList READ sourseList NOTIFY sourseListChanged)
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
     Q_PROPERTY(QString logState READ getLogState NOTIFY logStateChanged  FINAL)
+    Q_PROPERTY(bool isOpenMessage READ isOpenMessage NOTIFY isOpenMessageChanged FINAL)
+    Q_PROPERTY(int currentMessageId READ currentMessageId NOTIFY currentMessageIdChanged FINAL)
 
 public:
     explicit Conversation(QObject* parent = nullptr) : QObject(parent), m_model(new Model(this)), m_modelSettings(new ModelSettings(1,this)),m_messageList(new MessageList(this)),
@@ -106,6 +112,16 @@ public:
     QString getLogState() const;
     void setLogState(const QString &newLogState);
 
+    ActivityList *activityList();
+
+    SourseList *sourseList();
+
+    bool isOpenMessage() const;
+    void setIsOpenMessage(bool newIsOpenMessage);
+
+    int currentMessageId() const;
+    void setCurrentMessageId(int newCurrentMessageId);
+
 public slots:
     virtual void loadModelResult(const bool result, const QString &warning);
     virtual void tokenResponse(const QString &token);
@@ -125,6 +141,8 @@ signals:
     void modelChanged();
     void modelSettingsChanged();
     void conversationChange();
+    void activityListChanged();
+    void sourseListChanged();
     void logStateChanged();
 
     void requestReadMessages(const int conversationId);
@@ -140,6 +158,9 @@ signals:
     void requestLoadModel(const QString &model, const QString &key);
     // void requestUnLoadModel();
     void requestStop();
+    void isOpenMessageChanged();
+
+    void currentMessageIdChanged();
 
 private:
     int m_id;
@@ -156,6 +177,10 @@ private:
     Model *m_model;
     ModelSettings *m_modelSettings;
     Provider *m_provider;
+    int m_currentMessageId;
+    bool m_isOpenMessage;
+    ActivityList *m_activityList;
+    SourseList *m_sourceList;
 
     bool m_stopRequest;
     bool m_isModelChanged;

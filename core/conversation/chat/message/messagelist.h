@@ -45,7 +45,7 @@ public slots:
 signals:
     void countChanged();
     void requestDeleteMessage(const int &id);
-    void requestAddMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
+    // void requestAddMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
 
 private:
     QList<Message*> m_messages;

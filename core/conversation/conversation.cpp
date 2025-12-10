@@ -131,6 +131,22 @@ void Conversation::updateModelSettingsConversation(){
                                                 m_modelSettings->contextLength(), m_modelSettings->numberOfGPULayers());
 }
 
+int Conversation::currentMessageId() const{return m_currentMessageId;}
+void Conversation::setCurrentMessageId(int newCurrentMessageId){
+    if (m_currentMessageId == newCurrentMessageId)
+        return;
+    m_currentMessageId = newCurrentMessageId;
+    emit currentMessageIdChanged();
+}
+
+bool Conversation::isOpenMessage() const{return m_isOpenMessage;}
+void Conversation::setIsOpenMessage(bool newIsOpenMessage){
+    if (m_isOpenMessage == newIsOpenMessage)
+        return;
+    m_isOpenMessage = newIsOpenMessage;
+    emit isOpenMessageChanged();
+}
+
 QString Conversation::getLogState() const{return m_logState;}
 void Conversation::setLogState(const QString &newLogState){
     if (m_logState != newLogState) {
@@ -227,6 +243,10 @@ void Conversation::setResponseInProgress(bool inProgress) {
 }
 
 MessageList* Conversation::messageList() {return m_messageList;}
+
+ActivityList* Conversation::activityList() {return m_activityList;}
+
+SourseList* Conversation::sourseList() {return m_sourceList;}
 
 Model* Conversation::model() {return m_model;}
 void Conversation::setModel(Model *model) {

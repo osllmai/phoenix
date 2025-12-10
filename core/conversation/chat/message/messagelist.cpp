@@ -85,7 +85,7 @@ void MessageList::addMessage(const int id, const QString &text, const QString &f
     m_messages.append(message);
     endInsertRows();
     emit countChanged();
-    emit requestAddMessage(id, text, fileName, date, icon, isPrompt, like);
+    // emit requestAddMessage(id, text, fileName, date, icon, isPrompt, like);
 }
 
 Message* MessageList::findMessageById(const int id) {
