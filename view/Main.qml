@@ -126,7 +126,6 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Quit")
                 onTriggered: {
-                    systemTrayIcon.restore()
                     systemTrayIcon.shouldClose = true
                     window.shouldClose = true
                 }

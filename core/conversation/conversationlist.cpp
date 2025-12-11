@@ -259,11 +259,11 @@ void ConversationList::addConversation(const int id, const QString &title, const
     }
 }
 
-void ConversationList::addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
+void ConversationList::addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
     Conversation* conversation = findConversationById(conversationId);
     if(conversation == nullptr) return;
     const int index = m_conversations.indexOf(conversation);
-    conversation->addMessage(id, text, fileName, date, icon, isPrompt, like);
+    conversation->addMessage(id, text, fileName, date, icon, isPrompt, isDeepSearch, like);
     conversation->setDescription(text);
     conversation->setDate(date);
     conversation->setIcon(icon);
@@ -312,8 +312,8 @@ void ConversationList::readMessages(const int conversationId){
     emit requestReadMessages(conversationId);
 }
 
-void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
-    emit requestInsertMessage(conversationId, text, fileName, icon, isPrompt, like);
+void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
+    emit requestInsertMessage(conversationId, text, fileName, icon, isPrompt, isDeepSearch, like);
 }
 
 void ConversationList::updateTextMessage(const int conversationId, const int messageId, const QString &text){

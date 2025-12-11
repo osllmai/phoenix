@@ -72,18 +72,28 @@
         <file>chat/components/HistoryDrawer.qml</file>
         <file>chat/components/ModelSettingsChatDrawer.qml</file>
         <file>chat/components/ModelChatComboBox.qml</file>
-        <file>chat/components/chat/InputPrompt.qml</file>
-        <file>chat/components/chat/MessageDelegate.qml</file>
-        <file>chat/components/chat/MyMessageList.qml</file>
-        <file>chat/components/chat/components/FileConverteInputPrompt.qml</file>
-        <file>chat/components/chat/components/AudioRecoderInput.qml</file>
-        <file>chat/components/chat/components/TextInput.qml</file>
-        <file>chat/components/chat/components/SuggestionsButton.qml</file>
+        <file>chat/components/message/InputPrompt.qml</file>
+        <file>chat/components/message/MessageDelegate.qml</file>
+        <file>chat/components/message/MyMessageList.qml</file>
+        <file>chat/components/message/components/FileConverteInputPrompt.qml</file>
+        <file>chat/components/message/components/AudioRecoderInput.qml</file>
+        <file>chat/components/message/components/TextInput.qml</file>
+        <file>chat/components/message/components/SuggestionsButton.qml</file>
+	<file>chat/components/message/components/AddFileAndMore.qml</file>
         <file>chat/components/history/HistoryHeader.qml</file>
         <file>chat/components/history/HistoryBody.qml</file>
         <file>chat/components/history/HistoryList.qml</file>
         <file>chat/components/history/HistoryDelegate.qml</file>
-        <file>chat/components/chat/components/AddFileAndMore.qml</file>
+	<file>chat/components/logMessage/LogMessageView.qml</file>
+	<file>chat/components/logMessage/components/LogMessageBody.qml</file>
+	<file>chat/components/logMessage/components/LogMessageHeader.qml</file>
+	<file>chat/components/logMessage/components/activity/ActivityLogView.qml</file>
+	<file>chat/components/logMessage/components/activity/ActivityLogList.qml</file>
+	<file>chat/components/logMessage/components/activity/ActivityLogDelegate.qml</file>
+	<file>chat/components/logMessage/components/sourse/SourceLogView.qml</file>
+	<file>chat/components/logMessage/components/sourse/SourceLogList.qml</file>
+	<file>chat/components/logMessage/components/sourse/SourseLogDelegate.qml</file>
+        
         <file>component_library/model_settings/ModelSettingsView.qml</file>
         <file>component_library/model_settings/ModelSettingsHeader.qml</file>
         <file>component_library/model_settings/ModelSettingsBody.qml</file>
@@ -156,7 +166,5 @@
         <file>deepsearch/DeepSearchView.qml</file>
         <file>deepsearch/components/DeepSearchBody.qml</file>
         <file>deepsearch/components/DeepSearchHeader.qml</file>
-        <file>chat/components/deepSearchLog/DeepSearchLogList.qml</file>
-        <file>chat/components/DeepSearchThinking.qml</file>
     </qresource>
 </RCC>

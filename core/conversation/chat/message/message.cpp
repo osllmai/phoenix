@@ -1,7 +1,23 @@
 #include "message.h"
 
-Message::Message(const int &id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent):
-    m_id(id), m_text(text), m_fileName(fileName), m_date(date), m_icon(icon), m_isPrompt(isPrompt), m_like(like), QObject(parent){}
+Message::Message(const int &id,
+                 const QString &text,
+                 const QString &fileName,
+                 const QDateTime date,
+                 const QString &icon,
+                 bool isPrompt,
+                 bool isDeepSearch,
+                 const int like,
+                 QObject *parent):
+    m_id(id),
+    m_text(text),
+    m_fileName(fileName),
+    m_date(date),
+    m_icon(icon),
+    m_isPrompt(isPrompt),
+    m_isDeepSearch(isDeepSearch),
+    m_like(like),
+    QObject(parent){}
 
 int Message::id() const {return m_id;}
 
@@ -34,3 +50,6 @@ void Message::setFileName(const QString &newFileName){
     m_fileName = newFileName;
     emit fileNameChanged();
 }
+
+bool Message::isDeepSearch() const{return m_isDeepSearch;}
+

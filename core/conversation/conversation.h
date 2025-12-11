@@ -39,7 +39,7 @@ class Conversation : public QObject
     Q_PROPERTY(Model *model READ model NOTIFY modelChanged)
     Q_PROPERTY(ModelSettings *modelSettings READ modelSettings NOTIFY modelSettingsChanged)
     Q_PROPERTY(QString logState READ getLogState NOTIFY logStateChanged  FINAL)
-    Q_PROPERTY(bool isOpenMessage READ isOpenMessage NOTIFY isOpenMessageChanged FINAL)
+    Q_PROPERTY(bool isOpenMessage READ isOpenMessage WRITE setIsOpenMessage NOTIFY isOpenMessageChanged FINAL)
     Q_PROPERTY(int currentMessageId READ currentMessageId NOTIFY currentMessageIdChanged FINAL)
 
 public:
@@ -63,7 +63,8 @@ public:
 
     void likeMessageRequest( const int messageId, const int like);
 
-    void addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int id, const QString &text, const QString &fileName,
+                    QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
 
     const int id() const;
 
@@ -146,7 +147,8 @@ signals:
     void logStateChanged();
 
     void requestReadMessages(const int conversationId);
-    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
+                              bool isPrompt, bool isDeepSearch, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
     void requestUpdateDescriptionText(const int conversationId, const QString &text);
     void requestUpdateDateConversation(const int id, const QString &description, const QString &icon);

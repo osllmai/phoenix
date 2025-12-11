@@ -22,6 +22,7 @@ public:
         DateRole,
         IconRole,
         IsPromptRole,
+        IsDeepSearchRole,
         LikeRole
     };
 
@@ -30,8 +31,8 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
-    QVariantMap lastMessageInfo() const;
 
+    QVariantMap lastMessageInfo() const;
     QString history(int count = 10) const;
 
     void likeMessageRequest(const int messageId, const int like);
@@ -39,20 +40,20 @@ public:
     Q_INVOKABLE void updateAllTextMessage();
 
 public slots:
-    void addMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
+    void addMessage(const int id, const QString &text, const QString &fileName,
+                    const QDateTime date, const QString &icon,
+                    const bool isPrompt, const bool isDeepSearch, const int like);
     void updateLastMessage(const QString &newText);
 
 signals:
     void countChanged();
     void requestDeleteMessage(const int &id);
-    // void requestAddMessage(const int id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, const bool isPrompt, const int like);
 
 private:
     QList<Message*> m_messages;
 
     Message* findMessageById(const int id);
-
-    QVariant dateCalculation(const QDateTime date)const;
+    QVariant dateCalculation(const QDateTime date) const;
 };
 
 #endif // MESSAGELIST_H

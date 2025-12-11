@@ -86,7 +86,7 @@ public:
     void likeMessageRequest(const int messageId, const int like);
 
     void addMessage(const int id, const QString &text, const QString &fileName, QDateTime date,
-                    const QString &icon, bool isPrompt, const int like);
+                    const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
 
 public slots:
     void loadModelResult(const bool result, const QString &warning);

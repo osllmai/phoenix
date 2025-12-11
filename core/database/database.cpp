@@ -156,8 +156,8 @@ void Database::readConversation(){
 }
 
 void Database::insertMessage(const int idConversation, const QString &text, const QString &fileName,
-                             const QString &icon, bool isPrompt, const int like){
-    messageManager->insertMessage(idConversation, text, fileName, icon, isPrompt, like);
+                             const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
+    messageManager->insertMessage(idConversation, text, fileName, icon, isPrompt, isDeepSearch, like);
 }
 
 void Database::updateLikeMessage(const int conversationId, const int messageId, const int like){

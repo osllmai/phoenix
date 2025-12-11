@@ -25,8 +25,9 @@ TextConversation::TextConversation(int id, const QString &title, const QString &
 
 TextConversation::~TextConversation() {}
 
-void TextConversation::addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
-    messageList()->addMessage(id, text, fileName, date, icon, isPrompt, like);
+void TextConversation::addMessage(const int id, const QString &text, const QString &fileName,
+                                  QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
+    messageList()->addMessage(id, text, fileName, date, icon, isPrompt, isDeepSearch, like);
 }
 
 void TextConversation::readMessages(){
@@ -76,8 +77,8 @@ void TextConversation::prompt(const QString &input, const QString &fileName, con
         setIsLoadModel(true);
     }
 
-    emit requestInsertMessage(id(), input, fileName, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(id(), "", "", model()->icon(),  false, 0);
+    emit requestInsertMessage(id(), input, fileName, "qrc:/media/image_company/user.svg", true, false, 0);
+    emit requestInsertMessage(id(), "", "", model()->icon(),  false, false, 0);
 
     qInfo()<<model()->icon();
 

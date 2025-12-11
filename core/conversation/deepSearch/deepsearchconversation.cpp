@@ -17,6 +17,7 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
+    setIsOpenMessage(true);
 }
 
 DeepSearchConversation::DeepSearchConversation(int id, const QString &title, const QString &description, const QString &icon,
@@ -36,6 +37,7 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
+    setIsOpenMessage(true);
 }
 
 DeepSearchConversation::~DeepSearchConversation() {
@@ -44,8 +46,9 @@ DeepSearchConversation::~DeepSearchConversation() {
     }
 }
 
-void DeepSearchConversation::addMessage(const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like){
-    messageList()->addMessage(id, text, fileName, date, icon, isPrompt, like);
+void DeepSearchConversation::addMessage(const int id, const QString &text, const QString &fileName,
+                                        QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
+    messageList()->addMessage(id, text, fileName, date, icon, isPrompt, isDeepSearch, like);
 }
 
 void DeepSearchConversation::readMessages(){
@@ -71,8 +74,11 @@ void DeepSearchConversation::prompt(const QString &input, const QString &fileNam
     m_userFileName = fileName;
     m_userFileInfo = fileInfo;
 
-    emit requestInsertMessage(id(), input, fileName, "qrc:/media/image_company/user.svg", true, 0);
-    emit requestInsertMessage(id(), "", "", model()->icon(),  false, 0);
+    emit requestInsertMessage(id(), input, fileName, "qrc:/media/image_company/user.svg", true, false, 0);
+    if(m_state == DeepSearchState::GenerateSearchKeywords)
+        emit requestInsertMessage(id(), "", "", model()->icon(),  false, true, 0);
+    else
+        emit requestInsertMessage(id(), "", "", model()->icon(),  false, false, 0);
 
     handleState();
 }

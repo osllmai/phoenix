@@ -19,7 +19,9 @@ class Message : public QObject
 
 public:
     explicit Message(QObject* parent = nullptr) : QObject(parent) {}
-    explicit Message(const int &id, const QString &text, const QString &fileName, const QDateTime date, const QString &icon, bool isPrompt, const int like, QObject *parent = nullptr );
+    explicit Message(const int &id, const QString &text, const QString &fileName,
+                     const QDateTime date, const QString &icon, bool isPrompt,
+                     bool isDeepSearch, const int like, QObject *parent = nullptr );
 
     int id() const;
 
@@ -38,11 +40,14 @@ public:
     QString fileName() const;
     void setFileName(const QString &newFileName);
 
+
+    bool isDeepSearch() const;
+
 signals:
     void textChanged();
     void likeChanged();
-
     void fileNameChanged();
+
 
 private:
     int m_id;
@@ -51,7 +56,9 @@ private:
     QDateTime m_date;
     QString m_icon;
     bool m_isPrompt;
+    bool m_isDeepSearch;
     int m_like;
+    Q_PROPERTY(bool isDeepSearch READ isDeepSearch CONSTANT FINAL)
 };
 
 #endif // MESSAGE_H

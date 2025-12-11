@@ -85,7 +85,6 @@ T.Button {
                 color: "#00ffffff"
                 OfflineInformationModel{}
             }
-
             DownloadButton{
                 id: downloadButtonId
                 anchors.right: parent.right

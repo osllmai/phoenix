@@ -95,9 +95,11 @@ public slots:
                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                          const int &contextLength, const int &numberOfGPULayers, const bool selectConversation);
 
-    void addMessage(const int conversationId, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int conversationId, const int id, const QString &text, const QString &fileName,
+                    QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
     void readMessages(const int conversationId);
-    void insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
+    void insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
+                       bool isPrompt, bool isDeepSearch, const int like);
     void updateTextMessage(const int conversationId, const int messageId, const QString &text);
     void updateDescriptionText(const int conversationId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
@@ -139,7 +141,8 @@ signals:
     void requestUpdateLikeMessage(const int conversationId, const int messageId, const int like);
 
     void requestReadMessages(const int conversationId);
-    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
+    void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
+                              bool isPrompt, bool isDeepSearch, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
 
 private:

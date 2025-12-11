@@ -6,25 +6,6 @@
 #include <QDateTime>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QThread>
-#include <QStandardPaths>
-#include <QFile>
-#include <QJsonParseError>
-#include <QFileInfo>
-#include <QDir>
-#include <QJsonArray>
-#include <QJsonObject>
-
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QEventLoop>
-
-#include "./model/offline/offlinemodel.h"
-#include "./model/online/onlinemodel.h"
-#include "./model/BackendType.h"
-#include "./model/company.h"
-#include "config.h"
 
 class MessageManager : public QObject
 {
@@ -35,12 +16,15 @@ public:
     virtual ~MessageManager();
 
     void readMessages(const int idConversation);
-    void insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like);
-    void updateTextMessage(const int idConversation, const int messageId, const QString &text);
+    void insertMessage(const int idConversation, const QString &text, const QString &fileName,
+                       const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
+    void updateTextMessage(const int conversationId, const int messageId, const QString &text);
     void updateLikeMessage(const int conversationId, const int messageId, const int like);
 
 signals:
-    void addMessage(const int idConversation, const int id, const QString &text, const QString &fileName, QDateTime date, const QString &icon, bool isPrompt, const int like);
+    void addMessage(const int idConversation, const int id, const QString &text,
+                    const QString &fileName, QDateTime date, const QString &icon,
+                    bool isPrompt, bool isDeepSearch, const int like);
 
 private:
     QSqlDatabase m_db;

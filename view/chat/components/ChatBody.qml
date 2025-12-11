@@ -1,9 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import "./chat"
 import '../../component_library/style' as Style
 import '../../component_library/button'
-import "./chat/components"
+import "./message"
+import "./message/components"
+import "./logMessage"
+
 Item {
     id: chatBodyBoxId
     width: parent.width
@@ -59,40 +61,51 @@ Item {
         xhr.send();
     }
 
-    Column{
-        spacing: 10
+    Row{
         anchors.fill: parent
-        visible: !conversationList.isEmptyConversation
-        onVisibleChanged: {
-            chatBodyBoxId.requestEmptyTheInput()
-        }
+        spacing: 10
+        Column{
+            spacing: 10
+            width: parent.width - (logMessageViewId.visible? logMessageViewId.width-10: 0)
+            height: parent.height
+            visible: !conversationList.isEmptyConversation
+            onVisibleChanged: {
+                chatBodyBoxId.requestEmptyTheInput()
+            }
 
-        MyMessageList{
-            id: myMessageView
-        }
-        InputPrompt{
-            id: inputBoxId
-            Connections{
-                target: inputBoxId
-                function onSendPrompt(prompt, converstationType) {
-                    const hasPrompt = prompt !== "";
-                    if (conversationList.modelSelect && hasPrompt) {
-                        myMessageView.goToEnd()
-                        conversationList.currentConversation.prompt(prompt,
-                                                                    (convertToMD.fileIsSelect? convertToMD.filePath:""),
-                                                                    (convertToMD.fileIsSelect? convertToMD.textMD:""))
-                        convertToMD.fileIsSelect = false;
-                        chatBodyBoxId.requestEmptyTheInput()
-                    } else if (hasPrompt) {
-                        notificationDialogId.open();
-                        chatBodyBoxId.openModelList();
+            MyMessageList{
+                id: myMessageView
+            }
+            InputPrompt{
+                id: inputBoxId
+                Connections{
+                    target: inputBoxId
+                    function onSendPrompt(prompt, converstationType) {
+                        const hasPrompt = prompt !== "";
+                        if (conversationList.modelSelect && hasPrompt) {
+                            myMessageView.goToEnd()
+                            conversationList.currentConversation.prompt(prompt,
+                                                                        (convertToMD.fileIsSelect? convertToMD.filePath:""),
+                                                                        (convertToMD.fileIsSelect? convertToMD.textMD:""))
+                            convertToMD.fileIsSelect = false;
+                            chatBodyBoxId.requestEmptyTheInput()
+                        } else if (hasPrompt) {
+                            notificationDialogId.open();
+                            chatBodyBoxId.openModelList();
+                        }
+                    }
+
+                    function onOpenModelIsLoaded(){
+                        modelIsloadedDialogId.open()
                     }
                 }
-
-                function onOpenModelIsLoaded(){
-                    modelIsloadedDialogId.open()
-                }
             }
+        }
+        LogMessageView{
+            id: logMessageViewId
+            width: 400
+            height: parent.height
+            visible: conversationList.isEmptyConversation? false: (conversationList.currentConversation.isOpenMessage? true: false)
         }
     }
 

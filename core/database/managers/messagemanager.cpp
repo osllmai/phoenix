@@ -1,9 +1,8 @@
 #include "messagemanager.h"
 
 MessageManager::MessageManager(QSqlDatabase db, QObject* parent)
-    : QObject{nullptr}, m_db(db)
+    : QObject{parent}, m_db(db)
 {
-
     if (m_db.isOpen()) {
         QSqlQuery query(m_db);
 
@@ -12,7 +11,7 @@ MessageManager::MessageManager(QSqlDatabase db, QObject* parent)
             query.exec(MESSAGE_SQL);
         }
     } else {
-        qDebug() << "Failed to open ModelManager:" << m_db.lastError().text();
+        qDebug() << "Failed to open MessageManager:" << m_db.lastError().text();
     }
 }
 
@@ -26,7 +25,8 @@ const QString MessageManager::MESSAGE_SQL = QLatin1String(R"(
         fileName TEXT,
         date TEXT NOT NULL,
         icon TEXT NOT NULL,
-        isPrompt INTEGER NOT NULL,
+        isPrompt BOOL NOT NULL,
+        isDeepSearch BOOL NOT NULL,
         like INTEGER NOT NULL,
         FOREIGN KEY(conversation_id)
         REFERENCES conversation(id)
@@ -35,19 +35,21 @@ const QString MessageManager::MESSAGE_SQL = QLatin1String(R"(
 )");
 
 const QString MessageManager::READ_MESSAGE_ID_SQL = QLatin1String(R"(
-    SELECT id, text, fileName, date, icon, isPrompt, like FROM message WHERE conversation_id=?
+    SELECT id, text, fileName, date, icon, isPrompt, isDeepSearch, like
+    FROM message WHERE conversation_id=?
 )");
 
 const QString MessageManager::INSERT_MESSAGE_SQL = QLatin1String(R"(
-    INSERT INTO message(conversation_id, text, fileName, date, icon, isPrompt, like) VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO message(conversation_id, text, fileName, date, icon, isPrompt, isDeepSearch, like)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 )");
 
 const QString MessageManager::UPDATE_LIKE_MESSAGE_SQL = QLatin1String(R"(
-    UPDATE message SET like=? Where conversation_id=? AND id=?
+    UPDATE message SET like=? WHERE conversation_id=? AND id=?
 )");
 
 const QString MessageManager::UPDATE_TEXT_MESSAGE_SQL = QLatin1String(R"(
-    UPDATE message SET text=? Where conversation_id=? AND id=?
+    UPDATE message SET text=? WHERE conversation_id=? AND id=?
 )");
 
 const QString MessageManager::READ_ICON_MESSAGE_SQL = QLatin1String(R"(
@@ -62,43 +64,50 @@ const QString MessageManager::DELETE_MESSAGE_SQL = QLatin1String(R"(
     DELETE FROM message WHERE conversation_id=?
 )");
 
-void MessageManager::insertMessage(const int idConversation, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, const int like){
+void MessageManager::insertMessage(const int idConversation, const QString &text,
+                                   const QString &fileName, const QString &icon,
+                                   bool isPrompt, bool isDeepSearch, const int like)
+{
     QDateTime date = QDateTime::currentDateTime();
-
     QSqlQuery query(m_db);
 
     if (!query.prepare(INSERT_MESSAGE_SQL))
         return;
+
     query.addBindValue(idConversation);
     query.addBindValue(text);
     query.addBindValue(fileName);
     query.addBindValue(date);
     query.addBindValue(icon);
     query.addBindValue(isPrompt);
+    query.addBindValue(isDeepSearch);
     query.addBindValue(like);
+
     if (!query.exec())
         return;
 
     int id = query.lastInsertId().toInt();
 
-    emit addMessage(idConversation, id, text, fileName, date, icon, isPrompt, like);
+    emit addMessage(idConversation, id, text, fileName, date, icon, isPrompt, isDeepSearch, like);
 
     updateDateConversation(idConversation, text, icon);
 }
 
-void MessageManager::updateLikeMessage(const int conversationId, const int messageId, const int like){
+void MessageManager::updateLikeMessage(const int conversationId, const int messageId, const int like)
+{
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_LIKE_MESSAGE_SQL))
         return;
+
     query.addBindValue(like);
     query.addBindValue(conversationId);
     query.addBindValue(messageId);
-    if (!query.exec())
-        return;
+    query.exec();
 }
 
-void MessageManager::updateTextMessage(const int conversationId, const int messageId, const QString &text){
+void MessageManager::updateTextMessage(const int conversationId, const int messageId, const QString &text)
+{
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_TEXT_MESSAGE_SQL))
@@ -107,30 +116,30 @@ void MessageManager::updateTextMessage(const int conversationId, const int messa
     query.addBindValue(text);
     query.addBindValue(conversationId);
     query.addBindValue(messageId);
-    if (!query.exec())
-        return;
+    query.exec();
 
-    //Find icon for update Conversation in DB
+    // Find icon in DB (برای آپدیت Conversation)
     if (!query.prepare(READ_ICON_MESSAGE_SQL))
-        return ;
+        return;
 
     query.addBindValue(conversationId);
     query.addBindValue(messageId);
 
     if (!query.exec())
-        return ;
+        return;
 
     if (query.next())
         updateDateConversation(conversationId, text, query.value(0).toString());
 }
 
-void MessageManager::readMessages(const int idConversation){
+void MessageManager::readMessages(const int idConversation)
+{
     QSqlQuery query(m_db);
     query.prepare(READ_MESSAGE_ID_SQL);
-
     query.addBindValue(idConversation);
-    if (query.exec()){
-        while(query.next()){
+
+    if (query.exec()) {
+        while (query.next()) {
             emit addMessage(
                 idConversation,
                 query.value(0).toInt(),
@@ -139,13 +148,15 @@ void MessageManager::readMessages(const int idConversation){
                 query.value(3).toDateTime(),
                 query.value(4).toString(),
                 query.value(5).toBool(),
-                query.value(6).toInt()
+                query.value(6).toBool(),
+                query.value(7).toInt()
                 );
         }
     }
 }
 
-void MessageManager::updateDateConversation(const int id, const QString &description, const QString &icon){
+void MessageManager::updateDateConversation(const int id, const QString &description, const QString &icon)
+{
     QSqlQuery query(m_db);
 
     if (!query.prepare(UPDATE_DATE_CONVERSATION_SQL))
@@ -155,6 +166,5 @@ void MessageManager::updateDateConversation(const int id, const QString &descrip
     query.addBindValue(icon);
     query.addBindValue(QDateTime::currentDateTime());
     query.addBindValue(id);
-    if (!query.exec())
-        return;
+    query.exec();
 }
