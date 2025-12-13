@@ -56,6 +56,8 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
+    Q_INVOKABLE void readSources(const int idMessage);
+    Q_INVOKABLE void readActivity(const int idMessage);
     Q_INVOKABLE virtual void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
     Q_INVOKABLE virtual void stop();
     Q_INVOKABLE virtual void loadModel(const int id);
@@ -65,6 +67,17 @@ public:
 
     void addMessage(const int id, const QString &text, const QString &fileName,
                     QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
+
+    void addSources(const int id,
+                    const int idMessage,
+                    const QString &titel,
+                    const QString &text,
+                    const QString &icon,
+                    const QString &link);
+    void addActivity(const int id,
+                     const int idMessage,
+                     const QString &text,
+                     const QString &icon);
 
     const int id() const;
 
@@ -161,8 +174,21 @@ signals:
     // void requestUnLoadModel();
     void requestStop();
     void isOpenMessageChanged();
-
     void currentMessageIdChanged();
+
+    void requestReadActivity(const int idConversation, const int idMessage);
+    void requestInsertActivity(const int idConversation,
+                               const int idMessage,
+                               const QString &text,
+                               const QString &icon);
+
+    void requestReadSourse(const int idConversation, const int idMessage);
+    void requestInsertSourse(const int idConversation,
+                             const int idMessage,
+                             const QString &titel,
+                             const QString &text,
+                             const QString &icon,
+                             const QString &link);
 
 private:
     int m_id;

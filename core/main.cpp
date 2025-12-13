@@ -275,6 +275,14 @@ int main(int argc, char *argv[])
         QObject::connect(conversationList, &ConversationList::requestUpdateLikeMessage, database, &Database::updateLikeMessage, Qt::QueuedConnection);
         QObject::connect(conversationList, &ConversationList::requestUpdateTextMessage, database, &Database::updateTextMessage, Qt::QueuedConnection);
 
+        QObject::connect(conversationList, &ConversationList::requestReadActivity, database, &Database::readActivity, Qt::QueuedConnection);
+        QObject::connect(database, &Database::addActivity, conversationList, &ConversationList::addActivity, Qt::QueuedConnection);
+        QObject::connect(conversationList, &ConversationList::requestInsertActivity, database, &Database::insertActivity, Qt::QueuedConnection);
+
+        QObject::connect(conversationList, &ConversationList::requestReadSourse, database, &Database::readSources, Qt::QueuedConnection);
+        QObject::connect(database, &Database::addSources, conversationList, &ConversationList::addSources, Qt::QueuedConnection);
+        QObject::connect(conversationList, &ConversationList::requestInsertSourse, database, &Database::insertSources, Qt::QueuedConnection);
+
         Clipboard clipboard;
         engine.rootContext()->setContextProperty("Clipboard", &clipboard);
 

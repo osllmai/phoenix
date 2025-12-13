@@ -28,7 +28,7 @@ Item {
         clip: true
         spacing: 10
 
-        model: conversationListFilter
+        model: (conversationList.currentConversation && conversationList.currentConversation.isOpenMessage)? conversationList.currentConversation.sourseList : []
         delegate: Item{
            width: listView.width; height: indoxItem.height
            SourseLogDelegate {

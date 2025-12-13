@@ -39,7 +39,7 @@ QVariant SourseList::data(const QModelIndex &index, int role) const {
 QHash<int, QByteArray> SourseList::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[IdRole] = "id";
-    roles[TitelRole] = "titel";
+    roles[TitelRole] = "title";
     roles[TextRole] = "text";
     roles[IconRole] = "icon";
     roles[LinkRole] = "link";

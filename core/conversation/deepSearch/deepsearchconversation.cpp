@@ -17,7 +17,7 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
-    setIsOpenMessage(true);
+    setIsOpenMessage(false);
 }
 
 DeepSearchConversation::DeepSearchConversation(int id, const QString &title, const QString &description, const QString &icon,
@@ -37,7 +37,7 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
-    setIsOpenMessage(true);
+    setIsOpenMessage(false);
 }
 
 DeepSearchConversation::~DeepSearchConversation() {
@@ -87,60 +87,108 @@ void DeepSearchConversation::handleState() {
     switch (m_state) {
 
     case DeepSearchState::ClassifyQuery:
-        setLogState(getLogState() + "\nAnalyzing your question to understand what type of information is needed.");
+        // emit requestInsertActivity(id(),
+        //                       messageList()->lastMessageInfo()["id"].toInt(),
+        //                       "Analyzing your question to understand what type of information is needed.",
+        //                       "qrc:/media/icon/search.svg");
+        setLogState( "Analyzing your question to understand what type of information is needed.");
         classifyQuery();
         break;
 
     case DeepSearchState::GenerateClarificationQuestions:
-        setLogState(getLogState() + "\nPreparing a few short questions to better understand your request.");
+        // emit requestInsertActivity(id(),
+        //                       messageList()->lastMessageInfo()["id"].toInt(),
+        //                       "Preparing a few short questions to better understand your request.",
+        //                       "qrc:/media/icon/search.svg");
+        setLogState("Preparing a few short questions to better understand your request.");
         generateClarificationQuestions();
         break;
 
     case DeepSearchState::WaitingUserClarifications:
-        setLogState(getLogState() + "\nWaiting for your answers so we can continue.");
+        // emit requestInsertActivity(id(),
+        //                       messageList()->lastMessageInfo()["id"].toInt(),
+        //                       "Waiting for your answers so we can continue.",
+        //                       "qrc:/media/icon/search.svg");
+        setLogState("Waiting for your answers so we can continue.");
         break;
 
     case DeepSearchState::GenerateSearchKeywords:
-        setLogState(getLogState() + "\nExtracting important keywords from your request to search more effectively.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Extracting important keywords from your request to search more effectively.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Extracting important keywords from your request to search more effectively.");
         generateSearchKeywords();
         break;
 
     case DeepSearchState::SearchInSources:
-        setLogState(getLogState() + "\nSearching through available sources to collect useful information.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Searching through available sources to collect useful information.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Searching through available sources to collect useful information.");
         startSearchInSources();
         break;
 
     case DeepSearchState::generateUserIntentSummary:
-        setLogState(getLogState() + "\nSummarizing your request to ensure we fully understand your goal.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Summarizing your request to ensure we fully understand your goal.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Summarizing your request to ensure we fully understand your goal.");
         generateUserIntentSummary();
         break;
 
     case DeepSearchState::SelectesPdfs:
-        setLogState(getLogState() + "\nProcessing selected documents to prepare them for analysis.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Processing selected documents to prepare them for analysis.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Processing selected documents to prepare them for analysis.");
         m_arxivModel->processSelectedPdfs(m_userSummery);
         break;
 
     case DeepSearchState::DownloadPdfs:
-        setLogState(getLogState() + "\nDownloading the required documents.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Downloading the required documents.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Downloading the required documents.");
         m_arxivModel->downloadPdfs();
         break;
 
     case DeepSearchState::EmbeddingPdfs:
-        setLogState(getLogState() + "\nAnalyzing the downloaded documents and preparing them for deeper understanding.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Analyzing the downloaded documents and preparing them for deeper understanding.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Analyzing the downloaded documents and preparing them for deeper understanding.");
         m_arxivModel->generateEmbeddings(m_userSummery);
         break;
 
     case DeepSearchState::RAGPreparation:
-        setLogState(getLogState() + "\nPreparing the most relevant information from documents to answer your request.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Preparing the most relevant information from documents to answer your request.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Preparing the most relevant information from documents to answer your request.");
         m_arxivModel->topSimilarChunksAsync(10);
         break;
 
     case DeepSearchState::SendForTextModel:
-        setLogState(getLogState() + "\nGenerating a final response based on all gathered information.");
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Generating a final response based on all gathered information.",
+                              "qrc:/media/icon/search.svg");
+        setLogState("Generating a final response based on all gathered information.");
         finalPrompt();
         break;
 
     case DeepSearchState::Finished:
+        emit requestInsertActivity(id(),
+                              messageList()->lastMessageInfo()["id"].toInt(),
+                              "Processing your text",
+                              "qrc:/media/icon/search.svg");
         setLogState( "Processing your text");
         m_state = DeepSearchState::WaitingPrompt;
         break;

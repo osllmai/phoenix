@@ -223,8 +223,12 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                         promptBatchSize, maxTokens, repeatPenaltyTokens,
                                         contextLength, numberOfGPULayers, this);
         m_conversations.append(conversation);
-        connect(conversation, &DeepSearchConversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
-        connect(conversation, &DeepSearchConversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestReadMessages, this, &ConversationList::requestReadMessages, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestInsertMessage, this, &ConversationList::requestInsertMessage, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestReadActivity, this, &ConversationList::requestReadActivity, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestInsertActivity, this, &ConversationList::requestInsertActivity, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestReadSourse, this, &ConversationList::requestReadSourse, Qt::QueuedConnection);
+        connect(conversation, &DeepSearchConversation::requestInsertSourse, this, &ConversationList::requestInsertSourse, Qt::QueuedConnection);
         connect(conversation, &DeepSearchConversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
         connect(conversation, &DeepSearchConversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
         connect(conversation, &DeepSearchConversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
@@ -236,8 +240,12 @@ void ConversationList::addConversation(const int id, const QString &title, const
                                                       promptBatchSize, maxTokens, repeatPenaltyTokens,
                                                       contextLength, numberOfGPULayers, this);
         m_conversations.append(conversation);
-        connect(conversation, &TextConversation::requestReadMessages, this, &ConversationList::readMessages, Qt::QueuedConnection);
-        connect(conversation, &TextConversation::requestInsertMessage, this, &ConversationList::insertMessage, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestReadMessages, this, &ConversationList::requestReadMessages, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestInsertMessage, this, &ConversationList::requestInsertMessage, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestReadActivity, this, &ConversationList::requestReadActivity, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestInsertActivity, this, &ConversationList::requestInsertActivity, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestReadSourse, this, &ConversationList::requestReadSourse, Qt::QueuedConnection);
+        connect(conversation, &TextConversation::requestInsertSourse, this, &ConversationList::requestInsertSourse, Qt::QueuedConnection);
         connect(conversation, &TextConversation::requestUpdateDateConversation, this, &ConversationList::updateDateConversation, Qt::QueuedConnection);
         connect(conversation, &TextConversation::requestUpdateModelSettingsConversation, this, &ConversationList::updateModelSettingsConversation, Qt::QueuedConnection);
         connect(conversation, &TextConversation::requestUpdateTextMessage, this, &ConversationList::updateTextMessage, Qt::QueuedConnection);
@@ -268,6 +276,26 @@ void ConversationList::addMessage(const int conversationId, const int id, const 
     conversation->setDate(date);
     conversation->setIcon(icon);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0), {DescriptionRole, IconRole, DateRole});
+}
+
+void ConversationList::addSources(const int id,
+                const int idConversation,
+                const int idMessage,
+                const QString &titel,
+                const QString &text,
+                const QString &icon,
+                const QString &link){
+    Conversation* conversation = findConversationById(idConversation);
+    conversation->addSources(id, idMessage, titel, text, icon, link);
+}
+
+void ConversationList::addActivity(const int id,
+                 const int idConversation,
+                 const int idMessage,
+                 const QString &text,
+                 const QString &icon){
+    Conversation* conversation = findConversationById(idConversation);
+    conversation->addActivity(id, idMessage, text, icon);
 }
 
 void ConversationList::updateDescriptionText(const int conversationId, const QString &text){
@@ -308,13 +336,13 @@ void ConversationList::selectCurrentConversationRequest(const int id){
     }
 }
 
-void ConversationList::readMessages(const int conversationId){
-    emit requestReadMessages(conversationId);
-}
+// void ConversationList::readMessages(const int conversationId){
+//     emit requestReadMessages(conversationId);
+// }
 
-void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
-    emit requestInsertMessage(conversationId, text, fileName, icon, isPrompt, isDeepSearch, like);
-}
+// void ConversationList::insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon, bool isPrompt, bool isDeepSearch, const int like){
+//     emit requestInsertMessage(conversationId, text, fileName, icon, isPrompt, isDeepSearch, like);
+// }
 
 void ConversationList::updateTextMessage(const int conversationId, const int messageId, const QString &text){
     emit requestUpdateTextMessage(conversationId, messageId, text);

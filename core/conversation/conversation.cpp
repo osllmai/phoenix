@@ -23,9 +23,12 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
     m_model(new Model(this)),
     m_modelSettings(new ModelSettings(id,this)),
     m_messageList(new MessageList(this)),
+    m_activityList(new ActivityList(this)),
+    m_sourceList(new SourseList(this)),
     m_provider(nullptr),
     m_stopRequest(false),
-    m_logState("Processing your text")
+    m_logState("Processing your text"),
+    m_currentMessageId(-1)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -65,8 +68,11 @@ Conversation::Conversation(int id, const QString &title, const QString &descript
                                       promptBatchSize, maxTokens, repeatPenaltyTokens,
                                       contextLength, numberOfGPULayers, this)),
     m_messageList(new MessageList(this)),
+    m_activityList(new ActivityList(this)),
+    m_sourceList(new SourseList(this)),
     m_provider(nullptr), m_stopRequest(false),
-    m_logState("Processing your text ")
+    m_logState("Processing your text "),
+    m_currentMessageId(-1)
 {
     connect(m_modelSettings, &ModelSettings::streamChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
     connect(m_modelSettings, &ModelSettings::promptTemplateChanged, this, &Conversation::updateModelSettingsConversation, Qt::QueuedConnection);
@@ -104,8 +110,48 @@ void Conversation::addMessage(const int id, const QString &text, const QString &
     m_messageList->addMessage(id, text, fileName, date, icon, isPrompt, isDeepSearch, like);
 }
 
+void Conversation::addSources(const int id,
+                const int idMessage,
+                const QString &titel,
+                const QString &text,
+                const QString &icon,
+                const QString &link)
+{
+    if(m_currentMessageId == idMessage){
+        sourseList()->add(id, titel, text, icon, link);
+    }
+}
+
+void Conversation::addActivity(const int id,
+                 const int idMessage,
+                 const QString &text,
+                 const QString &icon)
+{
+    if(m_currentMessageId == idMessage){
+        activityList()->add(id, text, icon);
+    }
+}
+
 void Conversation::readMessages(){
     emit requestReadMessages(m_id);
+}
+
+void Conversation::readSources(const int idMessage){
+    if(m_currentMessageId != idMessage){
+        emit requestReadSourse(m_id, idMessage);
+        sourseList()->clear();
+    }
+    setCurrentMessageId(idMessage);
+    setIsOpenMessage(true);
+}
+
+void Conversation::readActivity(const int idMessage){
+    if(m_currentMessageId != idMessage){
+        emit requestReadActivity(m_id, idMessage);
+        activityList()->clear();
+    }
+    setCurrentMessageId(idMessage);
+    setIsOpenMessage(true);
 }
 
 void Conversation::prompt(const QString &input, const QString &fileName, const QString &fileInfo){}

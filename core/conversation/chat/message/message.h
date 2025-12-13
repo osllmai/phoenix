@@ -16,6 +16,7 @@ class Message : public QObject
     Q_PROPERTY(bool isPrompt READ isPrompt CONSTANT FINAL)
     Q_PROPERTY(int like READ like WRITE setLike NOTIFY likeChanged FINAL)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged FINAL)
+    Q_PROPERTY(bool isDeepSearch READ isDeepSearch CONSTANT FINAL)
 
 public:
     explicit Message(QObject* parent = nullptr) : QObject(parent) {}
@@ -58,7 +59,6 @@ private:
     bool m_isPrompt;
     bool m_isDeepSearch;
     int m_like;
-    Q_PROPERTY(bool isDeepSearch READ isDeepSearch CONSTANT FINAL)
 };
 
 #endif // MESSAGE_H

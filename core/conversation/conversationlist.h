@@ -97,9 +97,9 @@ public slots:
 
     void addMessage(const int conversationId, const int id, const QString &text, const QString &fileName,
                     QDateTime date, const QString &icon, bool isPrompt, bool isDeepSearch, const int like);
-    void readMessages(const int conversationId);
-    void insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
-                       bool isPrompt, bool isDeepSearch, const int like);
+    // void readMessages(const int conversationId);
+    // void insertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
+    //                    bool isPrompt, bool isDeepSearch, const int like);
     void updateTextMessage(const int conversationId, const int messageId, const QString &text);
     void updateDescriptionText(const int conversationId, const QString &text);
     void updateDateConversation(const int id, const QString &description, const QString &icon);
@@ -108,6 +108,18 @@ public slots:
                                          const int &topK, const double &topP, const double &minP, const double &repeatPenalty,
                                          const int &promptBatchSize, const int &maxTokens, const int &repeatPenaltyTokens,
                                          const int &contextLength, const int &numberOfGPULayers);
+    void addSources(const int id,
+                    const int idConversation,
+                    const int idMessage,
+                    const QString &titel,
+                    const QString &text,
+                    const QString &icon,
+                    const QString &link);
+    void addActivity(const int id,
+                     const int idConversation,
+                     const int idMessage,
+                     const QString &text,
+                     const QString &icon);
 
 signals:
     void countChanged();
@@ -144,6 +156,20 @@ signals:
     void requestInsertMessage(const int conversationId, const QString &text, const QString &fileName, const QString &icon,
                               bool isPrompt, bool isDeepSearch, const int like);
     void requestUpdateTextMessage(const int conversationId, const int messageId, const QString &text);
+
+    void requestReadActivity(const int idConversation, const int idMessage);
+    void requestInsertActivity(const int idConversation,
+                               const int idMessage,
+                               const QString &text,
+                               const QString &icon);
+
+    void requestReadSourse(const int idConversation, const int idMessage);
+    void requestInsertSourse(const int idConversation,
+                             const int idMessage,
+                             const QString &titel,
+                             const QString &text,
+                             const QString &icon,
+                             const QString &link);
 
 private:
     explicit ConversationList(QObject* parent = nullptr);

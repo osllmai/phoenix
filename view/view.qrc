@@ -166,5 +166,8 @@
         <file>deepsearch/DeepSearchView.qml</file>
         <file>deepsearch/components/DeepSearchBody.qml</file>
         <file>deepsearch/components/DeepSearchHeader.qml</file>
+        <file>chat/components/message/DeepSearchMessageDelegate.qml</file>
+        <file>chat/components/message/components/DateAndIconsMessage.qml</file>
+        <file>chat/components/message/components/LogoIconMessage.qml</file>
     </qresource>
 </RCC>

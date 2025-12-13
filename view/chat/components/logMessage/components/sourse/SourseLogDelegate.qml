@@ -8,7 +8,11 @@ T.Button {
     id: control
     height: Math.max(logoModelId.height, titleId.height + 16) + informationId.height + information2Id.height + 10
 
-    onClicked: {}
+    onClicked: {
+        if (model.link && model.link !== "") {
+            Qt.openUrlExternally(model.link)
+        }
+    }
 
     background: null
     contentItem: Rectangle {
@@ -61,7 +65,7 @@ T.Button {
 
             Label {
                 id: informationId
-                text: model.description
+                text: model.link
                 color: Style.Colors.textTitle
                 clip: true
                 width: parent.width
@@ -75,7 +79,7 @@ T.Button {
             }
             Label {
                 id: information2Id
-                text: model.description
+                text: model.text
                 color: Style.Colors.textInformation
                 clip: true
                 width: parent.width

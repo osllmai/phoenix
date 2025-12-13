@@ -8,7 +8,7 @@ import './components'
 
 T.Button {
     id: control
-    height: textId.height + dateAndIconId.height + (allFileExist.visible? allFileExist.height: 0)  + 2
+    height: textId.height + newChatId.height + dateAndIconId.height + (allFileExist.visible? allFileExist.height: 0)  + 2
     width: Math.min(670, parent.width - 48)
     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -113,6 +113,22 @@ T.Button {
                     Component.onCompleted: {
                         textProcessor.textDocument = textId.textDocument
                         textProcessor.setValue(model.text)
+                    }
+                }
+
+                MyButton{
+                    id: newChatId
+                    visible: !conversationList.isEmptyConversation
+                    myText: "Open"
+                    myIcon: "qrc:/media/icon/add.svg"
+                    myTextToolTip: "Open"
+                    bottonType: Style.RoleEnum.BottonType.Primary
+                    Connections {
+                        target: newChatId
+                        function onClicked(){
+                            conversationList.currentConversation.readActivity(model.id)
+                            conversationList.currentConversation.readSources(model.id)
+                        }
                     }
                 }
 

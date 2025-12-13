@@ -27,7 +27,7 @@ Item {
         }
         clip: true
 
-        model: conversationListFilter
+        model: (conversationList.currentConversation && conversationList.currentConversation.isOpenMessage)? conversationList.currentConversation.activityList : []
         delegate: ActivityLogDelegate {
             id: indoxItem
             width: listView.width

@@ -32,7 +32,7 @@ Item {
         }
         Label {
             id: informationId
-            text: model.description
+            text: model.text
             color: Style.Colors.textTitle
             width: parent.width - logoModelId.width - 12
             font.pixelSize: 12

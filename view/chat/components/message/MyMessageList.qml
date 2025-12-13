@@ -34,10 +34,25 @@ Item {
         model: conversationList.currentConversation ? conversationList.currentConversation.messageList : []
 
         delegate: Item{
-           width: listView.width; height: promptItem.height
-           MessageDelegate{
-               id: promptItem
-           }
+            width: parent.width
+            height: loader.height
+
+            Loader {
+                  id: loader
+                  width: Math.min(670, listView.width - 48)
+                  anchors.horizontalCenter: parent.horizontalCenter
+                  sourceComponent: model.isDeepSearch ? deepSearchDelegate : messageDelegate
+
+                  Component {
+                      id: messageDelegate
+                      MessageDelegate { }
+                  }
+
+                  Component {
+                      id: deepSearchDelegate
+                      DeepSearchMessageDelegate { }
+                  }
+            }
         }
 
         onContentHeightChanged: {
