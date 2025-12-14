@@ -34,7 +34,7 @@ Item {
         model: conversationList.currentConversation ? conversationList.currentConversation.messageList : []
 
         delegate: Item{
-            width: parent.width
+            width: listView.width
             height: loader.height
 
             Loader {

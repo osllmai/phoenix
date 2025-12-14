@@ -145,7 +145,7 @@ void DeepSearchConversation::handleState() {
                               "Processing selected documents to prepare them for analysis.",
                               "qrc:/media/icon/search.svg");
         setLogState("Processing selected documents to prepare them for analysis.");
-        m_arxivModel->processSelectedPdfs(m_userSummery);
+        m_arxivModel->processSelectedPdfs(m_userSummery, id());
         break;
 
     case DeepSearchState::DownloadPdfs:
@@ -163,7 +163,7 @@ void DeepSearchConversation::handleState() {
                               "Analyzing the downloaded documents and preparing them for deeper understanding.",
                               "qrc:/media/icon/search.svg");
         setLogState("Analyzing the downloaded documents and preparing them for deeper understanding.");
-        m_arxivModel->generateEmbeddings(m_userSummery);
+        m_arxivModel->generateEmbeddings(m_userSummery, id());
         break;
 
     case DeepSearchState::RAGPreparation:

@@ -65,9 +65,9 @@ void ArxivArticleList::clearList() {
 }
 
 /* -------------------  Process PDFs + ARXIV Summaries ------------------- */
-void ArxivArticleList::processSelectedPdfs(const QString &query)
+void ArxivArticleList::processSelectedPdfs(const QString &query, const int converstationId)
 {
-    QtConcurrent::run([this, query]() {
+    QtConcurrent::run([this, query, converstationId]() {
 
         qInfo() << "[Arxiv] Starting processSelectedPdfs with query:" << query;
 
@@ -76,20 +76,25 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
 
         /* ---------------- SETTINGS SECTION ---------------- */
         qInfo() << "[Arxiv] Building settings object...";
-        settingsObj.insert("chunk_words", 300);
+        settingsObj.insert("mode", "chunk");
+        settingsObj.insert("chunk_words", 400);
         settingsObj.insert("chunk_overlap", 0);
         settingsObj.insert("min_chunk_length", 80);
-        settingsObj.insert("semantic_threshold", 0.50);
+        settingsObj.insert("semantic_threshold", 0.70);
         settingsObj.insert("embedding_model", QString::fromUtf8(APP_PATH) + "/all_mpnet_base_v2");
-        settingsObj.insert("use_gpu", true);
+        settingsObj.insert("use_gpu", false);
         settingsObj.insert("language", "en");
         settingsObj.insert("lowercase", true);
         settingsObj.insert("remove_newlines", true);
         settingsObj.insert("save_embeddings_only", false);
         settingsObj.insert("pdf_password", QJsonValue::Null);
         settingsObj.insert("chunking_mode", "semantic");
-        settingsObj.insert("min_paragraph_similarity", 0.50);
+        settingsObj.insert("chroma_db_path", QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
+        settingsObj.insert("conversation_id", converstationId);
+        settingsObj.insert("min_paragraph_similarity", 0.70);
         settingsObj.insert("query_text", query);
+        settingsObj.insert("output_dir_auto_create", true);
+        settingsObj.insert("top_k_results", 5);
 
         QJsonArray sections {
             "abstract","introduction","methods","materials and methods","methodology",
@@ -98,7 +103,6 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         };
         settingsObj.insert("filter_sections", sections);
 
-        settingsObj.insert("output_dir_auto_create", true);
         rootObj.insert("settings", settingsObj);
 
         /* ---------------- ARXIV FILES SECTION ---------------- */
@@ -108,19 +112,17 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
 
             QJsonObject obj;
             obj.insert("title", a.value("title").toString());
-            obj.insert("pdf", a.value("pdf").toString());
+            obj.insert("link", a.value("link").toString());
             obj.insert("summary", a.value("summary").toString());
 
             arxivArray.append(obj);
         }
 
         rootObj.insert("arxiv_files", arxivArray);
-
-        QJsonArray emptyFiles;
-        rootObj.insert("files", emptyFiles);
+        rootObj.insert("files", QJsonArray());
 
         QString arxivOut = m_tempFolder + "arxiv_summaries.json";
-        rootObj.insert("arxiv_output", arxivOut);
+        rootObj.insert("output", arxivOut);
 
         /* ---------------- SAVE CONFIG FILE ---------------- */
         QString configPath = m_tempFolder + "config_arxiv.json";
@@ -147,9 +149,6 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         qInfo() << "[Arxiv] STDOUT:" << proc.readAllStandardOutput();
         qWarning() << "[Arxiv] STDERR:" << proc.readAllStandardError();
 
-
-        qInfo() << "[Arxiv] Tokenizer finished with code:" << proc.exitCode();
-
         /* ---------------- READ SELECTED RESULTS ---------------- */
         QFile outFile(arxivOut);
         if (!outFile.open(QIODevice::ReadOnly)) {
@@ -164,20 +163,19 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         QMap<QString, QVariantMap> resultInfoMap;  // key: arxiv_title
 
         qInfo() << "[Arxiv] Collecting selected results...";
+        QJsonArray idsArray = json["ids"].toArray().first().toArray();
+        QJsonArray distancesArray = json["distances"].toArray().first().toArray();
+        QJsonArray metadatasArray = json["metadatas"].toArray().first().toArray();
+        QJsonArray documentsArray = json["documents"].toArray().first().toArray();
 
-        for (auto rVal : json["results"].toArray()) {
-            QJsonObject r = rVal.toObject();
-
-            QString title = r["arxiv_title"].toString();
-            if (title.isEmpty()) continue;
-
+        for (int i = 0; i < metadatasArray.size(); ++i) {
+            QJsonObject meta = metadatasArray[i].toObject();
+            QString title = meta["title"].toString();
             QVariantMap info;
-            info["similarity_pct"] = r["similarity_pct"].toDouble();
-            info["word_count"] = r["word_count"].toInt();
-            info["embedding"] = r["embedding"].toVariant();
-            info["chunk"] = r["chunk"].toString();
-            info["type"] = r["type"].toString();
-            info["chunk_index"] = r["chunk_index"].toInt();
+            info["similarity_pct"] = 1.0 - distancesArray[i].toDouble();
+            info["chunk"] = documentsArray[i].toString();
+            info["type"] = meta["type"].toString();
+            info["chunk_index"] = i;
 
             resultInfoMap.insert(title, info);
         }
@@ -186,26 +184,19 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         newList.reserve(m_articles.size());
 
         qInfo() << "[Arxiv] Merging tokenizer results with article list...";
-
         for (int i = 0; i < m_articles.size(); i++) {
             QString title = m_articles[i]["title"].toString();
 
             if (resultInfoMap.contains(title)) {
-
                 QVariantMap info = resultInfoMap.value(title);
 
-                m_articles[i]["embedding"] = info["embedding"];
                 m_articles[i]["summary_chunk"] = info["chunk"];
                 m_articles[i]["similarity_pct"] = info["similarity_pct"];
-                m_articles[i]["word_count"] = info["word_count"];
                 m_articles[i]["chunk_index"] = info["chunk_index"];
                 m_articles[i]["type"] = info["type"];
 
                 newList.append(m_articles[i]);
-
-                qInfo() << "[Arxiv] Kept:" << title
-                        << "similarity:" << info["similarity_pct"].toDouble();
-
+                qInfo() << "[Arxiv] Kept:" << title << "similarity:" << info["similarity_pct"].toDouble();
             } else {
                 qInfo() << "[Arxiv] Removed (no match):" << title;
             }
@@ -214,7 +205,6 @@ void ArxivArticleList::processSelectedPdfs(const QString &query)
         m_articles = newList;
         emit arxivDone();
         qInfo() << "[Arxiv] Processing completed.";
-
     });
 }
 
@@ -281,9 +271,9 @@ void ArxivArticleList::downloadNextPdf(int index)
 }
 
 /* ------------------- GENERATE EMBEDDINGS ------------------- */
-void ArxivArticleList::generateEmbeddings(const QString &query) {
+void ArxivArticleList::generateEmbeddings(const QString &query, const int converstationId) {
 
-    QtConcurrent::run([this, query]() {
+    QtConcurrent::run([this, query, converstationId]() {
 
         qDebug() << "[Embeddings] Starting embedding generation…";
         qDebug() << "[Embeddings] Query Text =" << query;

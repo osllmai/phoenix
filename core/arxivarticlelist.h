@@ -40,9 +40,9 @@ public:
     void appendArticle(const QVariantMap &article);
 
     Q_INVOKABLE void clearList();
-    Q_INVOKABLE void processSelectedPdfs(const QString &query);
+    Q_INVOKABLE void processSelectedPdfs(const QString &query, const int converstationId);
     Q_INVOKABLE void downloadPdfs();
-    Q_INVOKABLE void generateEmbeddings(const QString &query);
+    Q_INVOKABLE void generateEmbeddings(const QString &query, const int converstationId);
     Q_INVOKABLE void topSimilarChunksAsync(int topK = 5);
 
 signals:
