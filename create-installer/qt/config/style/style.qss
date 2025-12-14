@@ -1,0 +1,83 @@
+QWidget {
+    background-color: #1D2125;
+    color: #B6C2CF;
+    font-family: "DM Sans";
+    font-size: 10pt;
+}
+
+/* Label, Text, Title */
+QLabel {
+    color: #B6C2CF;
+}
+QLabel#PageTitle {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+QLabel#PageSubTitle {
+    font-size: 10pt;
+    color: #FFFFFF;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #9F8FEF;
+    color: #FFFFFF;
+    border-radius: 4px;
+    padding: 6px 14px;
+    border: none;
+}
+QPushButton:hover {
+    background-color: #DFD8FD;
+}
+QPushButton:pressed {
+    background-color: #6E5DC6;
+}
+QPushButton:disabled {
+    background-color: #352C63;
+    color: #738496;
+}
+
+/* LineEdits and ComboBoxes */
+QLineEdit, QComboBox {
+    background-color: #22272B;
+    border: 1px solid #2C333A;
+    border-radius: 4px;
+    color: #FFFFFF;
+    padding: 4px 8px;
+}
+QLineEdit:focus, QComboBox:focus {
+    border: 1px solid #9F8FEF;
+}
+
+/* Progress Bar */
+QProgressBar {
+    background-color: #DFD8FD;
+    border: none;
+    height: 6px;
+    border-radius: 4px;
+}
+QProgressBar::chunk {
+    background-color: #9F8FEF;
+    border-radius: 4px;
+}
+
+/* Scrollbar */
+QScrollBar:vertical {
+    border: none;
+    background: #22272B;
+    width: 5px;
+}
+QScrollBar::handle:vertical {
+    background: #738496;
+    border-radius: 5px;
+}
+QScrollBar::handle:vertical:hover {
+    background: #738496;
+}
+
+/* Message Box */
+QMessageBox {
+    background-color: #1D2125;
+    color: #B6C2CF;
+}

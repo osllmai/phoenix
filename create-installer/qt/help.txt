@@ -1,0 +1,220 @@
+D:\QT\6.9.3\msvc2022_64\bin\windeployqt.exe --release E:\phoenix\installer\packages\com.osllmai.phoenix\data\appPhoenix.exe
+ 
+D:\QT\Tools\QtInstallerFramework\4.10\bin\repogen -p E:\phoenix\installer\packages E:\phoenix\installer\repository
+
+D:\QT\Tools\QtInstallerFramework\4.10\bin\binarycreator --online-only -c E:\phoenix\installer\config\config.xml -p E:\phoenix\installer\packages E:\phoenix\installer\build\Phoenix_win64.exe
+ 
+ & '.\Phoenix_v0_1_4_beta_win64.exe' --verbose --show-archive
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------qt-installer mac------------------------------------------------
+
+
+/Users/parsanemati/QT/6.9.3/macos/bin/macdeployqt \
+  /Users/parsanemati/Zeinab/phoenix/installer/packages/com.osllmai.phoenix/data/Phoenix.app \
+  -qmldir=/Users/parsanemati/packages/com.osllmai.phoenix/data/Phoenix \
+  -dmg \
+  -verbose=2
+
+---------------------code sign----------------------------
+codesign --deep --force --verify --verbose \
+  --options runtime \
+  --sign "Developer ID Application: Your Name (TEAMID)" \
+  /Users/parsanemati/Zeinab/phoenix/installer/data/Phoenix.app
+
+
+---------------------notarize----------------------------
+xcrun notarytool submit /path/to/YourApp.dmg --apple-id "you@apple.com" --team-id TEAMID --password "@keychain:AC_PASSWORD" --wait
+xcrun stapler staple /path/to/YourApp.dmg
+
+
+/Users/parsanemati/Qt/Tools/QtInstallerFramework/4.10/bin/repogen \
+  -p /Users/parsanemati/Zeinab/phoenix/installer/packages \
+  /Users/parsanemati/Zeinab/phoenix/installer/repository
+
+
+/Users/parsanemati/Qt/Tools/QtInstallerFramework/4.10/bin/binarycreator \
+  --online-only \
+  -c /Users/parsanemati/Zeinab/phoenix/installer/config/config.xml \
+  -p /Users/parsanemati/Zeinab/phoenix/installer/packages \
+  /Users/parsanemati/Zeinab/phoenix/installer/build/Phoenix_mac.dmg
+
+
+-------------------code sign , noterize----------------------------
+codesign --force --verify --verbose --sign "Developer ID Application: Your Name (TEAMID)" /path/to/Phoenix_mac.dmg
+xcrun notarytool submit /path/to/Phoenix_mac.dmg --apple-id "you@apple.com" --team-id TEAMID --password "@keychain:AC_PASSWORD" --wait
+xcrun stapler staple /path/to/Phoenix_mac.dmg
+
+
+
+
+-----------------------------------mac installer
+
+cd /Users/parsanemati/Zeinab/phoenix/installer/data/
+mv appPhoenix.app Phoenix.app
+
+
+
+/Users/parsanemati/QT/6.9.3/macos/bin/macdeployqt \
+  /Users/parsanemati/Zeinab/phoenix/installer/data/Phoenix.app \
+  -qmldir=/Users/parsanemati/Zeinab/phoenix/installer/data/Phoenix \
+  -verbose=3
+
+
+codesign --deep --force --verify \
+  --options runtime \
+  --sign "0DF150BA4B5C8A1A31AAFA34943346FF7F6FC311" \
+  /Users/parsanemati/Zeinab/phoenix/installer/data/Phoenix.app
+
+
+
+
+codesign --verify --deep --strict --verbose=2 /Users/parsanemati/Zeinab/phoenix/installer/data/Phoenix.app
+
+
+
+output:        
+		/Users/.../appPhoenix.app: valid on disk
+		/Users/.../appPhoenix.app: satisfies its Designated Requirement
+
+
+
+
+
+
+ 
+cd /Users/parsanemati/Zeinab/phoenix/installer
+mkdir dmg_folder
+cp -R data/Phoenix.app dmg_folder/
+ln -s /Applications dmg_folder/Applications
+
+
+output:		dmg_folder/
+ 			├── Phoenix.app
+ 			└── Applications -> /Applications
+
+
+
+
+brew install create-dmg
+
+
+
+create-dmg \
+  --volname "Phoenix Installer" \
+  --window-pos 200 120 \
+  --window-size 600 400 \
+  --icon-size 100 \
+  --icon "Phoenix.app" 150 150 \
+  --icon "Applications" 450 150 \
+  "Phoenix.dmg" \
+  "dmg_folder/"
+
+
+
+
+xcrun notarytool submit "/Users/parsanemati/Zeinab/phoenix/installer/Phoenix.dmg" \
+  --apple-id "ali.nemati1983@gmail.com" \
+  --team-id "MFGJ44VM88" \
+  --password "ppca-vmtz-uvdj-ltda" \
+  --wait
+
+
+output: 
+		Successfully uploaded file
+		Status: Accepted
+
+
+
+xcrun stapler staple "/Users/parsanemati/Zeinab/phoenix/installer/Phoenix.dmg"
+
+
+
+xcrun stapler validate "/Users/parsanemati/Zeinab/phoenix/installer/Phoenix.dmg"
+
+output:	The staple and validate action worked!
+
+
+
+
+
+
+
+
+-------------------------------------------Linux
+
+cd ~/Documents/Zeinab/phoenix/installer/data/
+mv appPhoenix Phoenix
+
+
+mkdir -p ~/Documents/Zeinab/phoenix/AppDir/usr/bin
+mkdir -p ~/Documents/Zeinab/phoenix/AppDir/usr/lib
+mkdir -p ~/Documents/Zeinab/phoenix/AppDir/usr/share
+
+
+cp ~/Documents/Zeinab/phoenix/installer/data/Phoenix ~/Documents/Zeinab/phoenix/AppDir/usr/bin/
+
+cp ~/Documents/Zeinab/phoenix/installer/data/libllmodel.so* ~/Documents/Zeinab/phoenix/AppDir/usr/lib/
+
+cp -r ~/Documents/Zeinab/phoenix/installer/data/providers ~/Documents/Zeinab/phoenix/AppDir/usr/bin/
+cp -r ~/Documents/Zeinab/phoenix/installer/data/markitdown ~/Documents/Zeinab/phoenix/AppDir/usr/bin/
+
+cp -r ~/Documents/Zeinab/phoenix/installer/data/whisper ~/Documents/Zeinab/phoenix/AppDir/usr/bin/
+
+cp -r ~/Documents/Zeinab/phoenix/installer/data/models ~/Documents/Zeinab/phoenix/AppDir/usr/share/
+
+
+
+mkdir -p ~/Documents/Zeinab/phoenix/AppDir/usr/share/applications
+
+cat > ~/Documents/Zeinab/phoenix/AppDir/usr/share/applications/MyPhoenixApp.desktop <<EOL
+[Desktop Entry]
+Name=Phoenix
+Exec=Phoenix
+Icon=/home/nemati-usa/Documents/Zeinab/phoenix/media/image_company/phoenix.png
+Type=Application
+Categories=Utility;
+Comment=Phoenix AI app
+EOL
+
+mkdir -p myphoenix_1.0/usr/bin
+cp Phoenix myphoenix_1.0/usr/bin/
+
+dpkg-deb --build myphoenix_1.0
+
+
+
+
+
+
+
+
+D:\QT\6.9.2\msvc2022_64\bin\windeployqt.exe --release E:\phoenix\installer\packages\com.osllmai.phoenix\data\appphoenix.exe
+ 
+
+
+------------------------------------------microwoft windows
+
+create folder ------> E:\phoenix\msix_build\
+
+cd E:\phoenix\installer\packages\com.osllmai.phoenix\data
+rename appphoenix.exe Phoenix.exe
+
+D:\QT\6.9.2\msvc2022_64\bin\windeployqt.exe --release E:\phoenix\installer\packages\com.osllmai.phoenix\data\Phoenix.exe
+
+
+----Start  →   MSIX Packaging Tool
+
+“Application package” → “Package an application”   →  Create package on this computer
+
+click page “Recommended action items”----->Windows Search is active
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Phoenix</Name>
+    <Version>0.2.0</Version>
+    <Title>Phoenix Installer</Title>
+    <Publisher>Osllm AI</Publisher>
+    <StartMenuDir>Phoenix</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/Phoenix</TargetDir>
+    <InstallerApplicationIcon>Phoenix.ico</InstallerApplicationIcon>
+
+    <WizardStyle>Modern</WizardStyle>
+    <StyleSheet>style/style.qss</StyleSheet>
+
+    <RemoteRepositories>
+        <Repository>
+            <Url>https://osllm-phoenix.s3.us-east-2.amazonaws.com/phoenix_windows/windows_64x/update</Url>
+        </Repository>
+    </RemoteRepositories>
+</Installer>
