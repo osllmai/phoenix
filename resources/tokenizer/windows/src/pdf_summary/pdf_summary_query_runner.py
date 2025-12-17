@@ -26,6 +26,7 @@ class PDFSummaryQueryRunner:
 
         # --- Query Summary Vectors ---
         results = self.chroma.query_summary_vectors(
+            conversation_id=self.config.database.conversation_id,
             query_embedding=query_embedding,
             top_k=self.config.database.top_k_results
         )

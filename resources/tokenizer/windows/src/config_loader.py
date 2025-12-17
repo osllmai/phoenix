@@ -1,12 +1,12 @@
-from typing import List, Dict, Optional
-from dataclasses import dataclass
 import json
-from src.embedding.embedding_generator import EmbeddingGenerator
-from src.database.chroma_manager import PDFVectorDatabase
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
+
 
 # -----------------------------
 #       DATA MODELS
 # -----------------------------
+
 @dataclass
 class EmbeddingSettings:
     embedding_model: str
@@ -14,6 +14,7 @@ class EmbeddingSettings:
     language: str
     lowercase: bool
     remove_newlines: bool
+
 
 @dataclass
 class ChunkingSettings:
@@ -24,6 +25,7 @@ class ChunkingSettings:
     min_paragraph_similarity: float
     semantic_threshold: float
 
+
 @dataclass
 class DatabaseSettings:
     chroma_db_path: str
@@ -31,12 +33,13 @@ class DatabaseSettings:
     top_k_results: int
     query_text: str
 
+
 @dataclass
 class AppConfig:
     embedding: EmbeddingSettings
     chunking: ChunkingSettings
     database: DatabaseSettings
-    papers: List[Dict[str, str]]      # هر paper یک دیکشنری است
+    papers: List[Dict[str, Any]]
     output_file: str
     pdf_password: Optional[str]
     filter_sections: List[str]
@@ -44,9 +47,11 @@ class AppConfig:
     mode: str
     local_files: List[Dict[str, str]]
 
+
 # -----------------------------
 #       CONFIG LOADER
 # -----------------------------
+
 class ConfigLoader:
     """Loads and validates application config."""
 
@@ -57,6 +62,9 @@ class ConfigLoader:
 
         settings = raw["settings"]
 
+        # -------------------------------
+        # Embedding settings
+        # -------------------------------
         embedding = EmbeddingSettings(
             embedding_model=settings["embedding_model"],
             use_gpu=settings["use_gpu"],
@@ -65,6 +73,9 @@ class ConfigLoader:
             remove_newlines=settings.get("remove_newlines", True),
         )
 
+        # -------------------------------
+        # Chunk settings
+        # -------------------------------
         chunking = ChunkingSettings(
             chunk_words=settings["chunk_words"],
             chunk_overlap=settings["chunk_overlap"],
@@ -74,6 +85,9 @@ class ConfigLoader:
             semantic_threshold=settings.get("semantic_threshold", 0.70)
         )
 
+        # -------------------------------
+        # Database settings
+        # -------------------------------
         database = DatabaseSettings(
             chroma_db_path=settings["chroma_db_path"],
             conversation_id=settings.get("conversation_id", 0),
@@ -81,9 +95,19 @@ class ConfigLoader:
             query_text=settings.get("query_text", ""),
         )
 
+        # -------------------------------
+        # Paper list (Arxiv files)
+        # -------------------------------
         papers = raw.get("arxiv_files", [])
+
+        # -------------------------------
+        # Local file list (files section)
+        # -------------------------------
         local_files = raw.get("files", [])
 
+        # -------------------------------
+        # Return final validated config
+        # -------------------------------
         return AppConfig(
             embedding=embedding,
             chunking=chunking,

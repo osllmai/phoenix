@@ -1,11 +1,12 @@
 import chromadb
-from chromadb.config import Settings
 from typing import List, Dict, Any
 import numpy as np
 import hashlib
 import os
 
+# ============================================================
 # Disable telemetry completely
+# ============================================================
 os.environ["CHROMADB_TELEMETRY"] = "FALSE"
 try:
     chromadb.telemetry = None
@@ -20,25 +21,35 @@ try:
 except AttributeError:
     pass
 
+
+# ============================================================
+# Utils
+# ============================================================
 def hash_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def hash_list(data: List[str]) -> str:
+    joined = "||".join(data)
+    return hashlib.sha256(joined.encode("utf-8")).hexdigest()
+
+
+# ============================================================
+# PDF Vector Database
+# ============================================================
 class PDFVectorDatabase:
     """
-    Manages two collections:
-    1. PDFSummaryVectors — stores vector of each PDF summary
-    2. PDFChunksVectors — stores vector of user-generated chunks
+    Manages:
+    1. PDF summaries (one per PDF)
+    2. PDF chunks (multiple per PDF)
+    All operations are scoped by conversation_id
     """
 
     def __init__(self, db_path: str):
-        # Create persistent client
         self.client = chromadb.PersistentClient(
             path=db_path,
-            settings=Settings()
         )
 
-        # --- Create collections ---
         self.summary_collection = self.client.get_or_create_collection(
             name="PDFSummaryVectors",
             embedding_function=None,
@@ -52,62 +63,163 @@ class PDFVectorDatabase:
         )
 
     # ============================================================
-    #                     SUMMARY MANAGEMENT
+    # Internal checks
     # ============================================================
 
-    def add_summary(self, summary_id: str, summary_text: str,
-                    summary_embedding: np.ndarray, metadata: Dict[str, Any]):
+    def _conversation_exists(self, collection, conversation_id: int) -> bool:
+        res = collection.get(
+            where={"conversation_id": conversation_id},
+            limit=1
+        )
+        return len(res.get("ids", [])) > 0
+
+    # ============================================================
+    # SUMMARY MANAGEMENT
+    # ============================================================
+
+    def add_summary(
+        self,
+        summary_id: str,
+        summary_text: str,
+        summary_embedding: np.ndarray,
+        metadata: Dict[str, Any]
+    ):
+        """
+        metadata must include:
+        {
+            "title": str,
+            "pdf_file": str,
+            "conversation_id": int,
+            "type": "summary"
+        }
+        """
+
+        conversation_id = metadata["conversation_id"]
         text_hash = hash_text(summary_text)
-        existing = self.summary_collection.get(ids=[summary_id])
+
+        # Check if same summary already exists
+        existing = self.summary_collection.get(
+            where={
+                "$and": [
+                    {"conversation_id": conversation_id},
+                    {"pdf_file": metadata.get("pdf_file", "")},
+                    {"type": "summary"}
+                ]
+            }
+        )
+
+
         if existing.get("ids"):
             old_hash = existing["metadatas"][0].get("hash")
             if old_hash == text_hash:
-                print(f"✓ Summary unchanged → Skipped: {summary_id}")
+                print("✓ Summary already exists → skipped")
                 return
-            self.summary_collection.delete(ids=[summary_id])
+            else:
+                self.summary_collection.delete(ids=existing["ids"])
 
         metadata["hash"] = text_hash
+
         self.summary_collection.add(
             ids=[summary_id],
             embeddings=[summary_embedding.tolist()],
-            metadatas=[metadata],
-            documents=[summary_text]
+            documents=[summary_text],
+            metadatas=[metadata]
         )
-        print(f"✓ Summary stored: {summary_id}")
 
-    def query_summary_vectors(self, query_embedding: np.ndarray, top_k: int):
+        print(f"✓ Summary stored for conversation {conversation_id}")
+
+    def query_summary_vectors(
+        self,
+        conversation_id: int,
+        query_embedding: np.ndarray,
+        top_k: int
+    ):
         return self.summary_collection.query(
             query_embeddings=[query_embedding.tolist()],
-            n_results=top_k
+            n_results=top_k,
+            where={"conversation_id": conversation_id}
         )
 
     # ============================================================
-    #                       CHUNK MANAGEMENT
+    # CHUNK MANAGEMENT
     # ============================================================
 
-    def add_pdf_chunks(self, conversation_id: str,
-                       chunks: List[str],
-                       embeddings: np.ndarray):
-        ids = [f"{conversation_id}_chunk_{i}" for i in range(len(chunks))]
-        metadatas = [{"conversation_id": conversation_id,
-                      "chunk_index": i} for i in range(len(chunks))]
+    def add_pdf_chunks(
+        self,
+        pdf_path: str,
+        conversation_id: int,
+        chunks: List[str],
+        embeddings: np.ndarray
+    ):
+        """
+        Prevents re-storing chunks if the same PDF was already stored
+        """
 
-        embeddings_list = [emb.tolist() for emb in embeddings]
+        chunks_hash = hash_list(chunks)
+
+        # Check if this PDF was already chunked
+        existing = self.chunk_collection.get(
+            where={
+                "$and": [
+                    {"conversation_id": conversation_id},
+                    {"pdf_path": pdf_path}
+                ]
+            },
+            limit=1
+        )
+
+        if existing.get("ids"):
+            old_hash = existing["metadatas"][0].get("chunks_hash")
+            if old_hash == chunks_hash:
+                print("✓ PDF chunks already exist → skipped")
+                return
+            else:
+                # Remove old chunks of this PDF
+                self.chunk_collection.delete(
+                    where={
+                        "$and": [
+                            {"conversation_id": conversation_id},
+                            {"pdf_path": pdf_path}
+                        ]
+                    }
+                )
+
+
+        ids = [
+            f"{conversation_id}_{os.path.basename(pdf_path)}_chunk_{i}"
+            for i in range(len(chunks))
+        ]
+
+        metadatas = [
+            {
+                "conversation_id": conversation_id,
+                "pdf_path": pdf_path,
+                "chunk_index": i,
+                "chunks_hash": chunks_hash,
+                "type": "chunk"
+            }
+            for i in range(len(chunks))
+        ]
 
         self.chunk_collection.add(
             ids=ids,
-            embeddings=embeddings_list,
-            metadatas=metadatas,
-            documents=chunks
+            embeddings=[e.tolist() for e in embeddings],
+            documents=chunks,
+            metadatas=metadatas
         )
-        print(f"- {len(chunks)} chunks stored for PDF {conversation_id}.")
 
-    def query_chunks_vectors(self, conversation_id: str,
-                             query_embedding: np.ndarray,
-                             top_k: int):
-        embedding_list = query_embedding.tolist()
+        print(f"✓ {len(chunks)} chunks stored for PDF: {pdf_path}")
+
+    def query_chunks_vectors(
+        self,
+        conversation_id: int,
+        query_embedding: np.ndarray,
+        top_k: int
+    ):
         return self.chunk_collection.query(
-            query_embeddings=[embedding_list],
+            query_embeddings=[query_embedding.tolist()],
             n_results=top_k,
-            where={"conversation_id": conversation_id}
+            where={
+                "conversation_id": conversation_id
+            }
         )

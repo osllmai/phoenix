@@ -26,7 +26,7 @@ class PDFChunkQueryRunner:
 
         # --- Query Summary Vectors ---
         results = self.chroma.query_chunks_vectors(
-            conversation_id=str(self.config.database.conversation_id),
+            conversation_id=self.config.database.conversation_id,
             query_embedding=query_embedding,
             top_k=self.config.database.top_k_results
         )

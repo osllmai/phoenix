@@ -131,7 +131,7 @@ class PDFChunkDatabaseBuilder:
             chunk_size=self.config.chunking.chunk_words
         )
 
-        conversation_id = str(self.config.database.conversation_id)
+        conversation_id = self.config.database.conversation_id
 
         for idx, file_obj in enumerate(files):
             pdf_path = file_obj["pdf"]
@@ -178,9 +178,9 @@ class PDFChunkDatabaseBuilder:
             # -----------------------------
             # 4) Store in ChromaDB
             # -----------------------------
-            pdf_uid = f"{conversation_id}_file_{idx}"
             self.chroma.add_pdf_chunks(
-                conversation_id=str(self.config.database.conversation_id),
+                pdf_path=pdf_path,
+                conversation_id= self.config.database.conversation_id,
                 chunks=chunks,
                 embeddings=embeddings
             )
@@ -197,7 +197,7 @@ class PDFChunkDatabaseBuilder:
 
             json_data = {
                 "pdf_path": pdf_path,
-                "conversation_id": pdf_uid,
+                "conversation_id": self.config.database.conversation_id,
                 "num_chunks": len(chunks),
                 "chunks": chunks,
                 "embeddings": embeddings.tolist()  # convert numpy → list
