@@ -65,18 +65,18 @@ void ArxivArticleList::clearList() {
 }
 
 /* -------------------  Process PDFs + ARXIV Summaries ------------------- */
-void ArxivArticleList::processSelectedPdfs(const QString &query, const int converstationId)
+void ArxivArticleList::processSelectedPdfs(const QString &query, const int conversationId)
 {
-    QtConcurrent::run([this, query, converstationId]() {
+    QtConcurrent::run([this, query, conversationId]() {
 
         qInfo() << "[Arxiv] Starting processSelectedPdfs with query:" << query;
 
         QJsonObject rootObj, settingsObj;
         QJsonArray arxivArray;
+        QJsonArray filesArray;
 
         /* ---------------- SETTINGS SECTION ---------------- */
-        qInfo() << "[Arxiv] Building settings object...";
-        settingsObj.insert("mode", "chunk");
+        settingsObj.insert("mode", "summary");
         settingsObj.insert("chunk_words", 400);
         settingsObj.insert("chunk_overlap", 0);
         settingsObj.insert("min_chunk_length", 80);
@@ -89,8 +89,9 @@ void ArxivArticleList::processSelectedPdfs(const QString &query, const int conve
         settingsObj.insert("save_embeddings_only", false);
         settingsObj.insert("pdf_password", QJsonValue::Null);
         settingsObj.insert("chunking_mode", "semantic");
-        settingsObj.insert("chroma_db_path", QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
-        settingsObj.insert("conversation_id", converstationId);
+        settingsObj.insert("chroma_db_path",
+                           QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
+        settingsObj.insert("conversation_id", conversationId);
         settingsObj.insert("min_paragraph_similarity", 0.70);
         settingsObj.insert("query_text", query);
         settingsObj.insert("output_dir_auto_create", true);
@@ -98,115 +99,141 @@ void ArxivArticleList::processSelectedPdfs(const QString &query, const int conve
 
         QJsonArray sections {
             "abstract","introduction","methods","materials and methods","methodology",
-            "results","findings","evaluation","discussion","results and discussion",
-            "conclusion","conclusions","summary"
+            "results","findings","evaluation","discussion",
+            "results and discussion","conclusion","conclusions","summary"
         };
         settingsObj.insert("filter_sections", sections);
 
         rootObj.insert("settings", settingsObj);
 
-        /* ---------------- ARXIV FILES SECTION ---------------- */
-        qInfo() << "[Arxiv] Preparing ARXIV entries...";
-        for (int i = 0; i < m_articles.size(); i++) {
-            QVariantMap &a = m_articles[i];
-
+        /* ---------------- ARXIV SUMMARIES ---------------- */
+        for (const QVariantMap &article : std::as_const(m_articles)) {
             QJsonObject obj;
-            obj.insert("title", a.value("title").toString());
-            obj.insert("link", a.value("link").toString());
-            obj.insert("summary", a.value("summary").toString());
-
+            obj.insert("title", article.value("title").toString());
+            obj.insert("pdf", article.value("link").toString());
+            obj.insert("summary", article.value("summary").toString());
             arxivArray.append(obj);
         }
-
         rootObj.insert("arxiv_files", arxivArray);
-        rootObj.insert("files", QJsonArray());
 
-        QString arxivOut = m_tempFolder + "arxiv_summaries.json";
-        rootObj.insert("output", arxivOut);
+        /* ---------------- SELECTED PDF FILES ---------------- */
+        rootObj.insert("files", filesArray);
 
-        /* ---------------- SAVE CONFIG FILE ---------------- */
+        /* ---------------- OUTPUT FILE ---------------- */
+        QString outputPath = m_tempFolder + "tokenizer_output.json";
+        rootObj.insert("output", outputPath);
+
+        /* ---------------- SAVE CONFIG ---------------- */
         QString configPath = m_tempFolder + "config_arxiv.json";
-        qInfo() << "[Arxiv] Saving config to:" << configPath;
-
         QFile configFile(configPath);
         if (!configFile.open(QIODevice::WriteOnly)) {
-            qWarning() << "[Arxiv] ERROR: Cannot write config file!";
+            qWarning() << "[Arxiv] Cannot write config file";
             emit arxivDone();
             return;
         }
-        configFile.write(QJsonDocument(rootObj).toJson());
+        configFile.write(QJsonDocument(rootObj).toJson(QJsonDocument::Indented));
         configFile.close();
 
-        /* ---------------- RUN TOKENIZER PIPELINE ---------------- */
-        qInfo() << "[Arxiv] Running tokenizer...";
+        /* ---------------- RUN TOKENIZER ---------------- */
         QProcess proc;
         proc.setProgram("tokenizer/tokenizer.exe");
-        proc.setArguments({configPath});
+        proc.setArguments({ configPath });
+
+        /* Optional but recommended */
+        proc.setProcessChannelMode(QProcess::SeparateChannels);
+
+        qInfo() << "[Arxiv] Starting tokenizer process...";
         proc.start();
-        proc.waitForFinished(-1);
 
-        qInfo() << "[Arxiv] Tokenizer finished with code:" << proc.exitCode();
-        qInfo() << "[Arxiv] STDOUT:" << proc.readAllStandardOutput();
-        qWarning() << "[Arxiv] STDERR:" << proc.readAllStandardError();
-
-        /* ---------------- READ SELECTED RESULTS ---------------- */
-        QFile outFile(arxivOut);
-        if (!outFile.open(QIODevice::ReadOnly)) {
-            qWarning() << "[Arxiv] ERROR: Cannot open arxiv output file!";
+        /* Failed to start */
+        if (!proc.waitForStarted()) {
+            qCritical() << "[Arxiv] Tokenizer failed to start.";
+            qCritical() << "[Arxiv] Error:" << proc.errorString();
             emit arxivDone();
             return;
         }
 
-        auto json = QJsonDocument::fromJson(outFile.readAll()).object();
-        outFile.close();
+        /* Wait until finished */
+        proc.waitForFinished(-1);
 
-        QMap<QString, QVariantMap> resultInfoMap;  // key: arxiv_title
+        /* Capture outputs */
+        QString stdOut = QString::fromUtf8(proc.readAllStandardOutput());
+        QString stdErr = QString::fromUtf8(proc.readAllStandardError());
 
-        qInfo() << "[Arxiv] Collecting selected results...";
-        QJsonArray idsArray = json["ids"].toArray().first().toArray();
-        QJsonArray distancesArray = json["distances"].toArray().first().toArray();
-        QJsonArray metadatasArray = json["metadatas"].toArray().first().toArray();
-        QJsonArray documentsArray = json["documents"].toArray().first().toArray();
-
-        for (int i = 0; i < metadatasArray.size(); ++i) {
-            QJsonObject meta = metadatasArray[i].toObject();
-            QString title = meta["title"].toString();
-            QVariantMap info;
-            info["similarity_pct"] = 1.0 - distancesArray[i].toDouble();
-            info["chunk"] = documentsArray[i].toString();
-            info["type"] = meta["type"].toString();
-            info["chunk_index"] = i;
-
-            resultInfoMap.insert(title, info);
+        qInfo() << "---------------- TOKENIZER STDOUT ----------------";
+        if (stdOut.isEmpty()) {
+            qInfo() << "[Arxiv] No standard output produced.";
+        } else {
+            qInfo().noquote() << stdOut;
         }
 
-        QVector<QVariantMap> newList;
-        newList.reserve(m_articles.size());
+        qWarning() << "---------------- TOKENIZER STDERR ----------------";
+        if (stdErr.isEmpty()) {
+            qWarning() << "[Arxiv] No error output produced.";
+        } else {
+            qWarning().noquote() << stdErr;
+        }
 
-        qInfo() << "[Arxiv] Merging tokenizer results with article list...";
-        for (int i = 0; i < m_articles.size(); i++) {
-            QString title = m_articles[i]["title"].toString();
+        /* Final status */
+        qInfo() << "[Arxiv] Tokenizer exit code:" << proc.exitCode();
+        qInfo() << "[Arxiv] Tokenizer exit status:" << proc.exitStatus();
 
-            if (resultInfoMap.contains(title)) {
-                QVariantMap info = resultInfoMap.value(title);
+        /* Crash detection */
+        if (proc.exitStatus() != QProcess::NormalExit) {
+            qCritical() << "[Arxiv] Tokenizer process crashed unexpectedly.";
+        }
 
-                m_articles[i]["summary_chunk"] = info["chunk"];
-                m_articles[i]["similarity_pct"] = info["similarity_pct"];
-                m_articles[i]["chunk_index"] = info["chunk_index"];
-                m_articles[i]["type"] = info["type"];
+        /* ---------------- READ TOKENIZER OUTPUT ---------------- */
+        QFile outFile(outputPath);
+        if (!outFile.open(QIODevice::ReadOnly)) {
+            qWarning() << "[Arxiv] Cannot read tokenizer output";
+            emit arxivDone();
+            return;
+        }
 
-                newList.append(m_articles[i]);
-                qInfo() << "[Arxiv] Kept:" << title << "similarity:" << info["similarity_pct"].toDouble();
-            } else {
-                qInfo() << "[Arxiv] Removed (no match):" << title;
+        QJsonObject json = QJsonDocument::fromJson(outFile.readAll()).object();
+        outFile.close();
+
+        QJsonArray metadatas = json["metadatas"].toArray().first().toArray();
+
+        /* ---------------- BUILD FILTER LIST ---------------- */
+        QVector<QPair<QString, QString>> allowedArticles; // title , pdf_file
+
+        for (const QJsonValue &val : metadatas) {
+            QJsonObject meta = val.toObject();
+            allowedArticles.append({
+                meta["title"].toString(),
+                meta["pdf_file"].toString()
+            });
+        }
+
+        /* ---------------- FILTER m_articles IN-PLACE ---------------- */
+        for (int i = m_articles.size() - 1; i >= 0; --i) {
+
+            const QString title = m_articles[i].value("title").toString();
+            const QString link  = m_articles[i].value("link").toString();
+
+            bool exist = false;
+            for (const auto &allowed : std::as_const(allowedArticles)) {
+                if (title == allowed.first && link == allowed.second) {
+                    exist = true;
+                    break;
+                }
+            }
+
+            if (!exist) {
+                qInfo() << "[Arxiv] Removed:" << title;
+                m_articles.removeAt(i);
             }
         }
 
-        m_articles = newList;
+        /* ---------------- DONE ---------------- */
         emit arxivDone();
-        qInfo() << "[Arxiv] Processing completed.";
+
+        qInfo() << "[Arxiv] Processing completed successfully.";
     });
 }
+
 
 /* ------------------- DOWNLOAD PDFs ------------------- */
 void ArxivArticleList::downloadPdfs()
@@ -279,7 +306,61 @@ void ArxivArticleList::generateEmbeddings(const QString &query, const int conver
         qDebug() << "[Embeddings] Query Text =" << query;
 
         QJsonObject rootObj, settingsObj;
+        QJsonArray arxivArray;
         QJsonArray filesArray;
+
+        /* ---------------- SETTINGS SECTION ---------------- */
+        settingsObj.insert("mode", "chunk");
+        settingsObj.insert("chunk_words", 500);
+        settingsObj.insert("chunk_overlap", 0);
+        settingsObj.insert("min_chunk_length", 100);
+        settingsObj.insert("semantic_threshold", 0.70);
+        settingsObj.insert("embedding_model", QString::fromUtf8(APP_PATH) + "/all_mpnet_base_v2");
+        settingsObj.insert("use_gpu", false);
+        settingsObj.insert("language", "en");
+        settingsObj.insert("lowercase", true);
+        settingsObj.insert("remove_newlines", true);
+        settingsObj.insert("save_embeddings_only", false);
+        settingsObj.insert("pdf_password", QJsonValue::Null);
+        settingsObj.insert("chunking_mode", "semantic");
+        settingsObj.insert("chroma_db_path",
+                           QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
+        settingsObj.insert("conversation_id", converstationId);
+        settingsObj.insert("min_paragraph_similarity", 0.70);
+        settingsObj.insert("query_text", query);
+        settingsObj.insert("output_dir_auto_create", true);
+        settingsObj.insert("top_k_results", 5);
+
+        QJsonArray sections {
+            "abstract","introduction","methods","materials and methods","methodology",
+            "results","findings","evaluation","discussion",
+            "results and discussion","conclusion","conclusions","summary"
+        };
+        settingsObj.insert("filter_sections", sections);
+
+        rootObj.insert("settings", settingsObj);
+
+        /* ---------------- ARXIV SUMMARIES ---------------- */
+        rootObj.insert("arxiv_files", arxivArray);
+
+        /* ---------------- SELECTED PDF FILES ---------------- */
+        for (const QVariantMap &article : std::as_const(m_articles)) {
+            QJsonObject obj;
+            obj.insert("title", article.value("title").toString());
+            obj.insert("pdf", article.value("link").toString());
+            obj.insert("summary", article.value("summary").toString());
+            filesArray.append(obj);
+        }
+        rootObj.insert("files", filesArray);
+
+
+
+
+
+
+
+
+
 
         // ---------------- SETTINGS ----------------
         qDebug() << "[Settings] Building settings JSON…";

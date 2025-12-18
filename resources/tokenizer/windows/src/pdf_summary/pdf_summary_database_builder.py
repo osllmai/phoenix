@@ -22,13 +22,13 @@ class PDFSummaryDatabaseBuilder:
         )
 
     def run(self):
-        print("-> Building summary vector database...")
+        print("Building summary vector database...")
 
         for idx, paper in enumerate(self.config.papers):
             summary = paper.get("summary", "").strip()
 
             if not summary:
-                print(f"+ No summary found for paper: {paper.get('title', 'UNKNOWN')}. Skipped embedding.")
+                print(f"No summary found for paper: {paper.get('title', 'UNKNOWN')}. Skipped embedding.")
                 continue
 
             summary_embedding = self.embedder.embed([summary])[0]
@@ -49,4 +49,4 @@ class PDFSummaryDatabaseBuilder:
                 metadata=metadata
             )
 
-        print("- Summary database updated successfully.\n")
+        print("Summary database updated successfully.\n")

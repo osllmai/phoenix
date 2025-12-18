@@ -112,7 +112,7 @@ class PDFVectorDatabase:
         if existing.get("ids"):
             old_hash = existing["metadatas"][0].get("hash")
             if old_hash == text_hash:
-                print("✓ Summary already exists → skipped")
+                print("Summary already exists - skipped")
                 return
             else:
                 self.summary_collection.delete(ids=existing["ids"])
@@ -126,7 +126,7 @@ class PDFVectorDatabase:
             metadatas=[metadata]
         )
 
-        print(f"✓ Summary stored for conversation {conversation_id}")
+        print(f"Summary stored for conversation {conversation_id}")
 
     def query_summary_vectors(
         self,
@@ -171,7 +171,7 @@ class PDFVectorDatabase:
         if existing.get("ids"):
             old_hash = existing["metadatas"][0].get("chunks_hash")
             if old_hash == chunks_hash:
-                print("✓ PDF chunks already exist → skipped")
+                print("PDF chunks already exist - skipped")
                 return
             else:
                 # Remove old chunks of this PDF
@@ -208,7 +208,7 @@ class PDFVectorDatabase:
             metadatas=metadatas
         )
 
-        print(f"✓ {len(chunks)} chunks stored for PDF: {pdf_path}")
+        print(f"{len(chunks)} chunks stored for PDF: {pdf_path}")
 
     def query_chunks_vectors(
         self,

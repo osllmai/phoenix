@@ -119,11 +119,11 @@ class PDFChunkDatabaseBuilder:
     #                      RUN PROCESS
     # --------------------------------------------------------
     def run(self):
-        print("-> Building PDF Chunk Vector Database...\n")
+        print("Building PDF Chunk Vector Database...\n")
 
         files = self.config.local_files
         if not files:
-            print("* No PDF files found in config.local_files.")
+            print("No PDF files found in config.local_files.")
             return
 
         # Create splitter for chunking
@@ -136,7 +136,7 @@ class PDFChunkDatabaseBuilder:
         for idx, file_obj in enumerate(files):
             pdf_path = file_obj["pdf"]
             if not os.path.exists(pdf_path):
-                print(f"* File not found: {pdf_path}")
+                print(f"File not found: {pdf_path}")
                 continue
 
             print(f"\n--- [{idx+1}/{len(files)}] Reading PDF: {pdf_path} ---")
@@ -153,17 +153,17 @@ class PDFChunkDatabaseBuilder:
                 continue
 
             if not content.strip():
-                print(f"* No important content extracted from: {pdf_path}")
+                print(f"No important content extracted from: {pdf_path}")
                 continue
 
             # -----------------------------
             # 2) Semantic Chunking
             # -----------------------------
-            print("-> Splitting into chunks...")
+            print("Splitting into chunks...")
             chunks = splitter.split_text(content)
 
             if not chunks:
-                print("* No chunks produced.")
+                print("No chunks produced.")
                 continue
 
             print(f"- {len(chunks)} chunks generated.")
@@ -171,7 +171,7 @@ class PDFChunkDatabaseBuilder:
             # -----------------------------
             # 3) Embeddings
             # -----------------------------
-            print("-> Generating embeddings...")
+            print("Generating embeddings...")
             embeddings = self.embedder.embed(chunks)
             embeddings = np.array(embeddings)
 
@@ -207,10 +207,10 @@ class PDFChunkDatabaseBuilder:
                 with open(json_path, "w", encoding="utf-8") as jf:
                     json.dump(json_data, jf, ensure_ascii=False, indent=4)
 
-                print(f"✓ JSON saved: {json_path}")
+                print(f"JSON saved: {json_path}")
 
             except Exception as e:
-                print(f"* Failed to save JSON for {pdf_path}")
+                print(f"Failed to save JSON for {pdf_path}")
                 print(e)
 
         print("\n- Chunk vector database updated successfully.\n")

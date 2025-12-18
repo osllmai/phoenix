@@ -17,7 +17,7 @@ class PDFSummaryQueryRunner:
         )
 
     def run(self):
-        print("-> Running summary search query...")
+        print("Running summary search query...")
 
         # --- Embed Query ---
         query_embedding = self.embedder.embed(
@@ -35,4 +35,4 @@ class PDFSummaryQueryRunner:
         with open(self.config.output_file, "w", encoding="utf-8") as f:
             json.dump(results, f, indent=4, ensure_ascii=False)
 
-        print(f"- Query results saved to: {self.config.output_file}\n")
+        print(f"Query results saved to: {self.config.output_file}\n")
