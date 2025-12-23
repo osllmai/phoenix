@@ -30,7 +30,7 @@ public:
         HasEmbeddingRole
     };
 
-    explicit ArxivArticleList(QObject *parent = nullptr);
+    explicit ArxivArticleList(const int conversationId, QObject *parent = nullptr);
     ~ArxivArticleList();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -40,9 +40,9 @@ public:
     void appendArticle(const QVariantMap &article);
 
     Q_INVOKABLE void clearList();
-    Q_INVOKABLE void processSelectedPdfs(const QString &query, const int converstationId);
-    Q_INVOKABLE void downloadPdfs();
-    Q_INVOKABLE void generateEmbeddings(const QString &query, const int converstationId);
+    Q_INVOKABLE void processSelectedPdfs(const QString &query, const int idMessage);
+    Q_INVOKABLE void downloadPdfs(const int idMessage);
+    Q_INVOKABLE void generateEmbeddings(const QString &query, const int idMessage);
     Q_INVOKABLE void topSimilarChunksAsync(int topK = 5);
 
 signals:
@@ -50,11 +50,22 @@ signals:
     void downloadsDone();
     void embeddingsDone();
     void similarityReady(const QVariantList &results);
+    void requestInsertActivity(const int idConversation,
+                               const int idMessage,
+                               const QString &text,
+                               const QString &icon);
+    void requestInsertSourse(const int idConversation,
+                             const int idMessage,
+                             const QString &titel,
+                             const QString &text,
+                             const QString &icon,
+                             const QString &link);
 
 private:
+    const int m_conversationId;
     QVector<QVariantMap> m_articles;
     QString m_tempFolder;
 
     void cleanupTempFolder();
-    void downloadNextPdf(int index);
+    void downloadNextPdf(int index, const int idMessage);
 };

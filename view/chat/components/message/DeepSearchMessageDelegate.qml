@@ -126,8 +126,7 @@ T.Button {
                     Connections {
                         target: newChatId
                         function onClicked(){
-                            conversationList.currentConversation.readActivity(model.id)
-                            conversationList.currentConversation.readSources(model.id)
+                            conversationList.currentConversation.readSourcesAndActivity(model.id)
                         }
                     }
                 }

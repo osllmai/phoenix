@@ -74,7 +74,7 @@ class IndoxRouterProvider(BaseProvider):
             params["byok_api_key"] = self.byok_api_key
 
         response = self.client.chat(**params)
-        return response["data"]
+        return response["output"][0]["content"][0]["text"]
 
     async def complete_async(self, messages: List[Dict], **kwargs) -> str:
         """Generate a complete response from IndoxRouter asynchronously.

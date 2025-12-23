@@ -136,19 +136,11 @@ void Conversation::readMessages(){
     emit requestReadMessages(m_id);
 }
 
-void Conversation::readSources(const int idMessage){
+void Conversation::readSourcesAndActivity(const int idMessage){
     if(m_currentMessageId != idMessage){
         emit requestReadSourse(m_id, idMessage);
-        sourseList()->clear();
-    }
-    setCurrentMessageId(idMessage);
-    setIsOpenMessage(true);
-}
-
-void Conversation::readActivity(const int idMessage){
-    if(m_currentMessageId != idMessage){
         emit requestReadActivity(m_id, idMessage);
-        activityList()->clear();
+        sourseList()->clear();
     }
     setCurrentMessageId(idMessage);
     setIsOpenMessage(true);

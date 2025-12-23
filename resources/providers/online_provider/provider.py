@@ -147,6 +147,7 @@ class Provider:
         # Filter to common parameters to avoid passing unsupported ones
         return {k: v for k, v in kwargs.items() if k in common_params}
 
+
     def prompt(
         self,
         user_prompt: str,
@@ -166,7 +167,7 @@ class Provider:
 
         Returns:
             Union[str, Generator[str, None, None]]: Either a complete response string
-                or a generator that yields response chunks
+                or a generator that yields response text chunks
 
         Raises:
             ValueError: If no model has been loaded or the provider is not supported
@@ -181,9 +182,40 @@ class Provider:
         messages = self.provider_instance.format_messages(user_prompt, system_prompt)
 
         if stream:
-            return self.provider_instance.stream(messages, **filtered_kwargs)
+            # Get the stream from provider
+            stream_generator = self.provider_instance.stream(messages, **filtered_kwargs)
+            
+            def text_stream():
+                """Generator that extracts text from streaming events."""
+                for chunk in stream_generator:
+                    if self.stop_generation:
+                        break              
+                    if isinstance(chunk, dict):
+                        event_type = chunk.get("type", "")
+                        if event_type == "response.content_part.delta":
+                            delta_text = chunk.get("delta") or chunk.get("data", "")
+                            if delta_text:
+                                yield delta_text
+                        elif event_type == "response.output_item.done":
+                            item = chunk.get("item", {})
+                            content = item.get("content", [])
+                            if content and len(content) > 0:
+                                text_content = content[0].get("text", "")
+                                if text_content:
+                                    yield text_content
+                            elif chunk.get("data"):
+                                yield chunk["data"]
+                        elif "data" in chunk and not event_type:
+                            data = chunk.get("data", "")
+                            if data:
+                                yield data
+                    elif isinstance(chunk, str):
+                        yield chunk
+            
+            return text_stream()
         else:
             return self.provider_instance.complete(messages, **filtered_kwargs)
+            
 
     async def prompt_async(
         self,
@@ -192,35 +224,35 @@ class Provider:
         stream: bool = False,
         **kwargs,
     ) -> Union[str, AsyncGenerator[str, None]]:
-        """Generate a response using the selected model asynchronously.
-
-        This method handles both streaming and non-streaming generation modes.
-
-        Args:
-            user_prompt (str): The user's input message
-            system_prompt (str, optional): System instructions. Defaults to empty string.
-            stream (bool, optional): Whether to stream the response. Defaults to False.
-            **kwargs: Additional model parameters (temperature, top_p, etc.)
-
-        Returns:
-            Union[str, AsyncGenerator[str, None]]: Either a complete response string
-                or an async generator that yields response chunks
-
-        Raises:
-            ValueError: If no model has been loaded or the provider is not supported
-        """
+        """Generate a response using the selected model asynchronously."""
         if not self.provider_instance:
             raise ValueError("No model loaded. Call load_model() first.")
 
         self.stop_generation = False
         filtered_kwargs = self._filter_parameters(kwargs)
 
-        # Format messages using the provider-specific formatter
         messages = self.provider_instance.format_messages(user_prompt, system_prompt)
 
         if stream:
             return self.provider_instance.stream_async(messages, **filtered_kwargs)
+
         else:
-            return await self.provider_instance.complete_async(
+            # ---------- FIXED PART ----------
+            response = await self.provider_instance.complete_async(
                 messages, **filtered_kwargs
             )
+
+            if isinstance(response, str):
+                return response
+
+            if isinstance(response, dict):
+                try:
+                    return (
+                        response.get("output", [{}])[0]
+                        .get("content", [{}])[0]
+                        .get("text", "")
+                    )
+                except Exception:
+                    return ""
+
+            return str(response)

@@ -11,11 +11,13 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
                                                const QString type, const QDateTime &date, const bool isPinned, QObject *parent)
     : Conversation(id, title, description, icon, type, date, isPinned, parent)
 {
-    m_arxivModel = new ArxivArticleList(this);
+    m_arxivModel = new ArxivArticleList(id, this);
     connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
+    connect(m_arxivModel, &ArxivArticleList::requestInsertSourse, this, &DeepSearchConversation::requestInsertSourse);
+    connect(m_arxivModel, &ArxivArticleList::requestInsertActivity, this, &DeepSearchConversation::requestInsertActivity);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
     setIsOpenMessage(false);
 }
@@ -31,11 +33,13 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
                    temperature, topK, topP, minP, repeatPenalty, promptBatchSize, maxTokens,
                    repeatPenaltyTokens, contextLength, numberOfGPULayers, parent)
 {
-    m_arxivModel = new ArxivArticleList(this);
+    m_arxivModel = new ArxivArticleList(id, this);
     connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
+    connect(m_arxivModel, &ArxivArticleList::requestInsertSourse, this, &DeepSearchConversation::requestInsertSourse);
+    connect(m_arxivModel, &ArxivArticleList::requestInsertActivity, this, &DeepSearchConversation::requestInsertActivity);
     QQmlEngine::setObjectOwnership(m_arxivModel, QQmlEngine::CppOwnership);
     setIsOpenMessage(false);
 }
@@ -145,7 +149,7 @@ void DeepSearchConversation::handleState() {
                               "Processing selected documents to prepare them for analysis.",
                               "qrc:/media/icon/search.svg");
         setLogState("Processing selected documents to prepare them for analysis.");
-        m_arxivModel->processSelectedPdfs(m_userSummery, id());
+        m_arxivModel->processSelectedPdfs(m_userSummery, messageList()->lastMessageInfo()["id"].toInt());
         break;
 
     case DeepSearchState::DownloadPdfs:
@@ -154,7 +158,7 @@ void DeepSearchConversation::handleState() {
                               "Downloading the required documents.",
                               "qrc:/media/icon/search.svg");
         setLogState("Downloading the required documents.");
-        m_arxivModel->downloadPdfs();
+        m_arxivModel->downloadPdfs(messageList()->lastMessageInfo()["id"].toInt());
         break;
 
     case DeepSearchState::EmbeddingPdfs:
@@ -163,7 +167,7 @@ void DeepSearchConversation::handleState() {
                               "Analyzing the downloaded documents and preparing them for deeper understanding.",
                               "qrc:/media/icon/search.svg");
         setLogState("Analyzing the downloaded documents and preparing them for deeper understanding.");
-        m_arxivModel->generateEmbeddings(m_userSummery, id());
+        m_arxivModel->generateEmbeddings(m_userSummery, messageList()->lastMessageInfo()["id"].toInt());
         break;
 
     case DeepSearchState::RAGPreparation:
@@ -285,10 +289,10 @@ void DeepSearchConversation::tokenResponse(const QString &token){
         qInfo() << "State: ClassifyQuery" << token;
         if (token.contains("Yes", Qt::CaseInsensitive)) {
             m_selectedSources = DataSource::Arxiv;
-            qInfo() << "Classified as Search Query → Searching in sources";
+            qInfo() << "Classified as Search Query - Searching in sources";
         } else {
             m_selectedSources = DataSource::None;
-            qInfo() << "Classified as Local Response → Sending to LLM";
+            qInfo() << "Classified as Local Response - Sending to LLM";
         }
         break;
 
@@ -618,8 +622,6 @@ void DeepSearchConversation::generateSearchKeywords() {
 
         NO extra text. NO comments. NO explanations. JSON ONLY.
     )";
-
-
 
     keywordPrompt.replace("{{query}}", m_userQuery);
 

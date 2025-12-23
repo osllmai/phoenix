@@ -1,7 +1,5 @@
 #include "database.h"
 
-#include <QCoreApplication>
-
 #include "database.h"
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -183,6 +181,7 @@ void Database::insertSources(const int idConversation,
 
 void Database::readSources(const int idConversation, const int idMessage){
     sourcesManager->read(idConversation, idMessage);
+    qInfo()<<"HIFD";
 }
 
 void Database::insertActivity(const int idConversation,

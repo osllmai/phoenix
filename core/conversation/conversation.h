@@ -56,8 +56,7 @@ public:
     virtual ~Conversation();
 
     Q_INVOKABLE void readMessages();
-    Q_INVOKABLE void readSources(const int idMessage);
-    Q_INVOKABLE void readActivity(const int idMessage);
+    Q_INVOKABLE void readSourcesAndActivity(const int idMessage);
     Q_INVOKABLE virtual void prompt(const QString &input, const QString &fileName, const QString &fileInfo);
     Q_INVOKABLE virtual void stop();
     Q_INVOKABLE virtual void loadModel(const int id);

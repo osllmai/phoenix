@@ -1,8 +1,8 @@
 #include "ArxivArticleList.h"
 #include <QDebug>
 
-ArxivArticleList::ArxivArticleList(QObject *parent)
-    : QAbstractListModel(parent)
+ArxivArticleList::ArxivArticleList(const int conversationId, QObject *parent)
+    : QAbstractListModel(parent), m_conversationId(conversationId)
 {
     QString timestamp = QString::number(QDateTime::currentSecsSinceEpoch());
     m_tempFolder = QDir::tempPath() + "/arxiv_embeddings/" + timestamp + "/";
@@ -65,9 +65,9 @@ void ArxivArticleList::clearList() {
 }
 
 /* -------------------  Process PDFs + ARXIV Summaries ------------------- */
-void ArxivArticleList::processSelectedPdfs(const QString &query, const int conversationId)
+void ArxivArticleList::processSelectedPdfs(const QString &query, const int idMessage)
 {
-    QtConcurrent::run([this, query, conversationId]() {
+    QtConcurrent::run([this, query, idMessage]() {
 
         qInfo() << "[Arxiv] Starting processSelectedPdfs with query:" << query;
 
@@ -91,7 +91,7 @@ void ArxivArticleList::processSelectedPdfs(const QString &query, const int conve
         settingsObj.insert("chunking_mode", "semantic");
         settingsObj.insert("chroma_db_path",
                            QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
-        settingsObj.insert("conversation_id", conversationId);
+        settingsObj.insert("conversation_id", m_conversationId);
         settingsObj.insert("min_paragraph_similarity", 0.70);
         settingsObj.insert("query_text", query);
         settingsObj.insert("output_dir_auto_create", true);
@@ -234,9 +234,8 @@ void ArxivArticleList::processSelectedPdfs(const QString &query, const int conve
     });
 }
 
-
 /* ------------------- DOWNLOAD PDFs ------------------- */
-void ArxivArticleList::downloadPdfs()
+void ArxivArticleList::downloadPdfs(const int idMessage)
 {
     if (m_articles.isEmpty()) {
         emit downloadsDone();
@@ -246,10 +245,10 @@ void ArxivArticleList::downloadPdfs()
     qInfo() << "[Download] Starting controlled PDF downloads...";
 
     // Start from index 0
-    downloadNextPdf(0);
+    downloadNextPdf(0, idMessage);
 }
 
-void ArxivArticleList::downloadNextPdf(int index)
+void ArxivArticleList::downloadNextPdf(int index, const int idMessage)
 {
     if (index >= m_articles.size()) {
         qInfo() << "[Download] All PDFs downloaded.";
@@ -277,6 +276,12 @@ void ArxivArticleList::downloadNextPdf(int index)
                 file.write(reply->readAll());
                 file.close();
                 m_articles[index]["localPdf"] = localPath;
+                emit requestInsertSourse(m_conversationId,
+                                         idMessage,
+                                         m_articles[index]["title"].toString(),
+                                         m_articles[index]["summary"].toString(),
+                                         "qrc:/media/image_company/ArXiv.png",
+                                         m_articles[index]["link"].toString());
 
                 // Update QML
                 emit dataChanged(this->index(index), this->index(index), {PdfRole});
@@ -292,15 +297,15 @@ void ArxivArticleList::downloadNextPdf(int index)
 
         //  Delay 1500ms before next request (for arxiv anti-block)
         QTimer::singleShot(1500, this, [=]() {
-            downloadNextPdf(index + 1);
+            downloadNextPdf(index + 1, idMessage);
         });
     });
 }
 
 /* ------------------- GENERATE EMBEDDINGS ------------------- */
-void ArxivArticleList::generateEmbeddings(const QString &query, const int converstationId) {
+void ArxivArticleList::generateEmbeddings(const QString &query, const int idMessage) {
 
-    QtConcurrent::run([this, query, converstationId]() {
+    QtConcurrent::run([this, query, idMessage]() {
 
         qDebug() << "[Embeddings] Starting embedding generation…";
         qDebug() << "[Embeddings] Query Text =" << query;
@@ -325,7 +330,7 @@ void ArxivArticleList::generateEmbeddings(const QString &query, const int conver
         settingsObj.insert("chunking_mode", "semantic");
         settingsObj.insert("chroma_db_path",
                            QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/chroma_db");
-        settingsObj.insert("conversation_id", converstationId);
+        settingsObj.insert("conversation_id", m_conversationId);
         settingsObj.insert("min_paragraph_similarity", 0.70);
         settingsObj.insert("query_text", query);
         settingsObj.insert("output_dir_auto_create", true);
@@ -346,9 +351,8 @@ void ArxivArticleList::generateEmbeddings(const QString &query, const int conver
         /* ---------------- SELECTED PDF FILES ---------------- */
         for (const QVariantMap &article : std::as_const(m_articles)) {
             QJsonObject obj;
-            obj.insert("title", article.value("title").toString());
+            obj.insert("link", article.value("link").toString());
             obj.insert("pdf", article.value("link").toString());
-            obj.insert("summary", article.value("summary").toString());
             filesArray.append(obj);
         }
         rootObj.insert("files", filesArray);
@@ -358,44 +362,6 @@ void ArxivArticleList::generateEmbeddings(const QString &query, const int conver
 
 
 
-
-
-
-
-        // ---------------- SETTINGS ----------------
-        qDebug() << "[Settings] Building settings JSON…";
-
-        settingsObj.insert("chunk_words", 300);
-        settingsObj.insert("chunk_overlap", 0);
-        settingsObj.insert("min_chunk_length", 80);
-        settingsObj.insert("semantic_threshold", 0.50);
-        settingsObj.insert("embedding_model", QString::fromUtf8(APP_PATH) + "/all_mpnet_base_v2");
-        settingsObj.insert("use_gpu", true);
-        settingsObj.insert("language", "en");
-        settingsObj.insert("lowercase", true);
-        settingsObj.insert("remove_newlines", true);
-        settingsObj.insert("save_embeddings_only", false);
-        settingsObj.insert("pdf_password", QJsonValue::Null);
-        settingsObj.insert("chunking_mode", "semantic");
-        settingsObj.insert("min_paragraph_similarity", 0.50);
-        settingsObj.insert("query_text", query);
-        settingsObj.insert("output_dir_auto_create", true);
-
-        // filter_sections array
-        QJsonArray filters;
-        QStringList filterList = {
-            "abstract","introduction","methods","materials and methods","methodology",
-            "results","findings","evaluation","discussion","results and discussion",
-            "conclusion","conclusions","summary"
-        };
-
-        for (const QString &f : filterList)
-            filters.append(f);
-
-        settingsObj.insert("filter_sections", filters);
-        rootObj.insert("settings", settingsObj);
-
-        qDebug() << "[Settings] Settings JSON created.";
 
         // ------------------- FILES SECTION -------------------
         qDebug() << "[Files] Scanning articles for local PDF files…";

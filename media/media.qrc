@@ -351,5 +351,7 @@
         <file>image_company/pytorch.svg</file>
         <file>image_company/tensorflow.svg</file>
 	<file>image_company/indoxRoter.png</file>
+	<file>image_company/ArXiv.png</file>
+
     </qresource>
 </RCC>
