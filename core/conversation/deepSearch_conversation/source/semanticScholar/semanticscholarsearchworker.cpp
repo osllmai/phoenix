@@ -80,3 +80,48 @@ void SemanticScholarSearchWorker::process()
         });
     }
 }
+
+QList<QVariantMap> SemanticScholarSearchWorker::parseSemanticScholarJson(const QByteArray &data)
+{
+    QList<QVariantMap> results;
+
+    auto doc = QJsonDocument::fromJson(data);
+    if (!doc.isObject())
+        return results;
+
+    auto root = doc.object();
+    auto papers = root["data"].toArray();
+
+    for (auto p : papers) {
+        auto obj = p.toObject();
+        QVariantMap entry;
+
+        entry["title"] = obj["title"].toString();
+        entry["summary"] = obj["abstract"].toString();
+        entry["published"] = QString::number(obj["year"].toInt());
+        entry["link"] = obj["url"].toString();
+
+        // Authors
+        QStringList authors;
+        for (auto a : obj["authors"].toArray()) {
+            authors << a.toObject()["name"].toString();
+        }
+        entry["authors"] = authors.join(", ");
+
+        // PDF
+        QString pdf;
+        auto openPdf = obj["openAccessPdf"].toObject();
+        if (!openPdf.isEmpty())
+            pdf = openPdf["url"].toString();
+
+        entry["pdf"] = pdf;
+
+        // Fields for your pipeline
+        entry["localPdf"] = "";
+        entry["hasEmbedding"] = false;
+
+        results.append(entry);
+    }
+
+    return results;
+}
