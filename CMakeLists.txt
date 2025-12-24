@@ -30,9 +30,14 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/core/model/online
     ${CMAKE_SOURCE_DIR}/core/model/huggingface
     ${CMAKE_SOURCE_DIR}/core/conversation
-    ${CMAKE_SOURCE_DIR}/core/conversation/chat
-    ${CMAKE_SOURCE_DIR}/core/conversation/text
-    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch
+    ${CMAKE_SOURCE_DIR}/core/conversation/message/activity
+    ${CMAKE_SOURCE_DIR}/core/conversation/message/message
+    ${CMAKE_SOURCE_DIR}/core/conversation/message/source
+    ${CMAKE_SOURCE_DIR}/core/conversation/text_conversation
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch_conversation
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch_conversation/download
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch_conversation/source
+    ${CMAKE_SOURCE_DIR}/core/conversation/deepSearch_conversation/source/arxiv
     ${CMAKE_SOURCE_DIR}/core/conversation/provider
     ${CMAKE_SOURCE_DIR}/core/conversation/provider/worker
     ${CMAKE_SOURCE_DIR}/core/library/textprocessor
@@ -102,9 +107,9 @@ qt_add_executable(app${APP_NAME}
     core/conversation/conversation.h core/conversation/conversation.cpp
     core/conversation/conversationlist.h core/conversation/conversationlist.cpp
     core/conversation/conversationlistfilter.h core/conversation/conversationlistfilter.cpp
-    core/conversation/chat/messagelist.h core/conversation/chat/messagelist.cpp
-    core/conversation/chat/message.h core/conversation/chat/message.cpp
-    core/conversation/chat/responselist.h core/conversation/chat/responselist.cpp
+    core/conversation/message/message/messagelist.h core/conversation/message/message/messagelist.cpp
+    core/conversation/message/message/message.h core/conversation/message/message/message.cpp
+    core/conversation/message/message/responselist.h core/conversation/message/message/responselist.cpp
 
     core/provider/onlineprovider.h core/provider/onlineprovider.cpp
     core/provider/offlineprovider.h core/provider/offlineprovider.cpp
@@ -532,6 +537,7 @@ qt_add_resources(app${APP_NAME}
         media/image_company/pytorch.svg
         media/image_company/tensorflow.svg
         media/image_company/indoxRoter.png
+        media/image_company/ArXiv.png
 
 
         media/fonts/DMSans-Regular.ttf
@@ -629,17 +635,17 @@ qt_add_qml_module(app${APP_NAME}
         view/chat/components/HistoryDrawer.qml
         view/chat/components/ModelSettingsChatDrawer.qml
         view/chat/components/ModelChatComboBox.qml
-        view/chat/components/chat/InputPrompt.qml
-        view/chat/components/chat/MessageDelegate.qml
-        view/chat/components/chat/MyMessageList.qml
-        view/chat/components/chat/components/FileConverteInputPrompt.qml
-        view/chat/components/chat/components/AudioRecoderInput.qml
-        view/chat/components/chat/components/TextInput.qml
+        view/chat/components/message/InputPrompt.qml
+        view/chat/components/message/MessageDelegate.qml
+        view/chat/components/message/MyMessageList.qml
+        view/chat/components/message/components/FileConverteInputPrompt.qml
+        view/chat/components/message/components/AudioRecoderInput.qml
+        view/chat/components/message/components/TextInput.qml
         view/chat/components/history/HistoryHeader.qml
         view/chat/components/history/HistoryBody.qml
         view/chat/components/history/HistoryList.qml
         view/chat/components/history/HistoryDelegate.qml
-        view/chat/components/chat/components/SuggestionsButton.qml
+        view/chat/components/message/components/SuggestionsButton.qml
 
 
         view/component_library/model_settings/ModelSettingsView.qml
@@ -738,20 +744,35 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/deepsearch/DeepSearchView.qml
     QML_FILES view/deepsearch/components/DeepSearchBody.qml
     QML_FILES view/deepsearch/components/DeepSearchHeader.qml
-    SOURCES core/arxivfetcher.h core/arxivfetcher.cpp
-    SOURCES core/arxivarticlelist.h core/arxivarticlelist.cpp
-    QML_FILES view/chat/components/chat/components/AddFileAndMore.qml
+    SOURCES core/conversation/deepSearch_conversation/source/arxiv/arxivarticlelist.h core/conversation/deepSearch_conversation/source/arxiv/arxivarticlelist.cpp
+    QML_FILES view/chat/components/message/components/AddFileAndMore.qml
     QML_FILES view/component_library/button/MyComboBoxDelegate.qml
-    SOURCES core/conversation/text/textconversation.h core/conversation/text/textconversation.cpp
-    SOURCES core/conversation/deepSearch/deepsearchconversation.h core/conversation/deepSearch/deepsearchconversation.cpp
-    SOURCES core/database/managers/pdfmanager.h core/database/managers/pdfmanager.cpp
-    SOURCES core/database/managers/pdfembeddingmaneger.h core/database/managers/pdfembeddingmaneger.cpp
-    SOURCES core/conversation/deepSearch/tokenizer/tokenizer.h core/conversation/deepSearch/tokenizer/tokenizer.cpp
-    SOURCES core/conversation/deepSearch/tokenizer/tokenizerworker.h core/conversation/deepSearch/tokenizer/tokenizerworker.cpp
-    SOURCES core/conversation/deepSearch/download/downloadpdf.h core/conversation/deepSearch/download/downloadpdf.cpp
-    QML_FILES view/chat/components/deepSearchLog/DeepSearchLogList.qml
-    QML_FILES view/chat/components/DeepSearchThinking.qml
-    SOURCES core/conversation/deepSearch/arxiv/arxivsearchworker.h core/conversation/deepSearch/arxiv/arxivsearchworker.cpp
+    SOURCES core/conversation/text_conversation/textconversation.h core/conversation/text_conversation/textconversation.cpp
+    SOURCES core/conversation/deepSearch_conversation/deepsearchconversation.h core/conversation/deepSearch_conversation/deepsearchconversation.cpp
+    SOURCES core/conversation/deepSearch_conversation/download/downloadpdf.h core/conversation/deepSearch_conversation/download/downloadpdf.cpp
+    SOURCES core/conversation/deepSearch_conversation/source/arxiv/arxivsearchworker.h core/conversation/deepSearch_conversation/source/arxiv/arxivsearchworker.cpp
+    SOURCES core/database/managers/sourcesmanager.h core/database/managers/sourcesmanager.cpp
+    SOURCES core/database/managers/activitymanager.h core/database/managers/activitymanager.cpp
+    SOURCES core/conversation/message/source/source.h core/conversation/message/source/source.cpp
+    SOURCES core/conversation/message/source/sourselist.h core/conversation/message/source/sourselist.cpp
+    SOURCES core/conversation/message/activity/activity.h core/conversation/message/activity/activity.cpp
+    SOURCES core/conversation/message/activity/activitylist.h core/conversation/message/activity/activitylist.cpp
+    QML_FILES view/chat/components/logMessage/LogMessageView.qml
+    QML_FILES view/chat/components/logMessage/components/LogMessageBody.qml
+    QML_FILES view/chat/components/logMessage/components/LogMessageHeader.qml
+    QML_FILES view/chat/components/logMessage/components/activity/ActivityLogView.qml
+    QML_FILES view/chat/components/logMessage/components/activity/ActivityLogList.qml
+    QML_FILES view/chat/components/logMessage/components/activity/ActivityLogDelegate.qml
+    QML_FILES view/chat/components/logMessage/components/sourse/SourceLogView.qml
+    QML_FILES view/chat/components/logMessage/components/sourse/SourceLogList.qml
+    QML_FILES view/chat/components/logMessage/components/sourse/SourseLogDelegate.qml
+    QML_FILES view/chat/components/message/DeepSearchMessageDelegate.qml
+    QML_FILES view/chat/components/message/components/DateAndIconsMessage.qml
+    QML_FILES view/chat/components/message/components/LogoIconMessage.qml
+    SOURCES core/conversation/deepSearch_conversation/source/pmc/pmcsearchworker.h core/conversation/deepSearch_conversation/source/pmc/pmcsearchworker.cpp
+    SOURCES core/conversation/deepSearch_conversation/source/openAlex/openalexsearchworker.h core/conversation/deepSearch_conversation/source/openAlex/openalexsearchworker.cpp
+    SOURCES core/conversation/deepSearch_conversation/source/core/coresearchworker.h core/conversation/deepSearch_conversation/source/core/coresearchworker.cpp
+    SOURCES core/conversation/deepSearch_conversation/source/semanticScholar/semanticscholarsearchworker.h core/conversation/deepSearch_conversation/source/semanticScholar/semanticscholarsearchworker.cpp
 )
 
 #for show logger-contect (file name, message line, ...)
@@ -888,7 +909,7 @@ else()
 endif()
 
 configure_file(
-    ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE}
+    ${CMAKE_SOURCE_DIR}/resources/tokenizer/windows/dist/${TOKENIZER_FILE}
     ${BIN_DIR}/tokenizer/${TOKENIZER_FILE}
     COPYONLY
 )

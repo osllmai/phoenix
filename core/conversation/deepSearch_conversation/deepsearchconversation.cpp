@@ -89,28 +89,16 @@ void DeepSearchConversation::handleState() {
     switch (m_state) {
 
     case DeepSearchState::ClassifyQuery:
-        // emit requestInsertActivity(id(),
-        //                       messageList()->lastMessageInfo()["id"].toInt(),
-        //                       "Analyzing your question to understand what type of information is needed.",
-        //                       "qrc:/media/icon/search.svg");
         setLogState( "Analyzing your question to understand what type of information is needed.");
         classifyQuery();
         break;
 
     case DeepSearchState::GenerateClarificationQuestions:
-        // emit requestInsertActivity(id(),
-        //                       messageList()->lastMessageInfo()["id"].toInt(),
-        //                       "Preparing a few short questions to better understand your request.",
-        //                       "qrc:/media/icon/search.svg");
         setLogState("Preparing a few short questions to better understand your request.");
         generateClarificationQuestions();
         break;
 
     case DeepSearchState::WaitingUserClarifications:
-        // emit requestInsertActivity(id(),
-        //                       messageList()->lastMessageInfo()["id"].toInt(),
-        //                       "Waiting for your answers so we can continue.",
-        //                       "qrc:/media/icon/search.svg");
         setLogState("Waiting for your answers so we can continue.");
         break;
 
