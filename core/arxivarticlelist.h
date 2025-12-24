@@ -42,13 +42,11 @@ public:
     Q_INVOKABLE void clearList();
     Q_INVOKABLE void processSelectedPdfs(const QString &query, const int idMessage);
     Q_INVOKABLE void downloadPdfs(const int idMessage);
-    Q_INVOKABLE void generateEmbeddings(const QString &query, const int idMessage);
-    Q_INVOKABLE void topSimilarChunksAsync(int topK = 5);
+    Q_INVOKABLE void topSimilarChunksAsync(const QString &query, const int idMessage, int topK = 5);
 
 signals:
     void arxivDone();
     void downloadsDone();
-    void embeddingsDone();
     void similarityReady(const QVariantList &results);
     void requestInsertActivity(const int idConversation,
                                const int idMessage,

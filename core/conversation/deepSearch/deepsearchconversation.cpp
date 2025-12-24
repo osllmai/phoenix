@@ -14,7 +14,6 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     m_arxivModel = new ArxivArticleList(id, this);
     connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
-    connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     connect(m_arxivModel, &ArxivArticleList::requestInsertSourse, this, &DeepSearchConversation::requestInsertSourse);
     connect(m_arxivModel, &ArxivArticleList::requestInsertActivity, this, &DeepSearchConversation::requestInsertActivity);
@@ -36,7 +35,6 @@ DeepSearchConversation::DeepSearchConversation(int id, const QString &title, con
     m_arxivModel = new ArxivArticleList(id, this);
     connect(m_arxivModel, &ArxivArticleList::arxivDone, this, &DeepSearchConversation::selectesPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::downloadsDone, this, &DeepSearchConversation::downloadPdfsDone);
-    connect(m_arxivModel, &ArxivArticleList::embeddingsDone, this, &DeepSearchConversation::embeddingPdfsDone);
     connect(m_arxivModel, &ArxivArticleList::similarityReady, this, &DeepSearchConversation::similarityTextDone);
     connect(m_arxivModel, &ArxivArticleList::requestInsertSourse, this, &DeepSearchConversation::requestInsertSourse);
     connect(m_arxivModel, &ArxivArticleList::requestInsertActivity, this, &DeepSearchConversation::requestInsertActivity);
@@ -161,22 +159,13 @@ void DeepSearchConversation::handleState() {
         m_arxivModel->downloadPdfs(messageList()->lastMessageInfo()["id"].toInt());
         break;
 
-    case DeepSearchState::EmbeddingPdfs:
-        emit requestInsertActivity(id(),
-                              messageList()->lastMessageInfo()["id"].toInt(),
-                              "Analyzing the downloaded documents and preparing them for deeper understanding.",
-                              "qrc:/media/icon/search.svg");
-        setLogState("Analyzing the downloaded documents and preparing them for deeper understanding.");
-        m_arxivModel->generateEmbeddings(m_userSummery, messageList()->lastMessageInfo()["id"].toInt());
-        break;
-
     case DeepSearchState::RAGPreparation:
         emit requestInsertActivity(id(),
                               messageList()->lastMessageInfo()["id"].toInt(),
                               "Preparing the most relevant information from documents to answer your request.",
                               "qrc:/media/icon/search.svg");
         setLogState("Preparing the most relevant information from documents to answer your request.");
-        m_arxivModel->topSimilarChunksAsync(10);
+        m_arxivModel->topSimilarChunksAsync(m_userSummery, messageList()->lastMessageInfo()["id"].toInt(), 10);
         break;
 
     case DeepSearchState::SendForTextModel:
@@ -322,10 +311,6 @@ void DeepSearchConversation::tokenResponse(const QString &token){
         qInfo() << "State: DownloadDocuments - Downloading documents";
         break;
 
-    case DeepSearchState::EmbeddingPdfs:
-        qInfo() << "State: DownloadDocuments - Downloading documents";
-        break;
-
     case DeepSearchState::RAGPreparation:
         qInfo() << "State: RAGPreparation - Preparing RAG context";
         break;
@@ -406,10 +391,6 @@ void DeepSearchConversation::finishedResponse(const QString &warning){
         break;
 
     case DeepSearchState::DownloadPdfs:
-        qInfo() << "State: DownloadDocuments - Downloading documents";
-        break;
-
-    case DeepSearchState::EmbeddingPdfs:
         qInfo() << "State: DownloadDocuments - Downloading documents";
         break;
 
@@ -820,11 +801,6 @@ void DeepSearchConversation::selectesPdfsDone(){
 }
 
 void DeepSearchConversation::downloadPdfsDone(){
-    m_state = DeepSearchState::EmbeddingPdfs;
-    handleState();
-}
-
-void DeepSearchConversation::embeddingPdfsDone(){
     m_state = DeepSearchState::RAGPreparation;
     handleState();
 }

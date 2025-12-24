@@ -95,7 +95,6 @@ public slots:
     void updateModelSettingsConversation();
     void selectesPdfsDone();
     void downloadPdfsDone();
-    void embeddingPdfsDone();
     void similarityTextDone(const QVariantList &results);
 
 private:

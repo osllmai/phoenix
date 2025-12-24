@@ -35,12 +35,12 @@ T.Button {
                     myIcon: model.icon
                     iconType: Style.RoleEnum.IconType.Image
                     enabled: false
-                    width: 30; height: 30
+                    width: 50; height: 35
                 }
                 ToolButton {
                     id: phoenixIconId
                     visible: model.icon === "qrc:/media/image_company/user.svg"
-                    width: 30; height: 30
+                    width: 50; height: 35
                     background: null
                     icon{
                         source: model.icon
