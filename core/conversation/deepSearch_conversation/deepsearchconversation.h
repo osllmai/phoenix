@@ -62,7 +62,6 @@ public:
         SelectesPdfs,
 
         DownloadPdfs,       // Download documents
-        EmbeddingPdfs,       // Extract text from documents
 
         RAGPreparation,          // Retrieve relevant chunks for RAG context
         SendForTextModel,        // Send final constructed prompt to LLM
