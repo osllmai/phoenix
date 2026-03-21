@@ -62,3 +62,8 @@ _pycache_/
 
 # === API key header ===
 **/apikey.h
+.env
+
+.claude
+
+CLAUDE.md

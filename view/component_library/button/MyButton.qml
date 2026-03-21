@@ -3,10 +3,12 @@ import QtQuick.Templates 2.1 as T
 import QtQuick.Controls 2.15
 import QtQuick.Controls.Basic
 import '../style' as Style
+import "MyButtonStyle.js" as BStyle
 
 T.Button {
     id: control
     width: calculateWidthBotton()+6; height: 35
+    Component.onCompleted: BStyle.init(Style.Colors)
 
     // ---------- measurements used instead of direct ids ----------
     property real measuredTextWidth: 0
@@ -16,16 +18,14 @@ T.Button {
     property real measuredIconWidth: 0
     property real measuredIconHeight: 0
 
-    // ---------- visual state properties (changed by states) ----------
-    property color controlTextColor: "black"
-    property bool controlTextBold: false
-
-    property color controlProgressTextColor: "black"
-    property bool controlProgressTextBold: false
-
-    property color controlProgressGradient0: "transparent"
-    property color controlProgressGradient1: "transparent"
-    property color controlProgressBackground: "transparent"
+    // ---------- visual state properties (driven by _st bindings below) ----------
+    property color controlTextColor
+    property bool controlTextBold
+    property color controlProgressTextColor
+    property bool controlProgressTextBold
+    property color controlProgressGradient0
+    property color controlProgressGradient1
+    property color controlProgressBackground
 
     // ---------- existing functions (kept, but using measured widths) ----------
     function calculateWidthBotton(){
@@ -87,7 +87,7 @@ T.Button {
         }
     }
 
-    // ---------- tooltip Loader (kept) ----------
+    // ---------- tooltip Loader ----------
     Loader {
         id: tooltipLoader
         active: control.hovered
@@ -99,7 +99,7 @@ T.Button {
         }
     }
 
-    // ---------- background always exists ----------
+    // ---------- background ----------
     background: Rectangle {
         id: backgroundId
         width: parent.width-3; height: parent.height-3
@@ -157,7 +157,6 @@ T.Button {
         Loader {
             id: normalLoader
             anchors.centerIn: parent
-            // anchors.left: parent.left
             active: control.bottonType != Style.RoleEnum.BottonType.Progress
             sourceComponent: Row{
                 visible: control.bottonType != Style.RoleEnum.BottonType.Progress
@@ -172,7 +171,6 @@ T.Button {
                     iconType: control.iconType
                     enabled: false
                     Component.onCompleted: {
-                        // update measured icon sizes
                         control.measuredIconWidth = iconId.width
                         control.measuredIconHeight = iconId.height
                     }
@@ -224,503 +222,29 @@ T.Button {
         }
     }
 
-    // ---------- convenience boolean properties ----------
-    property bool isNormal: !selected && ((!control.checked && control.checkable) || !control.checkable) && !control.hovered && !control.pressed && control.enabled
-    property bool isHover: !selected && ((!control.checked && control.checkable) || !control.checkable) && control.hovered && !control.pressed && control.enabled
-    property bool isPressed: control.pressed && control.enabled
-    property bool isDisabled: !control.enabled
-    property bool isSelected: (control.selected || (control.checked && control.checkable)) && control.enabled
-
-    // ---------- STATES: modify backgroundId (always present) and control.* properties ----------
-    states: [
-        State {
-            name: "normal"
-            when: control.isNormal
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Normal)
-                width: control.width-3; height: control.height-3
-            }
-            PropertyChanges {
-                target: control
-                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Normal)
-                controlTextBold: false
-
-                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Normal)
-                controlProgressTextBold: false
-
-                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Normal)
-                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Normal)
-                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Normal)
-            }
-        },
-        State {
-            name: "hover"
-            when: control.isHover
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Hover)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: control
-                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Hover)
-                controlTextBold: false
-
-                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Hover)
-                controlProgressTextBold: false
-
-                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Hover)
-                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Hover)
-                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Hover)
-            }
-        },
-        State {
-            name: "pressed"
-            when: control.isPressed
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Pressed)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: control
-                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Pressed)
-                controlTextBold: false
-
-                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Pressed)
-                controlProgressTextBold: false
-
-                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Pressed)
-                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Pressed)
-                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Pressed)
-            }
-        },
-        State {
-            name: "selected"
-            when: control.isSelected
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Selected)
-                width: control.isNeedAnimation? control.width: control.width-3; height: control.isNeedAnimation? control.height: control.height-3
-            }
-            PropertyChanges {
-                target: control
-                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
-                controlTextBold: true
-
-                controlProgressTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Selected)
-                controlProgressTextBold: true
-
-                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Selected)
-                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Selected)
-                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Selected)
-            }
-        },
-        State {
-            name: "disabled"
-            when: control.isDisabled
-            PropertyChanges {
-                target: backgroundId
-                color: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
-                border.color: control.choiceBorderColor(bottonType, Style.RoleEnum.State.Disabled)
-                width: control.width-3; height: control.height-3
-            }
-            PropertyChanges {
-                target: control
-                controlTextColor: control.choiceTextColor(bottonType, Style.RoleEnum.State.Disabled)
-                controlTextBold: false
-
-                controlProgressTextColor: control.choiceTextColor(Style.RoleEnum.BottonType.Primary, Style.RoleEnum.State.Disabled)
-                controlProgressTextBold: false
-
-                controlProgressGradient0: control.choiceBackgroundColorGradient0(bottonType, Style.RoleEnum.State.Disabled)
-                controlProgressGradient1: control.choiceBackgroundColorGradient1(bottonType, Style.RoleEnum.State.Disabled)
-                controlProgressBackground: control.choiceBackgroundColor(bottonType, Style.RoleEnum.State.Disabled)
-            }
-        }
-    ]
-
-    function choiceBackgroundColor(buttonType, state) {
-        switch (state) {
-                case Style.RoleEnum.State.Normal:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-                case Style.RoleEnum.State.Hover:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryHover;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryHover;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerHover;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureHover;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressHover;
-                        default:
-                            return Style.Colors.buttonPrimaryHover;
-                    }
-                case Style.RoleEnum.State.Pressed:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryPressed;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryPressed;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerPressed;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeaturePressed;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressPressed;
-                        default:
-                            return Style.Colors.buttonPrimaryPressed;
-                    }
-                case Style.RoleEnum.State.Disabled:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryDisabled;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryDisabled;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerDisabled;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureDisabled;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressDisabled;
-                        default:
-                            return Style.Colors.buttonPrimaryDisabled;
-                    }
-                case Style.RoleEnum.State.Selected:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimarySelected;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondarySelected;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerSelected;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureSelected;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressSelected;
-                        default:
-                            return Style.Colors.buttonPrimarySelected;
-                    }
-                default:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-            }
+    // ---------- computed current visual state ----------
+    readonly property int _st: {
+        if (!enabled) return Style.RoleEnum.State.Disabled
+        if (selected || (checked && checkable)) return Style.RoleEnum.State.Selected
+        if (pressed) return Style.RoleEnum.State.Pressed
+        if (hovered) return Style.RoleEnum.State.Hover
+        return Style.RoleEnum.State.Normal
     }
+    readonly property bool _isAnimated: isNeedAnimation && (_st === Style.RoleEnum.State.Hover || _st === Style.RoleEnum.State.Pressed || _st === Style.RoleEnum.State.Selected)
+    readonly property bool _isBold: _st === Style.RoleEnum.State.Selected
+    readonly property int _progressTextBt: _isBold ? bottonType : Style.RoleEnum.BottonType.Primary
 
-    function choiceBackgroundColorGradient0(buttonType, state) {
-        switch (state) {
-                case Style.RoleEnum.State.Normal:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressNormalGradient0;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-                case Style.RoleEnum.State.Hover:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressHoverGradient0;
-                        default:
-                            return Style.Colors.buttonPrimaryHover;
-                    }
-                case Style.RoleEnum.State.Pressed:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressPressedGradient0;
-                        default:
-                            return Style.Colors.buttonPrimaryPressed;
-                    }
-                case Style.RoleEnum.State.Disabled:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressDisabledGradient0;
-                        default:
-                            return Style.Colors.buttonPrimaryDisabled;
-                    }
-                case Style.RoleEnum.State.Selected:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressSelectedGradient0;
-                        default:
-                            return Style.Colors.buttonPrimarySelected;
-                    }
-                default:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressNormalGradient0;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-            }
-    }
+    // ---------- bind background via computed state ----------
+    Binding { target: backgroundId; property: "color";         value: BStyle.choiceBackgroundColor(bottonType, _st) }
+    Binding { target: backgroundId; property: "border.color";  value: BStyle.choiceBorderColor(bottonType, _st) }
+    Binding { target: backgroundId; property: "width";         value: _isAnimated ? control.width : control.width-3 }
+    Binding { target: backgroundId; property: "height";        value: _isAnimated ? control.height : control.height-3 }
 
-    function choiceBackgroundColorGradient1(buttonType, state) {
-        switch (state) {
-                case Style.RoleEnum.State.Normal:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressNormalGradient1;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-                case Style.RoleEnum.State.Hover:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressHoverGradient1;
-                        default:
-                            return Style.Colors.buttonPrimaryHover;
-                    }
-                case Style.RoleEnum.State.Pressed:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressPressedGradient1;
-                        default:
-                            return Style.Colors.buttonPrimaryPressed;
-                    }
-                case Style.RoleEnum.State.Disabled:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressDisabledGradient1;
-                        default:
-                            return Style.Colors.buttonPrimaryDisabled;
-                    }
-                case Style.RoleEnum.State.Selected:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressSelectedGradient1;
-                        default:
-                            return Style.Colors.buttonPrimarySelected;
-                    }
-                default:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressNormalGradient1;
-                        default:
-                            return Style.Colors.buttonPrimaryNormal;
-                    }
-            }
-    }
-
-    function choiceTextColor(buttonType, state) {
-        switch (state) {
-                case Style.RoleEnum.State.Normal:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextNormal;
-                    }
-                case Style.RoleEnum.State.Hover:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextHover;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextHover;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextHover;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextHover;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextHover;
-                    }
-                case Style.RoleEnum.State.Pressed:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextPressed;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextPressed;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextPressed;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextPressed;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextPressed;
-                    }
-                case Style.RoleEnum.State.Disabled:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextDisabled;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextDisabled;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextDisabled;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextDisabled;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextDisabled;
-                    }
-                case Style.RoleEnum.State.Selected:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextSelected;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextSelected;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextSelected;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextSelected;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextSelected;
-                    }
-                default:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryTextNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryTextNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerTextNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureTextNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryTextNormal;
-                    }
-            }
-    }
-
-    function choiceBorderColor(buttonType, state) {
-        switch (state) {
-                case Style.RoleEnum.State.Normal:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderNormal;
-                    }
-                case Style.RoleEnum.State.Hover:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderHover;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderHover;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderHover;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderHover;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderHover;
-                    }
-                case Style.RoleEnum.State.Pressed:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderPressed;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderPressed;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderPressed;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderPressed;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderPressed;
-                    }
-                case Style.RoleEnum.State.Disabled:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderDisabled;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderDisabled;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderDisabled;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderDisabled;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderDisabled;
-                    }
-                case Style.RoleEnum.State.Selected:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderSelected;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderSelected;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderSelected;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderSelected;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderSelected;
-                    }
-                default:
-                    switch(buttonType){
-                        case Style.RoleEnum.BottonType.Primary:
-                            return Style.Colors.buttonPrimaryBorderNormal;
-                        case Style.RoleEnum.BottonType.Secondary:
-                            return Style.Colors.buttonSecondaryBorderNormal;
-                        case Style.RoleEnum.BottonType.Danger:
-                            return Style.Colors.buttonDangerBorderNormal;
-                        case Style.RoleEnum.BottonType.Feature:
-                            return Style.Colors.buttonFeatureBorderNormal;
-                        case Style.RoleEnum.BottonType.Progress:
-                            return Style.Colors.buttonProgressBorderNormal;
-                        default:
-                            return Style.Colors.buttonPrimaryBorderNormal;
-                    }
-            }
-    }
+    controlTextColor:           BStyle.choiceTextColor(bottonType, _st)
+    controlTextBold:            _isBold
+    controlProgressTextColor:   BStyle.choiceTextColor(_progressTextBt, _st)
+    controlProgressTextBold:    _isBold
+    controlProgressGradient0:   BStyle.choiceBackgroundColorGradient0(bottonType, _st)
+    controlProgressGradient1:   BStyle.choiceBackgroundColorGradient1(bottonType, _st)
+    controlProgressBackground:  BStyle.choiceBackgroundColor(bottonType, _st)
 }

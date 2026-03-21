@@ -92,6 +92,7 @@ qt_add_executable(app${APP_NAME}
 
     core/model/offline/offlinemodel.h core/model/offline/offlinemodel.cpp
     core/model/offline/offlinemodellist.h core/model/offline/offlinemodellist.cpp
+    core/model/offline/offlinemodellist_download.cpp
     core/model/offline/offlinemodellistfilter.h core/model/offline/offlinemodellistfilter.cpp
     core/model/offline/download.h core/model/offline/download.cpp
 
@@ -101,6 +102,7 @@ qt_add_executable(app${APP_NAME}
 
     core/conversation/conversation.h core/conversation/conversation.cpp
     core/conversation/conversationlist.h core/conversation/conversationlist.cpp
+    core/conversation/conversationlist_operations.cpp
     core/conversation/conversationlistfilter.h core/conversation/conversationlistfilter.cpp
     core/conversation/chat/messagelist.h core/conversation/chat/messagelist.cpp
     core/conversation/chat/message.h core/conversation/chat/message.cpp
@@ -552,6 +554,7 @@ qt_add_qml_module(app${APP_NAME}
         view/component_library/style/Colors.qml
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
+        view/component_library/button/MyButtonStyle.js
         view/component_library/button/MyComboBox.qml
         view/component_library/button/MyIcon.qml
         view/component_library/button/SearchButton.qml
@@ -622,6 +625,8 @@ qt_add_qml_module(app${APP_NAME}
         view/model/components/huggingface/components/components/HuggingfaceDelegateTitleAndCopyButton.qml
         view/model/components/huggingface/components/components/HuggingfaceDelegateInfoBox.qml
         view/model/components/huggingface/components/components/HuggingfaceInformationModel.qml
+        view/model/components/huggingface/components/components/FilterButton.qml
+        view/model/components/huggingface/components/components/SearchFilterPanel.qml
 
         view/chat/ChatView.qml
         view/chat/components/ChatHeader.qml
@@ -688,6 +693,8 @@ qt_add_qml_module(app${APP_NAME}
         view/settings/components/SettingsSpeech.qml
         view/settings/components/SettingsTerms_of_Use.qml
         view/settings/components/SettingsPrivacy.qml
+        view/settings/components/terms_of_use_content.html
+        view/settings/components/privacy_content.html
         view/settings/components/SettingsMenuButton.qml
         view/settings/components/SettingsSlider.qml
         view/settings/components/ThemeOption.qml
@@ -731,6 +738,9 @@ qt_add_qml_module(app${APP_NAME}
     SOURCES core/library/speech/speechtotextworker.h core/library/speech/speechtotextworker.cpp
     QML_FILES view/sql/SQLView.qml
     SOURCES core/database/managers/modelmanager.h core/database/managers/modelmanager.cpp
+    SOURCES core/database/managers/modelmanager_addmodel.cpp
+    SOURCES core/database/managers/modelmanager_readmodel.cpp
+    SOURCES core/database/managers/modelmanager_online.cpp
     SOURCES core/database/managers/conversationmanager.h core/database/managers/conversationmanager.cpp
     SOURCES core/database/managers/messagemanager.h core/database/managers/messagemanager.cpp
     QML_FILES view/pdf/PDFView.qml
@@ -740,10 +750,15 @@ qt_add_qml_module(app${APP_NAME}
     QML_FILES view/deepsearch/components/DeepSearchHeader.qml
     SOURCES core/arxivfetcher.h core/arxivfetcher.cpp
     SOURCES core/arxivarticlelist.h core/arxivarticlelist.cpp
+    SOURCES core/arxivarticlelist_process.cpp
+    SOURCES core/arxivarticlelist_embeddings.cpp
     QML_FILES view/chat/components/chat/components/AddFileAndMore.qml
     QML_FILES view/component_library/button/MyComboBoxDelegate.qml
     SOURCES core/conversation/text/textconversation.h core/conversation/text/textconversation.cpp
     SOURCES core/conversation/deepSearch/deepsearchconversation.h core/conversation/deepSearch/deepsearchconversation.cpp
+    SOURCES core/conversation/deepSearch/deepsearchconversation_response.cpp
+    SOURCES core/conversation/deepSearch/deepsearchconversation_prompts.cpp
+    SOURCES core/conversation/deepSearch/deepsearchconversation_search.cpp
     SOURCES core/database/managers/pdfmanager.h core/database/managers/pdfmanager.cpp
     SOURCES core/database/managers/pdfembeddingmaneger.h core/database/managers/pdfembeddingmaneger.cpp
     SOURCES core/conversation/deepSearch/tokenizer/tokenizer.h core/conversation/deepSearch/tokenizer/tokenizer.cpp
@@ -859,11 +874,9 @@ else()
     file(COPY ${CMAKE_SOURCE_DIR}/resources/whisper/cuda-device DESTINATION ${BIN_DIR}/whisper)
 endif()
 
-# Copy all_mpnet_base_v2 resources
-if(APPLE)
-    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
-else()
-    file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
+# Copy all_mpnet_base_v2 resources (skip if model files not available)
+file(GLOB _MPNET_FILES "${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2/*.*")
+if(_MPNET_FILES)
     file(COPY ${CMAKE_SOURCE_DIR}/resources/all_mpnet_base_v2 DESTINATION ${BIN_DIR})
 endif()
 
@@ -880,18 +893,20 @@ configure_file(
     COPYONLY
 )
 
-# Copy tokenizer
+# Copy tokenizer (skip if not built yet)
 if(WIN32)
     set(TOKENIZER_FILE tokenizer.exe)
 else()
     set(TOKENIZER_FILE tokenizer)  # macOS/Linux
 endif()
 
-configure_file(
-    ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE}
-    ${BIN_DIR}/tokenizer/${TOKENIZER_FILE}
-    COPYONLY
-)
+if(EXISTS ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE})
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/resources/tokenizer/${TOKENIZER_FILE}
+        ${BIN_DIR}/tokenizer/${TOKENIZER_FILE}
+        COPYONLY
+    )
+endif()
 
 # Copy offline provider executables and libraries
 if(WIN32)

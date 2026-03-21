@@ -1,0 +1,1932 @@
+{
+  "summary": {
+    "total_files": 383,
+    "total_lines": 37935,
+    "files_over_200": 41,
+    "files_150_to_200": 36,
+    "files_under_150": 306
+  },
+  "over_200": [
+    {
+      "file": "core/database/managers/modelmanager.cpp",
+      "lines": 835
+    },
+    {
+      "file": "core/conversation/deepSearch/deepsearchconversation.cpp",
+      "lines": 780
+    },
+    {
+      "file": "view/component_library/button/MyButton.qml",
+      "lines": 726
+    },
+    {
+      "file": "view/model/components/huggingface/components/SearchHuggingfaceModel.qml",
+      "lines": 556
+    },
+    {
+      "file": "core/arxivarticlelist.cpp",
+      "lines": 544
+    },
+    {
+      "file": "view/component_library/model_settings/components/button/ModelMenuSettings.qml",
+      "lines": 540
+    },
+    {
+      "file": "view/settings/components/SettingsTerms_of_Use.qml",
+      "lines": 453
+    },
+    {
+      "file": "core/conversation/conversationlist.cpp",
+      "lines": 443
+    },
+    {
+      "file": "core/model/offline/offlinemodellist.cpp",
+      "lines": 425
+    },
+    {
+      "file": "core/developer/codedeveloperlist.cpp",
+      "lines": 424
+    },
+    {
+      "file": "core/developer/server/chatserver.cpp",
+      "lines": 390
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodelinfo.cpp",
+      "lines": 385
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodel.cpp",
+      "lines": 335
+    },
+    {
+      "file": "view/settings/components/SettingsPrivacy.qml",
+      "lines": 333
+    },
+    {
+      "file": "core/developer/code/codegenerator.cpp",
+      "lines": 327
+    },
+    {
+      "file": "core/library/textprocessor/messagetextprocessor.cpp",
+      "lines": 325
+    },
+    {
+      "file": "core/developer/server/entities/chatapi.cpp",
+      "lines": 317
+    },
+    {
+      "file": "view/chat/components/chat/InputPrompt.qml",
+      "lines": 316
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodellist.cpp",
+      "lines": 314
+    },
+    {
+      "file": "core/main.cpp",
+      "lines": 303
+    },
+    {
+      "file": "view/chat/components/chat/MessageDelegate.qml",
+      "lines": 303
+    },
+    {
+      "file": "view/component_library/style/Colors.qml",
+      "lines": 297
+    },
+    {
+      "file": "view/Main.qml",
+      "lines": 270
+    },
+    {
+      "file": "view/component_library/button/MyComboBox.qml",
+      "lines": 255
+    },
+    {
+      "file": "view/model/components/online/components/OnlineCompanyRowDelegate.qml",
+      "lines": 250
+    },
+    {
+      "file": "core/database/managers/conversationmanager.cpp",
+      "lines": 243
+    },
+    {
+      "file": "core/log/logger.cpp",
+      "lines": 241
+    },
+    {
+      "file": "core/conversation/conversation.cpp",
+      "lines": 239
+    },
+    {
+      "file": "core/conversation/text/textconversation.cpp",
+      "lines": 238
+    },
+    {
+      "file": "core/provider/offlineprovider.cpp",
+      "lines": 234
+    },
+    {
+      "file": "view/model/components/online/components/OnlineRowDelegate.qml",
+      "lines": 230
+    },
+    {
+      "file": "view/model/components/online/components/components/OnlineModelListComboBox.qml",
+      "lines": 229
+    },
+    {
+      "file": "view/AppMenu.qml",
+      "lines": 217
+    },
+    {
+      "file": "core/model/online/onlinemodellist.cpp",
+      "lines": 212
+    },
+    {
+      "file": "view/component_library/model/components/offline/OfflineCurrentModelinformation.qml",
+      "lines": 212
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodelinfo.h",
+      "lines": 208
+    },
+    {
+      "file": "core/model/online/onlinecompanylist.cpp",
+      "lines": 208
+    },
+    {
+      "file": "view/chat/components/history/HistoryDelegate.qml",
+      "lines": 207
+    },
+    {
+      "file": "view/component_library/model/ModelSelectComboBox.qml",
+      "lines": 206
+    },
+    {
+      "file": "core/developer/code/codegenerator.h",
+      "lines": 205
+    },
+    {
+      "file": "core/library/speech/audiorecorder.cpp",
+      "lines": 204
+    }
+  ],
+  "between_150_200": [
+    {
+      "file": "core/updatechecker.cpp",
+      "lines": 199
+    },
+    {
+      "file": "view/component_library/model_settings/ModelSettingsBody.qml",
+      "lines": 197
+    },
+    {
+      "file": "view/model/components/offline/components/components/DownloadButton.qml",
+      "lines": 197
+    },
+    {
+      "file": "core/database/database.cpp",
+      "lines": 195
+    },
+    {
+      "file": "view/UpdateAvailable.qml",
+      "lines": 195
+    },
+    {
+      "file": "view/model/components/ModelBody.qml",
+      "lines": 194
+    },
+    {
+      "file": "view/model/components/offline/components/OfflineGridView.qml",
+      "lines": 193
+    },
+    {
+      "file": "view/chat/components/chat/components/AddFileAndMore.qml",
+      "lines": 191
+    },
+    {
+      "file": "view/settings/SettingsMenu.qml",
+      "lines": 190
+    },
+    {
+      "file": "core/library/textprocessor/highlight/highlighting.cpp",
+      "lines": 189
+    },
+    {
+      "file": "core/developer/codedeveloperlist.h",
+      "lines": 187
+    },
+    {
+      "file": "view/component_library/model/components/online/OnlineCurrentModelinformation.qml",
+      "lines": 185
+    },
+    {
+      "file": "core/library/textprocessor/codecolors.cpp",
+      "lines": 184
+    },
+    {
+      "file": "view/chat/components/ChatBody.qml",
+      "lines": 180
+    },
+    {
+      "file": "view/settings/components/SettingsSpeech.qml",
+      "lines": 180
+    },
+    {
+      "file": "view/model/components/huggingface/components/HuggingfaceRowDelegate.qml",
+      "lines": 174
+    },
+    {
+      "file": "view/component_library/button/MyMenu.qml",
+      "lines": 171
+    },
+    {
+      "file": "view/developer/components/code/CodeDeveloper.qml",
+      "lines": 170
+    },
+    {
+      "file": "view/chat/components/chat/components/FileConverteInputPrompt.qml",
+      "lines": 169
+    },
+    {
+      "file": "view/developer/components/command_line/CommandLineInterface.qml",
+      "lines": 169
+    },
+    {
+      "file": "core/conversation/chat/messagelist.cpp",
+      "lines": 167
+    },
+    {
+      "file": "view/model/components/offline/components/OfflineListView.qml",
+      "lines": 166
+    },
+    {
+      "file": "core/conversation/conversation.h",
+      "lines": 165
+    },
+    {
+      "file": "core/conversation/conversationlist.h",
+      "lines": 165
+    },
+    {
+      "file": "view/model/components/offline/components/OfflineRowDelegate.qml",
+      "lines": 162
+    },
+    {
+      "file": "view/sql/SQLView.qml",
+      "lines": 161
+    },
+    {
+      "file": "core/database/managers/messagemanager.cpp",
+      "lines": 160
+    },
+    {
+      "file": "view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml",
+      "lines": 160
+    },
+    {
+      "file": "view/component_library/model_settings/components/button/ModelSettingsSlider.qml",
+      "lines": 158
+    },
+    {
+      "file": "core/library/textprocessor/codecolors.h",
+      "lines": 157
+    },
+    {
+      "file": "view/developer/components/code/EditCodeDeveloper.qml",
+      "lines": 155
+    },
+    {
+      "file": "core/systemmonitor.cpp",
+      "lines": 153
+    },
+    {
+      "file": "core/model/offline/offlinemodellistfilter.cpp",
+      "lines": 153
+    },
+    {
+      "file": "view/model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml",
+      "lines": 153
+    },
+    {
+      "file": "view/model/components/online/components/OnlineGridView.qml",
+      "lines": 153
+    },
+    {
+      "file": "view/component_library/model/components/online/InputApikeyDialog.qml",
+      "lines": 152
+    }
+  ],
+  "under_150": [
+    {
+      "file": "core/conversation/deepSearch/download/downloadpdf.cpp",
+      "lines": 149
+    },
+    {
+      "file": "core/model/offline/download.cpp",
+      "lines": 149
+    },
+    {
+      "file": "view/AppHeader.qml",
+      "lines": 149
+    },
+    {
+      "file": "view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml",
+      "lines": 146
+    },
+    {
+      "file": "core/model/modelsettings.cpp",
+      "lines": 144
+    },
+    {
+      "file": "view/component_library/model/components/offline/OfflineCurrentModelDelegate.qml",
+      "lines": 143
+    },
+    {
+      "file": "view/component_library/button/MyComboBoxDelegate.qml",
+      "lines": 142
+    },
+    {
+      "file": "view/model/components/online/components/components/InputApikey.qml",
+      "lines": 142
+    },
+    {
+      "file": "core/database/managers/pdfembeddingmaneger.cpp",
+      "lines": 141
+    },
+    {
+      "file": "view/MyComboBoxDelegate.qml",
+      "lines": 141
+    },
+    {
+      "file": "core/model/companylist.cpp",
+      "lines": 140
+    },
+    {
+      "file": "view/model/components/online/components/OnlineListView.qml",
+      "lines": 140
+    },
+    {
+      "file": "core/model/offline/offlinecompanylist.cpp",
+      "lines": 139
+    },
+    {
+      "file": "view/model/components/online/components/OnlineBoxDelegate.qml",
+      "lines": 138
+    },
+    {
+      "file": "core/database/database.h",
+      "lines": 137
+    },
+    {
+      "file": "view/chat/components/chat/components/SuggestionsButton.qml",
+      "lines": 137
+    },
+    {
+      "file": "core/conversation/deepSearch/arxiv/arxivsearchworker.cpp",
+      "lines": 134
+    },
+    {
+      "file": "core/developer/server/chatserver.h",
+      "lines": 133
+    },
+    {
+      "file": "view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyDelegate.qml",
+      "lines": 132
+    },
+    {
+      "file": "view/model/components/online/components/components/OnlineModelDelegateComboBox.qml",
+      "lines": 132
+    },
+    {
+      "file": "view/component_library/model_settings/components/ModelInferencesSettings.qml",
+      "lines": 128
+    },
+    {
+      "file": "view/model/components/online/components/OnlineCompanyBoxDelegate.qml",
+      "lines": 127
+    },
+    {
+      "file": "core/conversation/deepSearch/deepsearchconversation.h",
+      "lines": 125
+    },
+    {
+      "file": "core/model/online/onlinecompany.cpp",
+      "lines": 125
+    },
+    {
+      "file": "core/library/speech/speechtotext.cpp",
+      "lines": 124
+    },
+    {
+      "file": "view/component_library/button/MyIcon.qml",
+      "lines": 123
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodellistfilter.cpp",
+      "lines": 122
+    },
+    {
+      "file": "core/model/offline/offlinemodellist.h",
+      "lines": 121
+    },
+    {
+      "file": "view/component_library/model/components/online/OnlineCurrentModelDelegate.qml",
+      "lines": 120
+    },
+    {
+      "file": "view/home/components/FeatureDelegate.qml",
+      "lines": 119
+    },
+    {
+      "file": "view/component_library/button/VerificationDialog.qml",
+      "lines": 117
+    },
+    {
+      "file": "view/chat/components/ModelSettingsChatDrawer.qml",
+      "lines": 116
+    },
+    {
+      "file": "view/model/components/huggingface/components/HuggingfaceBoxDelegate.qml",
+      "lines": 116
+    },
+    {
+      "file": "core/developer/server/entities/chatapi.h",
+      "lines": 114
+    },
+    {
+      "file": "core/model/modelsettings.h",
+      "lines": 109
+    },
+    {
+      "file": "view/model/components/offline/OfflineHeader.qml",
+      "lines": 109
+    },
+    {
+      "file": "view/model/components/huggingface/components/HuggingfaceListView.qml",
+      "lines": 108
+    },
+    {
+      "file": "core/library/speech/speechtotextworker.cpp",
+      "lines": 107
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp",
+      "lines": 107
+    },
+    {
+      "file": "view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml",
+      "lines": 104
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp",
+      "lines": 103
+    },
+    {
+      "file": "view/menu/MyMenuButton.qml",
+      "lines": 103
+    },
+    {
+      "file": "view/model/components/offline/components/OfflineBoxDelegate.qml",
+      "lines": 103
+    },
+    {
+      "file": "view/settings/components/SettingsMenuButton.qml",
+      "lines": 103
+    },
+    {
+      "file": "core/model/offline/offlinemodel.h",
+      "lines": 102
+    },
+    {
+      "file": "core/model/online/onlinemodellistfilter.cpp",
+      "lines": 102
+    },
+    {
+      "file": "view/developer/components/model_settings/ModelSettingsDeveloperView.qml",
+      "lines": 102
+    },
+    {
+      "file": "view/component_library/button/MySwitch.qml",
+      "lines": 101
+    },
+    {
+      "file": "view/deepsearch/components/DeepSearchHeader.qml",
+      "lines": 99
+    },
+    {
+      "file": "view/model/components/huggingface/components/HuggingfaceGridView.qml",
+      "lines": 98
+    },
+    {
+      "file": "view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml",
+      "lines": 97
+    },
+    {
+      "file": "core/library/convert/converttomd.cpp",
+      "lines": 96
+    },
+    {
+      "file": "view/AppFooter.qml",
+      "lines": 96
+    },
+    {
+      "file": "view/SettingsDialog.qml",
+      "lines": 95
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodellist.h",
+      "lines": 94
+    },
+    {
+      "file": "view/chat/components/chat/components/TextInput.qml",
+      "lines": 94
+    },
+    {
+      "file": "view/home/components/FeatureList.qml",
+      "lines": 93
+    },
+    {
+      "file": "view/model/components/offline/components/SearchOfflineModel.qml",
+      "lines": 90
+    },
+    {
+      "file": "core/library/textprocessor/messagetextprocessor.h",
+      "lines": 89
+    },
+    {
+      "file": "core/provider/worker/onlineworker.cpp",
+      "lines": 89
+    },
+    {
+      "file": "view/chat/components/chat/components/AudioRecoderInput.qml",
+      "lines": 89
+    },
+    {
+      "file": "core/library/textprocessor/highlight/syntaxhighlighter.cpp",
+      "lines": 88
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.cpp",
+      "lines": 88
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.cpp",
+      "lines": 88
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.cpp",
+      "lines": 88
+    },
+    {
+      "file": "core/model/model.h",
+      "lines": 88
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.cpp",
+      "lines": 87
+    },
+    {
+      "file": "core/model/offline/offlinemodel.cpp",
+      "lines": 87
+    },
+    {
+      "file": "view/settings/components/SettingsAbout.qml",
+      "lines": 86
+    },
+    {
+      "file": "view/settings/components/SettingsTheme.qml",
+      "lines": 86
+    },
+    {
+      "file": "core/library/textprocessor/highlight/language.h",
+      "lines": 85
+    },
+    {
+      "file": "view/chat/components/ChatHeader.qml",
+      "lines": 85
+    },
+    {
+      "file": "view/model/components/online/OnlineHeader.qml",
+      "lines": 85
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.cpp",
+      "lines": 84
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.cpp",
+      "lines": 84
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.cpp",
+      "lines": 83
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.cpp",
+      "lines": 82
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.cpp",
+      "lines": 82
+    },
+    {
+      "file": "core/database/managers/conversationmanager.h",
+      "lines": 81
+    },
+    {
+      "file": "view/component_library/model/components/offline/OfflineCurrentView.qml",
+      "lines": 81
+    },
+    {
+      "file": "core/developer/server/entities/modelapi.cpp",
+      "lines": 80
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.cpp",
+      "lines": 80
+    },
+    {
+      "file": "view/component_library/button/MyProgress.qml",
+      "lines": 80
+    },
+    {
+      "file": "view/component_library/model_settings/components/button/ModelTextEdit.qml",
+      "lines": 80
+    },
+    {
+      "file": "view/model/components/huggingface/HuggingfaceHeader.qml",
+      "lines": 80
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp",
+      "lines": 79
+    },
+    {
+      "file": "view/component_library/button/MySlider.qml",
+      "lines": 79
+    },
+    {
+      "file": "core/database/managers/modelmanager.h",
+      "lines": 78
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.cpp",
+      "lines": 78
+    },
+    {
+      "file": "view/model/components/offline/components/components/SearchTagPupup.qml",
+      "lines": 78
+    },
+    {
+      "file": "core/updatechecker.h",
+      "lines": 77
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.cpp",
+      "lines": 77
+    },
+    {
+      "file": "core/library/speech/speechtotext.h",
+      "lines": 76
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.cpp",
+      "lines": 76
+    },
+    {
+      "file": "view/chat/components/history/HistoryList.qml",
+      "lines": 76
+    },
+    {
+      "file": "view/component_library/model_settings/ModelSettingsView.qml",
+      "lines": 76
+    },
+    {
+      "file": "core/model/online/onlinecompanylist.h",
+      "lines": 75
+    },
+    {
+      "file": "core/model/online/onlinemodellist.h",
+      "lines": 75
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.cpp",
+      "lines": 74
+    },
+    {
+      "file": "view/developer/components/DeveloperBody.qml",
+      "lines": 73
+    },
+    {
+      "file": "view/model/components/ModelHeader.qml",
+      "lines": 73
+    },
+    {
+      "file": "core/database/managers/pdfmanager.cpp",
+      "lines": 72
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.cpp",
+      "lines": 72
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.cpp",
+      "lines": 72
+    },
+    {
+      "file": "core/provider/onlineprovider.cpp",
+      "lines": 72
+    },
+    {
+      "file": "view/footer/DownloadingDelegate.qml",
+      "lines": 72
+    },
+    {
+      "file": "core/library/speech/audiorecorder.h",
+      "lines": 71
+    },
+    {
+      "file": "view/settings/components/SettingsSlider.qml",
+      "lines": 71
+    },
+    {
+      "file": "core/model/offline/offlinemodellistfilter.h",
+      "lines": 70
+    },
+    {
+      "file": "view/component_library/button/NotificationDialog.qml",
+      "lines": 70
+    },
+    {
+      "file": "view/component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml",
+      "lines": 70
+    },
+    {
+      "file": "core/library/convert/convertworker.cpp",
+      "lines": 69
+    },
+    {
+      "file": "view/model/components/ModelMenu.qml",
+      "lines": 68
+    },
+    {
+      "file": "core/arxivfetcher.cpp",
+      "lines": 67
+    },
+    {
+      "file": "core/conversation/text/textconversation.h",
+      "lines": 67
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.cpp",
+      "lines": 67
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodellistfilter.h",
+      "lines": 67
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.cpp",
+      "lines": 66
+    },
+    {
+      "file": "view/chat/components/chat/MyMessageList.qml",
+      "lines": 65
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.cpp",
+      "lines": 64
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.cpp",
+      "lines": 64
+    },
+    {
+      "file": "core/model/online/onlinemodellistfilter.h",
+      "lines": 64
+    },
+    {
+      "file": "view/component_library/model/components/ModelSelectHeader.qml",
+      "lines": 64
+    },
+    {
+      "file": "core/developer/code/code_generator/nodejsaxioscodegenerator.cpp",
+      "lines": 63
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.cpp",
+      "lines": 63
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.cpp",
+      "lines": 63
+    },
+    {
+      "file": "view/component_library/button/SearchButton.qml",
+      "lines": 63
+    },
+    {
+      "file": "view/model/components/offline/OfflineModelView.qml",
+      "lines": 63
+    },
+    {
+      "file": "core/developer/code/code_generator/pythonrequestscodegenerator.cpp",
+      "lines": 62
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.cpp",
+      "lines": 62
+    },
+    {
+      "file": "view/AppBody.qml",
+      "lines": 62
+    },
+    {
+      "file": "view/component_library/model/components/online/OnlineCurrentModelList.qml",
+      "lines": 62
+    },
+    {
+      "file": "core/arxivarticlelist.h",
+      "lines": 60
+    },
+    {
+      "file": "core/database/managers/messagemanager.h",
+      "lines": 60
+    },
+    {
+      "file": "core/library/convert/converttomd.h",
+      "lines": 60
+    },
+    {
+      "file": "core/model/model.cpp",
+      "lines": 60
+    },
+    {
+      "file": "core/model/online/onlinemodel.h",
+      "lines": 60
+    },
+    {
+      "file": "view/component_library/model_settings/components/ModelInformationSettings.qml",
+      "lines": 60
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.cpp",
+      "lines": 59
+    },
+    {
+      "file": "core/model/offline/offlinecompanylist.h",
+      "lines": 59
+    },
+    {
+      "file": "core/model/online/onlinecompany.h",
+      "lines": 59
+    },
+    {
+      "file": "core/conversation/chat/messagelist.h",
+      "lines": 58
+    },
+    {
+      "file": "core/log/logger.h",
+      "lines": 58
+    },
+    {
+      "file": "core/model/huggingface/huggingfacemodel.h",
+      "lines": 58
+    },
+    {
+      "file": "core/conversation/chat/message.h",
+      "lines": 57
+    },
+    {
+      "file": "core/developer/server/crudapi.h",
+      "lines": 57
+    },
+    {
+      "file": "core/provider/offlineprovider.h",
+      "lines": 57
+    },
+    {
+      "file": "view/model/components/offline/components/components/OfflineInformationModel.qml",
+      "lines": 57
+    },
+    {
+      "file": "core/model/companylist.h",
+      "lines": 56
+    },
+    {
+      "file": "core/library/textprocessor/highlight/HighlightingCategory.h",
+      "lines": 55
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.cpp",
+      "lines": 55
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.cpp",
+      "lines": 55
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.cpp",
+      "lines": 55
+    },
+    {
+      "file": "view/footer/Downloading.qml",
+      "lines": 55
+    },
+    {
+      "file": "view/component_library/model/components/online/OnlineCurrentView.qml",
+      "lines": 54
+    },
+    {
+      "file": "view/model/components/huggingface/components/components/HuggingfaceDelegateTitleAndCopyButton.qml",
+      "lines": 54
+    },
+    {
+      "file": "core/conversation/conversationlistfilter.cpp",
+      "lines": 53
+    },
+    {
+      "file": "core/provider/provider.h",
+      "lines": 53
+    },
+    {
+      "file": "core/database/managers/pdfmanager.h",
+      "lines": 52
+    },
+    {
+      "file": "core/developer/code/code_generator/javascriptfetchcodegenerator.cpp",
+      "lines": 52
+    },
+    {
+      "file": "core/developer/server/entities/modelapi.h",
+      "lines": 50
+    },
+    {
+      "file": "core/library/textprocessor/highlight/highlighting.h",
+      "lines": 50
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.cpp",
+      "lines": 50
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.cpp",
+      "lines": 50
+    },
+    {
+      "file": "view/developer/DeveloperView.qml",
+      "lines": 50
+    },
+    {
+      "file": "view/developer/components/DeveloperHeader.qml",
+      "lines": 50
+    },
+    {
+      "file": "core/conversation/deepSearch/download/downloadpdf.h",
+      "lines": 49
+    },
+    {
+      "file": "core/library/textprocessor/highlight/syntaxhighlighter.h",
+      "lines": 49
+    },
+    {
+      "file": "core/model/offline/download.h",
+      "lines": 49
+    },
+    {
+      "file": "core/systemmonitor.h",
+      "lines": 48
+    },
+    {
+      "file": "view/component_library/model_settings/components/APISettings.qml",
+      "lines": 48
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.cpp",
+      "lines": 47
+    },
+    {
+      "file": "view/model/components/online/components/components/ApikeyButton.qml",
+      "lines": 47
+    },
+    {
+      "file": "view/component_library/model_settings/components/ModelAssistantSettings.qml",
+      "lines": 46
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp",
+      "lines": 45
+    },
+    {
+      "file": "core/model/huggingface/huggingfacestruct.h",
+      "lines": 45
+    },
+    {
+      "file": "view/chat/ChatView.qml",
+      "lines": 45
+    },
+    {
+      "file": "view/chat/components/HistoryDrawer.qml",
+      "lines": 45
+    },
+    {
+      "file": "view/component_library/model/ModelSelectView.qml",
+      "lines": 45
+    },
+    {
+      "file": "view/model/components/online/components/components/OnlineInformationModel.qml",
+      "lines": 45
+    },
+    {
+      "file": "view/chat/components/history/HistoryHeader.qml",
+      "lines": 43
+    },
+    {
+      "file": "core/conversation/chat/responselist.cpp",
+      "lines": 42
+    },
+    {
+      "file": "core/database/managers/pdfembeddingmaneger.h",
+      "lines": 42
+    },
+    {
+      "file": "core/model/company.h",
+      "lines": 42
+    },
+    {
+      "file": "view/settings/components/ThemeOption.qml",
+      "lines": 42
+    },
+    {
+      "file": "core/developer/code/code_generator/curlcodegenerator.cpp",
+      "lines": 41
+    },
+    {
+      "file": "view/component_library/model_settings/components/ModelEngineSettings.qml",
+      "lines": 41
+    },
+    {
+      "file": "view/component_library/model_settings/components/SocketSettings.qml",
+      "lines": 41
+    },
+    {
+      "file": "view/footer/SystemMonitoring.qml",
+      "lines": 41
+    },
+    {
+      "file": "view/model/components/huggingface/components/components/HuggingfaceInformationModel.qml",
+      "lines": 41
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.cpp",
+      "lines": 40
+    },
+    {
+      "file": "view/model/components/online/OnlineBody.qml",
+      "lines": 40
+    },
+    {
+      "file": "view/component_library/button/MyCopyButton.qml",
+      "lines": 39
+    },
+    {
+      "file": "view/developer/components/ModelSettingsDrawerDeveloper.qml",
+      "lines": 39
+    },
+    {
+      "file": "view/home/components/HomeHeader.qml",
+      "lines": 39
+    },
+    {
+      "file": "core/developer/code/programlanguage.h",
+      "lines": 38
+    },
+    {
+      "file": "view/component_library/style/RoleEnum.qml",
+      "lines": 38
+    },
+    {
+      "file": "view/component_library/button/MyToolTip.qml",
+      "lines": 37
+    },
+    {
+      "file": "view/component_library/model_settings/components/button/ModelTextCopyBox.qml",
+      "lines": 37
+    },
+    {
+      "file": "core/conversation/chat/message.cpp",
+      "lines": 36
+    },
+    {
+      "file": "core/conversation/chat/responselist.h",
+      "lines": 36
+    },
+    {
+      "file": "core/model/companylistfilter.h",
+      "lines": 36
+    },
+    {
+      "file": "core/provider/worker/onlineworker.h",
+      "lines": 36
+    },
+    {
+      "file": "view/component_library/model/components/offline/OfflineCurrentModelList.qml",
+      "lines": 36
+    },
+    {
+      "file": "view/component_library/model_settings/ModelSettingsHeader.qml",
+      "lines": 36
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp",
+      "lines": 35
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.cpp",
+      "lines": 35
+    },
+    {
+      "file": "core/model/online/onlinecompanylistfilter.h",
+      "lines": 35
+    },
+    {
+      "file": "core/model/online/onlinemodel.cpp",
+      "lines": 35
+    },
+    {
+      "file": "view/deepsearch/components/DeepSearchBody.qml",
+      "lines": 35
+    },
+    {
+      "file": "view/footer/DownloadProgressComboBox.qml",
+      "lines": 35
+    },
+    {
+      "file": "core/provider/onlineprovider.h",
+      "lines": 34
+    },
+    {
+      "file": "view/component_library/model_settings/components/button/ModelSettingsSwitch.qml",
+      "lines": 34
+    },
+    {
+      "file": "view/model/components/huggingface/components/components/HuggingfaceDelegateInfoBox.qml",
+      "lines": 34
+    },
+    {
+      "file": "view/model/components/offline/components/components/OfflineDelegateInfoBox.qml",
+      "lines": 33
+    },
+    {
+      "file": "view/model/components/online/components/components/OnlineDelegateInfoBox.qml",
+      "lines": 33
+    },
+    {
+      "file": "core/library/speech/speechtotextworker.h",
+      "lines": 32
+    },
+    {
+      "file": "view/model/components/offline/OfflineBody.qml",
+      "lines": 30
+    },
+    {
+      "file": "view/model/components/huggingface/HuggingfaceBody.qml",
+      "lines": 29
+    },
+    {
+      "file": "core/arxivfetcher.h",
+      "lines": 28
+    },
+    {
+      "file": "core/conversation/deepSearch/arxiv/arxivsearchworker.h",
+      "lines": 28
+    },
+    {
+      "file": "view/developer/components/model/ModelDeveloperView.qml",
+      "lines": 28
+    },
+    {
+      "file": "view/model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml",
+      "lines": 28
+    },
+    {
+      "file": "view/settings/SettingsHeader.qml",
+      "lines": 28
+    },
+    {
+      "file": "core/developer/server/crudapi.cpp",
+      "lines": 27
+    },
+    {
+      "file": "core/library/convert/convertworker.h",
+      "lines": 27
+    },
+    {
+      "file": "core/model/online/onlinecompanylistfilter.cpp",
+      "lines": 27
+    },
+    {
+      "file": "core/model/companylistfilter.cpp",
+      "lines": 26
+    },
+    {
+      "file": "view/menu/MyOpenMenuButton.qml",
+      "lines": 26
+    },
+    {
+      "file": "view/settings/SettingsBody.qml",
+      "lines": 26
+    },
+    {
+      "file": "view/settings/components/OpenMenuSettingsButton.qml",
+      "lines": 26
+    },
+    {
+      "file": "view/model/components/huggingface/HuggingfaceModelView.qml",
+      "lines": 25
+    },
+    {
+      "file": "view/model/components/online/OnlineModelView.qml",
+      "lines": 25
+    },
+    {
+      "file": "view/chat/components/ModelChatComboBox.qml",
+      "lines": 24
+    },
+    {
+      "file": "view/deepsearch/DeepSearchView.qml",
+      "lines": 24
+    },
+    {
+      "file": "core/utils.h",
+      "lines": 23
+    },
+    {
+      "file": "core/developer/code/programlanguage.cpp",
+      "lines": 23
+    },
+    {
+      "file": "view/AppMenuDrawer.qml",
+      "lines": 23
+    },
+    {
+      "file": "view/component_library/model/components/ModelSelectBody.qml",
+      "lines": 23
+    },
+    {
+      "file": "view/model/ModelsView.qml",
+      "lines": 23
+    },
+    {
+      "file": "view/settings/SettingsMenuDrawer.qml",
+      "lines": 23
+    },
+    {
+      "file": "core/conversation/conversationlistfilter.h",
+      "lines": 21
+    },
+    {
+      "file": "view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml",
+      "lines": 21
+    },
+    {
+      "file": "core/log/logcategories.h",
+      "lines": 19
+    },
+    {
+      "file": "core/developer/code/code_generator/curlcodegenerator.h",
+      "lines": 18
+    },
+    {
+      "file": "core/developer/code/code_generator/javascriptfetchcodegenerator.h",
+      "lines": 18
+    },
+    {
+      "file": "core/developer/code/code_generator/nodejsaxioscodegenerator.h",
+      "lines": 18
+    },
+    {
+      "file": "core/developer/code/code_generator/pythonrequestscodegenerator.h",
+      "lines": 18
+    },
+    {
+      "file": "core/model/company.cpp",
+      "lines": 18
+    },
+    {
+      "file": "view/developer/components/ModelSettingsDeveloper.qml",
+      "lines": 17
+    },
+    {
+      "file": "view/developer/components/model/ModelDeveloperComboBox.qml",
+      "lines": 16
+    },
+    {
+      "file": "core/clipboard.h",
+      "lines": 15
+    },
+    {
+      "file": "core/log/logcategories.cpp",
+      "lines": 14
+    },
+    {
+      "file": "core/provider/provider.cpp",
+      "lines": 14
+    },
+    {
+      "file": "view/home/HomeView.qml",
+      "lines": 14
+    },
+    {
+      "file": "core/library/textprocessor/highlight/HighlightingRule.h",
+      "lines": 13
+    },
+    {
+      "file": "core/clipboard.cpp",
+      "lines": 12
+    },
+    {
+      "file": "core/utils.cpp",
+      "lines": 11
+    },
+    {
+      "file": "core/model/BackendType.h",
+      "lines": 11
+    },
+    {
+      "file": "core/conversation/deepSearch/tokenizer/tokenizer.h",
+      "lines": 10
+    },
+    {
+      "file": "core/conversation/deepSearch/tokenizer/tokenizerworker.h",
+      "lines": 10
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.h",
+      "lines": 9
+    },
+    {
+      "file": "view/chat/components/history/HistoryBody.qml",
+      "lines": 8
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.h",
+      "lines": 7
+    },
+    {
+      "file": "core/provider/worker/apikey.h",
+      "lines": 7
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.h",
+      "lines": 6
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.h",
+      "lines": 6
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.h",
+      "lines": 6
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.h",
+      "lines": 6
+    },
+    {
+      "file": "core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.h",
+      "lines": 6
+    },
+    {
+      "file": "view/chat/components/DeepSearchThinking.qml",
+      "lines": 5
+    },
+    {
+      "file": "view/chat/components/deepSearchLog/DeepSearchLogList.qml",
+      "lines": 5
+    },
+    {
+      "file": "view/developer/components/command_line/CommandLineInterfaceApp.qml",
+      "lines": 5
+    },
+    {
+      "file": "view/pdf/PDFView.qml",
+      "lines": 5
+    },
+    {
+      "file": "core/conversation/deepSearch/tokenizer/tokenizer.cpp",
+      "lines": 3
+    },
+    {
+      "file": "core/conversation/deepSearch/tokenizer/tokenizerworker.cpp",
+      "lines": 3
+    }
+  ],
+  "all_files": {
+    "core/arxivarticlelist.cpp": 544,
+    "core/arxivarticlelist.h": 60,
+    "core/arxivfetcher.cpp": 67,
+    "core/arxivfetcher.h": 28,
+    "core/clipboard.cpp": 12,
+    "core/clipboard.h": 15,
+    "core/main.cpp": 303,
+    "core/systemmonitor.cpp": 153,
+    "core/systemmonitor.h": 48,
+    "core/updatechecker.cpp": 199,
+    "core/updatechecker.h": 77,
+    "core/utils.cpp": 11,
+    "core/utils.h": 23,
+    "core/conversation/conversation.cpp": 239,
+    "core/conversation/conversation.h": 165,
+    "core/conversation/conversationlist.cpp": 443,
+    "core/conversation/conversationlist.h": 165,
+    "core/conversation/conversationlistfilter.cpp": 53,
+    "core/conversation/conversationlistfilter.h": 21,
+    "core/conversation/chat/message.cpp": 36,
+    "core/conversation/chat/message.h": 57,
+    "core/conversation/chat/messagelist.cpp": 167,
+    "core/conversation/chat/messagelist.h": 58,
+    "core/conversation/chat/responselist.cpp": 42,
+    "core/conversation/chat/responselist.h": 36,
+    "core/conversation/deepSearch/deepsearchconversation.cpp": 780,
+    "core/conversation/deepSearch/deepsearchconversation.h": 125,
+    "core/conversation/deepSearch/arxiv/arxivsearchworker.cpp": 134,
+    "core/conversation/deepSearch/arxiv/arxivsearchworker.h": 28,
+    "core/conversation/deepSearch/download/downloadpdf.cpp": 149,
+    "core/conversation/deepSearch/download/downloadpdf.h": 49,
+    "core/conversation/deepSearch/tokenizer/tokenizer.cpp": 3,
+    "core/conversation/deepSearch/tokenizer/tokenizer.h": 10,
+    "core/conversation/deepSearch/tokenizer/tokenizerworker.cpp": 3,
+    "core/conversation/deepSearch/tokenizer/tokenizerworker.h": 10,
+    "core/conversation/text/textconversation.cpp": 238,
+    "core/conversation/text/textconversation.h": 67,
+    "core/database/database.cpp": 195,
+    "core/database/database.h": 137,
+    "core/database/managers/conversationmanager.cpp": 243,
+    "core/database/managers/conversationmanager.h": 81,
+    "core/database/managers/messagemanager.cpp": 160,
+    "core/database/managers/messagemanager.h": 60,
+    "core/database/managers/modelmanager.cpp": 835,
+    "core/database/managers/modelmanager.h": 78,
+    "core/database/managers/pdfembeddingmaneger.cpp": 141,
+    "core/database/managers/pdfembeddingmaneger.h": 42,
+    "core/database/managers/pdfmanager.cpp": 72,
+    "core/database/managers/pdfmanager.h": 52,
+    "core/developer/codedeveloperlist.cpp": 424,
+    "core/developer/codedeveloperlist.h": 187,
+    "core/developer/code/codegenerator.cpp": 327,
+    "core/developer/code/codegenerator.h": 205,
+    "core/developer/code/programlanguage.cpp": 23,
+    "core/developer/code/programlanguage.h": 38,
+    "core/developer/code/code_generator/curlcodegenerator.cpp": 41,
+    "core/developer/code/code_generator/curlcodegenerator.h": 18,
+    "core/developer/code/code_generator/javascriptfetchcodegenerator.cpp": 52,
+    "core/developer/code/code_generator/javascriptfetchcodegenerator.h": 18,
+    "core/developer/code/code_generator/nodejsaxioscodegenerator.cpp": 63,
+    "core/developer/code/code_generator/nodejsaxioscodegenerator.h": 18,
+    "core/developer/code/code_generator/pythonrequestscodegenerator.cpp": 62,
+    "core/developer/code/code_generator/pythonrequestscodegenerator.h": 18,
+    "core/developer/server/chatserver.cpp": 390,
+    "core/developer/server/chatserver.h": 133,
+    "core/developer/server/crudapi.cpp": 27,
+    "core/developer/server/crudapi.h": 57,
+    "core/developer/server/entities/chatapi.cpp": 317,
+    "core/developer/server/entities/chatapi.h": 114,
+    "core/developer/server/entities/modelapi.cpp": 80,
+    "core/developer/server/entities/modelapi.h": 50,
+    "core/library/convert/converttomd.cpp": 96,
+    "core/library/convert/converttomd.h": 60,
+    "core/library/convert/convertworker.cpp": 69,
+    "core/library/convert/convertworker.h": 27,
+    "core/library/speech/audiorecorder.cpp": 204,
+    "core/library/speech/audiorecorder.h": 71,
+    "core/library/speech/speechtotext.cpp": 124,
+    "core/library/speech/speechtotext.h": 76,
+    "core/library/speech/speechtotextworker.cpp": 107,
+    "core/library/speech/speechtotextworker.h": 32,
+    "core/library/textprocessor/codecolors.cpp": 184,
+    "core/library/textprocessor/codecolors.h": 157,
+    "core/library/textprocessor/messagetextprocessor.cpp": 325,
+    "core/library/textprocessor/messagetextprocessor.h": 89,
+    "core/library/textprocessor/highlight/highlighting.cpp": 189,
+    "core/library/textprocessor/highlight/highlighting.h": 50,
+    "core/library/textprocessor/highlight/HighlightingCategory.h": 55,
+    "core/library/textprocessor/highlight/HighlightingRule.h": 13,
+    "core/library/textprocessor/highlight/language.h": 85,
+    "core/library/textprocessor/highlight/syntaxhighlighter.cpp": 88,
+    "core/library/textprocessor/highlight/syntaxhighlighter.h": 49,
+    "core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.cpp": 88,
+    "core/library/textprocessor/highlight/languageHighlightingRules/assemblyhighlightingrules.h": 6,
+    "core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.cpp": 76,
+    "core/library/textprocessor/highlight/languageHighlightingRules/bashhighlightingrules.h": 7,
+    "core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.cpp": 62,
+    "core/library/textprocessor/highlight/languageHighlightingRules/batchhighlightingrules.h": 6,
+    "core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.cpp": 59,
+    "core/library/textprocessor/highlight/languageHighlightingRules/cmakehighlightingrules.h": 6,
+    "core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.cpp": 84,
+    "core/library/textprocessor/highlight/languageHighlightingRules/cpphighlightingrules.h": 6,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.cpp": 103,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csharphighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.cpp": 79,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csshighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.cpp": 35,
+    "core/library/textprocessor/highlight/languageHighlightingRules/csvhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.cpp": 47,
+    "core/library/textprocessor/highlight/languageHighlightingRules/dockerfilehighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.cpp": 64,
+    "core/library/textprocessor/highlight/languageHighlightingRules/gohighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.cpp": 63,
+    "core/library/textprocessor/highlight/languageHighlightingRules/haskellhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.cpp": 55,
+    "core/library/textprocessor/highlight/languageHighlightingRules/htmlhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.cpp": 35,
+    "core/library/textprocessor/highlight/languageHighlightingRules/inihighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.cpp": 72,
+    "core/library/textprocessor/highlight/languageHighlightingRules/javahighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.cpp": 72,
+    "core/library/textprocessor/highlight/languageHighlightingRules/javascripthighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.cpp": 50,
+    "core/library/textprocessor/highlight/languageHighlightingRules/jsonhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.cpp": 74,
+    "core/library/textprocessor/highlight/languageHighlightingRules/kotlinhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.cpp": 66,
+    "core/library/textprocessor/highlight/languageHighlightingRules/latexhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.cpp": 63,
+    "core/library/textprocessor/highlight/languageHighlightingRules/luahighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.cpp": 55,
+    "core/library/textprocessor/highlight/languageHighlightingRules/makefilehighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.cpp": 55,
+    "core/library/textprocessor/highlight/languageHighlightingRules/markdownhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.cpp": 67,
+    "core/library/textprocessor/highlight/languageHighlightingRules/perlhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.cpp": 80,
+    "core/library/textprocessor/highlight/languageHighlightingRules/phphighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.cpp": 78,
+    "core/library/textprocessor/highlight/languageHighlightingRules/powershellhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.cpp": 107,
+    "core/library/textprocessor/highlight/languageHighlightingRules/pythonhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.cpp": 82,
+    "core/library/textprocessor/highlight/languageHighlightingRules/qmllightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.cpp": 77,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.cpp": 84,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rubyhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.cpp": 88,
+    "core/library/textprocessor/highlight/languageHighlightingRules/rusthighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.cpp": 88,
+    "core/library/textprocessor/highlight/languageHighlightingRules/scalahighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.cpp": 82,
+    "core/library/textprocessor/highlight/languageHighlightingRules/shellscripthighlightingrules.h": 6,
+    "core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.cpp": 64,
+    "core/library/textprocessor/highlight/languageHighlightingRules/sqlhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.cpp": 83,
+    "core/library/textprocessor/highlight/languageHighlightingRules/swifthighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.cpp": 45,
+    "core/library/textprocessor/highlight/languageHighlightingRules/tomlhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.cpp": 87,
+    "core/library/textprocessor/highlight/languageHighlightingRules/typescripthighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.cpp": 40,
+    "core/library/textprocessor/highlight/languageHighlightingRules/xmlhighlightingrules.h": 9,
+    "core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.cpp": 50,
+    "core/library/textprocessor/highlight/languageHighlightingRules/yamlhighlightingrules.h": 9,
+    "core/log/logcategories.cpp": 14,
+    "core/log/logcategories.h": 19,
+    "core/log/logger.cpp": 241,
+    "core/log/logger.h": 58,
+    "core/model/BackendType.h": 11,
+    "core/model/company.cpp": 18,
+    "core/model/company.h": 42,
+    "core/model/companylist.cpp": 140,
+    "core/model/companylist.h": 56,
+    "core/model/companylistfilter.cpp": 26,
+    "core/model/companylistfilter.h": 36,
+    "core/model/model.cpp": 60,
+    "core/model/model.h": 88,
+    "core/model/modelsettings.cpp": 144,
+    "core/model/modelsettings.h": 109,
+    "core/model/huggingface/huggingfacemodel.cpp": 335,
+    "core/model/huggingface/huggingfacemodel.h": 58,
+    "core/model/huggingface/huggingfacemodelinfo.cpp": 385,
+    "core/model/huggingface/huggingfacemodelinfo.h": 208,
+    "core/model/huggingface/huggingfacemodellist.cpp": 314,
+    "core/model/huggingface/huggingfacemodellist.h": 94,
+    "core/model/huggingface/huggingfacemodellistfilter.cpp": 122,
+    "core/model/huggingface/huggingfacemodellistfilter.h": 67,
+    "core/model/huggingface/huggingfacestruct.h": 45,
+    "core/model/offline/download.cpp": 149,
+    "core/model/offline/download.h": 49,
+    "core/model/offline/offlinecompanylist.cpp": 139,
+    "core/model/offline/offlinecompanylist.h": 59,
+    "core/model/offline/offlinemodel.cpp": 87,
+    "core/model/offline/offlinemodel.h": 102,
+    "core/model/offline/offlinemodellist.cpp": 425,
+    "core/model/offline/offlinemodellist.h": 121,
+    "core/model/offline/offlinemodellistfilter.cpp": 153,
+    "core/model/offline/offlinemodellistfilter.h": 70,
+    "core/model/online/onlinecompany.cpp": 125,
+    "core/model/online/onlinecompany.h": 59,
+    "core/model/online/onlinecompanylist.cpp": 208,
+    "core/model/online/onlinecompanylist.h": 75,
+    "core/model/online/onlinecompanylistfilter.cpp": 27,
+    "core/model/online/onlinecompanylistfilter.h": 35,
+    "core/model/online/onlinemodel.cpp": 35,
+    "core/model/online/onlinemodel.h": 60,
+    "core/model/online/onlinemodellist.cpp": 212,
+    "core/model/online/onlinemodellist.h": 75,
+    "core/model/online/onlinemodellistfilter.cpp": 102,
+    "core/model/online/onlinemodellistfilter.h": 64,
+    "core/provider/offlineprovider.cpp": 234,
+    "core/provider/offlineprovider.h": 57,
+    "core/provider/onlineprovider.cpp": 72,
+    "core/provider/onlineprovider.h": 34,
+    "core/provider/provider.cpp": 14,
+    "core/provider/provider.h": 53,
+    "core/provider/worker/apikey.h": 7,
+    "core/provider/worker/onlineworker.cpp": 89,
+    "core/provider/worker/onlineworker.h": 36,
+    "view/AppBody.qml": 62,
+    "view/AppFooter.qml": 96,
+    "view/AppHeader.qml": 149,
+    "view/AppMenu.qml": 217,
+    "view/AppMenuDrawer.qml": 23,
+    "view/Main.qml": 270,
+    "view/MyComboBoxDelegate.qml": 141,
+    "view/SettingsDialog.qml": 95,
+    "view/UpdateAvailable.qml": 195,
+    "view/chat/ChatView.qml": 45,
+    "view/chat/components/ChatBody.qml": 180,
+    "view/chat/components/ChatHeader.qml": 85,
+    "view/chat/components/DeepSearchThinking.qml": 5,
+    "view/chat/components/HistoryDrawer.qml": 45,
+    "view/chat/components/ModelChatComboBox.qml": 24,
+    "view/chat/components/ModelSettingsChatDrawer.qml": 116,
+    "view/chat/components/chat/InputPrompt.qml": 316,
+    "view/chat/components/chat/MessageDelegate.qml": 303,
+    "view/chat/components/chat/MyMessageList.qml": 65,
+    "view/chat/components/chat/components/AddFileAndMore.qml": 191,
+    "view/chat/components/chat/components/AudioRecoderInput.qml": 89,
+    "view/chat/components/chat/components/FileConverteInputPrompt.qml": 169,
+    "view/chat/components/chat/components/SuggestionsButton.qml": 137,
+    "view/chat/components/chat/components/TextInput.qml": 94,
+    "view/chat/components/deepSearchLog/DeepSearchLogList.qml": 5,
+    "view/chat/components/history/HistoryBody.qml": 8,
+    "view/chat/components/history/HistoryDelegate.qml": 207,
+    "view/chat/components/history/HistoryHeader.qml": 43,
+    "view/chat/components/history/HistoryList.qml": 76,
+    "view/component_library/button/MyButton.qml": 726,
+    "view/component_library/button/MyComboBox.qml": 255,
+    "view/component_library/button/MyComboBoxDelegate.qml": 142,
+    "view/component_library/button/MyCopyButton.qml": 39,
+    "view/component_library/button/MyIcon.qml": 123,
+    "view/component_library/button/MyMenu.qml": 171,
+    "view/component_library/button/MyProgress.qml": 80,
+    "view/component_library/button/MySlider.qml": 79,
+    "view/component_library/button/MySwitch.qml": 101,
+    "view/component_library/button/MyToolTip.qml": 37,
+    "view/component_library/button/NotificationDialog.qml": 70,
+    "view/component_library/button/SearchButton.qml": 63,
+    "view/component_library/button/VerificationDialog.qml": 117,
+    "view/component_library/model/ModelSelectComboBox.qml": 206,
+    "view/component_library/model/ModelSelectView.qml": 45,
+    "view/component_library/model/components/ModelSelectBody.qml": 23,
+    "view/component_library/model/components/ModelSelectHeader.qml": 64,
+    "view/component_library/model/components/offline/OfflineCurrentModelDelegate.qml": 143,
+    "view/component_library/model/components/offline/OfflineCurrentModelinformation.qml": 212,
+    "view/component_library/model/components/offline/OfflineCurrentModelList.qml": 36,
+    "view/component_library/model/components/offline/OfflineCurrentView.qml": 81,
+    "view/component_library/model/components/online/InputApikeyDialog.qml": 152,
+    "view/component_library/model/components/online/OnlineCurrentModelDelegate.qml": 120,
+    "view/component_library/model/components/online/OnlineCurrentModelinformation.qml": 185,
+    "view/component_library/model/components/online/OnlineCurrentModelList.qml": 62,
+    "view/component_library/model/components/online/OnlineCurrentView.qml": 54,
+    "view/component_library/model/components/online/components/OnlineCurrentCompanyListModel.qml": 70,
+    "view/component_library/model/components/online/components/OnlineCurrentCompanyListModelDelegate.qml": 146,
+    "view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyDelegate.qml": 132,
+    "view/component_library/model/components/online/components/OnlineCurrentIndoxRouterCompanyyList.qml": 97,
+    "view/component_library/model_settings/ModelSettingsBody.qml": 197,
+    "view/component_library/model_settings/ModelSettingsHeader.qml": 36,
+    "view/component_library/model_settings/ModelSettingsView.qml": 76,
+    "view/component_library/model_settings/components/APISettings.qml": 48,
+    "view/component_library/model_settings/components/ModelAssistantSettings.qml": 46,
+    "view/component_library/model_settings/components/ModelEngineSettings.qml": 41,
+    "view/component_library/model_settings/components/ModelInferencesSettings.qml": 128,
+    "view/component_library/model_settings/components/ModelInformationSettings.qml": 60,
+    "view/component_library/model_settings/components/SocketSettings.qml": 41,
+    "view/component_library/model_settings/components/button/ModelMenuSettings.qml": 540,
+    "view/component_library/model_settings/components/button/ModelSettingsSlider.qml": 158,
+    "view/component_library/model_settings/components/button/ModelSettingsSwitch.qml": 34,
+    "view/component_library/model_settings/components/button/ModelTextCopyBox.qml": 37,
+    "view/component_library/model_settings/components/button/ModelTextEdit.qml": 80,
+    "view/component_library/style/Colors.qml": 297,
+    "view/component_library/style/RoleEnum.qml": 38,
+    "view/deepsearch/DeepSearchView.qml": 24,
+    "view/deepsearch/components/DeepSearchBody.qml": 35,
+    "view/deepsearch/components/DeepSearchHeader.qml": 99,
+    "view/developer/DeveloperView.qml": 50,
+    "view/developer/components/DeveloperBody.qml": 73,
+    "view/developer/components/DeveloperHeader.qml": 50,
+    "view/developer/components/ModelSettingsDeveloper.qml": 17,
+    "view/developer/components/ModelSettingsDrawerDeveloper.qml": 39,
+    "view/developer/components/code/CodeDeveloper.qml": 170,
+    "view/developer/components/code/EditCodeDeveloper.qml": 155,
+    "view/developer/components/command_line/CommandLineInterface.qml": 169,
+    "view/developer/components/command_line/CommandLineInterfaceApp.qml": 5,
+    "view/developer/components/model/ModelDeveloperComboBox.qml": 16,
+    "view/developer/components/model/ModelDeveloperView.qml": 28,
+    "view/developer/components/model_settings/ModelSettingsDeveloperDrawer.qml": 104,
+    "view/developer/components/model_settings/ModelSettingsDeveloperView.qml": 102,
+    "view/footer/Downloading.qml": 55,
+    "view/footer/DownloadingDelegate.qml": 72,
+    "view/footer/DownloadProgressComboBox.qml": 35,
+    "view/footer/SystemMonitoring.qml": 41,
+    "view/home/HomeView.qml": 14,
+    "view/home/components/FeatureDelegate.qml": 119,
+    "view/home/components/FeatureList.qml": 93,
+    "view/home/components/HomeHeader.qml": 39,
+    "view/menu/MyMenuButton.qml": 103,
+    "view/menu/MyOpenMenuButton.qml": 26,
+    "view/model/ModelsView.qml": 23,
+    "view/model/components/ModelBody.qml": 194,
+    "view/model/components/ModelHeader.qml": 73,
+    "view/model/components/ModelMenu.qml": 68,
+    "view/model/components/huggingface/HuggingfaceBody.qml": 29,
+    "view/model/components/huggingface/HuggingfaceHeader.qml": 80,
+    "view/model/components/huggingface/HuggingfaceModelView.qml": 25,
+    "view/model/components/huggingface/components/HuggingfaceBoxDelegate.qml": 116,
+    "view/model/components/huggingface/components/HuggingfaceGridView.qml": 98,
+    "view/model/components/huggingface/components/HuggingfaceListView.qml": 108,
+    "view/model/components/huggingface/components/HuggingfaceRowDelegate.qml": 174,
+    "view/model/components/huggingface/components/SearchHuggingfaceModel.qml": 556,
+    "view/model/components/huggingface/components/components/HuggingfaceDelegateInfoBox.qml": 34,
+    "view/model/components/huggingface/components/components/HuggingfaceDelegateTitleAndCopyButton.qml": 54,
+    "view/model/components/huggingface/components/components/HuggingfaceInformationModel.qml": 41,
+    "view/model/components/huggingface/components/modelInfo/HuggingfaceInfoDialog.qml": 153,
+    "view/model/components/huggingface/components/modelInfo/components/HugginfaceDialogView.qml": 160,
+    "view/model/components/offline/OfflineBody.qml": 30,
+    "view/model/components/offline/OfflineHeader.qml": 109,
+    "view/model/components/offline/OfflineModelView.qml": 63,
+    "view/model/components/offline/components/OfflineBoxDelegate.qml": 103,
+    "view/model/components/offline/components/OfflineGridView.qml": 193,
+    "view/model/components/offline/components/OfflineListView.qml": 166,
+    "view/model/components/offline/components/OfflineRowDelegate.qml": 162,
+    "view/model/components/offline/components/SearchOfflineModel.qml": 90,
+    "view/model/components/offline/components/components/DownloadButton.qml": 197,
+    "view/model/components/offline/components/components/OfflineDelegateInfoBox.qml": 33,
+    "view/model/components/offline/components/components/OfflineDelegateTitleAndCopyButton.qml": 28,
+    "view/model/components/offline/components/components/OfflineInformationModel.qml": 57,
+    "view/model/components/offline/components/components/SearchTagPupup.qml": 78,
+    "view/model/components/online/OnlineBody.qml": 40,
+    "view/model/components/online/OnlineHeader.qml": 85,
+    "view/model/components/online/OnlineModelView.qml": 25,
+    "view/model/components/online/components/OnlineBoxDelegate.qml": 138,
+    "view/model/components/online/components/OnlineCompanyBoxDelegate.qml": 127,
+    "view/model/components/online/components/OnlineCompanyRowDelegate.qml": 250,
+    "view/model/components/online/components/OnlineGridView.qml": 153,
+    "view/model/components/online/components/OnlineListView.qml": 140,
+    "view/model/components/online/components/OnlineRowDelegate.qml": 230,
+    "view/model/components/online/components/components/ApikeyButton.qml": 47,
+    "view/model/components/online/components/components/InputApikey.qml": 142,
+    "view/model/components/online/components/components/OnlineDelegateInfoBox.qml": 33,
+    "view/model/components/online/components/components/OnlineDelegateTitleAndCopyButton.qml": 21,
+    "view/model/components/online/components/components/OnlineInformationModel.qml": 45,
+    "view/model/components/online/components/components/OnlineModelDelegateComboBox.qml": 132,
+    "view/model/components/online/components/components/OnlineModelListComboBox.qml": 229,
+    "view/pdf/PDFView.qml": 5,
+    "view/settings/SettingsBody.qml": 26,
+    "view/settings/SettingsHeader.qml": 28,
+    "view/settings/SettingsMenu.qml": 190,
+    "view/settings/SettingsMenuDrawer.qml": 23,
+    "view/settings/components/OpenMenuSettingsButton.qml": 26,
+    "view/settings/components/SettingsAbout.qml": 86,
+    "view/settings/components/SettingsMenuButton.qml": 103,
+    "view/settings/components/SettingsPrivacy.qml": 333,
+    "view/settings/components/SettingsSlider.qml": 71,
+    "view/settings/components/SettingsSpeech.qml": 180,
+    "view/settings/components/SettingsTerms_of_Use.qml": 453,
+    "view/settings/components/SettingsTheme.qml": 86,
+    "view/settings/components/ThemeOption.qml": 42,
+    "view/sql/SQLView.qml": 161
+  }
+}
