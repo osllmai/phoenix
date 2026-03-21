@@ -7,7 +7,7 @@ Rectangle{
     id: control
     width: window.isDesktopSize? parent.width/2 : parent.width
     height: 60
-    color:  "#00ffffff"
+    color:  Style.Colors.transparent
     border.width: 1
     border.color: Style.Colors.boxBorder
     radius: 8

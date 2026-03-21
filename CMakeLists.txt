@@ -552,6 +552,7 @@ qt_add_qml_module(app${APP_NAME}
         view/Main.qml
 
         view/component_library/style/Colors.qml
+        view/component_library/style/ThemeData.js
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
         view/component_library/button/MyButtonStyle.js
@@ -698,6 +699,7 @@ qt_add_qml_module(app${APP_NAME}
         view/settings/components/SettingsMenuButton.qml
         view/settings/components/SettingsSlider.qml
         view/settings/components/ThemeOption.qml
+        view/settings/components/ThemeVariantButton.qml
         view/settings/components/OpenMenuSettingsButton.qml
 
         view/AppFooter.qml

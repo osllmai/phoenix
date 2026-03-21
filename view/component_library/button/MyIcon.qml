@@ -51,7 +51,7 @@ ToolButton {
             case Style.RoleEnum.IconType.Primary:
                 return enabled? Style.Colors.iconPrimaryNormal: Style.Colors.iconPrimaryHoverAndChecked;
             case Style.RoleEnum.IconType.Image:
-                return "#00ffffff";
+                return Style.Colors.transparent;
             case Style.RoleEnum.IconType.FeatureBlue:
                 return enabled? Style.Colors.iconFeatureBlueNormal: Style.Colors.iconFeatureBlueHoverAndChecked;
             case Style.RoleEnum.IconType.FeatureRed:
@@ -76,7 +76,7 @@ ToolButton {
             case Style.RoleEnum.IconType.Primary:
                 return Style.Colors.iconPrimaryHoverAndChecked;
             case Style.RoleEnum.IconType.Image:
-                return "#00ffffff";
+                return Style.Colors.transparent;
             case Style.RoleEnum.IconType.FeatureBlue:
                 return Style.Colors.iconFeatureBlueHoverAndChecked;
             case Style.RoleEnum.IconType.FeatureRed:
@@ -99,9 +99,9 @@ ToolButton {
     function choiceBackgroundColor(iconType) {
         switch (iconType) {
             case Style.RoleEnum.IconType.Primary:
-                return "#00ffffff";
+                return Style.Colors.transparent;
             case Style.RoleEnum.IconType.Image:
-                return "#00ffffff";
+                return Style.Colors.transparent;
             case Style.RoleEnum.IconType.FeatureBlue:
                 return Style.Colors.iconFeatureBlueBackground;
             case Style.RoleEnum.IconType.FeatureRed:
@@ -115,9 +115,9 @@ ToolButton {
             case Style.RoleEnum.IconType.FeatureGreen:
                 return Style.Colors.iconFeatureGreenBackground;
             case Style.RoleEnum.IconType.Like:
-                return "#00ffffff";
+                return Style.Colors.transparent;
             default:
-                return "#00ffffff";
+                return Style.Colors.transparent;
         }
     }
 }

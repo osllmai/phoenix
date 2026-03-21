@@ -74,7 +74,7 @@ Item {
         delegate: Rectangle{
            width: gridView.cellWidth
            height: gridView.cellHeight
-           color: "#00ffffff"
+           color: Style.Colors.transparent
 
            FeatureDelegate {
                id: indoxItem

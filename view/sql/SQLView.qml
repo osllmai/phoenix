@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls
 import QtWebView
 import QtQuick.Layouts
+import '../component_library/style' as Style
 
 Item {
     id: root
@@ -98,7 +99,7 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: "#efefef"
+            color: Style.Colors.boxHover
 
             ColumnLayout {
                 anchors.margins: 10

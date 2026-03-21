@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import '../../component_library/style' as Style
 
 Item {
 
@@ -9,9 +10,9 @@ Item {
         delegate: Rectangle {
             width: 700
             height: 180
-            color: "#f0f0f0"
+            color: Style.Colors.boxHover
             radius: 8
-            border.color: "#cccccc"
+            border.color: Style.Colors.boxBorder
             border.width: 1
             anchors.margins: 5
 

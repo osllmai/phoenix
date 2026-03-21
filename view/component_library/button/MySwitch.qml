@@ -9,7 +9,7 @@ Switch {
     background: backgroundItem
     Rectangle {
         id: backgroundItem
-        color: "#00000000"
+        color: Style.Colors.transparent
         implicitWidth: control.baseSize * 6.0
         implicitHeight: control.baseSize * 3.8
     }
@@ -47,7 +47,7 @@ Switch {
 
             PropertyChanges {
                 target: switchHandle
-                color: "#00000000"
+                color: Style.Colors.transparent
                 border.color: Style.Colors.boxBorder
             }
         },
@@ -77,7 +77,7 @@ Switch {
 
             PropertyChanges {
                 target: switchHandle
-                color: "#00000000"
+                color: Style.Colors.transparent
                 border.color: Style.Colors.progressBarGradient1
             }
         },

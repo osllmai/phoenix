@@ -1,0 +1,143 @@
+{
+  "version": "1.0.0",
+  "last_synced": "2026-03-20",
+  "description": "Unified theme system shared across all Nemati AI mobile apps. Each theme has light + dark mode. Use these JSON files as the source of truth when adding themes to new projects.",
+  "apps": {
+    "editra": {
+      "package": "nemati_studio",
+      "theme_system": "StudioColorScheme + ColorPalette",
+      "access_pattern": "context.colors",
+      "default_variant": "editra",
+      "palette_file": "lib/core/config/palettes.dart",
+      "colors_file": "lib/core/config/colors.dart"
+    },
+    "vesper": {
+      "package": "vesper",
+      "theme_system": "LoomThemeExtension + LoomColorTokens",
+      "access_pattern": "context.loom.colors",
+      "default_variant": "copper",
+      "primitives_file": "lib/core/theme/loom_primitives.dart",
+      "presets_file": "lib/core/theme/loom_presets.dart",
+      "theme_file": "lib/core/theme/app_theme.dart"
+    },
+    "nemati_ai_news": {
+      "package": "nemati_ai_news",
+      "theme_system": "AppColorsExtension + NewsPalettes",
+      "access_pattern": "context.colors",
+      "default_variant": "news",
+      "palettes_file": "lib/core/constants/color_palettes.dart",
+      "colors_file": "lib/core/constants/app_colors.dart"
+    },
+    "pencilly": {
+      "package": "pencilly",
+      "theme_system": "AppColors + AppTypography + AppSpacing",
+      "access_pattern": "context.colors / context.typo / context.spacing",
+      "default_variant": "pencilly",
+      "colors_file": "lib/core/theme/app_colors.dart",
+      "typography_file": "lib/core/theme/app_typography.dart",
+      "spacing_file": "lib/core/theme/app_spacing.dart",
+      "theme_file": "lib/core/theme/app_theme.dart"
+    },
+    "indox": {
+      "package": "indox_app",
+      "theme_system": "IndoxThemeExtension + IndoxColorTokens",
+      "access_pattern": "context.indox",
+      "default_variant": "indox",
+      "primitives_file": "lib/core/theme/app_primitives.dart",
+      "tokens_file": "lib/core/theme/app_tokens.dart",
+      "extension_file": "lib/core/theme/app_extension.dart",
+      "text_tokens_file": "lib/core/theme/app_text_tokens.dart",
+      "theme_file": "lib/core/theme/app_theme.dart"
+    }
+  },
+  "variants": [
+    {
+      "id": "editra",
+      "name": "Editra (Default)",
+      "file": "editra_theme.json",
+      "default_for": "editra",
+      "accent_hex": "#6C5CE7"
+    },
+    {
+      "id": "copper",
+      "name": "Copper (Default)",
+      "file": "copper_theme.json",
+      "default_for": "vesper",
+      "accent_hex": "#B87333"
+    },
+    {
+      "id": "obsidian",
+      "name": "Obsidian",
+      "file": "obsidian_theme.json",
+      "default_for": null,
+      "accent_hex": "#334155"
+    },
+    {
+      "id": "indigo",
+      "name": "Indigo",
+      "file": "indigo_theme.json",
+      "default_for": null,
+      "accent_hex": "#4F46E5"
+    },
+    {
+      "id": "news",
+      "name": "News (Default)",
+      "file": "news_theme.json",
+      "default_for": "nemati_ai_news",
+      "accent_hex": "#475AD7"
+    },
+    {
+      "id": "pencilly",
+      "name": "Pencilly",
+      "file": "pencilly_theme.json",
+      "default_for": "pencilly",
+      "accent_hex": "#5B4FCF"
+    },
+    {
+      "id": "indox",
+      "name": "Indox",
+      "file": "indox_theme.json",
+      "default_for": "indox",
+      "accent_hex": "#4989FF"
+    }
+  ],
+  "shared_semantic_tokens": {
+    "description": "These tokens are identical across all variants. Only the light/dark values differ.",
+    "warning": "#D97706",
+    "warningLight_light": "#FEF3C7",
+    "warningLight_dark": "#78350F",
+    "blue": "#2563EB",
+    "blueLight_light": "#DBEAFE",
+    "blueLight_dark": "#1E3A5F",
+    "pink": "#DB2777",
+    "pinkLight_light": "#FCE7F3",
+    "pinkLight_dark": "#831843",
+    "note": "Editra and News use warning=#F59E0B instead of #D97706 — see individual theme files for exact values."
+  },
+  "token_schema": {
+    "description": "All tokens available in the 'light' and 'dark' objects of each theme file.",
+    "categories": {
+      "brand": ["primary", "primaryDark", "primaryLight", "primarySurface"],
+      "background": ["background", "scaffold", "surface", "surfaceVariant"],
+      "text": ["textPrimary", "textSecondary", "textHint", "textOnPrimary"],
+      "input": ["inputBg", "inputBorder", "inputIcon"],
+      "navigation": ["navBarBg", "navBarActive", "navBarInactive", "navBarBorder"],
+      "structure": ["divider", "borderLight", "shadow"],
+      "category_chips": ["categoryBg", "categorySelectedBg", "categorySelectedText"],
+      "settings": ["settingsItemBg"],
+      "overlay": ["articleOverlay"],
+      "semantic": ["error", "errorLight", "errorSurface", "success", "successSurface", "warning", "warningLight", "blue", "blueLight", "pink", "pinkLight"],
+      "misc": ["savedStar"]
+    }
+  },
+  "usage": {
+    "new_project_steps": [
+      "1. Read the theme JSON for the variant you want",
+      "2. Create a ThemeExtension class with all tokens from 'light' and 'dark'",
+      "3. Follow the target project's existing access pattern (context.colors, context.loom, etc.)",
+      "4. Add app-specific extras from 'vesper_extras' or 'editra_extras' if needed",
+      "5. Register the ThemeExtension in your ThemeData.extensions",
+      "6. Add variant switching UI (dropdown, picker, or settings row)"
+    ]
+  }
+}

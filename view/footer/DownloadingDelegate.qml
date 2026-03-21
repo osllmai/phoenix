@@ -15,7 +15,7 @@ T.Button {
         radius: 8
         border.width: 1
         border.color: Style.Colors.buttonFeatureBorderNormal
-        color: (control.hovered)? Style.Colors.boxHover: "#00ffffff"
+        color: (control.hovered)? Style.Colors.boxHover: Style.Colors.transparent
 
         Row {
             id: headerId

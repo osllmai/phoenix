@@ -17,7 +17,7 @@ Item {
         anchors.fill: parent
         anchors.margins: 10
         radius: 12
-        color: "#00ffffff"
+        color: Style.Colors.transparent
         border.color: Style.Colors.boxBorder
         border.width: 1
 

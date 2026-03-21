@@ -34,8 +34,32 @@ Item {
             spacing: 10
 
             Label {
-                id: themeId
-                text: "Theme:"
+                text: "Color Theme:"
+                width: 100
+                color: Style.Colors.textTitle
+                font.pixelSize: 14
+            }
+
+            Flow {
+                spacing: 10
+                width: control.width - 40
+
+                Repeater {
+                    model: Style.Colors.availableThemes
+                    delegate: ThemeVariantButton {
+                        themeName: modelData
+                        isSelected: window.colorTheme === modelData
+                        onClicked: window.colorTheme = modelData
+                    }
+                }
+            }
+        }
+
+        Column {
+            spacing: 10
+
+            Label {
+                text: "Appearance:"
                 width: 100
                 color: Style.Colors.textTitle
                 font.pixelSize: 14

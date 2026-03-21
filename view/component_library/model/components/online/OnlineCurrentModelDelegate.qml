@@ -33,7 +33,7 @@ T.Button {
                        : Style.Colors.buttonFeatureBorderNormal
         color: (control.hovered || control.selected || control.checkselectItem)
                ? Style.Colors.boxHover
-               : "#00ffffff"
+               : Style.Colors.transparent
 
         Row {
             id: headerId

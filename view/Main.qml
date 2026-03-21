@@ -28,6 +28,9 @@ ApplicationWindow {
 
     property string lastFolder: "file:///" + Logger.logDir
 
+    property string colorTheme: "editra"
+    onColorThemeChanged: Style.Colors.currentTheme = window.colorTheme
+
     property string theme: "Default"
     onThemeChanged: {
         if ((window.theme === "Dark") || (window.theme === "Light"))
@@ -86,6 +89,7 @@ ApplicationWindow {
         property alias width: window.width
         property alias height: window.height
         property alias theme: window.theme
+        property alias colorTheme: window.colorTheme
         property alias fontFamily: window.font.family
         property alias modelPageView: window.modelPageView
         property alias isOpenMenu: window.isOpenMenu

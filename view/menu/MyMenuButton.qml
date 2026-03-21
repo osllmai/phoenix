@@ -63,7 +63,7 @@ T.Button {
 
     contentItem: Rectangle{
         id: backgroundId
-        color: control.hovered || (appBodyId.currentIndex === numberPage) ? Style.Colors.menuHoverBackground : "#00ffffff"
+        color: control.hovered || (appBodyId.currentIndex === numberPage) ? Style.Colors.menuHoverBackground : Style.Colors.transparent
         anchors.fill: parent
         radius: 10
         clip: true

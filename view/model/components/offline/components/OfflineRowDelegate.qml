@@ -83,7 +83,7 @@ T.Button {
                     radius: 10
                     border.color: Style.Colors.boxBorder
                     border.width: 1
-                    color: "#00ffffff"
+                    color: Style.Colors.transparent
                     OfflineInformationModel {}
                 }
 

@@ -14,7 +14,7 @@ Item {
         anchors.rightMargin: 10
         anchors.bottomMargin: 10
         radius: 12
-        color: "#00ffffff"
+        color: Style.Colors.transparent
         border.color: Style.Colors.boxBorder
         border.width: 1
 

@@ -15,7 +15,7 @@ T.Button {
         if(checkselectItem){
             return Style.Colors.boxChecked
         }else{
-            return control.hovered? Style.Colors.boxHover: "#00ffffff"
+            return control.hovered? Style.Colors.boxHover: Style.Colors.transparent
         }
     }
 

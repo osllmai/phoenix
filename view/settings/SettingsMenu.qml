@@ -8,7 +8,7 @@ Rectangle {
     id: root
     width: 200
     anchors.top: parent.top; anchors.bottom: parent.bottom
-    color: window.isDesktopSize? "#00ffffff": Style.Colors.background
+    color: window.isDesktopSize? Style.Colors.transparent: Style.Colors.background
 
     Item{
         id: appInfoId

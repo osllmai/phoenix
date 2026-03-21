@@ -28,7 +28,7 @@ T.Button {
 
     contentItem: Rectangle{
         id: backgroundId
-        color: control.hovered || control.checked ? Style.Colors.menuHoverBackground : "#00ffffff"
+        color: control.hovered || control.checked ? Style.Colors.menuHoverBackground : Style.Colors.transparent
         border.width:1
         border.color: Style.Colors.menuHoverBackground
         radius: 10
@@ -39,7 +39,7 @@ T.Button {
             anchors.top: parent.top; anchors.topMargin: 7
             anchors.horizontalCenter: parent.horizontalCenter
             background: Rectangle {
-                color: "#00ffffff"
+                color: Style.Colors.transparent
             }
             icon{
                 source: control.checked? control.myFillIcon : control.myIcon
