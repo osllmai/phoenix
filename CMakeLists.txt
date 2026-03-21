@@ -540,6 +540,11 @@ qt_add_resources(app${APP_NAME}
 
         media/media.qrc
         view/view.qrc
+        view/component_library/style/ThemeData.js
+        view/component_library/button/MyButtonStyle.js
+        view/settings/components/ThemeVariantButton.qml
+        view/model/components/huggingface/components/components/FilterButton.qml
+        view/model/components/huggingface/components/components/SearchFilterPanel.qml
 )
 
 # qt_policy(SET QTP0004 NEW)
@@ -552,7 +557,6 @@ qt_add_qml_module(app${APP_NAME}
         view/Main.qml
 
         view/component_library/style/Colors.qml
-        view/component_library/style/ThemeData.js
         view/component_library/style/RoleEnum.qml
         view/component_library/button/MyButton.qml
         view/component_library/button/MyButtonStyle.js
@@ -710,6 +714,7 @@ qt_add_qml_module(app${APP_NAME}
 
     RESOURCES
         view/component_library/style/qmldir
+        view/component_library/style/ThemeData.js
     RESOURCE_PREFIX /
     SOURCES core/updatechecker.h core/updatechecker.cpp
     QML_FILES view/UpdateAvailable.qml

@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import '../../component_library/style' as Style
-import "../../component_library/style/ThemeData.js" as ThemeData
+import "qrc:/view/component_library/style/ThemeData.js" as ThemeData
 
 AbstractButton {
     id: root

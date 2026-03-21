@@ -9,12 +9,10 @@ Item{
     property string currentTheme: "editra"
     property string theme: isDarkTheme ? "Dark" : "Light"
 
-    // Active palette — rebuilt when theme or mode changes
     property var _p: ThemeData.getPalette(currentTheme, theme)
     onCurrentThemeChanged: _p = ThemeData.getPalette(currentTheme, theme)
     onThemeChanged: _p = ThemeData.getPalette(currentTheme, theme)
 
-    // Palette arrays (backward compatible)
     property var currentTextColor:          _p.textColor
     property var currentTextSelectionColor: _p.textSelectionColor
     property var currentBackgroundColor:    _p.backgroundColor
@@ -26,24 +24,17 @@ Item{
     property var currentOrangeColor:        _p.orangeColor
     property var currentMagentaColor:       _p.magentaColor
     property var currentOverlayColor:       _p.overlayColor
-
-    // Avatar colors (shared across all themes)
-    property var currentAvatarBGDynamicColor: (theme === "Light")
-        ? ["#82B536","#F15B50","#F38A3F","#CF9F02","#2ABB7F","#42B2D7","#388BFF","#8F7EE7","#DA62AC", currentBackgroundColor[3]]
-        : ["#82B536","#F15B50","#F38A3F","#CF9F02","#2ABB7F","#42B2D7","#388BFF","#8F7EE7","#DA62AC", currentBackgroundColor[3]]
-
-    // Blue layer overlays (shared across all themes)
+    property var currentAvatarBGDynamicColor:
+        ["#82B536","#F15B50","#F38A3F","#CF9F02","#2ABB7F","#42B2D7","#388BFF","#8F7EE7","#DA62AC", currentBackgroundColor[3]]
     property var currentColorForBlueLayers: (theme === "Light")
         ? ["#091E4208","#091E420F","#091E424F","#091E424F","#091E427D"]
         : ["#BCD6F00A","#A1BDD914","#A6C5E229","#BFDBF847","#9BB4CA80"]
-
 
     readonly property color menuNormalIcon: currentBackgroundColor[4]
     readonly property color menuHoverAndCheckedIcon: currentPrimaryColor[2]
     readonly property color menuHoverBackground: currentBackgroundColor[2]
     readonly property color menuShowCheckedRectangle: currentPrimaryColor[2]
     readonly property color menuBackground: currentBackgroundColor[2]
-
     readonly property color transparent: "#00ffffff"
     readonly property color background: currentBackgroundColor[0]
     readonly property color menu: currentBackgroundColor[1]
@@ -64,7 +55,6 @@ Item{
     readonly property color textPlaceholder: currentTextSelectionColor[0]
     readonly property color iconPrimaryNormal: currentBackgroundColor[4]
     readonly property color iconPrimaryHoverAndChecked: currentPrimaryColor[2]
-
     readonly property color iconFeatureBlueNormal: currentInfoColor[1]
     readonly property color iconFeatureBlueHoverAndChecked: currentInfoColor[2]
     readonly property color iconFeatureBlueBackground: currentInfoColor[0]
@@ -98,7 +88,6 @@ Item{
     readonly property color buttonPrimaryTextPressed: currentTextColor[0]
     readonly property color buttonPrimaryTextDisabled: currentTextColor[3]
     readonly property color buttonPrimaryTextSelected: currentTextColor[1]
-
     readonly property color buttonSecondaryNormal: currentPrimaryColor[0]
     readonly property color buttonSecondaryHover: currentBackgroundColor[3]
     readonly property color buttonSecondaryPressed: currentPrimaryColor[1]
@@ -114,7 +103,6 @@ Item{
     readonly property color buttonSecondaryTextPressed: currentTextColor[5]
     readonly property color buttonSecondaryTextDisabled: currentTextColor[6]
     readonly property color buttonSecondaryTextSelected: currentPrimaryColor[2]
-
     readonly property color buttonDangerNormal: currentErrorColor[2]
     readonly property color buttonDangerHover: currentErrorColor[3]
     readonly property color buttonDangerPressed: currentErrorColor[4]
@@ -130,7 +118,6 @@ Item{
     readonly property color buttonDangerTextPressed: currentTextColor[0]
     readonly property color buttonDangerTextDisabled: currentTextColor[3]
     readonly property color buttonDangerTextSelected: currentTextColor[1]
-
     readonly property color buttonFeatureNormal: transparent
     readonly property color buttonFeatureHover: currentBackgroundColor[2]
     readonly property color buttonFeaturePressed: currentPrimaryColor[1]
@@ -146,7 +133,6 @@ Item{
     readonly property color buttonFeatureTextPressed: currentTextColor[5]
     readonly property color buttonFeatureTextDisabled: currentTextColor[6]
     readonly property color buttonFeatureTextSelected: currentPrimaryColor[2]
-
     readonly property color buttonProgressNormal: currentPrimaryColor[1]
     readonly property color buttonProgressHover: currentPrimaryColor[2]
     readonly property color buttonProgressPressed: currentPrimaryColor[2]
@@ -185,8 +171,6 @@ Item{
     readonly property color progressBarBackground: currentPrimaryColor[0]
     readonly property color progressBarGradient0: currentPrimaryColor[1]
     readonly property color progressBarGradient1: currentPrimaryColor[3]
-
-    // Available themes list (for UI picker)
     readonly property var availableThemes: [
         "editra", "copper", "obsidian", "indigo", "news", "pencilly", "indox"
     ]
