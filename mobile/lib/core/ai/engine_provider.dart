@@ -9,8 +9,7 @@ import 'package:phoenix_core/phoenix_core.dart';
 /// in tests/dev by providing [engineExecutableProvider].
 String defaultEngineExecutable() {
   final exe = Platform.isWindows ? 'applocal_provider.exe' : 'applocal_provider';
-  final dir = Platform.environment['PHOENIX_ENGINE_DIR'] ??
-      'resources/providers/local_provider';
+  final dir = Platform.environment['PHOENIX_ENGINE_DIR'] ?? 'engine/local_provider';
   return '$dir/$exe';
 }
 
