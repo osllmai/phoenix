@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:phoenix_core/phoenix_core.dart';
+
 import '../../../../core/ai/engine_provider.dart';
-import '../../data/model_repository.dart';
-import '../../domain/ai_model.dart';
-import '../../domain/model_manager.dart';
 
 /// Model persistence. Overridden in `main()` with the SQLite impl; defaults to
 /// in-memory for tests/previews.

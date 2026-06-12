@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/ai_model.dart';
+import 'package:phoenix_core/phoenix_core.dart';
+
 import '../providers/model_providers.dart';
 
 /// Lists installed local models, lets the user select (load) one, like, remove,

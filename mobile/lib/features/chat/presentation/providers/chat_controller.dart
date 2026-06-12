@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/chat_service.dart';
-import '../../domain/entities/conversation.dart';
-import '../../domain/entities/message.dart';
+import 'package:phoenix_core/phoenix_core.dart';
+
 import 'chat_providers.dart';
 
 /// UI state for a single chat session.

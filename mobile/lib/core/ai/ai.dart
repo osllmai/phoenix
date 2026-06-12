@@ -1,10 +1,6 @@
-/// Barrel for the engine-agnostic inference layer.
-///
-/// The rest of the app imports `package:phoenix/core/ai/ai.dart` and never the
-/// concrete engine files directly.
+/// Barrel for the app's AI layer: the pure-Dart core (engine + services) plus
+/// the Flutter Riverpod glue. UI imports `package:phoenix/core/ai/ai.dart`.
 library;
 
-export 'inference_port.dart';
-export 'protocol.dart';
-export 'subprocess_engine.dart';
+export 'package:phoenix_core/phoenix_core.dart';
 export 'engine_provider.dart';

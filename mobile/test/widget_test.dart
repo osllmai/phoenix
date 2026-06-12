@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:phoenix/core/ai/engine_provider.dart';
-import 'package:phoenix/core/ai/inference_port.dart';
 import 'package:phoenix/features/chat/presentation/screens/chat_screen.dart';
+import 'package:phoenix_core/phoenix_core.dart';
 
 /// Fake engine that streams a canned reply word-by-word.
 class _FakeEngine implements InferencePort {

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:phoenix_core/phoenix_core.dart';
+
 import '../../../../core/ai/engine_provider.dart';
-import '../../data/chat_repository.dart';
-import '../../domain/chat_service.dart';
 
 /// Chat persistence. Overridden in `main()` with [SqfliteChatRepository] once the
 /// database is open; defaults to in-memory so widgets/tests work standalone.

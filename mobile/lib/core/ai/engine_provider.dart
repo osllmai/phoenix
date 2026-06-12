@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'inference_port.dart';
-import 'subprocess_engine.dart';
+import 'package:phoenix_core/phoenix_core.dart';
 
 /// Resolves the path to the `applocal_provider` engine binary for the host OS.
 ///
