@@ -1,12 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/chat/presentation/screens/chat_screen.dart';
-import '../features/models/presentation/screens/models_screen.dart';
+import '../core/feature/feature_registry.dart';
+import 'app_shell.dart';
 
-/// App routes. Grows as features land (settings, deepsearch …).
-final appRouter = GoRouter(
-  routes: [
-    GoRoute(path: '/', builder: (context, state) => const ChatScreen()),
-    GoRoute(path: '/models', builder: (context, state) => const ModelsScreen()),
-  ],
-);
+/// The app router, derived entirely from the feature registry. No feature is
+/// referenced directly here — routes come from the enabled [FeatureModule]s.
+final routerProvider = Provider<GoRouter>((ref) {
+  final registry = ref.watch(featureRegistryProvider);
+  final nav = registry.navItems();
+  return GoRouter(
+    initialLocation: nav.isNotEmpty ? nav.first.path : '/',
+    routes: [
+      ShellRoute(
+        builder: (context, state, child) => AppShell(child: child),
+        routes: registry.routes(),
+      ),
+    ],
+  );
+});

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router.dart';
 
 /// Root widget for Phoenix.
-class PhoenixApp extends StatelessWidget {
+class PhoenixApp extends ConsumerWidget {
   const PhoenixApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       title: 'Phoenix',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      routerConfig: appRouter,
+      routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
     );
   }

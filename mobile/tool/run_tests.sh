@@ -17,6 +17,6 @@ dart test \
   test/model_manager_test.dart
 
 echo "▶ Flutter widget tests"
-flutter test test/widget_test.dart
+flutter test test/widget_test.dart test/feature_registry_test.dart
 
 echo "✓ all mobile tests passed"
