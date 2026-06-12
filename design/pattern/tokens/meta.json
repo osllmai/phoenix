@@ -1,0 +1,27 @@
+{
+  "name": "House Design Tokens (sage default)",
+  "version": "1.0.0",
+  "description": "Single source of truth for design tokens across all surfaces. Edit only files under design/pattern/tokens/, then run build_tokens.py to regenerate design/pattern/generated/. Never hardcode raw values in app code.",
+  "colorSpace": "hex (sRGB), rgba for alpha",
+  "themes": ["light", "dark"],
+  "winnerRule": "Where the shipped code platforms (web globals.css + flutter theme) agree, that value is canonical and overrides the static mock. Web's WCAG-AA variants (*-ink text-on-color, darkened text-tertiary/text-link) are canonical and propagated to flutter. Dark theme is derived from web. Mobile-origin feature colors are preserved (mobile = source of truth for features) and promoted into the token set.",
+  "consumers": [
+    "design/mock/{mobile,tablet,desktop,extension}/**/*.html  (CSS custom props, light only)",
+    "frontend/app/globals.css  (CSS custom props + Tailwind @theme, light+dark)",
+    "extension/  (WXT) — reuses generated/tokens.web.css (CSS vars, no re-author)",
+    "mobile/lib/core/theme/*.dart  (Dart constants, light+dark)"
+  ],
+  "fonts": {
+    "display": "Lora",
+    "body": "Mulish",
+    "mono": "Roboto Mono",
+    "delivery": "runtime from Google Fonts — mocks: CDN <link>; web: next/font/google; mobile: google_fonts package. Bundle under design/pattern/fonts/ only if offline/perf requires it."
+  },
+  "files": {
+    "color.json": "themed semantic colors (core, scale, semantic + ink)",
+    "color-extra.json": "theme-agnostic (identity, video, illustration) + mobile feature colors",
+    "typography.json": "font families, size scale, weights, line-height, letter-spacing",
+    "layout.json": "spacing, radius, sizes, safe-area",
+    "effect.json": "shadow (themed), motion durations + easings"
+  }
+}
