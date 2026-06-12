@@ -1,0 +1,19 @@
+name: phoenix_core
+description: >
+  Phoenix on-device LLM core — pure Dart. Engine (llama.cpp subprocess),
+  chat + model services, and SQLite persistence behind a single PhoenixCore
+  facade. No Flutter: consumed in-process by the Flutter UI, and by the HTTP
+  gateway / CLI.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  sqflite_common: ^2.5.0
+
+dev_dependencies:
+  test: ^1.25.0
+  sqflite_common_ffi: ^2.3.0
+  lints: ^4.0.0

@@ -1,0 +1,33 @@
+{
+  "font": {
+    "display": { "family": "Lora",        "stack": "'Lora', Georgia, serif",                       "weights": [400, 500, 600] },
+    "body":    { "family": "Mulish",      "stack": "'Mulish', -apple-system, system-ui, sans-serif", "weights": [300, 400, 500, 600, 700] },
+    "mono":    { "family": "Roboto Mono", "stack": "'Roboto Mono', 'SF Mono', Menlo, monospace",   "weights": [400, 700] }
+  },
+  "fontSize": {
+    "xs": "11px",
+    "sm": "13px",
+    "base": "15px",
+    "md": "17px",
+    "lg": "20px",
+    "xl": "26px",
+    "2xl": "34px"
+  },
+  "fontWeight": {
+    "light": 300,
+    "regular": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700
+  },
+  "lineHeight": {
+    "tight": 1.2,
+    "snug": 1.35,
+    "normal": 1.55
+  },
+  "letterSpacing": {
+    "tight": "-0.02em",
+    "wide": "0.02em",
+    "caps": "0.08em"
+  }
+}

@@ -67,3 +67,6 @@ _pycache_/
 .claude
 
 CLAUDE.md
+
+.claude/*
+*/design/*

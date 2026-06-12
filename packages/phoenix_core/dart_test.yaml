@@ -1,0 +1,3 @@
+# The engine integration test spawns a subprocess; run serially to avoid the
+# parallel runner racing on process I/O.
+concurrency: 1

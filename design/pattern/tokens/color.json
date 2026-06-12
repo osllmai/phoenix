@@ -1,0 +1,71 @@
+{
+  "color": {
+    "bg": {
+      "primary":   { "light": "#FAFAF7", "dark": "#1A1A16" },
+      "secondary": { "light": "#F4F2ED", "dark": "#14140F" },
+      "tertiary":  { "light": "#EDEAE3", "dark": "#26251F" }
+    },
+    "surface": {
+      "card":  { "light": "#FFFFFF", "dark": "#232220" },
+      "input": { "light": "#FFFFFF", "dark": "#2E2D27" }
+    },
+    "border": {
+      "default": { "light": "#E2DFD6", "dark": "#3A3833" },
+      "subtle":  { "light": "#EDEBE4", "dark": "#2E2D27" },
+      "strong":  { "light": "#CBC7BC", "dark": "#514E45" },
+      "focus":   { "light": "#7BA696", "dark": "#6FA88F" }
+    },
+    "text": {
+      "primary":   { "light": "#1C1B17", "dark": "#F2F1EC" },
+      "secondary": { "light": "#5C584D", "dark": "#BAB6AA" },
+      "tertiary":  { "light": "#6E6A5C", "dark": "#908C7E" },
+      "disabled":  { "light": "#B5B1A7", "dark": "#5C584D" },
+      "inverse":   { "light": "#FAFAF7", "dark": "#1C1B17" },
+      "link":      { "light": "#2F5F50", "dark": "#8FBCA5" }
+    },
+    "accent": {
+      "primary": { "light": "#4E8A76", "dark": "#6FA88F" },
+      "hover":   { "light": "#3D7362", "dark": "#82B89E" },
+      "active":  { "light": "#2F5F50", "dark": "#97C6AE" },
+      "subtle":  { "light": "#E8F0EC", "dark": "#29372F" },
+      "ink":     { "light": "#2F5F50", "dark": "#97C6AE" }
+    },
+    "sage": {
+      "50":  { "light": "#F0F4F1", "dark": "#232E28" },
+      "100": { "light": "#D6E5DE", "dark": "#2C3B33" },
+      "200": { "light": "#B3CFBE", "dark": "#3C5046" },
+      "300": { "light": "#8BB8A0", "dark": "#557060" },
+      "700": { "light": "#2F5F50", "dark": "#9BC7AF" },
+      "900": { "light": "#17342B", "dark": "#C8DECF" }
+    },
+    "sand": {
+      "200": { "light": "#EDEAE3", "dark": "#26251F" },
+      "300": { "light": "#E2DFD6", "dark": "#302E27" }
+    },
+    "success": {
+      "base": { "light": "#5A9E6F", "dark": "#6FB585" },
+      "bg":   { "light": "#EDF5EF", "dark": "#1F2E24" },
+      "ink":  { "light": "#2C7048", "dark": "#84CC9C" }
+    },
+    "warning": {
+      "base": { "light": "#C4943A", "dark": "#D0A04A" },
+      "bg":   { "light": "#FBF5E9", "dark": "#2E2818" },
+      "ink":  { "light": "#6E5114", "dark": "#D9B872" }
+    },
+    "error": {
+      "base": { "light": "#C15B52", "dark": "#D0726A" },
+      "bg":   { "light": "#FBEEED", "dark": "#2E1C1A" },
+      "ink":  { "light": "#A8362E", "dark": "#E8938A" }
+    },
+    "info": {
+      "base": { "light": "#5B8BA5", "dark": "#6E9CB5" },
+      "bg":   { "light": "#EDF3F7", "dark": "#1B2730" },
+      "ink":  { "light": "#3C6075", "dark": "#93BBD0" }
+    },
+    "plum": {
+      "base": { "light": "#8A6CA8", "dark": "#A98FC2" },
+      "bg":   { "light": "#F1ECF6", "dark": "#2A2336" },
+      "ink":  { "light": "#694E86", "dark": "#C6B2D9" }
+    }
+  }
+}

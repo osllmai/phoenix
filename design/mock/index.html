@@ -1,0 +1,65 @@
+<!doctype html>
+<!-- design/mock/index.html — searchable mock hub. 4 viewports: mobile(m-) tablet(T-) desktop(D-) extension(x-). -->
+<!-- DATA flags: m=mobile/flutter · t=tablet · d=desktop · x=extension. tag: F(frontend) M(mobile) FM(both). -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mock Hub</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background:#0b0f14; color:#e6edf3; font:14px/1.5 system-ui,sans-serif; }
+  header { padding:16px 20px; border-bottom:1px solid #1c2530; position:sticky; top:0; background:#0b0f14; }
+  input, select { background:#11161d; color:#e6edf3; border:1px solid #1c2530; border-radius:8px; padding:8px 10px; }
+  main { padding:16px 20px; }
+  .app { margin:18px 0; }
+  .app h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:#7d8aa0; margin:0 0 8px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; }
+  a.scr { display:flex; justify-content:space-between; gap:8px; padding:10px 12px; background:#11161d;
+          border:1px solid #1c2530; border-radius:10px; color:#e6edf3; text-decoration:none; }
+  a.scr:hover { border-color:#2f6fed; }
+  .tags { color:#7d8aa0; font-size:11px; }
+  .tag { border:1px solid #2a3442; border-radius:6px; padding:1px 6px; margin-left:4px; }
+</style>
+</head>
+<body>
+<header>
+  <input id="q" placeholder="Search screens…" oninput="render()" />
+  <select id="vp" onchange="render()">
+    <option value="">All viewports</option>
+    <option value="m">Mobile (m-)</option>
+    <option value="t">Tablet (T-)</option>
+    <option value="d">Desktop (D-)</option>
+    <option value="x">Extension (x-)</option>
+  </select>
+</header>
+<main id="out"></main>
+<script>
+  // Viewport dir + filename-prefix maps. Add new screens to DATA only.
+  const DIRS = { m:'mobile', t:'tablet', d:'desktop', x:'extension' };
+  const PRE  = { m:'m-',     t:'T-',     d:'D-',      x:'x-' };
+  const CATS = ['Auth','Dashboard','Content','Activity','Social','Profile','Billing','Other'];
+  // One row per screen: {app, n:name, m/t/d/x:1 if that viewport exists, tag:'F'|'M'|'FM'}
+  const DATA = [
+    // { app:'accounts', n:'auth-login', m:1, t:1, d:1, x:0, tag:'FM' },
+  ];
+  function card(app, r, vp) {
+    const vps = (vp ? [vp] : ['m','t','d','x']).filter(v => r[v]);
+    return vps.map(v =>
+      `<a class="scr" href="${DIRS[v]}/${app}/${PRE[v]}${r.n}.html">
+         <span>${r.n}</span><span class="tags">${v.toUpperCase()}<span class="tag">${r.tag||''}</span></span>
+       </a>`).join('');
+  }
+  function render() {
+    const q = (document.getElementById('q').value||'').toLowerCase();
+    const vp = document.getElementById('vp').value;
+    const byApp = {};
+    DATA.filter(r => (r.n+r.app).toLowerCase().includes(q)).forEach(r => (byApp[r.app] ||= []).push(r));
+    document.getElementById('out').innerHTML = Object.keys(byApp).sort().map(app =>
+      `<section class="app"><h2>${app}</h2><div class="grid">${byApp[app].map(r=>card(app,r,vp)).join('')}</div></section>`
+    ).join('') || '<p class="tags">No screens yet — add rows to DATA.</p>';
+  }
+  render();
+</script>
+</body>
+</html>

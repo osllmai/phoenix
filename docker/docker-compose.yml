@@ -1,0 +1,33 @@
+# Phoenix local stack (scaffold — mirrors health's service shape).
+services:
+  django:
+    build: { context: ../backend, dockerfile: ../docker/Dockerfile }
+    command: python manage.py runserver 0.0.0.0:16000
+    env_file: ../.env
+    ports: ['16000:16000']
+    depends_on: [postgres, redis]
+
+  celery:
+    build: { context: ../backend, dockerfile: ../docker/Dockerfile }
+    command: celery -A config worker -l info
+    env_file: ../.env
+    depends_on: [redis, postgres]
+
+  frontend:
+    image: node:22
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    volumes: ['../frontend:/app']
+    ports: ['3000:3000']
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: phoenix
+      POSTGRES_PASSWORD: phoenix
+      POSTGRES_DB: phoenix
+    ports: ['5432:5432']
+
+  redis:
+    image: redis:7
+    ports: ['6379:6379']
