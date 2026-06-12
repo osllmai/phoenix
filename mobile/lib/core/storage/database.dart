@@ -33,6 +33,15 @@ class PhoenixDatabase {
       numberOfGPULayers INTEGER NOT NULL DEFAULT 0
     )''';
 
+  static const _modelSql = '''
+    CREATE TABLE IF NOT EXISTS model(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      key TEXT,
+      add_model_time TEXT,
+      isLike INTEGER NOT NULL DEFAULT 0
+    )''';
+
   static const _messageSql = '''
     CREATE TABLE IF NOT EXISTS message(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,6 +68,7 @@ class PhoenixDatabase {
         onCreate: (d, _) async {
           await d.execute(_conversationSql);
           await d.execute(_messageSql);
+          await d.execute(_modelSql);
         },
       ),
     );

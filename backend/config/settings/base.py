@@ -47,8 +47,10 @@ TEMPLATES = [{
     ]},
 }]
 
+# DB is user's choice: Postgres in docker (DATABASE_URL set via .env), SQLite
+# as a zero-setup local fallback. Both supported — see design/MONOREPO.md.
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://phoenix:phoenix@postgres:5432/phoenix'),
+    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR}/db.sqlite3'),
 }
 
 # Celery

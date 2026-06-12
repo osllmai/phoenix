@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../models/presentation/providers/model_providers.dart';
 import '../providers/chat_controller.dart';
 import '../widgets/message_bubble.dart';
 
@@ -32,8 +34,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final state = ref.watch(chatControllerProvider);
     final hasStreaming = state.isGenerating || state.streaming.isNotEmpty;
 
+    final active = ref.watch(activeModelProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('🔥 Phoenix')),
+      appBar: AppBar(
+        title: Text(active == null ? '🔥 Phoenix' : '🔥 ${active.name}'),
+        actions: [
+          IconButton(
+            tooltip: 'Models',
+            icon: const Icon(Icons.dns_outlined),
+            onPressed: () => context.push('/models'),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(

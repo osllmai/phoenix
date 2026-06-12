@@ -8,6 +8,8 @@ import 'app/app.dart';
 import 'core/storage/database.dart';
 import 'features/chat/data/sqflite_chat_repository.dart';
 import 'features/chat/presentation/providers/chat_providers.dart';
+import 'features/models/data/sqflite_model_repository.dart';
+import 'features/models/presentation/providers/model_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,7 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         chatRepositoryProvider.overrideWithValue(SqfliteChatRepository(db)),
+        modelRepositoryProvider.overrideWithValue(SqfliteModelRepository(db)),
       ],
       child: const PhoenixApp(),
     ),

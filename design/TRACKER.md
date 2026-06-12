@@ -29,7 +29,7 @@ Design refs: [`scenario/`](scenario/README.md) · [`integration/`](integration/R
 ## P2 — Data layer
 | ID | Task | Depends | Status |
 |----|------|---------|--------|
-| 2.1 | Port SQLite schema → sqflite (conversation, message done; model/pdf/pdf_embedding TODO) | 0.6 | ◐ `core/storage/database.dart` |
+| 2.1 | Port SQLite schema → sqflite (conversation, message, model done; pdf/pdf_embedding TODO) | 0.6 | ◐ `core/storage/database.dart` |
 | 2.2 | Migration/seed + DB init (FFI factory, desktop+test) | 2.1 | ☑ verified via FFI test |
 | 2.3 | Repositories (chat done; model/pdf TODO) | 2.1 | ◐ `SqfliteChatRepository` + in-memory fake |
 
@@ -37,7 +37,7 @@ Design refs: [`scenario/`](scenario/README.md) · [`integration/`](integration/R
 | ID | Task | Depends | Status |
 |----|------|---------|--------|
 | 3.1 | ChatService / Conversation / Message (engine + persistence, streaming) | 1.5, 2.3 | ☑ `features/chat/**` + Riverpod providers, 4 tests |
-| 3.2 | ModelManager (local catalog, settings) | 2.3 | ☐ |
+| 3.2 | ModelManager (local catalog, select→engine load, like/remove) | 2.3 | ☑ `features/models/**`, 3 tests |
 | 3.3 | HuggingFace browse + download service | 3.2 | ☐ |
 | 3.4 | Online providers (API models) | 3.1 | ☐ |
 | 3.5 | DeepSearch / arXiv (fetch, tokenizer, embeddings) | 3.1 | ☐ |
@@ -48,7 +48,7 @@ Design refs: [`scenario/`](scenario/README.md) · [`integration/`](integration/R
 |----|------|---------|--------|
 | 4.1 | Component library / design system (46 qml) | 0.6 | ◐ MessageBubble + composer started |
 | 4.2 | Chat view (20 qml) | 3.1, 4.1 | ☑ `ChatScreen` + controller, go_router shell, widget test |
-| 4.3 | Model views (48 qml) | 3.2, 4.1 | ☐ |
+| 4.3 | Model views (48 qml) | 3.2, 4.1 | ◐ `ModelsScreen` (list/add/select/like/remove) + route |
 | 4.4 | Settings (14 qml) | 4.1 | ☐ |
 | 4.5 | DeepSearch / Developer / PDF / Home / Footer / Menu | 3.5, 3.6 | ☐ |
 | 4.6 | Theming (port `docs/themes`) | 4.1 | ☐ |
