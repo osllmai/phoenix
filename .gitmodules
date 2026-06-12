@@ -1,3 +1,0 @@
-[submodule "phoenix/llama.cpp-mainline"]
-	path = phoenix/llama.cpp-mainline
-	url = https://github.com/nomic-ai/llama.cpp.git

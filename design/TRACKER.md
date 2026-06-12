@@ -97,8 +97,8 @@ Design refs: [`scenario/`](scenario/README.md) · [`integration/`](integration/R
 | ID | Task | Depends | Status |
 |----|------|---------|--------|
 | 10.1 | Feature-parity check vs current Phoenix | P4, P5 | ☐ |
-| 10.2 | **Delete** `view/` + C++ `core/` outright — Qt preserved in a separate branch (no archiving needed). Keep `resources/providers/local_provider/` (llama.cpp engine) | 10.1 | ☐ |
-| 10.3 | Remove CMake/Qt build, add Flutter build/CI | 10.2 | ☐ |
+| 10.2 | **Delete** `view/` + C++ `core/` outright — Qt preserved in a separate branch. Kept `resources/providers/local_provider/` (llama.cpp engine) | 10.1 | ☑ 409 files removed |
+| 10.3 | Remove CMake/Qt build + Qt CI (add Flutter CI later) | 10.2 | ☑ CMakeLists/cmake/release.json/workflows removed |
 | 10.4 | Update README/docs, **ready to push** | 10.3 | ☐ |
 
 > **Qt strategy (confirmed):** current Qt/QML + C++ is preserved on a separate
