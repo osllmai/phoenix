@@ -6,6 +6,8 @@
 /// drop in without touching any caller.
 library;
 
+import 'wire_guard.dart';
+
 /// Generation parameters sent to the engine per prompt.
 ///
 /// Field names/order mirror the `__PARAMS_SETTINGS__` block emitted by the
@@ -40,6 +42,12 @@ class InferenceParams {
   final int repeatPenaltyTokens;
   final int contextLength;
   final int numberOfGpuLayers;
+
+  /// Rejects single-line fields that would corrupt the params block (S5).
+  void validate() {
+    WireGuard.checkParamField('promptTemplate', promptTemplate);
+    WireGuard.checkParamField('systemPrompt', systemPrompt);
+  }
 
   /// Renders the exact `__PARAMS_SETTINGS__ … __END_PARAMS_SETTINGS__` block the
   /// engine expects (see `core/provider/offlineprovider.cpp`).
@@ -77,10 +85,14 @@ abstract interface class InferencePort {
   Future<void> loadModel(String modelPath);
 
   /// Streams generated text tokens for [prompt]. The stream closes when the
-  /// engine signals end-of-response. Throws [StateError] if no model is loaded.
+  /// engine signals end-of-response. Throws [StateError] if no model is loaded
+  /// or a generation is already in flight; throws [ArgumentError] if [prompt] or
+  /// [params] would collide with the wire protocol. On a crash/error the stream
+  /// emits an `EngineException` then closes.
   Stream<String> prompt(String prompt, {InferenceParams params});
 
-  /// Requests the engine stop the in-flight generation.
+  /// Requests the engine stop the in-flight generation. No-op when idle. The
+  /// token stream closes once the engine acknowledges (its `__DONE__`).
   Future<void> stop();
 
   /// Tears down the engine and releases the underlying process/resources.

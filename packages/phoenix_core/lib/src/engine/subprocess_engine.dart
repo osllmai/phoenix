@@ -2,63 +2,90 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'engine_exceptions.dart';
 import 'inference_port.dart';
 import 'protocol.dart';
+import 'stderr_buffer.dart';
+import 'stdout_router.dart';
+import 'wire_guard.dart';
 
 /// [InferencePort] backed by the existing `applocal_provider` (llama.cpp / GGUF)
 /// binary, spawned as a child process and driven over stdin/stdout.
 ///
-/// This is the Dart port of `core/provider/offlineprovider.cpp`: same binary,
-/// same `__PROMPT__/__END__/__DONE_PROMPTPROCESS__` protocol — no Qt.
+/// Dart port of `core/provider/offlineprovider.cpp`: same binary, same
+/// `__PROMPT__/__END__/__DONE_PROMPTPROCESS__` protocol — no Qt.
 class SubprocessEngine implements InferencePort {
   /// [executablePath] is the engine binary (or a mock that speaks the protocol).
   /// [extraArgs] lets a mock be launched as `dart run mock.dart` etc.
-  SubprocessEngine({required this.executablePath, this.extraArgs = const []});
+  SubprocessEngine({
+    required this.executablePath,
+    this.extraArgs = const [],
+    this.loadTimeout = const Duration(seconds: 120),
+    this.stopTimeout = const Duration(seconds: 5),
+  });
 
   final String executablePath;
   final List<String> extraArgs;
+  final Duration loadTimeout;
+  final Duration stopTimeout;
 
   Process? _process;
   StreamSubscription<String>? _stdoutSub;
   EngineState _state = EngineState.idle;
-
   Completer<void>? _loaded;
   StreamController<String>? _tokens;
+  StdoutRouter? _router;
+  Timer? _stopTimer;
+  final _stderr = StderrBuffer();
 
   @override
   EngineState get state => _state;
 
   @override
   Future<void> loadModel(String modelPath) async {
+    if (_state == EngineState.loadingModel) {
+      throw StateError('A model load is already in progress.');
+    }
     if (_process != null) {
-      throw StateError('Engine already started; dispose() before reloading.');
+      if (_state == EngineState.generating) {
+        throw StateError('Cannot load a model while generating; stop() first.');
+      }
+      await dispose(); // S4: model switch — reap the old process first.
     }
     _state = EngineState.loadingModel;
     _loaded = Completer<void>();
-
-    _process = await Process.start(
-      executablePath,
-      [...extraArgs, '--model', modelPath],
-      // Merge stderr so engine diagnostics don't deadlock the pipe.
-      mode: ProcessStartMode.normal,
+    _stderr.clear();
+    _router = StdoutRouter(
+      onReady: _onReady,
+      onToken: (t) => _tokens?.add(t),
+      onDone: _finishResponse,
     );
 
-    _stdoutSub = _process!.stdout
+    final p = await Process.start(executablePath, [...extraArgs, '--model', modelPath]);
+    _process = p;
+    unawaited(p.exitCode.then(_onExit));
+    _stdoutSub = p.stdout
         .transform(utf8.decoder)
         .transform(const LineSplitter())
-        .listen(_onLine, onError: _onError, onDone: _onProcessDone);
-    // Drain stderr so it never blocks; surface as needed later.
-    _process!.stderr.transform(utf8.decoder).listen((_) {});
+        .listen((l) => _router?.handle(l, _state), onError: _onError);
+    p.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen(_stderr.add);
 
-    await _loaded!.future;
+    await _loaded!.future.timeout(loadTimeout, onTimeout: () {
+      unawaited(dispose());
+      throw _fail(EngineFailure.error, 'Model load timed out');
+    });
   }
 
   @override
   Stream<String> prompt(String prompt, {InferenceParams params = const InferenceParams()}) {
-    final p = _process;
-    if (p == null || _state == EngineState.idle || _state == EngineState.loadingModel) {
-      throw StateError('No model loaded. Call loadModel() first.');
+    if (_state != EngineState.ready) {
+      throw StateError(_state == EngineState.generating
+          ? 'A generation is already in flight; stop() first.'
+          : 'No model loaded. Call loadModel() first.');
     }
+    params.validate(); // S5
+    WireGuard.checkPromptBody(prompt); // S5
+    final p = _process!;
     _tokens = StreamController<String>();
     _state = EngineState.generating;
 
@@ -66,7 +93,6 @@ class SubprocessEngine implements InferencePort {
     p.stdin.write(params.toParamBlock());
     p.stdin.writeln(EngineProtocol.promptBegin);
     p.stdin.writeln('${prompt.trim()}\n${EngineProtocol.promptEnd}');
-
     return _tokens!.stream;
   }
 
@@ -74,49 +100,50 @@ class SubprocessEngine implements InferencePort {
   Future<void> stop() async {
     if (_state != EngineState.generating) return;
     _process?.stdin.writeln(EngineProtocol.stop);
-    _state = EngineState.stopped;
+    // The engine emits __DONE__ after honoring __STOP__ (verified in main.cpp),
+    // which closes the stream; guard against a wedged engine that never acks.
+    _stopTimer = Timer(stopTimeout, () {
+      if (_state != EngineState.generating) return;
+      _tokens?.addError(_fail(EngineFailure.crash, 'stop() not acknowledged'));
+      _finishResponse();
+    });
   }
 
   @override
   Future<void> dispose() async {
+    _stopTimer?.cancel();
     await _stdoutSub?.cancel();
-    _process?.kill();
+    _stdoutSub = null;
+    final p = _process;
+    _process = null; // clear first so _onExit treats this as a clean dispose.
+    p?.kill();
+    // Don't leave a load awaiter hanging until the timeout if we tear down mid-load.
+    if (!(_loaded?.isCompleted ?? true)) {
+      _loaded!.completeError(StateError('Engine disposed during load.'));
+      _loaded!.future.ignore(); // suppress unhandled-error if no one is awaiting.
+    }
     await _tokens?.close();
-    _process = null;
+    _tokens = null;
     _state = EngineState.idle;
+    if (p != null) await p.exitCode; // reap so a respawn can't double-bind the GPU.
   }
 
-  // --- stdout protocol handling ------------------------------------------------
+  // --- internals --------------------------------------------------------------
 
-  void _onLine(String line) {
-    // Model-load handshake.
-    if (_state == EngineState.loadingModel) {
-      if (line.trimRight().endsWith(EngineProtocol.loadingFinished)) {
-        _state = EngineState.ready;
-        if (!(_loaded?.isCompleted ?? true)) _loaded!.complete();
-      }
-      return;
-    }
-
-    // End-of-response marker may arrive with trailing token text on the line.
-    final idx = line.indexOf(EngineProtocol.done);
-    if (idx >= 0) {
-      final before = line.substring(0, idx);
-      if (before.isNotEmpty) _tokens?.add(before);
-      _finishResponse();
-      return;
-    }
-
-    if (_state == EngineState.generating) {
-      _tokens?.add(line);
-    }
+  void _onReady() {
+    _state = EngineState.ready;
+    if (!(_loaded?.isCompleted ?? true)) _loaded!.complete();
   }
 
   void _finishResponse() {
+    _stopTimer?.cancel();
     _state = EngineState.ready;
     _tokens?.close();
     _tokens = null;
   }
+
+  EngineException _fail(EngineFailure kind, String message, {int? exitCode}) =>
+      EngineException(kind, message, exitCode: exitCode, stderrTail: _stderr.tail);
 
   void _onError(Object e, StackTrace st) {
     _state = EngineState.error;
@@ -124,10 +151,18 @@ class SubprocessEngine implements InferencePort {
     if (!(_loaded?.isCompleted ?? true)) _loaded!.completeError(e, st);
   }
 
-  void _onProcessDone() {
-    if (_state == EngineState.generating) _finishResponse();
-    if (!(_loaded?.isCompleted ?? true)) {
-      _loaded!.completeError(StateError('Engine exited before model load.'));
+  // Fires on real process death; the clean dispose() path nulls _process first.
+  void _onExit(int code) {
+    if (_process == null) return;
+    if (_state == EngineState.generating) {
+      _tokens?.addError(
+          _fail(EngineFailure.crash, 'Engine exited during generation', exitCode: code));
+      _finishResponse();
+    } else if (!(_loaded?.isCompleted ?? true)) {
+      _loaded!.completeError(
+          _fail(EngineFailure.crash, 'Engine exited before model load', exitCode: code));
     }
+    _process = null;
+    _state = EngineState.idle;
   }
 }

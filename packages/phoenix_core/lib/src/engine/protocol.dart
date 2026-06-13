@@ -28,4 +28,13 @@ class EngineProtocol {
 
   /// Host → engine: closes the parameter settings block.
   static const String paramsEnd = '__END_PARAMS_SETTINGS__';
+
+  /// Every control marker. Used to reject user content that would collide with
+  /// the line protocol (see `WireGuard`).
+  static const Set<String> all = {
+    loadingFinished, promptBegin, promptEnd, done, stop, paramsBegin, paramsEnd,
+  };
+
+  /// True if [line] (trimmed) is exactly a protocol control marker.
+  static bool isDelimiter(String line) => all.contains(line.trim());
 }

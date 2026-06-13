@@ -14,39 +14,61 @@ class ChatService {
   final InferencePort engine;
   final ChatRepository repository;
 
+  bool _aborting = false;
+
   /// Sends [text] within [conversation] and streams the response tokens.
   ///
-  /// Side effects: the user message is saved before generation; the full
-  /// response is saved once the stream completes.
+  /// Side effects: the user message is saved before generation; the response is
+  /// saved once the stream ends. If stop()/an engine error cuts it short, the
+  /// partial text is still saved with status `aborted` (S7), then the error
+  /// (if any) rethrows.
   Stream<String> send(Conversation conversation, String text) async* {
     final convId = conversation.id;
     if (convId == null) {
       throw ArgumentError('Conversation must be persisted before sending.');
     }
-
+    _aborting = false;
     await repository.addMessage(Message(
-      conversationId: convId,
-      text: text,
-      date: _now(),
-      isPrompt: true,
-    ));
+        conversationId: convId, text: text, date: _now(), isPrompt: true));
 
     final buffer = StringBuffer();
-    await for (final token in engine.prompt(text, params: conversation.params)) {
-      buffer.write(token);
-      yield token;
+    var settled = false;
+    Future<void> settle(MessageStatus s) async {
+      if (settled) return;
+      settled = true;
+      await _persistResponse(convId, buffer, s);
     }
 
-    await repository.addMessage(Message(
-      conversationId: convId,
-      text: buffer.toString().trim(),
-      date: _now(),
-      isPrompt: false,
-    ));
+    try {
+      await for (final token in engine.prompt(text, params: conversation.params)) {
+        buffer.write(token);
+        yield token;
+      }
+      await settle(_aborting ? MessageStatus.aborted : MessageStatus.normal);
+    } catch (_) {
+      await settle(MessageStatus.aborted);
+      rethrow;
+    } finally {
+      // Halt the engine + persist the partial if the consumer cancelled the
+      // stream (no throw, no normal end) — otherwise the engine leaks generating.
+      await engine.stop();
+      await settle(MessageStatus.aborted);
+    }
   }
 
-  /// Stops the in-flight generation.
-  Future<void> stop() => engine.stop();
+  Future<void> _persistResponse(int convId, StringBuffer buf, MessageStatus s) =>
+      repository.addMessage(Message(
+          conversationId: convId,
+          text: buf.toString().trim(),
+          date: _now(),
+          isPrompt: false,
+          status: s));
+
+  /// Stops the in-flight generation; its partial response persists as aborted.
+  Future<void> stop() async {
+    _aborting = true;
+    await engine.stop();
+  }
 
   /// Loads the message history for a conversation.
   Future<List<Message>> history(int conversationId) =>

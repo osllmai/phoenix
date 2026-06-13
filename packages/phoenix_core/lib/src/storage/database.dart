@@ -52,8 +52,12 @@ class PhoenixDatabase {
       icon TEXT NOT NULL,
       isPrompt INTEGER NOT NULL,
       like INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'normal',
       FOREIGN KEY(conversation_id) REFERENCES conversation(id) ON DELETE CASCADE
     )''';
+
+  static const _v2AddStatus =
+      "ALTER TABLE message ADD COLUMN status TEXT NOT NULL DEFAULT 'normal'";
 
   /// Opens the DB at [path] using [factory] and runs migrations.
   ///
@@ -63,12 +67,15 @@ class PhoenixDatabase {
     final db = await factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 1,
+        version: 2,
         onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
         onCreate: (d, _) async {
           await d.execute(_conversationSql);
           await d.execute(_messageSql);
           await d.execute(_modelSql);
+        },
+        onUpgrade: (d, from, to) async {
+          if (from < 2) await d.execute(_v2AddStatus);
         },
       ),
     );

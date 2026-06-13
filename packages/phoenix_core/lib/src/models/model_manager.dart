@@ -21,12 +21,15 @@ class ModelManager {
 
   /// Registers a model from a local `.gguf` [path].
   Future<AiModel> addLocal({required String name, required String path}) async {
+    if (name.trim().isEmpty) throw ArgumentError.value(name, 'name', 'empty');
+    if (path.trim().isEmpty) throw ArgumentError.value(path, 'path', 'empty');
     final draft = AiModel(name: name, key: path, addedAt: DateTime.now());
     final id = await repository.add(draft);
     return draft.copyWith(id: id);
   }
 
-  /// Loads [model] into the engine and marks it active.
+  /// Loads [model] into the engine and marks it active. Switching from an
+  /// already-loaded model is supported — the engine reloads (S4).
   Future<void> select(AiModel model) async {
     if (!model.isInstalled) {
       throw ArgumentError('Model "${model.name}" has no file (key) to load.');
