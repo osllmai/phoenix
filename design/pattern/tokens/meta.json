@@ -1,5 +1,5 @@
 {
-  "name": "House Design Tokens (sage default)",
+  "name": "Ember (Phoenix) Design Tokens",
   "version": "1.0.0",
   "description": "Single source of truth for design tokens across all surfaces. Edit only files under design/pattern/tokens/, then run build_tokens.py to regenerate design/pattern/generated/. Never hardcode raw values in app code.",
   "colorSpace": "hex (sRGB), rgba for alpha",
