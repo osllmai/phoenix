@@ -36,8 +36,45 @@ cd mobile && flutter pub get && flutter run -d linux
 bash mobile/tool/run_tests.sh
 
 # Backend + web + infra (docker)
-cp .env.example .env && make up      # api :16000 · web :3000
+cp .env.example .env && make up      # web → localhost:37001 · api → localhost:37000
 ```
+
+## Using Phoenix
+
+Everything runs **on your machine** — pick a surface, load a model, and go.
+
+**1. Launch**
+- **Desktop app (Flutter)** — the functional on-device app:
+  `cd mobile && flutter run -d linux` (or `-d macos` / `-d windows`).
+- **Web** — `cp .env.example .env && make up`, then open **http://localhost:37001**.
+  The browser talks to the on-device gateway (`phoenix_server`) at
+  `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:24678`).
+
+**2. Add a model** (under **Models** — first launch walks you through it)
+- **Local** — point Phoenix at a `.gguf` you already have (*Models → Add*), or
+- **Browse** — download one from the catalog, or
+- **Online / Providers** — connect a hosted provider with your own key (BYOK).
+
+Local models run via llama.cpp — nothing leaves your device.
+
+**3. Work**
+- **Chat** — talk to the loaded model (markdown, code, streaming).
+- **Documents** — add a PDF/office file; Phoenix converts + indexes it (Docling).
+- **DeepSearch** — ask questions grounded in your documents (RAG).
+- **Speech** — transcribe audio on-device (whisper.cpp).
+- **Forecasting** — time-series forecasts (TimesFM). · **Extensions** — add features on demand.
+
+**4. Use the local API** (developers) — *Developer → Server* exposes an
+OpenAI/Anthropic-compatible endpoint; point any client at your local gateway:
+
+```bash
+curl http://localhost:24678/v1/chat/completions \
+  -H 'content-type: application/json' \
+  -d '{"model":"local","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+> The Flutter desktop app is the fully wired surface today; the web app ships the
+> full UI with live models, and its remaining data flows wire to the backend as it lands.
 
 ## Principle
 

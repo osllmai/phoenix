@@ -37,6 +37,7 @@ services:
     image: node:22
     working_dir: /app
     command: sh -c "corepack enable && pnpm install && pnpm dev"
+    env_file: ../../.env
     volumes:
       - ../../frontend:/app
       - /app/node_modules
