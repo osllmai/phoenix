@@ -1,0 +1,78 @@
+# Phoenix local stack (dev). `make up` targets this file.
+name: phoenix
+
+services:
+  backend:
+    container_name: phoenix-backend
+    image: phoenix-backend
+    build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
+    command: python manage.py runserver 0.0.0.0:16000
+    env_file: ../../.env
+    ports: ['${API_PORT}:16000']
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:16000/api/v1/health/']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  celery:
+    container_name: phoenix-celery
+    image: phoenix-backend
+    build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
+    command: celery -A config worker -l info
+    env_file: ../../.env
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck: { disable: true }
+    restart: unless-stopped
+
+  frontend:
+    container_name: phoenix-frontend
+    image: node:22
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    volumes:
+      - ../../frontend:/app
+      - /app/node_modules
+      - /app/.next
+      - /app/.pnpm-store
+    ports: ['${WEB_PORT}:3000']
+    restart: unless-stopped
+
+  postgres:
+    container_name: phoenix-postgres
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports: ['${PG_PORT}:5432']
+    volumes: ['pgdata:/var/lib/postgresql/data']
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    container_name: phoenix-redis
+    image: redis:7-alpine
+    ports: ['${REDIS_PORT}:6379']
+    volumes: ['redisdata:/data']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

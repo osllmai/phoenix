@@ -1,0 +1,11 @@
+# nginx prod-edge rehearsal — layer on compose.yml:
+#   make edge   (docker compose -f local/compose.yml -f local/edge.yml up -d)
+name: phoenix
+services:
+  nginx:
+    container_name: phoenix-nginx
+    image: nginx:1.27-alpine
+    ports: ['${HTTP_PORT}:80']
+    volumes: ['../production/nginx:/etc/nginx/conf.d:ro']
+    depends_on: [backend, frontend]
+    restart: unless-stopped

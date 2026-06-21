@@ -63,6 +63,7 @@ out/
 .output/
 .wxt/
 *.tsbuildinfo
+next-env.d.ts
 coverage/
 test-results/
 
@@ -90,3 +91,6 @@ CLAUDE.md
 # Design folder is local-only — never push to GitHub
 design/
 */design/*
+
+# Backend is local-only — not shared
+backend/

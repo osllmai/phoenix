@@ -1,0 +1,107 @@
+/* Phoenix design tokens — ported from design/pattern/generated/tokens.mock.css.
+   Default = dark (Ember). data-theme="light" on <html> = CREAM light theme.
+   NO hardcoded hex outside this file. */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Mulish:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;700&display=swap');
+
+:root {
+  color-scheme: dark;
+
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'Mulish', -apple-system, system-ui, sans-serif;
+  --font-mono: 'Roboto Mono', 'SF Mono', Menlo, monospace;
+
+  --bg-primary: #17120E;
+  --bg-secondary: #120E0A;
+  --bg-tertiary: #241B13;
+  --surface-card: #221A13;
+  --surface-input: #2B2018;
+
+  --border-default: #3A2C20;
+  --border-subtle: #2B2018;
+  --border-strong: #503D2C;
+  --border-focus: #FF8A3D;
+
+  --text-primary: #F5EFE8;
+  --text-secondary: #CBBBA8;
+  --text-tertiary: #9C8B78;
+  --text-disabled: #6A5947;
+  --text-inverse: #1A130D;
+  --text-link: #FFB070;
+
+  --accent-primary: #FF8A3D;
+  --accent-hover: #FF9D5C;
+  --accent-active: #FFB070;
+  --accent-subtle: #3A2415;
+  --accent-ink: #FFB070;
+
+  --success-base: #6FB585; --success-bg: #1C2A20; --success-ink: #84CC9C;
+  --warning-base: #E8C24A; --warning-bg: #2E2A14; --warning-ink: #F2D789;
+  --error-base: #E5645A;   --error-bg: #2E1A17;   --error-ink: #F0938A;
+  --info-base: #6E9CB5;    --info-bg: #18242C;    --info-ink: #93BBD0;
+  --plum-base: #A98FC2;    --plum-bg: #271E33;    --plum-ink: #C6B2D9;
+
+  --fs-xs: 11px; --fs-sm: 13px; --fs-base: 15px; --fs-md: 17px;
+  --fs-lg: 20px; --fs-xl: 26px; --fs-2xl: 34px;
+
+  --fw-light: 300; --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600; --fw-bold: 700;
+
+  --lh-tight: 1.2; --lh-snug: 1.35; --lh-normal: 1.55;
+  --ls-tight: -0.02em; --ls-wide: 0.02em; --ls-caps: 0.08em;
+
+  --sp-hairline: 1px; --sp-micro: 2px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-7: 32px; --sp-8: 40px; --sp-9: 48px; --sp-12: 80px;
+
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-2xl: 28px; --r-pill: 9999px;
+
+  --size-sidebar: 256px; --size-sidebar-collapsed: 64px; --size-rail: 88px;
+
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.40);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.48);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.56);
+  --shadow-focus: 0 0 0 3px rgba(255,138,61,0.25);
+
+  --dur-fast: 200ms; --dur-normal: 350ms; --dur-slow: 500ms; --dur-gentle: 700ms;
+  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg-primary: #F7F1E8;
+  --bg-secondary: #F0E7D8;
+  --bg-tertiary: #E7DBC8;
+  --surface-card: #FFFDF9;
+  --surface-input: #FFFFFF;
+
+  --border-default: #E3D7C3;
+  --border-subtle: #EDE4D5;
+  --border-strong: #CDBDA2;
+  --border-focus: #D9641A;
+
+  --text-primary: #2A2017;
+  --text-secondary: #5C5142;
+  --text-tertiary: #897A65;
+  --text-disabled: #B3A488;
+  --text-inverse: #FFFDF9;
+  --text-link: #B0480C;
+
+  --accent-primary: #D9641A;
+  --accent-hover: #C0530F;
+  --accent-active: #A8420A;
+  --accent-subtle: #FBE7D6;
+  --accent-ink: #B0480C;
+
+  --success-base: #4E9A6B; --success-bg: #EAF3EC; --success-ink: #2C7048;
+  --warning-base: #C9911F; --warning-bg: #FBF3DF; --warning-ink: #6E5114;
+  --error-base: #C15B52;   --error-bg: #FBEDEB;   --error-ink: #A8362E;
+  --info-base: #5B8BA5;    --info-bg: #EAF1F5;    --info-ink: #3C6075;
+  --plum-base: #8A6CA8;    --plum-bg: #F2ECF7;    --plum-ink: #694E86;
+
+  --shadow-sm: 0 2px 6px rgba(40,30,20,0.07);
+  --shadow-md: 0 4px 12px rgba(40,30,20,0.09);
+  --shadow-lg: 0 8px 24px rgba(40,30,20,0.11);
+  --shadow-focus: 0 0 0 3px rgba(217,100,26,0.18);
+}

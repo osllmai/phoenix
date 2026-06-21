@@ -24,6 +24,10 @@ export 'src/chat/chat_repository.dart';
 export 'src/chat/sqflite_chat_repository.dart';
 export 'src/chat/chat_service.dart';
 
+// Speech
+export 'src/speech/transcription_port.dart';
+export 'src/speech/stub_transcriber.dart';
+
 // Models
 export 'src/models/ai_model.dart';
 export 'src/models/model_repository.dart';

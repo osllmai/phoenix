@@ -1,0 +1,36 @@
+.wrap { max-width: 860px; margin: 0 auto; padding: 24px; }
+.h1 { font-size: 22px; font-weight: 600; margin: 0 0 16px; }
+.toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+.search { flex: 1; background: var(--input); border: 1px solid var(--border);
+  color: var(--text); border-radius: 8px; padding: 8px 12px; }
+.chip { border: 1px solid var(--border); background: transparent; color: var(--text-dim);
+  border-radius: 999px; padding: 6px 12px; }
+.chip.on { background: var(--accent-subtle); color: var(--accent-ink); border-color: var(--accent-ink); }
+.banner { display: flex; align-items: center; gap: 12px; background: var(--accent-subtle);
+  border: 1px solid var(--accent-ink); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.bname { font-weight: 600; color: var(--accent-ink); }
+.bsub { color: var(--text-dim); font-size: 12px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px;
+  border-bottom: 1px solid var(--border); }
+.row.active { background: var(--accent-subtle); border-radius: 8px; }
+.grow { flex: 1; min-width: 0; }
+.name { font-weight: 500; }
+.path { color: var(--text-dim); font-size: 12px; font-family: monospace;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.heart { background: none; border: 0; color: var(--error); font-size: 16px; }
+.load { color: var(--accent-ink); background: transparent; border: 1px solid var(--border);
+  border-radius: 8px; padding: 4px 12px; }
+.del { background: none; border: 0; color: var(--text-dim); font-size: 16px; }
+.tag { color: var(--success); font-size: 12px; }
+.add { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+.add input { background: var(--input); border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 8px 12px; }
+.btn { background: var(--accent); color: #1a130d; font-weight: 600; border: 0;
+  border-radius: 8px; padding: 8px 16px; }
+.center { text-align: center; padding: 64px 24px; color: var(--text-dim); }
+.center h2 { color: var(--text); }
+.sk { height: 14px; background: var(--input); border-radius: 6px; margin: 10px 0;
+  animation: pulse 1.2s infinite; }
+@keyframes pulse { 50% { opacity: 0.5; } }
+.msg { color: var(--text-dim); font-size: 12px; margin-top: 8px; }
