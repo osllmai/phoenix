@@ -20,7 +20,7 @@ phoenix/
 ├── engine/        vendored native runtime
 │   └── local_provider/   ★ llama.cpp / gpt4all engine (applocal_provider + libs)
 ├── design/        scenarios · integration · MONOREPO.md · TRACKER.md
-├── docker/        compose + Dockerfile (pinned via root Makefile)
+├── docker/        Dockerfile.{backend,frontend} · local/ · production/nginx (pinned via root Makefile)
 ├── docs/adr/      architecture decision records
 └── scripts/
 ```

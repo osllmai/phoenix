@@ -28,7 +28,7 @@ void main() {
     expect(reg.byId('b')?.id, 'b');
   });
 
-  testWidgets('shell renders a nav rail from registered features', (tester) async {
+  testWidgets('shell renders nav items from registered features', (tester) async {
     const reg = FeatureRegistry([_FakeFeature('a'), _FakeFeature('b')]);
     await tester.pumpWidget(
       ProviderScope(

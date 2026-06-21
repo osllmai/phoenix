@@ -81,14 +81,15 @@
     { cat:'Overview',             app:'home',       n:'home',          name:'Dashboard',             m:1, t:1, d:1 },
     { cat:'Conversation',         app:'chat',       n:'chat',          name:'Chat',                  m:1, t:1, d:1 },
     { cat:'Models',               app:'models',     n:'models',        name:'Local models',          plat:'M', m:1, t:1, d:1 },
-    { cat:'Models',               app:'models',     n:'models-add',    name:'Add local model',       plat:'M', m:0, t:0, d:1 },
-    { cat:'Models',               app:'models',     n:'models-detail', name:'Model detail',          plat:'M', m:0, t:0, d:1 },
-    { cat:'Models',               app:'models',     n:'models-browse', name:'Hugging Face',          plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-add',    name:'Add local model',       plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-detail', name:'Model detail',          plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-browse', name:'Browse & download (16.5k GGUF)', plat:'M', m:1, t:1, d:1 },
     { cat:'Models',               app:'models',     n:'models-online', name:'Online · IndoxHub',  plat:'M', m:1, t:1, d:1 },
     { cat:'Models',               app:'models',     n:'models-providers', name:'Providers & API Keys', plat:'M', m:1, t:1, d:1 },
     { cat:'Knowledge & Research', app:'deepsearch', n:'deepsearch',    name:'DeepSearch',            m:1, t:1, d:1 },
     { cat:'Knowledge & Research', app:'documents',  n:'documents',     name:'Documents',             m:1, t:1, d:1 },
     { cat:'Knowledge & Research', app:'speech',     n:'speech',        name:'Speech (Whisper)',      m:1, t:1, d:1 },
+    { cat:'Tools',                app:'forecasting',n:'forecasting',   name:'Forecasting (TimesFM)', plat:'M', m:1, t:1, d:1 },
     { cat:'Extensions',           app:'extensions', n:'extensions',    name:'Marketplace',           m:1, t:1, d:1 },
     { cat:'System',               app:'developer',  n:'developer',     name:'Developer · Server',    m:1, t:1, d:1 },
     { cat:'System',               app:'developer',  n:'maestro',       name:'Developer · Maestro',   m:1, t:1, d:1 },
@@ -96,9 +97,10 @@
     { cat:'System',               app:'developer',  n:'evaluators',    name:'Developer · Evaluators', m:1, t:1, d:1 },
     { cat:'System',               app:'settings',   n:'settings',      name:'Settings',              m:1, t:1, d:1 },
     { cat:'System',               app:'more',       n:'more',          name:'More menu (mobile)',    m:1, t:0, d:0 },
+    { cat:'Marketing',            app:'landing',    n:'landing',       name:'Landing page',          plat:'F', m:1, t:1, d:1 },
     { cat:'Onboarding',           app:'welcome',    n:'welcome',       name:'Welcome',               m:1, t:1, d:1 },
   ];
-  const CAT_ORDER = ['Overview', 'Conversation', 'Models', 'Knowledge & Research', 'Extensions', 'System', 'Onboarding'];
+  const CAT_ORDER = ['Marketing', 'Overview', 'Conversation', 'Models', 'Knowledge & Research', 'Tools', 'Extensions', 'System', 'Onboarding'];
   const VP = {
     m: { dir:'mobile',  pre:'m-', label:'M', title:'Mobile mock' },
     t: { dir:'tablet',  pre:'T-', label:'T', title:'Tablet mock' },
