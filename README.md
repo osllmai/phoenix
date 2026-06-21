@@ -1,22 +1,75 @@
-<h1 align="center">🔥 Phoenix</h1>
+<div align="center">
 
-<p align="center"><b>Local LLM app — Flutter UI over llama.cpp, no internet required.</b></p>
+<img src="docs/assets/phoenix-ember.svg" alt="Phoenix" width="120" />
 
-Phoenix is a full-stack monorepo for running large language models **on-device**.
-The Flutter app talks to a local **llama.cpp** engine; a Django + Celery backend
-handles cloud/async work; a pure-Dart core is shared across the UI, an HTTP
-gateway, and a CLI.
+# Phoenix
 
-> Re-platformed from the original Qt/QML app. The legacy Qt source lives on a
-> separate branch; this tree is Flutter-only.
+### Run large language models **100% on your own machine** — private, offline, yours.
 
-## Layout
+A full-stack, open-source workbench for local LLMs. Flutter desktop UI over a
+**llama.cpp** engine, a pure-Dart core SDK, and an optional Django/Celery backend —
+no cloud, no API keys, no data leaving your device.
+
+[![Stars](https://img.shields.io/github/stars/osllmai/phoenix?style=social)](https://github.com/osllmai/phoenix/stargazers)
+[![License: AGPL v3](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-desktop-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![llama.cpp](https://img.shields.io/badge/engine-llama.cpp-000000.svg)](https://github.com/ggerganov/llama.cpp)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#contributing)
+
+**⭐ If Phoenix is useful to you, [star the repo](https://github.com/osllmai/phoenix) — it genuinely helps.**
+
+</div>
+
+---
+
+<div align="center">
+<img src="docs/assets/preview-D-chat.png" alt="Phoenix chat — desktop" width="49%" />
+<img src="docs/assets/preview-D-models.png" alt="Phoenix local model catalog — desktop" width="49%" />
+<br/><sub><i>Desktop UI — design preview (the app is in active development).</i></sub>
+</div>
+
+## Why Phoenix?
+
+- 🔒 **Truly private** — inference runs on-device in `phoenix_core` + `engine/`. The backend **never** runs an LLM. Your prompts never leave the machine.
+- ⚡ **Local-first, cloud-optional** — works fully offline; an optional gateway speaks OpenAI `/v1/chat/completions` + Anthropic `/v1/messages` so existing tools just point at `localhost`.
+- 🧩 **Extensible by design** — features load as self-registering modules (`FeatureModule`); add one file, not a monolithic rewrite.
+- 📦 **GGUF model catalog** — import `.gguf` files from disk, load/switch/remove, favorites — all managed on-device.
+- 🛠️ **One core, many surfaces** — a single pure-Dart SDK powers the Flutter app, an HTTP gateway, and a CLI.
+
+## Features
+
+| | |
+|---|---|
+| 💬 **Chat** | Streaming local inference with system prompts + tunable sampling. |
+| 🧠 **Local models** | Add / load / switch / remove GGUF models; pick your active model. |
+| 📄 **Documents & search** | Doc-convert (Docling) + retrieval for chat-with-your-files *(in progress)*. |
+| 🎙️ **Speech** | On-device transcription via whisper.cpp *(planned)*. |
+| 🔌 **OpenAI/Anthropic gateway** | Drop-in local endpoint for existing clients *(WIP)*. |
+| 🧱 **Extensions** | Install capabilities on demand — keep the core lightweight. |
+
+## Quick start
+
+```bash
+# Desktop app (Flutter)
+cd mobile && flutter pub get && flutter run -d linux   # or -d macos / -d windows
+
+# Core + app tests (pure Dart)
+bash mobile/tool/run_tests.sh
+
+# Optional backend + web (Docker)
+cp .env.example .env && make up                        # api :16000 · web :3000
+```
+
+> **Inference is on-device.** Point Phoenix at a `.gguf` you already have, or grab one
+> from Hugging Face, and start chatting — no account, no network required.
+
+## Architecture
 
 | Path | What |
 |------|------|
 | `mobile/` | Flutter app (desktop-first). UI only — no business logic. |
 | `packages/phoenix_core/` | Pure-Dart SDK: engine + chat/model services + SQLite + `PhoenixCore` facade. |
-| `packages/phoenix_server/` | OpenAI/Anthropic-compatible HTTP gateway over the core (WIP). |
+| `packages/phoenix_server/` | OpenAI/Anthropic-compatible HTTP gateway over the core *(WIP)*. |
 | `backend/` | Django + django-ninja + Celery — auth, sync, async jobs (deep-search, Docling, embeddings). |
 | `frontend/` | Next.js 15 web surface (optional). |
 | `engine/local_provider/` | Vendored llama.cpp / gpt4all engine binary. |
@@ -36,45 +89,8 @@ cd mobile && flutter pub get && flutter run -d linux
 bash mobile/tool/run_tests.sh
 
 # Backend + web + infra (docker)
-cp .env.example .env && make up      # web → localhost:37001 · api → localhost:37000
+cp .env.example .env && make up      # api :16000 · web :3000
 ```
-
-## Using Phoenix
-
-Everything runs **on your machine** — pick a surface, load a model, and go.
-
-**1. Launch**
-- **Desktop app (Flutter)** — the functional on-device app:
-  `cd mobile && flutter run -d linux` (or `-d macos` / `-d windows`).
-- **Web** — `cp .env.example .env && make up`, then open **http://localhost:37001**.
-  The browser talks to the on-device gateway (`phoenix_server`) at
-  `NEXT_PUBLIC_API_BASE_URL` (default `http://localhost:24678`).
-
-**2. Add a model** (under **Models** — first launch walks you through it)
-- **Local** — point Phoenix at a `.gguf` you already have (*Models → Add*), or
-- **Browse** — download one from the catalog, or
-- **Online / Providers** — connect a hosted provider with your own key (BYOK).
-
-Local models run via llama.cpp — nothing leaves your device.
-
-**3. Work**
-- **Chat** — talk to the loaded model (markdown, code, streaming).
-- **Documents** — add a PDF/office file; Phoenix converts + indexes it (Docling).
-- **DeepSearch** — ask questions grounded in your documents (RAG).
-- **Speech** — transcribe audio on-device (whisper.cpp).
-- **Forecasting** — time-series forecasts (TimesFM). · **Extensions** — add features on demand.
-
-**4. Use the local API** (developers) — *Developer → Server* exposes an
-OpenAI/Anthropic-compatible endpoint; point any client at your local gateway:
-
-```bash
-curl http://localhost:24678/v1/chat/completions \
-  -H 'content-type: application/json' \
-  -d '{"model":"local","messages":[{"role":"user","content":"Hello"}]}'
-```
-
-> The Flutter desktop app is the fully wired surface today; the web app ships the
-> full UI with live models, and its remaining data flows wire to the backend as it lands.
 
 ## Principle
 
@@ -86,4 +102,7 @@ without a monolithic shell.
 
 [llama.cpp](https://github.com/ggerganov/llama.cpp) ·
 [gpt4all](https://github.com/nomic-ai/gpt4all) ·
-[Docling](https://github.com/docling-project/docling) · whisper.cpp
+[Docling](https://github.com/docling-project/docling) ·
+[whisper.cpp](https://github.com/ggerganov/whisper.cpp)
+
+<div align="center"><sub>Built with 🔥 by the osllmai community — <a href="https://github.com/osllmai/phoenix">star us on GitHub</a>.</sub></div>
