@@ -71,31 +71,32 @@ cp .env.example .env && make up                        # api :16000 · web :3000
 | `packages/phoenix_core/` | Pure-Dart SDK: engine + chat/model services + SQLite + `PhoenixCore` facade. |
 | `packages/phoenix_server/` | OpenAI/Anthropic-compatible HTTP gateway over the core *(WIP)*. |
 | `backend/` | Django + django-ninja + Celery — auth, sync, async jobs (deep-search, Docling, embeddings). |
-| `frontend/` | Next.js 15 web surface *(optional)*. |
-| `engine/local_provider/` | Vendored llama.cpp engine. |
+| `frontend/` | Next.js 15 web surface (optional). |
+| `engine/local_provider/` | Vendored llama.cpp / gpt4all engine binary. |
+| `design/` | Scenarios, integration plans, `MONOREPO.md`, `TRACKER.md`. |
+| `docker/` · `docs/adr/` · `scripts/` | Infra, decisions, tooling. |
 
-Full architecture: [`design/MONOREPO.md`](design/MONOREPO.md) · build status: [`design/TRACKER.md`](design/TRACKER.md).
+See [`design/MONOREPO.md`](design/MONOREPO.md) for the full architecture and
+[`design/TRACKER.md`](design/TRACKER.md) for build status.
 
-**Stack:** Flutter · Riverpod · go_router · pure Dart · sqflite · shelf · Django + django-ninja · Postgres/SQLite · Celery · Next.js 15.
+## Quick start
 
-## Roadmap
+```bash
+# Mobile (Flutter)
+cd mobile && flutter pub get && flutter run -d linux
 
-- [x] Pure-Dart core SDK (engine port + chat/model services)
-- [x] On-device GGUF model catalog
-- [ ] Document convert + retrieval (Docling)
-- [ ] OpenAI/Anthropic local gateway (`phoenix_server`)
-- [ ] Speech (whisper.cpp)
-- [ ] Extension marketplace
+# Core tests (pure Dart) + app tests
+bash mobile/tool/run_tests.sh
 
-## Contributing
+# Backend + web + infra (docker)
+cp .env.example .env && make up      # api :16000 · web :3000
+```
 
-PRs and issues welcome. Inference stays **on-device** — the Django backend never runs an LLM,
-and features are added as `FeatureModule` extensions rather than wired into a shell. See
-[`CLAUDE.md`](CLAUDE.md) and `design/` for conventions before opening a PR.
+## Principle
 
-## License
-
-[AGPL-3.0](LICENSE) © osllmai
+**Inference is on-device** (`phoenix_core` + `engine/`). The backend never runs an
+LLM. Features load as self-registering modules (`FeatureModule`) so the app scales
+without a monolithic shell.
 
 ## Acknowledgements
 
