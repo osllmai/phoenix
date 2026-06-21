@@ -154,3 +154,16 @@
   padding: var(--sp-4) var(--sp-5); }
 .skelTerm { min-height: 150px; border: 1px solid var(--border-subtle); border-radius: var(--r-md);
   background: var(--surface-card); padding: var(--sp-3); display: flex; flex-direction: column; gap: var(--sp-2); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .split { grid-template-columns: minmax(200px, 240px) 1fr; }
+  .grid, .skelGrid { grid-template-columns: 1fr; }
+  .picker { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .split { grid-template-columns: 1fr; }
+  .conductor { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+  .chipbar, .presetbar { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .grid, .skelGrid { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+}

@@ -143,3 +143,20 @@
   background: var(--surface-card); padding: var(--sp-4); text-align: left; }
 .recoCard .extIco { margin-bottom: var(--sp-2); }
 .recoBtn { margin-top: var(--sp-2); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .split { grid-template-columns: 1fr; }
+  .browse { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+  .reco { grid-template-columns: repeat(2, 1fr); }
+  .search { width: 100%; }
+}
+@media (max-width: 767px) {
+  .reco { grid-template-columns: 1fr; }
+  .req { grid-template-columns: 1fr; gap: var(--sp-1); }
+  .browse, .tabBody { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .detHead { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .tabs { padding: 0 var(--sp-4); overflow-x: auto; }
+  .cats { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .shellbar { padding-left: var(--sp-4); padding-right: var(--sp-4); flex-wrap: wrap; }
+}

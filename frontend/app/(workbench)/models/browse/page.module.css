@@ -8,7 +8,6 @@
                    font-size: var(--fs-xs); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-pill); }
 .switchOn { background: var(--accent-subtle); color: var(--accent-ink); }
 
-
 /* ---- off-device advisory ---- */
 .advisory { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-6);
             font-size: var(--fs-xs); color: var(--text-tertiary); background: var(--bg-tertiary);
@@ -190,3 +189,12 @@
 .btnSelClear { background: transparent; color: var(--text-inverse); border: 1px solid var(--border-default);
                font-size: var(--fs-sm); padding: var(--sp-2) var(--sp-4); border-radius: var(--r-md); }
 .btnSelClear:hover { background: var(--accent-hover); }
+@media (max-width: 1023px) {
+  .featured { grid-template-columns: repeat(2, 1fr); }
+  .results { padding: var(--sp-3) var(--sp-4); } }
+@media (max-width: 767px) {
+  .featured { grid-template-columns: 1fr; }
+  .controls, .selBar { flex-wrap: wrap; }
+  .searchHf { flex-basis: 100%; }
+  .sourceToggle, .sortModes { flex: 1; }
+  .repoStats { justify-content: flex-start; } }

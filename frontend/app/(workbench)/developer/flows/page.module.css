@@ -184,3 +184,16 @@
 .flowmini { display: block; font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-secondary);
   margin-top: var(--sp-2); background: var(--bg-primary); border: 1px solid var(--border-subtle);
   border-radius: var(--r-sm); padding: var(--sp-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .builder { grid-template-columns: 1fr; min-height: 0; }
+  .palette { border-right: 0; border-bottom: 1px solid var(--border-subtle); max-height: 240px; }
+  .inspector { border-left: 0; border-top: 1px solid var(--border-subtle); }
+  .canvas { min-height: 360px; }
+}
+@media (max-width: 767px) {
+  .tmplGrid { grid-template-columns: 1fr; }
+  .top { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .libpop { width: min(320px, 90vw); }
+}

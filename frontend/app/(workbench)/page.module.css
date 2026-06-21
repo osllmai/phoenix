@@ -134,3 +134,17 @@
 .switcher button { border: 0; background: transparent; color: var(--text-tertiary);
   font-size: var(--fs-xs); padding: 4px 10px; border-radius: var(--r-pill); }
 .switcher button.on { background: var(--accent-subtle); color: var(--accent-ink); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .grid { grid-template-columns: 1fr; }
+  .col7, .col5, .col12 { grid-column: span 1; }
+  .featCards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .canvas { padding: var(--sp-3); }
+  .heroRow { flex-wrap: wrap; }
+  .heroStats { grid-template-columns: 1fr; }
+  .qaGrid, .tips, .featCards { grid-template-columns: 1fr; }
+  .docCounts { grid-template-columns: 1fr; }
+}

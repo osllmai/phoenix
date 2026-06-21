@@ -161,3 +161,15 @@
 .switcher button { border: 0; background: transparent; color: var(--text-tertiary);
   font-size: var(--fs-xs); padding: 4px 10px; border-radius: var(--r-pill); }
 .switcherOn { background: var(--accent-subtle); color: var(--accent-ink); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .convos { display: none; }
+  .shell { flex-direction: column; }
+}
+@media (max-width: 767px) {
+  .row { padding: var(--sp-2) var(--sp-3); }
+  .msg { max-width: 100%; }
+  .suggest { grid-template-columns: 1fr; }
+  .center { padding: var(--sp-5); }
+}

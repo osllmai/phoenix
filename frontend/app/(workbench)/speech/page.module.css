@@ -173,3 +173,20 @@
 .ptime { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-tertiary); flex: none; }
 .seek { flex: 1; height: 5px; border-radius: var(--r-pill); background: var(--bg-tertiary); position: relative; cursor: pointer; }
 .seekAt { position: absolute; left: 0; top: 0; bottom: 0; width: 28%; background: var(--accent-primary); border-radius: var(--r-pill); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .body { flex-direction: column; overflow: auto; min-height: auto; }
+  .split { flex-direction: column; min-height: auto; }
+  .ctrl { width: 100%; flex: none; border-right: 0; border-bottom: 1px solid var(--border-subtle); overflow-y: visible; }
+  .output { min-height: 0; }
+  .scroll { overflow-y: visible; }
+}
+@media (max-width: 767px) {
+  .jobbar { padding: var(--sp-2) var(--sp-3); }
+  .ctrl { padding: var(--sp-4) var(--sp-3); }
+  .scroll { padding: var(--sp-3); }
+  .segment { flex-direction: column; gap: var(--sp-2); }
+  .segMeta { width: auto; }
+  .outputTop, .player { padding: var(--sp-2) var(--sp-3); }
+}

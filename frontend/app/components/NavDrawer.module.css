@@ -1,0 +1,26 @@
+.root {
+  position: fixed; inset: 0; z-index: 50;
+  visibility: hidden;
+  pointer-events: none;
+}
+.root.open { visibility: visible; pointer-events: auto; }
+
+.overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-default);
+}
+.root.open .overlay { opacity: 1; }
+
+.panel {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  width: var(--size-sidebar); max-width: 84vw;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-100%);
+  transition: transform var(--dur-normal) var(--ease-default);
+  display: flex;
+}
+.root.open .panel { transform: translateX(0); }
+.panel > * { width: 100%; }
