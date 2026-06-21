@@ -1,34 +1,17 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:phoenix_core/phoenix_core.dart';
 
 import 'chat_providers.dart';
+import 'chat_state.dart';
 
-/// UI state for a single chat session.
-class ChatState {
-  const ChatState({
-    this.messages = const [],
-    this.streaming = '',
-    this.isGenerating = false,
-  });
+part 'chat_controller.g.dart';
 
-  final List<Message> messages;
-
-  /// The in-flight response text being streamed (shown as a live bubble).
-  final String streaming;
-  final bool isGenerating;
-
-  ChatState copyWith({List<Message>? messages, String? streaming, bool? isGenerating}) =>
-      ChatState(
-        messages: messages ?? this.messages,
-        streaming: streaming ?? this.streaming,
-        isGenerating: isGenerating ?? this.isGenerating,
-      );
-}
-
-/// Drives a chat session: holds the conversation, appends the user message,
-/// streams the model response into a live bubble, then commits it to history.
-class ChatController extends Notifier<ChatState> {
+/// Drives a chat session: appends the user message, streams the model response
+/// into a live bubble, then commits it. Reference for the `@riverpod` Notifier
+/// pattern every feature controller follows.
+@riverpod
+class ChatController extends _$ChatController {
   late final ChatService _service;
   Conversation? _conversation;
 
@@ -47,12 +30,27 @@ class ChatController extends Notifier<ChatState> {
     _conversation = (await repo.conversations()).firstWhere((c) => c.id == id);
   }
 
+  /// Loads an existing conversation's history into the pane.
+  Future<void> open(Conversation conversation) async {
+    _conversation = conversation;
+    final repo = ref.read(chatRepositoryProvider);
+    state = state.copyWith(
+      messages: await repo.messages(conversation.id!),
+      streaming: '',
+    );
+  }
+
+  /// Starts a fresh, empty conversation.
+  void newChat() {
+    _conversation = null;
+    state = const ChatState();
+  }
+
   /// Sends [text] and streams the response into [ChatState.streaming].
   Future<void> send(String text) async {
     if (state.isGenerating || text.trim().isEmpty) return;
     await _ensureConversation();
     final conv = _conversation!;
-
     final userMsg = Message(
       conversationId: conv.id!,
       text: text.trim(),
@@ -91,6 +89,3 @@ class ChatController extends Notifier<ChatState> {
     state = state.copyWith(isGenerating: false);
   }
 }
-
-final chatControllerProvider =
-    NotifierProvider<ChatController, ChatState>(ChatController.new);

@@ -13,8 +13,8 @@ dependencies:
     path: ../phoenix_core
   shelf: ^1.4.0
   shelf_router: ^1.1.4
+  sqflite_common_ffi: ^2.3.0
 
 dev_dependencies:
   test: ^1.25.0
-  sqflite_common_ffi: ^2.3.0
   lints: ^4.0.0

@@ -1,0 +1,9 @@
+node_modules
+.next
+.pnpm-store
+out
+dist
+.git
+.gitignore
+.env
+.env.*

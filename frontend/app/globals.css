@@ -1,0 +1,61 @@
+@import './tokens.css';
+
+/* Legacy aliases — keep existing pages (models) working against the token set.
+   New code should use the token vocabulary in tokens.css directly. */
+:root {
+  --bg: var(--bg-primary);
+  --surface: var(--surface-card);
+  --input: var(--surface-input);
+  --border: var(--border-default);
+  --accent: var(--accent-primary);
+  --text: var(--text-primary);
+  --text-dim: var(--text-tertiary);
+  --error: var(--error-base);
+  --success: var(--success-ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+}
+
+a {
+  color: var(--text-link);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ---- app shell ---- */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}

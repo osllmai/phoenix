@@ -1,0 +1,13 @@
+{
+  "common": {
+    "appName": "Phoenix",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "error": "Something went wrong.",
+    "empty": "Nothing here yet."
+  },
+  "nav": {
+    "home": "Home",
+    "news": "News"
+  }
+}

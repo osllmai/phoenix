@@ -1,3 +1,7 @@
+/// Delivery state of a message. `aborted` = a model response cut short by
+/// stop()/error/crash, persisted with whatever partial text arrived (S7).
+enum MessageStatus { normal, aborted }
+
 /// A single chat message. Faithful port of the legacy `message` table
 /// (`core/database/managers/messagemanager.cpp`).
 class Message {
@@ -10,6 +14,7 @@ class Message {
     this.icon = '',
     required this.isPrompt,
     this.like = 0,
+    this.status = MessageStatus.normal,
   });
 
   /// Null until persisted (SQLite assigns the autoincrement id).
@@ -26,7 +31,11 @@ class Message {
   /// -1 disliked · 0 neutral · 1 liked.
   final int like;
 
-  Message copyWith({int? id, String? text, int? like}) => Message(
+  /// Whether the message completed normally or was aborted mid-generation.
+  final MessageStatus status;
+
+  Message copyWith({int? id, String? text, int? like, MessageStatus? status}) =>
+      Message(
         id: id ?? this.id,
         conversationId: conversationId,
         text: text ?? this.text,
@@ -35,6 +44,7 @@ class Message {
         icon: icon,
         isPrompt: isPrompt,
         like: like ?? this.like,
+        status: status ?? this.status,
       );
 
   Map<String, Object?> toRow() => {
@@ -46,6 +56,7 @@ class Message {
         'icon': icon,
         'isPrompt': isPrompt ? 1 : 0,
         'like': like,
+        'status': status.name,
       };
 
   factory Message.fromRow(Map<String, Object?> r) => Message(
@@ -57,5 +68,10 @@ class Message {
         icon: (r['icon'] as String?) ?? '',
         isPrompt: (r['isPrompt'] as int) == 1,
         like: (r['like'] as int?) ?? 0,
+        status: _statusFrom(r['status'] as String?),
       );
+
+  static MessageStatus _statusFrom(String? v) => v == MessageStatus.aborted.name
+      ? MessageStatus.aborted
+      : MessageStatus.normal;
 }

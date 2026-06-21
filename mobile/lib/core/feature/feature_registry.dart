@@ -15,6 +15,14 @@ class FeatureRegistry {
   List<RouteBase> routes() =>
       [for (final m in modules) ...m.routes()];
 
+  /// Routes that mount inside the app shell (with nav rail).
+  List<RouteBase> shellRoutes() =>
+      [for (final m in modules) if (m is! PreAppFeature) ...m.routes()];
+
+  /// Routes that mount at the router root, outside the shell.
+  List<RouteBase> rootRoutes() =>
+      [for (final m in modules) if (m is PreAppFeature) ...m.routes()];
+
   List<FeatureNavItem> navItems() =>
       [for (final m in modules) ...m.navItems()];
 

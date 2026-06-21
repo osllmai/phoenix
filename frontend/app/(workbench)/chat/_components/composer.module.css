@@ -1,0 +1,47 @@
+/* Composer styles — split from chat page.module.css to keep files under cap. Tokens only. */
+
+.composer { border-top: 1px solid var(--border-subtle); padding: var(--sp-3) var(--sp-6) var(--sp-4); }
+.comptools { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-2); flex-wrap: wrap; }
+.ctoggle { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs);
+  color: var(--text-secondary); border: 1px solid var(--border-default); border-radius: var(--r-pill);
+  padding: 3px var(--sp-3); background: transparent; }
+.ctoggle:hover { background: var(--bg-tertiary); }
+.ctoggleOn { background: var(--plum-bg); color: var(--plum-ink); border-color: var(--plum-base); }
+.ragsrc { font-size: var(--fs-xs); color: var(--text-tertiary); }
+.ragsrcWrap { position: relative; display: inline-block; }
+.ragsrcLink { color: var(--text-link); background: transparent; border: 0; font-size: var(--fs-xs); padding: 0; }
+.ragsrcLink:hover { text-decoration: underline; }
+.ragPop { position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 40; width: 300px;
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  border-radius: var(--r-md); box-shadow: var(--shadow-lg); padding: var(--sp-2); }
+.rpHead { font-size: var(--fs-xs); color: var(--text-secondary); text-transform: uppercase;
+  letter-spacing: var(--ls-caps); padding: var(--sp-1) var(--sp-2) var(--sp-2); }
+.rpItem { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2);
+  border-radius: var(--r-sm); font-size: var(--fs-sm); color: var(--text-secondary); cursor: pointer; }
+.rpItem:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.rpItem input { accent-color: var(--accent-primary); }
+.rpFoot { display: flex; justify-content: space-between; padding: var(--sp-2) var(--sp-2) 0;
+  border-top: 1px solid var(--border-subtle); margin-top: var(--sp-1); }
+.rpFoot a { color: var(--text-link); font-size: var(--fs-xs); }
+.rpFoot button { background: var(--accent-primary); color: var(--text-inverse); border: 0;
+  border-radius: var(--r-sm); font-size: var(--fs-xs); padding: 2px var(--sp-3); }
+.inputwrap { display: flex; align-items: flex-end; gap: var(--sp-2); background: var(--surface-input);
+  border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-3); }
+.inputwrap:focus-within { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.inputwrap textarea { flex: 1; resize: none; border: 0; background: transparent;
+  color: var(--text-primary); font-family: inherit; font-size: var(--fs-base);
+  line-height: var(--lh-normal); padding: var(--sp-1) 0; outline: none; }
+.inputwrap textarea::placeholder { color: var(--text-tertiary); }
+.dim { opacity: .5; }
+.iconbtn { background: transparent; border: 1px solid var(--border-default); color: var(--text-secondary);
+  border-radius: var(--r-md); padding: var(--sp-2); font-size: 15px; line-height: 1; }
+.iconbtn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.send { background: var(--accent-primary); color: var(--text-inverse); border: 0;
+  border-radius: var(--r-md); width: 40px; height: 40px; font-size: 18px; flex: none; }
+.send:hover { background: var(--accent-hover); }
+.sendStop { background: var(--error-base); }
+.send:disabled { background: var(--text-disabled); cursor: not-allowed; }
+.hint { display: flex; justify-content: space-between; color: var(--text-tertiary);
+  font-size: var(--fs-xs); padding: var(--sp-2) var(--sp-1) 0; gap: var(--sp-3); }
+.errHint { color: var(--error-ink); }

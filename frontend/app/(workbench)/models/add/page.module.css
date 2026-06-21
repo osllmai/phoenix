@@ -1,0 +1,78 @@
+/* Add a local model — ported from design/mock/desktop/models/D-models-add.html. Tokens only. */
+
+.body { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.scroll { flex: 1; overflow: auto; padding: var(--sp-6); }
+
+.back { display: inline-flex; align-items: center; gap: var(--sp-1); color: var(--text-link);
+  text-decoration: none; font-size: var(--fs-sm); }
+.back:hover { text-decoration: underline; }
+
+/* dev-only state switcher */
+.devSwitch { display: flex; gap: var(--sp-1); flex-wrap: wrap; background: var(--surface-card);
+  border: 1px solid var(--border-default); border-radius: var(--r-pill); padding: var(--sp-1); }
+.devBtn { border: 0; background: transparent; color: var(--text-tertiary);
+  font-size: var(--fs-xs); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-pill); cursor: pointer; }
+.devOn { background: var(--accent-subtle); color: var(--accent-ink); }
+
+/* explain + form */
+.explain { color: var(--text-tertiary); font-size: var(--fs-sm); margin: 0 auto var(--sp-5);
+  max-width: 620px; }
+.hfSoon { display: block; margin-top: var(--sp-2); font-size: var(--fs-xs); }
+
+.formCard { max-width: 620px; margin: 0 auto; background: var(--surface-card);
+  border: 1px solid var(--border-subtle); border-radius: var(--r-lg);
+  padding: var(--sp-6); box-shadow: var(--shadow-sm); }
+
+.field { margin-bottom: var(--sp-5); }
+.field label { display: block; font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  color: var(--text-secondary); margin-bottom: var(--sp-2); }
+.hint { color: var(--text-tertiary); font-size: var(--fs-xs); margin-top: var(--sp-2); }
+
+.input { width: 100%; background: var(--surface-input); border: 1px solid var(--border-subtle);
+  color: var(--text-primary); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3);
+  font-family: inherit; font-size: var(--fs-sm); }
+.mono { font-family: var(--font-mono); font-size: var(--fs-xs); }
+.input::placeholder { color: var(--text-tertiary); }
+.input:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+
+.pathRow { display: flex; gap: var(--sp-2); }
+.pathRow .input { flex: 1; min-width: 0; }
+.browseBtn { flex: none; background: transparent; color: var(--text-link);
+  border: 1px solid var(--border-default); border-radius: var(--r-md);
+  padding: var(--sp-2) var(--sp-4); font-size: var(--fs-sm); white-space: nowrap; cursor: pointer; }
+.browseBtn:hover { background: var(--bg-tertiary); }
+.browseBtn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.hasError .input { border-color: var(--error-base); }
+.hasError label { color: var(--error-ink); }
+.errMsg { color: var(--error-ink); font-size: var(--fs-xs); margin-top: var(--sp-2); }
+
+.formActions { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-6); }
+.cancel { display: inline-flex; align-items: center; background: transparent; color: var(--text-link);
+  border: 1px solid var(--border-default); border-radius: var(--r-md);
+  padding: var(--sp-2) var(--sp-4); font-size: var(--fs-sm); text-decoration: none; }
+.cancel:hover { background: var(--bg-tertiary); }
+
+/* success */
+.successCard { border: 1px solid var(--success-base); background: var(--success-bg); color: var(--success-ink);
+  border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-5); max-width: 460px;
+  justify-self: center; text-align: left; display: flex; align-items: center; gap: var(--sp-3); }
+.scIco { font-size: 24px; }
+.scName { font-weight: var(--fw-semibold); }
+.scSub { color: var(--success-ink); opacity: .85; font-size: var(--fs-xs); margin-top: 2px; }
+.ctaRow { display: flex; gap: var(--sp-2); justify-content: center; flex-wrap: wrap; margin-top: var(--sp-2); }
+.ctaPrimary { display: inline-flex; align-items: center; background: var(--accent-primary);
+  color: var(--text-inverse); border: 0; font-weight: var(--fw-semibold);
+  padding: var(--sp-2) var(--sp-4); border-radius: var(--r-md); font-size: var(--fs-sm); text-decoration: none; }
+.ctaPrimary:hover { background: var(--accent-hover); }
+
+/* first-run dropzone */
+.dropzone { border: 2px dashed var(--border-default); border-radius: var(--r-lg);
+  padding: var(--sp-8) var(--sp-6); display: grid; gap: var(--sp-3); justify-items: center;
+  max-width: 480px; justify-self: center; }
+.dzIcon { font-size: 40px; }
+.dropzone h3 { margin: 0; font-family: var(--font-display); font-weight: var(--fw-semibold); }
+.dropzone p { margin: 0; color: var(--text-tertiary); font-size: var(--fs-sm); }
+
+/* loading skeleton */
+.skelField { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-5); }

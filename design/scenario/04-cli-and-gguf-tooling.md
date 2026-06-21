@@ -38,7 +38,7 @@ Claude Code talks to the **Anthropic Messages API** (`/v1/messages`) and allows 
 endpoint override:
 
 ```bash
-ANTHROPIC_BASE_URL=http://localhost:11434 \
+ANTHROPIC_BASE_URL=http://localhost:24678 \
 ANTHROPIC_API_KEY=local-dummy \
 claude
 ```

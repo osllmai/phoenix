@@ -8,6 +8,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'app/app.dart';
 import 'app/features.dart';
 import 'core/feature/feature_registry.dart';
+import 'core/onboarding/onboarding_providers.dart';
+import 'core/onboarding/onboarding_repository.dart';
 import 'features/chat/presentation/providers/chat_providers.dart';
 import 'features/models/presentation/providers/model_providers.dart';
 
@@ -19,12 +21,17 @@ Future<void> main() async {
   final dir = await getApplicationSupportDirectory();
   final db = await PhoenixDatabase.open(p.join(dir.path, 'phoenix.db'), databaseFactoryFfi);
 
+  final onboarding = PrefsOnboardingRepository();
+  final seenWelcome = await onboarding.seenWelcome();
+
   runApp(
     ProviderScope(
       overrides: [
         featureRegistryProvider.overrideWithValue(const FeatureRegistry(phoenixFeatures)),
         chatRepositoryProvider.overrideWithValue(SqfliteChatRepository(db)),
         modelRepositoryProvider.overrideWithValue(SqfliteModelRepository(db)),
+        onboardingRepositoryProvider.overrideWithValue(onboarding),
+        seenWelcomeProvider.overrideWithValue(seenWelcome),
       ],
       child: const PhoenixApp(),
     ),

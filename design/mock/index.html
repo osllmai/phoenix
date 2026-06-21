@@ -1,63 +1,147 @@
 <!doctype html>
-<!-- design/mock/index.html — searchable mock hub. 4 viewports: mobile(m-) tablet(T-) desktop(D-) extension(x-). -->
-<!-- DATA flags: m=mobile/flutter · t=tablet · d=desktop · x=extension. tag: F(frontend) M(mobile) FM(both). -->
+<!-- design/mock/index.html — searchable mock hub. Cards per screen with M/T/D viewport buttons. -->
+<!-- Add a screen = one row in DATA. m/t/d = 1 if that viewport's mock exists. -->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mock Hub</title>
+<link rel="icon" type="image/svg+xml" href="assets/phoenix-ember.svg" />
+<title>Phoenix — Mock Index</title>
+<link rel="stylesheet" href="../pattern/generated/tokens.mock.css" />
 <style>
-  :root { color-scheme: dark; }
-  body { margin: 0; background:#0b0f14; color:#e6edf3; font:14px/1.5 system-ui,sans-serif; }
-  header { padding:16px 20px; border-bottom:1px solid #1c2530; position:sticky; top:0; background:#0b0f14; }
-  input, select { background:#11161d; color:#e6edf3; border:1px solid #1c2530; border-radius:8px; padding:8px 10px; }
-  main { padding:16px 20px; }
-  .app { margin:18px 0; }
-  .app h2 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:#7d8aa0; margin:0 0 8px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; }
-  a.scr { display:flex; justify-content:space-between; gap:8px; padding:10px 12px; background:#11161d;
-          border:1px solid #1c2530; border-radius:10px; color:#e6edf3; text-decoration:none; }
-  a.scr:hover { border-color:#2f6fed; }
-  .tags { color:#7d8aa0; font-size:11px; }
-  .tag { border:1px solid #2a3442; border-radius:6px; padding:1px 6px; margin-left:4px; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg-primary); color: var(--text-primary);
+         font-family: var(--font-body); font-size: var(--fs-base); line-height: var(--lh-normal); }
+  a { text-decoration: none; }
+
+  header { position: sticky; top: 0; z-index: 10; background: var(--bg-primary);
+           border-bottom: 1px solid var(--border-subtle); padding: var(--sp-4) var(--sp-6); }
+  .title { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: var(--fw-semibold); margin: 0; }
+  .sub { color: var(--text-tertiary); font-size: var(--fs-sm); margin-top: 2px; }
+  .bar { display: flex; gap: var(--sp-3); align-items: center; margin-top: var(--sp-4); }
+  .search { flex: 1; background: var(--surface-input); border: 1px solid var(--border-default);
+            color: var(--text-primary); border-radius: var(--r-md); padding: var(--sp-3) var(--sp-4);
+            font-family: inherit; font-size: var(--fs-base); }
+  .search::placeholder { color: var(--text-tertiary); }
+  .search:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+  .filters { display: flex; gap: var(--sp-2); }
+  .filters button { background: var(--surface-card); border: 1px solid var(--border-default);
+                    color: var(--text-secondary); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-4);
+                    font-family: inherit; font-size: var(--fs-sm); cursor: pointer; }
+  .filters button.on { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-ink); }
+
+  main { padding: var(--sp-5) var(--sp-6) var(--sp-9); max-width: 1400px; margin: 0 auto; }
+  .cat { margin: var(--sp-7) 0 var(--sp-4); display: flex; align-items: center; gap: var(--sp-3); }
+  .cat h2 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--ls-caps);
+            color: var(--text-secondary); margin: 0; white-space: nowrap; }
+  .cat .tag { font-size: 10px; font-weight: var(--fw-bold); letter-spacing: .04em;
+              background: var(--accent-subtle); color: var(--accent-ink);
+              border-radius: var(--r-sm); padding: 2px 7px; }
+  .cat .count { color: var(--text-tertiary); font-size: var(--fs-xs); }
+  .cat .line { flex: 1; height: 1px; background: var(--border-subtle); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--sp-3); }
+  .card { background: var(--surface-card); border: 1px solid var(--border-default);
+          border-radius: var(--r-md); padding: var(--sp-4); }
+  .card .name { font-weight: var(--fw-semibold); margin-bottom: var(--sp-3); display: flex; align-items: center; gap: var(--sp-2); }
+  .card .name .plat { margin-left: auto; font-size: 10px; font-weight: var(--fw-bold); letter-spacing: .04em;
+              background: var(--plum-bg, var(--accent-subtle)); color: var(--plum-ink, var(--accent-ink));
+              border: 1px solid var(--border-default); border-radius: var(--r-sm); padding: 1px 6px; }
+  .vps { display: flex; gap: var(--sp-2); }
+  .vp { flex: 1; text-align: center; border-radius: var(--r-md); padding: var(--sp-2) 0;
+        font-weight: var(--fw-semibold); font-size: var(--fs-sm); color: var(--text-inverse); }
+  .vp.m { background: var(--info-base); }
+  .vp.t { background: var(--plum-base); }
+  .vp.d { background: var(--success-base); }
+  .vp:hover { filter: brightness(1.08); }
+  .vp.off { background: transparent; border: 1px dashed var(--border-default);
+            color: var(--text-disabled); cursor: not-allowed; }
+  .empty { color: var(--text-tertiary); padding: var(--sp-6); text-align: center; }
 </style>
 </head>
 <body>
 <header>
-  <input id="q" placeholder="Search screens…" oninput="render()" />
-  <select id="vp" onchange="render()">
-    <option value="">All viewports</option>
-    <option value="m">Mobile (m-)</option>
-    <option value="t">Tablet (T-)</option>
-    <option value="d">Desktop (D-)</option>
-    <option value="x">Extension (x-)</option>
-  </select>
+  <h1 class="title"><img src="assets/phoenix-ember.svg" alt="" style="height:26px;vertical-align:-6px;margin-right:8px" />Phoenix — Mock Index</h1>
+  <div class="sub" id="sub">— screens</div>
+  <div class="bar">
+    <input id="q" class="search" placeholder="Search screens…  (e.g. chat, models, settings)" oninput="render()" />
+    <div class="filters" id="filters">
+      <button data-vp="" class="on" onclick="setVp('')">All</button>
+      <button data-vp="m" onclick="setVp('m')">Mobile</button>
+      <button data-vp="t" onclick="setVp('t')">Tablet</button>
+      <button data-vp="d" onclick="setVp('d')">Desktop</button>
+    </div>
+  </div>
 </header>
 <main id="out"></main>
+
 <script>
-  // Viewport dir + filename-prefix maps. Add new screens to DATA only.
-  const DIRS = { m:'mobile', t:'tablet', d:'desktop', x:'extension' };
-  const PRE  = { m:'m-',     t:'T-',     d:'D-',      x:'x-' };
-  const CATS = ['Auth','Dashboard','Content','Activity','Social','Profile','Billing','Other'];
-  // One row per screen: {app, n:name, m/t/d/x:1 if that viewport exists, tag:'F'|'M'|'FM'}
+  // Add a screen = one DATA row. m/t/d = 1 if that viewport's mock file exists.
   const DATA = [
-    // { app:'accounts', n:'auth-login', m:1, t:1, d:1, x:0, tag:'FM' },
+    { cat:'Overview',             app:'home',       n:'home',          name:'Dashboard',             m:1, t:1, d:1 },
+    { cat:'Conversation',         app:'chat',       n:'chat',          name:'Chat',                  m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models',        name:'Local models',          plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-add',    name:'Add local model',       plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-detail', name:'Model detail',          plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-browse', name:'Browse & download (16.5k GGUF)', plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-online', name:'Online · IndoxHub',  plat:'M', m:1, t:1, d:1 },
+    { cat:'Models',               app:'models',     n:'models-providers', name:'Providers & API Keys', plat:'M', m:1, t:1, d:1 },
+    { cat:'Knowledge & Research', app:'deepsearch', n:'deepsearch',    name:'DeepSearch',            m:1, t:1, d:1 },
+    { cat:'Knowledge & Research', app:'documents',  n:'documents',     name:'Documents',             m:1, t:1, d:1 },
+    { cat:'Knowledge & Research', app:'speech',     n:'speech',        name:'Speech (Whisper)',      m:1, t:1, d:1 },
+    { cat:'Tools',                app:'forecasting',n:'forecasting',   name:'Forecasting (TimesFM)', plat:'M', m:1, t:1, d:1 },
+    { cat:'Extensions',           app:'extensions', n:'extensions',    name:'Marketplace',           m:1, t:1, d:1 },
+    { cat:'System',               app:'developer',  n:'developer',     name:'Developer · Server',    m:1, t:1, d:1 },
+    { cat:'System',               app:'developer',  n:'maestro',       name:'Developer · Maestro',   m:1, t:1, d:1 },
+    { cat:'System',               app:'developer',  n:'flows',         name:'Developer · Flows',     m:1, t:1, d:1 },
+    { cat:'System',               app:'developer',  n:'evaluators',    name:'Developer · Evaluators', m:1, t:1, d:1 },
+    { cat:'System',               app:'settings',   n:'settings',      name:'Settings',              m:1, t:1, d:1 },
+    { cat:'System',               app:'more',       n:'more',          name:'More menu (mobile)',    m:1, t:0, d:0 },
+    { cat:'Marketing',            app:'landing',    n:'landing',       name:'Landing page',          plat:'F', m:1, t:1, d:1 },
+    { cat:'Onboarding',           app:'welcome',    n:'welcome',       name:'Welcome',               m:1, t:1, d:1 },
   ];
-  function card(app, r, vp) {
-    const vps = (vp ? [vp] : ['m','t','d','x']).filter(v => r[v]);
-    return vps.map(v =>
-      `<a class="scr" href="${DIRS[v]}/${app}/${PRE[v]}${r.n}.html">
-         <span>${r.n}</span><span class="tags">${v.toUpperCase()}<span class="tag">${r.tag||''}</span></span>
-       </a>`).join('');
+  const CAT_ORDER = ['Marketing', 'Overview', 'Conversation', 'Models', 'Knowledge & Research', 'Tools', 'Extensions', 'System', 'Onboarding'];
+  const VP = {
+    m: { dir:'mobile',  pre:'m-', label:'M', title:'Mobile mock' },
+    t: { dir:'tablet',  pre:'T-', label:'T', title:'Tablet mock' },
+    d: { dir:'desktop', pre:'D-', label:'D', title:'Desktop mock' },
+  };
+  let vpFilter = '';
+
+  function setVp(v) {
+    vpFilter = v;
+    document.querySelectorAll('#filters button').forEach(b => b.classList.toggle('on', b.dataset.vp === v));
+    render();
   }
+
+  function btn(r, v) {
+    const c = VP[v];
+    if (r[v]) return `<a class="vp ${v}" href="${c.dir}/${r.app}/${c.pre}${r.n}.html" title="${c.title}">${c.label}</a>`;
+    return `<span class="vp ${v} off" title="No ${c.dir} mock yet">${c.label}</span>`;
+  }
+
   function render() {
-    const q = (document.getElementById('q').value||'').toLowerCase();
-    const vp = document.getElementById('vp').value;
-    const byApp = {};
-    DATA.filter(r => (r.n+r.app).toLowerCase().includes(q)).forEach(r => (byApp[r.app] ||= []).push(r));
-    document.getElementById('out').innerHTML = Object.keys(byApp).sort().map(app =>
-      `<section class="app"><h2>${app}</h2><div class="grid">${byApp[app].map(r=>card(app,r,vp)).join('')}</div></section>`
-    ).join('') || '<p class="tags">No screens yet — add rows to DATA.</p>';
+    const q = (document.getElementById('q').value || '').toLowerCase();
+    const match = r => (r.name + r.app + r.cat).toLowerCase().includes(q) && (!vpFilter || r[vpFilter]);
+    const rows = DATA.filter(match);
+
+    // subtitle: how many shown, and which viewports exist anywhere
+    const have = ['m','t','d'].filter(v => DATA.some(r => r[v])).map(v => VP[v].dir).join(' / ');
+    document.getElementById('sub').textContent = `${rows.length} of ${DATA.length} screens · ${have}`;
+
+    const out = CAT_ORDER.map(cat => {
+      const items = rows.filter(r => r.cat === cat);
+      if (!items.length) return '';
+      const tag = ['m','t','d'].filter(v => items.some(r => r[v])).map(v => VP[v].label).join('·');
+      const cards = items.map(r =>
+        `<div class="card"><div class="name">${r.name}${r.plat ? `<span class="plat" title="Platform — F: web · M: Flutter · FM: both">${r.plat}</span>` : ''}</div><div class="vps">${btn(r,'m')}${btn(r,'t')}${btn(r,'d')}</div></div>`
+      ).join('');
+      return `<section><div class="cat"><h2>${cat}</h2><span class="tag">${tag}</span>
+              <span class="count">· ${items.length}</span><span class="line"></span></div>
+              <div class="grid">${cards}</div></section>`;
+    }).join('');
+
+    document.getElementById('out').innerHTML = out || '<p class="empty">No screens match.</p>';
   }
   render();
 </script>

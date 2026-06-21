@@ -1,0 +1,53 @@
+/* Reusable UI primitives — ported from design/mock state patterns. Tokens only. */
+
+/* ---- Card ---- */
+.card { background: var(--surface-card); border: 1px solid var(--border-default);
+        border-radius: var(--r-lg); padding: var(--sp-4); }
+.cardHead { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.cardTitle { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--text-secondary);
+             text-transform: uppercase; letter-spacing: var(--ls-caps); margin: 0; }
+.cardGrow { flex: 1; }
+.cardLink { background: transparent; border: 0; color: var(--text-link); font-size: var(--fs-xs); padding: 0; }
+.cardLink:hover { text-decoration: underline; }
+
+/* ---- PageHeader (.top bar) ---- */
+.top { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-5);
+       border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); flex: none; }
+.topTitle { font-family: var(--font-display); font-size: var(--fs-md); font-weight: var(--fw-semibold);
+            margin: 0; letter-spacing: var(--ls-tight); }
+.topGrow { flex: 1; }
+.topActions { display: flex; align-items: center; gap: var(--sp-2); }
+
+/* ---- CenterState (.center) ---- */
+.center { flex: 1; display: grid; place-content: center; text-align: center;
+          gap: var(--sp-3); padding: var(--sp-8); }
+.centerBig { font-size: 44px; }
+.center h2 { font-family: var(--font-display); font-weight: var(--fw-semibold); margin: 0;
+             font-size: var(--fs-lg); letter-spacing: var(--ls-tight); color: var(--text-primary); }
+.center p { color: var(--text-tertiary); margin: 0; max-width: 440px; justify-self: center; }
+.sub { font-size: var(--fs-sm); color: var(--text-tertiary); max-width: 380px; justify-self: center; }
+.btnrow { display: flex; gap: var(--sp-2); justify-content: center; }
+
+/* ---- ErrorState (.errbox) / warnbox ---- */
+.errbox, .warnbox { border-radius: var(--r-lg); padding: var(--sp-4) var(--sp-5); max-width: 480px;
+                    justify-self: center; text-align: left; }
+.errbox { border: 1px solid var(--error-base); background: var(--error-bg); color: var(--error-ink); }
+.warnbox { border: 1px solid var(--warning-base); background: var(--warning-bg); color: var(--warning-ink); }
+.errbox h3, .warnbox h3 { margin: 0 0 var(--sp-2); font-size: var(--fs-base); font-weight: var(--fw-semibold); }
+.errbox p, .warnbox p { margin: 0 0 var(--sp-3); font-size: var(--fs-sm); }
+
+/* ---- Skeleton (.skel) ---- */
+.skel { border-radius: var(--r-sm); background: var(--bg-tertiary);
+        animation: pulse var(--dur-gentle) var(--ease-default) infinite; }
+@keyframes pulse { 50% { opacity: .4; } }
+
+/* ---- buttons (shared by primitives) ---- */
+.cta { background: var(--accent-primary); color: var(--text-inverse); border: 0;
+       font-weight: var(--fw-semibold); padding: var(--sp-2) var(--sp-4);
+       border-radius: var(--r-md); font-size: var(--fs-sm);
+       transition: background var(--dur-fast) var(--ease-default); }
+.cta:hover { background: var(--accent-hover); }
+.ghost { background: transparent; color: var(--text-link); border: 1px solid var(--border-default);
+         padding: var(--sp-2) var(--sp-4); border-radius: var(--r-md); font-size: var(--fs-sm);
+         transition: background var(--dur-fast) var(--ease-default); }
+.ghost:hover { background: var(--bg-tertiary); }

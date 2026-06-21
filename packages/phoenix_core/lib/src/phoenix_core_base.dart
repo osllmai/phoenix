@@ -40,6 +40,7 @@ class PhoenixCore {
   final ModelManager models;
 
   final PhoenixDatabase _database;
+  bool _disposed = false;
 
   /// Opens the core: database + engine + services, ready to use.
   ///
@@ -51,8 +52,9 @@ class PhoenixCore {
     String? enginePath,
     InferencePort? engine,
   }) async {
-    assert(engine != null || enginePath != null,
-        'Provide either an engine or an enginePath.');
+    if (engine == null && enginePath == null) {
+      throw ArgumentError('Provide either an engine or an enginePath.');
+    }
     final db = await PhoenixDatabase.open(dbPath, databaseFactory);
     final port = engine ?? SubprocessEngine(executablePath: enginePath!);
     return PhoenixCore._(
@@ -63,8 +65,10 @@ class PhoenixCore {
     );
   }
 
-  /// Releases the engine process and closes the database.
+  /// Releases the engine process and closes the database. Idempotent.
   Future<void> dispose() async {
+    if (_disposed) return;
+    _disposed = true;
     await engine.dispose();
     await _database.close();
   }

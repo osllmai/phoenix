@@ -1,0 +1,12 @@
+# E2E runner — layer on compose.yml:
+#   make e2e   (runs Playwright against the running frontend)
+name: phoenix
+services:
+  playwright:
+    container_name: phoenix-playwright
+    image: mcr.microsoft.com/playwright:v1.50.0-noble
+    working_dir: /e2e
+    command: sh -c "corepack enable && pnpm install && pnpm exec playwright test"
+    env_file: ../../.env
+    volumes: ['../../frontend:/e2e']
+    depends_on: [frontend]

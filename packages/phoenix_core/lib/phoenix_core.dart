@@ -11,6 +11,8 @@ export 'src/phoenix_core_base.dart';
 export 'src/engine/inference_port.dart';
 export 'src/engine/protocol.dart';
 export 'src/engine/subprocess_engine.dart';
+export 'src/engine/engine_exceptions.dart';
+export 'src/engine/wire_guard.dart';
 
 // Storage
 export 'src/storage/database.dart';
@@ -21,6 +23,10 @@ export 'src/chat/conversation.dart';
 export 'src/chat/chat_repository.dart';
 export 'src/chat/sqflite_chat_repository.dart';
 export 'src/chat/chat_service.dart';
+
+// Speech
+export 'src/speech/transcription_port.dart';
+export 'src/speech/stub_transcriber.dart';
 
 // Models
 export 'src/models/ai_model.dart';

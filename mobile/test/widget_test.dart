@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:phoenix/core/ai/engine_provider.dart';
 import 'package:phoenix/features/chat/presentation/screens/chat_screen.dart';
 import 'package:phoenix_core/phoenix_core.dart';
@@ -32,11 +33,14 @@ void main() {
       ),
     );
 
-    await tester.enterText(find.byType(TextField), 'hello');
+    await tester.enterText(find.byKey(const Key('chatComposer')), 'hello');
     await tester.tap(find.byIcon(Icons.send));
     await tester.pumpAndSettle();
 
     expect(find.text('hello'), findsOneWidget); // user bubble
-    expect(find.text('Hi there!'), findsOneWidget); // streamed reply
+    expect(
+      find.byWidgetPredicate((w) => w is GptMarkdown && w.data == 'Hi there!'),
+      findsOneWidget,
+    ); // streamed reply, rendered as markdown
   });
 }

@@ -1,0 +1,12 @@
+# Flutter ANDROID build image (CI only — iOS builds stay on host macOS).
+# Build context = repo root. Signing keys injected at build time, never baked in.
+FROM ghcr.io/cirruslabs/flutter:stable
+
+WORKDIR /app/mobile
+
+COPY mobile/pubspec.yaml mobile/pubspec.lock ./
+RUN flutter pub get
+
+COPY mobile/ ./
+
+CMD ["flutter", "build", "appbundle", "--release"]

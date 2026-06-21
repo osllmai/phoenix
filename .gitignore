@@ -1,32 +1,16 @@
-# === Build directories ===
+# === Build output (Flutter desktop + llama.cpp engine still emit CMake artifacts) ===
 build/
 cmake-build*/
 CMakeFiles/
 CMakeCache.txt
-Makefile
-*.autosave
 
-# === Qt Creator and CMake user files ===
-*.user
-*.user.*
-*.qmake.stash
-*.pro.user
-*.pro.user.*
-
-# === CMake generated files ===
-CMakeLists.txt.user
-
-# === Installer folder ===
-Installer/
-
-# === Compiled object files ===
+# === Compiled binaries / objects (C/C++ engine) ===
 *.o
 *.obj
 *.so
 *.a
 *.lib
-*.dll   # Ignore DLL files in root
-**/*.dll  # Ignore DLL files in all subdirectories
+*.dll
 *.db
 *.out
 
@@ -42,31 +26,71 @@ Installer/
 Thumbs.db
 ehthumbs.db
 desktop.ini
-.qmlls.ini
 
-# === VSCode settings ===
+# === Editor settings ===
 .vscode/
 
-# === Qt Linguist translation binary files ===
-*.qm
-
-# === Whisper models ===
+# === Models (Whisper / local GGUF) ===
 *.bin
-ggml-*
-
-# === Local models ===
 *.ggml
 ggml-*
 
-_pycache_/
+# === Python / Django ===
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.sqlite3
+staticfiles/
+media/
 
-# === API key header ===
+# === Dart / Flutter tooling (build cache + deps — never commit) ===
+.dart_tool/
+.pub-cache/
+.pub/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# === Node / Next.js / pnpm / WXT extension (web + extension surfaces) ===
+node_modules/
+.pnpm-store/
+.next/
+out/
+.turbo/
+.output/
+.wxt/
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+test-results/
+
+# === Flutter native (iOS / Android) ===
+Pods/
+.symlinks/
+**/Flutter/ephemeral/
+local.properties
+.gradle/
+
+# === IDE (JetBrains) ===
+.idea/
+*.iml
+
+# === Secrets / local env ===
 **/apikey.h
 .env
+.env.*
+!.env.example
 
+# === Agent config / generated docs ===
 .claude
-
-CLAUDE.md
-
 .claude/*
+CLAUDE.md
+# Design folder is local-only — never push to GitHub
+design/
 */design/*
+
+# Backend is local-only — not shared
+backend/

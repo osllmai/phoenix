@@ -8,8 +8,11 @@ import 'package:phoenix_core/phoenix_core.dart';
 /// Ships alongside the app under `resources/providers/local_provider/`. Override
 /// in tests/dev by providing [engineExecutableProvider].
 String defaultEngineExecutable() {
-  final exe = Platform.isWindows ? 'applocal_provider.exe' : 'applocal_provider';
-  final dir = Platform.environment['PHOENIX_ENGINE_DIR'] ?? 'engine/local_provider';
+  final (platformDir, exe) = Platform.isWindows
+      ? ('windows_llama', 'applocal_provider.exe')
+      : ('linux_llama', 'applocal_provider');
+  final dir =
+      Platform.environment['PHOENIX_ENGINE_DIR'] ?? 'engine/local_provider/$platformDir';
   return '$dir/$exe';
 }
 
