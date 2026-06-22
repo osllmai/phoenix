@@ -25,14 +25,12 @@ class MaestroGoal {
 
 class MaestroStep {
   const MaestroStep({
-    required this.marker,
     required this.title,
     required this.meta,
     required this.statusLabel,
     required this.state,
   });
 
-  final String marker;
   final String title;
   final String meta;
   final String statusLabel;

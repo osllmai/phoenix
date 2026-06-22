@@ -9,7 +9,7 @@ const maestroSample = MaestroData(
     MaestroPreset(label: 'add tests'),
     MaestroPreset(label: 'review PR'),
     MaestroPreset(label: 'refactor module'),
-    MaestroPreset(label: '↺ add OAuth login + tests'),
+    MaestroPreset(label: 'rerun last'),
   ],
   goal: MaestroGoal(
     text: 'add OAuth login + tests',
@@ -19,28 +19,24 @@ const maestroSample = MaestroData(
   ),
   plan: [
     MaestroStep(
-      marker: '✓',
       title: '1 · plan',
       meta: 'claude-code · 4 steps',
       statusLabel: 'done',
       state: MaestroStepState.done,
     ),
     MaestroStep(
-      marker: '⠿',
       title: '2 · impl',
       meta: 'codex · 3 files changed…',
       statusLabel: 'running',
       state: MaestroStepState.running,
     ),
     MaestroStep(
-      marker: '✋',
       title: '3 · tests',
       meta: 'needs your approval to run',
       statusLabel: 'gated',
       state: MaestroStepState.gated,
     ),
     MaestroStep(
-      marker: '•',
       title: '4 · review',
       meta: 'droid · queued',
       statusLabel: 'queued',

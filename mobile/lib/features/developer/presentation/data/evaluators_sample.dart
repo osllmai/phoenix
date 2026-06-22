@@ -55,7 +55,7 @@ const evaluatorsSample = EvaluatorsData(
       title: 'claude-code · "draft OAuth guide"',
       run: 'run #1284 · indoxJudge · llama-3.1-8b · 12s',
       passed: true,
-      verdictLabel: '✓ Quality gate: PASS (≥0.8)',
+      verdictLabel: 'Quality gate: PASS (≥0.8)',
       metrics: [
         EvaluatorMetric(
           label: 'Faithfulness',
@@ -100,7 +100,7 @@ const evaluatorsSample = EvaluatorsData(
       title: 'flow:summarize · "Q2 board deck"',
       run: 'run #1281 · Ragas · llama-3.1-8b · 18s',
       passed: false,
-      verdictLabel: '✕ Quality gate: FAIL (<0.8)',
+      verdictLabel: 'Quality gate: FAIL (<0.8)',
       metrics: [
         EvaluatorMetric(
           label: 'Faithfulness',

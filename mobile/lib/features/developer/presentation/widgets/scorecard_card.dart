@@ -53,12 +53,20 @@ class _VerdictBadge extends StatelessWidget {
         color: background,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(
-        label,
-        style: Theme.of(context)
-            .textTheme
-            .labelSmall
-            ?.copyWith(color: foreground),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(passed ? Icons.check_circle : Icons.cancel,
+              size: 13, color: foreground),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .labelSmall
+                ?.copyWith(color: foreground),
+          ),
+        ],
       ),
     );
   }

@@ -41,11 +41,7 @@ class _StepRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 24,
-            child: Text(
-              step.marker,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontFamily: 'monospace', color: accent),
-            ),
+            child: Icon(_markerIcon(step.state), size: 16, color: accent),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -96,6 +92,19 @@ class _MiniStat extends StatelessWidget {
       ),
       child: Text(label, style: theme.textTheme.labelSmall?.copyWith(color: fg)),
     );
+  }
+}
+
+IconData _markerIcon(MaestroStepState s) {
+  switch (s) {
+    case MaestroStepState.done:
+      return Icons.check_circle;
+    case MaestroStepState.running:
+      return Icons.sync;
+    case MaestroStepState.gated:
+      return Icons.back_hand;
+    case MaestroStepState.pending:
+      return Icons.schedule;
   }
 }
 
