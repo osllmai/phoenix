@@ -128,9 +128,13 @@ class ProviderCard extends StatelessWidget {
               color: scheme.onSurfaceVariant, fontStyle: FontStyle.italic));
     }
     return Row(children: [
-      Text(p.maskedKey,
-          style: theme.textTheme.bodySmall?.copyWith(
-              fontFamily: 'monospace', color: scheme.onSurface)),
+      Flexible(
+        child: Text(p.maskedKey,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+                fontFamily: 'monospace', color: scheme.onSurface)),
+      ),
       const SizedBox(width: 8),
       Icon(Icons.visibility_outlined, size: 16, color: scheme.onSurfaceVariant),
       const SizedBox(width: 8),
@@ -152,21 +156,30 @@ class ProviderCard extends StatelessWidget {
 
   Widget _actions(ColorScheme scheme) {
     if (p.status == ProvStatus.notConnected) {
-      return Row(children: [
-        OutlinedButton(onPressed: () {}, child: const Text('+ Add key')),
-        const Spacer(),
-        OutlinedButton(onPressed: () {}, child: const Text('Connect')),
-      ]);
+      return const OverflowBar(
+        spacing: 8,
+        overflowSpacing: 8,
+        alignment: MainAxisAlignment.spaceBetween,
+        children: [
+          OutlinedButton(onPressed: _noop, child: Text('+ Add key')),
+          OutlinedButton(onPressed: _noop, child: Text('Connect')),
+        ],
+      );
     }
-    return Row(children: [
-      OutlinedButton(onPressed: () {}, child: const Text('Test')),
-      const SizedBox(width: 8),
-      OutlinedButton(onPressed: () {}, child: const Text('Set default')),
-      const Spacer(),
-      OutlinedButton(
-          onPressed: () {},
-          style: OutlinedButton.styleFrom(foregroundColor: scheme.error),
-          child: const Text('Remove')),
-    ]);
+    return OverflowBar(
+      spacing: 8,
+      overflowSpacing: 8,
+      alignment: MainAxisAlignment.spaceBetween,
+      children: [
+        OutlinedButton(onPressed: _noop, child: const Text('Test')),
+        OutlinedButton(onPressed: _noop, child: const Text('Set default')),
+        OutlinedButton(
+            onPressed: _noop,
+            style: OutlinedButton.styleFrom(foregroundColor: scheme.error),
+            child: const Text('Remove')),
+      ],
+    );
   }
 }
+
+void _noop() {}

@@ -30,6 +30,7 @@ export 'src/speech/stub_transcriber.dart';
 
 // Models
 export 'src/models/ai_model.dart';
+export 'src/models/selected_model.dart';
 export 'src/models/model_repository.dart';
 export 'src/models/sqflite_model_repository.dart';
 export 'src/models/model_manager.dart';

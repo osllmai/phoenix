@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phoenix_core/phoenix_core.dart';
 
 import '../../../models/presentation/providers/model_providers.dart';
+import '../../../models/presentation/widgets/model_picker.dart';
 import 'hero_throughput.dart';
 
 class ActiveModelHero extends ConsumerWidget {
@@ -10,8 +12,8 @@ class ActiveModelHero extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
-    final active = ref.watch(activeModelProvider);
-    final loaded = active != null;
+    final selection = ref.watch(selectedModelProvider);
+    final loaded = selection != null;
 
     return Container(
       decoration: BoxDecoration(
@@ -28,7 +30,7 @@ class ActiveModelHero extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _HeroRow(loaded: loaded, name: active?.name),
+          _HeroRow(selection: selection),
           if (loaded) ...[
             const SizedBox(height: 16),
             const HeroThroughput(),
@@ -40,19 +42,24 @@ class ActiveModelHero extends ConsumerWidget {
 }
 
 class _HeroRow extends StatelessWidget {
-  const _HeroRow({required this.loaded, this.name});
+  const _HeroRow({required this.selection});
 
-  final bool loaded;
-  final String? name;
+  final SelectedModel? selection;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final loaded = selection != null;
+    final isCloud = selection?.mode == ComputeMode.cloud;
     return Row(
       children: [
         Opacity(
           opacity: loaded ? 1 : 0.5,
-          child: const Text('🧠', style: TextStyle(fontSize: 32)),
+          child: Icon(
+            isCloud ? Icons.cloud_outlined : Icons.computer,
+            size: 32,
+            color: scheme.primary,
+          ),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -60,7 +67,7 @@ class _HeroRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                loaded ? name! : 'No model loaded',
+                loaded ? selection!.name : 'No model selected',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -71,8 +78,8 @@ class _HeroRow extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 loaded
-                    ? 'Loaded · ready · Q4_K_M · 8K context'
-                    : 'Load a model to start chatting',
+                    ? (isCloud ? 'Cloud · via IndoxHub' : 'Local · on-device')
+                    : 'Pick a model to start chatting',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -85,10 +92,9 @@ class _HeroRow extends StatelessWidget {
         const SizedBox(width: 12),
         Flexible(
           child: FilledButton.icon(
-            onPressed: () {},
-            icon: Icon(loaded ? Icons.chat_bubble_outline : Icons.download,
-                size: 16),
-            label: Text(loaded ? 'New chat' : 'Load a model',
+            onPressed: () => showModelPicker(context),
+            icon: Icon(loaded ? Icons.swap_horiz : Icons.add, size: 16),
+            label: Text(loaded ? 'Switch' : 'Pick a model',
                 maxLines: 1, overflow: TextOverflow.ellipsis),
           ),
         ),

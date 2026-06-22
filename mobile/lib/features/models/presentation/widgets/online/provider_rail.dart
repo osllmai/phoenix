@@ -52,6 +52,94 @@ class ProviderRail extends StatelessWidget {
   }
 }
 
+/// The phone variant of [ProviderRail]: a horizontally scrollable pill strip.
+class ProviderStrip extends StatelessWidget {
+  const ProviderStrip({
+    super.key,
+    required this.selectedId,
+    required this.onSelect,
+  });
+
+  final String selectedId;
+  final ValueChanged<String> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          children: [
+            for (final p in onlineProviders) ...[
+              _StripPill(
+                provider: p,
+                selected: p.id == selectedId,
+                onTap: () => onSelect(p.id),
+              ),
+              const SizedBox(width: 8),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StripPill extends StatelessWidget {
+  const _StripPill(
+      {required this.provider, required this.selected, required this.onTap});
+
+  final OnlineProvider provider;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Opacity(
+      opacity: provider.available ? 1 : 0.5,
+      child: InkWell(
+        onTap: provider.available ? onTap : null,
+        borderRadius: BorderRadius.circular(999),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: selected ? scheme.primaryContainer : Colors.transparent,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+                color: selected ? scheme.onPrimaryContainer : scheme.outline),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  width: 9,
+                  height: 9,
+                  decoration: BoxDecoration(
+                      color: provider.dot, shape: BoxShape.circle)),
+              const SizedBox(width: 7),
+              Text(provider.name,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                      color: selected
+                          ? scheme.onPrimaryContainer
+                          : scheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ProvTile extends StatelessWidget {
   const _ProvTile(
       {required this.provider, required this.selected, required this.onTap});

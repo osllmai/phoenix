@@ -63,9 +63,9 @@ void main() {
     testWidgets('empty $tag: renders no-model + no-conversations states',
         (tester) async {
       await _pumpEmptyAt(tester, size);
-      expect(find.text('No model loaded'), findsOneWidget);
-      expect(find.text('Load a model to start chatting'), findsOneWidget);
-      expect(find.text('Load a model'), findsOneWidget);
+      expect(find.text('No model selected'), findsOneWidget);
+      expect(find.text('Pick a model to start chatting'), findsOneWidget);
+      expect(find.text('Pick a model'), findsOneWidget);
       expect(find.text('No conversations yet'), findsOneWidget);
     });
   }
