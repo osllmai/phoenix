@@ -52,22 +52,28 @@ class ProvidersScreen extends ConsumerWidget {
   Widget _header(BuildContext context, WidgetRef ref, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 16, 12),
-      child: Row(
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text('Providers & API Keys',
               style: theme.textTheme.titleLarge
                   ?.copyWith(fontWeight: FontWeight.w600)),
-          const Spacer(),
-          if (kDebugMode) ...[
-            _stateSwitcher(ref),
-            const SizedBox(width: 8),
-          ],
-          OutlinedButton(onPressed: () {}, child: const Text('Test all')),
-          const SizedBox(width: 8),
-          FilledButton.icon(
-            onPressed: () => showAddProviderDialog(context),
-            icon: const Icon(Icons.add, size: 18),
-            label: const Text('Add provider'),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              if (kDebugMode) _stateSwitcher(ref),
+              OutlinedButton(onPressed: () {}, child: const Text('Test all')),
+              FilledButton.icon(
+                onPressed: () => showAddProviderDialog(context),
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('Add provider'),
+              ),
+            ],
           ),
         ],
       ),

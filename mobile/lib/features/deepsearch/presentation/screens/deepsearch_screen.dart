@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/responsive/breakpoints.dart';
-import '../../../../core/widgets/desktop_only_panel.dart';
 import '../providers/deepsearch_controller.dart';
 import '../providers/deepsearch_state.dart';
 import '../widgets/answer_column.dart';
@@ -18,18 +17,6 @@ class DeepSearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ff = formFactorOf(context);
-    if (!isDesktopPlatform) {
-      return const Scaffold(
-        body: SafeArea(
-          child: DesktopOnlyPanel(
-            icon: Icons.travel_explore,
-            title: 'DeepSearch is best on desktop',
-            message: 'Multi-step research runs on the desktop workbench. Pair '
-                'with your desktop to run and monitor searches from here.',
-          ),
-        ),
-      );
-    }
     final async = ref.watch(deepSearchControllerProvider);
 
     return Scaffold(

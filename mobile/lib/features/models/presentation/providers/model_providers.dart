@@ -6,6 +6,7 @@ import '../../../../core/ai/engine_provider.dart';
 
 export 'model_filters.dart';
 export 'models_controller.dart';
+export 'selection_providers.dart';
 
 /// Model persistence. Overridden in `main()` with the SQLite impl; defaults to
 /// in-memory for tests/previews.

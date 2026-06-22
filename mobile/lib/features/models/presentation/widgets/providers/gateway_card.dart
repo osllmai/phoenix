@@ -37,9 +37,12 @@ class GatewayCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [
-                      Text('IndoxHub gateway',
-                          style: theme.textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w600)),
+                      Flexible(
+                        child: Text('IndoxHub gateway',
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600)),
+                      ),
                       if (ok) ...[
                         const SizedBox(width: 8),
                         _defaultTag(scheme),
@@ -88,39 +91,55 @@ class GatewayCard extends StatelessWidget {
                 fontWeight: FontWeight.w600)),
       );
 
-  Widget _credits(ThemeData theme, ColorScheme scheme) => Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: scheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
+  Widget _credits(ThemeData theme, ColorScheme scheme) {
+    final usage = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('${(info.usedPct * 100).round()}% used',
+            style: theme.textTheme.labelSmall
+                ?.copyWith(color: scheme.onSurfaceVariant)),
+        const SizedBox(height: 4),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(value: info.usedPct, minHeight: 6),
         ),
-        child: Row(
-          children: [
+      ],
+    );
+    final topUp = OutlinedButton(onPressed: () {}, child: const Text('Top up'));
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final stats = Row(children: [
             _stat(theme, scheme, 'Credits remaining', info.credits),
             const SizedBox(width: 20),
             _stat(theme, scheme, 'Used this month', info.usedMonth),
+          ]);
+          if (c.maxWidth < 420) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                stats,
+                const SizedBox(height: 12),
+                Row(children: [Expanded(child: usage), const SizedBox(width: 16), topUp]),
+              ],
+            );
+          }
+          return Row(children: [
+            stats,
             const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${(info.usedPct * 100).round()}% used',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: scheme.onSurfaceVariant)),
-                  const SizedBox(height: 4),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: LinearProgressIndicator(
-                        value: info.usedPct, minHeight: 6),
-                  ),
-                ],
-              ),
-            ),
+            Expanded(child: usage),
             const SizedBox(width: 16),
-            OutlinedButton(onPressed: () {}, child: const Text('Top up')),
-          ],
-        ),
-      );
+            topUp,
+          ]);
+        },
+      ),
+    );
+  }
 
   Widget _stat(ThemeData theme, ColorScheme scheme, String label, String val) =>
       Column(

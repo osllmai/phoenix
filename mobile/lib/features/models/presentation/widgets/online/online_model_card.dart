@@ -131,20 +131,24 @@ class OnlineModelCard extends StatelessWidget {
 
   Widget _footer(ThemeData theme) {
     final scheme = theme.colorScheme;
-    return Row(children: [
-      OutlinedButton(onPressed: () {}, child: const Text('Details')),
-      const Spacer(),
-      TextButton(
-          onPressed: onSetDefault,
-          child: Text(isDefault ? '★ Default' : 'Set default')),
-      const SizedBox(width: 6),
-      FilledButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.cloud_outlined, size: 16),
-          label: const Text('Use'),
-          style: FilledButton.styleFrom(
-              backgroundColor: scheme.primary, foregroundColor: scheme.onPrimary)),
-    ]);
+    return OverflowBar(
+      spacing: 6,
+      overflowSpacing: 6,
+      alignment: MainAxisAlignment.end,
+      children: [
+        OutlinedButton(onPressed: () {}, child: const Text('Details')),
+        TextButton(
+            onPressed: onSetDefault,
+            child: Text(isDefault ? '★ Default' : 'Set default')),
+        FilledButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.cloud_outlined, size: 16),
+            label: const Text('Use'),
+            style: FilledButton.styleFrom(
+                backgroundColor: scheme.primary,
+                foregroundColor: scheme.onPrimary)),
+      ],
+    );
   }
 
   Widget _badge(String text, Color bg, Color fg) => _chip(null, text, bg, fg);

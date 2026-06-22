@@ -22,33 +22,41 @@ class OnlineHeader extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
       ),
-      child: Row(
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text('Online · IndoxHub',
               style: theme.textTheme.titleMedium
                   ?.copyWith(fontWeight: FontWeight.w600)),
-          const Spacer(),
-          if (state == OnlineState.success || state == OnlineState.empty) ...[
-            _credits(theme),
-            const SizedBox(width: 8),
-          ],
-          _connPill(theme),
-          if (state != OnlineState.firstRun) ...[
-            const SizedBox(width: 8),
-            OutlinedButton(
-                onPressed: () {},
-                child: Text(state == OnlineState.denied ? 'Update key' : 'Manage keys')),
-          ],
-          if (onState != null && kDebugMode)
-            PopupMenuButton<OnlineState>(
-              tooltip: 'Preview state',
-              icon: const Icon(Icons.more_vert, size: 18),
-              onSelected: onState,
-              itemBuilder: (_) => [
-                for (final s in OnlineState.values)
-                  PopupMenuItem(value: s, child: Text(s.name)),
-              ],
-            ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              if (state == OnlineState.success || state == OnlineState.empty)
+                _credits(theme),
+              _connPill(theme),
+              if (state != OnlineState.firstRun)
+                OutlinedButton(
+                    onPressed: () {},
+                    child: Text(state == OnlineState.denied
+                        ? 'Update key'
+                        : 'Manage keys')),
+              if (onState != null && kDebugMode)
+                PopupMenuButton<OnlineState>(
+                  tooltip: 'Preview state',
+                  icon: const Icon(Icons.more_vert, size: 18),
+                  onSelected: onState,
+                  itemBuilder: (_) => [
+                    for (final s in OnlineState.values)
+                      PopupMenuItem(value: s, child: Text(s.name)),
+                  ],
+                ),
+            ],
+          ),
         ],
       ),
     );

@@ -55,10 +55,9 @@ class OnlineSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final visible = onlineModels.where(_matches).toList();
-    return Row(
-      children: [
-        ProviderRail(selectedId: providerId, onSelect: onProvider),
-        Expanded(
+    return LayoutBuilder(
+      builder: (context, c) {
+        final body = Expanded(
           child: Column(
             children: [
               if (selected.isNotEmpty) _selBar(context),
@@ -72,8 +71,22 @@ class OnlineSuccess extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
+        );
+        if (c.maxWidth < 640) {
+          return Column(
+            children: [
+              ProviderStrip(selectedId: providerId, onSelect: onProvider),
+              body,
+            ],
+          );
+        }
+        return Row(
+          children: [
+            ProviderRail(selectedId: providerId, onSelect: onProvider),
+            body,
+          ],
+        );
+      },
     );
   }
 
@@ -123,9 +136,10 @@ class OnlineSuccess extends StatelessWidget {
         border: Border(bottom: BorderSide(color: scheme.primary, width: 2)),
       ),
       child: Row(children: [
-        Text('${selected.length} selected',
-            style: const TextStyle(fontWeight: FontWeight.w600)),
-        const Spacer(),
+        Expanded(
+          child: Text('${selected.length} selected',
+              style: const TextStyle(fontWeight: FontWeight.w600)),
+        ),
         FilledButton(
             onPressed: () {},
             child: Text('Add ${selected.length} '

@@ -23,11 +23,14 @@ class ModelsTabBar extends StatelessWidget {
         color: scheme.surfaceContainerHighest,
         border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
       ),
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-      child: Row(
-        children: [
-          for (final t in _tabs) _tab(context, scheme, t.$1, t.$2),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+        child: Row(
+          children: [
+            for (final t in _tabs) _tab(context, scheme, t.$1, t.$2),
+          ],
+        ),
       ),
     );
   }

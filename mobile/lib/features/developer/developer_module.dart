@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/feature/feature_module.dart';
-import '../../core/widgets/placeholder_screen.dart';
 import 'presentation/screens/developer_screen.dart';
+import 'presentation/screens/evaluators_screen.dart';
+import 'presentation/screens/flows_screen.dart';
+import 'presentation/screens/maestro_screen.dart';
 
 /// Developer / server console feature, self-registered with the app shell.
 class DeveloperModule implements FeatureModule {
@@ -20,18 +22,15 @@ class DeveloperModule implements FeatureModule {
         ),
         GoRoute(
           path: '/developer/maestro',
-          builder: (context, state) => const PlaceholderScreen(
-              title: 'Maestro', icon: Icons.account_tree_outlined),
+          builder: (context, state) => const MaestroScreen(),
         ),
         GoRoute(
           path: '/developer/flows',
-          builder: (context, state) => const PlaceholderScreen(
-              title: 'Flows', icon: Icons.schema_outlined),
+          builder: (context, state) => const FlowsScreen(),
         ),
         GoRoute(
           path: '/developer/evaluators',
-          builder: (context, state) => const PlaceholderScreen(
-              title: 'Evaluators', icon: Icons.bar_chart_outlined),
+          builder: (context, state) => const EvaluatorsScreen(),
         ),
       ];
 

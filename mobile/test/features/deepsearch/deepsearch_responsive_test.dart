@@ -69,11 +69,11 @@ Future<void> _withDesktop(Future<void> Function() body) async {
 
 void main() {
   for (final size in [const Size(400, 900), const Size(800, 900)]) {
-    testWidgets('width ${size.width.toInt()}: desktop-only panel, no search UI',
+    testWidgets('width ${size.width.toInt()}: full search UI, no desktop gate',
         (tester) async {
       await _pumpAt(tester, size, _repo());
-      expect(find.byType(DesktopOnlyPanel), findsOneWidget);
-      expect(find.byType(FirstRunView), findsNothing);
+      expect(find.byType(DesktopOnlyPanel), findsNothing);
+      expect(find.byType(FirstRunView), findsOneWidget);
     });
   }
 
