@@ -1,0 +1,54 @@
+# .github/workflows/tag_and_release.yml
+# Reusable: after a successful production deploy, cut the next patch version tag
+# and a GitHub release with auto-generated notes. Tag + release are created in a
+# single REST call (no gh CLI), so it runs fine on the self-hosted box.
+name: Tag & Release
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  tag-and-release:
+    runs-on: [self-hosted, phoenix]
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Compute next version tag
+        id: ver
+        run: |
+          set -euo pipefail
+          git fetch --tags --quiet || true
+          LATEST="$(git tag -l 'v*' --sort=-v:refname | head -n1)"
+          if [ -z "$LATEST" ]; then
+            NEW="v0.1.0"
+          elif [[ "$LATEST" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            NEW="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$(( BASH_REMATCH[3] + 1 ))"
+          else
+            echo "::error::Cannot parse latest tag '$LATEST'"; exit 1
+          fi
+          echo "tag=$NEW" >> "$GITHUB_OUTPUT"
+          echo "Latest: ${LATEST:-none}  ->  New: $NEW"
+
+      - name: Create tag + GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_TAG: ${{ steps.ver.outputs.tag }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          curl -sf -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${REPO}/releases" \
+            -d "{\"tag_name\":\"${NEW_TAG}\",\"target_commitish\":\"${SHA}\",\"name\":\"${NEW_TAG}\",\"generate_release_notes\":true}"
+          echo "✅ Released ${NEW_TAG}"

@@ -1,0 +1,29 @@
+name: CI/CD Pipeline for Production Branch for Phoenix
+
+on:
+  push:
+    branches: [production]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "docker/**"
+      - ".github/workflows/main_production.yml"
+      - ".github/workflows/backend_frontend_production.yml"
+      - ".github/workflows/docker_build_production.yml"
+      - ".github/workflows/docker_build_frontend_production.yml"
+      - ".github/workflows/tag_and_release.yml"
+      - ".github/workflows/cleanup_production.yml"
+      - ".github/actions/detect-drift/action.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  backend-frontend:
+    name: Backend + Frontend
+    uses: ./.github/workflows/backend_frontend_production.yml

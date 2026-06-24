@@ -1,0 +1,48 @@
+name: Detect deploy drift
+description: True when a surface drifted from its running image.
+
+inputs:
+  image:
+    description: Docker image repo.
+    required: true
+  paths:
+    description: Regex of paths that force a rebuild.
+    required: true
+  head:
+    description: HEAD commit to compare against.
+    required: true
+
+outputs:
+  changed:
+    description: true if the surface should be redeployed.
+    value: ${{ steps.d.outputs.changed }}
+
+runs:
+  using: composite
+  steps:
+    - id: d
+      shell: bash
+      env:
+        IMAGE: ${{ inputs.image }}
+        PATHS: ${{ inputs.paths }}
+        HEAD_SHA: ${{ inputs.head }}
+      run: |
+        set -euo pipefail
+        DEPLOYED=""
+        CUR_ID="$(docker image inspect -f '{{.Id}}' "$IMAGE:current" 2>/dev/null || true)"
+        if [ -n "$CUR_ID" ]; then
+          for t in $(docker image ls "$IMAGE" --format '{{.Tag}}'); do
+            case "$t" in current|previous|latest|'<none>') continue ;; esac
+            [ "$(docker image inspect -f '{{.Id}}' "$IMAGE:$t" 2>/dev/null)" = "$CUR_ID" ] \
+              && { DEPLOYED="$t"; break; }
+          done
+        fi
+        if [ -z "$DEPLOYED" ]; then
+          echo "changed=true" >> "$GITHUB_OUTPUT"; exit 0
+        fi
+        CHANGED="$(git diff --name-only "$DEPLOYED" "$HEAD_SHA" 2>/dev/null || echo all)"
+        if [ "$CHANGED" = all ] || echo "$CHANGED" | grep -qE "$PATHS"; then
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        fi

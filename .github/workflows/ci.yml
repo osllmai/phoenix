@@ -1,0 +1,66 @@
+name: CI — Tests & Lint (PR gate)
+
+on:
+  pull_request:
+    branches: [production]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - "docker/**"
+      - ".github/workflows/ci.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend — ruff + pytest
+    runs-on: [self-hosted, phoenix]
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: ruff + pytest (isolated ephemeral datastores)
+        run: |
+          set -euo pipefail
+          SUF="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          NET="ci-net-$SUF"; PG="ci-pg-$SUF"; RD="ci-redis-$SUF"
+          TAG="phoenix-ci-backend"
+          cleanup() { docker rm -f "$PG" "$RD" >/dev/null 2>&1 || true; docker network rm "$NET" >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          docker network create "$NET"
+          docker run -d --name "$PG" --network "$NET" \
+            -e POSTGRES_USER=ci -e POSTGRES_PASSWORD=ci -e POSTGRES_DB=ci postgres:17-alpine
+          docker run -d --name "$RD" --network "$NET" redis:7-alpine
+          # No dedicated dev/test target — build the runtime image and override its
+          # command. Context is backend/, ruff + pytest ship in the venv (requirements.txt).
+          docker build -f docker/Dockerfile.backend --target runtime -t "$TAG" backend
+          for i in $(seq 1 30); do docker exec "$PG" pg_isready -U ci -d ci >/dev/null 2>&1 && break; sleep 2; done
+          docker run --rm --network "$NET" -w /app \
+            -e DJANGO_SETTINGS_MODULE=config.settings.local \
+            -e DJANGO_SECRET_KEY=ci-not-a-real-secret \
+            -e DEBUG=True \
+            -e "ALLOWED_HOSTS=*" \
+            -e "DATABASE_URL=postgres://ci:ci@$PG:5432/ci" \
+            -e "CELERY_BROKER_URL=redis://$RD:6379/0" \
+            -e "CELERY_RESULT_BACKEND=redis://$RD:6379/1" \
+            "$TAG" sh -c "ruff check . && pytest -q"
+
+  frontend:
+    name: Frontend — eslint + build
+    runs-on: [self-hosted, phoenix]
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: install + lint + build
+        run: |
+          set -euo pipefail
+          # Frontend ships only dev/build/start/lint scripts (no tsc/vitest) — gate
+          # on a frozen install, next lint, and a production build.
+          docker run --rm -v "$PWD/frontend":/app -w /app \
+            -e COREPACK_INTEGRITY_KEYS=0 node:22-slim \
+            sh -c "corepack enable && pnpm install --frozen-lockfile && pnpm lint && pnpm build"

@@ -1,0 +1,120 @@
+name: Build Production Backend
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  detect-changes:
+    runs-on: [self-hosted, phoenix]
+    outputs:
+      backend: ${{ steps.detect.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Detect drift (deployed image vs HEAD)
+        id: detect
+        uses: ./.github/actions/detect-drift
+        with:
+          image: phoenix-backend
+          paths: '^(backend/|docker/)'
+          head: ${{ github.sha }}
+
+  deploy-backend:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: [self-hosted, phoenix]
+    defaults:
+      run:
+        working-directory: /home/phoenix/production
+    env:
+      COMPOSE: docker compose --env-file .env -f docker/production/compose.yml -f docker/production/nginx.yml
+      IMAGE: phoenix-backend
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Sync checkout into deploy root (/home/phoenix/production; .env kept)
+        run: |
+          set -euo pipefail
+          test -f .env || { echo "::error::/home/phoenix/production/.env missing — it is set MANUALLY on the box (never from GitHub secrets); place it and re-run."; exit 1; }
+          # Exclude build-generated, gitignored dirs: they live only at the deploy
+          # root (root-owned), so --delete can't remove them and rsync exits 23.
+          rsync -a --delete --exclude='.env' --exclude='.git/' \
+                --exclude='.pnpm-store/' --exclude='node_modules/' \
+                "$GITHUB_WORKSPACE/" /home/phoenix/production/
+
+      - name: Save current image as rollback point
+        run: |
+          if docker image inspect "$IMAGE:current" >/dev/null 2>&1; then
+            docker tag "$IMAGE:current" "$IMAGE:previous"
+            echo "Rollback point: $IMAGE:previous"
+          else
+            echo "No existing $IMAGE:current — first deploy, no rollback point."
+          fi
+
+      - name: Build backend image
+        run: $COMPOSE build django
+
+      - name: Start datastores
+        run: $COMPOSE up -d postgres redis
+
+      # Migrations are MANUAL (consent gate) — run `manage.py migrate` on the box; never auto-applied in CI.
+
+      - name: Deploy django (zero-downtime via docker-rollout)
+        run: |
+          set -euo pipefail
+          REF=39b8066d56cc1edc76d1ae898db46623cc93bc24
+          URL="https://raw.githubusercontent.com/wowu/docker-rollout/$REF/docker-rollout"
+          CP="$(docker info -f '{{range .ClientInfo.Plugins}}{{if eq .Name "compose"}}{{.Path}}{{end}}{{end}}')"
+          DIR="$(dirname "$CP")"
+          curl -fsSL "$URL" -o "$DIR/docker-rollout" && chmod +x "$DIR/docker-rollout" \
+            || { mkdir -p "$HOME/.docker/cli-plugins"; curl -fsSL "$URL" -o "$HOME/.docker/cli-plugins/docker-rollout" && chmod +x "$HOME/.docker/cli-plugins/docker-rollout"; }
+          docker info -f '{{range .ClientInfo.Plugins}}{{if eq .Name "rollout"}}ok{{end}}{{end}}' | grep -q ok \
+            || { echo "::error::docker-rollout not discovered (dir=$DIR)"; exit 1; }
+          docker rollout -f docker/production/compose.yml -f docker/production/nginx.yml --env-file .env -t 180 django
+          # Celery shares the phoenix-backend image — recreate it onto the new build.
+          $COMPOSE up -d --force-recreate --no-build celery
+          # Restart the edge on every deploy: --force-recreate replaces the nginx
+          # container (fresh start) so it always picks up new image/config and
+          # re-resolves the just-rolled-out django upstream. Brief edge blip.
+          $COMPOSE up -d --force-recreate nginx
+
+      - name: Wait for health + smoke test
+        id: health
+        run: |
+          cid="$($COMPOSE ps -q django | head -n1)"
+          for i in $(seq 1 30); do
+            status="$(docker inspect -f '{{.State.Health.Status}}' "$cid" 2>/dev/null || echo starting)"
+            echo "attempt $i — django health: $status"
+            if [ "$status" = "healthy" ]; then
+              $COMPOSE exec -T django curl -fsS http://localhost:16000/api/v1/health/
+              echo "✅ smoke test passed"; exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::django did not become healthy within ~150s"
+          $COMPOSE logs --tail 50 django
+          exit 1
+
+      - name: Roll back on failure
+        if: failure() && steps.health.conclusion == 'failure'
+        run: |
+          if docker image inspect "$IMAGE:previous" >/dev/null 2>&1; then
+            echo "Rolling back to $IMAGE:previous"
+            docker tag "$IMAGE:previous" "$IMAGE:current"
+            $COMPOSE up -d --no-build django
+          else
+            echo "::warning::No previous image to roll back to."
+          fi
+
+      - name: Tag deployed image with commit sha
+        if: success()
+        run: docker tag "$IMAGE:current" "$IMAGE:${GITHUB_SHA::7}"

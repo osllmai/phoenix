@@ -1,0 +1,29 @@
+name: Backend + Frontend Production Flow
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+# Prod .env is placed on the box MANUALLY (never from GitHub secrets / Environment).
+# The deploy jobs read /home/<slug>/production/.env directly — there is no setup job.
+jobs:
+  build:
+    name: Build Backend Image and Deploy
+    uses: ./.github/workflows/docker_build_production.yml
+
+  build-frontend:
+    name: Build and Deploy Frontend
+    uses: ./.github/workflows/docker_build_frontend_production.yml
+
+  tag_and_release:
+    needs: [build-frontend]
+    name: Tag and Release
+    uses: ./.github/workflows/tag_and_release.yml
+
+  cleanup:
+    needs: [build, build-frontend, tag_and_release]
+    if: always()
+    name: Clean Up
+    uses: ./.github/workflows/cleanup_production.yml

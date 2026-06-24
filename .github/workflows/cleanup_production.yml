@@ -1,0 +1,36 @@
+# .github/workflows/cleanup_production.yml
+# Reusable: free disk on the single box after a deploy. Runs even if the build
+# failed (caller gates it with if: always()).
+name: Cleanup Docker Resources (production)
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: [self-hosted, phoenix]
+    steps:
+      - name: Clear transient workspace .env
+        run: |
+          rm -f "$GITHUB_WORKSPACE/.env"
+          echo "✅ workspace .env cleared (deploy copy at /home/phoenix/production/.env is kept)"
+
+      - name: Prune stopped/dangling containers
+        run: docker container prune -f
+
+      - name: Prune dangling images (tagged :current/:previous/:sha are kept)
+        run: docker image prune -f
+
+      # NOTE: no `docker volume prune` on purpose — a transient postgres outage
+      # during a failed deploy could make its named volume look unused and get
+      # deleted (data loss). Named prod volumes are managed by compose only.
+
+      - name: Docker disk usage
+        run: docker system df

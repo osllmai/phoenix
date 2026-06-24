@@ -4,8 +4,8 @@
 name: phoenix-prod
 
 services:
-  backend:
-    image: phoenix-backend
+  django:
+    image: phoenix-backend:current
     build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
     command: gunicorn config.wsgi:application --bind 0.0.0.0:16000 --workers 3
     env_file: ../../.env
@@ -24,7 +24,7 @@ services:
     restart: always
 
   celery:
-    image: phoenix-backend
+    image: phoenix-backend:current
     build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
     command: celery -A config worker -l info
     env_file: ../../.env
@@ -37,10 +37,16 @@ services:
     restart: always
 
   frontend:
-    image: phoenix-frontend
+    image: phoenix-frontend:current
     build: { context: ../../frontend, dockerfile: ../docker/Dockerfile.frontend }
     env_file: ../../.env
     expose: ['3000']
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     restart: always
 
   postgres:
