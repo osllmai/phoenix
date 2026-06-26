@@ -92,7 +92,4 @@ CLAUDE.md
 design/
 */design/*
 
-# Backend is local-only — not shared
-backend/
-
 mobile/test/*
