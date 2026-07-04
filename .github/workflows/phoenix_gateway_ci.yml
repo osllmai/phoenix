@@ -1,0 +1,29 @@
+name: Phoenix Gateway CI
+
+on:
+  pull_request:
+    branches: [production]
+    paths:
+      - "packages/phoenix_core/**"
+      - "packages/phoenix_server/**"
+      - "install/**"
+      - ".github/workflows/phoenix_gateway_ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Dart tests + gateway e2e
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Run install/verify.py
+        run: python3 install/verify.py

@@ -17,6 +17,8 @@ permissions:
 jobs:
   tag-and-release:
     runs-on: [self-hosted, phoenix]
+    outputs:
+      tag: ${{ steps.ver.outputs.tag }}
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -28,10 +30,12 @@ jobs:
           set -euo pipefail
           git fetch --tags --quiet || true
           LATEST="$(git tag -l 'v*' --sort=-v:refname | head -n1)"
+          # Accept an optional suffix (e.g. v0.1.37-Master) and preserve it so the
+          # tag series stays consistent with whatever naming the repo already uses.
           if [ -z "$LATEST" ]; then
             NEW="v0.1.0"
-          elif [[ "$LATEST" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-            NEW="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$(( BASH_REMATCH[3] + 1 ))"
+          elif [[ "$LATEST" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)(-.+)?$ ]]; then
+            NEW="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$(( BASH_REMATCH[3] + 1 ))${BASH_REMATCH[4]}"
           else
             echo "::error::Cannot parse latest tag '$LATEST'"; exit 1
           fi
@@ -52,3 +56,14 @@ jobs:
             "https://api.github.com/repos/${REPO}/releases" \
             -d "{\"tag_name\":\"${NEW_TAG}\",\"target_commitish\":\"${SHA}\",\"name\":\"${NEW_TAG}\",\"generate_release_notes\":true}"
           echo "✅ Released ${NEW_TAG}"
+
+  # A release created with GITHUB_TOKEN does NOT fire release_binaries.yml's
+  # `push: tags` trigger, so invoke it directly as a reusable workflow.
+  build-binaries:
+    needs: tag-and-release
+    uses: ./.github/workflows/release_binaries.yml
+    with:
+      version: ${{ needs.tag-and-release.outputs.tag }}
+    secrets: inherit
+    permissions:
+      contents: write

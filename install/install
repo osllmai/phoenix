@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+# Phoenix installer — Cursor-style: curl -fsSL https://get.phoenix.example/install | bash
+set -euo pipefail
+
+PHOENIX_REPO="${PHOENIX_REPO:-osllmai/phoenix}"
+PHOENIX_VERSION="${PHOENIX_VERSION:-}"          # empty = latest GitHub release
+PHOENIX_INSTALL_CLI="${PHOENIX_INSTALL_CLI:-1}"
+PHOENIX_INSTALL_DESKTOP="${PHOENIX_INSTALL_DESKTOP:-1}"
+PHOENIX_DOWNLOAD_BASE="${PHOENIX_DOWNLOAD_BASE:-https://github.com/${PHOENIX_REPO}/releases/download}"
+
+# --- styling (same idea as cursor.com/install) ---
+if [ -n "${NO_COLOR+x}" ] || [ ! -t 1 ]; then
+  BOLD='' GREEN='' BLUE='' RED='' DIM='' NC=''
+else
+  BOLD='\033[1m' GREEN='\033[0;32m' BLUE='\033[0;34m' RED='\033[0;31m' DIM='\033[2m' NC='\033[0m'
+fi
+
+print_step() { echo -e "${BLUE}▸${NC} $1"; }
+print_ok()   { echo -e "${GREEN}✓${NC} $1"; }
+print_err()  { echo -e "${RED}✗${NC} $1" >&2; }
+
+usage() {
+  cat <<EOF
+Phoenix installer
+
+  curl -fsSL https://get.phoenix.example/install | bash
+  curl -fsSL .../install | bash -s -- --cli
+  curl -fsSL .../install | bash -s -- --desktop
+  curl -fsSL .../install | bash -s -- --version v0.1.0
+
+Environment:
+  PHOENIX_VERSION         Pin release tag (e.g. v0.1.0)
+  PHOENIX_REPO            GitHub repo (default: osllmai/phoenix)
+  PHOENIX_DOWNLOAD_BASE   Override CDN/release base URL
+EOF
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --cli)     PHOENIX_INSTALL_CLI=1; PHOENIX_INSTALL_DESKTOP=0 ;;
+    --desktop) PHOENIX_INSTALL_CLI=0; PHOENIX_INSTALL_DESKTOP=1 ;;
+    --version) PHOENIX_VERSION="$2"; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) print_err "Unknown option: $1"; usage; exit 1 ;;
+  esac
+  shift
+done
+
+echo ""
+echo -e "${BOLD}Phoenix Installer${NC}"
+echo ""
+
+# --- detect platform ---
+print_step "Detecting system architecture..."
+OS="$(uname -s)"
+case "${OS}" in
+  Linux*)  OS="linux" ;;
+  Darwin*) OS="darwin" ;;
+  *)
+    print_err "Unsupported operating system: ${OS}"
+    exit 1
+    ;;
+esac
+
+ARCH="$(uname -m)"
+case "${ARCH}" in
+  x86_64|amd64) ARCH="x64" ;;
+  arm64|aarch64) ARCH="arm64" ;;
+  *)
+    print_err "Unsupported architecture: ${ARCH}"
+    exit 1
+    ;;
+esac
+print_ok "Detected ${OS}/${ARCH}"
+
+# --- resolve version ---
+if [ -z "${PHOENIX_VERSION}" ]; then
+  print_step "Resolving latest release..."
+  PHOENIX_VERSION="$(
+    curl -fsSL "https://api.github.com/repos/${PHOENIX_REPO}/releases/latest" \
+      | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
+      | head -n1
+  )"
+fi
+TAG="${PHOENIX_VERSION#v}"
+TAG="v${TAG}"
+print_ok "Release ${TAG}"
+
+INSTALL_ROOT="${HOME}/.local/share/phoenix/versions/${TAG#v}"
+BIN_DIR="${HOME}/.local/bin"
+DATA_DIR="${HOME}/.local/share/phoenix/data"
+TMP_DIR=""
+INSTALLED=0
+
+cleanup() {
+  [ -n "${TMP_DIR}" ] && rm -rf "${TMP_DIR}"
+}
+trap cleanup EXIT
+
+install_artifact() {
+  local target="$1"   # cli | desktop
+  local artifact="phoenix-${target}-${OS}-${ARCH}.tar.gz"
+  local url="${PHOENIX_DOWNLOAD_BASE}/${TAG}/${artifact}"
+  local dest="${INSTALL_ROOT}/${target}"
+
+  print_step "Downloading ${artifact}..."
+  echo -e "${DIM}  ${url}${NC}"
+
+  if ! curl -fSL --progress-bar "${url}" -o "${TMP_DIR}/${artifact}"; then
+    print_err "${artifact} not available for ${OS}/${ARCH} — skipped"
+    return 1
+  fi
+
+  rm -rf "${dest}"
+  mkdir -p "${TMP_DIR}/extract"
+  tar -xzf "${TMP_DIR}/${artifact}" -C "${TMP_DIR}/extract"
+  local inner
+  inner="$(find "${TMP_DIR}/extract" -mindepth 1 -maxdepth 1 -type d | head -n1)"
+  mkdir -p "${INSTALL_ROOT}"
+  mv "${inner}" "${dest}"
+  print_ok "Installed ${target} → ${dest}"
+
+  mkdir -p "${BIN_DIR}" "${DATA_DIR}"
+
+  if [ "${target}" = "cli" ]; then
+    ln -sf "${dest}/bin/phoenix" "${BIN_DIR}/phoenix"
+    print_ok "Linked ~/.local/bin/phoenix"
+  else
+    ln -sf "${dest}/bin/phoenix-desktop" "${BIN_DIR}/phoenix-desktop"
+    print_ok "Linked ~/.local/bin/phoenix-desktop"
+  fi
+  return 0
+}
+
+TMP_DIR="$(mktemp -d "${HOME}/.local/share/phoenix/versions/.tmp-${TAG}-XXXXXX")"
+
+if [ "${PHOENIX_INSTALL_CLI}" = "1" ]; then
+  install_artifact cli && INSTALLED=$((INSTALLED + 1)) || true
+fi
+if [ "${PHOENIX_INSTALL_DESKTOP}" = "1" ]; then
+  install_artifact desktop && INSTALLED=$((INSTALLED + 1)) || true
+fi
+
+if [ "${INSTALLED}" -eq 0 ]; then
+  print_err "Nothing installed — no artifacts for ${OS}/${ARCH} on ${TAG}."
+  print_err "Wait for the release_binaries workflow, or set PHOENIX_VERSION."
+  exit 1
+fi
+
+echo ""
+echo -e "${BOLD}${GREEN}✨ Installation complete!${NC}"
+echo ""
+[ "${PHOENIX_INSTALL_CLI}" = "1" ] && echo -e "  ${BOLD}phoenix${NC}          — CLI gateway (:24678)"
+[ "${PHOENIX_INSTALL_DESKTOP}" = "1" ] && echo -e "  ${BOLD}phoenix-desktop${NC}  — desktop app"
+echo ""
+
+if [[ ":${PATH}:" != *":${HOME}/.local/bin:"* ]]; then
+  echo -e "${BOLD}Add Phoenix to PATH:${NC}"
+  case "$(basename "${SHELL:-bash}")" in
+    zsh)
+      echo -e "  ${BLUE}echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc && source ~/.zshrc${NC}"
+      ;;
+    fish)
+      echo -e "  ${BLUE}fish_add_path \$HOME/.local/bin${NC}"
+      ;;
+    *)
+      echo -e "  ${BLUE}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}"
+      ;;
+  esac
+  echo ""
+fi
+
+echo -e "${BOLD}Run local inference:${NC}"
+echo -e "  ${BOLD}phoenix${NC}   # then: curl http://127.0.0.1:24678/v1/chat/completions ..."
+echo ""

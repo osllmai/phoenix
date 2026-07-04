@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:phoenix_core/phoenix_core.dart';
+import 'package:phoenix_server/src/completion.dart';
+import 'package:phoenix_server/src/completions_api.dart';
+import 'package:phoenix_server/src/messages_api.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -76,10 +79,13 @@ Router modelsApi(ModelManager manager) {
   return r;
 }
 
-/// The full gateway handler: CORS (the web app is cross-origin) + health + the
-/// model routes.
-Handler buildModelsHandler(ModelManager manager) {
-  final router = modelsApi(manager)
+/// The full gateway handler: CORS + health + model routes + chat completions.
+Handler buildGatewayHandler(PhoenixCore core) {
+  final completions = CompletionEngine(core);
+  final router = Router()
+    ..mount('/', modelsApi(core.models))
+    ..mount('/', completionsApi(completions, core.models))
+    ..mount('/', messagesApi(completions, core.models))
     ..get('/health', (Request req) => _json({'ok': true}));
   return const Pipeline().addMiddleware(_cors()).addHandler(router.call);
 }
@@ -87,7 +93,7 @@ Handler buildModelsHandler(ModelManager manager) {
 const _corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key, anthropic-version',
 };
 
 Middleware _cors() => (handler) => (req) async {

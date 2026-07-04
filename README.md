@@ -49,6 +49,52 @@ no cloud, no API keys, no data leaving your device.
 
 ## Quick start
 
+### Install (Cursor-style)
+
+```bash
+# Same pattern as: curl https://cursor.com/install -fsS | bash
+curl -fsSL https://raw.githubusercontent.com/osllmai/phoenix/production/install/install | bash
+
+# CLI only
+curl -fsSL https://raw.githubusercontent.com/osllmai/phoenix/production/install/install | bash -s -- --cli
+
+# Desktop only
+curl -fsSL https://raw.githubusercontent.com/osllmai/phoenix/production/install/install | bash -s -- --desktop
+```
+
+**Production URL (when you host it):** point `https://get.phoenix.example/install` at the same
+file — e.g. nginx static, Cloudflare, or GitHub Pages — so users get a short link like Cursor.
+
+Requires a [GitHub Release](https://github.com/osllmai/phoenix/releases) with platform artifacts
+(built by `.github/workflows/release_binaries.yml` on each `v*` tag).
+
+Alternative (Python): `curl -fsSL …/install.py | python3 -`
+
+**Local gateway + curl (from source or after `phoenix` CLI install):**
+
+```bash
+# 1. Start gateway (default :24678)
+cd packages/phoenix_server && dart run bin/server.dart
+
+# 2. Register + load a GGUF
+curl -X POST http://127.0.0.1:24678/v1/models \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Llama-3","path":"/path/to/model.gguf"}'
+curl -X POST http://127.0.0.1:24678/v1/models/1/select
+
+# 3. Chat (OpenAI-compatible)
+curl http://127.0.0.1:24678/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"messages":[{"role":"user","content":"Hello"}]}'
+
+# 4. Claude CLI / Anthropic clients (or: phoenix configure --all)
+python3 install/phoenix_cli.py configure --all
+source ~/.phoenix/env.sh
+phoenix    # start gateway in another terminal, load a model, then: claude
+```
+
+### Develop from source
+
 ```bash
 # Desktop app (Flutter)
 cd mobile && flutter pub get && flutter run -d linux   # or -d macos / -d windows
@@ -73,24 +119,13 @@ cp .env.example .env && make up                        # api :16000 · web :3000
 | `backend/` | Django + django-ninja + Celery — auth, sync, async jobs (deep-search, Docling, embeddings). |
 | `frontend/` | Next.js 15 web surface (optional). |
 | `engine/local_provider/` | Vendored llama.cpp / gpt4all engine binary. |
+| `install/` | Python installer, release build, e2e smoke, `verify.py` |
+| `docs/AUDIT.md` | External audit checklist (for reviewers) |
 | `design/` | Scenarios, integration plans, `MONOREPO.md`, `TRACKER.md`. |
-| `docker/` · `docs/adr/` · `scripts/` | Infra, decisions, tooling. |
+| `docker/` · `docs/adr/` | Infra and architecture decisions. |
 
 See [`design/MONOREPO.md`](design/MONOREPO.md) for the full architecture and
 [`design/TRACKER.md`](design/TRACKER.md) for build status.
-
-## Quick start
-
-```bash
-# Mobile (Flutter)
-cd mobile && flutter pub get && flutter run -d linux
-
-# Core tests (pure Dart) + app tests
-bash mobile/tool/run_tests.sh
-
-# Backend + web + infra (docker)
-cp .env.example .env && make up      # api :16000 · web :3000
-```
 
 ## Principle
 

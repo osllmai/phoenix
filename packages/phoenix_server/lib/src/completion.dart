@@ -30,38 +30,51 @@ class CompletionEngine {
 
   /// Streams response tokens for [messages]. The system message becomes the
   /// engine `systemPrompt`; the rest are formatted into the prompt.
+  ///
+  /// Call [ensureReady] before streaming if you need model-selection guarantees.
   Stream<String> complete(
     List<ApiMessage> messages, {
     String? model,
+    String? system,
     double? temperature,
     int? maxTokens,
   }) async* {
-    await _ensureModel(model);
-
-    final system = messages.where((m) => m.role == 'system').map((m) => m.content).join('\n');
+    final fromMessages = messages.where((m) => m.role == 'system').map((m) => m.content).join('\n');
+    final systemPrompt = (system != null && system.isNotEmpty) ? system : fromMessages;
     final turns = messages.where((m) => m.role != 'system').toList();
     final prompt = _formatPrompt(turns);
 
     final params = InferenceParams(
-      systemPrompt: system,
+      systemPrompt: systemPrompt,
       temperature: temperature ?? 0.7,
       maxTokens: maxTokens ?? 512,
     );
     yield* core.engine.prompt(prompt, params: params);
   }
 
-  Future<void> _ensureModel(String? model) async {
-    if (model == null) return;
-    final active = core.models.active;
-    if (active != null && (active.name == model || active.key == model)) return;
-    final installed = await core.models.list();
-    for (final m in installed) {
-      if (m.name == model || m.key == model) {
-        await core.models.select(m);
+  /// Ensures a model is loaded before completion. Resolves [modelName] when
+  /// given; otherwise requires an already-active model from `/v1/models/.../select`.
+  Future<void> ensureReady(String? modelName) => _ensureModel(modelName);
+
+  Future<void> _ensureModel(String? modelName) async {
+    if (modelName != null) {
+      final active = core.models.active;
+      if (active != null && (active.name == modelName || active.key == modelName)) {
         return;
       }
+      for (final m in await core.models.list()) {
+        if (m.name == modelName || m.key == modelName) {
+          await core.models.select(m);
+          return;
+        }
+      }
+      throw ArgumentError('Model not found: $modelName');
     }
-    // Unknown model name: leave the active model as-is (engine decides/errs).
+    if (core.models.active == null) {
+      throw StateError(
+        'No model loaded. POST /v1/models with a GGUF path, then POST /v1/models/<id>/select.',
+      );
+    }
   }
 
   String _formatPrompt(List<ApiMessage> turns) {
