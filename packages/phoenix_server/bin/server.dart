@@ -5,8 +5,7 @@ import 'package:phoenix_server/phoenix_server.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-/// Runs the on-device gateway (model-management API). Config from the
-/// environment — nothing hardcoded; defaults are dev fallbacks.
+/// Runs the on-device gateway: model management + OpenAI-compatible chat.
 Future<void> main() async {
   sqfliteFfiInit();
   final env = Platform.environment;
@@ -22,9 +21,12 @@ Future<void> main() async {
   );
 
   final server = await io.serve(
-    buildModelsHandler(core.models),
+    buildGatewayHandler(core),
     InternetAddress.loopbackIPv4,
     port,
   );
-  stdout.writeln('Phoenix gateway · models API on http://${server.address.host}:${server.port}');
+  stdout.writeln(
+    'Phoenix gateway · http://${server.address.host}:${server.port} '
+    '(models + /v1/chat/completions + /v1/messages)',
+  );
 }

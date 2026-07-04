@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:phoenix_core/phoenix_core.dart';
 import 'package:phoenix_server/phoenix_server.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
@@ -20,12 +21,21 @@ class _FakeEngine implements InferencePort {
 }
 
 void main() {
+  sqfliteFfiInit();
+
+  late PhoenixCore core;
   late Handler handler;
 
-  setUp(() {
-    final manager = ModelManager(engine: _FakeEngine(), repository: InMemoryModelRepository());
-    handler = buildModelsHandler(manager);
+  setUp(() async {
+    core = await PhoenixCore.open(
+      dbPath: inMemoryDatabasePath,
+      databaseFactory: databaseFactoryFfi,
+      engine: _FakeEngine(),
+    );
+    handler = buildGatewayHandler(core);
   });
+
+  tearDown(() => core.dispose());
 
   Future<Response> call(String method, String path, [Object? body]) async => handler(
     Request(
