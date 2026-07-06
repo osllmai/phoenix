@@ -22,14 +22,16 @@ Router messagesApi(CompletionEngine engine, ModelManager models) {
       return _anthropicError(400, 'invalid_request_error', 'max_tokens is required');
     }
 
-    final messages = _parseMessages(messagesRaw, system: _anthropicSystem(body['system']));
-    if (messages.every((m) => m.role == 'system')) {
+    final messages = _parseMessages(messagesRaw);
+    if (messages.isEmpty) {
       return _anthropicError(400, 'invalid_request_error', 'messages must include user content');
     }
 
     final modelName = body['model'] as String?;
     final temperature = (body['temperature'] as num?)?.toDouble();
     final stream = body['stream'] as bool? ?? false;
+    // The Anthropic top-level `system` is the single source of system prompt;
+    // CompletionEngine.complete applies it directly.
     final system = _anthropicSystem(body['system']);
 
     try {
@@ -96,11 +98,8 @@ Router messagesApi(CompletionEngine engine, ModelManager models) {
   return r;
 }
 
-List<ApiMessage> _parseMessages(List<dynamic> raw, {String system = ''}) {
+List<ApiMessage> _parseMessages(List<dynamic> raw) {
   final out = <ApiMessage>[];
-  if (system.isNotEmpty) {
-    out.add(ApiMessage('system', system));
-  }
   for (final item in raw) {
     if (item is! Map<String, dynamic>) continue;
     final role = item['role'] as String? ?? '';

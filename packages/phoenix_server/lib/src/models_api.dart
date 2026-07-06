@@ -90,16 +90,36 @@ Handler buildGatewayHandler(PhoenixCore core) {
   return const Pipeline().addMiddleware(_cors()).addHandler(router.call);
 }
 
-const _corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+/// A request Origin is only trusted when it is loopback. CLI/SDK clients
+/// (curl, the Dart/Python SDKs) send no Origin at all and pass through.
+bool _isLocalhostOrigin(String origin) {
+  final uri = Uri.tryParse(origin);
+  if (uri == null) return false;
+  return uri.host == '127.0.0.1' || uri.host == 'localhost' || uri.host == '::1';
+}
+
+Map<String, String> _corsHeadersFor(String? origin) => {
+  // Reflect a trusted loopback origin; fall back to `*` only when no browser
+  // Origin is present (non-browser clients), never for a foreign site.
+  'Access-Control-Allow-Origin': (origin == null || origin.isEmpty) ? '*' : origin,
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key, anthropic-version',
+  'Vary': 'Origin',
 };
 
 Middleware _cors() => (handler) => (req) async {
-  if (req.method == 'OPTIONS') return Response.ok(null, headers: _corsHeaders);
+  final origin = req.headers['origin'];
+  // Block cross-site browser callers (DNS-rebind / localhost CSRF). A malicious
+  // page the user visits must not be able to drive or delete local models.
+  if (origin != null && origin.isNotEmpty && !_isLocalhostOrigin(origin)) {
+    return Response.forbidden(
+      jsonEncode({'error': 'cross-origin requests are not allowed on the local gateway'}),
+      headers: {'content-type': 'application/json'},
+    );
+  }
+  if (req.method == 'OPTIONS') return Response.ok(null, headers: _corsHeadersFor(origin));
   final res = await handler(req);
-  return res.change(headers: _corsHeaders);
+  return res.change(headers: _corsHeadersFor(origin));
 };
 
 Future<AiModel?> _find(ModelManager manager, String id) async {
