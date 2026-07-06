@@ -59,3 +59,10 @@ button {
   min-width: 0;
   overflow: hidden;
 }
+
+.deskNav { display: contents; }
+
+@media (max-width: 767px) {
+  .deskNav { display: none; }
+  .main { padding-top: 52px; padding-bottom: 62px; }
+}

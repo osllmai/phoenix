@@ -172,3 +172,20 @@
          color: var(--error-ink); font-size: 16px; line-height: 1; padding: 0 4px;
          cursor: pointer; opacity: .7; }
 .discX:hover { opacity: 1; }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .split { flex-direction: column; }
+  .ctrl { width: 100%; flex: none; border-right: 0;
+          border-bottom: 1px solid var(--border-subtle); }
+  .statgrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .statgrid { grid-template-columns: 1fr; }
+  .fieldRow2 { grid-template-columns: 1fr; }
+  .ctrl, .scroll { padding: var(--sp-4); }
+  .outputTop { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .jobbar { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .disclaimer { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .tbl { font-size: var(--fs-xs); }
+}

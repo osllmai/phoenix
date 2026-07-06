@@ -149,3 +149,13 @@
                 border-radius: var(--r-lg); padding: var(--sp-4); margin-bottom: var(--sp-3);
                 display: flex; flex-direction: column; gap: var(--sp-2); }
 .skelGap { height: var(--sp-2); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .research { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  .body { padding: var(--sp-3); }
+  .querywrap { min-width: 0; }
+  .answerMeta { gap: var(--sp-2); }
+}

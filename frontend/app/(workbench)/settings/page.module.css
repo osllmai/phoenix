@@ -179,3 +179,22 @@
              transition: background var(--dur-fast) var(--ease-default); }
 .btnDanger:hover:not(:disabled) { background: var(--error-bg); }
 .btnDanger:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .shell { flex-direction: column; min-height: 0; }
+  .nav { width: 100%; flex: none; flex-direction: row; flex-wrap: wrap; border-right: 0;
+         border-bottom: 1px solid var(--border-subtle); padding: var(--sp-2) var(--sp-3);
+         gap: var(--sp-1); overflow-x: auto; }
+  .navTitle, .navSpacer, .navFoot, .navSearch { display: none; }
+  .navLink { width: auto; border-radius: var(--r-pill); padding: var(--sp-1) var(--sp-3); border-left: 0; }
+  .navLink.active { border-left: 0; } .panel { padding: var(--sp-5); }
+}
+@media (max-width: 767px) {
+  .field { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
+  .fieldLabel { flex: none; }
+  .control { width: 100%; }
+  .select, .textInput, .range { max-width: none; min-width: 0; width: 100%; }
+  .panel { padding: var(--sp-4); }
+  .meterLabel { width: 110px; }
+}

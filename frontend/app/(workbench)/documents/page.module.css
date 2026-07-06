@@ -177,3 +177,18 @@
 .fmtchips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 540px; justify-self: center; }
 .fmtchip { font-size: var(--fs-xs); color: var(--text-secondary); background: var(--surface-card);
   border: 1px solid var(--border-default); border-radius: var(--r-pill); padding: 3px var(--sp-3); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .split { grid-template-columns: 1fr; }
+  .library { border-right: 0; border-bottom: 1px solid var(--border-subtle); }
+  .search { width: 100%; }
+}
+@media (max-width: 767px) {
+  .figgrid { grid-template-columns: 1fr; }
+  .field { grid-template-columns: 1fr; gap: var(--sp-1); }
+  .inspHead, .tabbody, .library { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+  .tabs { padding: 0 var(--sp-4); overflow-x: auto; }
+  .jobbar { padding-left: var(--sp-4); padding-right: var(--sp-4); flex-wrap: wrap; }
+  .dropzone { padding: var(--sp-6) var(--sp-5); }
+}

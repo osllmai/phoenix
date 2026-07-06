@@ -108,3 +108,18 @@
   padding: var(--sp-2) var(--sp-3); font-family: inherit; font-size: var(--fs-sm); }
 .sfld textarea { font-family: var(--font-mono); font-size: var(--fs-xs); min-height: 72px; resize: vertical; }
 .srow { display: flex; gap: var(--sp-2); justify-content: flex-end; margin-top: var(--sp-4); }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .wrap { padding: var(--sp-4) var(--sp-5); gap: var(--sp-5); }
+  .meter { grid-template-columns: 120px 1fr 48px 96px; }
+}
+@media (max-width: 767px) {
+  .wrap { padding: var(--sp-4); }
+  .meter { grid-template-columns: 1fr auto; gap: var(--sp-1) var(--sp-2); }
+  .meter .track { grid-column: 1 / -1; }
+  .meter .val, .meter .pf { text-align: right; }
+  .skelMeter { grid-template-columns: 1fr auto; }
+  .skelMeter > :last-child { grid-column: 1 / -1; }
+  .jobbar { flex-wrap: wrap; padding-left: var(--sp-4); padding-right: var(--sp-4); }
+}
