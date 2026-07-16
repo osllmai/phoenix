@@ -4,6 +4,7 @@ read run/lane/event state, and merge the winning lane.
 The execution runtime is out of scope here (see tasks.py); these endpoints are
 the persistence + control contract the web and Flutter Fleet screens consume.
 """
+from django.db import transaction
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from ninja import Router
@@ -56,11 +57,12 @@ def get_run(request, run_id: int):
 @router.post('/runs/{run_id}/merge/', response=RunDetailOut, auth=None)
 def merge_winner(request, run_id: int, payload: MergeIn):
     """Mark the chosen lane the winner and the run merged onto the target branch."""
-    run = get_object_or_404(FleetRun, pk=run_id)
-    lane = get_object_or_404(FleetLane, pk=payload.lane_id, run=run)
-    run.lanes.update(is_winner=False)
-    FleetLane.objects.filter(pk=lane.pk).update(is_winner=True)
-    run.status = 'merged'
-    run.base_branch = payload.target_branch
-    run.save(update_fields=['status', 'base_branch'])
+    with transaction.atomic():
+        run = get_object_or_404(FleetRun.objects.select_for_update(), pk=run_id)
+        lane = get_object_or_404(FleetLane, pk=payload.lane_id, run=run)
+        run.lanes.update(is_winner=False)
+        FleetLane.objects.filter(pk=lane.pk).update(is_winner=True)
+        run.status = 'merged'
+        run.base_branch = payload.target_branch
+        run.save(update_fields=['status', 'base_branch'])
     return get_object_or_404(_detail_qs(), pk=run.pk)
