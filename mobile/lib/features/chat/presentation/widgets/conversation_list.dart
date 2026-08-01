@@ -9,10 +9,13 @@ import '../providers/conversation_list_provider.dart';
 /// The conversation list pane: a "New chat" action, a search filter, and the
 /// saved conversations. Rendered as a side pane (tablet/desktop) or Drawer (phone).
 class ConversationList extends ConsumerStatefulWidget {
-  const ConversationList({super.key, this.onSelected});
+  const ConversationList({super.key, this.onSelected, this.onCollapse});
 
   /// Called after a selection so the phone Drawer can close itself.
   final VoidCallback? onSelected;
+
+  /// Collapses the side pane to the rail. Null on phone, where it is hidden.
+  final VoidCallback? onCollapse;
 
   @override
   ConsumerState<ConversationList> createState() => _ConversationListState();
@@ -31,13 +34,27 @@ class _ConversationListState extends ConsumerState<ConversationList> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-          child: FilledButton.icon(
-            onPressed: () {
-              controller.newChat();
-              widget.onSelected?.call();
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('New chat'),
+          child: Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () {
+                    controller.newChat();
+                    widget.onSelected?.call();
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('New chat'),
+                ),
+              ),
+              if (widget.onCollapse != null) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  tooltip: 'Collapse list',
+                  onPressed: widget.onCollapse,
+                  icon: const Icon(Icons.chevron_left),
+                ),
+              ],
+            ],
           ),
         ),
         Padding(

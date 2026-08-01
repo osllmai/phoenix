@@ -1,8 +1,8 @@
 export type SettingsState = 'success' | 'empty' | 'first-run' | 'loading' | 'error' | 'denied';
 
 export const SECTIONS = [
-  { id: 'appearance', icon: '🎨', label: 'Appearance' },
   { id: 'general', icon: '⚙️', label: 'General' },
+  { id: 'appearance', icon: '🎨', label: 'Appearance' },
   { id: 'models', icon: '🧠', label: 'Models & Inference' },
   { id: 'privacy', icon: '🔒', label: 'Privacy & Data' },
   { id: 'storage', icon: '💾', label: 'Storage' },

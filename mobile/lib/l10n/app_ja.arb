@@ -1,0 +1,17 @@
+{
+  "@@locale": "ja",
+  "sectionGeneral": "一般",
+  "sectionGeneralSubtitle": "言語、起動、既定のモデル。",
+  "sectionAppearance": "外観",
+  "sectionAppearanceSubtitle": "テーマ、文字サイズ、アクセント。",
+  "sectionEngine": "エンジンとパラメータ",
+  "sectionEngineSubtitle": "llama.cpp によるデバイス上の推論。",
+  "sectionPrivacy": "プライバシーとデータ",
+  "sectionPrivacySubtitle": "既定では何もデバイスの外に出ません。",
+  "sectionStorage": "ストレージ",
+  "sectionStorageSubtitle": "ディスク使用量とローカルデータ。",
+  "sectionBackend": "バックエンド",
+  "sectionBackendSubtitle": "ストレージエンジンとローカル HTTP ゲートウェイ。",
+  "sectionAbout": "情報",
+  "sectionAboutSubtitle": "ビルドとランタイムのバージョン。"
+}

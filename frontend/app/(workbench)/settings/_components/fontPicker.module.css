@@ -1,0 +1,44 @@
+.fontField { display: flex; flex-direction: column; gap: var(--sp-2); min-width: 240px; }
+
+.fontPicker { position: relative; min-width: 240px; }
+
+.fontTrigger {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2);
+  width: 100%; min-width: 240px; text-align: left;
+  background: var(--surface-input); border: 1px solid var(--border-subtle); color: var(--text-primary);
+  border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); cursor: pointer;
+}
+.fontTrigger:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.fontCaret { color: var(--text-tertiary); font-size: var(--fs-xs); }
+
+.fontPanel {
+  position: absolute; z-index: 20; top: calc(100% + var(--sp-1)); left: 0; right: 0;
+  background: var(--surface-card); border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md); box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.35));
+  padding: var(--sp-2); display: flex; flex-direction: column; gap: var(--sp-2);
+}
+
+.fontSearch {
+  background: var(--surface-input); border: 1px solid var(--border-subtle); color: var(--text-primary);
+  border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); font-family: inherit; font-size: var(--fs-sm);
+}
+.fontSearch:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+
+.fontList { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; }
+
+.fontRow {
+  display: block; width: 100%; text-align: left; border: 0; background: transparent;
+  color: var(--text-primary); padding: var(--sp-2) var(--sp-3); border-radius: var(--r-sm);
+  font-size: var(--fs-md); cursor: pointer;
+}
+.fontRow:hover { background: var(--surface-input); }
+.fontRow.sel { background: var(--accent-subtle); color: var(--accent-ink); }
+
+.fontEmpty { padding: var(--sp-3); color: var(--text-tertiary); font-size: var(--fs-sm); }
+
+.fontNotice {
+  display: flex; align-items: center; gap: var(--sp-2);
+  background: var(--error-bg); color: var(--error-ink); border: 1px solid var(--error-base);
+  border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); font-size: var(--fs-xs);
+}
+.fontNoticeClose { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: var(--fs-xs); }

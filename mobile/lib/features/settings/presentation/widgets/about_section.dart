@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/app_info.dart';
 import 'setting_field.dart';
+import 'settings_actions.dart';
 
-const _versions = <(String, String)>[
-  ('Phoenix', '0.9.1 (build 412)'),
-  ('llama.cpp engine', 'b3456 · GGUF 3'),
-  ('Flutter runtime', '3.22.1 · Dart 3.4.1'),
-  ('Platform', 'Linux · on-device'),
-];
-
-class AboutSection extends StatelessWidget {
+class AboutSection extends ConsumerWidget {
   const AboutSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
+    final info = ref.watch(appInfoProvider).value;
+
+    final rows = <(String, String)>[
+      ('Phoenix', info == null ? '…' : '${info.version} (build ${info.build})'),
+      ('Platform', info?.platform ?? '…'),
+      ('Runtime', info?.runtime ?? '…'),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SettingGroup(
           children: [
-            for (final v in _versions)
+            for (final r in rows)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(v.$1, style: Theme.of(context).textTheme.bodyMedium),
+                    Text(r.$1, style: Theme.of(context).textTheme.bodyMedium),
                     Text(
-                      v.$2,
+                      r.$2,
                       style: Theme.of(context).textTheme.bodySmall
                           ?.copyWith(color: scheme.onSurfaceVariant),
                     ),
@@ -41,9 +45,27 @@ class AboutSection extends StatelessWidget {
           spacing: 12,
           runSpacing: 12,
           children: [
-            FilledButton(onPressed: () {}, child: const Text('Check for updates')),
-            OutlinedButton(onPressed: () {}, child: const Text('View licenses')),
-            OutlinedButton(onPressed: () {}, child: const Text('Open log folder')),
+            FilledButton(
+              onPressed: info == null
+                  ? null
+                  : () => notify(context,
+                      "You're on Phoenix ${info.version} (build ${info.build})"),
+              child: const Text('Check for updates'),
+            ),
+            OutlinedButton(
+              onPressed: () => showLicensePage(
+                context: context,
+                applicationName: 'Phoenix',
+                applicationVersion: info?.version,
+              ),
+              child: const Text('View licenses'),
+            ),
+            OutlinedButton(
+              onPressed: info == null
+                  ? null
+                  : () => copyValue(context, info.logPath, 'Log path copied'),
+              child: const Text('Open log folder'),
+            ),
           ],
         ),
       ],

@@ -1,10 +1,9 @@
 'use client';
 
-import { Button } from '@/app/components/ui';
-
 import { DISK_USAGE, DOCUMENT_STORE_SUMMARY, VERSIONS } from '../sample';
 import type { SettingsForm } from './useSettingsForm';
 import { Block, Field, Toggle } from './fields';
+import { AboutActions, ClearCachesButton, ManageButton, RevealButton } from './SectionActions';
 import s from '../page.module.css';
 
 export function Privacy({ f }: { f: SettingsForm }) {
@@ -32,7 +31,7 @@ export function Privacy({ f }: { f: SettingsForm }) {
             value={f.dataLocation}
             onChange={(e) => f.setDataLocation(e.target.value)}
           />
-          <Button variant="ghost">Reveal…</Button>
+          <RevealButton path={f.dataLocation} />
         </Field>
       </Block>
     </>
@@ -57,10 +56,10 @@ export function Storage() {
       <Block>
         <Field name="Document store" desc="Converted markdown + embeddings index">
           <span className={s.staticVal}>{DOCUMENT_STORE_SUMMARY}</span>
-          <Button variant="ghost">Manage…</Button>
+          <ManageButton />
         </Field>
         <Field name="Clear caches" desc="KV-cache and thumbnails (1.2 GB) — models kept">
-          <button type="button" className={s.btnDanger}>Clear caches…</button>
+          <ClearCachesButton />
         </Field>
       </Block>
     </>
@@ -126,11 +125,7 @@ export function About() {
           </div>
         ))}
       </Block>
-      <div className={s.actions}>
-        <Button>Check for updates</Button>
-        <Button variant="ghost">View licenses</Button>
-        <Button variant="ghost">Open log folder</Button>
-      </div>
+      <AboutActions />
     </>
   );
 }

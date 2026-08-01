@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../widgets/document_inspector.dart';
 import '../widgets/document_library.dart';
@@ -24,21 +25,32 @@ class _WidePane extends StatelessWidget {
   Widget build(BuildContext context) {
     final listWidth = formFactorOf(context).isDesktop ? 380.0 : 300.0;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const DocumentsHeader(),
-            const JobBar(),
-            Expanded(
-              child: Row(
-                children: [
-                  SizedBox(width: listWidth, child: const DocumentLibrary()),
-                  const VerticalDivider(width: 1),
-                  const Expanded(child: DocumentInspector()),
-                ],
-              ),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: Column(
+              children: [
+                const DocumentsHeader(),
+                const JobBar(),
+                Expanded(
+                  child: Row(
+                    children: [
+                      RadiantPanel(
+                        width: listWidth,
+                        child: const DocumentLibrary(),
+                      ),
+                      const SizedBox(width: radiantGap),
+                      const Expanded(
+                        child: RadiantPanel(child: DocumentInspector()),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -59,25 +71,31 @@ class _PhoneFlowState extends State<_PhoneFlow> {
   Widget build(BuildContext context) {
     if (_detail) {
       return Scaffold(
-        body: SafeArea(
-          child: DocumentInspector(
-            onBack: () => setState(() => _detail = false),
+        backgroundColor: Colors.transparent,
+        body: RadiantBackdrop(
+          child: SafeArea(
+            child: DocumentInspector(
+              onBack: () => setState(() => _detail = false),
+            ),
           ),
         ),
       );
     }
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const DocumentsHeader(),
-            const JobBar(),
-            Expanded(
-              child: DocumentLibrary(
-                onSelected: () => setState(() => _detail = true),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              const DocumentsHeader(),
+              const JobBar(),
+              Expanded(
+                child: DocumentLibrary(
+                  onSelected: () => setState(() => _detail = true),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

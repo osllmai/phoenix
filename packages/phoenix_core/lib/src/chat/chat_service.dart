@@ -1,3 +1,4 @@
+import '../engine/device_capabilities.dart';
 import '../engine/inference_port.dart';
 import 'chat_repository.dart';
 import 'conversation.dart';
@@ -9,10 +10,18 @@ import 'message.dart';
 /// This is the Dart equivalent of the legacy `TextConversation` + provider glue,
 /// but engine-agnostic — it depends only on [InferencePort] and [ChatRepository].
 class ChatService {
-  ChatService({required this.engine, required this.repository});
+  ChatService({
+    required this.engine,
+    required this.repository,
+    this.capabilities,
+  });
 
   final InferencePort engine;
   final ChatRepository repository;
+
+  /// Supplies the current device capabilities so per-prompt params are clamped
+  /// to what the hardware can do (no GPU → 0 offload layers). Null = no clamp.
+  final DeviceCapabilities? Function()? capabilities;
 
   bool _aborting = false;
 
@@ -39,8 +48,13 @@ class ChatService {
       await _persistResponse(convId, buffer, s);
     }
 
+    final caps = capabilities?.call();
+    final params = caps == null
+        ? conversation.params
+        : conversation.params.clampedTo(caps);
+
     try {
-      await for (final token in engine.prompt(text, params: conversation.params)) {
+      await for (final token in engine.prompt(text, params: params)) {
         buffer.write(token);
         yield token;
       }

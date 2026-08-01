@@ -5,6 +5,7 @@ import 'package:phoenix/core/ai/engine_provider.dart';
 import 'package:phoenix/features/chat/presentation/screens/chat_screen.dart';
 import 'package:phoenix/features/chat/presentation/widgets/conversation_list.dart';
 import 'package:phoenix/features/chat/presentation/widgets/conversation_pane.dart';
+import 'package:phoenix/features/chat/presentation/widgets/conversation_rail.dart';
 import 'package:phoenix_core/phoenix_core.dart';
 
 class _FakeEngine implements InferencePort {
@@ -43,12 +44,17 @@ void main() {
     expect(find.byType(ConversationList), findsNothing);
   });
 
-  for (final size in [const Size(800, 800), const Size(1200, 800)]) {
-    testWidgets('width ${size.width.toInt()}: two panes side by side', (tester) async {
-      await _pumpAt(tester, size);
-      expect(find.byType(ConversationList), findsOneWidget);
-      expect(find.byType(ConversationPane), findsOneWidget);
-      expect(find.byType(VerticalDivider), findsOneWidget);
-    });
-  }
+  testWidgets('tablet: side pane auto-collapses to the rail', (tester) async {
+    await _pumpAt(tester, const Size(800, 800));
+    expect(find.byType(ConversationRail), findsOneWidget);
+    expect(find.byType(ConversationList), findsNothing);
+    expect(find.byType(ConversationPane), findsOneWidget);
+  });
+
+  testWidgets('desktop: side pane starts expanded', (tester) async {
+    await _pumpAt(tester, const Size(1200, 800));
+    expect(find.byType(ConversationList), findsOneWidget);
+    expect(find.byType(ConversationRail), findsNothing);
+    expect(find.byType(ConversationPane), findsOneWidget);
+  });
 }

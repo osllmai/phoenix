@@ -3,6 +3,7 @@ export type SectionTab = { label: string; href: string };
 export const DEV_TABS: SectionTab[] = [
   { label: 'Server', href: '/developer' },
   { label: 'Maestro', href: '/developer/maestro' },
+  { label: 'Fleet', href: '/developer/fleet' },
   { label: 'Flows', href: '/developer/flows' },
   { label: 'Evaluators', href: '/developer/evaluators' },
 ];

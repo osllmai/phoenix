@@ -21,22 +21,22 @@ full: up migrations health   ## up + show migration status + health + ps (migrat
 	docker ps
 
 migrate:       ## apply migrations
-	$(COMPOSE) exec -T backend python manage.py migrate
+	$(COMPOSE) exec -T django python manage.py migrate
 
 migrations:    ## show migration status
-	$(COMPOSE) exec -T backend python manage.py showmigrations
+	$(COMPOSE) exec -T django python manage.py showmigrations
 
 health:        ## poll API health (port from .env)
 	@for i in $$(seq 1 15); do curl -fsS http://localhost:$(API_PORT)/api/v1/health/ && echo && exit 0; sleep 2; done; echo "health FAILED"; exit 1
 
 test-backend:  ## pytest a=<app>
-	$(COMPOSE) exec backend pytest apps/$(a) -q
+	$(COMPOSE) exec django pytest apps/$(a) -q
 
 test-mobile:   ## mobile unit (dart) + widget (flutter) tests
 	bash mobile/tool/run_tests.sh
 
 lint:          ## ruff check the backend
-	$(COMPOSE) exec backend ruff check . --no-cache
+	$(COMPOSE) exec django ruff check . --no-cache
 
 logs:          ## follow logs for one service: s=<service>
 	$(COMPOSE) logs -f $(s)
@@ -47,8 +47,8 @@ ps:            ## list the stack's containers
 restart:       ## restart a service (all if empty): s=<service>
 	$(COMPOSE) restart $(s)
 
-sh:            ## shell into a service (default backend): s=<service>
-	$(COMPOSE) exec $(or $(s),backend) bash
+sh:            ## shell into a service (default django): s=<service>
+	$(COMPOSE) exec $(or $(s),django) bash
 
 edge:          ## local + nginx prod-edge rehearsal
 	$(EDGE_COMPOSE) up -d

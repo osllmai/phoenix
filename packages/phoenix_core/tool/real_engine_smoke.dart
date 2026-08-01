@@ -4,7 +4,7 @@ import 'package:phoenix_core/phoenix_core.dart';
 
 /// Drives the production [SubprocessEngine] against a real engine binary and a
 /// real GGUF — the same code path `ModelManager.select` + `ChatService.prompt`
-/// use. Usage: dart run tool/real_engine_smoke.dart <engineExe> <model.gguf>
+/// use. Usage: `dart run tool/real_engine_smoke.dart <engineExe> <model.gguf>`
 Future<void> main(List<String> args) async {
   final exe = args.isNotEmpty ? args[0] : 'engine/local_provider/linux_llama/applocal_provider';
   final model = args.length > 1

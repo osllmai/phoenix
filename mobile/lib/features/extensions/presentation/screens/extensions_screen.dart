@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../widgets/browse_pane.dart';
 import '../widgets/extension_detail.dart';
@@ -16,9 +17,12 @@ class ExtensionsScreen extends ConsumerWidget {
 
     if (!ff.hasSidePane) {
       return Scaffold(
-        body: SafeArea(
-          child: BrowsePane(
-            onSelected: () => _openDetail(context),
+        backgroundColor: Colors.transparent,
+        body: RadiantBackdrop(
+          child: SafeArea(
+            child: BrowsePane(
+              onSelected: () => _openDetail(context),
+            ),
           ),
         ),
       );
@@ -26,13 +30,19 @@ class ExtensionsScreen extends ConsumerWidget {
 
     final listWidth = ff.isDesktop ? 420.0 : 340.0;
     return Scaffold(
-      body: SafeArea(
-        child: Row(
-          children: [
-            SizedBox(width: listWidth, child: const BrowsePane()),
-            const VerticalDivider(width: 1),
-            const Expanded(child: ExtensionDetail()),
-          ],
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: Row(
+              children: [
+                RadiantPanel(width: listWidth, child: const BrowsePane()),
+                const SizedBox(width: radiantGap),
+                const Expanded(child: RadiantPanel(child: ExtensionDetail())),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -42,8 +52,11 @@ class ExtensionsScreen extends ConsumerWidget {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => Scaffold(
-          body: SafeArea(
-            child: ExtensionDetail(onBack: () => Navigator.of(context).pop()),
+          backgroundColor: Colors.transparent,
+          body: RadiantBackdrop(
+            child: SafeArea(
+              child: ExtensionDetail(onBack: () => Navigator.of(context).pop()),
+            ),
           ),
         ),
       ),

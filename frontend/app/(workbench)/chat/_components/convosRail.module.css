@@ -1,0 +1,23 @@
+.rail { width: var(--size-sidebar-collapsed); border-right: 1px solid var(--border-subtle);
+  background: var(--bg-secondary); display: flex; flex-direction: column; align-items: center;
+  gap: var(--sp-2); padding: var(--sp-3) 0; flex: none; }
+
+.railIcon { width: 38px; height: 38px; border-radius: var(--r-md); display: grid; place-content: center;
+  cursor: pointer; font-size: 16px; line-height: 1; color: var(--text-secondary);
+  background: var(--bg-tertiary); border: 1px solid var(--border-subtle); }
+.railIcon:hover { color: var(--text-primary); border-color: var(--border-default); }
+
+.railNew { background: var(--accent-primary); color: var(--text-inverse); border: 0; }
+.railNew:hover { background: var(--accent-hover); color: var(--text-inverse); }
+
+.railSep { flex: 1; }
+.railExpand { color: var(--accent-ink); }
+
+.railAvatar { width: 38px; height: 38px; border-radius: var(--r-pill); display: grid; place-content: center;
+  font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--text-primary); cursor: pointer;
+  position: relative; background: var(--surface-card); border: 1px solid var(--border-subtle); }
+.railAvatar:hover { border-color: var(--border-default); }
+.railAvatarSel { border-color: transparent;
+  box-shadow: 0 0 0 2px var(--accent-primary), 0 0 0 4px var(--bg-secondary); }
+
+.railPin { position: absolute; top: -3px; right: -3px; font-size: 9px; line-height: 1; }

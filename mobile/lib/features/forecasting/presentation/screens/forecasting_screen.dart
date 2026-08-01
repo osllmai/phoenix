@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../../../../core/widgets/use_desktop_or_subscribe.dart';
 import '../providers/forecast_view.dart';
@@ -20,17 +21,25 @@ class ForecastingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final view = ref.watch(forecastViewProvider);
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 12),
-              child: FcHeader(),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: RadiantPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 12),
+                    child: FcHeader(),
+                  ),
+                  const Divider(height: 1),
+                  Expanded(child: _body(context, view)),
+                ],
+              ),
             ),
-            const Divider(height: 1),
-            Expanded(child: _body(context, view)),
-          ],
+          ),
         ),
       ),
     );

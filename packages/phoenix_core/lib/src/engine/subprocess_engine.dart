@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'device_capabilities.dart';
 import 'engine_exceptions.dart';
 import 'inference_port.dart';
 import 'protocol.dart';
@@ -14,7 +15,7 @@ import 'wire_guard.dart';
 ///
 /// Dart port of `core/provider/offlineprovider.cpp`: same binary, same
 /// `__PROMPT__/__END__/__DONE_PROMPTPROCESS__` protocol — no Qt.
-class SubprocessEngine implements InferencePort {
+class SubprocessEngine implements InferencePort, AcceleratorProbe {
   /// [executablePath] is the engine binary (or a mock that speaks the protocol).
   /// [extraArgs] lets a mock be launched as `dart run mock.dart` etc.
   SubprocessEngine({
@@ -40,6 +41,17 @@ class SubprocessEngine implements InferencePort {
 
   @override
   EngineState get state => _state;
+
+  @override
+  Future<List<Accelerator>> availableAccelerators() async {
+    try {
+      final r = await Process.run(executablePath, [...extraArgs, '--list-devices'])
+          .timeout(const Duration(seconds: 10));
+      return parseAcceleratorList('${r.stdout}\n${r.stderr}');
+    } on Object {
+      return const [Accelerator.cpu];
+    }
+  }
 
   @override
   Future<void> loadModel(String modelPath) async {

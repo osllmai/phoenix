@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/radiant.dart';
 import '../data/maestro_sample.dart';
 import '../widgets/maestro_agents_card.dart';
 import '../widgets/maestro_approval_banner.dart';
@@ -16,39 +17,47 @@ class MaestroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const data = maestroSample;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _Header(),
-            const Divider(height: 1),
-            MaestroPairBar(pair: data.pair),
-            MaestroGoalSender(
-              draft: data.goalDraft,
-              presets: data.presets,
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 16),
-                    MaestroGoalCard(goal: data.goal),
-                    const SizedBox(height: 16),
-                    MaestroPlanTimeline(steps: data.plan),
-                    const SizedBox(height: 16),
-                    MaestroApprovalBanner(approval: data.approval),
-                    const SizedBox(height: 16),
-                    MaestroAgentsCard(agents: data.agents),
-                    const SizedBox(height: 16),
-                    MaestroEventsCard(events: data.events),
-                  ],
-                ),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: RadiantPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _Header(),
+                  const Divider(height: 1),
+                  MaestroPairBar(pair: data.pair),
+                  MaestroGoalSender(
+                    draft: data.goalDraft,
+                    presets: data.presets,
+                  ),
+                  const Divider(height: 1),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 16),
+                          MaestroGoalCard(goal: data.goal),
+                          const SizedBox(height: 16),
+                          MaestroPlanTimeline(steps: data.plan),
+                          const SizedBox(height: 16),
+                          MaestroApprovalBanner(approval: data.approval),
+                          const SizedBox(height: 16),
+                          MaestroAgentsCard(agents: data.agents),
+                          const SizedBox(height: 16),
+                          MaestroEventsCard(events: data.events),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

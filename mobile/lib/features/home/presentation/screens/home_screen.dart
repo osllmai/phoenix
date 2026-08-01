@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/dashboard_stacked.dart';
@@ -15,17 +16,32 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ff = formFactorOf(context);
     final wide = ff.hasSidePane;
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DashboardHeader(compact: !wide),
+        const Divider(height: 1),
+        Expanded(
+          child: wide ? const DashboardWide() : const DashboardStacked(),
+        ),
+      ],
+    );
+
+    if (!wide) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        body: RadiantBackdrop(child: SafeArea(child: content)),
+      );
+    }
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            DashboardHeader(compact: !wide),
-            const Divider(height: 1),
-            Expanded(
-              child: wide ? const DashboardWide() : const DashboardStacked(),
-            ),
-          ],
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: RadiantPanel(child: content),
+          ),
         ),
       ),
     );

@@ -92,7 +92,6 @@ void main() {
       await _run(tester);
       expect(find.byType(AnswerColumn), findsOneWidget);
       expect(find.byType(SourcesPane), findsOneWidget);
-      expect(find.byType(VerticalDivider), findsOneWidget);
     });
   });
 }

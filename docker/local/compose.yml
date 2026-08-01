@@ -2,8 +2,8 @@
 name: phoenix
 
 services:
-  backend:
-    container_name: phoenix-backend
+  django:
+    container_name: phoenix-django
     image: phoenix-backend
     build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
     command: python manage.py runserver 0.0.0.0:16000

@@ -1,10 +1,10 @@
 # Production edge reverse-proxy — layered on compose.yml by `make up-prod`.
-# Mounts nginx/*.conf: / → web · /api,/admin → backend.
+# Mounts nginx/*.conf: / → web · /api,/admin → django.
 name: phoenix-prod
 services:
   nginx:
     image: nginx:1.27-alpine
     ports: ['${HTTP_PORT}:80']
     volumes: ['./nginx:/etc/nginx/conf.d:ro']
-    depends_on: [backend, frontend]
+    depends_on: [django, frontend]
     restart: always

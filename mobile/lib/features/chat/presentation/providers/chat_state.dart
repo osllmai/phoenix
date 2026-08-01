@@ -11,5 +11,6 @@ abstract class ChatState with _$ChatState {
     @Default(<Message>[]) List<Message> messages,
     @Default('') String streaming,
     @Default(false) bool isGenerating,
+    int? selectedId,
   }) = _ChatState;
 }

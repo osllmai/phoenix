@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../widgets/speech_controls.dart';
 import '../widgets/transcript_pane.dart';
@@ -18,22 +19,25 @@ class SpeechScreen extends ConsumerWidget {
 
     if (!ff.hasSidePane) {
       return Scaffold(
+        backgroundColor: Colors.transparent,
         drawer: const Drawer(child: SafeArea(child: TranscriptionList())),
-        body: SafeArea(
-          child: Builder(
-            builder: (context) => Column(
-              children: [
-                Expanded(
-                  child: TranscriptPane(
-                    onMenu: () => Scaffold.of(context).openDrawer(),
+        body: RadiantBackdrop(
+          child: SafeArea(
+            child: Builder(
+              builder: (context) => Column(
+                children: [
+                  Expanded(
+                    child: TranscriptPane(
+                      onMenu: () => Scaffold.of(context).openDrawer(),
+                    ),
                   ),
-                ),
-                const Divider(height: 1),
-                const SizedBox(
-                  height: 320,
-                  child: SpeechControls(),
-                ),
-              ],
+                  const Divider(height: 1),
+                  const SizedBox(
+                    height: 320,
+                    child: SpeechControls(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -42,17 +46,29 @@ class SpeechScreen extends ConsumerWidget {
 
     final controlsWidth = ff.isDesktop ? 340.0 : 300.0;
     return Scaffold(
-      body: SafeArea(
-        child: Row(
-          children: [
-            SizedBox(width: controlsWidth, child: const SpeechControls()),
-            const VerticalDivider(width: 1),
-            const Expanded(child: TranscriptPane()),
-            if (ff.isDesktop) ...[
-              const VerticalDivider(width: 1),
-              const SizedBox(width: 300, child: TranscriptionList()),
-            ],
-          ],
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: Row(
+              children: [
+                RadiantPanel(
+                  width: controlsWidth,
+                  child: const SpeechControls(),
+                ),
+                const SizedBox(width: radiantGap),
+                const Expanded(child: RadiantPanel(child: TranscriptPane())),
+                if (ff.isDesktop) ...[
+                  const SizedBox(width: radiantGap),
+                  const RadiantPanel(
+                    width: 300,
+                    child: TranscriptionList(),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );

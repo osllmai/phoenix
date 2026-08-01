@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../../data/hf_repository.dart';
 import '../../data/remote_catalog_repository.dart';
@@ -21,22 +22,27 @@ class ModelsBrowseScreen extends ConsumerWidget {
     final wide = !formFactorOf(context).isPhone;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Browse models')),
-      body: Column(
-        children: [
-          const _SourceToggle(),
-          Expanded(
-            child: async.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
-              error: (e, _) => _Error(
-                message: '$e',
-                onRetry: () => _invalidate(ref, source, query),
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Browse models'),
+      ),
+      body: RadiantBackdrop(
+        child: Column(
+          children: [
+            const _SourceToggle(),
+            Expanded(
+              child: async.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => _Error(
+                  message: '$e',
+                  onRetry: () => _invalidate(ref, source, query),
+                ),
+                data: (entries) => _Loaded(entries: entries, wide: wide),
               ),
-              data: (entries) => _Loaded(entries: entries, wide: wide),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -102,7 +108,9 @@ class _Loaded extends ConsumerWidget {
     return Column(
       children: [
         BrowseHeader(count: visible.length),
-        Expanded(child: BrowseResults(entries: visible, wide: wide)),
+        Expanded(
+          child: BrowseResults(entries: visible, wide: wide),
+        ),
       ],
     );
   }
@@ -125,12 +133,16 @@ class _Error extends StatelessWidget {
           children: [
             Icon(Icons.error_outline, size: 56, color: cs.error),
             const SizedBox(height: 12),
-            Text("Couldn't load the catalog",
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              "Couldn't load the catalog",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 6),
-            Text(message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: cs.onSurfaceVariant)),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: cs.onSurfaceVariant),
+            ),
             const SizedBox(height: 16),
             FilledButton(onPressed: onRetry, child: const Text('Retry')),
           ],

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ChatState {
 
- List<Message> get messages; String get streaming; bool get isGenerating;
+ List<Message> get messages; String get streaming; bool get isGenerating; int? get selectedId;
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ChatStateCopyWith<ChatState> get copyWith => _$ChatStateCopyWithImpl<ChatState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.streaming, streaming) || other.streaming == streaming)&&(identical(other.isGenerating, isGenerating) || other.isGenerating == isGenerating));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatState&&const DeepCollectionEquality().equals(other.messages, messages)&&(identical(other.streaming, streaming) || other.streaming == streaming)&&(identical(other.isGenerating, isGenerating) || other.isGenerating == isGenerating)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),streaming,isGenerating);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),streaming,isGenerating,selectedId);
 
 @override
 String toString() {
-  return 'ChatState(messages: $messages, streaming: $streaming, isGenerating: $isGenerating)';
+  return 'ChatState(messages: $messages, streaming: $streaming, isGenerating: $isGenerating, selectedId: $selectedId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ChatStateCopyWith<$Res>  {
   factory $ChatStateCopyWith(ChatState value, $Res Function(ChatState) _then) = _$ChatStateCopyWithImpl;
 @useResult
 $Res call({
- List<Message> messages, String streaming, bool isGenerating
+ List<Message> messages, String streaming, bool isGenerating, int? selectedId
 });
 
 
@@ -62,12 +62,13 @@ class _$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? streaming = null,Object? isGenerating = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? streaming = null,Object? isGenerating = null,Object? selectedId = freezed,}) {
   return _then(_self.copyWith(
 messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<Message>,streaming: null == streaming ? _self.streaming : streaming // ignore: cast_nullable_to_non_nullable
 as String,isGenerating: null == isGenerating ? _self.isGenerating : isGenerating // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Message> messages,  String streaming,  bool isGenerating)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Message> messages,  String streaming,  bool isGenerating,  int? selectedId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
+return $default(_that.messages,_that.streaming,_that.isGenerating,_that.selectedId);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Message> messages,  String streaming,  bool isGenerating)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Message> messages,  String streaming,  bool isGenerating,  int? selectedId)  $default,) {final _that = this;
 switch (_that) {
 case _ChatState():
-return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
+return $default(_that.messages,_that.streaming,_that.isGenerating,_that.selectedId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Message> messages,  String streaming,  bool isGenerating)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Message> messages,  String streaming,  bool isGenerating,  int? selectedId)?  $default,) {final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
-return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
+return $default(_that.messages,_that.streaming,_that.isGenerating,_that.selectedId);case _:
   return null;
 
 }
@@ -208,7 +209,7 @@ return $default(_that.messages,_that.streaming,_that.isGenerating);case _:
 
 
 class _ChatState implements ChatState {
-  const _ChatState({final  List<Message> messages = const <Message>[], this.streaming = '', this.isGenerating = false}): _messages = messages;
+  const _ChatState({final  List<Message> messages = const <Message>[], this.streaming = '', this.isGenerating = false, this.selectedId}): _messages = messages;
   
 
  final  List<Message> _messages;
@@ -220,6 +221,7 @@ class _ChatState implements ChatState {
 
 @override@JsonKey() final  String streaming;
 @override@JsonKey() final  bool isGenerating;
+@override final  int? selectedId;
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ _$ChatStateCopyWith<_ChatState> get copyWith => __$ChatStateCopyWithImpl<_ChatSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.streaming, streaming) || other.streaming == streaming)&&(identical(other.isGenerating, isGenerating) || other.isGenerating == isGenerating));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChatState&&const DeepCollectionEquality().equals(other._messages, _messages)&&(identical(other.streaming, streaming) || other.streaming == streaming)&&(identical(other.isGenerating, isGenerating) || other.isGenerating == isGenerating)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),streaming,isGenerating);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),streaming,isGenerating,selectedId);
 
 @override
 String toString() {
-  return 'ChatState(messages: $messages, streaming: $streaming, isGenerating: $isGenerating)';
+  return 'ChatState(messages: $messages, streaming: $streaming, isGenerating: $isGenerating, selectedId: $selectedId)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$ChatStateCopyWith<$Res> implements $ChatStateCopyWith<$Re
   factory _$ChatStateCopyWith(_ChatState value, $Res Function(_ChatState) _then) = __$ChatStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<Message> messages, String streaming, bool isGenerating
+ List<Message> messages, String streaming, bool isGenerating, int? selectedId
 });
 
 
@@ -268,12 +270,13 @@ class __$ChatStateCopyWithImpl<$Res>
 
 /// Create a copy of ChatState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? streaming = null,Object? isGenerating = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? streaming = null,Object? isGenerating = null,Object? selectedId = freezed,}) {
   return _then(_ChatState(
 messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
 as List<Message>,streaming: null == streaming ? _self.streaming : streaming // ignore: cast_nullable_to_non_nullable
 as String,isGenerating: null == isGenerating ? _self.isGenerating : isGenerating // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

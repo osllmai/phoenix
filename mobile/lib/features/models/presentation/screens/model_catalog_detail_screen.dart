@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../data/catalog_entry.dart';
 import '../widgets/catalog_entry_action.dart';
 import '../widgets/hf_files_list.dart';
@@ -26,30 +27,34 @@ class ModelCatalogDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final repoId = _repoIdFrom(entry);
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: Text(entry.name.isEmpty ? entry.modelName : entry.name),
         leading: const BackButton(),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: RunnabilityBadge(entry: entry),
-          ),
-          const SizedBox(height: 12),
-          _InfoCard(entry: entry),
-          const SizedBox(height: 24),
-          if (entry.url.isNotEmpty)
+      body: RadiantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: CatalogEntryAction(entry: entry),
-            )
-          else if (repoId != null)
-            HfFilesList(repoId: repoId)
-          else
-            const Text('No downloadable file available for this model.'),
-        ],
+              child: RunnabilityBadge(entry: entry),
+            ),
+            const SizedBox(height: 12),
+            _InfoCard(entry: entry),
+            const SizedBox(height: 24),
+            if (entry.url.isNotEmpty)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: CatalogEntryAction(entry: entry),
+              )
+            else if (repoId != null)
+              HfFilesList(repoId: repoId)
+            else
+              const Text('No downloadable file available for this model.'),
+          ],
+        ),
       ),
     );
   }
@@ -104,8 +109,10 @@ class _InfoRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 140,
-            child: Text(label,
-                style: const TextStyle(fontWeight: FontWeight.w600)),
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
           Expanded(child: Text(value)),
         ],

@@ -57,7 +57,9 @@ class WelcomeCard extends ConsumerWidget {
         side: BorderSide(color: scheme.outline),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
+        padding: twoPane
+            ? const EdgeInsets.fromLTRB(28, 28, 28, 20)
+            : const EdgeInsets.fromLTRB(20, 22, 20, 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -12,6 +12,12 @@
   padding: var(--sp-2) var(--sp-3); border-radius: var(--r-md); font-weight: var(--fw-semibold);
   font-size: var(--fs-sm); }
 .newchat:hover { background: var(--accent-hover); }
+.convosHeadRow { display: flex; align-items: center; gap: var(--sp-2); }
+.convosHeadRow .newchat { flex: 1; }
+.collapse { width: 34px; height: 34px; flex: none; border-radius: var(--r-md);
+  background: var(--bg-tertiary); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+  font-size: 15px; line-height: 1; cursor: pointer; }
+.collapse:hover { color: var(--text-primary); border-color: var(--border-default); }
 .search { background: var(--surface-input); border: 1px solid var(--border-subtle);
   color: var(--text-primary); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3);
   font-family: inherit; font-size: var(--fs-sm); }

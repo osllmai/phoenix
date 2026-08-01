@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:phoenix_core/phoenix_core.dart';
 
+import 'default_model.dart';
 import 'model_providers.dart';
 
 part 'models_controller.g.dart';
@@ -34,6 +35,14 @@ class ModelsController extends _$ModelsController {
   Future<void> addLocal({required String name, required String path}) async {
     await _manager.addLocal(name: name, path: path);
     state = AsyncData(await _manager.list());
+  }
+
+  /// Loads the model named by the user's default-model [setting] when no model
+  /// is active yet. No-op for the "none" sentinel or when nothing matches.
+  Future<void> applyDefaultModel(String setting) async {
+    if (ref.read(activeModelProvider) != null) return;
+    final match = matchDefaultModel(setting, await _manager.list());
+    if (match != null) await select(match);
   }
 
   Future<void> select(AiModel model) async {

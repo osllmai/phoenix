@@ -1,4 +1,5 @@
 @import './tokens.css';
+@import './fonts.css';
 
 /* Legacy aliases — keep existing pages (models) working against the token set.
    New code should use the token vocabulary in tokens.css directly. */
@@ -50,6 +51,10 @@ button {
 .app {
   display: flex;
   height: 100vh;
+  gap: var(--shell-gap);
+  padding: var(--shell-gap);
+  background: var(--radiant-backdrop);
+  background-attachment: fixed;
 }
 
 .main {
@@ -58,4 +63,8 @@ button {
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
+  border-radius: var(--panel-radius);
+  border: var(--panel-border);
+  background: var(--panel-bg);
+  box-shadow: var(--panel-shadow);
 }

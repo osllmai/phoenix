@@ -1,0 +1,17 @@
+{
+  "@@locale": "de",
+  "sectionGeneral": "Allgemein",
+  "sectionGeneralSubtitle": "Sprache, Start und Standardmodell.",
+  "sectionAppearance": "Darstellung",
+  "sectionAppearanceSubtitle": "Design, Schriftgröße und Akzent.",
+  "sectionEngine": "Engine & Parameter",
+  "sectionEngineSubtitle": "Inferenz auf dem Gerät über llama.cpp.",
+  "sectionPrivacy": "Datenschutz & Daten",
+  "sectionPrivacySubtitle": "Standardmäßig verlässt nichts Ihr Gerät.",
+  "sectionStorage": "Speicher",
+  "sectionStorageSubtitle": "Speichernutzung und lokale Daten.",
+  "sectionBackend": "Backend",
+  "sectionBackendSubtitle": "Speicher-Engine und lokales HTTP-Gateway.",
+  "sectionAbout": "Über",
+  "sectionAboutSubtitle": "Build- und Laufzeitversionen."
+}

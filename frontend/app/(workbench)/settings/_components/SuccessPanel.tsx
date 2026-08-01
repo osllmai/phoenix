@@ -11,7 +11,7 @@ import s from '../page.module.css';
 
 export default function SuccessPanel() {
   const f = useSettingsForm();
-  const [active, setActive] = useState('appearance');
+  const [active, setActive] = useState('general');
   const [query, setQuery] = useState('');
 
   const select = (id: string) => {
@@ -37,8 +37,8 @@ export default function SuccessPanel() {
               All preferences read from <code className={s.code}>{SETTINGS_PATH}</code>.
             </div>
           </div>
-          <Appearance f={f} />
           <General f={f} />
+          <Appearance f={f} />
           <ModelsInference f={f} />
           <Privacy f={f} />
           <Storage />

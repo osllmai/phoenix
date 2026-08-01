@@ -105,7 +105,7 @@ export function FirstRunPanel() {
               <div className={s.stepTitle}>Choose your theme</div>
               <div className={s.stepHint}>Warm-charcoal dark by default.</div>
               <div className={s.stepGap}>
-                <RadioPills name="fr-theme" value={theme} onChange={setTheme} options={['Dark', 'Cream', 'System']} />
+                <RadioPills name="fr-theme" value={theme} onChange={setTheme} options={['Dark', 'Light', 'System']} />
               </div>
             </div>
           </li>

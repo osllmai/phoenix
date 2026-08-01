@@ -47,7 +47,6 @@ void main() {
       await _pumpAt(tester, size);
       expect(find.byType(BrowsePane), findsOneWidget);
       expect(find.byType(ExtensionDetail), findsOneWidget);
-      expect(find.byType(VerticalDivider), findsOneWidget);
     });
   }
 

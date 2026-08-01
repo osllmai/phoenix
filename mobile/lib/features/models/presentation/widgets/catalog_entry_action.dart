@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../data/catalog_entry.dart';
 import '../../data/device_capabilities.dart';
@@ -24,6 +25,13 @@ class CatalogEntryAction extends ConsumerWidget {
 
     if (installed) {
       return const _StatusChip(icon: Icons.check_circle, label: 'Installed');
+    }
+    if (entry.url.isEmpty || entry.filename.isEmpty) {
+      return OutlinedButton.icon(
+        onPressed: () => context.go('/models/catalog-detail', extra: entry),
+        icon: const Icon(Icons.folder_open_outlined, size: 18),
+        label: const Text('Choose file'),
+      );
     }
     if (progress == null) {
       return FilledButton.tonalIcon(

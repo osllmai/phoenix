@@ -37,6 +37,7 @@ class ChatController extends _$ChatController {
     state = state.copyWith(
       messages: await repo.messages(conversation.id!),
       streaming: '',
+      selectedId: conversation.id,
     );
   }
 

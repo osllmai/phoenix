@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/feature/feature_module.dart';
 import 'presentation/screens/developer_screen.dart';
 import 'presentation/screens/evaluators_screen.dart';
+import 'presentation/screens/fleet_screen.dart';
 import 'presentation/screens/flows_screen.dart';
 import 'presentation/screens/maestro_screen.dart';
 
@@ -23,6 +24,10 @@ class DeveloperModule implements FeatureModule {
         GoRoute(
           path: '/developer/maestro',
           builder: (context, state) => const MaestroScreen(),
+        ),
+        GoRoute(
+          path: '/developer/fleet',
+          builder: (context, state) => const FleetScreen(),
         ),
         GoRoute(
           path: '/developer/flows',
@@ -45,6 +50,11 @@ class DeveloperModule implements FeatureModule {
             label: 'Maestro',
             icon: Icons.account_tree_outlined,
             path: '/developer/maestro',
+            group: NavGroup.developer),
+        FeatureNavItem(
+            label: 'Fleet',
+            icon: Icons.grid_view_outlined,
+            path: '/developer/fleet',
             group: NavGroup.developer),
         FeatureNavItem(
             label: 'Flows',

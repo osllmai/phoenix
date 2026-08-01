@@ -40,7 +40,7 @@ final class SettingsControllerProvider
 }
 
 String _$settingsControllerHash() =>
-    r'da9acd56a60cfe1e0302326ac47d584d3633bb7a';
+    r'86778a7a31b1b70b033394f847a3432c168557f5';
 
 /// Loads persisted preferences on build and writes each change back through the
 /// [SettingsRepository]. `activeSection` is transient UI state (not persisted).

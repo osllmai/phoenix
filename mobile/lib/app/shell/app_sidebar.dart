@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/feature/feature_module.dart';
+import '../radiant.dart';
 import 'sidebar_footer.dart';
 import 'sidebar_group.dart';
 import 'sidebar_header.dart';
@@ -29,24 +30,20 @@ class _AppSidebarState extends State<AppSidebar> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final footer = widget.items.where((i) => i.isFooter).toList();
     final width = _collapsed ? 72.0 : 264.0;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 160),
       width: width,
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border(right: BorderSide(color: scheme.outlineVariant)),
-      ),
+      clipBehavior: Clip.antiAlias,
+      decoration: radiantPanelDecoration(Theme.of(context).colorScheme),
       child: OverflowBox(
         alignment: Alignment.centerLeft,
         minWidth: width,
         maxWidth: width,
-        child: SafeArea(
-          right: false,
+        child: DecoratedBox(
+          decoration: radiantPanelSheen(Theme.of(context).colorScheme),
           child: Column(
             children: [
             SidebarHeader(

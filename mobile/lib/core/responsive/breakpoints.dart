@@ -31,6 +31,7 @@ FormFactor formFactorOf(BuildContext context) =>
 
 extension FormFactorX on FormFactor {
   bool get isPhone => this == FormFactor.phone;
+  bool get isTablet => this == FormFactor.tablet;
   bool get isDesktop => this == FormFactor.desktop;
 
   /// Tablet and desktop show side-by-side panes; phone is single-pane + drawer.

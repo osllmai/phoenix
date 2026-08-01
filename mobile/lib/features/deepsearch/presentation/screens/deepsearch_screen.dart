@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../providers/deepsearch_controller.dart';
 import '../providers/deepsearch_state.dart';
@@ -20,23 +21,26 @@ class DeepSearchScreen extends ConsumerWidget {
     final async = ref.watch(deepSearchControllerProvider);
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            QueryHeader(onMenu: ff.isPhone ? () {} : null),
-            const Divider(height: 1),
-            Expanded(
-              child: switch (async) {
-                AsyncLoading() => const _Busy(),
-                AsyncError(:final error) => _Failed(message: '$error'),
-                AsyncData(:final value) when !value.hasResult =>
-                  const FirstRunView(),
-                AsyncData(:final value) => ff.hasSidePane
-                    ? _TwoPane(state: value, isDesktop: ff.isDesktop)
-                    : _SingleColumn(state: value),
-              },
-            ),
-          ],
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Column(
+            children: [
+              QueryHeader(onMenu: ff.isPhone ? () {} : null),
+              const Divider(height: 1),
+              Expanded(
+                child: switch (async) {
+                  AsyncLoading() => const _Busy(),
+                  AsyncError(:final error) => _Failed(message: '$error'),
+                  AsyncData(:final value) when !value.hasResult =>
+                    const FirstRunView(),
+                  AsyncData(:final value) => ff.hasSidePane
+                      ? _TwoPane(state: value, isDesktop: ff.isDesktop)
+                      : _SingleColumn(state: value),
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -94,24 +98,29 @@ class _TwoPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sourcesWidth = isDesktop ? 380.0 : 320.0;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: AnswerColumn(state: state),
+    return Padding(
+      padding: const EdgeInsets.all(radiantGap),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: RadiantPanel(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: AnswerColumn(state: state),
+              ),
+            ),
           ),
-        ),
-        const VerticalDivider(width: 1),
-        SizedBox(
-          width: sourcesWidth,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: SourcesPane(sources: state.sources),
+          const SizedBox(width: radiantGap),
+          RadiantPanel(
+            width: sourcesWidth,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: SourcesPane(sources: state.sources),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

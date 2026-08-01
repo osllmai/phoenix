@@ -1,0 +1,17 @@
+{
+  "@@locale": "fr",
+  "sectionGeneral": "Général",
+  "sectionGeneralSubtitle": "Langue, démarrage et modèle par défaut.",
+  "sectionAppearance": "Apparence",
+  "sectionAppearanceSubtitle": "Thème, échelle typographique et accent.",
+  "sectionEngine": "Moteur et paramètres",
+  "sectionEngineSubtitle": "Inférence sur l'appareil via llama.cpp.",
+  "sectionPrivacy": "Confidentialité et données",
+  "sectionPrivacySubtitle": "Rien ne quitte votre appareil par défaut.",
+  "sectionStorage": "Stockage",
+  "sectionStorageSubtitle": "Utilisation du disque et données locales.",
+  "sectionBackend": "Backend",
+  "sectionBackendSubtitle": "Moteur de stockage et passerelle HTTP locale.",
+  "sectionAbout": "À propos",
+  "sectionAboutSubtitle": "Versions de build et d'exécution."
+}

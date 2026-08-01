@@ -23,6 +23,8 @@ dependencies:
   dio: ^5.9.0
   web_socket_channel: ^3.0.3
   device_info_plus: ^11.3.0
+  package_info_plus: ^8.1.2
+  google_fonts: ^6.2.1
 
   # Persistence (chat history, models).
   sqflite: ^2.3.0
@@ -96,6 +98,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/phoenix.svg
@@ -108,6 +111,31 @@ flutter:
     - family: DMSans
       fonts:
         - asset: assets/fonts/DMSans-Regular.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+    - family: Lora
+      fonts:
+        - asset: assets/fonts/Lora-Regular.ttf
+        - asset: assets/fonts/Lora-Bold.ttf
+          weight: 700
+    - family: Merriweather
+      fonts:
+        - asset: assets/fonts/Merriweather-Regular.ttf
+        - asset: assets/fonts/Merriweather-Bold.ttf
+          weight: 700
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
+    - family: OpenDyslexic
+      fonts:
+        - asset: assets/fonts/OpenDyslexic-Regular.ttf
+        - asset: assets/fonts/OpenDyslexic-Bold.ttf
+          weight: 700
 
 flutter_launcher_icons:
   android: true

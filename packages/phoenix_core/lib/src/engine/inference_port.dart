@@ -6,6 +6,7 @@
 /// drop in without touching any caller.
 library;
 
+import 'device_capabilities.dart';
 import 'wire_guard.dart';
 
 /// Generation parameters sent to the engine per prompt.
@@ -42,6 +43,32 @@ class InferenceParams {
   final int repeatPenaltyTokens;
   final int contextLength;
   final int numberOfGpuLayers;
+
+  /// Returns a copy forced within [caps] so the engine can never be
+  /// over-committed: no GPU on the device → 0 offload layers; context capped
+  /// to [maxContext] when given (a RAM/VRAM-derived ceiling). This is the
+  /// hard safety clamp applied before every generation.
+  InferenceParams clampedTo(DeviceCapabilities caps, {int? maxContext}) {
+    final gpu = caps.hasGpu ? numberOfGpuLayers : 0;
+    final ctx = (maxContext != null && contextLength > maxContext)
+        ? maxContext
+        : contextLength;
+    return InferenceParams(
+      stream: stream,
+      promptTemplate: promptTemplate,
+      systemPrompt: systemPrompt,
+      maxTokens: maxTokens,
+      topK: topK,
+      topP: topP,
+      minP: minP,
+      temperature: temperature,
+      promptBatchSize: promptBatchSize,
+      repeatPenalty: repeatPenalty,
+      repeatPenaltyTokens: repeatPenaltyTokens,
+      contextLength: ctx,
+      numberOfGpuLayers: gpu,
+    );
+  }
 
   /// Rejects single-line fields that would corrupt the params block (S5).
   void validate() {

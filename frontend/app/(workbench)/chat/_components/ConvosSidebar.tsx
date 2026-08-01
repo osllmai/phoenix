@@ -3,10 +3,47 @@
 import { useState } from 'react';
 
 import s from '../page.module.css';
+import rail from './convosRail.module.css';
 import { SAMPLE_CONVOS } from './data';
 
-export default function ConvosSidebar() {
+type Props = { collapsed: boolean; onToggle: () => void };
+
+function ConvosRail({ onToggle }: { onToggle: () => void }) {
+  return (
+    <aside className={rail.rail}>
+      <button className={`${rail.railIcon} ${rail.railNew}`} title="New chat">
+        ＋
+      </button>
+      <button className={rail.railIcon} title="Search conversations">
+        🔍
+      </button>
+      {SAMPLE_CONVOS.map((c) => (
+        <div
+          key={c.id}
+          className={`${rail.railAvatar} ${c.selected ? rail.railAvatarSel : ''}`}
+          title={c.title}
+        >
+          {c.title.charAt(0)}
+          {c.pinned && <span className={rail.railPin}>📌</span>}
+        </div>
+      ))}
+      <div className={rail.railSep} />
+      <button
+        className={`${rail.railIcon} ${rail.railExpand}`}
+        title="Expand list"
+        onClick={onToggle}
+      >
+        »
+      </button>
+    </aside>
+  );
+}
+
+export default function ConvosSidebar({ collapsed, onToggle }: Props) {
   const [q, setQ] = useState('');
+
+  if (collapsed) return <ConvosRail onToggle={onToggle} />;
+
   const ql = q.trim().toLowerCase();
   const convos = SAMPLE_CONVOS.filter(
     (c) => ql === '' || c.title.toLowerCase().includes(ql) || c.snippet.toLowerCase().includes(ql),
@@ -18,7 +55,12 @@ export default function ConvosSidebar() {
   return (
     <aside className={s.convos}>
       <header className={s.convosHead}>
-        <button className={s.newchat}>＋ New chat</button>
+        <div className={s.convosHeadRow}>
+          <button className={s.newchat}>＋ New chat</button>
+          <button className={s.collapse} title="Collapse list" onClick={onToggle}>
+            «
+          </button>
+        </div>
         <input
           className={s.search}
           placeholder="Search conversations…"

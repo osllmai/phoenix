@@ -1,4 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'dart:io';
 
 import '../providers/settings_state.dart';
 
@@ -7,55 +8,93 @@ abstract class SettingsRepository {
   Future<void> save(SettingsState state);
 }
 
-/// Persists settings via the modern [SharedPreferencesAsync] API. One key per
-/// field keeps the store forward-compatible as fields are added.
-class PrefsSettingsRepository implements SettingsRepository {
-  PrefsSettingsRepository([SharedPreferencesAsync? prefs])
-      : _prefs = prefs ?? SharedPreferencesAsync();
+/// Persists settings as a single, human-readable `settings.json` file — the
+/// portable source of truth (easy to back up, sync, or hand-edit). `activeSection`
+/// is transient UI state and is intentionally not written.
+class JsonFileSettingsRepository implements SettingsRepository {
+  JsonFileSettingsRepository(this._file);
 
-  final SharedPreferencesAsync _prefs;
-
-  static const _kTheme = 'settings.theme';
-  static const _kFontSize = 'settings.fontSize';
-  static const _kAccent = 'settings.accentIndex';
-  static const _kContext = 'settings.contextLength';
-  static const _kGpuLayers = 'settings.gpuLayers';
-  static const _kCpuThreads = 'settings.cpuThreads';
-  static const _kTelemetry = 'settings.telemetry';
-  static const _kUsageAnalytics = 'settings.usageAnalytics';
+  final File _file;
 
   @override
   Future<SettingsState> load() async {
-    const d = SettingsState();
-    final themeIndex = await _prefs.getInt(_kTheme);
-    return SettingsState(
-      theme: themeIndex == null
-          ? d.theme
-          : AppThemeMode.values[themeIndex.clamp(0, AppThemeMode.values.length - 1)],
-      fontSize: await _prefs.getDouble(_kFontSize) ?? d.fontSize,
-      accentIndex: await _prefs.getInt(_kAccent) ?? d.accentIndex,
-      contextLength: await _prefs.getInt(_kContext) ?? d.contextLength,
-      gpuLayers: await _prefs.getInt(_kGpuLayers) ?? d.gpuLayers,
-      cpuThreads: await _prefs.getInt(_kCpuThreads) ?? d.cpuThreads,
-      telemetry: await _prefs.getBool(_kTelemetry) ?? d.telemetry,
-      usageAnalytics: await _prefs.getBool(_kUsageAnalytics) ?? d.usageAnalytics,
-    );
+    if (!await _file.exists()) return const SettingsState();
+    try {
+      final map = jsonDecode(await _file.readAsString()) as Map<String, Object?>;
+      return _fromJson(map);
+    } catch (_) {
+      return const SettingsState();
+    }
   }
 
   @override
   Future<void> save(SettingsState s) async {
-    await _prefs.setInt(_kTheme, s.theme.index);
-    await _prefs.setDouble(_kFontSize, s.fontSize);
-    await _prefs.setInt(_kAccent, s.accentIndex);
-    await _prefs.setInt(_kContext, s.contextLength);
-    await _prefs.setInt(_kGpuLayers, s.gpuLayers);
-    await _prefs.setInt(_kCpuThreads, s.cpuThreads);
-    await _prefs.setBool(_kTelemetry, s.telemetry);
-    await _prefs.setBool(_kUsageAnalytics, s.usageAnalytics);
+    await _file.parent.create(recursive: true);
+    await _file.writeAsString(
+        const JsonEncoder.withIndent('  ').convert(_toJson(s)));
+  }
+
+  static Map<String, Object?> _toJson(SettingsState s) => {
+        'theme': s.theme.name,
+        'fontSize': s.fontSize,
+        'accentIndex': s.accentIndex,
+        'colorTheme': s.colorTheme,
+        'fontFamily': s.fontFamily,
+        'chatModel': s.chatModel,
+        'embedModel': s.embedModel,
+        'accelerator': s.accelerator,
+        'contextLength': s.contextLength,
+        'gpuLayers': s.gpuLayers,
+        'cpuThreads': s.cpuThreads,
+        'telemetry': s.telemetry,
+        'usageAnalytics': s.usageAnalytics,
+        'language': s.language,
+        'startupView': s.startupView,
+        'defaultModel': s.defaultModel,
+        'launchAtLogin': s.launchAtLogin,
+        'database': s.database,
+        'databaseUrl': s.databaseUrl,
+        'dataLocation': s.dataLocation,
+        'serverPort': s.serverPort,
+      };
+
+  static SettingsState _fromJson(Map<String, Object?> m) {
+    const d = SettingsState();
+    return SettingsState(
+      theme: _theme(m['theme'], d.theme),
+      fontSize: (m['fontSize'] as num?)?.toDouble() ?? d.fontSize,
+      accentIndex: m['accentIndex'] as int? ?? d.accentIndex,
+      colorTheme: m['colorTheme'] as String? ?? d.colorTheme,
+      fontFamily: m['fontFamily'] as String? ?? d.fontFamily,
+      chatModel: m['chatModel'] as String? ?? d.chatModel,
+      embedModel: m['embedModel'] as String? ?? d.embedModel,
+      accelerator: m['accelerator'] as String? ?? d.accelerator,
+      contextLength: m['contextLength'] as int? ?? d.contextLength,
+      gpuLayers: m['gpuLayers'] as int? ?? d.gpuLayers,
+      cpuThreads: m['cpuThreads'] as int? ?? d.cpuThreads,
+      telemetry: m['telemetry'] as bool? ?? d.telemetry,
+      usageAnalytics: m['usageAnalytics'] as bool? ?? d.usageAnalytics,
+      language: m['language'] as String? ?? d.language,
+      startupView: m['startupView'] as String? ?? d.startupView,
+      defaultModel: m['defaultModel'] as String? ?? d.defaultModel,
+      launchAtLogin: m['launchAtLogin'] as bool? ?? d.launchAtLogin,
+      database: m['database'] as String? ?? d.database,
+      databaseUrl: m['databaseUrl'] as String? ?? d.databaseUrl,
+      dataLocation: m['dataLocation'] as String? ?? d.dataLocation,
+      serverPort: m['serverPort'] as int? ?? d.serverPort,
+    );
+  }
+
+  static AppThemeMode _theme(Object? value, AppThemeMode fallback) {
+    if (value == 'cream') return AppThemeMode.light;
+    for (final mode in AppThemeMode.values) {
+      if (mode.name == value) return mode;
+    }
+    return fallback;
   }
 }
 
-/// In-memory backing used by widgets/tests so they never touch real storage.
+/// In-memory backing used by widgets/tests so they never touch the filesystem.
 class InMemorySettingsRepository implements SettingsRepository {
   InMemorySettingsRepository([this._state = const SettingsState()]);
 
