@@ -140,4 +140,12 @@ without a monolithic shell.
 [Docling](https://github.com/docling-project/docling) ·
 [whisper.cpp](https://github.com/ggerganov/whisper.cpp)
 
-<div align="center"><sub>Built with 🔥 by the osllmai community — <a href="https://github.com/osllmai/phoenix">star us on GitHub</a>.</sub></div>
+## License
+
+Phoenix is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+
+Copyright © 2023–2026 **NEMATI AI LLC** — a Wisconsin limited liability company
+(Entity ID D075329), 7343 N Teutonia Ave, Apt 7, Milwaukee, WI 53209-2051, USA.
+See [`NOTICE`](NOTICE) for details.
+
+<div align="center"><sub>Built with 🔥 by NEMATI AI LLC and the osllmai community — <a href="https://github.com/osllmai/phoenix">star us on GitHub</a>.</sub></div>
