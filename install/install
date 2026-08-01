@@ -113,7 +113,13 @@ install_artifact() {
 
   rm -rf "${dest}"
   mkdir -p "${TMP_DIR}/extract"
-  tar -xzf "${TMP_DIR}/${artifact}" -C "${TMP_DIR}/extract"
+  # Refuse absolute paths or `..` traversal before extracting (tar-slip guard;
+  # parity with install.py's filter="data").
+  if tar -tzf "${TMP_DIR}/${artifact}" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then
+    print_err "unsafe paths in ${artifact} — refusing to extract"
+    return 1
+  fi
+  tar -xzf "${TMP_DIR}/${artifact}" -C "${TMP_DIR}/extract" --no-same-owner
   local inner
   inner="$(find "${TMP_DIR}/extract" -mindepth 1 -maxdepth 1 -type d | head -n1)"
   mkdir -p "${INSTALL_ROOT}"
