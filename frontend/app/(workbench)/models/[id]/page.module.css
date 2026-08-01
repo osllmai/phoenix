@@ -104,3 +104,14 @@
   padding: var(--sp-2) var(--sp-4); border-radius: var(--r-md); font-size: var(--fs-sm);
   transition: background var(--dur-fast) var(--ease-default); }
 .btnDanger:hover { background: var(--error-bg); }
+
+@media (max-width: 1023px) {
+  .scroll { padding: var(--sp-4); }
+  .benchGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 767px) {
+  .benchGrid { grid-template-columns: 1fr; }
+  .idRows { grid-template-columns: 1fr; gap: var(--sp-micro) 0; }
+  .idRows dt { margin-top: var(--sp-2); }
+  .specRow { flex-direction: column; gap: var(--sp-micro); }
+}

@@ -1,0 +1,33 @@
+.bar {
+  display: none;
+  height: 52px;
+  flex: none;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-3);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.logo { width: 24px; height: 24px; display: block; flex: none; }
+.title {
+  flex: 1; min-width: 0;
+  font-family: var(--font-display); font-size: var(--fs-md);
+  font-weight: var(--fw-semibold); letter-spacing: var(--ls-tight);
+  color: var(--text-primary);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.act {
+  border: 0; background: transparent; color: var(--text-secondary);
+  padding: var(--sp-1); border-radius: var(--r-sm); display: flex;
+}
+.ico {
+  width: 20px; height: 20px; stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+@media (max-width: 767px) {
+  .bar {
+    display: flex;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  }
+}

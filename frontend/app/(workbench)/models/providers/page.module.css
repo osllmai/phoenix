@@ -183,3 +183,17 @@
 .secureNote { display: flex; align-items: flex-start; gap: var(--sp-2); font-size: var(--fs-xs);
               color: var(--text-tertiary); background: var(--bg-tertiary); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); }
 .dialogFoot { display: flex; gap: var(--sp-2); justify-content: flex-end; flex-wrap: wrap; }
+
+@media (max-width: 1023px) {
+  .body { padding: var(--sp-4); }
+  .table { overflow-x: auto; }
+  .thead, .row { min-width: 760px; }
+}
+@media (max-width: 767px) {
+  .gwTop { flex-wrap: wrap; }
+  .keyRow { flex-wrap: wrap; }
+  .keyInputWrap { flex-basis: 100%; }
+  .paths { flex-direction: column; align-items: stretch; }
+  .pathCard { max-width: none; }
+  .dialog { width: 100%; }
+}

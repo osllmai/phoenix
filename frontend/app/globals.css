@@ -68,3 +68,10 @@ button {
   background: var(--panel-bg);
   box-shadow: var(--panel-shadow);
 }
+
+.deskNav { display: contents; }
+
+@media (max-width: 767px) {
+  .deskNav { display: none; }
+  .main { padding-top: 52px; padding-bottom: 62px; }
+}

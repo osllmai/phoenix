@@ -76,3 +76,14 @@
 
 /* loading skeleton */
 .skelField { display: grid; gap: var(--sp-2); margin-bottom: var(--sp-5); }
+
+@media (max-width: 1023px) {
+  .scroll { padding: var(--sp-4); }
+}
+@media (max-width: 767px) {
+  .pathRow { flex-direction: column; }
+  .browseBtn { width: 100%; }
+  .formActions { flex-direction: column; align-items: stretch; }
+  .cancel, .ctaPrimary { justify-content: center; }
+  .ctaRow { flex-direction: column; align-items: stretch; }
+}

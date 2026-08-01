@@ -68,11 +68,12 @@ export default function LandingPage() {
             <Image src="/phoenix-ember.svg" alt="" width={20} height={20} />
             Phoenix
           </span>
-          <span>© 2026 · Local-first AI</span>
+          <span>© 2026 NEMATI AI LLC · Local-first AI</span>
           <span className={s.footLinks}>
             <a href="#">GitHub</a>
             <a href="#">Docs</a>
             <a href="#">Privacy</a>
+            <a href="/legal">Legal</a>
             <a href="/welcome">Download</a>
           </span>
         </div>

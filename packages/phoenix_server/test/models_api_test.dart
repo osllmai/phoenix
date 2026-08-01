@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:phoenix_core/phoenix_core.dart';
 import 'package:phoenix_server/phoenix_server.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
@@ -20,12 +21,21 @@ class _FakeEngine implements InferencePort {
 }
 
 void main() {
+  sqfliteFfiInit();
+
+  late PhoenixCore core;
   late Handler handler;
 
-  setUp(() {
-    final manager = ModelManager(engine: _FakeEngine(), repository: InMemoryModelRepository());
-    handler = buildModelsHandler(manager);
+  setUp(() async {
+    core = await PhoenixCore.open(
+      dbPath: inMemoryDatabasePath,
+      databaseFactory: databaseFactoryFfi,
+      engine: _FakeEngine(),
+    );
+    handler = buildGatewayHandler(core);
   });
+
+  tearDown(() => core.dispose());
 
   Future<Response> call(String method, String path, [Object? body]) async => handler(
     Request(
@@ -82,5 +92,20 @@ void main() {
 
   test('unknown id → 404', () async {
     expect((await call('POST', '/v1/models/999/select')).statusCode, 404);
+  });
+
+  Future<Response> callWithOrigin(String origin) async => handler(
+    Request('GET', Uri.parse('http://localhost/v1/models'), headers: {'origin': origin}),
+  );
+
+  test('cross-site Origin is rejected with 403', () async {
+    final res = await callWithOrigin('https://evil.example');
+    expect(res.statusCode, 403);
+  });
+
+  test('loopback Origin is allowed and reflected', () async {
+    final res = await callWithOrigin('http://127.0.0.1:24678');
+    expect(res.statusCode, 200);
+    expect(res.headers['access-control-allow-origin'], 'http://127.0.0.1:24678');
   });
 }

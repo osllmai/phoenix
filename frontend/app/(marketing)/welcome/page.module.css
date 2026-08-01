@@ -166,3 +166,31 @@
   outline: none;
   box-shadow: var(--shadow-focus);
 }
+
+/* ---- responsive ---- */
+@media (max-width: 1023px) {
+  .stage {
+    place-items: start center;
+    padding: var(--sp-5);
+  }
+}
+@media (max-width: 767px) {
+  .stage {
+    padding: var(--sp-4);
+  }
+  .steps {
+    padding: var(--sp-5) var(--sp-5) 0;
+  }
+  .stepLabel,
+  .body {
+    padding-left: var(--sp-5);
+    padding-right: var(--sp-5);
+  }
+  .footer {
+    padding: var(--sp-4) var(--sp-5) var(--sp-6);
+    flex-wrap: wrap;
+  }
+  .hero h1 {
+    font-size: var(--fs-xl);
+  }
+}

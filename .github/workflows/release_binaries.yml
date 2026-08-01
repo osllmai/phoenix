@@ -1,0 +1,121 @@
+# Build CLI + desktop release artifacts and attach them to the GitHub Release.
+# Triggers when a v* tag is pushed (including tag_and_release.yml on production deploy).
+name: Release Binaries
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag to upload to (e.g. v0.1.0)"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: "Release tag to upload to (e.g. v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }} (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux-x64
+            target: cli
+            engine: true
+          - runner: ubuntu-24.04
+            platform: linux-x64
+            target: desktop
+            engine: true
+          - runner: macos-14
+            platform: darwin-arm64
+            target: cli
+            engine: false
+          - runner: macos-14
+            platform: darwin-arm64
+            target: desktop
+            engine: false
+          - runner: windows-latest
+            platform: windows-x64
+            target: desktop
+            engine: false
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Install Linux build deps (engine)
+        if: matrix.engine
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang pkg-config
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Enable Flutter desktop
+        if: matrix.target == 'desktop'
+        run: |
+          flutter config --enable-linux-desktop
+          flutter config --enable-macos-desktop
+          flutter config --enable-windows-desktop
+
+      - name: Build artifact
+        shell: bash
+        run: |
+          # inputs.version is set for workflow_dispatch and workflow_call;
+          # empty on a plain tag push, where the tag is github.ref_name.
+          VERSION="${{ inputs.version }}"
+          [ -z "$VERSION" ] && VERSION="${{ github.ref_name }}"
+          python3 install/build_release.py \
+            --target "${{ matrix.target }}" \
+            --platform "${{ matrix.platform }}" \
+            --version "${VERSION#v}" \
+            --output-dir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phoenix-${{ matrix.target }}-${{ matrix.platform }}
+          path: dist/*
+          if-no-files-found: error
+
+  publish:
+    name: Upload to GitHub Release
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Merge SHA256SUMS
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          find artifacts -type f ! -name SHA256SUMS -exec cp {} release/ \;
+          find artifacts -name SHA256SUMS -exec cat {} + | sort -u > release/SHA256SUMS
+          ls -la release/
+
+      - name: Attach assets to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${{ inputs.version }}"
+          [ -z "$TAG" ] && TAG="${{ github.ref_name }}"
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          fi
+          gh release upload "$TAG" release/* --clobber

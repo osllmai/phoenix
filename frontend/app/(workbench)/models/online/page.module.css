@@ -169,3 +169,18 @@
 .note { font-size: var(--fs-xs); color: var(--text-tertiary); line-height: var(--lh-normal); }
 .note strong { color: var(--text-secondary); }
 .keyformCta { align-self: flex-start; }
+
+@media (max-width: 1023px) {
+  .provlist { width: 180px; }
+  .panel { padding: var(--sp-4); }
+  .search { width: 200px; }
+}
+@media (max-width: 767px) {
+  .content { flex-direction: column; }
+  .provlist { width: 100%; flex: none; border-right: 0;
+    border-bottom: 1px solid var(--border-subtle); max-height: 180px; }
+  .search { width: 100%; }
+  .mcardMeta { grid-template-columns: 1fr; }
+  .mcardFoot { flex-wrap: wrap; }
+  .selBar { flex-wrap: wrap; }
+}

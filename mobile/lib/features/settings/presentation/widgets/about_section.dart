@@ -41,6 +41,28 @@ class AboutSection extends ConsumerWidget {
               ),
           ],
         ),
+        const SizedBox(height: 16),
+        SettingGroup(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('NEMATI AI LLC', style: Theme.of(context).textTheme.bodyMedium),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Domestic LLC · Wisconsin, USA · Entity ID D075329\n'
+                    '7343 N Teutonia Ave, Apt 7, Milwaukee, WI 53209-2051\n'
+                    '© 2023–2026 NEMATI AI LLC · AGPL-3.0',
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: scheme.onSurfaceVariant, height: 1.5),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         Wrap(
           spacing: 12,
           runSpacing: 12,
