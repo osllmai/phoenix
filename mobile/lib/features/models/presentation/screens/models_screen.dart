@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/radiant.dart';
 import '../providers/model_providers.dart';
 import '../widgets/active_model_banner.dart';
 import '../widgets/model_loading_skeleton.dart';
@@ -21,7 +22,9 @@ class ModelsScreen extends ConsumerWidget {
     final active = ref.watch(activeModelProvider);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Local models'),
         actions: [
           IconButton(
@@ -36,59 +39,62 @@ class ModelsScreen extends ConsumerWidget {
         icon: const Icon(Icons.add),
         label: const Text('Add .gguf'),
       ),
-      body: DropImport(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: models.when(
-            loading: () => const ModelLoadingSkeleton(key: ValueKey('loading')),
-            error: (e, _) => _ErrorState(
-              key: const ValueKey('error'),
-              message: '$e',
-              onRetry: () => ref.invalidate(modelsControllerProvider),
-            ),
-            data: (list) {
-              if (list.isEmpty) {
-                return ModelsEmptyState(
-                  key: const ValueKey('empty'),
-                  icon: Icons.dns_outlined,
-                  title: 'No models yet',
-                  message:
-                      'Add a .gguf file you already have on disk to start '
-                      'running models entirely on-device — no cloud, no API keys.',
-                  ctaLabel: 'Add .gguf file',
-                  onCta: () => context.go('/models/add'),
+      body: RadiantBackdrop(
+        child: DropImport(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: models.when(
+              loading: () =>
+                  const ModelLoadingSkeleton(key: ValueKey('loading')),
+              error: (e, _) => _ErrorState(
+                key: const ValueKey('error'),
+                message: '$e',
+                onRetry: () => ref.invalidate(modelsControllerProvider),
+              ),
+              data: (list) {
+                if (list.isEmpty) {
+                  return ModelsEmptyState(
+                    key: const ValueKey('empty'),
+                    icon: Icons.dns_outlined,
+                    title: 'No models yet',
+                    message:
+                        'Add a .gguf file you already have on disk to start '
+                        'running models entirely on-device — no cloud, no API keys.',
+                    ctaLabel: 'Add .gguf file',
+                    onCta: () => context.go('/models/add'),
+                  );
+                }
+                final filtered = applyModelFilters(
+                  list,
+                  query: ref.watch(modelQueryProvider),
+                  favOnly: ref.watch(modelFavOnlyProvider),
+                  sort: ref.watch(modelSortPrefProvider),
                 );
-              }
-              final filtered = applyModelFilters(
-                list,
-                query: ref.watch(modelQueryProvider),
-                favOnly: ref.watch(modelFavOnlyProvider),
-                sort: ref.watch(modelSortPrefProvider),
-              );
-              return Column(
-                key: const ValueKey('data'),
-                children: [
-                  const ModelsToolbar(),
-                  if (active != null) ActiveModelBanner(model: active),
-                  Expanded(
-                    child: filtered.isEmpty
-                        ? const Center(
-                            child: Text('No models match your filters.'),
-                          )
-                        : ListView(
-                            children: [
-                              for (final m in filtered)
-                                ModelTile(
-                                  model: m,
-                                  onOpen: () =>
-                                      context.go('/models/detail', extra: m),
-                                ),
-                            ],
-                          ),
-                  ),
-                ],
-              );
-            },
+                return Column(
+                  key: const ValueKey('data'),
+                  children: [
+                    const ModelsToolbar(),
+                    if (active != null) ActiveModelBanner(model: active),
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? const Center(
+                              child: Text('No models match your filters.'),
+                            )
+                          : ListView(
+                              children: [
+                                for (final m in filtered)
+                                  ModelTile(
+                                    model: m,
+                                    onOpen: () =>
+                                        context.go('/models/detail', extra: m),
+                                  ),
+                              ],
+                            ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

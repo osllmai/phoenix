@@ -5,6 +5,8 @@ import '../providers/settings_controller.dart';
 import '../providers/settings_state.dart';
 import 'setting_controls.dart';
 import 'setting_field.dart';
+import 'setting_text_field.dart';
+import 'settings_actions.dart';
 
 class PrivacySection extends ConsumerWidget {
   const PrivacySection({super.key});
@@ -59,6 +61,27 @@ class PrivacySection extends ConsumerWidget {
               control: SettingToggle(
                 value: s.usageAnalytics,
                 onChanged: ctrl.setUsageAnalytics,
+              ),
+            ),
+            SettingField(
+              name: 'Data location',
+              description: 'Where conversations and metadata live',
+              control: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: SettingTextField(
+                      value: s.dataLocation,
+                      onChanged: ctrl.setDataLocation,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: () =>
+                        copyValue(context, s.dataLocation, 'Path copied'),
+                    child: const Text('Reveal…'),
+                  ),
+                ],
               ),
             ),
           ],

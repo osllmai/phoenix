@@ -49,7 +49,6 @@ void main() {
       await _pumpAt(tester, size);
       expect(find.byType(DocumentLibrary), findsOneWidget);
       expect(find.byType(DocumentInspector), findsOneWidget);
-      expect(find.byType(VerticalDivider), findsOneWidget);
     });
   }
 

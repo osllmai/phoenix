@@ -9,6 +9,10 @@ export 'src/phoenix_core_base.dart';
 
 // Engine
 export 'src/engine/inference_port.dart';
+export 'src/engine/device_capabilities.dart';
+export 'src/engine/device_capabilities_repository.dart';
+export 'src/engine/sqflite_device_capabilities_repository.dart';
+export 'src/engine/capability_detector.dart';
 export 'src/engine/protocol.dart';
 export 'src/engine/subprocess_engine.dart';
 export 'src/engine/engine_exceptions.dart';
@@ -16,6 +20,7 @@ export 'src/engine/wire_guard.dart';
 
 // Storage
 export 'src/storage/database.dart';
+export 'src/storage/storage_service.dart';
 
 // Chat
 export 'src/chat/message.dart';

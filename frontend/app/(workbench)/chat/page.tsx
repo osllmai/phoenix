@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PageHeader } from '@/app/components/ui';
 
@@ -9,8 +9,29 @@ import ConvosSidebar from './_components/ConvosSidebar';
 import { CHAT_STATES, type ChatState } from './_components/data';
 import s from './page.module.css';
 
+const COLLAPSE_KEY = 'phoenix.chat.convosCollapsed';
+const TABLET_MAX = 1024;
+
+function readCollapsed(): boolean {
+  if (typeof window === 'undefined') return false;
+  const stored = window.localStorage.getItem(COLLAPSE_KEY);
+  if (stored !== null) return stored === 'true';
+  return window.innerWidth <= TABLET_MAX;
+}
+
 export default function ChatPage() {
   const [state, setState] = useState<ChatState>('success');
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => setCollapsed(readCollapsed()), []);
+
+  const toggle = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      window.localStorage.setItem(COLLAPSE_KEY, String(next));
+      return next;
+    });
+  };
 
   const switcher = (
     <div className={s.switcher}>
@@ -30,7 +51,7 @@ export default function ChatPage() {
     <>
       <PageHeader title="Chat" actions={switcher} />
       <div className={s.shell}>
-        <ConvosSidebar />
+        <ConvosSidebar collapsed={collapsed} onToggle={toggle} />
         <ChatColumn state={state} />
       </div>
     </>

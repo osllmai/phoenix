@@ -16,13 +16,13 @@ ProviderContainer _containerWith(SettingsRepository repo) {
 void main() {
   test('loads persisted preferences on build', () async {
     final repo = InMemorySettingsRepository(
-      const SettingsState(theme: AppThemeMode.cream, cpuThreads: 4),
+      const SettingsState(theme: AppThemeMode.light, cpuThreads: 4),
     );
     final container = _containerWith(repo);
 
     final loaded = await container.read(settingsControllerProvider.future);
 
-    expect(loaded.theme, AppThemeMode.cream);
+    expect(loaded.theme, AppThemeMode.light);
     expect(loaded.cpuThreads, 4);
   });
 
@@ -35,16 +35,41 @@ void main() {
     await ctrl.setTheme(AppThemeMode.system);
     await ctrl.setTelemetry(true);
     await ctrl.setContextLength(16384);
+    await ctrl.setColorTheme('indox');
 
     final state = container.read(settingsControllerProvider).requireValue;
     expect(state.theme, AppThemeMode.system);
     expect(state.telemetry, isTrue);
     expect(state.contextLength, 16384);
+    expect(state.colorTheme, 'indox');
 
     final persisted = await repo.load();
     expect(persisted.theme, AppThemeMode.system);
     expect(persisted.telemetry, isTrue);
     expect(persisted.contextLength, 16384);
+    expect(persisted.colorTheme, 'indox');
+  });
+
+  test('general/storage/backend setters persist round-trip', () async {
+    final repo = InMemorySettingsRepository();
+    final container = _containerWith(repo);
+    await container.read(settingsControllerProvider.future);
+    final ctrl = container.read(settingsControllerProvider.notifier);
+
+    await ctrl.setLanguage('Français');
+    await ctrl.setStartupView('Last conversation');
+    await ctrl.setDefaultModel('Mistral-7B-Instruct · Q5_K_M');
+    await ctrl.setLaunchAtLogin(true);
+    await ctrl.setDatabase('Postgres');
+    await ctrl.setServerPort(16500);
+
+    final persisted = await repo.load();
+    expect(persisted.language, 'Français');
+    expect(persisted.startupView, 'Last conversation');
+    expect(persisted.defaultModel, 'Mistral-7B-Instruct · Q5_K_M');
+    expect(persisted.launchAtLogin, isTrue);
+    expect(persisted.database, 'Postgres');
+    expect(persisted.serverPort, 16500);
   });
 
   test('persisted values survive a fresh controller (restart)', () async {
@@ -69,6 +94,6 @@ void main() {
       container.read(settingsControllerProvider).requireValue.activeSection,
       'engine',
     );
-    expect((await repo.load()).activeSection, 'appearance');
+    expect((await repo.load()).activeSection, 'general');
   });
 }

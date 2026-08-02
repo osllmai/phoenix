@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phoenix_core/phoenix_core.dart';
 
+import '../../../../app/radiant.dart';
 import '../providers/model_providers.dart';
 import '../widgets/model_detail_body.dart';
 
@@ -24,6 +27,11 @@ class _ModelDetailScreenState extends ConsumerState<ModelDetailScreen> {
   Future<void> _load() async {
     setState(() => _error = null);
     final messenger = ScaffoldMessenger.of(context);
+    final key = _model.key;
+    if (key != null && !key.toLowerCase().endsWith('.gguf')) {
+      setState(() => _error = 'Not a .gguf file: $key');
+      return;
+    }
     try {
       await ref.read(modelsControllerProvider.notifier).select(_model);
       messenger.showSnackBar(SnackBar(content: Text('Loaded ${_model.name}')));
@@ -34,6 +42,8 @@ class _ModelDetailScreenState extends ConsumerState<ModelDetailScreen> {
         () =>
             _error = 'Another model is still loading — try again in a moment.',
       );
+    } on ProcessException catch (e) {
+      setState(() => _error = 'Engine binary not found: ${e.executable}');
     } on EngineException catch (e) {
       setState(
         () => _error =
@@ -77,32 +87,36 @@ class _ModelDetailScreenState extends ConsumerState<ModelDetailScreen> {
     final isActive = ref.watch(activeModelProvider)?.id == _model.id;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: Text(_model.name),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/models'),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          ModelIdentityCard(model: _model),
-          const SizedBox(height: 20),
-          ModelLifecycle(
-            model: _model,
-            isLoading: isLoading,
-            isActive: isActive,
-            error: _error,
-            onLoad: _load,
-          ),
-          const SizedBox(height: 32),
-          OutlinedButton.icon(
-            onPressed: _remove,
-            icon: const Icon(Icons.delete_outline),
-            label: const Text('Remove from catalog'),
-          ),
-        ],
+      body: RadiantBackdrop(
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            ModelIdentityCard(model: _model),
+            const SizedBox(height: 20),
+            ModelLifecycle(
+              model: _model,
+              isLoading: isLoading,
+              isActive: isActive,
+              error: _error,
+              onLoad: _load,
+            ),
+            const SizedBox(height: 32),
+            OutlinedButton.icon(
+              onPressed: _remove,
+              icon: const Icon(Icons.delete_outline),
+              label: const Text('Remove from catalog'),
+            ),
+          ],
+        ),
       ),
     );
   }

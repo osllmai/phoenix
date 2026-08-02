@@ -21,6 +21,12 @@ class SettingsSection {
 @riverpod
 List<SettingsSection> settingsSections(Ref ref) => const [
       SettingsSection(
+        id: 'general',
+        label: 'General',
+        icon: Icons.tune_outlined,
+        subtitle: 'Language, startup and default model.',
+      ),
+      SettingsSection(
         id: 'appearance',
         label: 'Appearance',
         icon: Icons.palette_outlined,
@@ -37,6 +43,18 @@ List<SettingsSection> settingsSections(Ref ref) => const [
         label: 'Privacy & Data',
         icon: Icons.lock_outline,
         subtitle: 'Nothing leaves your device by default.',
+      ),
+      SettingsSection(
+        id: 'storage',
+        label: 'Storage',
+        icon: Icons.storage_outlined,
+        subtitle: 'Disk usage and local data.',
+      ),
+      SettingsSection(
+        id: 'backend',
+        label: 'Backend',
+        icon: Icons.dns_outlined,
+        subtitle: 'Storage engine and local HTTP gateway.',
       ),
       SettingsSection(
         id: 'about',

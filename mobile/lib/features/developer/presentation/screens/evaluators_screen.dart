@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/radiant.dart';
 import '../data/evaluators_sample.dart';
 import '../widgets/scorecard_card.dart';
 
@@ -10,30 +11,38 @@ class EvaluatorsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     const data = evaluatorsSample;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _Header(),
-            const Divider(height: 1),
-            _ViewOnlyBar(statusLabel: data.statusLabel),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final scorecard in data.scorecards) ...[
-                      const SizedBox(height: 16),
-                      ScorecardCard(scorecard: scorecard),
-                    ],
-                    const SizedBox(height: 16),
-                    _DesktopNote(text: data.desktopNote),
-                  ],
-                ),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: RadiantPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _Header(),
+                  const Divider(height: 1),
+                  _ViewOnlyBar(statusLabel: data.statusLabel),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (final scorecard in data.scorecards) ...[
+                            const SizedBox(height: 16),
+                            ScorecardCard(scorecard: scorecard),
+                          ],
+                          const SizedBox(height: 16),
+                          _DesktopNote(text: data.desktopNote),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../../../core/responsive/breakpoints.dart';
 import '../providers/server_console_controller.dart';
 import '../providers/server_health_provider.dart';
@@ -31,32 +32,40 @@ class DeveloperScreen extends ConsumerWidget {
     final cols = ff.isDesktop ? 4 : 2;
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _Header(),
-            const Divider(height: 1),
-            const ServerToolbar(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (reachable)
-                      ServerStatusGrid(stats: stats, columns: cols)
-                    else
-                      const ServerDownPanel(),
-                    const SizedBox(height: 16),
-                    EndpointsCard(endpoints: endpoints),
-                    const SizedBox(height: 16),
-                    const RequestLogPanel(),
-                  ],
-                ),
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(radiantGap),
+            child: RadiantPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _Header(),
+                  const Divider(height: 1),
+                  const ServerToolbar(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (reachable)
+                            ServerStatusGrid(stats: stats, columns: cols)
+                          else
+                            const ServerDownPanel(),
+                          const SizedBox(height: 16),
+                          EndpointsCard(endpoints: endpoints),
+                          const SizedBox(height: 16),
+                          const RequestLogPanel(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

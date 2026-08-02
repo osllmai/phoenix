@@ -59,6 +59,16 @@ class PhoenixDatabase {
   static const _v2AddStatus =
       "ALTER TABLE message ADD COLUMN status TEXT NOT NULL DEFAULT 'normal'";
 
+  static const _deviceCapabilitiesSql = '''
+    CREATE TABLE IF NOT EXISTS device_capabilities(
+      id INTEGER PRIMARY KEY,
+      platform TEXT NOT NULL,
+      cpu_cores INTEGER NOT NULL,
+      ram_bytes INTEGER NOT NULL,
+      accelerators TEXT NOT NULL DEFAULT '[]',
+      detected_at TEXT
+    )''';
+
   /// Opens the DB at [path] using [factory] and runs migrations.
   ///
   /// Desktop app and tests both pass the FFI factory (`databaseFactoryFfi`);
@@ -67,15 +77,17 @@ class PhoenixDatabase {
     final db = await factory.openDatabase(
       path,
       options: OpenDatabaseOptions(
-        version: 2,
+        version: 3,
         onConfigure: (d) => d.execute('PRAGMA foreign_keys = ON'),
         onCreate: (d, _) async {
           await d.execute(_conversationSql);
           await d.execute(_messageSql);
           await d.execute(_modelSql);
+          await d.execute(_deviceCapabilitiesSql);
         },
         onUpgrade: (d, from, to) async {
           if (from < 2) await d.execute(_v2AddStatus);
+          if (from < 3) await d.execute(_deviceCapabilitiesSql);
         },
       ),
     );

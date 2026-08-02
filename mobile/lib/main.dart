@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
@@ -11,7 +13,10 @@ import 'core/feature/feature_registry.dart';
 import 'core/onboarding/onboarding_providers.dart';
 import 'core/onboarding/onboarding_repository.dart';
 import 'features/chat/presentation/providers/chat_providers.dart';
+import 'features/models/data/device_capabilities.dart';
 import 'features/models/presentation/providers/model_providers.dart';
+import 'features/settings/presentation/data/settings_repository.dart';
+import 'features/settings/presentation/providers/settings_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +35,10 @@ Future<void> main() async {
         featureRegistryProvider.overrideWithValue(const FeatureRegistry(phoenixFeatures)),
         chatRepositoryProvider.overrideWithValue(SqfliteChatRepository(db)),
         modelRepositoryProvider.overrideWithValue(SqfliteModelRepository(db)),
+        deviceCapabilitiesRepositoryProvider
+            .overrideWithValue(SqfliteDeviceCapabilitiesRepository(db)),
+        settingsRepositoryProvider.overrideWithValue(
+            JsonFileSettingsRepository(File(p.join(dir.path, 'settings.json')))),
         onboardingRepositoryProvider.overrideWithValue(onboarding),
         seenWelcomeProvider.overrideWithValue(seenWelcome),
       ],

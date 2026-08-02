@@ -7,5 +7,5 @@ services:
     image: nginx:1.27-alpine
     ports: ['${HTTP_PORT}:80']
     volumes: ['../production/nginx:/etc/nginx/conf.d:ro']
-    depends_on: [backend, frontend]
+    depends_on: [django, frontend]
     restart: unless-stopped

@@ -7,6 +7,7 @@ import '../features/extensions/extensions_module.dart';
 import '../features/forecasting/forecasting_module.dart';
 import '../features/home/home_module.dart';
 import '../features/models/models_module.dart';
+import '../features/more/more_module.dart';
 import '../features/settings/settings_module.dart';
 import '../features/speech/speech_module.dart';
 import '../features/welcome/welcome_module.dart';
@@ -27,5 +28,6 @@ const List<FeatureModule> phoenixFeatures = [
   ExtensionsModule(),
   DeveloperModule(),
   SettingsModule(),
+  MoreModule(),
   WelcomeModule(),
 ];

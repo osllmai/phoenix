@@ -14,7 +14,11 @@ import {
 } from '../sample';
 import type { SettingsForm } from './useSettingsForm';
 import { Block, Field, Range, RadioPills, Select, Toggle } from './fields';
+import { FontPicker } from './FontPicker';
+import { FontNotice } from './FontNotice';
+import { ThemeGallery } from './ThemeGallery';
 import s from '../page.module.css';
+import fp from './fontPicker.module.css';
 
 export function Appearance({ f }: { f: SettingsForm }) {
   return (
@@ -22,8 +26,14 @@ export function Appearance({ f }: { f: SettingsForm }) {
       <h2 className={s.sectionTitle} id="appearance">Appearance</h2>
       <p className={s.sub}>Theme, type scale, and accent.</p>
       <Block>
-        <Field name="Theme" desc="Warm-charcoal dark, cream light, or follow OS">
-          <RadioPills name="theme" value={f.theme} onChange={f.setTheme} options={['Dark', 'Cream', 'System']} />
+        <Field name="Theme" desc="Warm-charcoal dark, light, or follow OS">
+          <RadioPills name="theme" value={f.theme} onChange={f.setTheme} options={['Dark', 'Light', 'System']} />
+        </Field>
+        <Field name="Font" desc="Typeface for UI and prose">
+          <div className={fp.fontField}>
+            <FontPicker value={f.fontFamily} onChange={f.setFontFamily} />
+            <FontNotice />
+          </div>
         </Field>
         <Field name="Font size" desc="Base UI and prose scale">
           <Range value={f.fontSize} onChange={f.setFontSize} min={12} max={20} unit="px" />
@@ -43,6 +53,9 @@ export function Appearance({ f }: { f: SettingsForm }) {
               </button>
             ))}
           </div>
+        </Field>
+        <Field name="Color theme" desc="Shared palette — re-themes the whole site">
+          <ThemeGallery value={f.colorTheme} onChange={f.setColorTheme} />
         </Field>
       </Block>
     </>

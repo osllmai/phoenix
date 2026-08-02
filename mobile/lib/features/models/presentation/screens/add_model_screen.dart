@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
 
+import '../../../../app/radiant.dart';
 import '../providers/model_pick_provider.dart';
 import '../providers/model_providers.dart';
 
@@ -67,65 +68,71 @@ class _AddModelScreenState extends ConsumerState<AddModelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add a local model')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.all(24),
-            children: [
-              Text(
-                'Register a .gguf file you already have on disk. Phoenix runs it '
-                'entirely on-device — nothing is uploaded.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _name,
-                decoration: InputDecoration(
-                  labelText: 'Display name',
-                  hintText: 'My Llama 3.1 8B',
-                  errorText: _nameError,
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Add a local model'),
+      ),
+      body: RadiantBackdrop(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(24),
+              children: [
+                Text(
+                  'Register a .gguf file you already have on disk. Phoenix runs it '
+                  'entirely on-device — nothing is uploaded.',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _path,
-                readOnly: true,
-                onTap: _browse,
-                decoration: InputDecoration(
-                  labelText: 'File path',
-                  hintText: '/home/you/models/model.gguf',
-                  errorText: _pathError,
-                  suffixIcon: TextButton(
-                    onPressed: _browse,
-                    child: const Text('Browse…'),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _name,
+                  decoration: InputDecoration(
+                    labelText: 'Display name',
+                    hintText: 'My Llama 3.1 8B',
+                    errorText: _nameError,
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: _saving ? null : () => context.go('/models'),
-                    child: const Text('Cancel'),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _path,
+                  readOnly: true,
+                  onTap: _browse,
+                  decoration: InputDecoration(
+                    labelText: 'File path',
+                    hintText: '/home/you/models/model.gguf',
+                    errorText: _pathError,
+                    suffixIcon: TextButton(
+                      onPressed: _browse,
+                      child: const Text('Browse…'),
+                    ),
                   ),
-                  const SizedBox(width: 12),
-                  FilledButton(
-                    onPressed: _saving ? null : _submit,
-                    child: _saving
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Add to catalog'),
-                  ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: _saving ? null : () => context.go('/models'),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 12),
+                    FilledButton(
+                      onPressed: _saving ? null : _submit,
+                      child: _saving
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Add to catalog'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

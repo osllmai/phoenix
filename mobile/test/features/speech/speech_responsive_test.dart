@@ -35,7 +35,6 @@ void main() {
     await _pumpAt(tester, const Size(800, 900));
     expect(find.byType(SpeechControls), findsOneWidget);
     expect(find.byType(TranscriptPane), findsOneWidget);
-    expect(find.byType(VerticalDivider), findsOneWidget);
     expect(find.byType(TranscriptionList), findsNothing);
   });
 
@@ -44,7 +43,6 @@ void main() {
     expect(find.byType(SpeechControls), findsOneWidget);
     expect(find.byType(TranscriptPane), findsOneWidget);
     expect(find.byType(TranscriptionList), findsOneWidget);
-    expect(find.byType(VerticalDivider), findsNWidgets(2));
   });
 
   testWidgets('tablet landscape 1280x800: empty state, no overflow',

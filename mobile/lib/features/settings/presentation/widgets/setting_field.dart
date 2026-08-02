@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/responsive/breakpoints.dart';
-
 /// A labelled setting row: name + description on one side, control on the other.
-/// Side-by-side when wide; stacked (label above control) on phone.
+/// Side-by-side when the panel is wide; stacked (label above control) when narrow
+/// — so the control gets full width instead of wrapping in a cramped column.
 class SettingField extends StatelessWidget {
   const SettingField({
     super.key,
@@ -32,22 +31,26 @@ class SettingField extends StatelessWidget {
       ],
     );
 
-    final stacked = !formFactorOf(context).hasSidePane;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      child: stacked
-          ? Column(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 480) {
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [label, const SizedBox(height: 10), control],
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: 240, child: label),
-                const SizedBox(width: 16),
-                Expanded(child: Align(alignment: Alignment.centerLeft, child: control)),
-              ],
-            ),
+            );
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(width: 220, child: label),
+              const SizedBox(width: 16),
+              Expanded(child: Align(alignment: Alignment.centerLeft, child: control)),
+            ],
+          );
+        },
+      ),
     );
   }
 }

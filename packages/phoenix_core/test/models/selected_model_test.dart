@@ -16,7 +16,7 @@ void main() {
   });
 
   test('selected model switches exhaustively over its variants', () {
-    SelectedModel sel = const CloudSelection(
+    final SelectedModel sel = const CloudSelection(
         CloudModel(id: 'x', name: 'X', provider: 'P'));
     final label = switch (sel) {
       LocalSelection() => 'local',

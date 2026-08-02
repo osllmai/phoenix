@@ -1,0 +1,18 @@
+{
+  "@@locale": "en",
+  "sectionGeneral": "General",
+  "@sectionGeneral": { "description": "Settings nav label for the General section" },
+  "sectionGeneralSubtitle": "Language, startup and default model.",
+  "sectionAppearance": "Appearance",
+  "sectionAppearanceSubtitle": "Theme, type scale and accent.",
+  "sectionEngine": "Engine & Params",
+  "sectionEngineSubtitle": "On-device inference via llama.cpp.",
+  "sectionPrivacy": "Privacy & Data",
+  "sectionPrivacySubtitle": "Nothing leaves your device by default.",
+  "sectionStorage": "Storage",
+  "sectionStorageSubtitle": "Disk usage and local data.",
+  "sectionBackend": "Backend",
+  "sectionBackendSubtitle": "Storage engine and local HTTP gateway.",
+  "sectionAbout": "About",
+  "sectionAboutSubtitle": "Build and runtime versions."
+}

@@ -1,0 +1,2 @@
+.floatPanel { border-radius: var(--panel-radius); border: var(--panel-border);
+              background: var(--panel-bg); box-shadow: var(--panel-shadow); }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:phoenix/l10n/app_localizations.dart';
 import 'package:phoenix/features/settings/presentation/data/settings_repository.dart';
 import 'package:phoenix/features/settings/presentation/providers/settings_providers.dart';
 import 'package:phoenix/features/settings/presentation/screens/settings_screen.dart';
@@ -19,7 +20,11 @@ Future<void> _pumpAt(WidgetTester tester, Size size) async {
         settingsRepositoryProvider
             .overrideWithValue(InMemorySettingsRepository()),
       ],
-      child: const MaterialApp(home: SettingsScreen()),
+      child: const MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: SettingsScreen(),
+      ),
     ),
   );
   await tester.pumpAndSettle();
@@ -39,7 +44,6 @@ void main() {
       await _pumpAt(tester, size);
       expect(find.byType(SectionNav), findsOneWidget);
       expect(find.byType(SectionDetail), findsOneWidget);
-      expect(find.byType(VerticalDivider), findsOneWidget);
       expect(find.byType(MobileSettingsList), findsNothing);
     });
   }

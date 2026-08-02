@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// Phoenix dark theme — mirrors `design/pattern/tokens` (ember on warm charcoal).
-/// This is the design-token source layer; replace with a generated
-/// `app_tokens.g.dart` when the token emitter lands.
+import '../features/settings/presentation/providers/settings_state.dart';
+import 'fonts.dart';
+import 'named_themes.dart';
+import 'theme_light.dart';
+
+const kAccentColors = [
+  Color(0xFFFF8A3D),
+  Color(0xFF7FB069),
+  Color(0xFF5AA9E6),
+  Color(0xFFB57EDC),
+  Color(0xFFE6B95A),
+];
+
 const _bg = Color(0xFF17120E);
 const _surface = Color(0xFF221A13);
 const _input = Color(0xFF2B2018);
@@ -17,16 +27,42 @@ const _error = Color(0xFFE5645A);
 const _errorBg = Color(0xFF2E1A17);
 const _errorInk = Color(0xFFF0938A);
 
-ThemeData buildPhoenixDarkTheme() {
+int _safeAccent(int i) => (i >= 0 && i < kAccentColors.length) ? i : 0;
+
+ThemeData buildPhoenixTheme({
+  required AppThemeMode mode,
+  required int accentIndex,
+  String colorTheme = 'phoenix',
+  String fontFamily = 'DMSans',
+}) {
+  final brightness =
+      mode == AppThemeMode.light ? Brightness.light : Brightness.dark;
+  final named = colorTheme == 'phoenix' ? null : namedThemeById(colorTheme);
+  if (named != null) {
+    return buildNamedTheme(named, brightness, fontFamily);
+  }
+  if (mode == AppThemeMode.light) {
+    return buildPhoenixLightTheme(
+      kAccentColors[_safeAccent(accentIndex)],
+      fontFamily,
+    );
+  }
+  return _buildDark(accentIndex, fontFamily);
+}
+
+ThemeData _buildDark(int accentIndex, String fontFamily) {
+  final seed = accentIndex == 0
+      ? _accent
+      : kAccentColors[_safeAccent(accentIndex)];
   final scheme =
       ColorScheme.fromSeed(
-        seedColor: _accent,
+        seedColor: seed,
         brightness: Brightness.dark,
       ).copyWith(
-        primary: _accent,
+        primary: seed,
         onPrimary: _ink,
-        primaryContainer: _accentSubtle,
-        onPrimaryContainer: _accentInk,
+        primaryContainer: accentIndex == 0 ? _accentSubtle : null,
+        onPrimaryContainer: accentIndex == 0 ? _accentInk : null,
         surface: _bg,
         onSurface: _textPrimary,
         surfaceContainerHighest: _input,
@@ -37,13 +73,13 @@ ThemeData buildPhoenixDarkTheme() {
         outline: _border,
       );
 
-  return ThemeData(
+  final data = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: scheme,
     scaffoldBackgroundColor: _bg,
     cardColor: _surface,
-    fontFamily: 'DMSans',
+    fontFamily: isBundledFont(fontFamily) ? fontFamily : null,
     appBarTheme: const AppBarTheme(
       backgroundColor: _bg,
       foregroundColor: _textPrimary,
@@ -55,4 +91,8 @@ ThemeData buildPhoenixDarkTheme() {
       border: OutlineInputBorder(),
     ),
   );
+  return data.copyWith(textTheme: applyFontFamily(data.textTheme, fontFamily));
 }
+
+ThemeData buildPhoenixDarkTheme() =>
+    buildPhoenixTheme(mode: AppThemeMode.dark, accentIndex: 0);

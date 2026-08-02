@@ -1,11 +1,37 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phoenix_core/phoenix_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../core/ai/engine_provider.dart';
 
 part 'device_capabilities.g.dart';
 
 const double _desktopSentinelGb = 64;
+
+/// Stores the detected capabilities on-device. Overridden in `main()` with the
+/// SQLite-backed repository; defaults to in-memory for widgets/tests.
+final deviceCapabilitiesRepositoryProvider =
+    Provider<DeviceCapabilitiesRepository>(
+        (ref) => InMemoryDeviceCapabilitiesRepository());
+
+/// Detected host capabilities: CPU cores + RAM + accelerators the engine reports
+/// (CPU-only when no GPU / no engine). Detected fresh each launch and persisted
+/// to the local DB. Settings gate to this so the user can't pick a backend the
+/// device lacks.
+@riverpod
+Future<DeviceCapabilities> deviceCapabilities(Ref ref) async {
+  final ramGb = await ref.watch(deviceRamGbProvider.future);
+  final engine = ref.watch(inferenceEngineProvider);
+  final caps = await const CapabilityDetector().detect(
+    engine: engine,
+    ramBytesOverride: (ramGb * 1024 * 1024 * 1024).round(),
+  );
+  await ref.read(deviceCapabilitiesRepositoryProvider).save(caps);
+  return caps;
+}
 
 @riverpod
 Future<double> deviceRamGb(Ref ref) async {

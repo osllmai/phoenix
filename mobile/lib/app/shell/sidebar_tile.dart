@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/feature/feature_module.dart';
+import '../radiant.dart';
 
 /// One navigation row in the sidebar. Highlights when its path is active;
 /// renders icon-only (with a tooltip) when the sidebar is collapsed.
@@ -21,14 +22,13 @@ class SidebarTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final fg = selected ? scheme.onPrimaryContainer : scheme.onSurfaceVariant;
+    final fg = selected ? radiantSelectedInk(scheme) : scheme.onSurfaceVariant;
     final tile = Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
       padding: EdgeInsets.symmetric(horizontal: collapsed ? 0 : 12, vertical: 9),
-      decoration: BoxDecoration(
-        color: selected ? scheme.primaryContainer : Colors.transparent,
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: selected
+          ? radiantEmberHighlight(scheme)
+          : BoxDecoration(borderRadius: BorderRadius.circular(8)),
       child: Row(
         mainAxisAlignment:
             collapsed ? MainAxisAlignment.center : MainAxisAlignment.start,

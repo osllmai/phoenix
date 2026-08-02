@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/settings_controller.dart';
 import '../providers/settings_sections.dart';
+import 'section_l10n.dart';
 
 /// The section list pane: pick a settings group. Drives the detail pane.
 class SectionNav extends ConsumerWidget {
@@ -65,12 +68,23 @@ class _NavTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return ListTile(
-      selected: selected,
-      selectedTileColor: scheme.primaryContainer,
-      leading: Icon(section.icon),
-      title: Text(section.label),
-      onTap: onTap,
+    final iconColor =
+        selected ? radiantSelectedInk(scheme) : scheme.onSurfaceVariant;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: selected ? radiantNeutralHighlight(scheme) : null,
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        leading: Icon(section.icon, color: iconColor),
+        title: Text(
+          sectionLabel(AppLocalizations.of(context), section.id),
+          style: TextStyle(
+            color: selected ? scheme.onSurface : null,
+            fontWeight: selected ? FontWeight.w600 : null,
+          ),
+        ),
+        onTap: onTap,
+      ),
     );
   }
 }

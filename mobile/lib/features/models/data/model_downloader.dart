@@ -18,6 +18,13 @@ class BgModelDownloader implements ModelDownloader {
 
   @override
   Stream<DownloadProgress> download(CatalogEntry entry) async* {
+    if (entry.url.isEmpty || entry.filename.isEmpty) {
+      yield const DownloadProgress(
+        phase: DownloadPhase.failed,
+        error: 'Pick a .gguf file for this model first.',
+      );
+      return;
+    }
     final controller = StreamController<DownloadProgress>();
     final task = DownloadTask(
       url: entry.url,

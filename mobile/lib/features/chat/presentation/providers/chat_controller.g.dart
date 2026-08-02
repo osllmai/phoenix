@@ -50,7 +50,7 @@ final class ChatControllerProvider
   }
 }
 
-String _$chatControllerHash() => r'571c0b9daca566767b8677ce6588201694969a23';
+String _$chatControllerHash() => r'395a173f06aef1e125afcac8f28fa65ce2dc501c';
 
 /// Drives a chat session: appends the user message, streams the model response
 /// into a live bubble, then commits it. Reference for the `@riverpod` Notifier

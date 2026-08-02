@@ -1,7 +1,8 @@
 /* Ported from design/pattern/generated/sidebar.mock.css. Tokens only. */
 .sb {
   width: var(--size-sidebar); flex: none; display: flex; flex-direction: column;
-  background: var(--bg-secondary); border-right: 1px solid var(--border-subtle);
+  border-radius: var(--panel-radius); border: var(--panel-border);
+  background: var(--panel-bg); box-shadow: var(--panel-shadow); overflow: hidden;
   transition: width var(--dur-fast) var(--ease-default);
 }
 .sb a { text-decoration: none; color: inherit; }
@@ -73,7 +74,8 @@
              stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .link:hover:not(.active) { background: var(--bg-tertiary); color: var(--text-primary); }
-.link.active { background: var(--accent-subtle); color: var(--accent-ink); font-weight: var(--fw-semibold); }
+.link.active { background: var(--nav-active); color: var(--accent-ink); font-weight: var(--fw-semibold);
+        box-shadow: var(--nav-active-ring); }
 .link.active::before { content: ""; position: absolute; left: calc(-1 * var(--sp-3)); top: 6px;
         bottom: 6px; width: 3px; border-radius: var(--r-pill); background: var(--accent-primary); }
 

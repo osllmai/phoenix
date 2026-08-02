@@ -27,7 +27,7 @@ const STATE_SECTION: Record<Exclude<SettingsState, 'success' | 'first-run'>, str
 
 export default function SettingsPage() {
   const [state, setState] = useState<SettingsState>('success');
-  const [section, setSection] = useState('appearance');
+  const [section, setSection] = useState('general');
 
   return (
     <>

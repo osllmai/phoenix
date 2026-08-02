@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/radiant.dart';
 import '../../data/providers_stub.dart';
 import '../widgets/providers/add_provider_dialog.dart';
 import '../widgets/providers/models_tab_bar.dart';
@@ -21,29 +22,36 @@ class ProvidersScreen extends ConsumerWidget {
 
     final body = switch (view) {
       ProvidersView.success || ProvidersView.add => const ProvidersSuccess(
-          gateway: gatewayConnected, providers: successProviders),
+        gateway: gatewayConnected,
+        providers: successProviders,
+      ),
       ProvidersView.empty => const ProvidersEmpty(),
       ProvidersView.firstRun => const ProvidersFirstRun(),
       ProvidersView.loading => const ProvidersLoading(),
       ProvidersView.error => const ProvidersSuccess(
-          gateway: gatewayError,
-          providers: errorProviders,
-          countLabel: '1 connected · 1 failed'),
+        gateway: gatewayError,
+        providers: errorProviders,
+        countLabel: '1 connected · 1 failed',
+      ),
       ProvidersView.denied => const ProvidersSuccess(
-          gateway: gatewayDenied,
-          providers: deniedProviders,
-          countLabel: '1 connected · 1 denied'),
+        gateway: gatewayDenied,
+        providers: deniedProviders,
+        countLabel: '1 connected · 1 denied',
+      ),
     };
 
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const ModelsTabBar(activePath: '/models/providers'),
-            _header(context, ref, theme),
-            Expanded(child: body),
-          ],
+      backgroundColor: Colors.transparent,
+      body: RadiantBackdrop(
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const ModelsTabBar(activePath: '/models/providers'),
+              _header(context, ref, theme),
+              Expanded(child: body),
+            ],
+          ),
         ),
       ),
     );
@@ -58,9 +66,12 @@ class ProvidersScreen extends ConsumerWidget {
         alignment: WrapAlignment.spaceBetween,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Text('Providers & API Keys',
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w600)),
+          Text(
+            'Providers & API Keys',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -81,14 +92,13 @@ class ProvidersScreen extends ConsumerWidget {
   }
 
   Widget _stateSwitcher(WidgetRef ref) => PopupMenuButton<ProvidersView>(
-        tooltip: 'Preview state',
-        icon: const Icon(Icons.layers_outlined),
-        onSelected: (v) =>
-            ref.read(providersViewProvider.notifier).state = v,
-        itemBuilder: (_) => [
-          for (final v in ProvidersView.values)
-            if (v != ProvidersView.add)
-              PopupMenuItem(value: v, child: Text(v.name)),
-        ],
-      );
+    tooltip: 'Preview state',
+    icon: const Icon(Icons.layers_outlined),
+    onSelected: (v) => ref.read(providersViewProvider.notifier).state = v,
+    itemBuilder: (_) => [
+      for (final v in ProvidersView.values)
+        if (v != ProvidersView.add)
+          PopupMenuItem(value: v, child: Text(v.name)),
+    ],
+  );
 }
