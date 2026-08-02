@@ -28,6 +28,7 @@ export 'src/chat/conversation.dart';
 export 'src/chat/chat_repository.dart';
 export 'src/chat/sqflite_chat_repository.dart';
 export 'src/chat/chat_service.dart';
+export 'src/chat/reasoning_split.dart';
 
 // Speech
 export 'src/speech/transcription_port.dart';
