@@ -8,7 +8,9 @@ from apps.documents.api import router as documents_router
 from apps.extensions.api import router as extensions_router
 from apps.fleet.api import router as fleet_router
 
-api = NinjaAPI(title='Phoenix API', version='1.0.0')
+from .scalar import docs_viewer
+
+api = NinjaAPI(title='Phoenix API', version='1.0.0', docs=docs_viewer)
 
 api.add_router('/accounts/', accounts_router)
 api.add_router('/ai-chat/', ai_chat_router)
