@@ -1,5 +1,5 @@
 """Production settings — DEBUG off, behind nginx/TLS. Inherits base."""
-from .base import *  # noqa: F401,F403
+from .base import *  # noqa: F403
 
 DEBUG = False
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])  # noqa: F405
