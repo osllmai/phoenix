@@ -38,14 +38,6 @@ class RunListOut(Schema):
     lane_count: int
     done_count: int
 
-    @staticmethod
-    def resolve_lane_count(obj) -> int:
-        return obj.lanes.count()
-
-    @staticmethod
-    def resolve_done_count(obj) -> int:
-        return obj.lanes.filter(state='done').count()
-
 
 class RunDetailOut(Schema):
     id: int
