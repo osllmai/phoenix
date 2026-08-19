@@ -57,7 +57,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# Test-only patterns: fixture credentials, a loopback bind constant, urlopen against a
+# fixture URL, a deliberate broad except while probing settings, en dashes in prose.
 "conftest.py" = ["S105", "S106"]
-"*/tests/*" = ["S105", "S106"]
-"tests/*" = ["S105", "S106"]
+"*/tests/*" = ["S104", "S105", "S106", "S112", "S310", "BLE001", "RUF002"]
+"tests/*" = ["S104", "S105", "S106", "S112", "S310", "BLE001", "RUF002"]
 "loadtest/*" = ["S110", "S311", "BLE001"]
