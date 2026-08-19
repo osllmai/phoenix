@@ -12,6 +12,9 @@ from .models import User
 
 
 class SessionTokenAuth(XSessionTokenAuth):
+    openapi_in = 'header'
+    openapi_name = 'X-Session-Token'
+
     def __call__(self, request) -> User | None:
         user = super().__call__(request)
         if user is not None:

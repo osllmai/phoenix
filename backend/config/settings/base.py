@@ -99,4 +99,4 @@ SESSION_COOKIE_AGE = env.int('SESSION_COOKIE_AGE_SECONDS', default=1800)
 SESSION_SAVE_EVERY_REQUEST = True
 
 # ── allauth (headless) auth core (verbose config in _auth.py) ─
-from config.settings._auth import *  # noqa: E402,F401,F403
+from config.settings._auth import *  # noqa: E402, F403

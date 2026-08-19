@@ -145,7 +145,7 @@ function renderState(
         heading="IndoxHub account required"
         message={
           <>
-            This evaluator's judge model is set to a cloud model (<code>gpt-4o</code> via IndoxHub).
+            This evaluator&rsquo;s judge model is set to a cloud model (<code>gpt-4o</code> via IndoxHub).
             Cloud judges leave the device and require an IndoxHub key or account. Add one in
             Settings, or switch the judge back to a local gateway model.
           </>

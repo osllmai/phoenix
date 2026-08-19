@@ -5,7 +5,7 @@ The execution runtime is out of scope here (see tasks.py); these endpoints are
 the persistence + control contract the web and Flutter Fleet screens consume.
 """
 from django.db import transaction
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.shortcuts import get_object_or_404
 from ninja import Router
 
@@ -25,7 +25,10 @@ def _detail_qs():
 
 @router.get('/runs/', response=list[RunListOut], auth=None)
 def list_runs(request, status: str | None = None):
-    qs = FleetRun.objects.all()
+    qs = FleetRun.objects.annotate(
+        lane_count=Count('lanes'),
+        done_count=Count('lanes', filter=Q(lanes__state='done')),
+    ).order_by('-created_at')
     if status:
         qs = qs.filter(status=status)
     return list(qs)
