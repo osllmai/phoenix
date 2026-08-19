@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Button, CenterState, EmptyState, ErrorState, Skeleton } from '@/app/components/ui';
 
-import { FIRST_RUN_ROSTER, SAMPLE_PROMPT } from './sampleData';
+import { FIRST_RUN_ROSTER } from './sampleData';
 import s from '../page.module.css';
 
 export function EmptyPane({ onRun }: { onRun: () => void }) {

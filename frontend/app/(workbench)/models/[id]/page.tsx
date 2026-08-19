@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { use, useState } from 'react';
 
 import {
@@ -32,9 +33,9 @@ export default function ModelDetailPage({ params }: { params: Promise<{ id: stri
   return (
     <>
       <PageHeader title={model?.name ?? 'Model'}>
-        <a className={s.backLink} href="/models">
+        <Link className={s.backLink} href="/models">
           ← Local models
-        </a>
+        </Link>
         <span className={s.headSep}>/</span>
       </PageHeader>
 

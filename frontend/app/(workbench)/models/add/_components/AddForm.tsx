@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/app/components/ui';
 
-import { SAMPLE_PATH, deriveName } from './sampleData';
+import { SAMPLE_PATH } from './sampleData';
 import s from '../page.module.css';
 
 export type FormErrors = { name?: string; path?: string };

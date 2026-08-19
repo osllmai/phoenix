@@ -71,7 +71,7 @@ export function DeniedView() {
       }
       sub={
         <pre className={s.httpBlock}>
-          <span className={s.headerLine}>$ curl -H "Authorization: Bearer phx_live_revoked" \</span>
+          <span className={s.headerLine}>{'$ curl -H "Authorization: Bearer phx_live_revoked" \\'}</span>
           {'\n'}
           <span className={s.headerLine}>{'    '}http://127.0.0.1:8645/v1/messages</span>
           {'\n\n'}
