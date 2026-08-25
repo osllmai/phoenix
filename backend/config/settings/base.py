@@ -108,4 +108,5 @@ SESSION_SAVE_EVERY_REQUEST = True
 TIME_ZONE = env('TIME_ZONE', default='UTC')
 DOCUMENTS_ROOT = Path(env('DOCUMENTS_ROOT', default=str(BASE_DIR / 'documents'))).resolve()
 
+# ── allauth (headless) auth core (verbose config in _auth.py) ─
 from config.settings._auth import *  # noqa: E402, F403

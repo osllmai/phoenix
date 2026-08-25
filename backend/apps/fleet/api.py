@@ -30,7 +30,7 @@ def list_runs(request, status: str | None = None):
     qs = FleetRun.objects.filter(owner=request.auth).annotate(
         lane_count=Count('lanes'),
         done_count=Count('lanes', filter=Q(lanes__state='done')),
-    )
+    ).order_by('-created_at')
     if status:
         qs = qs.filter(status=status)
     return list(qs)
