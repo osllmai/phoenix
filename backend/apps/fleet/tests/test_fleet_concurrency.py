@@ -20,12 +20,12 @@ ROUNDS = 5
 
 
 @pytest.fixture
-def client():
-    return TestClient(router)
+def client(auth_headers):
+    return TestClient(router, headers=auth_headers)
 
 
-def _make_run():
-    run = FleetRun.objects.create(prompt='race the merge')
+def _make_run(user):
+    run = FleetRun.objects.create(owner=user, prompt='race the merge')
     lanes = [
         FleetLane.objects.create(run=run, agent=f'agent-{i}', worktree_path=f'wt-{i}')
         for i in range(LANES)
@@ -55,10 +55,10 @@ def _race_merges(client, run, lanes, branch_of):
         return [f.result() for f in futures]
 
 
-def test_concurrent_merges_leave_exactly_one_winner(client):
+def test_concurrent_merges_leave_exactly_one_winner(client, user):
     winner_counts = []
     for _ in range(ROUNDS):
-        run, lanes = _make_run()
+        run, lanes = _make_run(user)
         statuses = _race_merges(client, run, lanes, lambda lane: 'production')
         assert set(statuses) == {200}
         winner_counts.append(FleetLane.objects.filter(run=run, is_winner=True).count())
@@ -69,8 +69,8 @@ def test_concurrent_merges_leave_exactly_one_winner(client):
     )
 
 
-def test_concurrent_merges_leave_run_state_consistent(client):
-    run, lanes = _make_run()
+def test_concurrent_merges_leave_run_state_consistent(client, user):
+    run, lanes = _make_run(user)
     statuses = _race_merges(client, run, lanes, lambda lane: f'branch-{lane.id}')
     assert set(statuses) == {200}
 

@@ -20,11 +20,23 @@ services:
       start_period: 20s
     restart: unless-stopped
 
-  celery:
-    container_name: phoenix-celery
+  worker-cpu:
+    container_name: phoenix-worker-cpu
     image: phoenix-backend
     build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
-    command: celery -A config worker -l info
+    command: celery -A config worker -l info -Q default
+    env_file: ../../.env
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck: { disable: true }
+    restart: unless-stopped
+
+  worker-lowprio:
+    container_name: phoenix-worker-lowprio
+    image: phoenix-backend
+    build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
+    command: celery -A config worker -l info -Q lowprio
     env_file: ../../.env
     depends_on:
       postgres: { condition: service_healthy }
@@ -60,6 +72,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 180s
     restart: unless-stopped
 
   redis:
@@ -74,6 +87,55 @@ services:
       retries: 5
     restart: unless-stopped
 
+  prometheus:
+    profiles: ['observability']
+    container_name: phoenix-prometheus
+    image: prom/prometheus:v3.1.0
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ../observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
+    ports: ['${PROMETHEUS_PORT}:9090']
+    restart: unless-stopped
+
+  victorialogs:
+    profiles: ['observability']
+    container_name: phoenix-victorialogs
+    image: victoriametrics/victoria-logs:v1.0.0-victorialogs
+    command: ['-storageDataPath=/vlogs']
+    volumes: ['vlogsdata:/vlogs']
+    ports: ['${VICTORIALOGS_PORT}:9428']
+    restart: unless-stopped
+
+  grafana:
+    profiles: ['observability']
+    container_name: phoenix-grafana
+    image: grafana/grafana:11.5.1
+    environment:
+      GF_INSTALL_PLUGINS: victoriametrics-logs-datasource
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - ../observability/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - grafanadata:/var/lib/grafana
+    ports: ['${GRAFANA_PORT}:3000']
+    depends_on: [prometheus, victorialogs]
+    restart: unless-stopped
+
+  celery-exporter:
+    profiles: ['observability']
+    container_name: phoenix-celery-exporter
+    image: danihodovic/celery-exporter:0.12.0
+    command: ['--broker-url=${CELERY_BROKER_URL}']
+    ports: ['${CELERY_EXPORTER_PORT}:9808']
+    depends_on:
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+
 volumes:
   pgdata:
   redisdata:
+  promdata:
+  vlogsdata:
+  grafanadata:

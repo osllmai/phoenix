@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../../app/status_colors.dart';
 
-const _info = Color(0xFF5B8BA5);
+const _info = StatusColors.info;
 
 /// The banner warning that Online models run in the cloud, not on-device.
 class CloudNotice extends StatelessWidget {

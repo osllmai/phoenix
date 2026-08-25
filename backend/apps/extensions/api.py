@@ -1,13 +1,16 @@
-"""Extensions router. Marketplace catalog browse + install/uninstall."""
+"""Extensions router. Marketplace catalog browse + per-account install/uninstall."""
 from datetime import datetime
 
-from django.db.models import F, Q
+from django.db import transaction
+from django.db.models import BooleanField, Exists, F, OuterRef, Q, Value
 from django.shortcuts import get_object_or_404
 from ninja import Router, Schema
 
-from .models import Extension
+from apps.accounts.auth import optional_session_token_auth, session_token_auth
 
-router = Router(tags=['extensions'])
+from .models import Extension, ExtensionInstall
+
+router = Router(tags=['extensions'], auth=session_token_auth)
 
 
 class ExtensionListOut(Schema):
@@ -40,9 +43,21 @@ class ExtensionDetailOut(Schema):
     created_at: datetime
 
 
-@router.get('/', response=list[ExtensionListOut], auth=None)
+def _catalog(request):
+    """The catalog with `installed` resolved for the caller — False when anonymous."""
+    user = getattr(request, 'auth', None)
+    if user is None or not user.is_authenticated:
+        return Extension.objects.annotate(
+            installed=Value(False, output_field=BooleanField())
+        )
+    return Extension.objects.annotate(
+        installed=Exists(ExtensionInstall.objects.filter(extension=OuterRef('pk'), user=user))
+    )
+
+
+@router.get('/', response=list[ExtensionListOut], auth=optional_session_token_auth)
 def list_extensions(request, category: str | None = None, q: str | None = None):
-    qs = Extension.objects.all()
+    qs = _catalog(request)
     if category:
         qs = qs.filter(category=category)
     if q:
@@ -50,24 +65,26 @@ def list_extensions(request, category: str | None = None, q: str | None = None):
     return list(qs)
 
 
-@router.get('/{slug}/', response=ExtensionDetailOut, auth=None)
+@router.get('/{slug}/', response=ExtensionDetailOut, auth=optional_session_token_auth)
 def get_extension(request, slug: str):
-    return get_object_or_404(Extension, slug=slug)
+    return get_object_or_404(_catalog(request), slug=slug)
 
 
-@router.post('/{slug}/install/', response=ExtensionDetailOut, auth=None)
+@router.post('/{slug}/install/', response=ExtensionDetailOut)
 def install_extension(request, slug: str):
     ext = get_object_or_404(Extension, slug=slug)
-    Extension.objects.filter(pk=ext.pk).update(
-        installed=True, installs_count=F('installs_count') + 1
-    )
-    ext.refresh_from_db()
-    return ext
+    with transaction.atomic():
+        _, created = ExtensionInstall.objects.get_or_create(extension=ext, user=request.auth)
+        if created:
+            Extension.objects.filter(pk=ext.pk).update(installs_count=F('installs_count') + 1)
+    return get_object_or_404(_catalog(request), pk=ext.pk)
 
 
-@router.post('/{slug}/uninstall/', response=ExtensionDetailOut, auth=None)
+@router.post('/{slug}/uninstall/', response=ExtensionDetailOut)
 def uninstall_extension(request, slug: str):
     ext = get_object_or_404(Extension, slug=slug)
-    ext.installed = False
-    ext.save(update_fields=['installed'])
-    return ext
+    with transaction.atomic():
+        removed, _ = ExtensionInstall.objects.filter(extension=ext, user=request.auth).delete()
+        if removed:
+            Extension.objects.filter(pk=ext.pk).update(installs_count=F('installs_count') - 1)
+    return get_object_or_404(_catalog(request), pk=ext.pk)

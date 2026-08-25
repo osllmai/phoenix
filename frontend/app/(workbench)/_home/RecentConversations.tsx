@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Card, CardHead, CardLink } from '@/app/components/ui';
 import { conversationTotal, recentConversations } from './data';
 import s from '../page.module.css';
@@ -7,10 +9,10 @@ export function RecentConversations() {
     <Card>
       <CardHead
         title="Recent conversations"
-        action={<CardLink>View all ({conversationTotal})</CardLink>}
+        action={<CardLink href="/chat">View all ({conversationTotal})</CardLink>}
       />
       {recentConversations.map((conv) => (
-        <button className={s.conv} type="button" key={conv.title} title="Resume this chat">
+        <Link className={s.conv} href="/chat" key={conv.title} title="Resume this chat">
           <span className={s.cIco}>{conv.icon}</span>
           <div className={s.cBody}>
             <div className={s.cTitle}>{conv.title}</div>
@@ -18,7 +20,7 @@ export function RecentConversations() {
           </div>
           <span className={s.cTime}>{conv.time}</span>
           <span className={s.cGo}>›</span>
-        </button>
+        </Link>
       ))}
     </Card>
   );

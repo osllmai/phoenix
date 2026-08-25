@@ -18,7 +18,7 @@ export default function EvaluateSheet({ onClose }: { onClose: () => void }) {
         <div className={s.sfld}>
           <label>Candidate</label>
           <select>
-            <option>Last Maestro run · "draft OAuth guide"</option>
+            <option>{'Last Maestro run · "draft OAuth guide"'}</option>
             <option>Last chat answer</option>
             <option>Paste text below…</option>
           </select>

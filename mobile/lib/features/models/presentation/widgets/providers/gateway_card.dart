@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../data/providers_stub.dart';
 import 'conn_pill.dart';
+import '../../../../../app/status_colors.dart';
 
 /// The IndoxHub gateway card: one key, all providers. Shows credits when
 /// connected; an error box + retry actions when unreachable / denied.
@@ -15,7 +16,7 @@ class GatewayCard extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final ok = info.status == ProvStatus.connected;
-    final green = const Color(0xFF6FCF97);
+    final green = StatusColors.secure;
 
     return Container(
       padding: const EdgeInsets.all(18),

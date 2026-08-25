@@ -1,5 +1,2 @@
-"""Local/dev settings."""
-from .base import *  # noqa: F401,F403
-
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+"""Local/dev settings — inherits env-backed values from base."""
+from .base import *  # noqa: F403

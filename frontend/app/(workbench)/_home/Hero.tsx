@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button } from '@/app/components/ui';
 import { sampleModel } from './data';
 import s from '../page.module.css';
@@ -6,7 +8,7 @@ export function Hero({ onSwitch }: { onSwitch?: (value: string) => void }) {
   return (
     <div className={s.hero}>
       <div className={s.heroRow}>
-        <button className={s.heroCta} type="button" title="Continue chatting with this model">
+        <Link className={s.heroCta} href="/chat" title="Continue chatting with this model">
           <span className={s.heroIco}>{sampleModel.icon}</span>
           <span className={s.heroBody}>
             <span className={s.heroName}>{sampleModel.name}</span>
@@ -19,7 +21,7 @@ export function Hero({ onSwitch }: { onSwitch?: (value: string) => void }) {
             </span>
           </span>
           <span className={s.heroGo}>💬 New chat ›</span>
-        </button>
+        </Link>
         <select
           className={s.switchsel}
           title="Switch model (stays on Home)"

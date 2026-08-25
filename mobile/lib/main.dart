@@ -9,6 +9,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'app/app.dart';
 import 'app/features.dart';
+import 'core/config/env.dart';
 import 'core/feature/feature_registry.dart';
 import 'core/onboarding/onboarding_providers.dart';
 import 'core/onboarding/onboarding_repository.dart';
@@ -20,8 +21,8 @@ import 'features/settings/presentation/providers/settings_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await loadPhoenixEnv();
 
-  // Desktop uses the FFI SQLite backend.
   sqfliteFfiInit();
   final dir = await getApplicationSupportDirectory();
   final db = await PhoenixDatabase.open(p.join(dir.path, 'phoenix.db'), databaseFactoryFfi);

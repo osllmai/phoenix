@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
+from apps.core.admin import PhoenixModelAdmin
+
 from .models import User
 
 
 @admin.register(User)
-class UserAdmin(DjangoUserAdmin):
+class UserAdmin(DjangoUserAdmin, PhoenixModelAdmin):
     ordering = ("email",)
     list_display = ("email", "full_name", "is_active", "is_staff", "date_joined")
     search_fields = ("email", "full_name")

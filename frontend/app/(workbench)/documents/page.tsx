@@ -14,6 +14,7 @@ import {
 import SuccessView from './_components/SuccessView';
 import { FILTERS, FORMAT_CHIPS } from './_components/sampleData';
 import s from './page.module.css';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 
 type DocState = 'success' | 'empty' | 'first-run' | 'loading' | 'error' | 'denied';
 
@@ -30,17 +31,14 @@ export default function DocumentsPage() {
         actions={
           <>
             <input className={s.search} placeholder="Search across converted text…" />
-            <div className={s.devSwitch}>
-              {STATES.map((st) => (
-                <button
-                  key={st}
-                  className={`${s.devBtn} ${state === st ? s.devOn : ''}`}
-                  onClick={() => setState(st)}
-                >
-                  {st}
-                </button>
-              ))}
-            </div>
+            <MockStateSwitcher
+              states={STATES}
+              value={state}
+              onChange={setState}
+              className={s.devSwitch}
+              buttonClassName={s.devBtn}
+              activeClassName={s.devOn}
+            />
             <Button variant="ghost">💬 Chat with documents</Button>
             <Button>＋ Add document</Button>
           </>

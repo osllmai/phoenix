@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:phoenix_core/phoenix_core.dart';
 
@@ -18,7 +19,7 @@ class RecentConversations extends ConsumerWidget {
       title: 'Recent conversations',
       action: convos.maybeWhen(
         data: (list) => TextButton(
-          onPressed: () {},
+          onPressed: () => context.go('/'),
           child: Text('View all (${list.length})'),
         ),
         orElse: () => null,
@@ -81,7 +82,7 @@ class _ConvRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return InkWell(
-      onTap: () {},
+      onTap: () => context.go('/'),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(

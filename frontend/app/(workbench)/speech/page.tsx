@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import { Button, EmptyState, ErrorState } from '@/app/components/ui';
 
 import FirstRunView from './_components/FirstRunView';
@@ -33,18 +34,13 @@ export default function SpeechPage() {
 
   return (
     <>
-      <div className={s.switcher}>
-        {STATES.map((st) => (
-          <button
-            className={state === st ? s.switchOn : ''}
-            type="button"
-            key={st}
-            onClick={() => setState(st)}
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <SpeechHeader
         model={model}

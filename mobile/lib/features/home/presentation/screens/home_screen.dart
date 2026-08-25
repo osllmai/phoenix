@@ -8,26 +8,29 @@ import '../widgets/dashboard_stacked.dart';
 import '../widgets/dashboard_wide.dart';
 
 /// The dashboard / overview surface. A two-column card grid with a full-width
-/// tips strip on tablet/desktop; a single stacked column on phone.
+/// tips strip on desktop; a single stacked column on phone and tablet, where
+/// the 7/5 split leaves the side column too narrow for its card headers.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ff = formFactorOf(context);
-    final wide = ff.hasSidePane;
+    final panelled = ff.hasSidePane;
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DashboardHeader(compact: !wide),
+        DashboardHeader(compact: !panelled),
         const Divider(height: 1),
         Expanded(
-          child: wide ? const DashboardWide() : const DashboardStacked(),
+          child: ff.isDesktop
+              ? const DashboardWide()
+              : DashboardStacked(compact: ff.isPhone),
         ),
       ],
     );
 
-    if (!wide) {
+    if (!panelled) {
       return Scaffold(
         backgroundColor: Colors.transparent,
         body: RadiantBackdrop(child: SafeArea(child: content)),

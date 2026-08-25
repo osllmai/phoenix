@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/providers_stub.dart';
+import '../../../../../app/status_colors.dart';
 
 /// One provider row as a touch card: identity + enable toggle, status/key-kind,
 /// the masked key, and per-card actions (varies by connection status).
@@ -72,7 +73,7 @@ class ProviderCard extends StatelessWidget {
   }
 
   Widget _meta(ThemeData theme, ColorScheme scheme) {
-    final green = const Color(0xFF6FCF97);
+    final green = StatusColors.secure;
     final (statusText, statusColor) = switch (p.status) {
       ProvStatus.connected => ('● Connected', green),
       ProvStatus.disabled => ('○ Disabled', scheme.onSurfaceVariant),
@@ -101,7 +102,7 @@ class ProviderCard extends StatelessWidget {
     final (label, color) = switch (p.keyKind) {
       KeyKind.byok => ('BYOK', scheme.tertiary),
       KeyKind.gateway => ('IndoxHub', scheme.primary),
-      KeyKind.local => ('Local network', const Color(0xFF6FCF97)),
+      KeyKind.local => ('Local network', StatusColors.secure),
       KeyKind.none => ('', scheme.outline),
     };
     return Container(

@@ -1,8 +1,13 @@
+from django.conf import settings
 from django.db import models
 
 
 class Document(models.Model):
-    """A source file converted to markdown via an async Celery job."""
+    """A source file converted to markdown via an async Celery job.
+
+    `owner` is nullable so the column could be added without dropping rows, but
+    every query filters on it — an unowned row is reachable by nobody.
+    """
 
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -11,6 +16,10 @@ class Document(models.Model):
         ('failed', 'Failed'),
     ]
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='documents',
+        on_delete=models.CASCADE, null=True, blank=True,
+    )
     title = models.CharField(max_length=255)
     source_path = models.CharField(max_length=1024)
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default='pending')

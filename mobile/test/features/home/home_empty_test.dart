@@ -63,10 +63,21 @@ void main() {
     testWidgets('empty $tag: renders no-model + no-conversations states',
         (tester) async {
       await _pumpEmptyAt(tester, size);
-      expect(find.text('No model selected'), findsOneWidget);
-      expect(find.text('Pick a model to start chatting'), findsOneWidget);
-      expect(find.text('Pick a model'), findsOneWidget);
-      expect(find.text('No conversations yet'), findsOneWidget);
+      // Tablet width scrolls one lazy column, so the cards below the fold are
+      // only built once scrolled to.
+      for (final text in const [
+        'No model selected',
+        'Pick a model to start chatting',
+        'Pick a model',
+        'No conversations yet',
+      ]) {
+        final finder = find.text(text);
+        if (finder.evaluate().isEmpty) {
+          await tester.scrollUntilVisible(finder, 200,
+              scrollable: find.byType(Scrollable).first);
+        }
+        expect(finder, findsOneWidget, reason: 'missing "$text" at $tag');
+      }
     });
   }
 }

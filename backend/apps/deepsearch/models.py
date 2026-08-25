@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -14,6 +15,10 @@ class SearchRun(models.Model):
         ('failed', 'Failed'),
     ]
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='search_runs',
+        on_delete=models.CASCADE, null=True, blank=True,
+    )
     query = models.CharField(max_length=1024)
     scope = models.CharField(max_length=8, choices=SCOPE_CHOICES, default='local')
     depth = models.CharField(max_length=8, choices=DEPTH_CHOICES, default='standard')

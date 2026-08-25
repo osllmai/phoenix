@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Button, PageHeader } from '@/app/components/ui';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { MODELS_TABS } from '@/app/components/sectionTabs.config';
 
@@ -40,18 +41,13 @@ export default function ProvidersPage() {
 
   return (
     <>
-      <div className={s.switcher}>
-        {PROVIDERS_STATES.map((st) => (
-          <button
-            className={state === st ? s.switchOn : ''}
-            type="button"
-            key={st}
-            onClick={() => setState(st)}
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={PROVIDERS_STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <SectionTabs items={MODELS_TABS} variant="tab" aria-label="Models sections" />
 

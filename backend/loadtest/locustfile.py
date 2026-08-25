@@ -6,13 +6,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from locust import HttpUser, between, events  # noqa: E402
-
-import seed  # noqa: E402
-import tasks_auth as auth  # noqa: E402
-import tasks_jobs as jobs  # noqa: E402
-import tasks_read as read  # noqa: E402
-import tasks_write as write  # noqa: E402
+import seed
+import tasks_auth as auth
+import tasks_jobs as jobs
+import tasks_read as read
+import tasks_write as write
+from locust import HttpUser, between, events
 
 
 @events.test_start.add_listener

@@ -8,13 +8,13 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def client():
-    return TestClient(router)
+def client(auth_headers):
+    return TestClient(router, headers=auth_headers)
 
 
 @pytest.fixture
-def run():
-    r = FleetRun.objects.create(prompt='add OAuth login + tests')
+def run(user):
+    r = FleetRun.objects.create(owner=user, prompt='add OAuth login + tests')
     FleetLane.objects.create(
         run=r, agent='claude-code', worktree_path='phoenix-cc-1', state='done',
         status_label='done', additions=128, deletions=14, files_changed=3, is_winner=True,
@@ -99,3 +99,11 @@ def test_seed_migration_populated(client):
     assert run.lanes.filter(is_winner=True).count() == 1
     assert run.lanes.count() == 4
     assert run.events.count() == 4
+
+
+def test_fanout_rejects_oversized_fields(client):
+    base = {'prompt': 'p', 'agents': ['claude-code']}
+    assert client.post('/runs/', json={**base, 'prompt': 'p' * 600}).status_code == 422
+    assert client.post('/runs/', json={**base, 'agents': ['a' * 100]}).status_code == 422
+    assert client.post('/runs/', json={**base, 'agents': ['a'] * 50}).status_code == 422
+    assert client.post('/runs/', json={**base, 'base_branch': 'b' * 300}).status_code == 422

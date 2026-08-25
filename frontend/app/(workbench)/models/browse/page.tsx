@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { Button, EmptyState, ErrorState, PageHeader } from '@/app/components/ui';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { MODELS_TABS } from '@/app/components/sectionTabs.config';
 
@@ -48,18 +49,13 @@ export default function ModelsBrowsePage() {
 
   return (
     <>
-      <div className={s.switcher}>
-        {BROWSE_STATES.map((st) => (
-          <button
-            key={st}
-            type="button"
-            className={state === st ? s.switchOn : ''}
-            onClick={() => setState(st)}
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={BROWSE_STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <SectionTabs items={MODELS_TABS} variant="tab" aria-label="Models sections" />
 

@@ -5,10 +5,9 @@ import os
 import random
 from uuid import uuid4
 
-from locust.exception import StopUser
-
 import checks as c
 import contracts as s
+from locust.exception import StopUser
 
 LOCALES = ['en', 'fa', 'de', 'fr']
 

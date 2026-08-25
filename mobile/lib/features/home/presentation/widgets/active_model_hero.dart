@@ -51,7 +51,7 @@ class _HeroRow extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final loaded = selection != null;
     final isCloud = selection?.mode == ComputeMode.cloud;
-    return Row(
+    final identity = Row(
       children: [
         Opacity(
           opacity: loaded ? 1 : 0.5,
@@ -89,16 +89,33 @@ class _HeroRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 12),
-        Flexible(
-          child: FilledButton.icon(
-            onPressed: () => showModelPicker(context),
-            icon: Icon(loaded ? Icons.swap_horiz : Icons.add, size: 16),
-            label: Text(loaded ? 'Switch' : 'Pick a model',
-                maxLines: 1, overflow: TextOverflow.ellipsis),
-          ),
-        ),
       ],
+    );
+    final action = FilledButton.icon(
+      onPressed: () => showModelPicker(context),
+      icon: Icon(loaded ? Icons.swap_horiz : Icons.add, size: 16),
+      label: Text(loaded ? 'Switch' : 'Pick a model',
+          maxLines: 1, overflow: TextOverflow.ellipsis),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) => constraints.maxWidth < _stackBelow
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [identity, const SizedBox(height: 12), action],
+            )
+          : Row(
+              children: [
+                Expanded(child: identity),
+                const SizedBox(width: 12),
+                action,
+              ],
+            ),
     );
   }
 }
+
+/// Below this the identity text and the action button can't share a row without
+/// the button's label overflowing, so the button drops beneath it.
+const double _stackBelow = 420;

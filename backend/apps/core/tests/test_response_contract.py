@@ -14,7 +14,7 @@ from apps.documents.models import Document
 from apps.extensions.models import Extension
 from apps.fleet.models import FleetLane, FleetRun
 
-from .contract_cases import ROUTES, cases
+from .contract_cases import PUBLIC, ROUTES, cases
 
 pytestmark = pytest.mark.django_db
 
@@ -31,23 +31,23 @@ def client():
 
 
 @pytest.fixture
-def data():
+def data(user):
     ext = Extension.objects.create(
         slug='contract-doc', name='Contract Doc', publisher='Tester',
         category='document', description='Convert PDFs.', icon='📄',
     )
-    doc = Document.objects.create(title='Spec', source_path='/spec.pdf')
-    search = SearchRun.objects.create(query='vectors')
-    run = FleetRun.objects.create(prompt='contract run')
+    doc = Document.objects.create(owner=user, title='Spec', source_path='/spec.pdf')
+    search = SearchRun.objects.create(owner=user, query='vectors')
+    run = FleetRun.objects.create(owner=user, prompt='contract run')
     lane = FleetLane.objects.create(run=run, agent='claude-code', worktree_path='wt-1')
     return {'ext': ext, 'doc': doc, 'search': search, 'run': run, 'lane': lane}
 
 
-def _send(client, method, url, payload):
+def _send(client, method, url, payload, headers=None):
     call = getattr(client, method.lower())
     if payload is None:
-        return call(url)
-    return call(url, data=payload, content_type='application/json')
+        return call(url, headers=headers)
+    return call(url, data=payload, content_type='application/json', headers=headers)
 
 
 def _schema_for(models, status):
@@ -90,10 +90,10 @@ def _check_body(model, body):
         mirror.model_validate(row)
 
 
-def test_every_route_returns_its_declared_contract(client, data):
+def test_every_route_returns_its_declared_contract(client, data, auth_headers):
     failures = []
     for method, template, url, payload, expect in cases(data):
-        resp = _send(client, method, url, payload)
+        resp = _send(client, method, url, payload, auth_headers)
         try:
             assert resp.status_code == expect, f'status {resp.status_code}, expected {expect}'
             body = resp.json()
@@ -107,12 +107,25 @@ def test_every_route_returns_its_declared_contract(client, data):
     assert not failures, '\n'.join(failures)
 
 
-def test_account_routes_reject_anonymous(client, data):
-    for method, _t, url, payload, _e in cases(data):
-        if not url.startswith('/api/v1/accounts/'):
+def test_non_public_routes_reject_anonymous(client, data):
+    checked = 0
+    for method, template, url, payload, _e in cases(data):
+        if (method, template) in PUBLIC:
             continue
         resp = _send(client, method, url, payload)
         assert resp.status_code in (401, 403), (
+            f'{method} {url} returned {resp.status_code} to an anonymous caller'
+        )
+        checked += 1
+    assert checked == len(ROUTES) - len(PUBLIC)
+
+
+def test_public_routes_allow_anonymous(client, data):
+    for method, template, url, payload, _e in cases(data):
+        if (method, template) not in PUBLIC:
+            continue
+        resp = _send(client, method, url, payload)
+        assert resp.status_code == 200, (
             f'{method} {url} returned {resp.status_code} to an anonymous caller'
         )
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../app/status_colors.dart';
 
 Future<void> showAddProviderDialog(BuildContext context) =>
     showDialog<void>(context: context, builder: (_) => const AddProviderDialog());
@@ -77,7 +78,7 @@ class _AddProviderDialogState extends State<AddProviderDialog> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lock_outline, size: 16, color: Color(0xFF6FCF97)),
+                    const Icon(Icons.lock_outline, size: 16, color: StatusColors.secure),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(

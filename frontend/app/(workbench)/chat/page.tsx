@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import { PageHeader } from '@/app/components/ui';
 
 import ChatColumn from './_components/ChatColumn';
@@ -34,17 +35,13 @@ export default function ChatPage() {
   };
 
   const switcher = (
-    <div className={s.switcher}>
-      {CHAT_STATES.map((st) => (
-        <button
-          key={st}
-          className={state === st ? s.switcherOn : ''}
-          onClick={() => setState(st)}
-        >
-          {st}
-        </button>
-      ))}
-    </div>
+    <MockStateSwitcher
+      states={CHAT_STATES}
+      value={state}
+      onChange={setState}
+      className={s.switcher}
+      activeClassName={s.switcherOn}
+    />
   );
 
   return (

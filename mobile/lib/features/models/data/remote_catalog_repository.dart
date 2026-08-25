@@ -3,16 +3,12 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/config/env.dart';
 import '../../../core/network/api_client.dart';
 import 'catalog_entry.dart';
 import 'catalog_repository.dart';
 
 part 'remote_catalog_repository.g.dart';
-
-const catalogUrl = String.fromEnvironment(
-  'PHOENIX_CATALOG_URL',
-  defaultValue: 'https://local-ai-zone.github.io/gguf_models.json',
-);
 
 const _bundledCatalogAsset = 'assets/catalog/gguf_models.json';
 

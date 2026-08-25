@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import '../../../app/status_colors.dart';
 
 /// Stub data + view-state for the Providers screen. Hardcoded until the
 /// IndoxHub / BYOK backend lands.
@@ -16,7 +17,7 @@ enum KeyKind { byok, gateway, local, none }
 enum DotTone { green, plum, blue, amber, accent, grey }
 
 Color toneColor(DotTone tone, ColorScheme s) => switch (tone) {
-      DotTone.green => const Color(0xFF6FCF97),
+      DotTone.green => StatusColors.secure,
       DotTone.plum => s.tertiary,
       DotTone.blue => s.secondary,
       DotTone.amber => s.tertiaryContainer,
