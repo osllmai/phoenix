@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import { PageHeader } from '@/app/components/ui';
 
 import SettingsNav from './_components/SettingsNav';
@@ -34,21 +35,16 @@ export default function SettingsPage() {
       <PageHeader
         title="Settings"
         actions={
-          <div className={s.switcher}>
-            {STATES.map((st) => (
-              <button
-                key={st}
-                type="button"
-                className={state === st ? s.on : ''}
-                onClick={() => {
-                  setState(st);
-                  if (st !== 'success' && st !== 'first-run') setSection(STATE_SECTION[st]);
-                }}
-              >
-                {st}
-              </button>
-            ))}
-          </div>
+          <MockStateSwitcher
+            states={STATES}
+            value={state}
+            onChange={(st) => {
+              setState(st);
+              if (st !== 'success' && st !== 'first-run') setSection(STATE_SECTION[st]);
+            }}
+            className={s.switcher}
+            activeClassName={s.on}
+          />
         }
       />
       <Body state={state} section={section} onSection={setSection} />

@@ -1,15 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/config/env.dart';
 import '../../../core/network/api_client.dart';
 import 'catalog_entry.dart';
 
 part 'hf_repository.g.dart';
-
-const hfApi = String.fromEnvironment(
-  'PHOENIX_HF_API',
-  defaultValue: 'https://huggingface.co/api',
-);
 
 final _quantRe = RegExp(
   r'(Q\d+_K_[A-Z0-9]+|Q\d+_K|Q\d+_\d+|IQ\d+_[A-Z0-9]+|BF16|F16|F32|FP16)',

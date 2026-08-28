@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import { PageHeader } from '@/app/components/ui';
 import { SAMPLE_EXTENSIONS, SHELL_STATS, CATEGORY_CHIPS } from './_components/sampleData';
 import ExtensionCard from './_components/ExtensionCard';
@@ -48,18 +49,14 @@ export default function ExtensionsPage() {
           <option>Recently updated</option>
           <option>Name (A–Z)</option>
         </select>
-        <div className={s.switcher}>
-          {STATES.map((st) => (
-            <button
-              key={st}
-              type="button"
-              className={`${s.switch} ${view === st ? s.switchOn : ''}`}
-              onClick={() => setView(st)}
-            >
-              {st}
-            </button>
-          ))}
-        </div>
+        <MockStateSwitcher
+          states={STATES}
+          value={view}
+          onChange={setView}
+          className={s.switcher}
+          buttonClassName={s.switch}
+          activeClassName={s.switchOn}
+        />
       </PageHeader>
 
       <div className={s.shellbar}>

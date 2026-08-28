@@ -43,6 +43,8 @@ markers = [
     "real: runs against the live Docker stack",
     "scenario(doc): the design/scenario doc this test executes",
     "quarantine(since, reason): known-flaky; expires",
+    "unit: fast, no live stack; run on every push",
+    "integration: needs the live stack or DB round-trips; run on merge",
 ]
 
 [tool.ruff]

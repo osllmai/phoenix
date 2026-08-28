@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/catalog_entry.dart';
+import '../../../../app/status_colors.dart';
 
 String formatCount(int n) {
   if (n >= 1000000) {
@@ -15,19 +16,19 @@ String formatCount(int n) {
 ({Color fg, Color bg}) capabilityColors(BuildContext context, String raw) {
   final c = raw.toLowerCase();
   if (c.contains('code')) {
-    return (fg: const Color(0xFF93BBD0), bg: const Color(0xFF18242C));
+    return BadgeTones.vision;
   }
   if (c.contains('vision') || c.contains('image')) {
-    return (fg: const Color(0xFFC6B2D9), bg: const Color(0xFF271E33));
+    return BadgeTones.reasoning;
   }
   if (c.contains('audio') || c.contains('speech')) {
-    return (fg: const Color(0xFFFFB070), bg: const Color(0xFF3A2415));
+    return BadgeTones.marginal;
   }
   if (c.contains('embed')) {
-    return (fg: const Color(0xFF7FD8C7), bg: const Color(0xFF152A26));
+    return BadgeTones.tools;
   }
   if (c.contains('text') || c.contains('chat')) {
-    return (fg: const Color(0xFF84CC9C), bg: const Color(0xFF1C2A20));
+    return BadgeTones.runnable;
   }
   final cs = Theme.of(context).colorScheme;
   return (fg: cs.onSurfaceVariant, bg: cs.surfaceContainerHighest);

@@ -9,29 +9,33 @@ import 'stat_cards.dart';
 import 'system_resources.dart';
 import 'tips_strip.dart';
 
+/// One column of cards. [compact] is the phone dressing — one stat per row and
+/// stacked action tiles; a tablet has the width to keep those side by side.
 class DashboardStacked extends StatelessWidget {
-  const DashboardStacked({super.key});
+  const DashboardStacked({super.key, this.compact = true});
+
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-      children: const [
-        StatCards(columns: 1),
-        SizedBox(height: 16),
-        ActiveModelHero(),
-        SizedBox(height: 16),
-        QuickActions(stacked: true),
-        SizedBox(height: 16),
-        RecentConversations(),
-        SizedBox(height: 16),
-        DocumentLibrary(),
-        SizedBox(height: 16),
-        ServerStatus(),
-        SizedBox(height: 16),
-        SystemResources(),
-        SizedBox(height: 16),
-        TipsStrip(stacked: true),
+      children: [
+        StatCards(columns: compact ? 1 : 3),
+        const SizedBox(height: 16),
+        const ActiveModelHero(),
+        const SizedBox(height: 16),
+        QuickActions(stacked: compact),
+        const SizedBox(height: 16),
+        const RecentConversations(),
+        const SizedBox(height: 16),
+        const DocumentLibrary(),
+        const SizedBox(height: 16),
+        const ServerStatus(),
+        const SizedBox(height: 16),
+        const SystemResources(),
+        const SizedBox(height: 16),
+        TipsStrip(stacked: compact),
       ],
     );
   }

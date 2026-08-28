@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/catalog_entry.dart';
 import '../../data/device_capabilities.dart';
 import '../../data/runnability.dart';
+import '../../../../app/status_colors.dart';
 
 ({Color fg, Color bg}) runnabilityColors(BuildContext context, Runnability r) {
   switch (r) {
     case Runnability.runs:
-      return (fg: const Color(0xFF84CC9C), bg: const Color(0xFF1C2A20));
+      return BadgeTones.runnable;
     case Runnability.tight:
-      return (fg: const Color(0xFFFFB070), bg: const Color(0xFF3A2415));
+      return BadgeTones.marginal;
     case Runnability.tooLarge:
       final cs = Theme.of(context).colorScheme;
       return (fg: cs.error, bg: cs.errorContainer.withValues(alpha: 0.4));

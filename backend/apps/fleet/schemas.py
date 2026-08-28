@@ -1,7 +1,9 @@
 """django-ninja schemas for the Fleet API (read + control contracts)."""
 from datetime import datetime
+from typing import Annotated
 
 from ninja import Schema
+from pydantic import Field
 
 
 class LaneOut(Schema):
@@ -59,12 +61,12 @@ class RunDetailOut(Schema):
 
 
 class FanOutIn(Schema):
-    prompt: str
-    agents: list[str]
-    base_branch: str = 'app/developer'
+    prompt: str = Field(max_length=500)
+    agents: list[Annotated[str, Field(max_length=64)]] = Field(max_length=32)
+    base_branch: str = Field('app/developer', max_length=200)
     race_mode: bool = True
 
 
 class MergeIn(Schema):
     lane_id: int
-    target_branch: str = 'app/developer'
+    target_branch: str = Field('app/developer', max_length=200)

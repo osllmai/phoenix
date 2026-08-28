@@ -38,14 +38,26 @@ class StatCards extends ConsumerWidget {
         ],
       );
     }
-    return Row(
-      children: [
-        for (final s in stats) ...[
-          Expanded(child: _StatTile(stat: s)),
-          if (s != stats.last) const SizedBox(width: 12),
+    // A tile needs ~180px before its value ellipsizes ("24.8 GB" → "24…"), which
+    // is what the S7 in portrait gives three-across.
+    return LayoutBuilder(
+      builder: (context, c) => Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: [
+          for (final s in stats)
+            SizedBox(
+              width: _tileWidth(c.maxWidth, stats.length),
+              child: _StatTile(stat: s),
+            ),
         ],
-      ],
+      ),
     );
+  }
+
+  double _tileWidth(double available, int count) {
+    final perRow = available / count >= 180 ? count : 2;
+    return (available - 12 * (perRow - 1)) / perRow;
   }
 }
 

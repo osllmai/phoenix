@@ -29,9 +29,9 @@ export const sampleModel = {
 };
 
 export const quickActions = [
-  { icon: '💬', title: 'New chat', sub: 'Start a conversation with the loaded model' },
-  { icon: '📄', title: 'Add document', sub: 'Convert & index a PDF or office file' },
-  { icon: '🔎', title: 'Search', sub: 'DeepSearch across your indexed docs' },
+  { icon: '💬', title: 'New chat', sub: 'Start a conversation with the loaded model', href: '/chat' },
+  { icon: '📄', title: 'Add document', sub: 'Convert & index a PDF or office file', href: '/documents' },
+  { icon: '🔎', title: 'Search', sub: 'DeepSearch across your indexed docs', href: '/deepsearch' },
 ];
 
 export const recentConversations = [

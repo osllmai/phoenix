@@ -6,6 +6,7 @@ Celery backend job — see design/scenario/04-cli-and-gguf-tooling.md.
 from pathlib import Path
 
 from celery import shared_task
+from django.conf import settings
 
 TEXT_SUFFIXES = {'.md', '.txt', '.markdown'}
 
@@ -33,8 +34,16 @@ def convert_document(document_id: int) -> dict:
     return {'document_id': document_id, 'status': 'ready'}
 
 
+def _resolve(source_path: str) -> Path:
+    root = Path(settings.DOCUMENTS_ROOT)
+    path = (root / source_path).resolve()
+    if not path.is_relative_to(root):
+        raise ValueError(f'source outside the documents root: {source_path}')
+    return path
+
+
 def _convert(source_path: str) -> str:
-    path = Path(source_path)
+    path = _resolve(source_path)
     if path.suffix.lower() in TEXT_SUFFIXES:
         return path.read_text(encoding='utf-8')
     if not path.exists():

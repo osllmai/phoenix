@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { DEV_TABS } from '@/app/components/sectionTabs.config';
 
@@ -19,7 +20,6 @@ import { SAMPLE_PROMPT, type FleetState } from './_components/sampleData';
 import s from './page.module.css';
 
 const STATES: FleetState[] = ['success', 'empty', 'first-run', 'loading', 'error', 'denied'];
-const SHOW_SWITCHER = process.env.NODE_ENV !== 'production';
 
 export default function FleetPage() {
   const [state, setState] = useState<FleetState>('success');
@@ -27,20 +27,13 @@ export default function FleetPage() {
 
   return (
     <main className={s.page}>
-      {SHOW_SWITCHER && (
-        <div className={s.switcher}>
-          {STATES.map((st) => (
-            <button
-              key={st}
-              type="button"
-              className={state === st ? s.switchOn : ''}
-              onClick={() => setState(st)}
-            >
-              {st}
-            </button>
-          ))}
-        </div>
-      )}
+      <MockStateSwitcher
+        states={STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <SectionTabs items={DEV_TABS} />
       <FleetHeader prompt={prompt} onPrompt={setPrompt} onRun={() => setState('loading')} />

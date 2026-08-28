@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import s from './ui.module.css';
@@ -28,11 +29,20 @@ export function CardHead({
 
 export function CardLink({
   children,
+  href,
   onClick,
 }: {
   children: ReactNode;
+  href?: string;
   onClick?: () => void;
 }) {
+  if (href) {
+    return (
+      <Link className={s.cardLink} href={href}>
+        {children}
+      </Link>
+    );
+  }
   return (
     <button className={s.cardLink} onClick={onClick} type="button">
       {children}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import { PageHeader } from '@/app/components/ui';
 import { HOME_STATES, type HomeState } from './_home/data';
 import { EmptyView, LoadingView, SuccessView } from './_home/Views';
@@ -26,7 +27,13 @@ export default function Home() {
 
   return (
     <>
-      <StateSwitcher state={state} onChange={setState} />
+      <MockStateSwitcher
+        states={HOME_STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.on}
+      />
 
       <PageHeader title={TITLES[state]} actions={<HeaderActions state={state} label={refreshLabel} show={showRefresh} onRetry={() => setState('loading')} />}>
         {state === 'success' && (
@@ -67,28 +74,5 @@ function HeaderActions({
       </button>
       {state === 'success' && <span className={s.last}>Updated 14:02:31</span>}
     </>
-  );
-}
-
-function StateSwitcher({
-  state,
-  onChange,
-}: {
-  state: HomeState;
-  onChange: (s: HomeState) => void;
-}) {
-  return (
-    <div className={s.switcher}>
-      {HOME_STATES.map((st) => (
-        <button
-          key={st}
-          type="button"
-          className={st === state ? s.on : undefined}
-          onClick={() => onChange(st)}
-        >
-          {st}
-        </button>
-      ))}
-    </div>
   );
 }

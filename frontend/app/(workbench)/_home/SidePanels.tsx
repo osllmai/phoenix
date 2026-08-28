@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 import { Card, CardHead, CardLink } from '@/app/components/ui';
 import { docLibrary, resourceMeters, serverStatus } from './data';
 import s from '../page.module.css';
@@ -8,7 +12,7 @@ const fillClass = { ok: '', warn: s.warn, hot: s.hot };
 export function DocLibrary() {
   return (
     <Card>
-      <CardHead title="Document library" action={<CardLink>Open Docs</CardLink>} />
+      <CardHead title="Document library" action={<CardLink href="/documents">Open Docs</CardLink>} />
       <div className={s.docCounts}>
         {docLibrary.counts.map((c) => (
           <div className={s.dcount} key={c.l}>
@@ -29,9 +33,17 @@ export function DocLibrary() {
 }
 
 export function ServerStatus() {
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const handleCopy = (path: string) => {
+    navigator.clipboard.writeText(path);
+    setCopied(path);
+    setTimeout(() => setCopied((cur) => (cur === path ? null : cur)), 1500);
+  };
+
   return (
     <Card>
-      <CardHead title="Local server" action={<CardLink>Manage</CardLink>} />
+      <CardHead title="Local server" action={<CardLink href="/developer">Manage</CardLink>} />
       <div className={s.srvHead}>
         <span className={s.srvDot} />
         <span className={s.srvState}>{serverStatus.state}</span>
@@ -45,8 +57,8 @@ export function ServerStatus() {
           <code>{ep.path}</code>
           <span className={s.epGrow} />
           <span className={s.epLabel}>{ep.label}</span>
-          <button className={s.copybtn} type="button">
-            copy
+          <button className={s.copybtn} type="button" onClick={() => handleCopy(ep.path)}>
+            {copied === ep.path ? 'copied' : 'copy'}
           </button>
         </div>
       ))}

@@ -26,7 +26,7 @@ services:
   celery:
     image: phoenix-backend:current
     build: { context: ../../backend, dockerfile: ../docker/Dockerfile.backend }
-    command: celery -A config worker -l info
+    command: celery -A config worker -l info -Q default,lowprio
     env_file: ../../.env
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.prod
@@ -38,7 +38,11 @@ services:
 
   frontend:
     image: phoenix-frontend:current
-    build: { context: ../../frontend, dockerfile: ../docker/Dockerfile.frontend }
+    build:
+      context: ../../frontend
+      dockerfile: ../docker/Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
     env_file: ../../.env
     expose: ['3000']
     healthcheck:
@@ -73,6 +77,51 @@ services:
       retries: 5
     restart: always
 
+  prometheus:
+    profiles: ['observability']
+    image: prom/prometheus:v3.1.0
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ../observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
+    expose: ['9090']
+    restart: always
+
+  victorialogs:
+    profiles: ['observability']
+    image: victoriametrics/victoria-logs:v1.0.0-victorialogs
+    command: ['-storageDataPath=/vlogs']
+    volumes: ['vlogsdata:/vlogs']
+    expose: ['9428']
+    restart: always
+
+  grafana:
+    profiles: ['observability']
+    image: grafana/grafana:11.5.1
+    environment:
+      GF_INSTALL_PLUGINS: victoriametrics-logs-datasource
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - ../observability/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - grafanadata:/var/lib/grafana
+    ports: ['${GRAFANA_PORT}:3000']
+    depends_on: [prometheus, victorialogs]
+    restart: always
+
+  celery-exporter:
+    profiles: ['observability']
+    image: danihodovic/celery-exporter:0.12.0
+    command: ['--broker-url=${CELERY_BROKER_URL}']
+    expose: ['9808']
+    depends_on:
+      redis: { condition: service_healthy }
+    restart: always
+
 volumes:
   pgdata:
   redisdata:
+  promdata:
+  vlogsdata:
+  grafanadata:

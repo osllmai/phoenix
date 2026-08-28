@@ -17,6 +17,7 @@ import LoadingScorecard from './_components/LoadingScorecard';
 import Scorecard from './_components/Scorecard';
 import { SAMPLE_EVALUATORS, SAMPLE_SCORECARD, type EvalState } from './_components/data';
 import s from './page.module.css';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 
 const STATES: EvalState[] = ['success', 'empty', 'first-run', 'loading', 'error', 'denied'];
 
@@ -34,18 +35,13 @@ export default function EvaluatorsPage() {
     <>
       <SectionTabs items={DEV_TABS} />
 
-      <div className={s.devSwitcher}>
-        {STATES.map((st) => (
-          <button
-            key={st}
-            className={state === st ? s.devSwitchOn : ''}
-            onClick={() => setState(st)}
-            type="button"
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={STATES}
+        value={state}
+        onChange={setState}
+        className={s.devSwitcher}
+        activeClassName={s.devSwitchOn}
+      />
 
       <PageHeader
         title="Evaluators"

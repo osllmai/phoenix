@@ -3,16 +3,19 @@ from datetime import datetime
 
 from django.shortcuts import get_object_or_404
 from ninja import Router, Schema
+from pydantic import Field
+
+from apps.accounts.auth import session_token_auth
 
 from .models import Document
 from .tasks import convert_document
 
-router = Router(tags=['documents'])
+router = Router(tags=['documents'], auth=session_token_auth)
 
 
 class DocumentCreateIn(Schema):
-    title: str
-    source_path: str
+    title: str = Field(max_length=255)
+    source_path: str = Field(max_length=1024)
 
 
 class DocumentListOut(Schema):
@@ -40,27 +43,28 @@ class DocumentCreatedOut(Schema):
     job_id: str
 
 
-@router.get('/', response=list[DocumentListOut], auth=None)
+@router.get('/', response=list[DocumentListOut])
 def list_documents(request):
-    return list(Document.objects.all())
+    return list(Document.objects.filter(owner=request.auth))
 
 
-@router.get('/{document_id}/', response=DocumentDetailOut, auth=None)
+@router.get('/{document_id}/', response=DocumentDetailOut)
 def get_document(request, document_id: int):
-    return get_object_or_404(Document, pk=document_id)
+    return get_object_or_404(Document, pk=document_id, owner=request.auth)
 
 
-@router.post('/', response=DocumentCreatedOut, auth=None)
+@router.post('/', response=DocumentCreatedOut)
 def create_document(request, payload: DocumentCreateIn):
     doc = Document.objects.create(
-        title=payload.title, source_path=payload.source_path, status='pending'
+        owner=request.auth, title=payload.title, source_path=payload.source_path,
+        status='pending',
     )
     result = convert_document.delay(doc.id)
     return DocumentCreatedOut(id=doc.id, title=doc.title, status=doc.status, job_id=result.id)
 
 
-@router.delete('/{document_id}/', auth=None)
+@router.delete('/{document_id}/')
 def delete_document(request, document_id: int):
-    doc = get_object_or_404(Document, pk=document_id)
+    doc = get_object_or_404(Document, pk=document_id, owner=request.auth)
     doc.delete()
     return {'deleted': document_id}

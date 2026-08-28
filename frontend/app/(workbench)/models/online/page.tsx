@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { PageHeader } from '@/app/components/ui';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { MODELS_TABS } from '@/app/components/sectionTabs.config';
 import { CREDITS, FILTER_PILLS, SORT_OPTIONS } from './_components/sampleData';
@@ -55,18 +56,13 @@ export default function OnlineModelsPage() {
             {view === 'denied' ? 'Update key' : 'Manage keys'}
           </button>
         )}
-        <div className={s.switcher}>
-          {STATES.map((st) => (
-            <button
-              key={st}
-              type="button"
-              className={`${s.switch} ${view === st ? s.switchOn : ''}`}
-              onClick={() => setView(st)}
-            >
-              {st}
-            </button>
-          ))}
-        </div>
+        <MockStateSwitcher
+          states={STATES}
+          value={view}
+          onChange={setView}
+          className={s.switcher}
+          activeClassName={s.switchOn}
+        />
       </PageHeader>
 
       {showToolbar && (

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'dashboard_card.dart';
 
 class _Action {
-  const _Action(this.icon, this.title, this.subtitle);
+  const _Action(this.icon, this.title, this.subtitle, this.route);
   final String icon;
   final String title;
   final String subtitle;
+  final String route;
 }
 
 const _actions = [
-  _Action('💬', 'New chat', 'Start a conversation with the loaded model'),
-  _Action('📄', 'Add document', 'Convert & index a PDF or office file'),
-  _Action('🔎', 'Search', 'DeepSearch across your indexed docs'),
+  _Action('💬', 'New chat', 'Start a conversation with the loaded model', '/'),
+  _Action('📄', 'Add document', 'Convert & index a PDF or office file', '/documents'),
+  _Action('🔎', 'Search', 'DeepSearch across your indexed docs', '/deepsearch'),
 ];
 
 class QuickActions extends StatelessWidget {
@@ -55,7 +57,7 @@ class _Tile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return InkWell(
-      onTap: () {},
+      onTap: () => context.go(action.route),
       borderRadius: BorderRadius.circular(10),
       child: Container(
         decoration: BoxDecoration(

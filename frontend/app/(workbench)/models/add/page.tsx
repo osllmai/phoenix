@@ -16,6 +16,7 @@ import AddForm, { type FormErrors } from './_components/AddForm';
 import SuccessView from './_components/SuccessView';
 import { SAMPLE_PATH, STATES, deriveName, type AddState } from './_components/sampleData';
 import s from './page.module.css';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 
 export default function ModelsAddPage() {
   const [state, setState] = useState<AddState>('default');
@@ -49,17 +50,14 @@ export default function ModelsAddPage() {
       <PageHeader
         title="Add a local model"
         actions={
-          <div className={s.devSwitch}>
-            {STATES.map((st) => (
-              <button
-                key={st}
-                className={`${s.devBtn} ${state === st ? s.devOn : ''}`}
-                onClick={() => setState(st)}
-              >
-                {st}
-              </button>
-            ))}
-          </div>
+          <MockStateSwitcher
+            states={STATES}
+            value={state}
+            onChange={setState}
+            className={s.devSwitch}
+            buttonClassName={s.devBtn}
+            activeClassName={s.devOn}
+          />
         }
       >
         <Link className={s.back} href="/models">

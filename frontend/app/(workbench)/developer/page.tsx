@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { Button, ErrorState, PageHeader } from '@/app/components/ui';
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { DEV_TABS } from '@/app/components/sectionTabs.config';
 
@@ -10,7 +11,7 @@ import EmptyView from './_components/EmptyView';
 import { DeniedView, FirstRunView } from './_components/HeroViews';
 import LoadingView from './_components/LoadingView';
 import SuccessView from './_components/SuccessView';
-import { DEV_STATES, SERVER, type DevState } from './_components/sampleData';
+import { DEV_STATES, GATEWAY, SERVER, type DevState } from './_components/sampleData';
 import s from './page.module.css';
 
 function StatusPill({ state }: { state: DevState }) {
@@ -82,18 +83,13 @@ export default function DeveloperPage() {
     <>
       <SectionTabs items={DEV_TABS} />
 
-      <div className={s.switcher}>
-        {DEV_STATES.map((st) => (
-          <button
-            className={state === st ? s.switchOn : ''}
-            type="button"
-            key={st}
-            onClick={() => setState(st)}
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={DEV_STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <PageHeader title="Developer · Server" actions={<HeaderActions state={state} onState={setState} />}>
         <StatusPill state={state} />
@@ -107,10 +103,10 @@ export default function DeveloperPage() {
       {state === 'error' && (
         <ErrorState
           title="Could not start the server"
-          heading="Port 8645 is already in use (EADDRINUSE)"
+          heading={`Port ${GATEWAY.port} is already in use (EADDRINUSE)`}
           message={
             <>
-              Another process is bound to <span className={s.inlineCode}>127.0.0.1:8645</span>, so the
+              Another process is bound to <span className={s.inlineCode}>{`${GATEWAY.bind}:${GATEWAY.port}`}</span>, so the
               gateway can&apos;t open its socket. Free the port or pick a different one, then retry.
             </>
           }

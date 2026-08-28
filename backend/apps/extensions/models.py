@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -23,7 +24,6 @@ class Extension(models.Model):
     verified = models.BooleanField(default=False)
     rating = models.FloatField(default=0)
     installs_count = models.IntegerField(default=0)
-    installed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -31,3 +31,22 @@ class Extension(models.Model):
 
     def __str__(self) -> str:
         return f'{self.name} ({self.category})'
+
+
+class ExtensionInstall(models.Model):
+    """One user's install of one extension — install state is per-account, never
+    a flag on the shared catalog row."""
+
+    extension = models.ForeignKey(Extension, related_name='installs', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='extension_installs', on_delete=models.CASCADE
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['extension', 'user'], name='uniq_install_per_user'),
+        ]
+
+    def __str__(self) -> str:
+        return f'{self.user_id}:{self.extension_id}'

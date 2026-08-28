@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { MockStateSwitcher } from '@/app/components/dev/MockStateSwitcher';
 import SectionTabs from '@/app/components/SectionTabs';
 import { DEV_TABS } from '@/app/components/sectionTabs.config';
 
@@ -27,18 +28,13 @@ export default function MaestroPage() {
 
   return (
     <main className={s.page}>
-      <div className={s.switcher}>
-        {STATES.map((st) => (
-          <button
-            key={st}
-            type="button"
-            className={state === st ? s.switchOn : ''}
-            onClick={() => setState(st)}
-          >
-            {st}
-          </button>
-        ))}
-      </div>
+      <MockStateSwitcher
+        states={STATES}
+        value={state}
+        onChange={setState}
+        className={s.switcher}
+        activeClassName={s.switchOn}
+      />
 
       <SectionTabs items={DEV_TABS} />
       <MaestroHeader goal={goal} onGoal={setGoal} onRun={() => setState('loading')} />

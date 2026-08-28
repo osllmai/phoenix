@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from ninja import Schema
+from pydantic import Field
 
 
 class UserMeRead(Schema):
@@ -15,5 +16,5 @@ class UserMeRead(Schema):
 
 
 class UserMeWrite(Schema):
-    full_name: str | None = None
-    locale: str | None = None
+    full_name: str | None = Field(None, max_length=120)
+    locale: str | None = Field(None, max_length=8)

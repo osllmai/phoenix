@@ -2,8 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/online_catalog_stub.dart';
+import '../../../../../app/status_colors.dart';
 
-const _green = Color(0xFF6FB585);
+const _green = StatusColors.online;
 
 /// The Online page header: title, credits balance, a connection-state pill and
 /// a "Manage keys" action.
@@ -102,7 +103,7 @@ class OnlineHeader extends StatelessWidget {
     final (label, dot, bg, fg) = switch (state) {
       OnlineState.firstRun => ('Not connected', scheme.outline,
           scheme.surfaceContainerHighest, scheme.onSurfaceVariant),
-      OnlineState.loading => ('Connecting…', const Color(0xFFC9911F),
+      OnlineState.loading => ('Connecting…', StatusColors.warning,
           scheme.surfaceContainerHighest, scheme.onSurfaceVariant),
       OnlineState.error => ('Gateway unreachable', scheme.error,
           scheme.errorContainer, scheme.onErrorContainer),

@@ -11,12 +11,12 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def client():
-    return TestClient(router)
+def client(auth_headers):
+    return TestClient(router, headers=auth_headers)
 
 
-def make_run(lanes: int = 2, done: int = 1) -> FleetRun:
-    run = FleetRun.objects.create(prompt='ship the fleet list')
+def make_run(user, lanes: int = 2, done: int = 1) -> FleetRun:
+    run = FleetRun.objects.create(owner=user, prompt='ship the fleet list')
     for i in range(lanes):
         FleetLane.objects.create(
             run=run, agent=f'agent-{i}', worktree_path=f'phoenix-a{i}',
@@ -31,12 +31,12 @@ def count_queries(call) -> int:
     return len(captured)
 
 
-def test_the_list_query_count_does_not_grow_with_rows(client):
-    make_run()
+def test_the_list_query_count_does_not_grow_with_rows(client, user):
+    make_run(user)
     at_one = count_queries(lambda: client.get('/runs/'))
 
     for _ in range(7):
-        make_run()
+        make_run(user)
     at_many = count_queries(lambda: client.get('/runs/'))
 
     assert at_one == at_many, (
@@ -44,8 +44,8 @@ def test_the_list_query_count_does_not_grow_with_rows(client):
     )
 
 
-def test_the_counts_are_still_right(client):
-    make_run(lanes=3, done=2)
+def test_the_counts_are_still_right(client, user):
+    make_run(user, lanes=3, done=2)
 
     row = client.get('/runs/').json()[0]
 
@@ -53,8 +53,8 @@ def test_the_counts_are_still_right(client):
     assert row['done_count'] == 2
 
 
-def test_a_run_without_lanes_counts_zero(client):
-    FleetRun.objects.create(prompt='no lanes yet')
+def test_a_run_without_lanes_counts_zero(client, user):
+    FleetRun.objects.create(owner=user, prompt='no lanes yet')
 
     row = client.get('/runs/').json()[0]
 
@@ -62,8 +62,8 @@ def test_a_run_without_lanes_counts_zero(client):
     assert row['done_count'] == 0
 
 
-def test_the_newest_run_is_still_listed_first(client):
-    make_run()
-    newest = FleetRun.objects.create(prompt='newest')
+def test_the_newest_run_is_still_listed_first(client, user):
+    make_run(user)
+    newest = FleetRun.objects.create(owner=user, prompt='newest')
 
     assert client.get('/runs/').json()[0]['id'] == newest.pk

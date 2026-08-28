@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import pytest
 from ninja.testing import TestClient
 
@@ -10,8 +12,8 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def client():
-    return TestClient(router)
+def client(auth_headers):
+    return TestClient(router, headers=auth_headers)
 
 
 @pytest.fixture(autouse=True)
@@ -40,16 +42,20 @@ def test_start_endpoint(client):
     assert run.status == 'ready'
 
 
-def test_start_endpoint_status_pending_without_eager(client, settings):
+def test_start_endpoint_status_pending_without_eager(client, settings, monkeypatch):
     settings.CELERY_TASK_ALWAYS_EAGER = False
+    monkeypatch.setattr(
+        'apps.deepsearch.api.run_search.delay',
+        lambda *a, **k: SimpleNamespace(id='queued-job-id'),
+    )
     resp = client.post('/', json={'query': 'anything', 'scope': 'local', 'depth': 'deep'})
     body = resp.json()
     assert body['status'] == 'pending'
-    assert body['job_id']
+    assert body['job_id'] == 'queued-job-id'
 
 
-def test_detail_endpoint(client):
-    run = SearchRun.objects.create(query='q', answer='a', sources=[{'title': 't'}])
+def test_detail_endpoint(client, user):
+    run = SearchRun.objects.create(owner=user, query='q', answer='a', sources=[{'title': 't'}])
     resp = client.get(f'/{run.id}/')
     assert resp.status_code == 200
     body = resp.json()
@@ -61,9 +67,9 @@ def test_detail_404(client):
     assert client.get('/9999/').status_code == 404
 
 
-def test_list_endpoint(client):
-    SearchRun.objects.create(query='one')
-    SearchRun.objects.create(query='two')
+def test_list_endpoint(client, user):
+    SearchRun.objects.create(owner=user, query='one')
+    SearchRun.objects.create(owner=user, query='two')
     resp = client.get('/')
     assert resp.status_code == 200
     body = resp.json()
@@ -130,3 +136,9 @@ def test_run_search_failure_path(monkeypatch):
     assert result['status'] == 'failed'
     assert run.status == 'failed'
     assert 'exploded' in run.error
+
+
+def test_start_rejects_oversized_and_invalid_enum(client):
+    assert client.post('/', json={'query': 'q' * 2000}).status_code == 422
+    assert client.post('/', json={'query': 'q', 'scope': 'x' * 20}).status_code == 422
+    assert client.post('/', json={'query': 'q', 'depth': 'x' * 20}).status_code == 422

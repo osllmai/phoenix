@@ -9,11 +9,14 @@ export type Model = {
 
 export type ModelsResponse = { active: Model | null; data: Model[] };
 
-// On-device gateway (phoenix_server). Configurable; never hardcoded in components.
-const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:24678';
+function apiBase(): string {
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!base) throw new Error('NEXT_PUBLIC_API_BASE_URL is required');
+  return base;
+}
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
+  const res = await fetch(`${apiBase()}${path}`, {
     headers: { 'content-type': 'application/json' },
     ...init,
   });

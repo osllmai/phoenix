@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -13,6 +14,10 @@ class FleetRun(models.Model):
         ('merged', 'Merged'),
     ]
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='fleet_runs',
+        on_delete=models.CASCADE, null=True, blank=True,
+    )
     prompt = models.CharField(max_length=500)
     base_branch = models.CharField(max_length=200, default='app/developer')
     race_mode = models.BooleanField(default=True)

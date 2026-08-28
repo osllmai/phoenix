@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:phoenix_core/phoenix_core.dart';
+import 'package:phoenix_server/src/auth.dart';
 import 'package:phoenix_server/src/completion.dart';
 import 'package:phoenix_server/src/completions_api.dart';
 import 'package:phoenix_server/src/messages_api.dart';
@@ -79,15 +80,19 @@ Router modelsApi(ModelManager manager) {
   return r;
 }
 
-/// The full gateway handler: CORS + health + model routes + chat completions.
-Handler buildGatewayHandler(PhoenixCore core) {
+/// The full gateway handler: CORS + optional API key + health + model routes
+/// + chat completions. [apiKey] null/empty leaves the gateway open.
+Handler buildGatewayHandler(PhoenixCore core, {String? apiKey}) {
   final completions = CompletionEngine(core);
   final router = Router()
     ..mount('/', modelsApi(core.models))
     ..mount('/', completionsApi(completions, core.models))
     ..mount('/', messagesApi(completions, core.models))
     ..get('/health', (Request req) => _json({'ok': true}));
-  return const Pipeline().addMiddleware(_cors()).addHandler(router.call);
+  return const Pipeline()
+      .addMiddleware(_cors())
+      .addMiddleware(requireApiKey(apiKey))
+      .addHandler(router.call);
 }
 
 /// A request Origin is only trusted when it is loopback. CLI/SDK clients

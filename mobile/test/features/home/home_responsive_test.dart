@@ -51,13 +51,32 @@ void main() {
     expect(find.byType(DashboardWide), findsNothing);
   });
 
-  for (final size in [const Size(800, 800), const Size(1200, 800)]) {
-    testWidgets('width ${size.width.toInt()}: two-column wide grid', (tester) async {
-      await _pumpAt(tester, size);
-      expect(find.byType(DashboardWide), findsOneWidget);
-      expect(find.byType(DashboardStacked), findsNothing);
-    });
-  }
+  // The two-column 7/5 split needs desktop width; at tablet width the side
+  // column is ~330px and its card headers ellipsize (seen on the S7).
+  testWidgets('tablet: one column, tablet-dressed not phone-dressed',
+      (tester) async {
+    await _pumpAt(tester, const Size(800, 800));
+    expect(find.byType(DashboardStacked), findsOneWidget);
+    expect(find.byType(DashboardWide), findsNothing);
+    expect(
+      tester.widget<DashboardStacked>(find.byType(DashboardStacked)).compact,
+      isFalse,
+    );
+  });
+
+  testWidgets('phone: stacked column is phone-dressed', (tester) async {
+    await _pumpAt(tester, const Size(400, 800));
+    expect(
+      tester.widget<DashboardStacked>(find.byType(DashboardStacked)).compact,
+      isTrue,
+    );
+  });
+
+  testWidgets('desktop: two-column wide grid', (tester) async {
+    await _pumpAt(tester, const Size(1200, 800));
+    expect(find.byType(DashboardWide), findsOneWidget);
+    expect(find.byType(DashboardStacked), findsNothing);
+  });
 
   testWidgets('renders the real installed-model count and conversation titles',
       (tester) async {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/config/env.dart';
+
 import '../../core/feature/feature_module.dart';
 import 'sidebar_tile.dart';
+import '../../app/status_colors.dart';
 
 /// The pinned bottom of the sidebar: footer nav (Settings) and the on-device
 /// server status chip.
@@ -44,12 +47,12 @@ class SidebarFooter extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: const BoxDecoration(
-                    color: Color(0xFF6FCF97), shape: BoxShape.circle),
+                    color: StatusColors.secure, shape: BoxShape.circle),
               ),
               if (!collapsed) ...[
                 const SizedBox(width: 8),
                 Flexible(
-                  child: Text('On-device · :24678',
+                  child: Text(gatewayLabel,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: scheme.onSurfaceVariant, fontSize: 12)),

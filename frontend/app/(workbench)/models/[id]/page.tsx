@@ -10,6 +10,7 @@ import {
   PageHeader,
   Skeleton,
 } from '@/app/components/ui';
+import { MockStateSwitcher, mockStatesEnabled } from '@/app/components/dev/MockStateSwitcher';
 
 import ActionArea from './_components/ActionArea';
 import IdentityCard from './_components/IdentityCard';
@@ -39,30 +40,23 @@ export default function ModelDetailPage({ params }: { params: Promise<{ id: stri
         <span className={s.headSep}>/</span>
       </PageHeader>
 
-      <div className={s.switcher}>
-        {STATUS_TABS.map((t) => (
-          <button
-            key={t}
-            type="button"
-            className={status === t ? s.switchOn : ''}
-            onClick={() => setStatus(t)}
-          >
-            {t}
-          </button>
-        ))}
-        <span className={s.switchSep} />
-        {STATE_TABS.map((t) => (
-          <button
-            key={t}
-            type="button"
-            disabled={status !== 'ready'}
-            className={status === 'ready' && state === t ? s.switchOn : ''}
-            onClick={() => setState(t)}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
+      {mockStatesEnabled && (
+        <div className={s.switcher}>
+          <MockStateSwitcher
+            states={STATUS_TABS}
+            value={status}
+            onChange={setStatus}
+            activeClassName={s.switchOn}
+          />
+          <span className={s.switchSep} />
+          <MockStateSwitcher
+            states={STATE_TABS}
+            value={state}
+            onChange={(t) => status === 'ready' && setState(t)}
+            activeClassName={s.switchOn}
+          />
+        </div>
+      )}
 
       <div className={s.scroll}>
         <Body

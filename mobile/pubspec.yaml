@@ -73,6 +73,7 @@ dependencies:
   # Codegen annotations (generators are in dev_dependencies).
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
+  flutter_dotenv: ^6.0.1
 
 dev_dependencies:
   flutter_test:

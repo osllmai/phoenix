@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../providers/dashboard_controller.dart';
 import 'dashboard_card.dart';
@@ -13,7 +14,10 @@ class ServerStatus extends ConsumerWidget {
     final state = ref.watch(dashboardControllerProvider);
     return DashboardCard(
       title: 'Local server',
-      action: TextButton(onPressed: () {}, child: const Text('Manage')),
+      action: TextButton(
+        onPressed: () => context.go('/developer'),
+        child: const Text('Manage'),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

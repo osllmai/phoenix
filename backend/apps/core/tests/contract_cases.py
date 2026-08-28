@@ -19,15 +19,22 @@ def mounted_routes() -> dict:
 
 ROUTES = mounted_routes()
 
+PUBLIC = {
+    ('GET', '/api/v1/health/'),
+    ('GET', '/api/v1/extensions/'),
+    ('GET', '/api/v1/extensions/{slug}/'),
+}
+
 
 def cases(d):
+    """Every route as an AUTHENTICATED caller sees it. Anonymous rejection of
+    everything outside PUBLIC is asserted separately."""
     doc, ext, search, run, lane = d['doc'], d['ext'], d['search'], d['run'], d['lane']
     return [
         ('GET', '/api/v1/health/', '/api/v1/health/', None, 200),
-        ('GET', '/api/v1/accounts/me/', '/api/v1/accounts/me/', None, 401),
-        ('PATCH', '/api/v1/accounts/me/', '/api/v1/accounts/me/', {'full_name': 'x'}, 401),
-        ('DELETE', '/api/v1/accounts/me/', '/api/v1/accounts/me/', None, 401),
-        ('POST', '/api/v1/accounts/me/export/', '/api/v1/accounts/me/export/', None, 401),
+        ('GET', '/api/v1/accounts/me/', '/api/v1/accounts/me/', None, 200),
+        ('PATCH', '/api/v1/accounts/me/', '/api/v1/accounts/me/', {'full_name': 'x'}, 200),
+        ('POST', '/api/v1/accounts/me/export/', '/api/v1/accounts/me/export/', None, 200),
         ('POST', '/api/v1/ai-chat/deep-search/', '/api/v1/ai-chat/deep-search/',
          {'query': 'transformers'}, 200),
         ('GET', '/api/v1/ai-chat/jobs/{job_id}/', f'/api/v1/ai-chat/jobs/{JOB_ID}/', None, 200),
@@ -51,4 +58,6 @@ def cases(d):
         ('POST', '/api/v1/fleet/runs/{run_id}/merge/', f'/api/v1/fleet/runs/{run.id}/merge/',
          {'lane_id': lane.id}, 200),
         ('DELETE', '/api/v1/documents/{document_id}/', f'/api/v1/documents/{doc.id}/', None, 200),
+        # last — soft-deletes the caller, after which the token stops authenticating
+        ('DELETE', '/api/v1/accounts/me/', '/api/v1/accounts/me/', None, 200),
     ]

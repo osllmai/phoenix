@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button, CenterState, ErrorState } from '@/app/components/ui';
 
 import s from '../page.module.css';
-import { SERVER } from './sampleData';
+import { SERVER, GATEWAY } from './sampleData';
 
 export function FirstRunView({ onStart }: { onStart: () => void }) {
   const [port, setPort] = useState(SERVER.port);
@@ -73,7 +73,7 @@ export function DeniedView() {
         <pre className={s.httpBlock}>
           <span className={s.headerLine}>{'$ curl -H "Authorization: Bearer phx_live_revoked" \\'}</span>
           {'\n'}
-          <span className={s.headerLine}>{'    '}http://127.0.0.1:8645/v1/messages</span>
+          <span className={s.headerLine}>{'    '}{`${GATEWAY.origin}/v1/messages`}</span>
           {'\n\n'}
           <span className={s.statusLine}>HTTP/1.1 401 Unauthorized</span>
           {'\n'}

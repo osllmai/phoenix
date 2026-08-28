@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'dashboard_card.dart';
 
@@ -11,7 +12,10 @@ class DocumentLibrary extends StatelessWidget {
     // TODO(real-data): document counts await the Docling library feature.
     return DashboardCard(
       title: 'Document library',
-      action: TextButton(onPressed: () {}, child: const Text('Open Docs')),
+      action: TextButton(
+        onPressed: () => context.go('/documents'),
+        child: const Text('Open Docs'),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

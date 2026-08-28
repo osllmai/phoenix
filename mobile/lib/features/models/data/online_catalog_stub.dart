@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../app/status_colors.dart';
 
 /// Stub data for the Online · IndoxHub screen. Hardcoded until the cloud
 /// gateway backend lands — mirrors design/mock/tablet/models/T-models-online.html.
@@ -51,18 +52,17 @@ class OnlineModel {
 }
 
 // Provider brand dot colors — brand identity, not theme roles.
-const _green = Color(0xFF4E9A6B);
-const _amber = Color(0xFFC9911F);
-const _blue = Color(0xFF5B8BA5);
-const _plum = Color(0xFF8A6CA8);
-const _greenInk = Color(0xFF2C7048);
-const _red = Color(0xFFE5645A);
-const _grey = Color(0xFF6B5E50);
-const _accent = Color(0xFFFF8A3D);
+const _green = StatusColors.success;
+const _amber = StatusColors.warning;
+const _blue = StatusColors.info;
+const _plum = StatusColors.plum;
+const _greenInk = StatusColors.successInk;
+const _red = StatusColors.danger;
+const _grey = StatusColors.neutral;
 
 const onlineProviders = [
   OnlineProvider('all', 'All providers', _green, 9),
-  OnlineProvider('openai', 'OpenAI', _accent, 2),
+  OnlineProvider('openai', 'OpenAI', StatusColors.ember, 2),
   OnlineProvider('anthropic', 'Anthropic', _amber, 2),
   OnlineProvider('google', 'Google', _blue, 1),
   OnlineProvider('mistral', 'Mistral AI', _plum, 1),

@@ -28,7 +28,8 @@ def get_me(request: HttpRequest):
 def patch_me(request: HttpRequest, payload: UserMeWrite):
     user = request.auth
     for field, value in payload.dict(exclude_unset=True).items():
-        setattr(user, field, value)
+        if value is not None:
+            setattr(user, field, value)
     user.save()
     return user
 

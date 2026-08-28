@@ -2,14 +2,14 @@ import pytest
 from ninja.testing import TestClient
 
 from apps.extensions.api import router
-from apps.extensions.models import Extension
+from apps.extensions.models import Extension, ExtensionInstall
 
 pytestmark = pytest.mark.django_db
 
 
 @pytest.fixture
-def client():
-    return TestClient(router)
+def client(auth_headers):
+    return TestClient(router, headers=auth_headers)
 
 
 @pytest.fixture
@@ -24,7 +24,6 @@ def test_model_str_and_defaults(ext):
     assert ext.version == '1.0.0'
     assert ext.verified is False
     assert ext.installs_count == 0
-    assert ext.installed is False
     assert str(ext) == 'Test Doc (document)'
 
 
@@ -62,32 +61,32 @@ def test_detail_404(client):
     assert client.get('/nope/').status_code == 404
 
 
-def test_install_endpoint(client, ext):
+def test_install_endpoint(client, ext, user):
     resp = client.post(f'/{ext.slug}/install/')
     assert resp.status_code == 200
     body = resp.json()
     assert body['installed'] is True
     assert body['installs_count'] == 1
     ext.refresh_from_db()
-    assert ext.installed is True
     assert ext.installs_count == 1
+    assert ExtensionInstall.objects.filter(extension=ext, user=user).exists()
 
 
 def test_install_404(client):
     assert client.post('/nope/install/').status_code == 404
 
 
-def test_uninstall_endpoint(client, ext):
-    ext.installed = True
+def test_uninstall_endpoint(client, ext, user):
+    ExtensionInstall.objects.create(extension=ext, user=user)
     ext.installs_count = 5
     ext.save()
     resp = client.post(f'/{ext.slug}/uninstall/')
     assert resp.status_code == 200
     body = resp.json()
     assert body['installed'] is False
-    assert body['installs_count'] == 5
+    assert body['installs_count'] == 4
     ext.refresh_from_db()
-    assert ext.installed is False
+    assert not ExtensionInstall.objects.filter(extension=ext, user=user).exists()
 
 
 def test_uninstall_404(client):

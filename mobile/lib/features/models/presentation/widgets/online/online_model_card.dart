@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/online_catalog_stub.dart';
+import '../../../../../app/status_colors.dart';
 
-const _green = Color(0xFF6FB585);
+const _green = StatusColors.online;
 
 /// A hosted-model card on the Online screen: icon, name + id, badges, a pricing/
 /// latency meta grid, a comment and the select / default / use-for-chat footer.
@@ -98,8 +99,8 @@ class OnlineModelCard extends StatelessWidget {
         if (model.recBadge != null)
           _badge(model.recBadge!, _green.withValues(alpha: 0.18), _green),
         if (model.vision)
-          _badge('Vision', const Color(0xFF5B8BA5).withValues(alpha: 0.18),
-              const Color(0xFF8FB6CC)),
+          _badge('Vision', StatusColors.info.withValues(alpha: 0.18),
+              StatusColors.infoInk),
         if (model.tools)
           _badge('Tools', scheme.primaryContainer, scheme.onPrimaryContainer),
       ]);

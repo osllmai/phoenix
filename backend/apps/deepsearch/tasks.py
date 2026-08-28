@@ -21,7 +21,7 @@ def run_search(run_id: int) -> dict:
     run.save(update_fields=['status'])
 
     try:
-        sources = _retrieve(run.query, run.depth)
+        sources = _retrieve(run.query, run.depth, run.owner_id)
     except Exception as exc:  # noqa: BLE001 - surface any retrieval failure to the user
         run.status = 'failed'
         run.error = str(exc)
@@ -40,7 +40,7 @@ def _terms(query: str) -> list[str]:
     return [t for t in re.findall(r'\w+', query.lower()) if t]
 
 
-def _retrieve(query: str, depth: str) -> list[dict]:
+def _retrieve(query: str, depth: str, owner_id) -> list[dict]:
     Document = apps.get_model('documents', 'Document')
     terms = _terms(query)
     if not terms:
@@ -48,7 +48,7 @@ def _retrieve(query: str, depth: str) -> list[dict]:
 
     top_n = TOP_N_BY_DEPTH.get(depth, TOP_N_BY_DEPTH['standard'])
     scored = []
-    for doc in Document.objects.all():
+    for doc in Document.objects.filter(owner_id=owner_id):
         haystack = f'{doc.title}\n{doc.markdown}'.lower()
         freq = sum(haystack.count(term) for term in terms)
         if freq == 0:

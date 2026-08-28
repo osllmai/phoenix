@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../app/status_colors.dart';
 
 /// The local-keychain reassurance strip shown above the provider list.
 class PrivacyNote extends StatelessWidget {
@@ -17,7 +18,7 @@ class PrivacyNote extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.lock_outline, size: 16, color: Color(0xFF6FCF97)),
+          const Icon(Icons.lock_outline, size: 16, color: StatusColors.secure),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
