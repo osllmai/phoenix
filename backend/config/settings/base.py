@@ -102,7 +102,7 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
-SESSION_COOKIE_AGE = env.int('SESSION_COOKIE_AGE_SECONDS')
+SESSION_COOKIE_AGE = env.int('SESSION_COOKIE_AGE_SECONDS', default=1209600)
 SESSION_SAVE_EVERY_REQUEST = True
 
 TIME_ZONE = env('TIME_ZONE', default='UTC')

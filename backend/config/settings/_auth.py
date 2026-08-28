@@ -21,10 +21,10 @@ MFA_RECOVERY_CODE_COUNT = 10
 
 HEADLESS_ONLY = True
 HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": env("HEADLESS_URL_CONFIRM_EMAIL"),
-    "account_reset_password_from_key": env("HEADLESS_URL_RESET_PASSWORD"),
-    "account_signup": env("HEADLESS_URL_SIGNUP"),
+    "account_confirm_email": env("HEADLESS_URL_CONFIRM_EMAIL", default="/auth/confirm-email/{key}"),
+    "account_reset_password_from_key": env("HEADLESS_URL_RESET_PASSWORD", default="/auth/reset-password/{key}"),
+    "account_signup": env("HEADLESS_URL_SIGNUP", default="/auth/signup"),
 }
 
-EMAIL_BACKEND = env("EMAIL_BACKEND")
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="noreply@phoenix.local")
