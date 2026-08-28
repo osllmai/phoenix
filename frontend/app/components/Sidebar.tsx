@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { GATEWAY_LABEL, footerItem, navGroups, newMenuItems } from '@/lib/nav';
+import { footerItem, gatewayLabel, navGroups, newMenuItems } from '@/lib/nav';
 import NavIcon from './NavIcon';
 import SidebarGroup from './SidebarGroup';
 import s from './Sidebar.module.css';
@@ -70,7 +70,7 @@ export default function Sidebar() {
         </Link>
         <div className={s.status} title="Local server running">
           <span className={s.statusDot} />
-          <span>{GATEWAY_LABEL}</span>
+          <span>{gatewayLabel()}</span>
         </div>
       </div>
     </nav>

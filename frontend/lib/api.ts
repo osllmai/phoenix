@@ -9,11 +9,14 @@ export type Model = {
 
 export type ModelsResponse = { active: Model | null; data: Model[] };
 
-const base = process.env.NEXT_PUBLIC_API_BASE_URL;
-if (!base) throw new Error('NEXT_PUBLIC_API_BASE_URL is required');
+function apiBase(): string {
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!base) throw new Error('NEXT_PUBLIC_API_BASE_URL is required');
+  return base;
+}
 
 async function req<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${base}${path}`, {
+  const res = await fetch(`${apiBase()}${path}`, {
     headers: { 'content-type': 'application/json' },
     ...init,
   });

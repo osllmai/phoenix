@@ -67,6 +67,8 @@ export const newMenuItems: NavItem[] = [
   { key: 'new-flow', label: 'New flow', href: '/developer/flows', icon: ['M4 2.2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3', 'M11.7 6.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3', 'M5.4 4.6c4 .6 4.5 2 4.8 2.6'] },
 ];
 
-const _gatewayBase = process.env.NEXT_PUBLIC_API_BASE_URL;
-if (!_gatewayBase) throw new Error('NEXT_PUBLIC_API_BASE_URL is required');
-export const GATEWAY_LABEL = `On-device · :${new URL(_gatewayBase).port || '80'}`;
+export function gatewayLabel(): string {
+  const base = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!base) return 'On-device';
+  return `On-device · :${new URL(base).port || '80'}`;
+}
